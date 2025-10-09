@@ -1,17 +1,19 @@
 #include "DebugUI.h"
-#include"Normalize.h"
+#include"MyEngine.h"
 #include"Input.h"
 #include"Sprite.h"
+#include"Model.h"
+
 #include"SphereMesh.h"
 #include"DirectionalLight.h"
 #include"PSO.h"
 #include"Camera/Camera.h"
-#include"MyEngine.h"
+#include"Normalize.h"
 
 #include<numbers>
 #include<algorithm>
 
-void DebugUI::CheckDirectionalLight(int& lightType) {
+void DebugUI::CheckDirectionalLight(uint32_t& lightType) {
 
     DirectionalLight* directionalLight = MyEngine::GetDirectionalLightData();
 
@@ -82,10 +84,6 @@ void DebugUI::CheckCamera(Camera& camera) {
     if (ImGui::Button("Orthographic")) {
         camera.SetOrthographic(camera.GetIsOrthographic() ? false : true);
     }
-
-
-
-
 
     ImGui::End();
 

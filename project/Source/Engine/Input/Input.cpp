@@ -161,6 +161,16 @@ bool Input::IsReleaseKey(const uint8_t& keyNum) {
 
 }
 
+bool Input::IsAnyKeyPressed() {
+
+    for (int i = 0; i < 256; ++i) {
+        if (key_[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void Input::Update() {
 
     //キーの状態をコピーする

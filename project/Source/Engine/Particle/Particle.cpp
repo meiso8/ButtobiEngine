@@ -3,7 +3,7 @@
 #include"DirectXCommon.h"
 #include"Camera/Camera.h"
 #include"MakeIdentity4x4.h"
-
+#include"TextureManager.h"
 #include"MyEngine.h"
 using namespace  Microsoft::WRL;
 

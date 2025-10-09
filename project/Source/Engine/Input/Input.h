@@ -36,7 +36,7 @@ public:
     static bool IsReleaseStateKey(const uint8_t& key);
     /// @briefキーを離した瞬間
     static bool IsReleaseKey(const uint8_t& key);
-
+    static bool IsAnyKeyPressed();
     /// @brief キーの情報を取得する
     void Update();
 

@@ -8,10 +8,11 @@ class MyEngine;
 class Model;
 class Camera;
 
-class Player
+class SamplePlayer
 {
 public:
-    Player();
+    SamplePlayer();
+    ~SamplePlayer();
     void Init();
     void Draw(Camera& camera, uint32_t lightType);
     void Update();
@@ -19,7 +20,7 @@ public:
 private:
     Vector3 velocity_ = { 0.0f,0.0f,0.0f };
     float kSpeed_ = 0.0f;
-    std::unique_ptr<Model>model_ = nullptr;
+    Model* model_ = nullptr;
     WorldTransform worldTransform_;
 };
 

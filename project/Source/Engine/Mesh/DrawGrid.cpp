@@ -1,8 +1,14 @@
 #include"DrawGrid.h"
 #include<numbers>
 #include"MakeIdentity4x4.h"
+#include"Texture.h"
 
-DrawGrid::DrawGrid(uint32_t textureHandle) {
+LineMesh DrawGrid::line_[102];
+Cube DrawGrid::cube_[2];
+
+void DrawGrid::Initialize()
+{
+    uint32_t textureHandle = Texture::GetHandle(Texture::WHITE_1X1);
 
     for (int i = 0; i < 102; ++i) {
         line_[i].Create(textureHandle);
@@ -32,7 +38,6 @@ DrawGrid::DrawGrid(uint32_t textureHandle) {
 
     cube_[0].SetColor(Vector4(0.0f, 1.0f, 0.0f, 1.0f));
     cube_[1].SetColor(Vector4(1.0f, 0.0f, 0.0f, 1.0f));
-
 }
 
 void DrawGrid::Draw(Camera& camera) {
