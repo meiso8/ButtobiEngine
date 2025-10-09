@@ -3,6 +3,7 @@
 #include"Collision.h"
 #include"Input.h"
 #include"Model.h"
+#include"DebugUI.h"
 
 const int winWidth = 1280;
 const int winHeight = 720;
@@ -11,7 +12,7 @@ void GameScene::Initialize() {
     // メンバ変数への代入処理
 
     // カメラの初期化
-    camera_.Initialize(winWidth, winHeight);
+    camera_.Initialize(winWidth, winHeight,Camera::PERSPECTIVE);
     camera_.farZ_ = 1000.0f;
     camera_.translate_.x = 12.0f;
     camera_.translate_.y = 7.0f;
@@ -19,7 +20,8 @@ void GameScene::Initialize() {
 
 #ifdef _DEBUG
     // デバッグカメラの生成
-    debugCamera_ = new DebugCamera(winWidth, winHeight);
+    debugCamera_ = new DebugCamera();
+    debugCamera_->Initialize(winWidth, winHeight);
 #endif
 
     // 自キャラの生成
@@ -105,6 +107,8 @@ void GameScene::Update() {
         isDebugCameraActive_ = isDebugCameraActive_ ? false : true;
     }
 
+#endif
+
     // カメラの処理
     if (isDebugCameraActive_) {
         // デバッグカメラの更新
@@ -113,13 +117,8 @@ void GameScene::Update() {
         camera_.projectionMat_ = debugCamera_->projectionMat_;
     } else {
         // 行列更新
-        camera_.UpdateMatrix();
+        cameraController_->Update();
     }
-
-    cameraController_->Update();
-    //Sprite用のカメラを更新
-    Camera::UpdateSpriteCamera();
-#endif
 
     // 全ての当たり判定を行う
     CheckAllCollisions();
@@ -182,7 +181,17 @@ void GameScene::Draw() {
         deathParticles_->Draw();
     }
     uiManager_->Draw();
-};
+}
+void GameScene::Debug()
+{
+
+    DebugUI::CheckFlag(isDebugCameraActive_,"isDebugActive");
+    //視点操作
+    DebugUI::CheckCamera(camera_);
+    uint32_t lightType = 0;
+    DebugUI::CheckDirectionalLight(lightType);
+}
+;
 
 GameScene::~GameScene() {
     delete player_;

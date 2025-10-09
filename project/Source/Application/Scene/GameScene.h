@@ -25,6 +25,8 @@ public:
 	// 描画
 	void Draw()override;
 
+	void Debug()override;
+
 	// デストラクタ
 	~GameScene();
 

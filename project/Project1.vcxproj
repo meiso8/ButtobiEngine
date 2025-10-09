@@ -221,7 +221,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="Source\Application\main.cpp">
+    <ClCompile Include="Source\main.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MaxSpeed</Optimization>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">true</WholeProgramOptimization>
     </ClCompile>
@@ -258,6 +258,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\DirectXCommon\StringUtility.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\SpriteCommon.cpp" />
     <ClCompile Include="Source\Engine\Surface\TextureManager.cpp" />
+    <ClCompile Include="Source\Engine\Camera\SpriteCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\Object3d.PS.hlsl">
@@ -396,6 +397,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\DirectXCommon\StringUtility.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\SpriteCommon.h" />
     <ClInclude Include="Source\Engine\Surface\TextureManager.h" />
+    <ClInclude Include="Source\Engine\Camera\SpriteCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />

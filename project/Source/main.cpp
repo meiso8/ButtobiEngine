@@ -48,7 +48,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #ifdef _DEBUG
         //デバック用
         currentScene->Debug();
-        DebugUI::CheckColor(screenColor);
+        DebugUI::CheckColor(screenColor,"screenColor");
 #endif // _DEBUG
 
         //シーンの更新処理

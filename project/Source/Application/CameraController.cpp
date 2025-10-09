@@ -42,6 +42,8 @@ void CameraController::Update() {
 	camera_->rotate_.x = 0.3f;
 	camera_->rotate_.y = targetWorldTransform.rotate_.y;
 
+	camera_->UpdateMatrix();
+
 }
 
 

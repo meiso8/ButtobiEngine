@@ -33,8 +33,8 @@ PixelShaderOutput main(VertexShaderOutput input)
     float4 transformedUV = mul(float32_t4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
     float32_t4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
 
-    //textureのα値ガ0.5以下の時にpixleを棄却
-    if (textureColor.a <= 0.5)
+    //textureのα値ガ0.2以下の時にpixleを棄却
+    if (textureColor.a <= 0.2)
     {
         discard;
     }
@@ -68,6 +68,23 @@ PixelShaderOutput main(VertexShaderOutput input)
         output.color.a = gMaterial.color.a * textureColor.a;
     }
     
+
+    float3 color = output.color.rgb;
+
+// トーン調整スケール
+    float3 toneScale = float3(0.74f, 0.80f, 0.84f);
+
+// 色補正
+    color *= toneScale;
+
+// 彩度調整（オプション）
+    float gray = dot(color, float3(0.299f, 0.587f, 0.114f));
+    float saturation = 1.2f; // 少し鮮やかに
+    color = lerp(float3(gray, gray, gray), color, saturation);
+
+// 最終色
+    output.color.rgb = saturate(color);
+
     //output.colorのαの値が0の時にPixelを棄却
     if (output.color.a == 0.0)
     {

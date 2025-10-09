@@ -6,6 +6,7 @@
 #include"Cube.h"
 #include"Particle/Particle.h"
 #include"Camera/Camera.h"
+#include"Camera/DebugCamera.h"
 
 class Sprite;
 
@@ -25,9 +26,11 @@ private:
     uint32_t blendMode_ = 0;
 
     //カメラ
-    Camera camera_;
+    std::unique_ptr<Camera> camera_ = nullptr;
     Transform cameraTransform_;
-    bool isCameraUpdate_ = false;
+    bool isDebugCameraActive_ = false;
+    std::unique_ptr<DebugCamera> debugCamera_ = nullptr;
+    Camera* currentCamera = nullptr;
 
     //スプライト
     std::vector<Sprite*>sprites_;

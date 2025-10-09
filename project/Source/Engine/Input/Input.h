@@ -5,7 +5,7 @@
 #include<cstdint>
 #include"Vector2.h"
 #include"Window.h"
-#include"SphericalCoordinate.h"
+
 #include"Window.h"
 #include<memory>
 #define FPS 60.0f
@@ -53,12 +53,6 @@ public:
     static Vector2& GetMousePos();
     static float GetMouseWheel();
 
-    static void EyeOperation(Camera& camera);
-
-    static Vector2& GetOffset() { return offset_; }
-    static Vector2& GetCurrentPos() { return currentPos_; }
-    static Vector3& GetPos() { return pos_; }
-    ShericalCoordinate& GetSc() { return shericalCoordinate_; }
 private:
     static Input* instance_;
     Window* window_ = nullptr;
@@ -74,10 +68,7 @@ private:
     static float mouseWheelVol_;
     static bool isDragging_;
 
-    static Vector2 offset_;
-    static Vector2 currentPos_;
-    static Vector3 pos_;
-    static ShericalCoordinate shericalCoordinate_;
+
 
     //ゲームパッド
     IDirectInputDevice8* gamePad_ = nullptr;

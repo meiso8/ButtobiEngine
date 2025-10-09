@@ -2,7 +2,7 @@
 
 #include"PSO.h"  
 #include"ShaderResourceView.h"  
-#include"Camera/Camera.h"  
+
 #include"Transform.h"  
 #include"TransformationMatrix.h"  
 #include"MaterialResource.h"  

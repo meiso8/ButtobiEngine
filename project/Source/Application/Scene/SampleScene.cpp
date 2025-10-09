@@ -18,17 +18,21 @@ void SampleScene::Initialize() {
 
 #pragma region//Camera
 
-    Window* windowClass = &MyEngine::GetWC();
-
-    camera_.Initialize(static_cast<float>(windowClass->GetClientWidth()), static_cast<float>(windowClass->GetClientHeight()), Camera::PERSPECTIVE);
+    camera_ = std::make_unique<Camera>();
+    camera_->Initialize(static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()), Camera::PERSPECTIVE);
     cameraTransform_ = { { 1.0f, 1.0f, 1.0f }, { 0.0f,0.0f,0.0f }, { 0.0f,0.0f,-10.0f } };
+
+    debugCamera_ = std::make_unique<DebugCamera>();
+    debugCamera_->Initialize(static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()));
+
+    currentCamera = camera_.get();
 
 #pragma endregion
 
     for (uint32_t i = 0; i < 5; ++i) {
         Sprite* sprite = new Sprite();
         if (i % 2 == 0) {
-            sprite->Create(Texture::textureHandle_[Texture::PLAYER], { i * 256.0f,0.0f }, { 128.0f,128.0f },{1.0f,1.0f,1.0f,1.0f});
+            sprite->Create(Texture::textureHandle_[Texture::PLAYER], { i * 256.0f,0.0f }, { 128.0f,128.0f }, { 1.0f,1.0f,1.0f,1.0f });
         } else {
             sprite->Create(Texture::textureHandle_[Texture::UV_CHECKER], { i * 256.0f,0.0f }, { 128.0f,128.0f }, { 1.0f,1.0f,1.0f,1.0f });
         }
@@ -64,12 +68,13 @@ void SampleScene::Update()
         SoundManager::Play(Sound::GetHandle(Sound::SE1), 1.0f, false);
     }
 
-    if (Input::IsTriggerKey(DIK_O)) {
-        camera_.projectionType_ = (camera_.projectionType_ == Camera::PERSPECTIVE) ? Camera::PARALLEL : Camera::PERSPECTIVE;
+    if (Input::IsTriggerKey(DIK_P)) {
+        // スペースキーを押すとデバッグカメラに切り替える
+        isDebugCameraActive_ = isDebugCameraActive_ ? false : true;
+        currentCamera = (isDebugCameraActive_) ? debugCamera_.get() : camera_.get();
     }
 
-    camera_.UpdateMatrix();
-    Camera::UpdateSpriteCamera();
+    currentCamera->UpdateMatrix();
 
     for (Sprite* sprite : sprites_) {
         sprite->UpdateUV();
@@ -83,15 +88,15 @@ void SampleScene::Update()
 void SampleScene::Draw()
 {
 #ifdef _DEBUG
-    DrawGrid::Draw(camera_);
+    DrawGrid::Draw(*currentCamera);
 #endif // _DEBUG
 
     cube_[0].PreDraw(kBlendModeNormal);
-    cube_[0].Draw(camera_, MakeIdentity4x4(), lightType_);
-    cube_[1].Draw(camera_, cubeWorldTransform_.matWorld_, lightType_);
+    cube_[0].Draw(*currentCamera, MakeIdentity4x4(), lightType_);
+    cube_[1].Draw(*currentCamera, cubeWorldTransform_.matWorld_, lightType_);
 
     MyEngine::SetBlendMode(blendMode_);
-    samplePlayer_->Draw(camera_, lightType_);
+    samplePlayer_->Draw(*currentCamera, lightType_);
     MyEngine::SetBlendMode();
 
     Sprite::PreDraw(blendMode_);
@@ -107,16 +112,12 @@ void SampleScene::Debug()
 {
 
     DebugUI::CheckDirectionalLight(lightType_);
-    DebugUI::CheckFPS();
+
     DebugUI::CheckBlendMode(blendMode_);
-    DebugUI::CheckSprite(*sprites_[0]);
-
-    //入力確認
-    DebugUI::CheckInput(*Input::GetInstance());
-
-    //視点操作
-    DebugUI::CheckCamera(camera_);
-    Input::EyeOperation(camera_);
+    DebugUI::CheckSprite(*sprites_[0], "sprite0");
+    DebugUI::CheckCamera(*currentCamera);
+    DebugUI::CheckFlag(isDebugCameraActive_, "isDebugActive");
+    DebugUI::CheckFPS();
 }
 
 SampleScene::~SampleScene()

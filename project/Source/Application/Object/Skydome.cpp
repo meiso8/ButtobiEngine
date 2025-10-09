@@ -26,6 +26,6 @@ void Skydome::Draw() {
 	// 3Dモデル描画前処理
 	Model::PreDraw();
 	// 3Dモデルを描画
-	model_->Draw(worldTransform_.matWorld_, *camera_);
+	model_->Draw(worldTransform_.matWorld_, *camera_,MaterialResource::HALF_L);
 
 }
