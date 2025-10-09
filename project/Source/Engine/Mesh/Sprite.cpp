@@ -6,6 +6,7 @@
 #include"Multiply.h"
 #include"MyEngine.h"
 #include"TextureManager.h"
+#include"Camera/SpriteCamera.h"  
 
 SpriteCommon* Sprite::spriteCommon = nullptr;
 ID3D12GraphicsCommandList* Sprite::commandList = nullptr;
@@ -67,7 +68,7 @@ void Sprite::Draw(uint32_t lightType
     transform_.translate = { position_.x,position_.y,0.0f };
     transform_.rotate = { 0.0f,0.0f,rotate_ };
     worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
-    worldViewProjectionMatrix_ = Multiply(worldMatrix_, Camera::GetSpriteViewProjectionMatrix());
+    worldViewProjectionMatrix_ = Multiply(worldMatrix_, SpriteCamera::GetViewProjectionMatrix());
     *transformationMatrixData_ = { worldViewProjectionMatrix_,worldMatrix_ };
 
     //頂点バッファビューを設定

@@ -43,13 +43,6 @@ void Player::Initialize(Camera* camera, const Vector3& position) {
 	model_[Parts::kLeftLeg]->Create(ModelManager::LEFTLEG);
 	model_[Parts::kRightLeg]->Create(ModelManager::RIGHTLEG);
 
-	//model_[Parts::kHead] = Model::CreateFromOBJ("head", true);
-	//model_[Parts::kBody] = Model::CreateFromOBJ("body", true);
-	//model_[Parts::kLeftArm] = Model::CreateFromOBJ("leftArm", true);
-	//model_[Parts::kRightArm] = Model::CreateFromOBJ("rightArm", true);
-	//model_[Parts::kLeftLeg] = Model::CreateFromOBJ("leftLeg", true);
-	//model_[Parts::kRightLeg] = Model::CreateFromOBJ("rightLeg", true);
-
 	// ワールド変換の初期化
 	worldTransform_.Initialize();
 	worldTransform_.translate_ = position;
@@ -453,7 +446,7 @@ void Player::AttackAnimation(){
 		break;
 	case Player::kEnd:
 
-		objectColor_ = { 0.0f,0.0f,1.0f,0.0f };
+		objectColor_ = { 0.0f,0.0f,1.0f,1.0f };
 		for (int i = 0; i < Parts::kNumParts; i++) {
 
 			PartsWorldTransform_[i].scale_ = Lerp(PartsWorldTransform_[i].scale_, targetPartsScale_[AttackPhase::kEnd][i], kInterVal_);

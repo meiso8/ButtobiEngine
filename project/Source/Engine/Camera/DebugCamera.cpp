@@ -11,33 +11,35 @@
 #include<numbers>
 #include<cmath>
 #include"Input.h"
+#include"Lerp.h"
 
-DebugCamera::DebugCamera(const float& width, const float& height, const PROJECTION_TYPE& type)
+void DebugCamera::Initialize(const float& width, const float& height, const PROJECTION_TYPE& type)
 {
     width_ = width;
     height_ = height;
     projectionType_ = type;
-    farZ_ = 100.0f;
+    farZ_ = 1000.0f;
     nearZ_ = 0.1f;
     offset_ = { 0.0f };
 
     rotateSpeed_ = std::numbers::pi_v<float> / 20.0f / FPS;
     speed_ = 1.0f;
 
+    scale_ = { 1.0f,1.0f,1.0f };
+    rotate_ = { 0.0f,0.0f,0.0f };
     translate_ = { 0.0f,0.0f,-50.0f };
 
     viewMat_ = Inverse(MakeAffineMatrix(scale_, rotate_, translate_));
     projectionMat_ = MakePerspectiveFovMatrix(0.45f, width_ / height_, nearZ_, farZ_);
 
     matRot_ = MakeIdentity4x4();
-
 }
-
 
 void DebugCamera::UpdateMatrix() {
 
-    InputRotate();
-    InputTranslate();
+    //InputRotate();
+    //InputTranslate();
+    EyeOperation();
 
     Matrix4x4 matRotDelta = MakeIdentity4x4();
     matRotDelta = Multiply(matRotDelta, MakeRotateXMatrix(deltaRotate_.x));
@@ -50,26 +52,27 @@ void DebugCamera::UpdateMatrix() {
     matRot_ = Multiply(matRot_, matRotDelta);
     viewMat_ = Inverse(Multiply(matRot_, MakeAffineMatrix(scale_, rotate_, translate_)));
 
-    if (projectionType_ = PARALLEL) {
-        //平行投影
-        //float halfWidth = width_ * 0.5f;
-        //float halfHeight = height_ * 0.5f;
-        nearZ_ = 0.0f;
-        projectionMat_ = MakeOrthographicMatrix(0.0f, 0.0f, width_, height_, nearZ_, farZ_);
-        //projectionMat_ = MakeOrthographicMatrix(halfWidth, halfHeight, -halfWidth, -halfHeight, nearZ_, farZ_);
-    } else if (projectionType_ = PERSPECTIVE) {
+    UpdateProjectionMatrix();
+}
+
+void DebugCamera::UpdateProjectionMatrix()
+{
+    if (projectionType_ == PERSPECTIVE) {
         //投資投影
-        nearZ_ = 0.1f;
         projectionMat_ = MakePerspectiveFovMatrix(0.45f, width_ / height_, nearZ_, farZ_);
-    
+    } else if (projectionType_ == PARALLEL) {
+        //平行投影
+        float halfWidth = width_ * 0.5f;
+        float halfHeight = height_ * 0.5f;
+        scale_ = { 0.01f,0.01f,0.01f };
+        projectionMat_ = MakeOrthographicMatrix(halfWidth, halfHeight, -halfWidth, -halfHeight, nearZ_, farZ_);
     }
-    
+
     projectionMat_.m[3][0] += offset_.x;
     projectionMat_.m[3][1] -= offset_.y;
 }
 
 void DebugCamera::InputTranslate() {
-
 
     if (Input::IsPushKey(DIK_A)) {
         MoveX(-speed_);
@@ -94,6 +97,7 @@ void DebugCamera::InputTranslate() {
     if (Input::IsPushKey(DIK_E)) {
         MoveZ(speed_);
     }
+
 };
 
 void DebugCamera::InputRotate() {
@@ -115,15 +119,13 @@ void DebugCamera::InputRotate() {
         if (Input::IsPushKey(DIK_Z)) {
             deltaRotate_.z = rotateSpeed_;
         }
-
     }
 
 };
 
 void DebugCamera::MoveZ(const float& speed) {
     //カメラ移動ベクトル
-    Vector3 move = { 0.0f,0.0f,speed };
-    translate_ += CoordinateTransform(move, matRot_);
+    translate_ += CoordinateTransform({ 0.0f,0.0f,speed }, matRot_);
 }
 
 void DebugCamera::MoveX(const float& speed) {
@@ -134,6 +136,35 @@ void DebugCamera::MoveY(const float& speed) {
     translate_ += CoordinateTransform({ 0.0f, speed, 0.0f }, matRot_);
 };
 
-Matrix4x4 DebugCamera::GetViewProjectionMatrix() {
-    return Multiply(viewMat_, projectionMat_);
-};
+void DebugCamera::EyeOperation() {
+
+    if (Input::IsPressMouse(2) && Input::IsPushKey(DIK_LSHIFT)) {
+        //視点の移動 offset をずらす
+        //後でoffsetをくわえる
+        Vector2 deltaOffset = { 0.0f,0.0f };
+        deltaOffset += Input::GetMousePos();
+        offset_ += { deltaOffset.x / FPS,deltaOffset.y / FPS * 2.0f };
+    } else if (Input::IsPressMouse(2)) {
+        //視点の回転
+        //中ボタン押し込み&&ドラッグ
+        isDragging_ = true;
+    }
+
+    //マウススクロールする //初期位置-30
+    shericalCoordinate_.radius = -30 + Input::GetMouseWheel();
+
+    if (!Input::IsPressMouse(2)) {
+        isDragging_ = false;
+    }
+
+    if (isDragging_) {
+        Vector2 currentPos = Input::GetMousePos();
+        shericalCoordinate_.polar += currentPos.x / FPS;
+        shericalCoordinate_.azimuthal += currentPos.y / FPS;
+        rotate_.y = shericalCoordinate_.polar;
+        rotate_.z = shericalCoordinate_.azimuthal;
+    }
+
+    translate_ = TransformCoordinate(shericalCoordinate_);
+
+}

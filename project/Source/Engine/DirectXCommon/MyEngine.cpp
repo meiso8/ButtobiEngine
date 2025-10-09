@@ -2,6 +2,7 @@
 #include"SpriteCommon.h"
 #include"TextureManager.h"
 #include<algorithm>
+#include"Camera/SpriteCamera.h"
 
 std::array<PSO, kCountOfBlendMode> MyEngine::pso = {};
 MyEngine* MyEngine::instance_ = nullptr;
@@ -130,6 +131,7 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     modelConfig_.Initialize(rootSignature.get(), directionalLightResource.Get());
 
     SpriteCommon::GetInstance()->Initialize();
+    SpriteCamera::GetInstance()->Initialize(static_cast<float>(wc->GetClientWidth()),static_cast<float>(wc->GetClientHeight()));
 
     //ランダム関数の初期化
     srand(static_cast<unsigned int>(time(nullptr)));

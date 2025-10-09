@@ -5,6 +5,7 @@
 
 #include"Camera/Camera.h"
 #include"math/Normalize.h"
+#include<cmath>
 
 Input* Input::instance_ = nullptr;
 BYTE Input::key_[256];
@@ -16,10 +17,6 @@ BYTE Input::preJoyButtons_[32];
 DIMOUSESTATE Input::mouseState_;
 float Input::mouseWheelVol_ = 0;
 bool Input::isDragging_ = false;
-Vector2 Input::offset_ = { 0.0f,0.0f };
-Vector2 Input::currentPos_ = { 0.0f };
-Vector3 Input::pos_ = { 0.0f };
-ShericalCoordinate Input::shericalCoordinate_ = { 0.0f,0.0f,0.0f };
 
 Input* Input::GetInstance() {
 
@@ -365,39 +362,7 @@ float Input::GetMouseWheel() {
     return mouseWheelVol_;
 };
 
-void Input::EyeOperation(Camera& camera) {
 
-    if (IsPressMouse(2) && IsPushKey(DIK_LSHIFT)) {
-        //視点の移動 offset をずらす
-        //後でoffsetをくわえる
-        offset_ += GetMousePos();
-        camera.offset_ = {offset_.x / FPS,offset_.y / FPS * 2.0f };
-    } else if (IsPressMouse(2)) {
-        //視点の回転
-        //中ボタン押し込み&&ドラッグ
-        isDragging_ = true;
-    }
-
-    //マウススクロールする //初期位置-10
-    shericalCoordinate_.radius = -30 + GetMouseWheel();
-
-    if (!IsPressMouse(2)) {
-        isDragging_ = false;
-    }
-
-    if (isDragging_) {
-        currentPos_ = GetMousePos();
-        shericalCoordinate_.polar += currentPos_.x / FPS;
-        shericalCoordinate_.azimuthal += currentPos_.y / FPS;
-        camera.rotate_.y = shericalCoordinate_.polar;
-        camera.rotate_.z = shericalCoordinate_.azimuthal;
-    }
-
-    pos_ = TransformCoordinate(shericalCoordinate_);
-
-    camera.translate_ = pos_;
-
-}
 
 Input::~Input() {
 

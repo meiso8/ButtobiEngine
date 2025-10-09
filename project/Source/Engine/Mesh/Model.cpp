@@ -22,7 +22,7 @@ void Model::Create(const ModelManager::MODEL_HANDLE& modelHandle) {
     commandList_ = DirectXCommon::GetCommandList();
 
     //マテリアルの作成 lightType halfLambert
-    materialResource_.CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, 2);
+    materialResource_.CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, MaterialResource::HALF_L);
 
     CreateWorldVPResource();
 
