@@ -6,7 +6,7 @@
 struct ModelData {
     std::vector<VertexData> vertices;
     MaterialData material;
-    std::string filename;
+    std::string filePath;
 };
 
 ///// @brief ModelDataの読み込み関数/// @param directoryPath ディレクトリパス/// @param filename ファイル名/// @return　モデルデータ 

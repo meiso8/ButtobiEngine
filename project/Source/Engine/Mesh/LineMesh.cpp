@@ -145,7 +145,7 @@ void LineMesh::CreateTransformationMatrix() {
 void LineMesh::CreateMaterial() {
 
     //マテリアルリソースを作成 ライトなし
-    materialResource_.CreateMaterial(MaterialResource::LIGHTTYPE::NONE);
+    materialResource_.CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, MaterialResource::LIGHTTYPE::NONE);
 
 }
 
@@ -175,7 +175,7 @@ void LineMesh::Draw(Camera& camera
     //TransformationMatrixCBufferの場所を設定
     commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
-    commandList_->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(textureIndex));
+    commandList_->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureIndex));
     //LightのCBufferの場所を設定
     commandList_->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
     //timeのSRVの場所を設定

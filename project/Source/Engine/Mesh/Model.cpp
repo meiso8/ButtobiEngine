@@ -9,15 +9,20 @@
 #include<numbers>
 #include"TextureManager.h"
 #include"ModelManager.h"
+#include"MyEngine.h"
 
-void Model::Create(const ModelManager::TAG& modelHandle) {
+
+ID3D12GraphicsCommandList* Model::commandList_ = nullptr;
+ModelConfig* Model::modelConfig_ = nullptr;
+
+void Model::Create(const ModelManager::MODEL_HANDLE& modelHandle) {
 
     modelData_ = &ModelManager::GetModelData(modelHandle);
     modelConfig_ = ModelConfig::GetInstance();
     commandList_ = DirectXCommon::GetCommandList();
 
     //マテリアルの作成 lightType halfLambert
-    materialResource_.CreateMaterial(2);
+    materialResource_.CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, 2);
 
     CreateWorldVPResource();
 
@@ -33,7 +38,9 @@ void Model::Create(const ModelManager::TAG& modelHandle) {
     std::memcpy(vertexData_, modelData_->vertices.data(), sizeof(VertexData) * modelData_->vertices.size());//頂点データをリソースにコピー
 
     //モデルのテクスチャを読む
-    textureIndex = TextureManager::GetInstance()->Load(modelData_->material.textureFilePath);
+    Texture::textureHandle_.push_back(TextureManager::Load(modelData_->material.textureFilePath));
+    textureIndex = UINT(Texture::textureHandle_.size() - 1);
+    assert(textureIndex < Texture::textureHandle_.size());
 
     uvTransform_ = {
         {1.0f,1.0f,1.0f},
@@ -101,9 +108,10 @@ void Model::SetColor(const Vector4& color) {
     materialResource_.SetColor(color);
 };
 
-void Model::PreDraw(PSO& pso, PSO::PSOType type) {
+void Model::PreDraw(const BlendMode& type) {
+    PSO* pso = MyEngine::GetPSO(type);
     commandList_->SetGraphicsRootSignature(modelConfig_->rootSignature->GetRootSignature(0));
-    commandList_->SetPipelineState(pso.GetGraphicsPipelineState(type).Get());//PSOを設定
+    commandList_->SetPipelineState(pso->GetGraphicsPipelineState(PSO::TRIANGLE).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
@@ -122,7 +130,7 @@ void Model::Draw(const Matrix4x4& worldMatrix, Camera& camera, uint32_t lightTyp
     //wvp用のCBufferの場所を設定
     commandList_->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
-    commandList_->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(textureIndex));
+    commandList_->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureIndex));
     //LightのCBufferの場所を設定
     commandList_->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
     //timeのSRVの場所を設定

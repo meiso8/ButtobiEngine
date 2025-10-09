@@ -16,7 +16,7 @@ public:
         HALF_L,
     };
 
-    void CreateMaterial(uint32_t lightType = LIGHTTYPE::NONE);
+    void CreateMaterial(const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, uint32_t lightType = LIGHTTYPE::NONE);
     Material* GetMaterial() {
         return material_;
     };

@@ -17,23 +17,22 @@
 class Sprite
 {
 public:
-    void Initialize(uint32_t textureHandle,const Vector2& size = { 360.0f,640.0f });
+    void Create(uint32_t textureHandle, const Vector2& position, const Vector2& size, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
     void ChangeTexture(uint32_t textureHandle);
 
     void UpdateUV();
 
-    void PreDraw(uint32_t blendMode = BlendMode::kBlendModeNormal);
-    void Draw(Camera& camera, uint32_t lightType = MaterialResource::LIGHTTYPE::NONE
+    static void PreDraw(uint32_t blendMode = BlendMode::kBlendModeNormal);
+    void Draw(uint32_t lightType = MaterialResource::LIGHTTYPE::NONE
     );
 
-
     void SetSize(const Vector2& size) { size_ = size; };
- 
+
     void SetColor(const Vector4& color);
     void SetPosition(const Vector2& position) { position_ = position; }
     void SetRotate(const float& rotate) { rotate_ = rotate; }
     void SetScale(const Vector3& scale) { transform_.scale = scale; };
-   
+
     void ResetSize(const Vector2& size);
     Vector2& GetSize() { return size_; }
     Vector3& GetScaleRef() { return transform_.scale; };
@@ -47,17 +46,17 @@ public:
     Vector3& GetUVTranslate() { return uvTransform_.translate; };
     const Vector4& GetColor() { return materialResource_.GetMaterial()->color; }
 private:
-    void     CreateVertex();
+    void CreateVertex();
     void CreateUVTransformationMatrix();
     void CreateTransformationMatrix();
-    void CreateMaterial();
+    void CreateMaterial(const Vector4& color);
     void CreateWaveData();
     void CreateBalloonData();
 private:
     uint32_t textureIndex = 0;
 
     static SpriteCommon* spriteCommon;
-    ID3D12GraphicsCommandList* commandList;
+    static ID3D12GraphicsCommandList* commandList;
 
     Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};

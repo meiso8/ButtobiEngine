@@ -4,12 +4,27 @@
 class ModelManager
 {
 public:
-    enum TAG {
+    enum MODEL_HANDLE {
         PLAYER,
+      
+        HEAD,
+        BODY,
+        LEFTARM,
+        RIGHTARM,
+        LEFTLEG,
+        RIGHTLEG,
+  
+        ENEMY,
+        WORLD,
+        PARTICLE,
+
+        STAGE,
+
         MODELS,
     };
 
-    static ModelData& GetModelData(const TAG& modelHandle) {
+
+    static ModelData& GetModelData(const uint32_t& modelHandle) {
         if (modelHandle < MODELS) {
             return modelDatas[modelHandle];
         }

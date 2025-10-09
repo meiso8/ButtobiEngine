@@ -17,6 +17,20 @@ void ModelManager::LoadAllModel()
 {
     modelHandle_.resize(MODELS);
     modelHandle_[PLAYER] = Load("resources/player", "player.obj");
+
+    modelHandle_[HEAD] = Load("resources/head", "head.obj");
+    modelHandle_[BODY] = Load("resources/body", "body.obj");
+    modelHandle_[LEFTARM] = Load("resources/leftArm", "leftArm.obj");
+    modelHandle_[RIGHTARM] = Load("resources/rightArm", "rightArm.obj");
+    modelHandle_[LEFTLEG] = Load("resources/leftLeg", "leftLeg.obj");
+    modelHandle_[RIGHTLEG] = Load("resources/rightLeg", "rightLeg.obj");
+
+    modelHandle_[ENEMY] = Load("resources/enemy", "enemy.obj");
+    modelHandle_[WORLD] = Load("resources/world", "world.obj");
+    modelHandle_[PARTICLE] = Load("resources/particle", "particle.obj");
+
+    modelHandle_[STAGE] = Load("resources/stage", "stage.obj");
+    
 }
 
 // ========================================================================================================
@@ -24,7 +38,8 @@ void ModelManager::LoadAllModel()
 uint32_t ModelManager::Load(const std::string& directoryPath, const std::string& filename)
 {
     LoadModel(directoryPath, filename);
-    return GetTextureIndexByFileName(filename);
+    std::string filePath = directoryPath + "/" + filename;
+    return GetTextureIndexByFileName(filePath);
 }
 
 void ModelManager::LoadModel(const std::string& directoryPath, const std::string& filename)
@@ -33,7 +48,7 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
     auto it = std::find_if(
         modelDatas.begin(),
         modelDatas.end(),
-        [&](ModelData& soundData) {return soundData.filename == filename; }
+        [&](ModelData& soundData) {return soundData.filePath == filename; }
     );
 
     //テクスチャ枚数上限チェック
@@ -50,7 +65,7 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
 
     Assimp::Importer importer;
     std::string filePath = directoryPath + "/" + filename;
-    modelData.filename = filename;
+    modelData.filePath = filePath;
 
     const aiScene* scene = importer.ReadFile(filePath.c_str(),
         aiProcess_Triangulate |
@@ -104,11 +119,13 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
 
 uint32_t ModelManager::GetTextureIndexByFileName(const std::string& filePath)
 {
+   
+
     //読み込み済みデータを検索
     auto it = std::find_if(
         modelDatas.begin(),
         modelDatas.end(),
-        [&](ModelData& modelData) {return modelData.filename == filePath; }
+        [&](ModelData& modelData) {return modelData.filePath == filePath; }
     );
 
     if (it != modelDatas.end()) {
