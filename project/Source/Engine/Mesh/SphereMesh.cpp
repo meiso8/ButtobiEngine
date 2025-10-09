@@ -116,7 +116,7 @@ void SphereMesh::Draw(Camera& camera, uint32_t lightType
     //wvp用のCBufferの場所を設定
     commandList_->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
-    commandList_->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(textureIndex));
+    commandList_->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureIndex));
     //LightのCBufferの場所を設定
     commandList_->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
     //timeのSRVの場所を設定
@@ -256,6 +256,6 @@ void SphereMesh::CreateVertex() {
 void SphereMesh::CreateMaterial() {
 
     //マテリアルリソースを作成 //ライトなし
-    materialResource_.CreateMaterial(MaterialResource::LIGHTTYPE::NONE);
+    materialResource_.CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, MaterialResource::LIGHTTYPE::NONE);
 
 }

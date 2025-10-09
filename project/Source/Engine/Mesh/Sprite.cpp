@@ -8,21 +8,24 @@
 #include"TextureManager.h"
 
 SpriteCommon* Sprite::spriteCommon = nullptr;
+ID3D12GraphicsCommandList* Sprite::commandList = nullptr;
 
-void Sprite::Initialize(uint32_t textureHandle, const Vector2& size)
+
+void Sprite::Create(uint32_t textureHandle, const Vector2 & position, const Vector2& size, const Vector4& color)
 {
-    textureIndex = textureHandle;
     spriteCommon = SpriteCommon::GetInstance();
-
     commandList = DirectXCommon::GetCommandList();
+
     SetSize(size);
+    SetPosition(position);
+    textureIndex = textureHandle;
+
+    CreateMaterial(color);
     CreateVertex();
     CreateTransformationMatrix();
     CreateUVTransformationMatrix();
     CreateWaveData();
     CreateBalloonData();
-
-    materialResource_.CreateMaterial();
 }
 
 void Sprite::ChangeTexture(uint32_t textureHandle)
@@ -57,14 +60,14 @@ void Sprite::PreDraw(uint32_t blendMode) {
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-void Sprite::Draw(Camera& camera, uint32_t lightType
+void Sprite::Draw(uint32_t lightType
 ) {
 
     materialResource_.SetLightType(lightType);
     transform_.translate = { position_.x,position_.y,0.0f };
     transform_.rotate = { 0.0f,0.0f,rotate_ };
     worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
-    worldViewProjectionMatrix_ = Multiply(worldMatrix_, camera.GetViewProjectionMatrix());
+    worldViewProjectionMatrix_ = Multiply(worldMatrix_, Camera::GetSpriteViewProjectionMatrix());
     *transformationMatrixData_ = { worldViewProjectionMatrix_,worldMatrix_ };
 
     //頂点バッファビューを設定
@@ -75,7 +78,7 @@ void Sprite::Draw(Camera& camera, uint32_t lightType
     //TransformationMatrixCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
-    commandList->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(textureIndex));
+    commandList->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureIndex));
 
 
     spriteCommon->LightDraw(commandList);
@@ -155,10 +158,11 @@ void Sprite::CreateTransformationMatrix() {
 
 }
 
-void Sprite::CreateMaterial() {
+void Sprite::CreateMaterial(const Vector4& color) {
 
     //マテリアルリソースを作成 //ライトなし
-    materialResource_.CreateMaterial(MaterialResource::LIGHTTYPE::NONE);
+    materialResource_.CreateMaterial(color, MaterialResource::LIGHTTYPE::NONE);
+
 
 }
 

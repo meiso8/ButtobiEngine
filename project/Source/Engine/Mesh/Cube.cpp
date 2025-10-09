@@ -21,7 +21,7 @@ void Cube::Create(uint32_t textureHandle
     CreateMaterial();
 
     modelConfig_ = ModelConfig::GetInstance();
- 
+
 #pragma region//time
 
     int waveCount = 2;
@@ -160,7 +160,7 @@ void Cube::CreateTransformationMatrix() {
 void Cube::CreateMaterial() {
 
     //マテリアルリソースを作成
-    materialResource_.CreateMaterial(0);
+    materialResource_.CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, 0);
 
 }
 
@@ -202,14 +202,14 @@ void Cube::PreDraw(BlendMode blendMode) {
     commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-void Cube::Draw(Camera& camera,const Matrix4x4& worldMatrix, uint32_t lightType
+void Cube::Draw(Camera& camera, const Matrix4x4& worldMatrix, uint32_t lightType
 ) {
 
     materialResource_.SetLightType(lightType);
 
     worldViewProjectionMatrix_ = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
     *transformationMatrixData_ = { worldViewProjectionMatrix_,worldMatrix };
- 
+
     //頂点バッファビューを設定
     commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
     //IBVを設定new
@@ -219,7 +219,7 @@ void Cube::Draw(Camera& camera,const Matrix4x4& worldMatrix, uint32_t lightType
     //TransformationMatrixCBufferの場所を設定
     commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
-    commandList_->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(textureHandle_));
+    commandList_->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureHandle_));
     //LightのCBufferの場所を設定
     commandList_->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
     //timeのSRVの場所を設定

@@ -25,11 +25,11 @@ public:
 
     Model() = default;
     ~Model() = default;
-    void Create(const ModelManager::TAG& modelHandle);
+    void Create(const ModelManager::MODEL_HANDLE& modelHandle);
 
     void UpdateUV();
 
-    void PreDraw(PSO& pso, PSO::PSOType type = PSO::PSOType::TRIANGLE);
+    static void PreDraw(const BlendMode& type = BlendMode::kBlendModeNormal);
     void Draw(const Matrix4x4& worldMatrix, Camera& camera, uint32_t lightType = MaterialResource::LIGHTTYPE::NONE);
 
     Material* GetMaterial() { return materialResource_.GetMaterial(); };
@@ -51,13 +51,13 @@ public:
 private:
     void CreateWorldVPResource();
 private:
-    ModelConfig* modelConfig_ = nullptr;
+   static ModelConfig* modelConfig_;
     Camera* camera_ = nullptr;
 
     Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_;
     TransformationMatrix* wvpDate_ = nullptr;
 
-    ID3D12GraphicsCommandList* commandList_ =nullptr;
+   static ID3D12GraphicsCommandList* commandList_;
     Matrix4x4 worldViewProjectionMatrix_ = { 0.0f };
     MaterialResource materialResource_;
     const ModelData* modelData_;

@@ -16,7 +16,7 @@ void Particle::Create(uint32_t textureHandle)
     CreateTransformationMatrix();
 
     //マテリアルリソースを作成 //ライトなし
-    materialResource_.CreateMaterial(MaterialResource::LIGHTTYPE::NONE);
+    materialResource_.CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, MaterialResource::LIGHTTYPE::NONE);
 
     vertexBufferResource_ = DirectXCommon::CreateBufferResource(sizeof(VertexData) * modelData_.vertices.size());
     vertexBufferResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexBufferData_));
@@ -102,7 +102,7 @@ void Particle::Draw(Camera& camera, BlendMode blendMode)
     //粒ごとのトランスフォーム
     commandList->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU);
     //テスクチャ
-    commandList->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(textureHandle_));
+    commandList->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureHandle_));
 
     //描画!（DrawCall/ドローコール）6個のインデックスを使用しインスタンスを描画。
     commandList->DrawInstanced(UINT(modelData_.vertices.size()), kNumInstance, 0, 0);

@@ -20,22 +20,18 @@ void SampleScene::Initialize() {
 
     Window* windowClass = &MyEngine::GetWC();
 
-    camera_.Initialize(static_cast<float>(windowClass->GetClientWidth()), static_cast<float>(windowClass->GetClientHeight()), false);
+    camera_.Initialize(static_cast<float>(windowClass->GetClientWidth()), static_cast<float>(windowClass->GetClientHeight()), Camera::PERSPECTIVE);
     cameraTransform_ = { { 1.0f, 1.0f, 1.0f }, { 0.0f,0.0f,0.0f }, { 0.0f,0.0f,-10.0f } };
-
-    cameraSprite_.Initialize(static_cast<float>(windowClass->GetClientWidth()), static_cast<float>(windowClass->GetClientHeight()), true);
 
 #pragma endregion
 
     for (uint32_t i = 0; i < 5; ++i) {
         Sprite* sprite = new Sprite();
         if (i % 2 == 0) {
-            sprite->Initialize(Texture::GetHandle(Texture::PLAYER), { 128.0f,128.0f });
+            sprite->Create(Texture::textureHandle_[Texture::PLAYER], { i * 256.0f,0.0f }, { 128.0f,128.0f },{1.0f,1.0f,1.0f,1.0f});
         } else {
-            sprite->Initialize(Texture::GetHandle(Texture::UV_CHECKER), { 128.0f,128.0f });
+            sprite->Create(Texture::textureHandle_[Texture::UV_CHECKER], { i * 256.0f,0.0f }, { 128.0f,128.0f }, { 1.0f,1.0f,1.0f,1.0f });
         }
-
-        sprite->SetPosition({ i * 256.0f,0.0f });
         sprites_.push_back(sprite);
     }
 
@@ -43,15 +39,15 @@ void SampleScene::Initialize() {
     samplePlayer_->Init();
 
     cube_.resize(2);
-    cube_[0].Create(Texture::GetHandle(Texture::WHITE_1X1));
-    cube_[1].Create(Texture::GetHandle(Texture::WHITE_1X1));
+    cube_[0].Create(Texture::textureHandle_[Texture::WHITE_1X1]);
+    cube_[1].Create(Texture::textureHandle_[Texture::WHITE_1X1]);
 
     cubeWorldTransform_.Initialize();
     cubeWorldTransform_.scale_ = { 10.0f,10.0f,10.0f };
     cubeWorldTransform_.SetRotationY(std::numbers::pi_v<float> / 4.0f);
     WorldTransformUpdate(cubeWorldTransform_);
 
-    particle_.Create(Texture::GetHandle(Texture::UV_CHECKER));
+    //particle_.Create(Texture::GetHandle(Texture::UV_CHECKER));
 
 }
 
@@ -69,10 +65,11 @@ void SampleScene::Update()
     }
 
     if (Input::IsTriggerKey(DIK_O)) {
-        camera_.SetOrthographic(camera_.GetIsOrthographic() ? false : true);
+        camera_.projectionType_ = (camera_.projectionType_ == Camera::PERSPECTIVE) ? Camera::PARALLEL : Camera::PERSPECTIVE;
     }
 
-    camera_.Update();
+    camera_.UpdateMatrix();
+    Camera::UpdateSpriteCamera();
 
     for (Sprite* sprite : sprites_) {
         sprite->UpdateUV();
@@ -97,13 +94,13 @@ void SampleScene::Draw()
     samplePlayer_->Draw(camera_, lightType_);
     MyEngine::SetBlendMode();
 
-    sprites_[0]->PreDraw(blendMode_);
+    Sprite::PreDraw(blendMode_);
 
     for (Sprite* sprite : sprites_) {
-        sprite->Draw(cameraSprite_, lightType_);
+        sprite->Draw();
     }
 
-    particle_.Draw(camera_);
+    //particle_.Draw(camera_);
 }
 
 void SampleScene::Debug()

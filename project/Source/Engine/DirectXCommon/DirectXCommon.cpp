@@ -42,8 +42,6 @@ void DirectXCommon::Initialize(Window& window)
     ScissorRectSetting();
     CreateDXCCompiler();
     InitializeImGui();
-
-
 }
 
 void DirectXCommon::Update()
@@ -77,7 +75,6 @@ void DirectXCommon::PreDraw(Vector4& color)
     UINT backBufferIndex = swapChainClass.GetSwapChain()->GetCurrentBackBufferIndex();
 
     //TransitionBarrierの設定
-
     barrier.SettingBarrier(swapChainResources[backBufferIndex], commandList->GetCommandList().Get());
 
     //2.描画用のRTVとDSVを設定する
@@ -453,33 +450,6 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::UploadTextureData(const Mi
     commandList->GetCommandList()->ResourceBarrier(1, &barrier);
     return intermediateResource;
 }
-
-DirectX::ScratchImage DirectXCommon::LoadTextureFile(const std::string& filePath)
-{
-    //テクスチャファイルを読んでプログラムで扱えるようにする
-    DirectX::ScratchImage image{};
-    std::wstring filePathW = StringUtility::ConvertString(filePath);
-    //sRBG空間で作られた物として読む。
-    HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
-    assert(SUCCEEDED(hr));
-
-    const DirectX::TexMetadata metadata = image.GetMetadata();
-
-    //ミニマップの作成
-    DirectX::ScratchImage mipImages{};
-
-    if (metadata.width > 1 || metadata.height > 1) {
-        hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
-
-        assert(SUCCEEDED(hr));
-    } else {
-        mipImages = std::move(image); // そのまま使う
-    }
-
-    //ミニマップ付きのデータを返す
-    return mipImages;
-}
-
 
 D3D12_CPU_DESCRIPTOR_HANDLE DirectXCommon::GetSRVCPUDescriptorHandle(uint32_t index)
 {

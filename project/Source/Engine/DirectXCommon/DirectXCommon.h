@@ -83,7 +83,6 @@ public:
     static Microsoft::WRL::ComPtr<ID3D12Resource> UploadTextureData(
         const Microsoft::WRL::ComPtr<ID3D12Resource>& texture,
         const DirectX::ScratchImage& mipImages);
-    static DirectX::ScratchImage LoadTextureFile(const std::string& filePath);
     static ID3D12Device* GetDevice() { return device.Get(); };
     static DxcCompiler* GetDxcCompiler() { return dxcCompiler.get(); }
     static ID3D12GraphicsCommandList* GetCommandList() { return commandList->GetCommandList().Get(); };

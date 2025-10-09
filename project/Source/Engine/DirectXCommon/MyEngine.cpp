@@ -159,7 +159,7 @@ void MyEngine::PostCommandSet() {
 
 void MyEngine::Finalize() {
 
-    TextureManager::GetInstance()->Finalize();
+    TextureManager::Finalize();
     directXCommon->EndFrame();
     wc->Finalize();
 }

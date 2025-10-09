@@ -371,7 +371,7 @@ void Input::EyeOperation(Camera& camera) {
         //視点の移動 offset をずらす
         //後でoffsetをくわえる
         offset_ += GetMousePos();
-        camera.SetOffset({ offset_.x / FPS,offset_.y / FPS * 2.0f });
+        camera.offset_ = {offset_.x / FPS,offset_.y / FPS * 2.0f };
     } else if (IsPressMouse(2)) {
         //視点の回転
         //中ボタン押し込み&&ドラッグ
@@ -389,13 +389,13 @@ void Input::EyeOperation(Camera& camera) {
         currentPos_ = GetMousePos();
         shericalCoordinate_.polar += currentPos_.x / FPS;
         shericalCoordinate_.azimuthal += currentPos_.y / FPS;
-        camera.SetRotateY(shericalCoordinate_.polar);
-        camera.SetRotateZ(shericalCoordinate_.azimuthal);
+        camera.rotate_.y = shericalCoordinate_.polar;
+        camera.rotate_.z = shericalCoordinate_.azimuthal;
     }
 
     pos_ = TransformCoordinate(shericalCoordinate_);
 
-    camera.SetTranslate(pos_);
+    camera.translate_ = pos_;
 
 }
 

@@ -1,5 +1,6 @@
 #include"MyEngine.h"
 #include"SampleScene.h"
+#include"GameScene.h"
 
 #define WIN_WIDTH 1280
 #define WIN_HEIGHT 720
@@ -21,10 +22,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     Vector4 screenColor = { 0.6f,0.6f,0.6f,1.0f };
     //サンプルシーンの生成
     std::unique_ptr<SampleScene> sampleScene = std::make_unique<SampleScene>();
+    // ゲームシーンのインスタンスの取得
+    std::unique_ptr<GameScene> gameScene = std::make_unique<GameScene>();
+
     //現在のシーン
     SceneManager* currentScene = nullptr;
     //現在のシーンに代入
-    currentScene = sampleScene.get();
+    currentScene = gameScene.get();
     //現在のシーンの初期化
     currentScene->Initialize();
 

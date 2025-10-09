@@ -1,0 +1,60 @@
+#include "UIManager.h"
+#include"Texture.h"
+#include"Sprite.h"
+
+void UIManager::Initialize() {
+
+    LifeTextureHandle_ = Texture::textureHandle_[Texture::LIFE];
+    scoreTextureHandle_ = Texture::textureHandle_[Texture::SCORE];
+    comboTextureHandle_ = Texture::textureHandle_[Texture::COMBO];
+    speedBonusTextureHandle_ = Texture::textureHandle_[Texture::SPEED_BONUS];
+    WASDTextureHandle_ = Texture::textureHandle_[Texture::WASD];
+    SpaceTextureHandle_ = Texture::textureHandle_[Texture::SPACE];
+    TimerTextureHandle_ = Texture::textureHandle_[Texture::TIMER];
+    JuiceTextureHandle_ = Texture::textureHandle_[Texture::JUICE];
+
+
+    for (int i = 0; i < MaxLife_; i++) {
+        lifeSprites[i].Create(LifeTextureHandle_, LifeFirstPosition_, LifeSize_, { 1.0f, 1.0f, 1.0f, 1.0f });
+    }
+
+    scoreSprite = std::make_unique<Sprite>();
+    scoreSprite->Create(scoreTextureHandle_, ScorePosition_, ScoreSize_, { 1, 1, 1, 1 });
+    comboSprite = std::make_unique<Sprite>();
+    comboSprite->Create(comboTextureHandle_, ComboPosition_, ComboSize_,{ 1, 1, 1, 1 });
+    speedBonusSprite = std::make_unique<Sprite>();
+    speedBonusSprite->Create(speedBonusTextureHandle_, speedBonusPosition_, SpeedBonusSize_,{ 1, 1, 1, 1 });
+    WASDSprite = std::make_unique<Sprite>();
+    WASDSprite->Create(WASDTextureHandle_, WASDPosition_, WASDSize_,{ 1, 1, 1, 1 });
+    SpaceSprite = std::make_unique<Sprite>();
+    SpaceSprite->Create(SpaceTextureHandle_, SpacePosition_, SpaceSize_,{ 1, 1, 1, 1 });
+    TimerSprite = std::make_unique<Sprite>();
+    TimerSprite->Create(TimerTextureHandle_, TimerPosition_, TimerSize_,{ 1, 1, 1, 1 });
+    JuiceSprite = std::make_unique<Sprite>();
+    JuiceSprite->Create(JuiceTextureHandle_, JuicePosition_, JuiceSize_,{ 1, 1, 1, 1 });
+
+    for (int i = 0; i < lifeSprites.size(); i++) {
+        lifeSprites[i].SetPosition({ LifeFirstPosition_.x + LifePositionInterval_ * i, LifeFirstPosition_.y });
+    }
+
+}
+
+void UIManager::Update() {}
+
+void UIManager::Draw() {
+
+    Sprite::PreDraw(kBlendModeNormal);
+
+    for (int i = 0; i < Life_; i++) {
+        lifeSprites[i].Draw();
+    }
+
+    JuiceSprite->Draw();
+    scoreSprite->Draw();
+    comboSprite->Draw();
+    speedBonusSprite->Draw();
+    WASDSprite->Draw();
+    SpaceSprite->Draw();
+    TimerSprite->Draw();
+
+}

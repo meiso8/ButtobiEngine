@@ -5,9 +5,9 @@
 
 std::ofstream LogFile::stream_;
 
-//void Log(const std::string& message) {
-//    OutputDebugStringA(message.c_str());
-//}
+void DebugLog(const std::string& message) {
+    OutputDebugStringA(message.c_str());
+}
 
 void LogFile::Create()
 {

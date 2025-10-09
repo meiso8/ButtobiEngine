@@ -71,18 +71,18 @@ void DebugUI::CheckInt(int& value) {
 
 void DebugUI::CheckCamera(Camera& camera) {
     ImGui::Begin("Camera");
-    ImGui::SliderFloat3("translate", &camera.GetTranslate().x, -1000.0f, 1000.0f);
-    ImGui::SliderFloat3("rotate", &camera.GetRotate().x, -1000.0f, 1000.0f);
-    ImGui::SliderFloat3("scale", &camera.GetScale().x, -1000.0f, 1000.0f);
-    ImGui::SliderFloat2("ofsset", &camera.GetOffset().x, -1000.0f, 1000.0f);
-    ImGui::SliderFloat("nearZ", &camera.GetNearZ(), 0.0f, 1000.0f);
-    ImGui::SliderFloat("farZ", &camera.GetFarZ(), 0.0f, 1000.0f);
+    ImGui::SliderFloat3("translate", &camera.translate_.x, -1000.0f, 1000.0f);
+    ImGui::SliderFloat3("rotate", &camera.rotate_.x, -1000.0f, 1000.0f);
+    ImGui::SliderFloat3("scale", &camera.scale_.x, -1000.0f, 1000.0f);
+    ImGui::SliderFloat2("ofsset", &camera.offset_.x, -1000.0f, 1000.0f);
+    ImGui::SliderFloat("nearZ", &camera.nearZ_, 0.0f, 1000.0f);
+    ImGui::SliderFloat("farZ", &camera.farZ_, 0.0f, 1000.0f);
     if (ImGui::Button("InitTransform")) {
         camera.InitializeTransform();
     }
-    ImGui::Text("Orthographic : %d", camera.GetIsOrthographic());
-    if (ImGui::Button("Orthographic")) {
-        camera.SetOrthographic(camera.GetIsOrthographic() ? false : true);
+    ImGui::Text("projectionType : %d", camera.projectionType_);
+    if (ImGui::Button("ChangeProjectionType")) {
+        camera.projectionType_ = (camera.projectionType_ == Camera::PERSPECTIVE) ? Camera::PARALLEL : Camera::PERSPECTIVE;
     }
 
     ImGui::End();

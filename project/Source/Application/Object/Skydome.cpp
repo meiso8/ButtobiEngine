@@ -1,0 +1,31 @@
+#include "Skydome.h"
+
+#include "Model.h"
+
+void Skydome::Initialize(Model* model, Camera* camera) {
+
+	//// NULLポインタチェック
+	//assert(model);
+
+	// 引数として受け取ったデータをメンバ変数に記録する
+	model_ = model;
+	camera_ = camera;
+
+	// ワールド変換の初期化
+	worldTransform_.Initialize();
+}
+
+void Skydome::Update() {
+
+	WorldTransformUpdate(worldTransform_);
+
+}
+
+void Skydome::Draw() {
+
+	// 3Dモデル描画前処理
+	Model::PreDraw();
+	// 3Dモデルを描画
+	model_->Draw(worldTransform_.matWorld_, *camera_);
+
+}

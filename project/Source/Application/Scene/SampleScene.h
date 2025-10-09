@@ -1,6 +1,6 @@
 #pragma once
 #include"SceneManager.h"
-#include"../SamplePlayer.h"
+#include"SamplePlayer.h"
 #include"Transform.h"
 #include"WorldTransform.h"
 #include"Cube.h"
@@ -26,15 +26,14 @@ private:
 
     //カメラ
     Camera camera_;
-    Camera cameraSprite_;
     Transform cameraTransform_;
     bool isCameraUpdate_ = false;
 
     //スプライト
     std::vector<Sprite*>sprites_;
 
-    //パーティクル
-    Particle particle_;
+    ////パーティクル
+    //Particle particle_;
     //立方体
     std::vector<Cube>cube_;
     WorldTransform cubeWorldTransform_;
