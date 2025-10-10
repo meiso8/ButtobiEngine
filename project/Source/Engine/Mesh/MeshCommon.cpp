@@ -112,11 +112,11 @@ void MeshCommon::CreateBalloonData()
     expansionResource_ = DirectXCommon::CreateBufferResource(sizeof(Balloon));
 
     //書き込むためのアドレスを取得
-    expansionResource_->Map(0, nullptr, reinterpret_cast<void**>(&expansionData_));
+    expansionResource_->Map(0, nullptr, reinterpret_cast<void**>(&balloonData_));
     //データを書き込む
-    expansionData_->expansion = 0.0f;
-    expansionData_->sphere = 0.0f;
-    expansionData_->cube = 0.0f;
-    expansionData_->isSphere = false;
+    balloonData_->expansion = 0.0f;
+    balloonData_->sphere = 0.0f;
+    balloonData_->cube = 0.0f;
+    balloonData_->isSphere = false;
 
 }

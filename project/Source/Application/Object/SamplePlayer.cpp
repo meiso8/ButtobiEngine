@@ -5,6 +5,7 @@
 #include"Model.h"
 #include"ModelManager.h"
 #include"Camera/Camera.h"
+#include"DebugUI.h"
 
 SamplePlayer::SamplePlayer() {
 
@@ -71,4 +72,10 @@ void SamplePlayer::Update()
 
     WorldTransformUpdate(worldTransform_);
 
+}
+
+void SamplePlayer::Debug()
+{
+
+    DebugUI::CheckModel(*model_,"playerModel");
 }
