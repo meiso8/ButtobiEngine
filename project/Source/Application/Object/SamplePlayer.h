@@ -16,6 +16,7 @@ public:
     void Init();
     void Draw(Camera& camera, uint32_t lightType);
     void Update();
+    void Debug();
     Vector3& GetTranslate() { return worldTransform_.translate_; }
 private:
     Vector3 velocity_ = { 0.0f,0.0f,0.0f };

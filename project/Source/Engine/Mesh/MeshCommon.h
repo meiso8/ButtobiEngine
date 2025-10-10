@@ -24,8 +24,11 @@ public:
     VertexData& GetVertexData(const uint32_t& index) {
         return vertexData_[index];
     }
-    Balloon& GetExpansionData() {
-        return *expansionData_;
+    Balloon& GetBalloonData() {
+        return *balloonData_;
+    }
+    Wave& GetWaveData() {
+        return *waveData_;
     }
 
 protected:
@@ -42,7 +45,7 @@ protected:
     uint32_t* indexData_ = nullptr;
 
     Microsoft::WRL::ComPtr<ID3D12Resource> expansionResource_;
-    Balloon* expansionData_ = nullptr;
+    Balloon* balloonData_ = nullptr;
 
     Microsoft::WRL::ComPtr<ID3D12Resource> waveResource_;
     Wave* waveData_ = nullptr;

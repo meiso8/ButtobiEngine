@@ -114,7 +114,10 @@ void SampleScene::Draw()
 void SampleScene::Debug()
 {
     std::function<void()> func = [this]() { SwitchCamera(); };
+    samplePlayer_->Debug();
 
+    DebugUI::CheckBalloonData(cube_[0].GetBalloonData());
+    DebugUI::CheckWaveData(cube_[0].GetWaveData(),"cube");
     DebugUI::CheckDirectionalLight(lightType_);
     DebugUI::CheckBlendMode(blendMode_);
     DebugUI::CheckSprite(*sprites_[0], "sprite0");
