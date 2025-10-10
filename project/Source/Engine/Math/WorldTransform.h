@@ -13,27 +13,6 @@ public://一旦public
     const WorldTransform* parent_ = nullptr;
 public:
     void Initialize();
-    void SetTranslation(const Vector3& translation) {
-        translate_ = translation
-            ;
-    }
-    void SetRotationX(float rotateX) {
-        rotate_.x = rotateX
-            ;
-    }
-
-    void SetRotationY(float rotateY) {
-        rotate_.y = rotateY
-            ;
-    }
-
-    Vector3& GetRotate() {
-        return rotate_;
-    };
-
-    Vector3& GetTranslate() {
-        return translate_;
-    };
 };
 
 

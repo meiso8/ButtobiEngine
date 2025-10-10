@@ -21,13 +21,6 @@ void DebugUI::CheckInt(int& value, const char* label) {
         ImGui::TreePop();
     }
 }
-void DebugUI::CheckFlag(bool& flag, const char* label)
-{
-
-    std::string labels = std::string(label) + " : " + (flag ? "true" : "false");
-    ImGui::Text("%s", labels.c_str());
-
-};
 
 void DebugUI::CheckCamera(Camera& camera) {
     ImGui::Begin("Camera");
@@ -123,16 +116,6 @@ void DebugUI::CheckSprite(Sprite& sprite, const char* label) {
     ImGui::End();
 }
 
-void DebugUI::CheckSphere(SphereMesh& sphere) {
-    ImGui::Begin("Sphere");
-
-    CheckTransforms(sphere.GetScale(), sphere.GetRotate(), sphere.GetTranslate(), "worldTransform");
-    CheckTransform(sphere.GetUVTransform(), "uvTransform");
-    CheckColor(sphere.GetColor(), "sphereColor");
-
-    ImGui::End();
-}
-
 void DebugUI::CheckBalloonData(Balloon& balloon)
 {
     if (ImGui::TreeNode("Balloon")) {
@@ -180,7 +163,7 @@ void DebugUI::CheckTransform(Transform& transform, const char* label)
 
 void DebugUI::CheckWorldTransform(WorldTransform& worldTransform, const char* label) {
 
-    CheckTransforms(worldTransform.scale_, worldTransform.rotate_, worldTransform.translate_, "worldTransform");
+    CheckTransforms(worldTransform.scale_, worldTransform.rotate_, worldTransform.translate_, label);
 
 };
 
@@ -227,4 +210,23 @@ void DebugUI::CheckBlendMode(uint32_t& blendMode) {
 
 void DebugUI::CheckFPS() {
     ImGui::Text("FPS : %f", ImGui::GetIO().Framerate);
+}
+
+void DebugUI::SwitchFlag(bool& flag,const char* label)
+{
+    if (ImGui::Button(label)) {
+        // スペースキーを押すとデバッグカメラに切り替える
+        flag = flag ? false : true;
+
+    }
+    std::string labels = std::string(label) + " : " + (flag ? "true" : "false");
+    ImGui::Text("%s", labels.c_str());
+}
+void DebugUI::Button(const char* label, std::function<void()> onSwitch)
+{
+    if (ImGui::Button(label)) {
+        if (onSwitch) {
+            onSwitch(); // ボタンが押されたら関数オブジェクトを実行！
+        }
+    }
 }

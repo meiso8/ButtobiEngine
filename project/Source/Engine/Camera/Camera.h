@@ -25,6 +25,7 @@ public:
     static Matrix4x4 viewMat_;
     //射影行列
     Matrix4x4 projectionMat_ = {0.0f};
+    Matrix4x4 viewProjectionMat_ = { 0.0f };
     static ShericalCoordinate shericalCoordinate_;
 
 protected:
@@ -36,7 +37,7 @@ public:
     /// @brief 更新
     virtual void UpdateMatrix();
     virtual void UpdateProjectionMatrix();
-    Matrix4x4 GetViewProjectionMatrix();
+    Matrix4x4& GetViewProjectionMatrix();
     void SetTransform(const Transform& transform) {
         scale_ = transform.scale;
         rotate_ = transform.rotate;

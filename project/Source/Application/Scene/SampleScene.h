@@ -7,10 +7,10 @@
 #include"Particle/Particle.h"
 #include"Camera/Camera.h"
 #include"Camera/DebugCamera.h"
+#include<memory>
+#include"SphereMesh.h"
 
 class Sprite;
-
-
 class SampleScene :public  SceneManager
 {
 public:
@@ -19,6 +19,8 @@ public:
     void Draw()override;
     void Debug()override;
     ~SampleScene();
+private:
+    void SwitchCamera();
 private:
     //ライトタイプ
     uint32_t lightType_ = 0;
@@ -39,7 +41,8 @@ private:
     //Particle particle_;
     //立方体
     std::vector<Cube>cube_;
-    WorldTransform cubeWorldTransform_;
+    std::unique_ptr<SphereMesh> sphereMesh_ = nullptr;
+    WorldTransform worldTransform_;
     //プレイヤー
     std::unique_ptr<SamplePlayer>samplePlayer_ = nullptr;
 

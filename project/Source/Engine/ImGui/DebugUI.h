@@ -8,6 +8,7 @@
 #include"Transform.h"
 #include"Balloon.h"
 #include"Wave.h"
+#include <functional>
 
 enum BlendMode;
 class Input;
@@ -26,9 +27,6 @@ public:
     /// @brief スプライト
     /// @param sprite 
     static void CheckSprite(Sprite& sprite, const char* label);
-    /// @brief 球
-    /// @param sphere 
-    static void CheckSphere(SphereMesh& sphere);
     static void CheckBalloonData(Balloon& balloon);
     static void CheckWaveData(Wave& wave, const char* label);
     /// @brief ワールドトランスフォーム
@@ -58,9 +56,8 @@ public:
 
     static void CheckBlendMode(uint32_t& blendMode);
     static void CheckInt(int& value, const char* label);
-    static void CheckFlag(bool& flag, const char* label);
     static void CheckFPS();
-
-
+    static void SwitchFlag(bool& flag, const char* label);
+    static void Button(const char* label, std::function<void()> onSwitch);
 };
 

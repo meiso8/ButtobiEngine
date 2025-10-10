@@ -53,6 +53,7 @@ void DebugCamera::UpdateMatrix() {
     viewMat_ = Inverse(Multiply(matRot_, MakeAffineMatrix(scale_, rotate_, translate_)));
 
     UpdateProjectionMatrix();
+    viewProjectionMat_ = Multiply(viewMat_, projectionMat_);
 }
 
 void DebugCamera::UpdateProjectionMatrix()
