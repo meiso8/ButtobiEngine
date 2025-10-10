@@ -29,7 +29,7 @@ void SamplePlayer::Init()
 
 void SamplePlayer::Draw(Camera& camera, uint32_t lightType)
 {
-    model_->Draw(worldTransform_.matWorld_, camera, lightType);
+    model_->Draw( camera, worldTransform_.matWorld_, lightType);
 }
 
 void SamplePlayer::Update()

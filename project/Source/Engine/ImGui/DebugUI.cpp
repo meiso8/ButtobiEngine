@@ -57,7 +57,7 @@ void DebugUI::CheckModel(Model& model, const char* label) {
     CheckWaveData(model.GetWaveData(0), "wave0");
     CheckWaveData(model.GetWaveData(1), "wave1");
 
-    CheckBalloonData(model.GetExpansionData());
+    CheckBalloonData(model.GetBalloonData());
 
     CheckTransform(model.GetUVTransform(), "UVTransform");
     CheckColor(model.GetColor(), "modelColor");

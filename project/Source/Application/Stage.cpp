@@ -30,7 +30,7 @@ void Stage::Update() {
 
 void Stage::Draw() {
 	// 3Dモデル描画前処理
-	Model::PreDraw(BlendMode::kBlendModeNone);
+	model_->PreDraw(BlendMode::kBlendModeNone);
 	// 3Dモデルを描画
-	model_->Draw(worldTransform_.matWorld_, *camera_);
+	model_->Draw( *camera_,worldTransform_.matWorld_);
 }

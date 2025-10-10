@@ -44,10 +44,10 @@ void Enemy::Update() {
 void Enemy::Draw() {
 
 	// 3Dモデル描画前処理
-	Model::PreDraw(BlendMode::kBlendModeNormal);
+	model_->PreDraw(BlendMode::kBlendModeNormal);
 	model_->SetColor(color_);
 	// 3Dモデルを描画
-	model_->Draw(worldTransform_.matWorld_, *camera_,MaterialResource::LIGHTTYPE::HALF_L);
+	model_->Draw( *camera_, worldTransform_.matWorld_, MaterialResource::LIGHTTYPE::HALF_L);
 
 }
 

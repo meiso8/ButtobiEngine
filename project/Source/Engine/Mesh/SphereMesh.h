@@ -5,7 +5,7 @@
 class SphereMesh :public MeshCommon
 {
 public:
-    void Create(uint32_t& textureHandle)override;
+    void Create(uint32_t& textureHandle);
     void Draw(Camera& camera, const Matrix4x4& worldMatrix, uint32_t lightType = MaterialResource::LIGHTTYPE::NONE)override;
     void SetUVScale(const Vector3& scale) { uvTransform_.scale = scale; };
     void UpdateUV();

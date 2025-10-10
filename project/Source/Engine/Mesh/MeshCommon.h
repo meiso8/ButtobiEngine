@@ -15,28 +15,25 @@
 class MeshCommon
 {
 public:
-    virtual void Create(uint32_t& textureHandle);
-    virtual void PreDraw(BlendMode blendMode = BlendMode::kBlendModeNormal);
-    virtual void Draw(Camera& camera, const Matrix4x4& worldMatrix, uint32_t lightType = MaterialResource::LIGHTTYPE::NONE);
+    virtual void PreDraw(const BlendMode& blendMode = BlendMode::kBlendModeNormal);
+    virtual void Draw(Camera& camera, const Matrix4x4& worldMatrix, const uint32_t lightType = MaterialResource::LIGHTTYPE::NONE);
 
     void SetColor(const Vector4& color);
     Material* GetMaterial() { return materialResource_.GetMaterial(); };
+    Vector4& GetColor() { return materialResource_.GetMaterial()->color; };
     VertexData& GetVertexData(const uint32_t& index) {
         return vertexData_[index];
     }
     Balloon& GetBalloonData() {
         return *balloonData_;
     }
-    Wave& GetWaveData() {
-        return *waveData_;
-    }
-
+    Wave& GetWaveData(size_t index) { return waveData_[index]; };
 protected:
     uint32_t textureHandle_ = 0;
     MaterialResource materialResource_{};
     static ModelConfig* modelConfig_;
 
-    ID3D12GraphicsCommandList* commandList_ = nullptr;
+    static ID3D12GraphicsCommandList* commandList_;
     Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
     VertexData* vertexData_ = nullptr;

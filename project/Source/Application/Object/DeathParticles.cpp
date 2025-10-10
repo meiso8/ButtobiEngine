@@ -77,11 +77,11 @@ void DeathParticles::Draw() {
     }
 
     // 3Dモデル描画前処理
-    Model::PreDraw(kBlendModeNormal);
+    model_->PreDraw(kBlendModeNormal);
 
     for (auto& worldTransform : worldTransforms_) {
         // 3Dモデルを描画
-        model_->Draw(worldTransform.matWorld_, *camera_, MaterialResource::HALF_L);
+        model_->Draw( *camera_, worldTransform.matWorld_, MaterialResource::HALF_L);
     }
 
 };
