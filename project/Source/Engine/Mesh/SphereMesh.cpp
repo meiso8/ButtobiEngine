@@ -8,8 +8,6 @@
 #include<numbers>
 #include"TextureManager.h"
 
-
-
 void SphereMesh::Create(uint32_t& textureHandle)
 {
     commandList_ = DirectXCommon::GetCommandList();
@@ -40,7 +38,6 @@ void SphereMesh::CreateUV()
 }
 ;
 
-
 void SphereMesh::UpdateUV() {
 
     uvTransformMatrix_ = MakeAffineMatrix(uvTransform_.scale, uvTransform_.rotate, uvTransform_.translate);
@@ -48,7 +45,7 @@ void SphereMesh::UpdateUV() {
 }
 
 
-void SphereMesh::Draw(Camera& camera, const Matrix4x4& worldMatrix, uint32_t lightType
+void SphereMesh::Draw(Camera& camera, const Matrix4x4& worldMatrix, const uint32_t lightType
 ) {
 
     materialResource_.SetLightType(lightType);

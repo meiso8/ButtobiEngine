@@ -157,7 +157,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Engine\Mesh\Mesh.cpp" />
     <ClCompile Include="Source\Engine\Mesh\MeshCommon.cpp" />
     <ClCompile Include="Source\Application\CameraController.cpp" />
     <ClCompile Include="Source\Application\Object\DeathParticles.cpp" />
@@ -176,7 +175,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Sound\Sound.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\DirectXCommon.cpp" />
     <ClCompile Include="Source\Application\Object\SamplePlayer.cpp" />
-    <ClCompile Include="Source\Engine\Mesh\ModelConfig.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\ModelConfig.cpp" />
     <ClCompile Include="Source\Engine\Particle\Particle.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\MyEngine.cpp" />
     <ClCompile Include="Source\Engine\ImGui\DebugUI.cpp" />
@@ -243,7 +242,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Math\MakeTranslateMatrix.cpp" />
     <ClCompile Include="Source\Engine\Math\MakeViewportMatrix.cpp" />
     <ClCompile Include="Source\Engine\Surface\MaterialData.cpp" />
-    <ClCompile Include="Source\Engine\Mesh\ModelData.cpp" />
     <ClCompile Include="Source\Engine\Math\Multiply.cpp" />
     <ClCompile Include="Source\Engine\Math\Normalize.cpp" />
     <ClCompile Include="Source\Engine\Math\ShericalCoordinate.cpp" />
@@ -281,7 +279,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Engine\Mesh\Mesh.h" />
     <ClInclude Include="Source\Engine\Mesh\MeshCommon.h" />
     <ClInclude Include="Source\Application\CameraController.h" />
     <ClInclude Include="Source\Application\Object\DeathParticles.h" />
@@ -312,13 +309,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\hlslTypeToCpp.h" />
     <ClInclude Include="Source\Engine\Particle\Particle.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\MyEngine.h" />
-    <ClInclude Include="Source\Engine\Mesh\Balloon.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\Balloon.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\BlendState.h" />
     <ClInclude Include="Source\Engine\Camera\Camera.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\CommandList.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\CommandQueue.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\CompileShader.h" />
-    <ClInclude Include="Source\Engine\Mesh\ModelConfig.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\ModelConfig.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\CrashHandler.h" />
     <ClInclude Include="Source\Engine\Mesh\Cube.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\D3DResourceLeakChecker.h" />
@@ -381,7 +378,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Math\Vector4.h" />
     <ClInclude Include="Source\Engine\Math\WorldTransform.h" />
     <ClInclude Include="Source\Engine\Mesh\Model.h" />
-    <ClInclude Include="Source\Engine\Mesh\ModelData.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\ModelData.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\PSO.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\RasterizerState.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\RenderTargetView.h" />
@@ -394,9 +391,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\DirectXCommon\SwapChain.h" />
     <ClInclude Include="Source\Engine\Math\TransformationMatrix.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\TransitionBarrier.h" />
-    <ClInclude Include="Source\Engine\Mesh\VertexData.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\VertexData.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\Viewport.h" />
-    <ClInclude Include="Source\Engine\Mesh\Wave.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\Wave.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\Window.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\StringUtility.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\SpriteCommon.h" />

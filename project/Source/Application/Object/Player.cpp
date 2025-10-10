@@ -668,13 +668,13 @@ void Player::Update() {
 void Player::Draw() {
 
 	// 3Dモデル描画前処理
-	Model::PreDraw(BlendMode::kBlendModeNormal);
+	model_[0]->PreDraw(BlendMode::kBlendModeNormal);
 
 	// 3Dモデルを描画
 	for (int i = 0; i < Parts::kNumParts; i++) {
 		//ここに追加しました。
 		model_[i]->SetColor(objectColor_);
-		model_[i]->Draw(DrawPartsWorldTransform_[i].matWorld_, *camera_, MaterialResource::LIGHTTYPE::HALF_L);
+		model_[i]->Draw(*camera_, DrawPartsWorldTransform_[i].matWorld_, MaterialResource::LIGHTTYPE::HALF_L);
 	}
 
 }

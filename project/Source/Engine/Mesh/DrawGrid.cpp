@@ -15,8 +15,8 @@ void DrawGrid::Initialize()
     }
 
     for (int i = 0; i < 51; ++i) {
-        line_[i].SetVertexPos(Vector3(-25.0f, 0.0f, static_cast<float>(i - 25)), Vector3(25.0f, 0.0f, static_cast<float>(i - 25)));
-        line_[i + 51].SetVertexPos(Vector3(static_cast<float>(i - 25), 0.0f, -25.0f), Vector3(static_cast<float>(i - 25), 0.0f, 25.0f));
+        line_[i].SetVertexData(Vector3(-25.0f, 0.0f, static_cast<float>(i - 25)), Vector3(25.0f, 0.0f, static_cast<float>(i - 25)));
+        line_[i + 51].SetVertexData(Vector3(static_cast<float>(i - 25), 0.0f, -25.0f), Vector3(static_cast<float>(i - 25), 0.0f, 25.0f));
 
         if (i % 10 == 0) {
             line_[i].SetColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
@@ -42,15 +42,17 @@ void DrawGrid::Initialize()
 
 void DrawGrid::Draw(Camera& camera) {
 
+    Matrix4x4 identity4x4 = MakeIdentity4x4();
+
     line_[0].PreDraw();
 
     for (int i = 0; i < 102; ++i) {
-        line_[i].Draw(camera);
+        line_[i].Draw(camera, identity4x4);
     }
     cube_[0].PreDraw();
 
     for (int i = 0; i < 2; ++i) {
-        cube_[i].Draw(camera, MakeIdentity4x4());
+        cube_[i].Draw(camera, identity4x4);
     }
 
 }

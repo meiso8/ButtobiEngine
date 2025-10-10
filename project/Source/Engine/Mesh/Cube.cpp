@@ -1,5 +1,25 @@
 #include "Cube.h"
 #include"DirectXCommon.h"
+#include"Multiply.h"
+#include"TextureManager.h"
+#include"MyEngine.h"
+
+void Cube::Create(uint32_t& textureHandle) {
+
+
+    commandList_ = DirectXCommon::GetCommandList();
+    modelConfig_ = ModelConfig::GetInstance();
+    textureHandle_ = textureHandle;
+
+    CreateVertex();
+    CreateIndexResource();
+
+    CreateTransformationMatrix();
+    CreateMaterial();
+    CreateWaveData();
+    CreateBalloonData();
+
+};
 
 void Cube::CreateVertex()
 {
@@ -90,5 +110,34 @@ void Cube::SetMinMax(const Vector3& min, const Vector3& max) {
     vertexData_[7].position = { max.x,max.y,max.z,1.0f };//migiue
     vertexData_[7].texcoord = { 1.0f,0.0f };
     vertexData_[7].normal = { vertexData_[7].position.x,  vertexData_[7].position.y,  vertexData_[7].position.z };
+}
+
+void Cube::Draw(Camera& camera, const Matrix4x4& worldMatrix, const uint32_t lightType)
+{
+
+    materialResource_.SetLightType(lightType);
+
+    worldViewProjectionMatrix_ = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
+    *transformationMatrixData_ = { worldViewProjectionMatrix_,worldMatrix };
+
+    //頂点バッファビューを設定
+    commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
+    //IBVを設定new
+    commandList_->IASetIndexBuffer(&indexBufferView_);//IBVを設定
+    //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
+    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
+    //TransformationMatrixCBufferの場所を設定
+    commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+    //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
+    commandList_->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureHandle_));
+    //LightのCBufferの場所を設定
+    commandList_->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
+    //timeのSRVの場所を設定
+    commandList_->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
+    //expansionのCBufferの場所を設定
+    commandList_->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
+
+    //描画!（DrawCall/ドローコール）6個のインデックスを使用し1つのインスタンスを描画。その他は当面0で良い。
+    commandList_->DrawIndexedInstanced(36, 1, 0, 0, 0);
 }
 

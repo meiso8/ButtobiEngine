@@ -117,7 +117,8 @@ void SampleScene::Debug()
     samplePlayer_->Debug();
 
     DebugUI::CheckBalloonData(cube_[0].GetBalloonData());
-    DebugUI::CheckWaveData(cube_[0].GetWaveData(),"cube");
+    DebugUI::CheckWaveData(cube_[0].GetWaveData(0),"waveData0");
+    DebugUI::CheckWaveData(cube_[0].GetWaveData(1), "waveData1");
     DebugUI::CheckDirectionalLight(lightType_);
     DebugUI::CheckBlendMode(blendMode_);
     DebugUI::CheckSprite(*sprites_[0], "sprite0");

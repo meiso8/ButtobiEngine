@@ -282,9 +282,6 @@
     <ClCompile Include="Source\Engine\Mesh\Model.cpp">
       <Filter>ソース ファイル\Engine\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\ModelData.cpp">
-      <Filter>ソース ファイル\Engine\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\Math\WorldTransform.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
@@ -318,7 +315,7 @@
     <ClCompile Include="Source\Engine\DirectXCommon\SpriteCommon.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\ModelConfig.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\ModelConfig.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Surface\TextureManager.cpp">
@@ -378,9 +375,6 @@
     <ClCompile Include="Source\Engine\Mesh\MeshCommon.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\Mesh.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\Object3d.PS.hlsl">
@@ -421,7 +415,7 @@
     <ClInclude Include="Source\Engine\Math\Add.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\Balloon.h">
+    <ClInclude Include="Source\Engine\DirectXCommon\Balloon.h">
       <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Camera\Camera.h">
@@ -520,7 +514,7 @@
     <ClInclude Include="Source\Engine\Mesh\Model.h">
       <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\ModelData.h">
+    <ClInclude Include="Source\Engine\DirectXCommon\ModelData.h">
       <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Math\Matrix3x3.h">
@@ -556,10 +550,10 @@
     <ClInclude Include="Source\Engine\Math\WorldTransform.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\Wave.h">
+    <ClInclude Include="Source\Engine\DirectXCommon\Wave.h">
       <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\VertexData.h">
+    <ClInclude Include="Source\Engine\DirectXCommon\VertexData.h">
       <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Sound\SoundManager.h">
@@ -640,7 +634,7 @@
     <ClInclude Include="Source\Engine\DirectXCommon\Log.h">
       <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\ModelConfig.h">
+    <ClInclude Include="Source\Engine\DirectXCommon\ModelConfig.h">
       <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\DirectXCommon\MyEngine.h">
@@ -749,9 +743,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Mesh\MeshCommon.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\Mesh.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
