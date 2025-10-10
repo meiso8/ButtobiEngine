@@ -99,15 +99,6 @@ void GameScene::Update() {
     // 天球の更新処理
     skyDome_->Update();
 
-#ifdef _DEBUG
-
-    if (Input::IsTriggerKey(DIK_P)) {
-        // スペースキーを押すとデバッグカメラに切り替える
-        isDebugCameraActive_ = isDebugCameraActive_ ? false : true;
-    }
-
-#endif
-
     // カメラの処理
     if (isDebugCameraActive_) {
         // デバッグカメラの更新
@@ -185,9 +176,13 @@ void GameScene::Draw() {
 }
 void GameScene::Debug()
 {
-
     player_->Debug();
-    DebugUI::CheckFlag(isDebugCameraActive_,"isDebugActive");
+    if (ImGui::Button("ChangeCamera")) {
+        // スペースキーを押すとデバッグカメラに切り替える
+        isDebugCameraActive_ = isDebugCameraActive_ ? false : true;
+    }
+  
+    DebugUI::CheckFlag(isDebugCameraActive_,"DebugCamera");
     //視点操作
     DebugUI::CheckCamera(camera_);
     uint32_t lightType = 0;
