@@ -54,8 +54,6 @@ private:
     void CreateBalloonData();
 private:
     uint32_t textureIndex = 0;
-
-    static SpriteCommon* spriteCommon;
     static ID3D12GraphicsCommandList* commandList;
 
     Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};

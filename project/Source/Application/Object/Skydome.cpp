@@ -1,5 +1,4 @@
 #include "Skydome.h"
-
 #include "Model.h"
 
 void Skydome::Initialize(Model* model, Camera* camera) {
@@ -26,6 +25,6 @@ void Skydome::Draw() {
 	// 3Dモデル描画前処理
 	Model::PreDraw();
 	// 3Dモデルを描画
-	model_->Draw(worldTransform_.matWorld_, *camera_,MaterialResource::HALF_L);
+	model_->Draw(worldTransform_.matWorld_, *camera_,MaterialResource::NONE);
 
 }

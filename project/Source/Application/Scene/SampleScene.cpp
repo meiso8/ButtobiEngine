@@ -32,9 +32,9 @@ void SampleScene::Initialize() {
     for (uint32_t i = 0; i < 5; ++i) {
         Sprite* sprite = new Sprite();
         if (i % 2 == 0) {
-            sprite->Create(Texture::textureHandle_[Texture::PLAYER], { i * 256.0f,0.0f }, { 128.0f,128.0f }, { 1.0f,1.0f,1.0f,1.0f });
+            sprite->Create(Texture::handle_[Texture::PLAYER], { i * 256.0f,0.0f }, { 128.0f,128.0f }, { 1.0f,1.0f,1.0f,1.0f });
         } else {
-            sprite->Create(Texture::textureHandle_[Texture::UV_CHECKER], { i * 256.0f,0.0f }, { 128.0f,128.0f }, { 1.0f,1.0f,1.0f,1.0f });
+            sprite->Create(Texture::handle_[Texture::UV_CHECKER], { i * 256.0f,0.0f }, { 128.0f,128.0f }, { 1.0f,1.0f,1.0f,1.0f });
         }
         sprites_.push_back(sprite);
     }
@@ -43,8 +43,8 @@ void SampleScene::Initialize() {
     samplePlayer_->Init();
 
     cube_.resize(2);
-    cube_[0].Create(Texture::textureHandle_[Texture::WHITE_1X1]);
-    cube_[1].Create(Texture::textureHandle_[Texture::WHITE_1X1]);
+    cube_[0].Create(Texture::handle_[Texture::WHITE_1X1]);
+    cube_[1].Create(Texture::handle_[Texture::WHITE_1X1]);
 
     cubeWorldTransform_.Initialize();
     cubeWorldTransform_.scale_ = { 10.0f,10.0f,10.0f };

@@ -7,20 +7,12 @@ using namespace StringUtility;
 
 uint32_t TextureManager::kSRVIndexTop = 1;
 std::vector<TextureManager::TextureData> TextureManager::textureDatas;
-TextureManager* TextureManager::instance = nullptr;
-
-TextureManager* TextureManager::GetInstance()
-{
-    if (instance == nullptr) {
-        instance = new TextureManager;
-    }
-    return instance;
-}
 
 void TextureManager::Finalize()
 {
-    delete instance;
-    instance = nullptr;
+    //for (int i = 0; i < textureDatas.size(); ++i) {
+    //    Unload(&soundDatas[i]);
+    //}
 }
 
 void TextureManager::Initialize()

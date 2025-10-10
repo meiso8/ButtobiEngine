@@ -8,13 +8,11 @@
 #include"TextureManager.h"
 #include"Camera/SpriteCamera.h"  
 
-SpriteCommon* Sprite::spriteCommon = nullptr;
 ID3D12GraphicsCommandList* Sprite::commandList = nullptr;
 
 
 void Sprite::Create(uint32_t textureHandle, const Vector2 & position, const Vector2& size, const Vector4& color)
 {
-    spriteCommon = SpriteCommon::GetInstance();
     commandList = DirectXCommon::GetCommandList();
 
     SetSize(size);
@@ -55,7 +53,7 @@ void Sprite::PreDraw(uint32_t blendMode) {
 
     PSO* pso = MyEngine::GetPSO(blendMode);
 
-    spriteCommon->PreDraw(commandList);
+    SpriteCommon::PreDraw(commandList);
     commandList->SetPipelineState(pso->GetGraphicsPipelineState(PSO::TRIANGLE).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -73,7 +71,7 @@ void Sprite::Draw(uint32_t lightType
 
     //頂点バッファビューを設定
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
-    spriteCommon->SetIndexBuffer(commandList);
+    SpriteCommon::SetIndexBuffer(commandList);
     //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
     commandList->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
     //TransformationMatrixCBufferの場所を設定
@@ -82,14 +80,14 @@ void Sprite::Draw(uint32_t lightType
     commandList->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureIndex));
 
 
-    spriteCommon->LightDraw(commandList);
+    SpriteCommon::LightDraw(commandList);
 
     //Wave timeのSRVの場所を設定
     commandList->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
     //expansionのCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
 
-    spriteCommon->DrawCall(commandList);
+    SpriteCommon::DrawCall(commandList);
 
 };
 

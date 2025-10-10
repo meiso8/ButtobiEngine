@@ -44,13 +44,13 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     directXCommon = std::make_unique<DirectXCommon>();
     directXCommon.get()->Initialize(*wc);
 
-//RootSignatureを生成する
+    //RootSignatureを生成する
     rootSignature = std::make_unique<RootSignature>();
     //具体的にShaderがどこかでデータを読めばいいのかの情報を取りまとめたもの
     rootSignature->Create();
     LogFile::Log("CreateRootSignature");
 
-//InputLayout
+    //InputLayout
     inputLayout = std::make_unique<InputLayout>();
     inputLayout->Create();
     LogFile::Log("InputLayout");
@@ -70,7 +70,7 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     //rasterizerStates[0].Create(kCullModeNone, kFillModeWireframe);//ワイヤーフレームモード
     LogFile::Log("SetRasterizerState");
 
-//DepthStencilStateの設定
+    //DepthStencilStateの設定
     depthStencil.Create();
     LogFile::Log("Create depthStencilDesc");
 
@@ -119,7 +119,7 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
 
     LogFile::Log("CreatePSO");
 
-//平行光源用のResourceを作成する
+    //平行光源用のResourceを作成する
     directionalLightResource = DirectXCommon::CreateBufferResource(sizeof(DirectionalLight));
     //書き込むためのアドレスを取得
     directionalLightResource->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData));
@@ -130,8 +130,14 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
 
     modelConfig_.Initialize(rootSignature.get(), directionalLightResource.Get());
 
-    SpriteCommon::GetInstance()->Initialize();
-    SpriteCamera::GetInstance()->Initialize(static_cast<float>(wc->GetClientWidth()),static_cast<float>(wc->GetClientHeight()));
+    //共通のスプライト
+    SpriteCommon::Initialize();
+    //スプライト用カメラ
+    SpriteCamera::Initialize(static_cast<float>(wc->GetClientWidth()), static_cast<float>(wc->GetClientHeight()));
+    //サウンド管理
+    SoundManager::Initialize();
+    //テクスチャ管理
+    TextureManager::Initialize();
 
     //ランダム関数の初期化
     srand(static_cast<unsigned int>(time(nullptr)));
@@ -154,14 +160,13 @@ void MyEngine::PreCommandSet(Vector4& screenColor) {
 };
 
 void MyEngine::PostCommandSet() {
-
     directXCommon->PostDraw();
-
 };
 
 void MyEngine::Finalize() {
 
     TextureManager::Finalize();
+    SoundManager::Finalize();
     directXCommon->EndFrame();
     wc->Finalize();
 }

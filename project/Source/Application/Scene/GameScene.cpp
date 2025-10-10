@@ -185,6 +185,7 @@ void GameScene::Draw() {
 void GameScene::Debug()
 {
 
+    player_->Debug();
     DebugUI::CheckFlag(isDebugCameraActive_,"isDebugActive");
     //視点操作
     DebugUI::CheckCamera(camera_);
