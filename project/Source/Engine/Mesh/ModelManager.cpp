@@ -9,27 +9,27 @@
 #include<assimp/postprocess.h>
 #include"DirectXCommon.h"
 
-std::vector<ModelData> ModelManager::modelDatas;
-std::vector<uint32_t> ModelManager::modelHandle_;
+std::vector<ModelData> ModelManager::modelDatas_;
+std::vector<uint32_t> ModelManager::handle_;
 
 
 void ModelManager::LoadAllModel()
 {
-    modelHandle_.resize(MODELS);
-    modelHandle_[PLAYER] = Load("resources/player", "player.obj");
+    handle_.resize(MODELS);
+    handle_[PLAYER] = Load("resources/player", "player.obj");
 
-    modelHandle_[HEAD] = Load("resources/head", "head.obj");
-    modelHandle_[BODY] = Load("resources/body", "body.obj");
-    modelHandle_[LEFTARM] = Load("resources/leftArm", "leftArm.obj");
-    modelHandle_[RIGHTARM] = Load("resources/rightArm", "rightArm.obj");
-    modelHandle_[LEFTLEG] = Load("resources/leftLeg", "leftLeg.obj");
-    modelHandle_[RIGHTLEG] = Load("resources/rightLeg", "rightLeg.obj");
+    handle_[HEAD] = Load("resources/head", "head.obj");
+    handle_[BODY] = Load("resources/body", "body.obj");
+    handle_[LEFTARM] = Load("resources/leftArm", "leftArm.obj");
+    handle_[RIGHTARM] = Load("resources/rightArm", "rightArm.obj");
+    handle_[LEFTLEG] = Load("resources/leftLeg", "leftLeg.obj");
+    handle_[RIGHTLEG] = Load("resources/rightLeg", "rightLeg.obj");
 
-    modelHandle_[ENEMY] = Load("resources/enemy", "enemy.obj");
-    modelHandle_[WORLD] = Load("resources/world", "world.obj");
-    modelHandle_[PARTICLE] = Load("resources/particle", "particle.obj");
+    handle_[ENEMY] = Load("resources/enemy", "enemy.obj");
+    handle_[WORLD] = Load("resources/world", "world.obj");
+    handle_[PARTICLE] = Load("resources/particle", "particle.obj");
 
-    modelHandle_[STAGE] = Load("resources/stage", "stage.obj");
+    handle_[STAGE] = Load("resources/stage", "stage.obj");
     
 }
 
@@ -46,22 +46,22 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
 {
     //読み込み済みテクスチャを検索
     auto it = std::find_if(
-        modelDatas.begin(),
-        modelDatas.end(),
+        modelDatas_.begin(),
+        modelDatas_.end(),
         [&](ModelData& soundData) {return soundData.filePath == filename; }
     );
 
     //テクスチャ枚数上限チェック
-    assert(modelDatas.size() < DirectXCommon::kMaxModelCount);
+    assert(modelDatas_.size() < DirectXCommon::kMaxModelCount);
 
-    if (it != modelDatas.end()) {
+    if (it != modelDatas_.end()) {
         return;
     }
 
     //テクスチャデータを追加
-    modelDatas.resize(modelDatas.size() + 1);
+    modelDatas_.resize(modelDatas_.size() + 1);
     //追加したテクスチャデータの参照を取得する
-    ModelData& modelData = modelDatas.back();
+    ModelData& modelData = modelDatas_.back();
 
     Assimp::Importer importer;
     std::string filePath = directoryPath + "/" + filename;
@@ -119,17 +119,15 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
 
 uint32_t ModelManager::GetTextureIndexByFileName(const std::string& filePath)
 {
-   
-
     //読み込み済みデータを検索
     auto it = std::find_if(
-        modelDatas.begin(),
-        modelDatas.end(),
+        modelDatas_.begin(),
+        modelDatas_.end(),
         [&](ModelData& modelData) {return modelData.filePath == filePath; }
     );
 
-    if (it != modelDatas.end()) {
-        uint32_t modelIndex = static_cast<uint32_t>(std::distance(modelDatas.begin(), it));
+    if (it != modelDatas_.end()) {
+        uint32_t modelIndex = static_cast<uint32_t>(std::distance(modelDatas_.begin(), it));
         return modelIndex;
     }
 

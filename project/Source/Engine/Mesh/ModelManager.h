@@ -23,12 +23,11 @@ public:
         MODELS,
     };
 
-
-    static ModelData& GetModelData(const uint32_t& modelHandle) {
-        if (modelHandle < MODELS) {
-            return modelDatas[modelHandle];
+    static ModelData& GetModelData(const uint32_t& handle) {
+        if (handle < MODELS) {
+            return modelDatas_[handle];
         }
-        return modelDatas[0];
+        return modelDatas_[0];
     }
     static void LoadAllModel();
 
@@ -38,7 +37,7 @@ private:
     //インデックスの開始番号
     static uint32_t GetTextureIndexByFileName(const std::string& filename);
 private:
-    static std::vector<ModelData> modelDatas;
-    static std::vector<uint32_t> modelHandle_;
+    static std::vector<ModelData> modelDatas_;
+    static std::vector<uint32_t> handle_;
 };
 

@@ -65,11 +65,9 @@ private:
 	// UIマネージャー
 	UIManager* uiManager_ = nullptr;
 
-#ifdef _DEBUG
 	// デバッグカメラ有効
 	bool isDebugCameraActive_ = false;
 	// デバッグカメラの生成
 	DebugCamera* debugCamera_ = nullptr;
 
-#endif
 };

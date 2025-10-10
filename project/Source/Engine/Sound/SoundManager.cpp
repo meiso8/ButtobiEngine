@@ -10,9 +10,6 @@
 
 #pragma comment(lib, "xaudio2.lib") // xaudio2.libをリンクする。  
 
-
-SoundManager* SoundManager::instance_ = nullptr;
-
 Microsoft::WRL::ComPtr<IXAudio2> SoundManager::xAudio2_ = nullptr; // ComオブジェクトなのでComPtrで管理する。  
 std::vector<IXAudio2SourceVoice*> SoundManager::voices_ = {};
 IXAudio2MasteringVoice* SoundManager::masterVoice_ = nullptr;
@@ -20,36 +17,6 @@ bool SoundManager::isStarted_ = false;
 bool SoundManager::isPaused_ = false;
 
 std::vector<SoundData> SoundManager::soundDatas;
-
-SoundManager::SoundManager() {
-    HRESULT result;
-    result = XAudio2Create(xAudio2_.GetAddressOf(), 0, XAUDIO2_DEFAULT_PROCESSOR);
-    assert(SUCCEEDED(result));
-
-    //マスターボイスの生成
-    result = xAudio2_->CreateMasteringVoice(&masterVoice_);//masterVoiceはxAudio2の解放と同時に無効になるため自分でdeleteしない
-    assert(SUCCEEDED(result));
-
-    result = MFStartup(MF_VERSION, MFSTARTUP_NOSOCKET);
-    assert(SUCCEEDED(result));
-}
-
-SoundManager::~SoundManager()
-{
-    for (int i = 0; i < soundDatas.size(); ++i) {
-        Unload(&soundDatas[i]);
-    }
-
-}
-
-
-SoundManager* SoundManager::GetInstance()
-{
-    if (instance_ == nullptr) {
-        instance_ = new SoundManager();
-    }
-    return instance_;
-}
 
 void SoundManager::LoadSoundData(const std::wstring& path) {
 
@@ -150,7 +117,25 @@ uint32_t SoundManager::GetSoundByIndex(const std::wstring& filePath)
 
 void SoundManager::Initialize()
 {
+    HRESULT result;
+    result = XAudio2Create(xAudio2_.GetAddressOf(), 0, XAUDIO2_DEFAULT_PROCESSOR);
+    assert(SUCCEEDED(result));
+
+    //マスターボイスの生成
+    result = xAudio2_->CreateMasteringVoice(&masterVoice_);//masterVoiceはxAudio2の解放と同時に無効になるため自分でdeleteしない
+    assert(SUCCEEDED(result));
+
+    result = MFStartup(MF_VERSION, MFSTARTUP_NOSOCKET);
+    assert(SUCCEEDED(result));
+
     soundDatas.reserve(DirectXCommon::kMaxSoundCount);
+}
+
+void SoundManager::Finalize()
+{
+    for (int i = 0; i < soundDatas.size(); ++i) {
+        Unload(&soundDatas[i]);
+    }
 }
 
 

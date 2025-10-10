@@ -4,6 +4,7 @@
 #include"Input.h"
 #include"Model.h"
 #include"DebugUI.h"
+#include"DrawGrid.h"
 
 const int winWidth = 1280;
 const int winHeight = 720;
@@ -11,12 +12,10 @@ const int winHeight = 720;
 void GameScene::Initialize() {
     // メンバ変数への代入処理
 
+    DrawGrid::Initialize();
+
     // カメラの初期化
     camera_.Initialize(winWidth, winHeight,Camera::PERSPECTIVE);
-    camera_.farZ_ = 1000.0f;
-    camera_.translate_.x = 12.0f;
-    camera_.translate_.y = 7.0f;
-    camera_.translate_.z = -20.0f;
 
 #ifdef _DEBUG
     // デバッグカメラの生成
@@ -159,6 +158,8 @@ void GameScene::CheckAllCollisions() {
 
 void GameScene::Draw() {
 
+
+    DrawGrid::Draw(camera_);
     // 天球の描画
     skyDome_->Draw();
 
@@ -185,6 +186,7 @@ void GameScene::Draw() {
 void GameScene::Debug()
 {
 
+    player_->Debug();
     DebugUI::CheckFlag(isDebugCameraActive_,"isDebugActive");
     //視点操作
     DebugUI::CheckCamera(camera_);

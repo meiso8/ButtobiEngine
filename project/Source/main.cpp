@@ -13,9 +13,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     myEngine->Create(L"2102", WIN_WIDTH, WIN_HEIGHT);
 
     //音声の読み込み
-    Sound::GetInstance()->Load();
+    Sound::LoadAllSound();
     //テスクチャ読み込み
-    Texture::GetInstance()->Load();
+    Texture::LoadAllTexture();
     //モデル読み込み
     ModelManager::LoadAllModel();
     //画面の色

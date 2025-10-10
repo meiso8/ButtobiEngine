@@ -38,9 +38,9 @@ void Model::Create(const ModelManager::MODEL_HANDLE& modelHandle) {
     std::memcpy(vertexData_, modelData_->vertices.data(), sizeof(VertexData) * modelData_->vertices.size());//頂点データをリソースにコピー
 
     //モデルのテクスチャを読む
-    Texture::textureHandle_.push_back(TextureManager::Load(modelData_->material.textureFilePath));
-    textureIndex = UINT(Texture::textureHandle_.size() - 1);
-    assert(textureIndex < Texture::textureHandle_.size());
+    Texture::handle_.push_back(TextureManager::Load(modelData_->material.textureFilePath));
+    textureIndex = UINT(Texture::handle_.size() - 1);
+    assert(textureIndex < Texture::handle_.size());
 
     uvTransform_ = {
         {1.0f,1.0f,1.0f},

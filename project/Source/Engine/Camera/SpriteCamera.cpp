@@ -5,15 +5,6 @@
 #include"Multiply.h"
 
 Matrix4x4 SpriteCamera::viewProjectionMat_;
-SpriteCamera* SpriteCamera::instance_ = nullptr;
-
-SpriteCamera* SpriteCamera::GetInstance()
-{
-    if (instance_ == nullptr) {
-        instance_ = new SpriteCamera();
-  }
-    return instance_;
-}
 
 void SpriteCamera::Initialize(const float& width, const float& height)
 {

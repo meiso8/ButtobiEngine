@@ -102,7 +102,7 @@ public:
 
 	//AABBを取得する関数
 	AABB GetAABB();
-	//衝突応答
+
 	void OnCollision(const Enemy* enemy);
 
 	bool IsAttack()const;
@@ -111,6 +111,8 @@ public:
 
 	int GetLife() const { return life_; };
 
+	//ImGUi用
+	void Debug();
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;

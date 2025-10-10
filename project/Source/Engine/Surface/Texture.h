@@ -3,8 +3,7 @@
 
 class Texture {
 public:
-    static Texture* GetInstance();
-    enum TAG {
+    enum TEXTURE_HANDLE {
         WHITE_1X1,
         UV_CHECKER,
         NUMBERS,
@@ -22,11 +21,8 @@ public:
         TEXTURES
     };
 
-    static std::vector<uint32_t>textureHandle_;
+    static std::vector<uint32_t>handle_;
+    static void LoadAllTexture();
 
-    static void Load();
-
-private:
-    static Texture* instance_;
 };
 

@@ -25,15 +25,11 @@ struct SoundData {
 class SoundManager {
 public:
 
-    SoundManager();
-    ~SoundManager();
-    SoundManager(SoundManager&) = delete;
-
-    static SoundManager* GetInstance();
     static void LoadSoundData(const std::wstring& path);
     static uint32_t Load(const std::wstring& path);
     static uint32_t GetSoundByIndex(const std::wstring& filePath);
     static void Initialize();
+    static void Finalize();
 
     static void Play(const uint32_t tag, const float& volume, bool isLoop = false);
     /// @brief 音声データの解放関数  
@@ -47,12 +43,11 @@ public:
     static bool IsPlaying();
  
 private:
-
+    SoundManager() = default;
+    ~SoundManager() = default;
+    SoundManager(SoundManager&) = delete;
     SoundManager& operator=(SoundManager&) = delete;
-
 private:
-    static SoundManager* instance_;
-
     static  Microsoft::WRL::ComPtr<IXAudio2> xAudio2_; // ComオブジェクトなのでComPtrで管理する。  
     static IXAudio2MasteringVoice* masterVoice_; // ReleaseなしのためComPtrで管理することが出来ない。  
     //IXAudio2SourceVoice* pSourceVoice_ = { nullptr };

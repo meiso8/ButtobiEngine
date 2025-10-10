@@ -4,14 +4,14 @@
 
 void UIManager::Initialize() {
 
-    LifeTextureHandle_ = Texture::textureHandle_[Texture::LIFE];
-    scoreTextureHandle_ = Texture::textureHandle_[Texture::SCORE];
-    comboTextureHandle_ = Texture::textureHandle_[Texture::COMBO];
-    speedBonusTextureHandle_ = Texture::textureHandle_[Texture::SPEED_BONUS];
-    WASDTextureHandle_ = Texture::textureHandle_[Texture::WASD];
-    SpaceTextureHandle_ = Texture::textureHandle_[Texture::SPACE];
-    TimerTextureHandle_ = Texture::textureHandle_[Texture::TIMER];
-    JuiceTextureHandle_ = Texture::textureHandle_[Texture::JUICE];
+    LifeTextureHandle_ = Texture::handle_[Texture::LIFE];
+    scoreTextureHandle_ = Texture::handle_[Texture::SCORE];
+    comboTextureHandle_ = Texture::handle_[Texture::COMBO];
+    speedBonusTextureHandle_ = Texture::handle_[Texture::SPEED_BONUS];
+    WASDTextureHandle_ = Texture::handle_[Texture::WASD];
+    SpaceTextureHandle_ = Texture::handle_[Texture::SPACE];
+    TimerTextureHandle_ = Texture::handle_[Texture::TIMER];
+    JuiceTextureHandle_ = Texture::handle_[Texture::JUICE];
 
 
     for (int i = 0; i < MaxLife_; i++) {
