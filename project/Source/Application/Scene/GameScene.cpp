@@ -177,12 +177,8 @@ void GameScene::Draw() {
 void GameScene::Debug()
 {
     player_->Debug();
-    if (ImGui::Button("ChangeCamera")) {
-        // スペースキーを押すとデバッグカメラに切り替える
-        isDebugCameraActive_ = isDebugCameraActive_ ? false : true;
-    }
-  
-    DebugUI::CheckFlag(isDebugCameraActive_,"DebugCamera");
+
+    DebugUI::SwitchFlag(isDebugCameraActive_, "ChangeCamera");
     //視点操作
     DebugUI::CheckCamera(camera_);
     uint32_t lightType = 0;

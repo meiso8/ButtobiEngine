@@ -20,7 +20,6 @@ void Camera::Initialize(const float& width, const float& height, const PROJECTIO
     offset_ = { 0.0f };
     InitializeTransform();
     UpdateProjectionMatrix();
-
 }
 
 void Camera::InitializeTransform()
@@ -36,6 +35,8 @@ void Camera::UpdateMatrix() {
 
     projectionMat_.m[3][0] += offset_.x;
     projectionMat_.m[3][1] -= offset_.y;
+
+    viewProjectionMat_ = Multiply(viewMat_, projectionMat_);
 }
 
 void Camera::UpdateProjectionMatrix()
@@ -54,7 +55,6 @@ void Camera::UpdateProjectionMatrix()
     }
 }
 
-Matrix4x4 Camera::GetViewProjectionMatrix() {
-
-    return Multiply(viewMat_, projectionMat_);
+Matrix4x4& Camera::GetViewProjectionMatrix() {
+    return viewProjectionMat_;
 }

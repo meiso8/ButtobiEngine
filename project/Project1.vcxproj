@@ -157,6 +157,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\Mesh\Mesh.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\MeshCommon.cpp" />
     <ClCompile Include="Source\Application\CameraController.cpp" />
     <ClCompile Include="Source\Application\Object\DeathParticles.cpp" />
     <ClCompile Include="Source\Application\Object\Enemy.cpp" />
@@ -279,6 +281,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\Mesh\Mesh.h" />
+    <ClInclude Include="Source\Engine\Mesh\MeshCommon.h" />
     <ClInclude Include="Source\Application\CameraController.h" />
     <ClInclude Include="Source\Application\Object\DeathParticles.h" />
     <ClInclude Include="Source\Application\Object\Enemy.h" />

@@ -8,6 +8,8 @@
 #include"MakeIdentity4x4.h"
 #include"Sprite.h"
 #include"Model.h"
+#include"SphereMesh.h"
+#include <functional>
 
 void SampleScene::Initialize() {
 
@@ -46,12 +48,15 @@ void SampleScene::Initialize() {
     cube_[0].Create(Texture::handle_[Texture::WHITE_1X1]);
     cube_[1].Create(Texture::handle_[Texture::WHITE_1X1]);
 
-    cubeWorldTransform_.Initialize();
-    cubeWorldTransform_.scale_ = { 10.0f,10.0f,10.0f };
-    cubeWorldTransform_.SetRotationY(std::numbers::pi_v<float> / 4.0f);
-    WorldTransformUpdate(cubeWorldTransform_);
+    worldTransform_.Initialize();
+    worldTransform_.translate_ = { 1.0f,1.0f,1.0f };
+    worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
+    worldTransform_.rotate_.y = (std::numbers::pi_v<float> / 4.0f);
+    WorldTransformUpdate(worldTransform_);
 
     //particle_.Create(Texture::GetHandle(Texture::UV_CHECKER));
+    sphereMesh_ = std::make_unique<SphereMesh>();
+    sphereMesh_->Create(Texture::handle_[Texture::WHITE_1X1]);
 
 }
 
@@ -68,12 +73,6 @@ void SampleScene::Update()
         SoundManager::Play(Sound::GetHandle(Sound::SE1), 1.0f, false);
     }
 
-    if (Input::IsTriggerKey(DIK_P)) {
-        // スペースキーを押すとデバッグカメラに切り替える
-        isDebugCameraActive_ = isDebugCameraActive_ ? false : true;
-        currentCamera = (isDebugCameraActive_) ? debugCamera_.get() : camera_.get();
-    }
-
     currentCamera->UpdateMatrix();
 
     for (Sprite* sprite : sprites_) {
@@ -81,6 +80,8 @@ void SampleScene::Update()
     }
 
     samplePlayer_->Update();
+
+    WorldTransformUpdate(worldTransform_);
 
 #endif
 }
@@ -93,7 +94,9 @@ void SampleScene::Draw()
 
     cube_[0].PreDraw(kBlendModeNormal);
     cube_[0].Draw(*currentCamera, MakeIdentity4x4(), lightType_);
-    cube_[1].Draw(*currentCamera, cubeWorldTransform_.matWorld_, lightType_);
+
+    sphereMesh_->PreDraw(kBlendModeNormal);
+    sphereMesh_->Draw(*currentCamera, worldTransform_.matWorld_, lightType_);
 
     MyEngine::SetBlendMode(blendMode_);
     samplePlayer_->Draw(*currentCamera, lightType_);
@@ -110,13 +113,14 @@ void SampleScene::Draw()
 
 void SampleScene::Debug()
 {
+    std::function<void()> func = [this]() { SwitchCamera(); };
 
     DebugUI::CheckDirectionalLight(lightType_);
-
     DebugUI::CheckBlendMode(blendMode_);
     DebugUI::CheckSprite(*sprites_[0], "sprite0");
     DebugUI::CheckCamera(*currentCamera);
-    DebugUI::CheckFlag(isDebugCameraActive_, "isDebugActive");
+    DebugUI::CheckWorldTransform(worldTransform_,"worldTransform");
+    DebugUI::Button("ChangeCamera", func);
     DebugUI::CheckFPS();
 }
 
@@ -128,4 +132,10 @@ SampleScene::~SampleScene()
     }
 
     sprites_.clear();
+}
+
+void SampleScene::SwitchCamera()
+{
+    isDebugCameraActive_ = isDebugCameraActive_ ? false : true;
+    currentCamera = (isDebugCameraActive_) ? debugCamera_.get() : camera_.get();
 }

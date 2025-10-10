@@ -6,6 +6,7 @@
 #define WIN_HEIGHT 720
 
 //Windowsアプリでのエントリーポイント(main関数)
+
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
     // ==============================================//↓基本いじらない↓//============================================
@@ -35,7 +36,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     //現在のシーン
     SceneManager* currentScene = nullptr;
     //現在のシーンに代入
-    currentScene = gameScene.get();
+    currentScene = sampleScene.get();
     //現在のシーンの初期化
     currentScene->Initialize();
 
