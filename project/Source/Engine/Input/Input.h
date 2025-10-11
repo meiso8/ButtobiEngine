@@ -16,6 +16,7 @@ class Input {
 public:
     static bool foundJoystick_;
     GUID joystickGUID = GUID_NULL;
+    static bool isDragging_;
 public:
 
     enum ButtonType {
@@ -65,8 +66,6 @@ private:
     IDirectInputDevice8* mouse_ = nullptr;
     static DIMOUSESTATE mouseState_;
     DIMOUSESTATE mouseState_bak_ = {};	// マウス情報(変化検知用)
-    static float mouseWheelVol_;
-    static bool isDragging_;
 
 
 

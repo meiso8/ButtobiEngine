@@ -65,13 +65,13 @@ void SampleScene::Update()
 
 #ifdef _DEBUG
 
-    if (!SoundManager::IsPlaying()) {
-        SoundManager::Play(Sound::GetHandle(Sound::BGM1), 0.0625f, true);
-    }
+    //if (!SoundManager::IsPlaying()) {
+    //    SoundManager::Play(Sound::GetHandle(Sound::BGM1), 0.0625f, true);
+    //}
 
-    if (Input::IsTriggerKey(DIK_W)) {
-        SoundManager::Play(Sound::GetHandle(Sound::SE1), 1.0f, false);
-    }
+    //if (Input::IsTriggerKey(DIK_W)) {
+    //    SoundManager::Play(Sound::GetHandle(Sound::SE1), 1.0f, false);
+    //}
 
     currentCamera->UpdateMatrix();
 
@@ -122,9 +122,10 @@ void SampleScene::Debug()
     DebugUI::CheckDirectionalLight(lightType_);
     DebugUI::CheckBlendMode(blendMode_);
     DebugUI::CheckSprite(*sprites_[0], "sprite0");
+    DebugUI::Button("ChangeCamera", func);
     DebugUI::CheckCamera(*currentCamera);
     DebugUI::CheckWorldTransform(worldTransform_,"worldTransform");
-    DebugUI::Button("ChangeCamera", func);
+
     DebugUI::CheckFPS();
 }
 
