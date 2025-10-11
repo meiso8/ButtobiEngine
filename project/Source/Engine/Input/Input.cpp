@@ -15,7 +15,7 @@ DIJOYSTATE Input::joyState_;
 float Input::deadZone_ = 0.1f;
 BYTE Input::preJoyButtons_[32];
 DIMOUSESTATE Input::mouseState_;
-float Input::mouseWheelVol_ = 0;
+
 bool Input::isDragging_ = false;
 
 Input* Input::GetInstance() {
@@ -358,8 +358,7 @@ Vector2& Input::GetMousePos() {
 }
 
 float Input::GetMouseWheel() {
-    mouseWheelVol_ += static_cast<float>(mouseState_.lZ) / FPS;
-    return mouseWheelVol_;
+    return  static_cast<float>(mouseState_.lZ) / FPS;
 };
 
 

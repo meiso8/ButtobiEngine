@@ -36,7 +36,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     //現在のシーン
     SceneManager* currentScene = nullptr;
     //現在のシーンに代入
-    currentScene = sampleScene.get();
+    currentScene = gameScene.get();
     //現在のシーンの初期化
     currentScene->Initialize();
 

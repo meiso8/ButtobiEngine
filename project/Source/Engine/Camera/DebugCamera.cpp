@@ -27,7 +27,8 @@ void DebugCamera::Initialize(const float& width, const float& height, const PROJ
 
     scale_ = { 1.0f,1.0f,1.0f };
     rotate_ = { 0.0f,0.0f,0.0f };
-    translate_ = { 0.0f,0.0f,-50.0f };
+    translate_ = { 0.0f,0.0f,-30.0f };
+    shericalCoordinate_.radius = -30.0f;
 
     viewMat_ = Inverse(MakeAffineMatrix(scale_, rotate_, translate_));
     projectionMat_ = MakePerspectiveFovMatrix(0.45f, width_ / height_, nearZ_, farZ_);
@@ -148,17 +149,17 @@ void DebugCamera::EyeOperation() {
     } else if (Input::IsPressMouse(2)) {
         //視点の回転
         //中ボタン押し込み&&ドラッグ
-        isDragging_ = true;
+        Input::isDragging_ = true;
     }
 
     //マウススクロールする //初期位置-30
-    shericalCoordinate_.radius = -30 + Input::GetMouseWheel();
+    shericalCoordinate_.radius += Input::GetMouseWheel();
 
     if (!Input::IsPressMouse(2)) {
-        isDragging_ = false;
+        Input::isDragging_ = false;
     }
 
-    if (isDragging_) {
+    if (Input::isDragging_) {
         Vector2 currentPos = Input::GetMousePos();
         shericalCoordinate_.polar += currentPos.x / FPS;
         shericalCoordinate_.azimuthal += currentPos.y / FPS;

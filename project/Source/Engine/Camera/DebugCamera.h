@@ -12,7 +12,6 @@ private:
     float rotateSpeed_ = 0.0f;
     //上下左右移動
     float speed_ = 0.0f;
-    bool isDragging_ = false;
 public:
     /// @brief 更新
     void UpdateMatrix()override;
