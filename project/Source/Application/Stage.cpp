@@ -4,33 +4,37 @@
 #include"Model.h"
 
 void Stage::Initialize(Camera* camera) {
-	// ワールド変換の初期化
-	worldTransform_.Initialize();
-	worldTransform_.scale_ = {100.0f, 100.0f, 100.0f};
-	worldTransform_.rotate_ = {};
-	worldTransform_.translate_ = {0.0f,30.0f,0.0f};
-	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotate_, worldTransform_.translate_);
-	
-	WorldTransformUpdate(worldTransform_);
+    // ワールド変換の初期化
+    worldTransform_.Initialize();
+    worldTransform_.scale_ = { 100.0f, 100.0f, 100.0f };
+    worldTransform_.rotate_ = {};
+    worldTransform_.translate_ = { 0.0f,30.0f,0.0f };
+    worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotate_, worldTransform_.translate_);
 
-	// カメラのセット
-	camera_ = camera;
+    WorldTransformUpdate(worldTransform_);
 
-	model_ = std::make_unique<Model>();
-	// モデルの生成 OBJからの生成
-	model_->Create(ModelManager::STAGE);
+    // カメラのセット
+    camera_ = camera;
+
+    model_ = new Model();
+    // モデルの生成 OBJからの生成
+    model_->Create(ModelManager::STAGE);
 }
 void Stage::Update() {
 
 
-	// ワールド変換の更新
-	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotate_, worldTransform_.translate_);
-	WorldTransformUpdate(worldTransform_);
+    // ワールド変換の更新
+    worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotate_, worldTransform_.translate_);
+    WorldTransformUpdate(worldTransform_);
 }
 
 void Stage::Draw() {
-	// 3Dモデル描画前処理
-	model_->PreDraw(BlendMode::kBlendModeNone);
-	// 3Dモデルを描画
-	model_->Draw( *camera_,worldTransform_.matWorld_);
+    // 3Dモデル描画前処理
+    model_->PreDraw(BlendMode::kBlendModeNone);
+    // 3Dモデルを描画
+    model_->Draw(*camera_, worldTransform_.matWorld_);
+}
+
+Stage::~Stage() {
+    delete model_;
 }

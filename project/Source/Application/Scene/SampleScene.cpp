@@ -7,7 +7,6 @@
 #include<numbers>
 #include"MakeIdentity4x4.h"
 #include"Sprite.h"
-#include"Model.h"
 #include"SphereMesh.h"
 #include <functional>
 
@@ -27,7 +26,7 @@ void SampleScene::Initialize() {
     debugCamera_ = std::make_unique<DebugCamera>();
     debugCamera_->Initialize(static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()));
 
-    currentCamera = camera_.get();
+    currentCamera_ = camera_.get();
 
 #pragma endregion
 
@@ -73,7 +72,7 @@ void SampleScene::Update()
     //    SoundManager::Play(Sound::GetHandle(Sound::SE1), 1.0f, false);
     //}
 
-    currentCamera->UpdateMatrix();
+    currentCamera_->UpdateMatrix();
 
     for (Sprite* sprite : sprites_) {
         sprite->UpdateUV();
@@ -89,17 +88,17 @@ void SampleScene::Update()
 void SampleScene::Draw()
 {
 #ifdef _DEBUG
-    DrawGrid::Draw(*currentCamera);
+    DrawGrid::Draw(*currentCamera_);
 #endif // _DEBUG
 
     cube_[0].PreDraw(kBlendModeNormal);
-    cube_[0].Draw(*currentCamera, MakeIdentity4x4(), lightType_);
+    cube_[0].Draw(*currentCamera_, MakeIdentity4x4(), lightType_);
 
     sphereMesh_->PreDraw(kBlendModeNormal);
-    sphereMesh_->Draw(*currentCamera, worldTransform_.matWorld_, lightType_);
+    sphereMesh_->Draw(*currentCamera_, worldTransform_.matWorld_, lightType_);
 
     MyEngine::SetBlendMode(blendMode_);
-    samplePlayer_->Draw(*currentCamera, lightType_);
+    samplePlayer_->Draw(*currentCamera_, lightType_);
     MyEngine::SetBlendMode();
 
     Sprite::PreDraw(blendMode_);
@@ -113,7 +112,7 @@ void SampleScene::Draw()
 
 void SampleScene::Debug()
 {
-    std::function<void()> func = [this]() { SwitchCamera(); };
+
     samplePlayer_->Debug();
 
     DebugUI::CheckBalloonData(cube_[0].GetBalloonData());
@@ -122,8 +121,9 @@ void SampleScene::Debug()
     DebugUI::CheckDirectionalLight(lightType_);
     DebugUI::CheckBlendMode(blendMode_);
     DebugUI::CheckSprite(*sprites_[0], "sprite0");
+    std::function<void()> func = [this]() { SwitchCamera(); };
     DebugUI::Button("ChangeCamera", func);
-    DebugUI::CheckCamera(*currentCamera);
+    DebugUI::CheckCamera(*currentCamera_);
     DebugUI::CheckWorldTransform(worldTransform_,"worldTransform");
 
     DebugUI::CheckFPS();
@@ -139,8 +139,3 @@ SampleScene::~SampleScene()
     sprites_.clear();
 }
 
-void SampleScene::SwitchCamera()
-{
-    isDebugCameraActive_ = isDebugCameraActive_ ? false : true;
-    currentCamera = (isDebugCameraActive_) ? debugCamera_.get() : camera_.get();
-}

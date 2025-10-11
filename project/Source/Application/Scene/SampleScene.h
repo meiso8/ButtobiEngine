@@ -5,9 +5,7 @@
 #include"WorldTransform.h"
 #include"Cube.h"
 #include"Particle/Particle.h"
-#include"Camera/Camera.h"
-#include"Camera/DebugCamera.h"
-#include<memory>
+
 #include"SphereMesh.h"
 
 class Sprite;
@@ -20,19 +18,12 @@ public:
     void Debug()override;
     ~SampleScene();
 private:
-    void SwitchCamera();
-private:
     //ライトタイプ
     uint32_t lightType_ = 0;
     //ブレンドモード
     uint32_t blendMode_ = 0;
 
-    //カメラ
-    std::unique_ptr<Camera> camera_ = nullptr;
     Transform cameraTransform_;
-    bool isDebugCameraActive_ = false;
-    std::unique_ptr<DebugCamera> debugCamera_ = nullptr;
-    Camera* currentCamera = nullptr;
 
     //スプライト
     std::vector<Sprite*>sprites_;

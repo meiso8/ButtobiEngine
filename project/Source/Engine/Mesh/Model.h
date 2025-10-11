@@ -13,7 +13,6 @@ public:
 private:
     void CreateVertex()override;
     void CreateUV();
-    void LoadTexture();
 private:
     const ModelData* modelData_;
     Transform uvTransform_;

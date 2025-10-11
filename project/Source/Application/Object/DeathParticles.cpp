@@ -5,16 +5,16 @@
 
 #include <algorithm>
 #include<cassert>
-#include"Model.h"
-#include"Camera/Camera.h"
 
-void DeathParticles::Initialize(Model* model, Camera* camera, const Vector3& position) {
-    // NULLポインタチェック
-    assert(model);
+#include"Camera/Camera.h"
+#include"Model.h"
+
+void DeathParticles::Initialize(Camera* camera, const Vector3& position) {
 
     // 引数として受け取ったデータをメンバ変数に記録する
-    this->model_ = model;
-    this->camera_ = camera;
+    model_ = new Model();
+    model_->Create(ModelManager::PARTICLE);;
+    camera_ = camera;
 
     // ワールド変換の初期化
     for (auto& worldTransform : worldTransforms_) {
@@ -81,7 +81,12 @@ void DeathParticles::Draw() {
 
     for (auto& worldTransform : worldTransforms_) {
         // 3Dモデルを描画
-        model_->Draw( *camera_, worldTransform.matWorld_, MaterialResource::HALF_L);
+        model_->Draw(*camera_, worldTransform.matWorld_, MaterialResource::HALF_L);
     }
 
-};
+}
+DeathParticles::~DeathParticles()
+{
+   delete model_;
+}
+;
