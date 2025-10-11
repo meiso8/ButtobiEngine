@@ -12,9 +12,9 @@ class Camera;
 class Enemy {
 
 public:
-	void Initialize(Camera* camera, Vector3& position);
+	void Initialize(Vector3& position);
 	void Update();
-	void Draw();
+	void Draw(Camera& camera);
 	AABB GetAABB();
 	// ワールド座標を取得
 	Vector3 GetWorldPosition();

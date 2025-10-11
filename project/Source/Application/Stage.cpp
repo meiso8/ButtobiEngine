@@ -3,7 +3,7 @@
 #include"Camera/Camera.h"
 #include"Model.h"
 
-void Stage::Initialize(Camera* camera) {
+void Stage::Initialize() {
     // ワールド変換の初期化
     worldTransform_.Initialize();
     worldTransform_.scale_ = { 100.0f, 100.0f, 100.0f };
@@ -12,9 +12,6 @@ void Stage::Initialize(Camera* camera) {
     worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotate_, worldTransform_.translate_);
 
     WorldTransformUpdate(worldTransform_);
-
-    // カメラのセット
-    camera_ = camera;
 
     model_ = new Model();
     // モデルの生成 OBJからの生成
@@ -28,11 +25,11 @@ void Stage::Update() {
     WorldTransformUpdate(worldTransform_);
 }
 
-void Stage::Draw() {
+void Stage::Draw(Camera& camera) {
     // 3Dモデル描画前処理
     model_->PreDraw(BlendMode::kBlendModeNone);
     // 3Dモデルを描画
-    model_->Draw(*camera_, worldTransform_.matWorld_);
+    model_->Draw(camera, worldTransform_.matWorld_);
 }
 
 Stage::~Stage() {

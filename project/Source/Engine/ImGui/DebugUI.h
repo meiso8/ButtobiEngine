@@ -57,6 +57,7 @@ public:
     static void CheckBlendMode(uint32_t& blendMode);
     static void CheckInt(int& value, const char* label);
     static void CheckFPS();
+    static void CheckFlag(bool& flag, const char* label);
     static void SwitchFlag(bool& flag, const char* label);
     static void Button(const char* label, std::function<void()> onSwitch);
 };
