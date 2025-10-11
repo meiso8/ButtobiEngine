@@ -27,10 +27,9 @@ Player::~Player()
 
 }
 
-void Player::Initialize(Camera* camera, const Vector3& position) {
+void Player::Initialize(Camera& camera,const Vector3& position) {
 
-	// 引数として受け取ったデータをメンバ変数に記録する
-	this->camera_ = camera;
+	camera_ = &camera;
 
 	for (size_t i = 0; i < model_.size(); ++i) {
 		model_[i] = new Model();
@@ -665,7 +664,7 @@ void Player::Update() {
 	AttackAnimation();
 }
 
-void Player::Draw() {
+void Player::Draw(Camera& camera) {
 
 	// 3Dモデル描画前処理
 	model_[0]->PreDraw(BlendMode::kBlendModeNormal);
@@ -674,7 +673,7 @@ void Player::Draw() {
 	for (int i = 0; i < Parts::kNumParts; i++) {
 		//ここに追加しました。
 		model_[i]->SetColor(objectColor_);
-		model_[i]->Draw(*camera_, DrawPartsWorldTransform_[i].matWorld_, MaterialResource::LIGHTTYPE::HALF_L);
+		model_[i]->Draw(camera, DrawPartsWorldTransform_[i].matWorld_, MaterialResource::LIGHTTYPE::HALF_L);
 	}
 
 }

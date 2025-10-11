@@ -54,7 +54,7 @@ public:
 	/// @brief 初期化
 	/// @param model モデル
 	/// @param textureHandle テクスチャハンドル
-	void Initialize(Camera* camera, const Vector3& position);
+	void Initialize(Camera& camera,const Vector3& position);
 
 	/// @brief 更新
 	void Update();
@@ -92,7 +92,7 @@ public:
 	void WallHit(const CollisionMapInfo& info);
 
 	/// @brief 描画
-	void Draw();
+	void Draw(Camera& camera);
 
 	const WorldTransform& GetWorldTransform() const { return worldTransform_; };
 	const Vector3& GetVelocity() const { return velocity_; };
@@ -114,6 +114,7 @@ public:
 	//ImGUi用
 	void Debug();
 private:
+	Camera* camera_ = nullptr;
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 
@@ -122,8 +123,6 @@ private:
 
 	// モデル
 	std::array<Model*, Parts::kNumParts> model_ = {nullptr,nullptr,nullptr,nullptr,nullptr,nullptr};
-	// カメラ
-	Camera* camera_ = nullptr;
 	// 速度
 	Vector3 velocity_ = {};
 	// 加速度

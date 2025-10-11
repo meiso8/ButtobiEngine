@@ -6,12 +6,11 @@
 #include <numbers>
 #include<cassert>
 
-void Enemy::Initialize(Camera* camera, Vector3& position) {
+void Enemy::Initialize(Vector3& position) {
 
 	model_ = new Model();
 	model_->Create(ModelManager::ENEMY);
 	color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
-	camera_ = camera;
 	worldTransform_.Initialize();
 	worldTransform_.translate_ = position; // 初期位置をオリジンにしておく
 	worldTransform_.rotate_.y = std::numbers::pi_v<float> * 3.0f / 2.0f;
@@ -40,13 +39,13 @@ void Enemy::Update() {
 	WorldTransformUpdate(worldTransform_);
 }
 
-void Enemy::Draw() {
+void Enemy::Draw(Camera& camera) {
 
 	// 3Dモデル描画前処理
 	model_->PreDraw(BlendMode::kBlendModeNormal);
 	model_->SetColor(color_);
 	// 3Dモデルを描画
-	model_->Draw( *camera_, worldTransform_.matWorld_, MaterialResource::LIGHTTYPE::HALF_L);
+	model_->Draw(camera, worldTransform_.matWorld_, MaterialResource::LIGHTTYPE::HALF_L);
 
 }
 

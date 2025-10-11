@@ -29,28 +29,28 @@ void GameScene::Initialize() {
     // 自キャラの生成
     player_ = new Player();
     Vector3 playerPosition = { 0.0f, 0.0f, 0.0f };
-    // 自キャラの初期化
-    player_->Initialize(camera_.get(), playerPosition);
+    // 自キャラの初期化 //ここはmainCamera
+    player_->Initialize(*camera_,playerPosition);
 
     // 敵キャラ生成
     for (int32_t i = 0; i < kEnemyMax; ++i) {
         Enemy* newEnemy = new Enemy();
         Vector3 enemyPosition = { i * 5.0f + 10.0f, 0.0f, 0.0f };
-        newEnemy->Initialize(camera_.get(), enemyPosition);
+        newEnemy->Initialize(enemyPosition);
         enemies_.push_back(newEnemy);
     }
 
     skyDome_ = new Skydome();
     // 天球の生成
-    skyDome_->Initialize(camera_.get());
+    skyDome_->Initialize();
 
     // パーティクル
     deathParticles_ = new DeathParticles();
-    deathParticles_->Initialize(camera_.get(), playerPosition);
+    deathParticles_->Initialize(playerPosition);
 
     // カメラ操作の初期化
     cameraController_ = new CameraController();
-    cameraController_->Initialize(camera_.get());
+    cameraController_->Initialize(currentCamera_);
     cameraController_->SetTarget(player_);
     cameraController_->Reset();
     cameraController_->SetMovableArea({ 0.0f, 100.0f, 0.0f, 100.0f });
@@ -61,7 +61,7 @@ void GameScene::Initialize() {
 
     // 地形
     stage_ = new Stage();
-    stage_->Initialize(camera_.get());
+    stage_->Initialize();
 
     player_->InitializeLife(uiManager_->GetMaxLife());
 };
@@ -97,8 +97,8 @@ void GameScene::Update() {
 
     // カメラの処理
     if (isDebugCameraActive_) {
-        camera_->viewMat_ = debugCamera_->viewMat_;
-        camera_->projectionMat_ = debugCamera_->projectionMat_;
+        //camera_->viewMat_ = debugCamera_->viewMat_;
+        //camera_->projectionMat_ = debugCamera_->projectionMat_;
     } else {
         // 行列更新
         cameraController_->Update();
@@ -148,25 +148,25 @@ void GameScene::Draw() {
 
     DrawGrid::Draw(*currentCamera_);
     // 天球の描画
-    skyDome_->Draw();
+    skyDome_->Draw(*currentCamera_);
 
     // 地形の描画
-    stage_->Draw();
+    stage_->Draw(*currentCamera_);
 
     // 自キャラの描画
-    player_->Draw();
+    player_->Draw(*currentCamera_);
 
     // 敵キャラの描画
     for (Enemy* newEnemy : enemies_) {
         if (!newEnemy)
             // ガード節と呼ぶ。
             continue;
-        newEnemy->Draw();
+        newEnemy->Draw(*currentCamera_);
     }
 
      //デスパーティクルの描画処理
     if (deathParticles_) {
-        deathParticles_->Draw();
+        deathParticles_->Draw(*currentCamera_);
     }
     uiManager_->Draw();
 }
@@ -174,8 +174,7 @@ void GameScene::Debug()
 {
     player_->Debug();
 
-    DebugUI::SwitchFlag(isDebugCameraActive_, "ChangeCamera");
-
+    DebugUI::CheckFlag(isDebugCameraActive_,"isDebugCameraAvtive");
     std::function<void()> func = [this]() { SwitchCamera(); };
     DebugUI::Button("ChangeCamera", func);
     uint32_t lightType = 0;

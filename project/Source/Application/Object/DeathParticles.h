@@ -12,9 +12,9 @@ class Model;
 /// @brief  デス演出用パーティクル
 class DeathParticles {
 public:
-	void Initialize(Camera* camera, const Vector3& position);
+	void Initialize(const Vector3& position);
 	void Update();
-	void Draw();
+	void Draw(Camera& camera);
 	~DeathParticles();
 private:
 	// モデル

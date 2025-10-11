@@ -9,12 +9,11 @@
 #include"Camera/Camera.h"
 #include"Model.h"
 
-void DeathParticles::Initialize(Camera* camera, const Vector3& position) {
+void DeathParticles::Initialize(const Vector3& position) {
 
     // 引数として受け取ったデータをメンバ変数に記録する
     model_ = new Model();
     model_->Create(ModelManager::PARTICLE);;
-    camera_ = camera;
 
     // ワールド変換の初期化
     for (auto& worldTransform : worldTransforms_) {
@@ -69,7 +68,7 @@ void DeathParticles::Update() {
     model_->SetColor(color_);
 };
 
-void DeathParticles::Draw() {
+void DeathParticles::Draw(Camera& camera) {
 
     // 早期リターン
     if (isFinished_) {
@@ -81,7 +80,7 @@ void DeathParticles::Draw() {
 
     for (auto& worldTransform : worldTransforms_) {
         // 3Dモデルを描画
-        model_->Draw(*camera_, worldTransform.matWorld_, MaterialResource::HALF_L);
+        model_->Draw(camera, worldTransform.matWorld_, MaterialResource::HALF_L);
     }
 
 }

@@ -212,15 +212,22 @@ void DebugUI::CheckFPS() {
     ImGui::Text("FPS : %f", ImGui::GetIO().Framerate);
 }
 
+void DebugUI::CheckFlag(bool& flag, const char* label)
+{
+    std::string labels = std::string(label) + " : " + (flag ? "true" : "false");
+    ImGui::Text("%s", labels.c_str());
+}
+
 void DebugUI::SwitchFlag(bool& flag,const char* label)
 {
+    CheckFlag(flag, label);
+
     if (ImGui::Button(label)) {
         // スペースキーを押すとデバッグカメラに切り替える
         flag = flag ? false : true;
-
     }
-    std::string labels = std::string(label) + " : " + (flag ? "true" : "false");
-    ImGui::Text("%s", labels.c_str());
+
+
 }
 void DebugUI::Button(const char* label, std::function<void()> onSwitch)
 {
