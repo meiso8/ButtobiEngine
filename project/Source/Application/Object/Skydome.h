@@ -9,12 +9,12 @@ class Camera;
 class Skydome {
 public:
     /// @brief 初期化
-    void Initialize(Model* model, Camera* camera);
+    void Initialize(Camera* camera);
     /// @brief 更新
     void Update();
     /// @brief 描画
     void Draw();
-
+    ~Skydome();
 private:
     // ワールド変換データ
     WorldTransform worldTransform_;

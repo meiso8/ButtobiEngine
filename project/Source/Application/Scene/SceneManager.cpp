@@ -16,3 +16,10 @@ void SceneManager::Debug()
 {
 
 }
+
+void SceneManager::SwitchCamera()
+{
+    isDebugCameraActive_ = isDebugCameraActive_ ? false : true;
+    currentCamera_ = (isDebugCameraActive_) ? debugCamera_.get() : camera_.get();
+
+}

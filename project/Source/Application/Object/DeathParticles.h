@@ -6,16 +6,16 @@
 #include <numbers>
 #include<array>
 
-class Model;
 class Camera;
+class Model;
 
 /// @brief  デス演出用パーティクル
 class DeathParticles {
 public:
-	void Initialize(Model* model, Camera* camera, const Vector3& position);
+	void Initialize(Camera* camera, const Vector3& position);
 	void Update();
 	void Draw();
-
+	~DeathParticles();
 private:
 	// モデル
 	Model* model_ = nullptr;

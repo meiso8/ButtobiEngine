@@ -1,6 +1,7 @@
 #pragma once
 #include"ModelData.h"
 
+
 class ModelManager
 {
 public:
@@ -23,12 +24,7 @@ public:
         MODELS,
     };
 
-    static ModelData& GetModelData(const uint32_t& handle) {
-        if (handle < MODELS) {
-            return modelDatas_[handle];
-        }
-        return modelDatas_[0];
-    }
+    static ModelData& GetModelData(const uint32_t& handle);
     static void LoadAllModel();
 
 private:
