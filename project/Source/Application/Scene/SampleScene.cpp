@@ -72,6 +72,10 @@ void SampleScene::Update()
     //    SoundManager::Play(Sound::GetHandle(Sound::SE1), 1.0f, false);
     //}
 
+    if (Input::IsTriggerMouse(0)) {
+        SoundManager::Play(Sound::GetHandle(Sound::SE1), 0.0625f, false);
+    }
+
     currentCamera_->UpdateMatrix();
 
     for (Sprite* sprite : sprites_) {
