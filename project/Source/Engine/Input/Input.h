@@ -25,8 +25,10 @@ public:
     };
 
     static Input* GetInstance();
+
     Input() = default;
     Input(Input&) = delete;
+    Input& operator=(Input&) = delete;
 
     HRESULT Initialize(Window& window);
     /// @brief キーを押した状態 
@@ -40,9 +42,14 @@ public:
     static bool IsAnyKeyPressed();
     /// @brief キーの情報を取得する
     void Update();
-
+    /// @brief マウスが押されている状態かどうかを取得する
+    /// @param index マウスボタンの番号　0 =左 1 = 右　2 = 中　3 = XButton2
+    /// @return 押されているかどうか
     static bool IsPressMouse(uint32_t index);
-
+    /// @brief マウスがトリガーされた状態かどうかを取得する
+    /// @param index マウスボタンの番号　0 =左 1 = 右　2 = 中　3 = XButton2
+    /// @return トリガーされたかどうか
+    static bool IsTriggerMouse(uint32_t index);
     static bool IsJoyStickPressButton(uint32_t index);
     static bool IsJoyStickTrigger(uint32_t index);
 
@@ -65,7 +72,7 @@ private:
     //マウス
     IDirectInputDevice8* mouse_ = nullptr;
     static DIMOUSESTATE mouseState_;
-    DIMOUSESTATE mouseState_bak_ = {};	// マウス情報(変化検知用)
+    static DIMOUSESTATE preMouseState_;	// マウス情報(変化検知用)
 
 
 
@@ -77,6 +84,5 @@ private:
 
 private:
     static bool NormalizeButtonCount(float* x, float* y, LONG& buttonLX, LONG& buttonLY);
-    Input& operator=(Input&) = delete;
     ~Input();
 };
