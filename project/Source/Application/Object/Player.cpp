@@ -66,19 +66,19 @@ void Player::Initialize(Camera* camera, const Vector3& position) {
 
 	targetPartsScale_[AttackPhase::kNone][Parts::kHead] = {1.0f, 1.0f, 1.0f};
 	targetPartsRotate_[AttackPhase::kNone][Parts::kHead] = {0.0f, 0.0f, 0.0f};
-	targetPartsTranslate_[AttackPhase::kNone][Parts::kHead] = {0.0f, 0.0f, 0.0f};
+	targetPartsTranslate_[AttackPhase::kNone][Parts::kHead] = defaultPartsOffset_[Parts::kHead];
 
 	targetPartsScale_[AttackPhase::kCharge][Parts::kHead] = {1.0f, 1.0f, 1.0f};
 	targetPartsRotate_[AttackPhase::kCharge][Parts::kHead] = {1.0f, 0.0f, 0.1f};
-	targetPartsTranslate_[AttackPhase::kCharge][Parts::kHead] = {0.0f, -0.4f, 0.8f};
+	targetPartsTranslate_[AttackPhase::kCharge][Parts::kHead] = defaultPartsOffset_[Parts::kHead]+Vector3{0.0f, -0.4f, 0.8f};
 
 	targetPartsScale_[AttackPhase::kFire][Parts::kHead] = {1.0f, 1.0f, 1.0f};
 	targetPartsRotate_[AttackPhase::kFire][Parts::kHead] = {0.0f, 0.0f, 0.1f};
-	targetPartsTranslate_[AttackPhase::kFire][Parts::kHead] = {0.0f, 0.0f, 0.0f};
+	targetPartsTranslate_[AttackPhase::kFire][Parts::kHead] = defaultPartsOffset_[Parts::kHead];
 
 	targetPartsScale_[AttackPhase::kEnd][Parts::kHead] = {1.0f, 1.0f, 1.0f};
 	targetPartsRotate_[AttackPhase::kEnd][Parts::kHead] = {0.0f, 0.0f, 0.0f};
-	targetPartsTranslate_[AttackPhase::kEnd][Parts::kHead] = {0.0f, 0.0f, 0.0f};
+	targetPartsTranslate_[AttackPhase::kEnd][Parts::kHead] = defaultPartsOffset_[Parts::kHead];
 
 #pragma endregion
 
@@ -86,19 +86,19 @@ void Player::Initialize(Camera* camera, const Vector3& position) {
 
 	targetPartsScale_[AttackPhase::kNone][Parts::kBody] = {1.0f, 1.0f, 1.0f};
 	targetPartsRotate_[AttackPhase::kNone][Parts::kBody] = {0.0f, 0.0f, 0.0f};
-	targetPartsTranslate_[AttackPhase::kNone][Parts::kBody] = {0.0f, 0.0f, 0.0f};
+	targetPartsTranslate_[AttackPhase::kNone][Parts::kBody] = defaultPartsOffset_[Parts::kBody];
 
 	targetPartsScale_[AttackPhase::kCharge][Parts::kBody] = {1.0f, 1.0f, 1.0f};
 	targetPartsRotate_[AttackPhase::kCharge][Parts::kBody] = {1.5f, 0.0f, 0.2f};
-	targetPartsTranslate_[AttackPhase::kCharge][Parts::kBody] = {0.0f, 0.0f, 0.2f};
+	targetPartsTranslate_[AttackPhase::kCharge][Parts::kBody] = defaultPartsOffset_[Parts::kBody] +Vector3{0.0f, 0.0f, 0.2f};
 
 	targetPartsScale_[AttackPhase::kFire][Parts::kBody] = {1.0f, 1.0f, 1.0f};
 	targetPartsRotate_[AttackPhase::kFire][Parts::kBody] = {-0.3f, 0.2f, 0.0f};
-	targetPartsTranslate_[AttackPhase::kFire][Parts::kBody] = {0.0f, 0.0f, 0.0f};
+	targetPartsTranslate_[AttackPhase::kFire][Parts::kBody] = defaultPartsOffset_[Parts::kBody];
 
 	targetPartsScale_[AttackPhase::kEnd][Parts::kBody] = {1.0f, 1.0f, 1.0f};
 	targetPartsRotate_[AttackPhase::kEnd][Parts::kBody] = {0.0f, 0.0f, 0.0f};
-	targetPartsTranslate_[AttackPhase::kEnd][Parts::kBody] = {0.0f, 0.0f, 0.0f};
+	targetPartsTranslate_[AttackPhase::kEnd][Parts::kBody] = defaultPartsOffset_[Parts::kBody];
 
 #pragma endregion
 
@@ -106,19 +106,19 @@ void Player::Initialize(Camera* camera, const Vector3& position) {
 
 	targetPartsScale_[AttackPhase::kNone][Parts::kLeftArm] = {1.0f, 1.0f, 1.0f};
 	targetPartsRotate_[AttackPhase::kNone][Parts::kLeftArm] = {0.0f, 0.0f, 0.0f};
-	targetPartsTranslate_[AttackPhase::kNone][Parts::kLeftArm] = {0.0f, 0.0f, 0.0f};
+	targetPartsTranslate_[AttackPhase::kNone][Parts::kLeftArm] = defaultPartsOffset_[Parts::kLeftArm];
 
 	targetPartsScale_[AttackPhase::kCharge][Parts::kLeftArm] = {1.0f, 1.0f, 1.0f};
 	targetPartsRotate_[AttackPhase::kCharge][Parts::kLeftArm] = {1.5f, 0.0f, -0.3f};
-	targetPartsTranslate_[AttackPhase::kCharge][Parts::kLeftArm] = {0.0f, -0.18f, 0.3f};
+	targetPartsTranslate_[AttackPhase::kCharge][Parts::kLeftArm] = defaultPartsOffset_[Parts::kLeftArm] + Vector3{0.0f, -0.18f, 0.3f};
 
 	targetPartsScale_[AttackPhase::kFire][Parts::kLeftArm] = {1.0f, 1.0f, 1.0f};
 	targetPartsRotate_[AttackPhase::kFire][Parts::kLeftArm] = {0.0f, 0.0f, 0.2f};
-	targetPartsTranslate_[AttackPhase::kFire][Parts::kLeftArm] = {0.2f, -0.2f, -0.2f};
+	targetPartsTranslate_[AttackPhase::kFire][Parts::kLeftArm] = defaultPartsOffset_[Parts::kLeftArm]+Vector3{0.2f, -0.2f, -0.2f};
 
 	targetPartsScale_[AttackPhase::kEnd][Parts::kLeftArm] = {1.0f, 1.0f, 1.0f};
 	targetPartsRotate_[AttackPhase::kEnd][Parts::kLeftArm] = {0.0f, 0.0f, 0.0f};
-	targetPartsTranslate_[AttackPhase::kEnd][Parts::kLeftArm] = {0.0f, 0.0f, 0.0f};
+	targetPartsTranslate_[AttackPhase::kEnd][Parts::kLeftArm] = defaultPartsOffset_[Parts::kLeftArm];
 
 #pragma endregion
 
@@ -126,19 +126,19 @@ void Player::Initialize(Camera* camera, const Vector3& position) {
 
 	targetPartsScale_[AttackPhase::kNone][Parts::kRightArm] = {1.0f, 1.0f, 1.0f};
 	targetPartsRotate_[AttackPhase::kNone][Parts::kRightArm] = {0.0f, 0.0f, 0.0f};
-	targetPartsTranslate_[AttackPhase::kNone][Parts::kRightArm] = {0.0f, 0.0f, 0.0f};
+	targetPartsTranslate_[AttackPhase::kNone][Parts::kRightArm] = defaultPartsOffset_[Parts::kRightArm];
 
 	targetPartsScale_[AttackPhase::kCharge][Parts::kRightArm] = {1.0f, 1.0f, 1.0f};
 	targetPartsRotate_[AttackPhase::kCharge][Parts::kRightArm] = {1.5f, 0.0f, -0.2f};
-	targetPartsTranslate_[AttackPhase::kCharge][Parts::kRightArm] = {0.0f, -0.28f, 0.3f};
+	targetPartsTranslate_[AttackPhase::kCharge][Parts::kRightArm] = defaultPartsOffset_[Parts::kRightArm]+Vector3{0.0f, -0.28f, 0.3f};
 
 	targetPartsScale_[AttackPhase::kFire][Parts::kRightArm] = {1.0f, 1.0f, 1.0f};
 	targetPartsRotate_[AttackPhase::kFire][Parts::kRightArm] = {0.0f, 0.3f, 0.0f};
-	targetPartsTranslate_[AttackPhase::kFire][Parts::kRightArm] = {0.0f, 0.0f, -0.2f};
+	targetPartsTranslate_[AttackPhase::kFire][Parts::kRightArm] = defaultPartsOffset_[Parts::kRightArm]+Vector3{0.0f, 0.0f, -0.2f};
 
 	targetPartsScale_[AttackPhase::kEnd][Parts::kRightArm] = {1.0f, 1.0f, 1.0f};
 	targetPartsRotate_[AttackPhase::kEnd][Parts::kRightArm] = {0.0f, 0.0f, 0.0f};
-	targetPartsTranslate_[AttackPhase::kEnd][Parts::kRightArm] = {0.0f, 0.0f, 0.0f};
+	targetPartsTranslate_[AttackPhase::kEnd][Parts::kRightArm] = defaultPartsOffset_[Parts::kRightArm];
 
 #pragma endregion
 
@@ -146,19 +146,19 @@ void Player::Initialize(Camera* camera, const Vector3& position) {
 
 	targetPartsScale_[AttackPhase::kNone][Parts::kLeftLeg] = {1.0f, 1.0f, 1.0f};
 	targetPartsRotate_[AttackPhase::kNone][Parts::kLeftLeg] = {0.0f, 0.0f, 0.0f};
-	targetPartsTranslate_[AttackPhase::kNone][Parts::kLeftLeg] = {0.0f, 0.0f, 0.0f};
+	targetPartsTranslate_[AttackPhase::kNone][Parts::kLeftLeg] = defaultPartsOffset_[Parts::kLeftLeg];
 
 	targetPartsScale_[AttackPhase::kCharge][Parts::kLeftLeg] = {1.0f, 1.0f, 1.0f};
 	targetPartsRotate_[AttackPhase::kCharge][Parts::kLeftLeg] = {0.0f, 0.0f, 0.1f};
-	targetPartsTranslate_[AttackPhase::kCharge][Parts::kLeftLeg] = {0.0f, 0.0f, 0.0f};
+	targetPartsTranslate_[AttackPhase::kCharge][Parts::kLeftLeg] = defaultPartsOffset_[Parts::kLeftLeg];
 
 	targetPartsScale_[AttackPhase::kFire][Parts::kLeftLeg] = {1.0f, 1.0f, 1.0f};
 	targetPartsRotate_[AttackPhase::kFire][Parts::kLeftLeg] = {-0.2f, 0.0f, 0.1f};
-	targetPartsTranslate_[AttackPhase::kFire][Parts::kLeftLeg] = {0.1f, 0.0f, 0.0f};
+	targetPartsTranslate_[AttackPhase::kFire][Parts::kLeftLeg] = defaultPartsOffset_[Parts::kLeftLeg]+Vector3{0.1f, 0.0f, 0.0f};
 
 	targetPartsScale_[AttackPhase::kEnd][Parts::kLeftLeg] = {1.0f, 1.0f, 1.0f};
 	targetPartsRotate_[AttackPhase::kEnd][Parts::kLeftLeg] = {0.0f, 0.0f, 0.0f};
-	targetPartsTranslate_[AttackPhase::kEnd][Parts::kLeftLeg] = {0.0f, 0.0f, 0.0f};
+	targetPartsTranslate_[AttackPhase::kEnd][Parts::kLeftLeg] = defaultPartsOffset_[Parts::kLeftLeg];
 
 #pragma endregion
 
@@ -166,19 +166,19 @@ void Player::Initialize(Camera* camera, const Vector3& position) {
 
 	targetPartsScale_[AttackPhase::kNone][Parts::kRightLeg] = {1.0f, 1.0f, 1.0f};
 	targetPartsRotate_[AttackPhase::kNone][Parts::kRightLeg] = {0.0f, 0.0f, 0.0f};
-	targetPartsTranslate_[AttackPhase::kNone][Parts::kRightLeg] = {0.0f, 0.0f, 0.0f};
+	targetPartsTranslate_[AttackPhase::kNone][Parts::kRightLeg] = defaultPartsOffset_[Parts::kRightLeg];
 
 	targetPartsScale_[AttackPhase::kCharge][Parts::kRightLeg] = {1.0f, 1.0f, 1.0f};
 	targetPartsRotate_[AttackPhase::kCharge][Parts::kRightLeg] = {2.5f, 0.0f, 0.0f};
-	targetPartsTranslate_[AttackPhase::kCharge][Parts::kRightLeg] = {0.0f, 1.2f, -0.6f};
+	targetPartsTranslate_[AttackPhase::kCharge][Parts::kRightLeg] = defaultPartsOffset_[Parts::kRightLeg]+Vector3{0.0f, 1.2f, -0.6f};
 
 	targetPartsScale_[AttackPhase::kFire][Parts::kRightLeg] = {1.0f, 1.0f, 1.0f};
 	targetPartsRotate_[AttackPhase::kFire][Parts::kRightLeg] = {-2.0f, -0.6f, -0.2f};
-	targetPartsTranslate_[AttackPhase::kFire][Parts::kRightLeg] = {-0.2f, 0.7f, 0.5f};
+	targetPartsTranslate_[AttackPhase::kFire][Parts::kRightLeg] = defaultPartsOffset_[Parts::kRightLeg]+Vector3{-0.2f, 0.7f, 0.5f};
 
 	targetPartsScale_[AttackPhase::kEnd][Parts::kRightLeg] = {1.0f, 1.0f, 1.0f};
 	targetPartsRotate_[AttackPhase::kEnd][Parts::kRightLeg] = {0.0f, 0.0f, 0.0f};
-	targetPartsTranslate_[AttackPhase::kEnd][Parts::kRightLeg] = {0.0f, 0.0f, 0.0f};
+	targetPartsTranslate_[AttackPhase::kEnd][Parts::kRightLeg] = defaultPartsOffset_[Parts::kRightLeg];
 
 #pragma endregion
 
@@ -299,7 +299,7 @@ void Player::InputAttack(){
 
 		if (Input::IsPushKey(DIK_SPACE)) {
 
-			attackPhase_ = Player::kCharge;
+                        			attackPhase_ = Player::kCharge;
 		}
 
 		break;

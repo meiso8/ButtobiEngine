@@ -125,8 +125,8 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     directionalLightResource->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData));
     //デフォルト値はとりあえず以下のようにしておく   
     directionalLightData->color = { 1.0f,1.0f,1.0f,1.0f };
-    directionalLightData->direction = { 0.0f,1.0f,0.0f };//向きは正規化する
-    directionalLightData->intensity = 1.0f;
+    directionalLightData->direction = { 0.0f,-1.0f,0.0f };//向きは正規化する
+    directionalLightData->intensity = 8.0f;
 
     modelConfig_.Initialize(rootSignature.get(), directionalLightResource.Get());
 
