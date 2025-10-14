@@ -1,5 +1,5 @@
 #include"MaterialResource.h"
-#include"MakeIdentity4x4.h"
+#include"MakeMatrix.h"
 #include"DirectXCommon.h"
 
 void MaterialResource::CreateMaterial(const Vector4& color, uint32_t lightType) {

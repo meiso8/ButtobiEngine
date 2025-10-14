@@ -6,7 +6,6 @@
 #include <algorithm> // std::max, std::min を使用するために必要
 #include"Camera/Camera.h"
 #include<cmath>
-#include"Normalize.h"
 #include"Window.h"
 
 void CameraController::Initialize(Camera* camera) {
@@ -32,9 +31,6 @@ void CameraController::Update() {
 	camera_->translate_ = behindPos;
 	camera_->rotate_.x = 0.3f;
 	camera_->rotate_.y = targetWorldTransform.rotate_.y;
-
-	camera_->UpdateMatrix();
-
 }
 
 

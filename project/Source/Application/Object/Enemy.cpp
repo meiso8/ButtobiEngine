@@ -1,18 +1,16 @@
 #include "Enemy.h"
 #include "AABB.h"
 #include "Player.h" // 追加
+#include"Model.h"
 #include <cmath>
 #include <numbers>
 #include<cassert>
-#include"Model.h"
 
-void Enemy::Initialize(Model* model, Camera* camera, Vector3& position) {
-	// NULLポインタチェック
-	assert(model);
+void Enemy::Initialize(Vector3& position) {
 
-	model_ = model;
+	model_ = new Model();
+	model_->Create(ModelManager::ENEMY);
 	color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
-	camera_ = camera;
 	worldTransform_.Initialize();
 	worldTransform_.translate_ = position; // 初期位置をオリジンにしておく
 	worldTransform_.rotate_.y = std::numbers::pi_v<float> * 3.0f / 2.0f;
@@ -41,13 +39,13 @@ void Enemy::Update() {
 	WorldTransformUpdate(worldTransform_);
 }
 
-void Enemy::Draw() {
+void Enemy::Draw(Camera& camera) {
 
 	// 3Dモデル描画前処理
 	model_->PreDraw(BlendMode::kBlendModeNormal);
 	model_->SetColor(color_);
 	// 3Dモデルを描画
-	model_->Draw( *camera_, worldTransform_.matWorld_, MaterialResource::LIGHTTYPE::HALF_L);
+	model_->Draw(camera, worldTransform_.matWorld_, MaterialResource::LIGHTTYPE::HALF_L);
 
 }
 
@@ -73,4 +71,9 @@ void Enemy::OnCollision(const Player* player) {
 
 	// 無意味な処理を入れることで警告を抑制できる
 	
-};
+}
+Enemy::~Enemy()
+{
+	delete model_;
+}
+;

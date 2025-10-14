@@ -5,9 +5,8 @@
 #include"DrawGrid.h"
 #include"DebugUI.h"
 #include<numbers>
-#include"MakeIdentity4x4.h"
+#include"MakeMatrix.h"
 #include"Sprite.h"
-#include"Model.h"
 #include"SphereMesh.h"
 #include <functional>
 
@@ -27,7 +26,7 @@ void SampleScene::Initialize() {
     debugCamera_ = std::make_unique<DebugCamera>();
     debugCamera_->Initialize(static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()));
 
-    currentCamera = camera_.get();
+    currentCamera_ = camera_.get();
 
 #pragma endregion
 
@@ -48,16 +47,28 @@ void SampleScene::Initialize() {
     cube_[0].Create(Texture::handle_[Texture::WHITE_1X1]);
     cube_[1].Create(Texture::handle_[Texture::WHITE_1X1]);
 
-    worldTransform_.Initialize();
-    worldTransform_.translate_ = { 1.0f,1.0f,1.0f };
-    worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
-    worldTransform_.rotate_.y = (std::numbers::pi_v<float> / 4.0f);
-    WorldTransformUpdate(worldTransform_);
+    worldTransformParent_.Initialize();
+    WorldTransformUpdate(worldTransformParent_);
+
+
+    worldTransformChild_.Initialize();
+    worldTransformChild_.parent_ = &worldTransformParent_;
+
+
+
+    worldTransformChild_.translate_ = { 0.0f,0.0f,1.0f };
+    worldTransformChild_.scale_ = { 1.0f,1.0f,1.0f };
+    worldTransformChild_.rotate_.y = (std::numbers::pi_v<float> / 4.0f);
+    WorldTransformUpdate(worldTransformChild_);
 
     //particle_.Create(Texture::GetHandle(Texture::UV_CHECKER));
     sphereMesh_ = std::make_unique<SphereMesh>();
-    sphereMesh_->Create(Texture::handle_[Texture::WHITE_1X1]);
+    sphereMesh_->Create(Texture::handle_[Texture::UV_CHECKER]);
+    sphereMesh_->SetVertex({ 4.0f });
 
+    quad_.Create(Texture::handle_[Texture::UV_CHECKER]);
+    scale_ = { 1.0f,1.0f };
+    uvMoveVal_ = { 0.0f,0.0f };
 }
 
 void SampleScene::Update()
@@ -73,7 +84,14 @@ void SampleScene::Update()
     //    SoundManager::Play(Sound::GetHandle(Sound::SE1), 1.0f, false);
     //}
 
-    currentCamera->UpdateMatrix();
+    worldTransformChild_.parent_ = &worldTransformParent_;
+    WorldTransformUpdate(worldTransformChild_);
+
+    if (Input::IsTriggerMouse(0)) {
+        SoundManager::Play(Sound::GetHandle(Sound::SE1), 0.0625f, false);
+    }
+
+    currentCamera_->UpdateMatrix();
 
     for (Sprite* sprite : sprites_) {
         sprite->UpdateUV();
@@ -81,25 +99,32 @@ void SampleScene::Update()
 
     samplePlayer_->Update();
 
-    WorldTransformUpdate(worldTransform_);
 
+    WorldTransformUpdate(worldTransformParent_);
+
+    WorldTransformUpdate(worldTransformChild_);
+    quad_.UpdateUV();
 #endif
 }
 
 void SampleScene::Draw()
 {
 #ifdef _DEBUG
-    DrawGrid::Draw(*currentCamera);
+    DrawGrid::Draw(*currentCamera_);
 #endif // _DEBUG
 
-    cube_[0].PreDraw(kBlendModeNormal);
-    cube_[0].Draw(*currentCamera, MakeIdentity4x4(), lightType_);
+    //cube_[0].PreDraw(kBlendModeNormal);
+    //cube_[0].Draw(*currentCamera_, worldTransformParent_.matWorld_, lightType_);
+    quad_.PreDraw();
+    quad_.Draw(*currentCamera_, MakeIdentity4x4());
+ 
 
-    sphereMesh_->PreDraw(kBlendModeNormal);
-    sphereMesh_->Draw(*currentCamera, worldTransform_.matWorld_, lightType_);
+
+    //sphereMesh_->PreDraw(kBlendModeNormal);
+    //sphereMesh_->Draw(*currentCamera_, worldTransformChild_.matWorld_, lightType_);
 
     MyEngine::SetBlendMode(blendMode_);
-    samplePlayer_->Draw(*currentCamera, lightType_);
+    samplePlayer_->Draw(*currentCamera_, lightType_);
     MyEngine::SetBlendMode();
 
     Sprite::PreDraw(blendMode_);
@@ -113,19 +138,27 @@ void SampleScene::Draw()
 
 void SampleScene::Debug()
 {
-    std::function<void()> func = [this]() { SwitchCamera(); };
+
     samplePlayer_->Debug();
 
     DebugUI::CheckBalloonData(cube_[0].GetBalloonData());
-    DebugUI::CheckWaveData(cube_[0].GetWaveData(0),"waveData0");
+    DebugUI::CheckWaveData(cube_[0].GetWaveData(0), "waveData0");
     DebugUI::CheckWaveData(cube_[0].GetWaveData(1), "waveData1");
     DebugUI::CheckDirectionalLight(lightType_);
     DebugUI::CheckBlendMode(blendMode_);
     DebugUI::CheckSprite(*sprites_[0], "sprite0");
+    std::function<void()> func = [this]() { SwitchCamera(); };
     DebugUI::Button("ChangeCamera", func);
-    DebugUI::CheckCamera(*currentCamera);
-    DebugUI::CheckWorldTransform(worldTransform_,"worldTransform");
+    DebugUI::CheckCamera(*currentCamera_);
+    DebugUI::CheckWorldTransform(worldTransformParent_, "worldTransformParent");
+    DebugUI::CheckWorldTransform(worldTransformChild_, "worldTransform");
 
+    ImGui::Begin("Quad");
+    ImGui::SliderFloat2("scale", &scale_.x, -10.0f, 10.0f);
+    ImGui::SliderFloat2("uvMoveVol", &uvMoveVal_.x, -10.0f, 10.0f);
+    DebugUI::CheckTransforms(quad_.GetUVScale(), quad_.GetUVRotate(), quad_.GetUVTranslate(), "uvTransform");
+
+    ImGui::End();
     DebugUI::CheckFPS();
 }
 
@@ -139,8 +172,3 @@ SampleScene::~SampleScene()
     sprites_.clear();
 }
 
-void SampleScene::SwitchCamera()
-{
-    isDebugCameraActive_ = isDebugCameraActive_ ? false : true;
-    currentCamera = (isDebugCameraActive_) ? debugCamera_.get() : camera_.get();
-}

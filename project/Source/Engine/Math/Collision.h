@@ -1,8 +1,6 @@
 #pragma once
 #include "Sphere.h"
 #include"Plane.h"
-#include"Segment.h"
-#include"Ray.h"
 #include"Line.h"
 #include"Triangle.h"
 #include"AABB.h"

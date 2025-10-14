@@ -4,7 +4,6 @@
 #pragma comment(lib,"dxguid.lib")
 
 #include"Camera/Camera.h"
-#include"math/Normalize.h"
 #include<cmath>
 
 Input* Input::instance_ = nullptr;
@@ -15,6 +14,7 @@ DIJOYSTATE Input::joyState_;
 float Input::deadZone_ = 0.1f;
 BYTE Input::preJoyButtons_[32];
 DIMOUSESTATE Input::mouseState_;
+DIMOUSESTATE Input::preMouseState_;
 
 bool Input::isDragging_ = false;
 
@@ -178,7 +178,7 @@ void Input::Update() {
     keyboard_->GetDeviceState(sizeof(key_), key_);
 
     //マウスの状態をコピーする
-    memcpy(&mouseState_bak_, &mouseState_, sizeof(mouseState_bak_));
+    memcpy(&preMouseState_, &mouseState_, sizeof(mouseState_));
     // 入力制御開始
     mouse_->Acquire();
     //マウスの状態を取得する
@@ -272,7 +272,7 @@ bool Input::GetJoyStickDPadButton(float* x, float* y)
     if (joyState_.rgdwPOV[0] == 31500) {
         //左上
         //*x = -1.0f / std::sqrtf(2.0f);
-        *x =-0.707107f;
+        *x = -0.707107f;
         *y = 0.707107f;
     }
 
@@ -317,27 +317,20 @@ bool Input::NormalizeButtonCount(float* x, float* y, LONG& buttonLX, LONG& butto
 
 
 bool Input::IsJoyStickPressButton(uint32_t index) {
+
     if (foundJoystick_) {
-
-        if (index > 31) {
-            return false;
-        }
-
+        assert(index < 32);
         if (joyState_.rgbButtons[index] & 0x80) {
             return true;
         }
-
-
     }
     return false;
 }
 bool Input::IsJoyStickTrigger(uint32_t index)
 {
     if (foundJoystick_) {
+        assert(index < 32);
 
-        if (index > 31) {
-            return false;
-        }
         if (joyState_.rgbButtons[index] & 0x80 && !(preJoyButtons_[index] & 0x80)) {
             return true;
         }
@@ -347,7 +340,18 @@ bool Input::IsJoyStickTrigger(uint32_t index)
 ;
 
 bool Input::IsPressMouse(uint32_t index) {
+    assert(index < 4);
     return (mouseState_.rgbButtons[index] & 0x80) ? true : false;
+}
+
+bool Input::IsTriggerMouse(uint32_t index) {
+    assert(index < 4);
+
+    if (mouseState_.rgbButtons[index] & 0x80 && !(preMouseState_.rgbButtons[index] & 0x80)) {
+        return true;
+    }
+
+    return false;
 }
 
 Vector2& Input::GetMousePos() {

@@ -1,8 +1,7 @@
 #include "Particle.h"
-#include"Multiply.h"
 #include"DirectXCommon.h"
 #include"Camera/Camera.h"
-#include"MakeIdentity4x4.h"
+#include"MakeMatrix.h"
 #include"TextureManager.h"
 #include"MyEngine.h"
 using namespace  Microsoft::WRL;

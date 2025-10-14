@@ -11,6 +11,17 @@ struct Vector2 {
 
 };
 
+Vector2 Add(const Vector2& v1, const Vector2& v2);
+Vector2 Subtract(const Vector2& v1, const Vector2& v2);
+Vector2 Multiply(const float scalar, const Vector2& v);
+
+//内積
+float Dot(const Vector2& v1, const Vector2& v2);
+float Cross(const Vector2& v1, const Vector2& v2);
+//長さ(ノルム)
+float Length(const Vector2& v);
+Vector2 Normalize(const Vector2& v);
+
 //二項演算子 Binary Operator
 Vector2 operator+(const Vector2& v1, const Vector2& v2);
 Vector2 operator-(const Vector2& v1, const Vector2& v2);
@@ -23,3 +34,4 @@ Vector2 operator/(const Vector2& v, float s);
 //単項演算子 Unary Operator
 Vector2 operator-(const Vector2& v);
 Vector2 operator+(const Vector2& v);
+

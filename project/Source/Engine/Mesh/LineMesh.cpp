@@ -1,7 +1,5 @@
 #include "LineMesh.h"
 
-#include"MakeAffineMatrix.h"
-#include"Multiply.h"
 #include"DirectXCommon.h"
 #include"MyEngine.h"
 #include"TextureManager.h"

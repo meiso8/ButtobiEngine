@@ -1,7 +1,7 @@
 #pragma once
 
 #include<cmath>
-#include"Dot.h"
+#include"Vector3.h"
 
 struct ShericalCoordinate {
     float radius;

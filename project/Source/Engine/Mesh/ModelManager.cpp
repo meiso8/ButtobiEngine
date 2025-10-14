@@ -8,14 +8,23 @@
 #include<assimp/scene.h>
 #include<assimp/postprocess.h>
 #include"DirectXCommon.h"
-
+#include"Texture.h"
+#include"TextureManager.h"
 std::vector<ModelData> ModelManager::modelDatas_;
 std::vector<uint32_t> ModelManager::handle_;
 
 
+
+ModelData& ModelManager::GetModelData(const uint32_t& handle)
+{
+    assert(handle < modelDatas_.size());
+    return modelDatas_[handle];
+}
+
 void ModelManager::LoadAllModel()
 {
     handle_.resize(MODELS);
+
     handle_[PLAYER] = Load("resources/player", "player.obj");
 
     handle_[HEAD] = Load("resources/head", "head.obj");
@@ -30,7 +39,7 @@ void ModelManager::LoadAllModel()
     handle_[PARTICLE] = Load("resources/particle", "particle.obj");
 
     handle_[STAGE] = Load("resources/stage", "stage.obj");
-    
+
 }
 
 // ========================================================================================================
@@ -115,6 +124,12 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
         }
 
     }
+
+    //モデルのテクスチャを読む
+    Texture::handle_.push_back(TextureManager::Load(modelData.material.textureFilePath));
+    modelData.textureHandle = UINT(Texture::handle_.size() - 1);
+    assert(modelData.textureHandle < Texture::handle_.size());
+
 }
 
 uint32_t ModelManager::GetTextureIndexByFileName(const std::string& filePath)
