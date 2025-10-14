@@ -23,6 +23,9 @@ public:
 	// 描画
 	void Draw()override;
 
+	bool GetIsGameOver();
+	bool GetIsGameClear();
+
 	void Debug()override;
 
 	// デストラクタ
@@ -50,4 +53,9 @@ private:
 
 	// UIマネージャー
 	UIManager* uiManager_ = nullptr;
+
+	bool isGameOver = false;
+	bool isGameClear = false;
+
+
 };

@@ -7,4 +7,7 @@ public:
     void Initialize()override;
     void Update()override;
     void Draw()override;
+	bool GetIsEndTitle();
+private:
+	bool isEndTitle_ = false;
 };

@@ -12,6 +12,7 @@ void UIManager::Initialize() {
     SpaceTextureHandle_ = Texture::handle_[Texture::SPACE];
     TimerTextureHandle_ = Texture::handle_[Texture::TIMER];
     JuiceTextureHandle_ = Texture::handle_[Texture::JUICE];
+	NumbersTextureHandle_ = Texture::handle_[Texture::NUMBERS];
 
 
     for (int i = 0; i < MaxLife_; i++) {
@@ -32,6 +33,8 @@ void UIManager::Initialize() {
     TimerSprite->Create(TimerTextureHandle_, TimerPosition_, TimerSize_,{ 1, 1, 1, 1 });
     JuiceSprite = std::make_unique<Sprite>();
     JuiceSprite->Create(JuiceTextureHandle_, JuicePosition_, JuiceSize_,{ 1, 1, 1, 1 });
+	numbersSprite = std::make_unique<Sprite>();
+	numbersSprite->Create(NumbersTextureHandle_, {0, 0}, {256, 32}, {1, 1, 1, 1});
 
     for (int i = 0; i < lifeSprites.size(); i++) {
         lifeSprites[i].SetPosition({ LifeFirstPosition_.x + LifePositionInterval_ * i, LifeFirstPosition_.y });
@@ -39,7 +42,20 @@ void UIManager::Initialize() {
 
 }
 
-void UIManager::Update() {}
+void UIManager::Update() {
+
+
+    AddFinalScore_ += static_cast<int>(AddBaseScore_ * speedBonus_);
+    AddFinalScore_ += static_cast<int>(AddBaseScore_ * ComboBonus_);
+
+    Score_ += AddFinalScore_; 
+ 
+    AddFinalScore_ = 0;
+
+    if (Score_> HighScore_) {
+        HighScore_ = Score_;
+	}
+}
 
 void UIManager::Draw() {
 
@@ -48,7 +64,7 @@ void UIManager::Draw() {
     for (int i = 0; i < Life_; i++) {
         lifeSprites[i].Draw();
     }
-
+    
     JuiceSprite->Draw();
     scoreSprite->Draw();
     comboSprite->Draw();
