@@ -50,7 +50,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
    #ifdef _DEBUG
 	// 現在のシーンに代入
-	currentScene = gameScene.get();
+	currentScene = sampleScene.get();
 #endif // DEBUG
 
 

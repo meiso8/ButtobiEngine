@@ -2,7 +2,6 @@
 #include "ModelData.h"
 #include"commandList.h"
 #include"WorldTransform.h"
-#include"TransformationMatrix.h"
 #include"MaterialResource.h"
 #include"Transform.h"
 #include"RootSignature.h"
@@ -16,15 +15,24 @@ struct Particle {
     Transform transform;
     Vector3 velocity;
     Vector4 color;
+    float lifeTime;
+    float currentTime;
+};
+
+struct ParticleForGPU {
+    Matrix4x4 WVP;
+    Matrix4x4 World;
+    Vector4 color;
 };
 
 class ParticleMesh
 {
 
 private:
-    const uint32_t kNumInstance = 10;//インスタンス数
-    TransformationMatrix* instancingData = nullptr;
+    const uint32_t kNumMaxInstance = 10;//インスタンス数
+    ParticleForGPU* instancingData = nullptr;
     std::vector<Particle>particles;
+
 
     ModelData modelData_;
     MaterialResource materialResource_{};
@@ -41,7 +49,7 @@ private:
 public:
     void Initialize(uint32_t textureHandle);
     void Create();
-    void Update();
+    //void Update(Camera& camera);
     Particle MakeNewParticle();
     void Draw(Camera& camera,BlendMode blendMode = BlendMode::kBlendModeNormal);
 private:

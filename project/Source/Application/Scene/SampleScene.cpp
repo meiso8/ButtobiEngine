@@ -105,7 +105,6 @@ void SampleScene::Update()
     WorldTransformUpdate(worldTransformChild_);
     quad_.UpdateUV();
 
-    particle_.Update();
 #endif
 }
 
