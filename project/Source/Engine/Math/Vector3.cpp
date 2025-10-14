@@ -1,6 +1,20 @@
-#include"Add.h"
-#include"Subtract.h"
-#include"Multiply.h"
+#include"Vector3.h"
+
+
+Vector3 Add(const Vector3& v1, const Vector3& v2) {
+
+    return { v1.x + v2.x,v1.y + v2.y ,v1.z + v2.z };
+};
+//ベクトル減算
+Vector3 Subtract(const Vector3& v1, const Vector3& v2) {
+    return { v1.x - v2.x,v1.y - v2.y ,v1.z - v2.z };
+};
+
+//スカラー倍
+Vector3 Multiply(const float scalar, const Vector3& v) {
+    return { scalar * v.x,scalar * v.y,scalar * v.z };
+};
+
 
 //二項演算子 Binary Operator
 Vector3 operator+(const Vector3& v1, const Vector3& v2) { return Add(v1, v2); }

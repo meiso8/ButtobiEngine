@@ -1,5 +1,6 @@
 #include"Normalize.h"
 #include"Length.h"
+#include<cmath>
 
 Vector3 Normalize(const Vector3& v) {
     float length = Length(v);
@@ -8,7 +9,7 @@ Vector3 Normalize(const Vector3& v) {
     } else {
         return { 0.0f, 0.0f, 0.0f };
     }
-  
+
 };
 
 Vector2 Normalize(const Vector2& v) {
@@ -16,9 +17,21 @@ Vector2 Normalize(const Vector2& v) {
     if (length != 0.0f) {
         return { v.x / length,v.y / length };
     } else {
-        return { 0.0f, 0.0f};
+        return { 0.0f, 0.0f };
     }
 };
+
+//正規化というより符号を取り出す作業？
+float Normalize(const float& v) {
+
+    return std::copysign(1.0f, v);
+    //if (v != 0.0f) {
+    //    return  v / std::fabsf(v);
+    //} else {
+    //    return 0.0f;
+    //}
+};
+
 
 //template<typename Type> Type Normalize(Type& v) {
 //
