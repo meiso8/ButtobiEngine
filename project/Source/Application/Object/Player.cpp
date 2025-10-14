@@ -662,7 +662,7 @@ void Player::Draw(Camera& camera) {
 		//ここに追加しました。
 		model_[i]->SetColor(objectColor_);
 
-		model_[i]->Draw(camera, DrawPartsWorldTransform_[i].matWorld_, MaterialResource::LIGHTTYPE::HALF_L);
+		model_[i]->Draw(camera, PartsWorldTransform_[i].matWorld_, MaterialResource::LIGHTTYPE::HALF_L);
 
 	}
 
