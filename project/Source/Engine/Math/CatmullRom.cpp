@@ -1,8 +1,10 @@
+#define NOMINMAX
 #include "CatmullRom.h"
 #include "Lerp.h"
 #include <algorithm>
 #include <cassert>
 #include <cmath>
+
 
 Vector3 CatmullRomInterpolation(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, float t) {
 

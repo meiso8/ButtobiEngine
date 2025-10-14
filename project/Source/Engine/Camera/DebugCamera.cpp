@@ -1,13 +1,10 @@
 #include "DebugCamera.h"
-#include"Inverse.h"
 #include"MakeMatrix.h"
-
 #include"CoordinateTransform.h"
-
+#include"Lerp.h"
 #include<numbers>
 #include<cmath>
 #include"Input.h"
-#include"Lerp.h"
 
 void DebugCamera::Initialize(const float& width, const float& height, const PROJECTION_TYPE& type)
 {
@@ -36,7 +33,7 @@ void DebugCamera::UpdateMatrix() {
 
     //InputRotate();
     //InputTranslate();
-    EyeOperation();
+    MouseInputMove();
 
     Matrix4x4 matRotDelta = MakeIdentity4x4();
     matRotDelta = Multiply(matRotDelta, MakeRotateXMatrix(deltaRotate_.x));
@@ -134,7 +131,7 @@ void DebugCamera::MoveY(const float& speed) {
     translate_ += CoordinateTransform({ 0.0f, speed, 0.0f }, matRot_);
 };
 
-void DebugCamera::EyeOperation() {
+void DebugCamera::MouseInputMove() {
 
     if (Input::IsPressMouse(2) && Input::IsPushKey(DIK_LSHIFT)) {
         //視点の移動 offset をずらす

@@ -16,7 +16,7 @@ class MeshCommon
 {
 public:
     virtual void PreDraw(const BlendMode& blendMode = BlendMode::kBlendModeNormal);
-    virtual void Draw(Camera& camera, const Matrix4x4& worldMatrix, const uint32_t lightType = MaterialResource::LIGHTTYPE::NONE);
+    virtual void Draw(Camera& camera, const Matrix4x4& worldMatrix, const uint32_t lightType = MaterialResource::LIGHTTYPE::NONE) = 0;
 
     void SetColor(const Vector4& color);
     Material* GetMaterial() { return materialResource_.GetMaterial(); };
@@ -52,8 +52,8 @@ protected:
     Matrix4x4 worldViewProjectionMatrix_{};
     TransformationMatrix* transformationMatrixData_ = nullptr;
 protected:
-   virtual void CreateVertex();
-    virtual void CreateIndexResource();
+   virtual void CreateVertex() = 0;
+    virtual void CreateIndexResource() = 0;
     void CreateTransformationMatrix();
     void CreateMaterial(const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, uint32_t lightType = 0);
     void CreateWaveData();

@@ -14,8 +14,4 @@ public:
     void Initialize();
 };
 
-
 void WorldTransformUpdate(WorldTransform& worldTransform);
-
-
-void WorldTransformTRUpdate(WorldTransform& worldTransform, const Vector3& translate, const Vector3& rotate);

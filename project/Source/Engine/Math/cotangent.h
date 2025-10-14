@@ -1,3 +1,3 @@
 #pragma once
 
-float cot(float rotate);
+float cot(float theta);

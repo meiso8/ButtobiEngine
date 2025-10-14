@@ -157,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\Math\Sphere.cpp" />
     <ClCompile Include="Source\Engine\Mesh\MeshCommon.cpp" />
     <ClCompile Include="Source\Application\CameraController.cpp" />
     <ClCompile Include="Source\Application\Object\DeathParticles.cpp" />
@@ -185,7 +186,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Math\AABB.cpp" />
     <ClCompile Include="Source\Engine\Math\CatmullRom.cpp" />
     <ClCompile Include="Source\Engine\Math\Collision.cpp" />
-    <ClCompile Include="Source\Engine\Math\Cross.cpp" />
     <ClCompile Include="Source\Engine\Math\Vector2.cpp" />
     <ClCompile Include="Source\Engine\Math\Vector4.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\RootSignature.cpp" />
@@ -228,17 +228,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </ClCompile>
     <ClCompile Include="Source\Engine\Math\cotangent.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\Depth.cpp" />
-    <ClCompile Include="Source\Engine\Math\Dot.cpp" />
     <ClCompile Include="Source\Engine\Input\Input.cpp" />
-    <ClCompile Include="Source\Engine\Math\Inverse.cpp" />
-    <ClCompile Include="Source\Engine\Math\Length.cpp" />
     <ClCompile Include="Source\Engine\Math\MakeMatrix.cpp" />
     <ClCompile Include="Source\Engine\Surface\MaterialData.cpp" />
-    <ClCompile Include="Source\Engine\Math\Normalize.cpp" />
-    <ClCompile Include="Source\Engine\Math\ShericalCoordinate.cpp" />
+    <ClCompile Include="Source\Engine\Math\SphericalCoordinate.cpp" />
     <ClCompile Include="Source\Engine\Sound\SoundManager.cpp" />
     <ClCompile Include="Source\Engine\Math\CoordinateTransform.cpp" />
-    <ClCompile Include="Source\Engine\Math\Transpose.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\Window.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\SwapChain.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\TransitionBarrier.cpp" />
@@ -332,26 +327,18 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Math\Collision.h" />
     <ClInclude Include="Source\Engine\Math\CoordinateTransform.h" />
     <ClInclude Include="Source\Engine\Math\cotangent.h" />
-    <ClInclude Include="Source\Engine\Math\Cross.h" />
-    <ClInclude Include="Source\Engine\Math\Dot.h" />
     <ClInclude Include="Source\Engine\Math\Easing.h" />
-    <ClInclude Include="Source\Engine\Math\Inverse.h" />
-    <ClInclude Include="Source\Engine\Math\Length.h" />
     <ClInclude Include="Source\Engine\Math\Lerp.h" />
     <ClInclude Include="Source\Engine\Math\Line.h" />
     <ClInclude Include="Source\Engine\Math\MakeMatrix.h" />
     <ClInclude Include="Source\Engine\Math\Matrix3x3.h" />
     <ClInclude Include="Source\Engine\Math\Matrix4x4.h" />
-    <ClInclude Include="Source\Engine\Math\Normalize.h" />
     <ClInclude Include="Source\Engine\Math\Pendulum.h" />
     <ClInclude Include="Source\Engine\Math\Plane.h" />
     <ClInclude Include="Source\Engine\Math\Project.h" />
-    <ClInclude Include="Source\Engine\Math\Ray.h" />
-    <ClInclude Include="Source\Engine\Math\Segment.h" />
     <ClInclude Include="Source\Engine\Math\Sphere.h" />
     <ClInclude Include="Source\Engine\Math\SphericalCoordinate.h" />
     <ClInclude Include="Source\Engine\Math\Transform.h" />
-    <ClInclude Include="Source\Engine\Math\Transpose.h" />
     <ClInclude Include="Source\Engine\Math\Triangle.h" />
     <ClInclude Include="Source\Engine\Math\Vector2.h" />
     <ClInclude Include="Source\Engine\Math\Vector3.h" />
