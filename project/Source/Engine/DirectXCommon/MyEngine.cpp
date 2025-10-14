@@ -71,7 +71,8 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     LogFile::Log("SetRasterizerState");
 
     //DepthStencilStateの設定
-    depthStencil.Create();
+    depthStencils[DepthStencil::ZERO].Create(DepthStencil::ZERO);
+    depthStencils[DepthStencil::ALL].Create(DepthStencil::ALL);
     LogFile::Log("Create depthStencilDesc");
 
     //PSOを生成する
@@ -80,42 +81,42 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
         *inputLayout,
         blendStates[kBlendModeNone],//ブレンドしない
         rasterizerStates[kCullModeBack],//後ろをカリング
-        depthStencil);
+        depthStencils[DepthStencil::ALL]);
 
     pso[1].Create(
         *rootSignature,
         *inputLayout,
         blendStates[kBlendModeNormal],//ブレンドする
         rasterizerStates[kCullModeBack],//後ろをカリング
-        depthStencil);
+        depthStencils[DepthStencil::ALL]);
 
     pso[2].Create(
         *rootSignature,
         *inputLayout,
         blendStates[kBlendModeAdd],//ブレンドしない
         rasterizerStates[kCullModeBack],//描画
-        depthStencil);
+        depthStencils[DepthStencil::ZERO]);//マスク０
 
     pso[3].Create(
         *rootSignature,
         *inputLayout,
         blendStates[kBlendModeSubtract],
         rasterizerStates[kCullModeBack],//描画
-        depthStencil);
+        depthStencils[DepthStencil::ALL]);
 
     pso[4].Create(
         *rootSignature,
         *inputLayout,
         blendStates[kBlendModeMultiply],
         rasterizerStates[kCullModeBack],//描画
-        depthStencil);
+        depthStencils[DepthStencil::ALL]);
 
     pso[5].Create(
         *rootSignature,
         *inputLayout,
         blendStates[kBlendModeScreen],
         rasterizerStates[kCullModeBack],//描画
-        depthStencil);
+        depthStencils[DepthStencil::ALL]);
 
     LogFile::Log("CreatePSO");
 
@@ -125,8 +126,10 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     directionalLightResource->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData));
     //デフォルト値はとりあえず以下のようにしておく   
     directionalLightData->color = { 1.0f,1.0f,1.0f,1.0f };
-    directionalLightData->direction = { 0.0f,1.0f,0.0f };//向きは正規化する
-    directionalLightData->intensity = 5.0f;
+
+    directionalLightData->direction = { 0.0f,-1.0f,0.0f };//向きは正規化する
+    directionalLightData->intensity = 8.0f;
+
 
     modelConfig_.Initialize(rootSignature.get(), directionalLightResource.Get());
 

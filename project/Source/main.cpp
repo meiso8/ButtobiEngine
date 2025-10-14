@@ -1,6 +1,9 @@
 #include"MyEngine.h"
 #include"SampleScene.h"
 #include"GameScene.h"
+#include"TitleScene.h"
+#include"GameClearScene.h"
+#include"GameOverScene.h"
 
 #define WIN_WIDTH 1280
 #define WIN_HEIGHT 720
@@ -32,11 +35,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     std::unique_ptr<SampleScene> sampleScene = std::make_unique<SampleScene>();
     // ゲームシーンのインスタンスの取得
     std::unique_ptr<GameScene> gameScene = std::make_unique<GameScene>();
+	// タイトルシーンの生成
+	std::unique_ptr<TitleScene> titleScene = std::make_unique<TitleScene>();
+	// ゲームクリアシーンの生成
+	std::unique_ptr<GameClearScene> gameClearScene = std::make_unique<GameClearScene>();
+	// ゲームオーバーシーンの生成
+	std::unique_ptr<GameOverScene> gameOverScene = std::make_unique<GameOverScene>();
 
     //現在のシーン
     SceneManager* currentScene = nullptr;
-    //現在のシーンに代入
-    currentScene = sampleScene.get();
+
+     // 現在のシーンに代入
+	currentScene = titleScene.get();
+
+   #ifdef _DEBUG
+	// 現在のシーンに代入
+	currentScene = sampleScene.get();
+#endif // DEBUG
+
+
     //現在のシーンの初期化
     currentScene->Initialize();
 
@@ -49,6 +66,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         if (myEngine->GetWC().ProcessMassage()) {
             break;
         }
+
+        if (titleScene->GetIsEndTitle() || gameScene->GetIsGameClear() || gameScene->GetIsGameOver()) {
+            if (titleScene->GetIsEndTitle()) {
+			    // 現在のシーンに代入
+			    currentScene = gameScene.get();
+            } else if (gameScene->GetIsGameClear()) {
+				currentScene = gameClearScene.get();
+            } else if (gameScene->GetIsGameOver()) {
+				currentScene = gameOverScene.get();
+            } else if (gameClearScene->GetIsEndGameClear() || gameOverScene->GetIsEndGameOver()) {
+				currentScene = titleScene.get();
+            }
+
+			// 現在のシーンの初期化
+			currentScene->Initialize();
+        }
+
 
         //エンジンの更新処理
         myEngine->Update();

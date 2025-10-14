@@ -17,7 +17,12 @@ Microsoft::WRL::ComPtr<ID3D12Resource> CreateDepthStencileTextureResource(
 
 class DepthStencil {
 public:
-    void Create();
+    enum MASK_TYPE {
+        ZERO,
+        ALL,
+        MASKS
+    };
+    void Create(MASK_TYPE maskType);
     D3D12_DEPTH_STENCIL_DESC& GetDesc() {
         return depthStencilDesc_;
     };

@@ -69,6 +69,6 @@ private:
     std::unique_ptr<InputLayout>inputLayout = nullptr;
     std::vector<BlendState> blendStates = {};
     std::vector<RasterizerState> rasterizerStates = {};
-    DepthStencil depthStencil = {};
+    std::array<DepthStencil, DepthStencil::MASKS>  depthStencils = {};
 };
 
