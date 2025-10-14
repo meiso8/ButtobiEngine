@@ -30,16 +30,13 @@ void ParticleMesh::Initialize(uint32_t textureHandle)
 
 void ParticleMesh::Create()
 {
+
     for (uint32_t index = 0; index < kNumMaxInstance; ++index) {
+
         particles[index] = MakeNewParticle();
     }
 
 }
-
-//void ParticleMesh::Update()
-//
-//
-//}
 
 Particle ParticleMesh::MakeNewParticle()
 {
@@ -55,6 +52,7 @@ Particle ParticleMesh::MakeNewParticle()
     Random::SetMinMax(1.0f, 3.0f);
     particle.lifeTime = Random::Get();
     particle.currentTime = 0;
+
 
     return particle;
 }
@@ -74,7 +72,6 @@ void ParticleMesh::CreateModelData()
 
 void ParticleMesh::CreateTransformationMatrix()
 {
-
     particles.resize(kNumMaxInstance);
 
     //Instancing用のTransformationMatrixリソースを作成
@@ -98,11 +95,14 @@ void ParticleMesh::CreateTransformationMatrix()
     instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
     instancingSrvDesc.Buffer.NumElements = kNumMaxInstance;
     instancingSrvDesc.Buffer.StructureByteStride = sizeof(ParticleForGPU);
+
     instancingSrvHandleCPU = DirectXCommon::GetSRVCPUDescriptorHandle((UINT)Texture::handle_.size() + 1);//この書き方はダメですね
     instancingSrvHandleGPU = DirectXCommon::GetSRVGPUDescriptorHandle((UINT)Texture::handle_.size() + 1);
     DirectXCommon::GetDevice()->CreateShaderResourceView(instancingResource.Get(), &instancingSrvDesc, instancingSrvHandleCPU);
 
+
     for (uint32_t index = 0; index < kNumMaxInstance; ++index) {
+
         particles[index].transform.scale = { 1.0f,1.0f,1.0f };
         particles[index].transform.rotate = { 0.0f,0.0f,0.0f };
         particles[index].transform.translate = { index * 0.1f,index * 0.1f,index * 0.1f };
@@ -114,6 +114,7 @@ void ParticleMesh::CreateTransformationMatrix()
 
 void ParticleMesh::Draw(Camera& camera, BlendMode blendMode)
 {
+
 
 
     const float kDeltaTime = 1.0f / 60.0f;
@@ -128,6 +129,7 @@ void ParticleMesh::Draw(Camera& camera, BlendMode blendMode)
 
         particles[index].transform.translate += particles[index].velocity * kDeltaTime;
         particles[index].currentTime += kDeltaTime;
+
 
         Matrix4x4 worldMatrix = MakeAffineMatrix(particles[index].transform.scale, particles[index].transform.rotate, particles[index].transform.translate);
         Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, camera.GetViewProjectionMatrix());

@@ -15,6 +15,7 @@ struct Particle {
     Transform transform;
     Vector3 velocity;
     Vector4 color;
+
     float lifeTime;
     float currentTime;
 };
@@ -29,10 +30,10 @@ class ParticleMesh
 {
 
 private:
+
     const uint32_t kNumMaxInstance = 10;//インスタンス数
     ParticleForGPU* instancingData = nullptr;
     std::vector<Particle>particles;
-
 
     ModelData modelData_;
     MaterialResource materialResource_{};
@@ -49,7 +50,6 @@ private:
 public:
     void Initialize(uint32_t textureHandle);
     void Create();
-    //void Update(Camera& camera);
     Particle MakeNewParticle();
     void Draw(Camera& camera,BlendMode blendMode = BlendMode::kBlendModeNormal);
 private:
