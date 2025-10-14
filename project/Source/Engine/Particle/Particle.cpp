@@ -30,23 +30,16 @@ void ParticleMesh::Initialize(uint32_t textureHandle)
 
 void ParticleMesh::Create()
 {
-    for (uint32_t index = 0; index < kNumInstance; ++index) {
+    for (uint32_t index = 0; index < kNumMaxInstance; ++index) {
         particles[index] = MakeNewParticle();
     }
 
 }
 
-void ParticleMesh::Update()
-{
-    const float kDeltaTime = 1.0f / 60.0f;
-
-
-    for (uint32_t index = 0; index < kNumInstance; ++index) {
-
-        particles[index].transform.translate += particles[index].velocity * kDeltaTime;
-    }
-
-}
+//void ParticleMesh::Update()
+//
+//
+//}
 
 Particle ParticleMesh::MakeNewParticle()
 {
@@ -59,6 +52,9 @@ Particle ParticleMesh::MakeNewParticle()
 
     Random::SetMinMax(0.0f, 1.0f);
     particle.color = { Random::Get(), Random::Get(), Random::Get() ,1.0f };
+    Random::SetMinMax(1.0f, 3.0f);
+    particle.lifeTime = Random::Get();
+    particle.currentTime = 0;
 
     return particle;
 }
@@ -79,18 +75,19 @@ void ParticleMesh::CreateModelData()
 void ParticleMesh::CreateTransformationMatrix()
 {
 
-    particles.resize(kNumInstance);
+    particles.resize(kNumMaxInstance);
 
     //Instancing用のTransformationMatrixリソースを作成
-    instancingResource = DirectXCommon::CreateBufferResource(sizeof(TransformationMatrix) * kNumInstance);
+    instancingResource = DirectXCommon::CreateBufferResource(sizeof(ParticleForGPU) * kNumMaxInstance);
     //書き込むためのアドレスを取得
     instancingResource->Map(0, nullptr, reinterpret_cast<void**>(&instancingData));
 
     assert(instancingResource != nullptr);
 
-    for (uint32_t index = 0; index < kNumInstance; ++index) {
+    for (uint32_t index = 0; index < kNumMaxInstance; ++index) {
         instancingData[index].WVP = MakeIdentity4x4();
         instancingData[index].World = MakeIdentity4x4();
+        instancingData[index].color = Vector4{ 1.0f,1.0f,1.0f,1.0f };
     }
 
     D3D12_SHADER_RESOURCE_VIEW_DESC instancingSrvDesc{};
@@ -99,13 +96,13 @@ void ParticleMesh::CreateTransformationMatrix()
     instancingSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
     instancingSrvDesc.Buffer.FirstElement = 0;
     instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
-    instancingSrvDesc.Buffer.NumElements = kNumInstance;
-    instancingSrvDesc.Buffer.StructureByteStride = sizeof(TransformationMatrix);
+    instancingSrvDesc.Buffer.NumElements = kNumMaxInstance;
+    instancingSrvDesc.Buffer.StructureByteStride = sizeof(ParticleForGPU);
     instancingSrvHandleCPU = DirectXCommon::GetSRVCPUDescriptorHandle((UINT)Texture::handle_.size() + 1);//この書き方はダメですね
     instancingSrvHandleGPU = DirectXCommon::GetSRVGPUDescriptorHandle((UINT)Texture::handle_.size() + 1);
     DirectXCommon::GetDevice()->CreateShaderResourceView(instancingResource.Get(), &instancingSrvDesc, instancingSrvHandleCPU);
 
-    for (uint32_t index = 0; index < kNumInstance; ++index) {
+    for (uint32_t index = 0; index < kNumMaxInstance; ++index) {
         particles[index].transform.scale = { 1.0f,1.0f,1.0f };
         particles[index].transform.rotate = { 0.0f,0.0f,0.0f };
         particles[index].transform.translate = { index * 0.1f,index * 0.1f,index * 0.1f };
@@ -118,10 +115,28 @@ void ParticleMesh::CreateTransformationMatrix()
 void ParticleMesh::Draw(Camera& camera, BlendMode blendMode)
 {
 
-    for (uint32_t index = 0; index < kNumInstance; ++index) {
+
+    const float kDeltaTime = 1.0f / 60.0f;
+
+    uint32_t numInstance = 0;
+
+    for (uint32_t index = 0; index < kNumMaxInstance; ++index) {
+
+        if (particles[index].lifeTime <= particles[index].currentTime) {
+            continue;
+        }
+
+        particles[index].transform.translate += particles[index].velocity * kDeltaTime;
+        particles[index].currentTime += kDeltaTime;
+
         Matrix4x4 worldMatrix = MakeAffineMatrix(particles[index].transform.scale, particles[index].transform.rotate, particles[index].transform.translate);
         Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
-        instancingData[index].WVP = worldViewProjectionMatrix;
+        instancingData[numInstance].WVP = worldViewProjectionMatrix;
+        instancingData[numInstance].World = worldMatrix;
+        instancingData[numInstance].color = particles[index].color;
+        float alpha = 1.0f - (particles[index].currentTime / particles[index].lifeTime);
+        instancingData[numInstance].color.w = alpha;
+        ++numInstance;
     }
 
     ID3D12GraphicsCommandList* commandList = DirectXCommon::GetCommandList();
@@ -140,7 +155,10 @@ void ParticleMesh::Draw(Camera& camera, BlendMode blendMode)
     //テスクチャ
     commandList->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureHandle_));
 
-    //描画!（DrawCall/ドローコール）6個のインデックスを使用しインスタンスを描画。
-    commandList->DrawInstanced(UINT(modelData_.vertices.size()), kNumInstance, 0, 0);
+    if (numInstance > 0) {
+        //描画!（DrawCall/ドローコール）6個のインデックスを使用しインスタンスを描画。
+        commandList->DrawInstanced(UINT(modelData_.vertices.size()), numInstance, 0, 0);
+    }
+
 
 }
