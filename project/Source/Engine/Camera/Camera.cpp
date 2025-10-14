@@ -1,9 +1,6 @@
 #include"Camera.h"
 #include"Inverse.h"
 #include"MakeMatrix.h"
-#include"Multiply.h"
-#include"MakePerspectiveFovMatrix.h"
-#include"MakeOrthographicMatrix.h"
 
 float Camera::width_;
 float Camera::height_;

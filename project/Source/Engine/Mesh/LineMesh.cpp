@@ -1,8 +1,5 @@
 #include "LineMesh.h"
 
-
-
-#include"Multiply.h"
 #include"DirectXCommon.h"
 #include"MyEngine.h"
 #include"TextureManager.h"
