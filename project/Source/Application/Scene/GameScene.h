@@ -10,10 +10,15 @@
 #include <vector>
 #include<list>
 
+class PlaneRenderer;
+
 // ゲームシーン
 class GameScene:public SceneManager {
 
 public:
+	/// @brief コンストラクタ
+	GameScene();
+
 	// 初期化
 	void Initialize()override;
 
@@ -50,4 +55,7 @@ private:
 
 	// UIマネージャー
 	UIManager* uiManager_ = nullptr;
+
+	// 平面のデバッグ描画
+	std::array<std::unique_ptr<PlaneRenderer>, 6> planeRenderers_;
 };

@@ -2,6 +2,11 @@
 #include"Inverse.h"
 #include"MakeMatrix.h"
 
+#ifdef _DEBUG
+#include "../externals/imgui/imgui.h"
+#endif // _DEBUG
+
+
 float Camera::width_;
 float Camera::height_;
 Matrix4x4 Camera::viewMat_;
@@ -18,6 +23,19 @@ void Camera::Initialize(const float& width, const float& height, const PROJECTIO
     InitializeTransform();
     UpdateProjectionMatrix();
 }
+
+#ifdef _DEBUG
+void Camera::EditTransform(const std::string &label) {
+    if (ImGui::TreeNode(label.c_str())) {
+        ImGui::DragFloat3("scale", &scale_.x, 0.01f, -std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+        ImGui::SliderAngle("rotateX", &rotate_.x);
+        ImGui::SliderAngle("rotateY", &rotate_.y);
+        ImGui::SliderAngle("rotateZ", &rotate_.z);
+        ImGui::DragFloat3("translate", &translate_.x, 0.01f, -std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+		ImGui::TreePop();
+    }
+}
+#endif // _DEBUG
 
 void Camera::InitializeTransform()
 {
