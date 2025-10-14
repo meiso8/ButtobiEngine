@@ -226,27 +226,17 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MaxSpeed</Optimization>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">true</WholeProgramOptimization>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Math\Add.cpp" />
     <ClCompile Include="Source\Engine\Math\cotangent.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\Depth.cpp" />
     <ClCompile Include="Source\Engine\Math\Dot.cpp" />
     <ClCompile Include="Source\Engine\Input\Input.cpp" />
     <ClCompile Include="Source\Engine\Math\Inverse.cpp" />
     <ClCompile Include="Source\Engine\Math\Length.cpp" />
-    <ClCompile Include="Source\Engine\Math\MakeAffineMatrix.cpp" />
-    <ClCompile Include="Source\Engine\Math\MakeIdentity4x4.cpp" />
-    <ClCompile Include="Source\Engine\Math\MakeOrthographicMatrix.cpp" />
-    <ClCompile Include="Source\Engine\Math\MakePerspectiveFovMatrix.cpp" />
-    <ClCompile Include="Source\Engine\Math\MakeRotateMatrix.cpp" />
-    <ClCompile Include="Source\Engine\Math\MakeScaleMatrix.cpp" />
-    <ClCompile Include="Source\Engine\Math\MakeTranslateMatrix.cpp" />
-    <ClCompile Include="Source\Engine\Math\MakeViewportMatrix.cpp" />
+    <ClCompile Include="Source\Engine\Math\MakeMatrix.cpp" />
     <ClCompile Include="Source\Engine\Surface\MaterialData.cpp" />
-    <ClCompile Include="Source\Engine\Math\Multiply.cpp" />
     <ClCompile Include="Source\Engine\Math\Normalize.cpp" />
     <ClCompile Include="Source\Engine\Math\ShericalCoordinate.cpp" />
     <ClCompile Include="Source\Engine\Sound\SoundManager.cpp" />
-    <ClCompile Include="Source\Engine\Math\Subtract.cpp" />
     <ClCompile Include="Source\Engine\Math\CoordinateTransform.cpp" />
     <ClCompile Include="Source\Engine\Math\Transpose.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\Window.cpp" />
@@ -338,7 +328,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Surface\MaterialData.h" />
     <ClInclude Include="Source\Engine\Surface\MaterialResource.h" />
     <ClInclude Include="Source\Engine\Math\AABB.h" />
-    <ClInclude Include="Source\Engine\Math\Add.h" />
     <ClInclude Include="Source\Engine\Math\CatmullRom.h" />
     <ClInclude Include="Source\Engine\Math\Collision.h" />
     <ClInclude Include="Source\Engine\Math\CoordinateTransform.h" />
@@ -350,17 +339,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Math\Length.h" />
     <ClInclude Include="Source\Engine\Math\Lerp.h" />
     <ClInclude Include="Source\Engine\Math\Line.h" />
-    <ClInclude Include="Source\Engine\Math\MakeAffineMatrix.h" />
-    <ClInclude Include="Source\Engine\Math\MakeIdentity4x4.h" />
-    <ClInclude Include="Source\Engine\Math\MakeOrthographicMatrix.h" />
-    <ClInclude Include="Source\Engine\Math\MakePerspectiveFovMatrix.h" />
-    <ClInclude Include="Source\Engine\Math\MakeRotateMatrix.h" />
-    <ClInclude Include="Source\Engine\Math\MakeScaleMatrix.h" />
-    <ClInclude Include="Source\Engine\Math\MakeTranslateMatrix.h" />
-    <ClInclude Include="Source\Engine\Math\MakeViewportMatrix.h" />
+    <ClInclude Include="Source\Engine\Math\MakeMatrix.h" />
     <ClInclude Include="Source\Engine\Math\Matrix3x3.h" />
     <ClInclude Include="Source\Engine\Math\Matrix4x4.h" />
-    <ClInclude Include="Source\Engine\Math\Multiply.h" />
     <ClInclude Include="Source\Engine\Math\Normalize.h" />
     <ClInclude Include="Source\Engine\Math\Pendulum.h" />
     <ClInclude Include="Source\Engine\Math\Plane.h" />
@@ -369,7 +350,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Math\Segment.h" />
     <ClInclude Include="Source\Engine\Math\Sphere.h" />
     <ClInclude Include="Source\Engine\Math\SphericalCoordinate.h" />
-    <ClInclude Include="Source\Engine\Math\Subtract.h" />
     <ClInclude Include="Source\Engine\Math\Transform.h" />
     <ClInclude Include="Source\Engine\Math\Transpose.h" />
     <ClInclude Include="Source\Engine\Math\Triangle.h" />

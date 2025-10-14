@@ -1,5 +1,5 @@
 #include "SpriteCamera.h"
-#include"MakeIdentity4x4.h"
+#include"MakeMatrix.h"
 #include"Inverse.h"
 #include"MakeOrthographicMatrix.h"
 #include"Multiply.h"

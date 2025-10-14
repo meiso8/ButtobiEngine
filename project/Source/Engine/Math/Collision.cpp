@@ -3,9 +3,7 @@
 #include"Dot.h"
 #include"Cross.h"
 #include"Normalize.h"
-#include"Multiply.h"
 #include<algorithm>
-
 
 bool IsCollision(const Sphere& s1, const Sphere& s2) {
 

@@ -1,9 +1,5 @@
 #include "WorldTransform.h"  
-#include "MakeAffineMatrix.h"  
-#include"MakeIdentity4x4.h"
-#include"Multiply.h"
-#include"MakeTranslateMatrix.h"
-#include"MakeRotateMatrix.h"
+#include"MakeMatrix.h"
 
 void WorldTransform::Initialize() {
 

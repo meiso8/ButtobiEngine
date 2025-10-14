@@ -2,10 +2,10 @@
 #include"DirectXCommon.h"
 
 #include"TransformationMatrix.h"
-#include"MakeAffineMatrix.h"
+#include"MakeMatrix.h"
 #include"Multiply.h"
 #include"Transform.h"
-#include"MakeIdentity4x4.h"
+#include"MakeMatrix.h"
 #include<numbers>
 #include"TextureManager.h"
 #include"ModelManager.h"
