@@ -213,3 +213,6 @@ GameScene::~GameScene() {
     // 敵のポインタの残骸を一掃
     enemies_.clear();
 }
+
+bool GameScene::GetIsGameOver() { return isGameOver; }
+bool GameScene::GetIsGameClear() { return isGameClear; }

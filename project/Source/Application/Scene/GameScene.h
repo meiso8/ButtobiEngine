@@ -25,6 +25,9 @@ public:
 	// 描画
 	void Draw()override;
 
+	bool GetIsGameOver();
+	bool GetIsGameClear();
+
 	void Debug()override;
 
 	// デストラクタ
@@ -34,7 +37,7 @@ public:
 	void CheckAllCollisions();
 
 private:
-
+	
 	// カメラ
 	Camera camera_;
 	// カメラ操作
@@ -69,5 +72,9 @@ private:
 	bool isDebugCameraActive_ = false;
 	// デバッグカメラの生成
 	DebugCamera* debugCamera_ = nullptr;
+
+
+	bool isGameOver = false;
+	bool isGameClear = false;
 
 };

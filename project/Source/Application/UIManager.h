@@ -87,6 +87,7 @@ private:
     uint32_t SpaceTextureHandle_ = 0;
     uint32_t TimerTextureHandle_ = 0;
     uint32_t JuiceTextureHandle_ = 0;
+	uint32_t NumbersTextureHandle_ = 0;
 
     //<スプライト系>
     std::array<Sprite,3> lifeSprites;
@@ -97,6 +98,7 @@ private:
     std::unique_ptr<Sprite> SpaceSprite;
     std::unique_ptr<Sprite> TimerSprite;
     std::unique_ptr<Sprite> JuiceSprite;
+	std::unique_ptr<Sprite> numbersSprite;
 
 
 public:
