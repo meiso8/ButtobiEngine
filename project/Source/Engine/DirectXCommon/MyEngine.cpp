@@ -141,8 +141,10 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     //テクスチャ管理
     TextureManager::Initialize();
 
-    //ランダム関数の初期化
-    srand(static_cast<unsigned int>(time(nullptr)));
+    ////ランダム関数の初期化
+    //srand(static_cast<unsigned int>(time(nullptr)));
+
+
 
     //ファイルへのログ出力
     LogFile::Log("LoopStart");

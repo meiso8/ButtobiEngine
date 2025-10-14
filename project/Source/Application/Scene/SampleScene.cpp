@@ -61,7 +61,7 @@ void SampleScene::Initialize() {
     worldTransformChild_.rotate_.y = (std::numbers::pi_v<float> / 4.0f);
     WorldTransformUpdate(worldTransformChild_);
 
-    //particle_.Create(Texture::GetHandle(Texture::UV_CHECKER));
+    particle_.Initialize(Texture::handle_[Texture::UV_CHECKER]);
     sphereMesh_ = std::make_unique<SphereMesh>();
     sphereMesh_->Create(Texture::handle_[Texture::UV_CHECKER]);
     sphereMesh_->SetVertex({ 4.0f });
@@ -80,9 +80,9 @@ void SampleScene::Update()
     //    SoundManager::Play(Sound::GetHandle(Sound::BGM1), 0.0625f, true);
     //}
 
-    //if (Input::IsTriggerKey(DIK_W)) {
-    //    SoundManager::Play(Sound::GetHandle(Sound::SE1), 1.0f, false);
-    //}
+    if (Input::IsTriggerKey(DIK_A)) {
+        particle_.Create();
+    }
 
     worldTransformChild_.parent_ = &worldTransformParent_;
     WorldTransformUpdate(worldTransformChild_);
@@ -104,6 +104,8 @@ void SampleScene::Update()
 
     WorldTransformUpdate(worldTransformChild_);
     quad_.UpdateUV();
+
+    particle_.Update();
 #endif
 }
 
@@ -119,6 +121,7 @@ void SampleScene::Draw()
     quad_.Draw(*currentCamera_, MakeIdentity4x4());
  
 
+    
 
     //sphereMesh_->PreDraw(kBlendModeNormal);
     //sphereMesh_->Draw(*currentCamera_, worldTransformChild_.matWorld_, lightType_);
@@ -133,7 +136,7 @@ void SampleScene::Draw()
         sprite->Draw();
     }
 
-    //particle_.Draw(camera_);
+    particle_.Draw(*currentCamera_,kBlendModeAdd);
 }
 
 void SampleScene::Debug()

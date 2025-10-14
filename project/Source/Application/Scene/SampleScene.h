@@ -29,7 +29,7 @@ private:
     std::vector<Sprite*>sprites_;
 
     ////パーティクル
-    //Particle particle_;
+    ParticleMesh particle_;
     //立方体
     std::vector<Cube>cube_;
     std::unique_ptr<SphereMesh> sphereMesh_ = nullptr;

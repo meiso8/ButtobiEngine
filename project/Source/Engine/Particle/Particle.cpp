@@ -4,9 +4,10 @@
 #include"MakeMatrix.h"
 #include"TextureManager.h"
 #include"MyEngine.h"
+#include"Random.h"
 using namespace  Microsoft::WRL;
 
-void Particle::Create(uint32_t textureHandle)
+void ParticleMesh::Initialize(uint32_t textureHandle)
 {
     rootSignature_ = MyEngine::GetRootSignature();
     textureHandle_ = textureHandle;
@@ -27,8 +28,43 @@ void Particle::Create(uint32_t textureHandle)
 
 }
 
+void ParticleMesh::Create()
+{
+    for (uint32_t index = 0; index < kNumInstance; ++index) {
+        particles[index] = MakeNewParticle();
+    }
 
-void Particle::CreateModelData()
+}
+
+void ParticleMesh::Update()
+{
+    const float kDeltaTime = 1.0f / 60.0f;
+
+
+    for (uint32_t index = 0; index < kNumInstance; ++index) {
+
+        particles[index].transform.translate += particles[index].velocity * kDeltaTime;
+    }
+
+}
+
+Particle ParticleMesh::MakeNewParticle()
+{
+    Random::SetMinMax(-1.0f, 1.0f);
+    Particle particle;
+    particle.transform.scale = { 1.0f,1.0f,1.0f };
+    particle.transform.rotate = { 0.0f,0.0f,0.0f };
+    particle.transform.translate = { Random::Get(), Random::Get(), Random::Get() };
+    particle.velocity = { Random::Get(), Random::Get(), Random::Get() };
+
+    Random::SetMinMax(0.0f, 1.0f);
+    particle.color = { Random::Get(), Random::Get(), Random::Get() ,1.0f };
+
+    return particle;
+}
+
+
+void ParticleMesh::CreateModelData()
 {
     modelData_.vertices.push_back({ .position = {1.0f,1.0f,0.0f,1.0f},.texcoord = {0.0f,0.0f},.normal = {0.0f,0.0f,1.0f} });//左上
     modelData_.vertices.push_back({ .position = {-1.0f,1.0f,0.0f,1.0f}, .texcoord = {1.0f,0.0f}, .normal = {0.0f,0.0f,1.0f} });//右上
@@ -40,10 +76,10 @@ void Particle::CreateModelData()
 
 }
 
-void Particle::CreateTransformationMatrix()
+void ParticleMesh::CreateTransformationMatrix()
 {
 
-    transforms.resize(kNumInstance);
+    particles.resize(kNumInstance);
 
     //Instancing用のTransformationMatrixリソースを作成
     instancingResource = DirectXCommon::CreateBufferResource(sizeof(TransformationMatrix) * kNumInstance);
@@ -65,24 +101,25 @@ void Particle::CreateTransformationMatrix()
     instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
     instancingSrvDesc.Buffer.NumElements = kNumInstance;
     instancingSrvDesc.Buffer.StructureByteStride = sizeof(TransformationMatrix);
-    instancingSrvHandleCPU = DirectXCommon::GetSRVCPUDescriptorHandle(Texture::TEXTURES + 2);//この書き方はダメですね
-    instancingSrvHandleGPU = DirectXCommon::GetSRVGPUDescriptorHandle(Texture::TEXTURES + 2);
+    instancingSrvHandleCPU = DirectXCommon::GetSRVCPUDescriptorHandle((UINT)Texture::handle_.size() + 1);//この書き方はダメですね
+    instancingSrvHandleGPU = DirectXCommon::GetSRVGPUDescriptorHandle((UINT)Texture::handle_.size() + 1);
     DirectXCommon::GetDevice()->CreateShaderResourceView(instancingResource.Get(), &instancingSrvDesc, instancingSrvHandleCPU);
 
     for (uint32_t index = 0; index < kNumInstance; ++index) {
-        transforms[index].scale = { 1.0f,1.0f,1.0f };
-        transforms[index].rotate = { 0.0f,0.0f,0.0f };
-        transforms[index].translate = { index * 0.1f,index * 0.1f,index * 0.1f };
+        particles[index].transform.scale = { 1.0f,1.0f,1.0f };
+        particles[index].transform.rotate = { 0.0f,0.0f,0.0f };
+        particles[index].transform.translate = { index * 0.1f,index * 0.1f,index * 0.1f };
+        particles[index].velocity = { 0.0f,1.0f,0.0f };
     }
 
 }
 
 
-void Particle::Draw(Camera& camera, BlendMode blendMode)
+void ParticleMesh::Draw(Camera& camera, BlendMode blendMode)
 {
 
     for (uint32_t index = 0; index < kNumInstance; ++index) {
-        Matrix4x4 worldMatrix = MakeAffineMatrix(transforms[index].scale, transforms[index].rotate, transforms[index].translate);
+        Matrix4x4 worldMatrix = MakeAffineMatrix(particles[index].transform.scale, particles[index].transform.rotate, particles[index].transform.translate);
         Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
         instancingData[index].WVP = worldViewProjectionMatrix;
     }

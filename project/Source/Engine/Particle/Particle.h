@@ -11,13 +11,20 @@
 #include<cstdint>
 class Camera;
 class ShaderResourceView;
-class Particle
+
+struct Particle {
+    Transform transform;
+    Vector3 velocity;
+    Vector4 color;
+};
+
+class ParticleMesh
 {
 
 private:
     const uint32_t kNumInstance = 10;//インスタンス数
     TransformationMatrix* instancingData = nullptr;
-    std::vector<Transform>transforms;
+    std::vector<Particle>particles;
 
     ModelData modelData_;
     MaterialResource materialResource_{};
@@ -32,7 +39,10 @@ private:
     VertexData* vertexBufferData_ = nullptr;
     uint32_t textureHandle_ = 0;
 public:
-    void Create(uint32_t textureHandle);
+    void Initialize(uint32_t textureHandle);
+    void Create();
+    void Update();
+    Particle MakeNewParticle();
     void Draw(Camera& camera,BlendMode blendMode = BlendMode::kBlendModeNormal);
 private:
     void CreateModelData();
