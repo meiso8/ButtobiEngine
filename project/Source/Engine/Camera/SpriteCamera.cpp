@@ -1,6 +1,5 @@
 #include "SpriteCamera.h"
 #include"MakeMatrix.h"
-#include"Inverse.h"
 
 Matrix4x4 SpriteCamera::viewProjectionMat_;
 

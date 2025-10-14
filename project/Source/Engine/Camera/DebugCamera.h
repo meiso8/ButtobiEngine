@@ -18,7 +18,7 @@ public:
     void Initialize(const float& width, const float& height, const PROJECTION_TYPE& type = PROJECTION_TYPE::PERSPECTIVE)override;
 private:
     void UpdateProjectionMatrix();
-    void EyeOperation();
+    void MouseInputMove();
     void InputTranslate();
     void InputRotate();
     void MoveZ(const float& speed);

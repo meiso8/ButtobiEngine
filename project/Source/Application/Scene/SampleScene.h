@@ -33,7 +33,9 @@ private:
     //立方体
     std::vector<Cube>cube_;
     std::unique_ptr<SphereMesh> sphereMesh_ = nullptr;
-    WorldTransform worldTransform_;
+    WorldTransform worldTransformChild_;
+
+    WorldTransform worldTransformParent_;
     //プレイヤー
     std::unique_ptr<SamplePlayer>samplePlayer_ = nullptr;
 

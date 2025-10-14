@@ -1,5 +1,4 @@
 #include"Camera.h"
-#include"Inverse.h"
 #include"MakeMatrix.h"
 
 float Camera::width_;

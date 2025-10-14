@@ -1,5 +1,5 @@
 #include"Vector3.h"
-
+#include <cmath>
 
 Vector3 Add(const Vector3& v1, const Vector3& v2) {
 
@@ -15,8 +15,44 @@ Vector3 Multiply(const float scalar, const Vector3& v) {
     return { scalar * v.x,scalar * v.y,scalar * v.z };
 };
 
+//内積
+float Dot(const Vector3& v1, const Vector3& v2) {
+    return { v1.x * v2.x + v1.y * v2.y + v1.z * v2.z };
+};
 
+
+Vector3 Cross(const Vector3& v1, const Vector3& v2) {
+
+    //左手でベクトルの順に巻いて親指が向く方向
+    Vector3 result;
+
+    result.x = v1.y * v2.z - v1.z * v2.y;
+    result.y = v1.z * v2.x - v1.x * v2.z;
+    result.z = v1.x * v2.y - v1.y * v2.x;
+
+    return result;
+}
+//二つ
+// のベクトルが向かい合っているかは内積で判断できる
+//c・(a×b)<= 0; 上記の外積と内積で判断
 //二項演算子 Binary Operator
+
+//長さ(ノルム)
+float Length(const Vector3& v) {
+    return { sqrtf(Dot(v,v)) };
+};
+
+
+Vector3 Normalize(const Vector3& v) {
+    float length = Length(v);
+    if (length != 0.0f) {
+        return { v.x / length,v.y / length,v.z / length };
+    } else {
+        return { 0.0f, 0.0f, 0.0f };
+    }
+
+};
+
 Vector3 operator+(const Vector3& v1, const Vector3& v2) { return Add(v1, v2); }
 Vector3 operator-(const Vector3& v1, const Vector3& v2) { return Subtract(v1, v2); }
 Vector3 operator*(float s, const Vector3& v) { return Multiply(s, v); }

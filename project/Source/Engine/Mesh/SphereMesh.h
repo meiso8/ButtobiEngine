@@ -9,6 +9,7 @@ public:
     void Draw(Camera& camera, const Matrix4x4& worldMatrix, uint32_t lightType = MaterialResource::LIGHTTYPE::NONE)override;
     void SetUVScale(const Vector3& scale) { uvTransform_.scale = scale; };
     void UpdateUV();
+    void SetVertex(const float& radius = 1.0f);
 private:
     void CreateVertex()override;
     void CreateUV();

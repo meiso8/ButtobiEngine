@@ -13,7 +13,6 @@
 #include"Input.h"
 #include"ImGuiClass.h"
 #include"Log.h"
-#include"Normalize.h"
 #include"Model.h"
 #include"CoordinateTransform.h"
 

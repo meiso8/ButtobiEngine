@@ -8,7 +8,6 @@
 #include"DirectionalLight.h"
 #include"PSO.h"
 #include"Camera/Camera.h"
-#include"Normalize.h"
 
 #include<numbers>
 #include<algorithm>

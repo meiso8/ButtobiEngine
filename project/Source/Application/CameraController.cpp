@@ -6,7 +6,6 @@
 #include <algorithm> // std::max, std::min を使用するために必要
 #include"Camera/Camera.h"
 #include<cmath>
-#include"Normalize.h"
 #include"Window.h"
 
 void CameraController::Initialize(Camera* camera) {

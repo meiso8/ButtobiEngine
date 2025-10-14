@@ -1,9 +1,7 @@
+#define NOMINMAX
 #include"Collision.h"
-#include"Length.h"
-#include"Dot.h"
-#include"Cross.h"
-#include"Normalize.h"
 #include<algorithm>
+#include<cmath>
 
 bool IsCollision(const Sphere& s1, const Sphere& s2) {
 

@@ -4,7 +4,6 @@
 #pragma comment(lib,"dxguid.lib")
 
 #include"Camera/Camera.h"
-#include"math/Normalize.h"
 #include<cmath>
 
 Input* Input::instance_ = nullptr;

@@ -1,7 +1,6 @@
 #include "SamplePlayer.h"
 
 #include"Input.h"
-#include"Normalize.h"
 #include"Model.h"
 #include"ModelManager.h"
 #include"Camera/Camera.h"
