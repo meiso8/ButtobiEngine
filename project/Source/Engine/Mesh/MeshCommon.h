@@ -53,7 +53,7 @@ protected:
     TransformationMatrix* transformationMatrixData_ = nullptr;
 protected:
    virtual void CreateVertex() = 0;
-    virtual void CreateIndexResource() = 0;
+    virtual void CreateIndexResource();
     void CreateTransformationMatrix();
     void CreateMaterial(const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, uint32_t lightType = 0);
     void CreateWaveData();

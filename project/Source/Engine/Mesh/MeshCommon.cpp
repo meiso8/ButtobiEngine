@@ -16,6 +16,10 @@ void MeshCommon::SetColor(const Vector4& color) {
     materialResource_.SetColor(color);
 }
 
+void MeshCommon::CreateIndexResource()
+{
+}
+
 void MeshCommon::CreateTransformationMatrix() {
 
     //Matrix4x4　1つ分のサイズを用意
