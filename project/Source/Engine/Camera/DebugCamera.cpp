@@ -1,12 +1,9 @@
 #include "DebugCamera.h"
 #include"Inverse.h"
-#include"MakeAffineMatrix.h"
-
 #include"MakeMatrix.h"
-#include"MakePerspectiveFovMatrix.h"
-#include"MakeOrthographicMatrix.h"
+
 #include"CoordinateTransform.h"
-#include"Multiply.h"
+
 #include<numbers>
 #include<cmath>
 #include"Input.h"

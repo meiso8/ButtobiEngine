@@ -2,8 +2,6 @@
 #include"DirectXCommon.h"
 #include"TransformationMatrix.h"
 #include"MakeMatrix.h"
-#include"MakeMatrix.h"
-#include"Multiply.h"
 #include"MyEngine.h"
 #include"TextureManager.h"
 #include"Camera/SpriteCamera.h"  

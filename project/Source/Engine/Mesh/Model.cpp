@@ -3,9 +3,7 @@
 
 #include"TransformationMatrix.h"
 #include"MakeMatrix.h"
-#include"Multiply.h"
 #include"Transform.h"
-#include"MakeMatrix.h"
 #include<numbers>
 #include"TextureManager.h"
 #include"ModelManager.h"
