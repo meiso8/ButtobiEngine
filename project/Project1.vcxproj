@@ -173,6 +173,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\Stage.cpp" />
     <ClCompile Include="Source\Application\UIManager.cpp" />
     <ClCompile Include="Source\Engine\Mesh\ModelManager.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\Quad.cpp" />
     <ClCompile Include="Source\Engine\Sound\Sound.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\DirectXCommon.cpp" />
     <ClCompile Include="Source\Application\Object\SamplePlayer.cpp" />
@@ -279,6 +280,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\Stage.h" />
     <ClInclude Include="Source\Application\UIManager.h" />
     <ClInclude Include="Source\Engine\Mesh\ModelManager.h" />
+    <ClInclude Include="Source\Engine\Mesh\Quad.h" />
     <ClInclude Include="Source\Engine\MyHeader.h" />
     <ClInclude Include="Source\Engine\Sound\Sound.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\DirectXCommon.h" />

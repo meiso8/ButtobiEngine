@@ -2,7 +2,6 @@
 #include<cmath>
 #include"Texture.h"
 #include"MakeMatrix.h"
-#include"LineMesh.h"
 #include"Camera/Camera.h"
 
 Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t) {

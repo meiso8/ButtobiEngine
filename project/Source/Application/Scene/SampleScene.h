@@ -5,7 +5,7 @@
 #include"WorldTransform.h"
 #include"Cube.h"
 #include"Particle/Particle.h"
-
+#include"Quad.h"
 #include"SphereMesh.h"
 
 class Sprite;
@@ -38,6 +38,8 @@ private:
     WorldTransform worldTransformParent_;
     //プレイヤー
     std::unique_ptr<SamplePlayer>samplePlayer_ = nullptr;
-
+    QuadMesh quad_;
+    Vector2 scale_;
+    Vector2 uvMoveVal_;
 };
 

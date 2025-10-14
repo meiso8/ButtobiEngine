@@ -110,7 +110,8 @@ void DebugUI::CheckSprite(Sprite& sprite, const char* label) {
         ImGui::TreePop();
     }
 
-    CheckTransforms(sprite.GetUVTranslate(), sprite.GetUVRotate(), sprite.GetUVRotate(), "uvTransform");
+    CheckTransforms(sprite.GetUVScale(), sprite.GetUVRotate(), sprite.GetUVTranslate(), "uvTransform");
+
 
     ImGui::End();
 }
