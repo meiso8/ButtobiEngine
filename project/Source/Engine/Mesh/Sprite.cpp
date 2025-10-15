@@ -49,7 +49,7 @@ void Sprite::UpdateUV() {
 
 void Sprite::PreDraw(uint32_t blendMode) {
     SpriteCommon::PreDraw(commandList);
-    commandList->SetPipelineState(MyEngine::GetPSO(blendMode)->GetGraphicsPipelineState(PSO::TRIANGLE).Get());//PSOを設定
+    commandList->SetPipelineState(MyEngine::GetPSO()->GetGraphicsPipelineState(blendMode,kCullModeBack).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }

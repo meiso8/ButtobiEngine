@@ -61,7 +61,7 @@ void Model::UpdateUV() {
 
 void Model::PreDraw(const BlendMode& type) {
     commandList_->SetGraphicsRootSignature(modelConfig_->rootSignature->GetRootSignature(0));
-    commandList_->SetPipelineState(MyEngine::GetPSO(type)->GetGraphicsPipelineState(PSO::TRIANGLE).Get());//PSOを設定
+    commandList_->SetPipelineState(MyEngine::GetPSO()->GetGraphicsPipelineState(type,kCullModeBack).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }

@@ -10,30 +10,58 @@
 #include"CompileShader.h"
 #include"BlendState.h"
 #include"RasterizerState.h"
-#include"Depth.h"
+#include"Depth.h"//StencilTextureの作成関数　奥行き
+#include<memory>
+#include<array>
 
 class PSO {
 public:
 
-    enum PSOType {
-        TRIANGLE,
-        LINE,
-        POINT,
-        PARTICLE,
-        PSO_MAX
+    enum TopologyType {
+        kTriangle,
+        kLine,
+        kPoint,
+        TopologyTypes
     };
 
-    void Create(
+    enum ShaderType {
+        kNormal,
+        kParticle,
+        Shaders,
+    };
+
+    static Microsoft::WRL::ComPtr <ID3D12PipelineState>& GetGraphicsPipelineState(uint32_t blendMode,uint32_t cullMode ) {
+        return graphicsPipelineStates_[blendMode][cullMode];
+        ;
+    }
+
+    static Microsoft::WRL::ComPtr <ID3D12PipelineState>& GetGraphicsPipelineStateParticle(uint32_t blendMode) {
+        return graphicsPipelineStatesParticle_[blendMode];
+        ;
+    }
+
+    static Microsoft::WRL::ComPtr <ID3D12PipelineState>& GetGraphicsPipelineStateLine() {
+        return graphicsPipelineStatesLine_;
+        ;
+    }
+
+    void CreateALLPSO();
+    static RootSignature* GetRootSignature() { return rootSignature.get(); }
+private:
+    Microsoft::WRL::ComPtr <ID3D12PipelineState> Create(
         RootSignature& rootSignature,
         InputLayout& inputLayout,
         BlendState& blendState,
         RasterizerState& rasterizerState,
-        DepthStencil& depthStencil);
-
-    Microsoft::WRL::ComPtr <ID3D12PipelineState>& GetGraphicsPipelineState(PSOType type) {
-        return graphicsPipelineState_[type];
-            ;
-    }
+        DepthStencil& depthStencil, const ShaderType shaderType, const TopologyType topologyType);
+public:
+    static std::unique_ptr<RootSignature>rootSignature;
 private:
-    Microsoft::WRL::ComPtr <ID3D12PipelineState> graphicsPipelineState_[PSO_MAX] = { nullptr };
+    static std::array<std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfCullMode>, kCountOfBlendMode> graphicsPipelineStates_;
+    static std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState> ,kCountOfBlendMode> graphicsPipelineStatesParticle_;
+    static Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineStatesLine_;
+    std::unique_ptr<InputLayout>inputLayout = nullptr;
+    std::vector<BlendState> blendStates = {};
+    std::vector<RasterizerState> rasterizerStates = {};
+    std::vector<DepthStencil>  depthStencils = {};
 };

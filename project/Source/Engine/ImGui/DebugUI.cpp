@@ -156,12 +156,27 @@ void DebugUI::CheckWaveData(Wave& wave, const char* label)
         ImGui::TreePop();
     }
 }
-void DebugUI::CheckParticle(ParticleMesh& particle, const char* label)
+void DebugUI::CheckParticle(ParticleMesh& particle,int& createNum, const char* label)
 {
-    for (uint32_t index = 0; index < particle.kNumMaxInstance; ++index) {
-        std::string labels = std::format("{} : {}", label, index);
-        CheckTransform(particle.particles[index].transform, labels.c_str());
+
+    ImGui::Begin(label);
+
+    ImGui::Checkbox("useBillboard", &particle.useBillboard_);
+
+    ImGui::SliderInt("createNum", &createNum, 0, particle.kNumMaxInstance);
+
+    if (ImGui::Button("Create")) {
+        particle.Create(createNum);
     }
+
+    int index = 0;
+    for (std::list<Particle>::iterator itr = particle.particles.begin(); itr != particle.particles.end();++itr) {
+        std::string labels = std::format("{}", index);
+        CheckTransform((*itr).transform, labels.c_str());
+        ++index;
+    }
+
+    ImGui::End();
 }
 
 void DebugUI::CheckTransforms(Vector3& scale, Vector3& rotate, Vector3& translate, const char* label) {

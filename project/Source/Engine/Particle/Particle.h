@@ -6,7 +6,7 @@
 #include"Transform.h"
 #include"RootSignature.h"
 #include "BlendState.h"
-
+#include<list>
 #include<cstdint>
 class Camera;
 class ShaderResourceView;
@@ -30,7 +30,8 @@ class ParticleMesh
 {
 public:
     const uint32_t kNumMaxInstance = 10;//インスタンス数
-    std::vector<Particle>particles;
+    std::list<Particle>particles;
+    bool useBillboard_ = false;
 private:
     ParticleForGPU* instancingData = nullptr;
     ModelData modelData_;
@@ -50,11 +51,12 @@ private:
 
     Matrix4x4 billboardMatrix;
     Matrix4x4 worldMatrix;
+
 public:
     void Initialize(uint32_t textureHandle);
-    void Create();
+    void Create(uint32_t maxInstance);
     Particle MakeNewParticle();
-    void Draw(Camera& camera, bool useBillboard, uint32_t blendMode = BlendMode::kBlendModeAdd);
+    void Draw(Camera& camera,uint32_t blendMode = BlendMode::kBlendModeAdd);
 private:
     void CreateModelData();
     void CreateTransformationMatrix();

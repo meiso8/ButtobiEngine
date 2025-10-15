@@ -53,8 +53,9 @@ void LineMesh::SetVertexData(const Vector3& start, const Vector3& end) {
 };
 
 void LineMesh::PreDraw(const BlendMode& blendMode) {
+    (void)blendMode;
     commandList_->SetGraphicsRootSignature(modelConfig_->rootSignature->GetRootSignature(0));
-    commandList_->SetPipelineState(MyEngine::GetPSO(blendMode)->GetGraphicsPipelineState(PSO::LINE).Get());//PSOを設定
+    commandList_->SetPipelineState(MyEngine::GetPSO()->GetGraphicsPipelineStateLine().Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 }

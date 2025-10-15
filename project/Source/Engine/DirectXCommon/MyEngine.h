@@ -4,13 +4,8 @@
 #include"D3DResourceLeakChecker.h"
 #include"Input.h"
 #include"DirectXCommon.h"
-#include "RootSignature.h"
 
 #include"PSO.h"
-#include"Depth.h"//StencilTextureの作成関数　奥行き
-#include"CompileShader.h"
-#include"BlendState.h"
-#include"RasterizerState.h"
 #include"Texture.h"
 
 #include"ModelManager.h"
@@ -21,7 +16,6 @@
 
 #include"CrashHandler.h"
 #include"Log.h"
-#include"InputLayout.h"
 #include"DebugUI.h"
 
 #include"DirectionalLight.h"
@@ -43,10 +37,9 @@ public:
     void Finalize();
 
     static Window& GetWC() { return *wc; };
-    static RootSignature* GetRootSignature() { return rootSignature.get(); }
-    static PSO* GetPSO(uint32_t index) { return &pso[index]; }
+    static PSO* GetPSO() { return &pso; }
     static DirectionalLight* GetDirectionalLightData() { return directionalLightData; }
-    static void SetBlendMode(uint32_t blendMode = BlendMode::kBlendModeNormal);
+    static void SetBlendMode(uint32_t blendMode = kBlendModeNormal, uint32_t cullMode = kCullModeBack);
 public:
 
 private:
@@ -56,6 +49,7 @@ private:
     std::unique_ptr<DirectXCommon> directXCommon = nullptr;
     std::unique_ptr<LogFile> logFile = nullptr;
     static std::unique_ptr<Window> wc;
+    static ModelConfig modelConfig_;
 
     Input* input = nullptr;
     //音声クラスの作成
@@ -63,12 +57,7 @@ private:
     Microsoft::WRL::ComPtr <ID3D12Resource> directionalLightResource = nullptr;
     static DirectionalLight* directionalLightData;
 
-    static std::array<PSO, kCountOfBlendMode> pso;
-    static std::unique_ptr<RootSignature>rootSignature;
-    static ModelConfig modelConfig_;
-    std::unique_ptr<InputLayout>inputLayout = nullptr;
-    std::vector<BlendState> blendStates = {};
-    std::vector<RasterizerState> rasterizerStates = {};
-    std::array<DepthStencil, DepthStencil::MASKS>  depthStencils = {};
+    static PSO pso;
+
 };
 
