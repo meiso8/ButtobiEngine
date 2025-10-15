@@ -15,7 +15,7 @@ void SampleScene::Initialize() {
     DrawGrid::Initialize();
 
     lightType_ = MaterialResource::LIGHTTYPE::NONE;
-    blendMode_ = BlendMode::kBlendModeNone;
+    blendMode_ = BlendMode::kBlendModeNormal;
 
 #pragma region//Camera
 
@@ -54,19 +54,19 @@ void SampleScene::Initialize() {
     worldTransformChild_.Initialize();
     worldTransformChild_.parent_ = &worldTransformParent_;
 
-
-
     worldTransformChild_.translate_ = { 0.0f,0.0f,1.0f };
     worldTransformChild_.scale_ = { 1.0f,1.0f,1.0f };
     worldTransformChild_.rotate_.y = (std::numbers::pi_v<float> / 4.0f);
     WorldTransformUpdate(worldTransformChild_);
 
-    particle_.Initialize(Texture::handle_[Texture::UV_CHECKER]);
+    particle_.Initialize(Texture::handle_[Texture::PARTICLE]);
     sphereMesh_ = std::make_unique<SphereMesh>();
     sphereMesh_->Create(Texture::handle_[Texture::UV_CHECKER]);
     sphereMesh_->SetVertex({ 4.0f });
 
     quad_.Create(Texture::handle_[Texture::UV_CHECKER]);
+
+
 
 }
 
@@ -79,16 +79,12 @@ void SampleScene::Update()
     //    SoundManager::Play(Sound::GetHandle(Sound::BGM1), 0.0625f, true);
     //}
 
-    if (Input::IsTriggerKey(DIK_A)) {
-        particle_.Create(3);
-    }
-
     worldTransformChild_.parent_ = &worldTransformParent_;
     WorldTransformUpdate(worldTransformChild_);
 
-    if (Input::IsTriggerMouse(0)) {
-        SoundManager::Play(Sound::GetHandle(Sound::SE1), 0.0625f, false);
-    }
+    //if (Input::IsTriggerMouse(0)) {
+    //    SoundManager::Play(Sound::GetHandle(Sound::SE1), 0.0625f, false);
+    //}
 
     currentCamera_->UpdateMatrix();
 
@@ -103,6 +99,8 @@ void SampleScene::Update()
 
     WorldTransformUpdate(worldTransformChild_);
     quad_.UpdateUV();
+
+    particle_.Update();
 
 #endif
 }
@@ -134,33 +132,36 @@ void SampleScene::Draw()
         sprite->Draw();
     }
 
-    
     particle_.Draw(*currentCamera_, blendMode_);
 }
 
 void SampleScene::Debug()
 {
+    DebugUI::CheckFPS();
+    std::function<void()> func = [this]() { SwitchCamera(); };
+    DebugUI::Button("ChangeCamera", func);
+    DebugUI::CheckCamera(*currentCamera_);
+    DebugUI::CheckDirectionalLight(lightType_);
+    DebugUI::CheckBlendMode(blendMode_);
 
     samplePlayer_->Debug();
 
     DebugUI::CheckBalloonData(cube_[0].GetBalloonData());
     DebugUI::CheckWaveData(cube_[0].GetWaveData(0), "waveData0");
     DebugUI::CheckWaveData(cube_[0].GetWaveData(1), "waveData1");
-    DebugUI::CheckDirectionalLight(lightType_);
-    DebugUI::CheckBlendMode(blendMode_);
-    DebugUI::CheckSprite(*sprites_[0], "sprite0");
-    std::function<void()> func = [this]() { SwitchCamera(); };
-    DebugUI::Button("ChangeCamera", func);
-    DebugUI::CheckCamera(*currentCamera_);
     DebugUI::CheckWorldTransform(worldTransformParent_, "worldTransformParent");
     DebugUI::CheckWorldTransform(worldTransformChild_, "worldTransform");
+
+    DebugUI::CheckSprite(*sprites_[0], "sprite0");
+
+
     ImGui::Begin("Quad");
 
-    DebugUI::CheckParticle(particle_, createNum, "particle");
+    DebugUI::CheckParticle(particle_,"particle");
     DebugUI::CheckTransforms(quad_.GetUVScale(), quad_.GetUVRotate(), quad_.GetUVTranslate(), "uvTransform");
 
     ImGui::End();
-    DebugUI::CheckFPS();
+ 
 }
 
 SampleScene::~SampleScene()

@@ -119,7 +119,6 @@ void PSO::CreateALLPSO()
         }
     }
 
-
     for (int b = 0; b < kCountOfBlendMode; ++b) {
         graphicsPipelineStatesParticle_[b] = Create(
             *rootSignature,
