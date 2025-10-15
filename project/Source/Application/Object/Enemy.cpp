@@ -5,7 +5,6 @@
 #include "Player.h" // 追加
 #include "Model.h"
 #include "RigidBody.h"
-#include "Normalize.h"
 #include <cmath>
 #include <numbers>
 #include <cassert>

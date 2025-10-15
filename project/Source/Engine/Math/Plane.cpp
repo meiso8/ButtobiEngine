@@ -2,8 +2,6 @@
 #include "Texture.h"
 #include "LineMesh.h"
 #include "Perpendicular.h"
-#include "Normalize.h"
-#include "Cross.h"
 #include "MakeMatrix.h"
 #include <cassert>
 
