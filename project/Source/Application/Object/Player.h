@@ -1,14 +1,17 @@
 #pragma once
-
-struct AABB;
-class Enemy;
-class Camera;
-class Model;
 #include<array>
+#include<memory>
 
 #include"Vector3.h"
 #include"Vector4.h"
 #include"WorldTransform.h"
+
+struct AABB;
+
+class Enemy;
+class Camera;
+class Model;
+class AABBRenderer;
 
 /// @brief 自キャラ
 class Player {
@@ -153,8 +156,8 @@ private:
 	static inline const float kJumpAcceleration = 1.0f;
 
 	// キャラクターの当たり判定サイズ
-	static inline const float kWidth = 0.8f;
-	static inline const float kHeight = 0.8f;
+	static inline const float kWidth = 2.0f;
+	static inline const float kHeight = 2.0f;
 
 	static inline const float kBlank = 0.2f;
 
@@ -184,6 +187,9 @@ private:
 
 	//色　変更しましたyoshida
 	Vector4 objectColor_ = {1.0f,1.0f,1.0f,1.0f};
+
+	// AABB描画
+	std::unique_ptr<AABBRenderer> aabbRenderer_ = nullptr;
 private:
 
 	};
