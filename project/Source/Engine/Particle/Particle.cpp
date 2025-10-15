@@ -27,25 +27,23 @@ void ParticleMesh::Initialize(uint32_t textureHandle)
     vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData) * modelData_.vertices.size());
     vertexBufferView_.StrideInBytes = sizeof(VertexData);
 
-}
-
-void ParticleMesh::Create(uint32_t maxInstance)
-{
-    assert(maxInstance <= kNumMaxInstance);
-
-    for (uint32_t i = 0; i < maxInstance; ++i) {
-        particles.push_back(MakeNewParticle());
-    }
+    emitter_.cont = 3;
+    emitter_.frequency = 0.5f;
+    emitter_.frequencyTime = 0.0f;
+    emitter_.transform.rotate = { 0.0f,0.0f,0.0f };
+    emitter_.transform.scale = { 1.0f,1.0f,1.0f };
+    emitter_.transform.translate = { 1.0f,1.0f,1.0f };
 
 }
 
-Particle ParticleMesh::MakeNewParticle()
+Particle ParticleMesh::MakeNewParticle(const Vector3& translate)
 {
     Random::SetMinMax(-1.0f, 1.0f);
     Particle particle;
     particle.transform.scale = { 1.0f,1.0f,1.0f };
     particle.transform.rotate = { 0.0f,0.0f,0.0f };
-    particle.transform.translate = { Random::Get(), Random::Get(), Random::Get() };
+    Vector3 randomTranslate{ Random::Get(), Random::Get(), Random::Get() };
+    particle.transform.translate = randomTranslate + translate;
     particle.velocity = { Random::Get(), Random::Get(), Random::Get() };
 
     Random::SetMinMax(0.0f, 1.0f);
@@ -112,8 +110,6 @@ void ParticleMesh::Draw(Camera& camera, uint32_t blendMode)
         billboardMatrix.m[3][2] = 0.0f;
     }
 
-    const float kDeltaTime = 1.0f / 60.0f;
-
     uint32_t numInstance = 0;
 
     for (std::list <Particle>::iterator particleIterator = particles.begin(); particleIterator != particles.end();) {
@@ -172,6 +168,24 @@ void ParticleMesh::Draw(Camera& camera, uint32_t blendMode)
         //描画!（DrawCall/ドローコール）6個のインデックスを使用しインスタンスを描画。
         commandList->DrawInstanced(UINT(modelData_.vertices.size()), numInstance, 0, 0);
     }
+}
 
+void ParticleMesh::Update()
+{
+    emitter_.frequencyTime += kDeltaTime;
+
+    if (emitter_.frequency <= emitter_.frequencyTime) {
+        particles.splice(particles.end(), Emit(emitter_));
+        emitter_.frequencyTime -= emitter_.frequency;
+    }
+}
+
+std::list<Particle> Emit(const Emitter& emitter)
+{
+    std::list<Particle>particles;
+    for (uint32_t count = 0; count < emitter.cont; ++count) {
+        particles.push_back(ParticleMesh::MakeNewParticle(emitter.transform.translate));
+    }
+    return particles;
 
 }

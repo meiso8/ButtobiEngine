@@ -11,6 +11,15 @@
 class Camera;
 class ShaderResourceView;
 
+struct Emitter
+{
+    Transform transform;//エミッタのTransfrom
+    uint32_t cont;//発生数
+    float frequency;//発生頻度
+    float frequencyTime;//頻度用時刻
+
+};
+
 struct Particle {
     Transform transform;
     Vector3 velocity;
@@ -19,6 +28,10 @@ struct Particle {
     float lifeTime;
     float currentTime;
 };
+
+std::list<Particle> Emit(const Emitter& emitter);
+
+
 
 struct ParticleForGPU {
     Matrix4x4 WVP;
@@ -29,10 +42,14 @@ struct ParticleForGPU {
 class ParticleMesh
 {
 public:
-    const uint32_t kNumMaxInstance = 10;//インスタンス数
+    const uint32_t kNumMaxInstance = 100;//インスタンス数
     std::list<Particle>particles;
     bool useBillboard_ = false;
+    Emitter emitter_{};
+
 private:
+    const float kDeltaTime = 1.0f / 60.0f;
+
     ParticleForGPU* instancingData = nullptr;
     ModelData modelData_;
     MaterialResource materialResource_{};
@@ -54,9 +71,10 @@ private:
 
 public:
     void Initialize(uint32_t textureHandle);
-    void Create(uint32_t maxInstance);
-    Particle MakeNewParticle();
+    static Particle MakeNewParticle(const Vector3& translate);
     void Draw(Camera& camera,uint32_t blendMode = BlendMode::kBlendModeAdd);
+    void Update();
+
 private:
     void CreateModelData();
     void CreateTransformationMatrix();
