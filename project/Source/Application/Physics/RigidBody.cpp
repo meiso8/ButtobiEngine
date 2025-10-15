@@ -1,6 +1,4 @@
 #include "RigidBody.h"
-#include "Length.h"
-#include "Normalize.h"
 
 #ifdef _DEBUG
 #include "../externals/imgui/imgui.h"
