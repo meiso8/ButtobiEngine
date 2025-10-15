@@ -47,11 +47,16 @@ private:
     Microsoft::WRL::ComPtr<ID3D12Resource> vertexBufferResource_;
     VertexData* vertexBufferData_ = nullptr;
     uint32_t textureHandle_ = 0;
+
+    Matrix4x4 backToFrontMatrix;
+
+    Matrix4x4 billboardMatrix;
+    Matrix4x4 worldMatrix;
 public:
     void Initialize(uint32_t textureHandle);
     void Create();
     Particle MakeNewParticle();
-    void Draw(Camera& camera,BlendMode blendMode = BlendMode::kBlendModeNormal);
+    void Draw(Camera& camera, bool useBillboard, BlendMode blendMode = BlendMode::kBlendModeAdd);
 private:
     void CreateModelData();
     void CreateTransformationMatrix();

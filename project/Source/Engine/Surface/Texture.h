@@ -18,6 +18,8 @@ public:
         TIMER,
         JUICE,
 
+        PARTICLE,
+
         TEXTURES
     };
 

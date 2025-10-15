@@ -677,4 +677,9 @@
       <Filter>externals\assimp</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\particle.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

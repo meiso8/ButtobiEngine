@@ -23,9 +23,13 @@ void Camera::InitializeTransform()
     scale_ = { 1.0f,1.0f,1.0f };
     rotate_ = { 0.0f,0.0f,0.0f };
     translate_ = { 0.0f,0.0f,0.0f };
+    worldMat_ = MakeIdentity4x4();
 }
 
 void Camera::UpdateMatrix() {
+
+    worldMat_ = MakeAffineMatrix(scale_, rotate_, translate_);
+    viewMat_ = Inverse(worldMat_);
 
     UpdateProjectionMatrix();
 
@@ -37,7 +41,6 @@ void Camera::UpdateMatrix() {
 
 void Camera::UpdateProjectionMatrix()
 {
-    viewMat_ = Inverse(MakeAffineMatrix(scale_, rotate_, translate_));
 
     if (projectionType_ == PERSPECTIVE) {
         //投資投影

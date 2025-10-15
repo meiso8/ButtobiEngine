@@ -28,18 +28,19 @@ private:
     //スプライト
     std::vector<Sprite*>sprites_;
 
-    ////パーティクル
+    //パーティクル
     ParticleMesh particle_;
+    bool useBillboard_ = false;
     //立方体
     std::vector<Cube>cube_;
     std::unique_ptr<SphereMesh> sphereMesh_ = nullptr;
-    WorldTransform worldTransformChild_;
 
+    WorldTransform worldTransformChild_;
     WorldTransform worldTransformParent_;
     //プレイヤー
     std::unique_ptr<SamplePlayer>samplePlayer_ = nullptr;
+    //矩形
     QuadMesh quad_;
-    Vector2 scale_;
-    Vector2 uvMoveVal_;
+
 };
 

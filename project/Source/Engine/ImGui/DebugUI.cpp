@@ -25,6 +25,7 @@ void DebugUI::CheckCamera(Camera& camera) {
     ImGui::Begin("Camera");
 
     CheckTransforms(camera.scale_, camera.rotate_, camera.translate_, "worldMatrix");
+    ShowMatrix4x4(camera.worldMat_);
     if (ImGui::Button("InitTransform")) {
         camera.InitializeTransform();
     }
@@ -115,6 +116,21 @@ void DebugUI::CheckSprite(Sprite& sprite, const char* label) {
 
     ImGui::End();
 }
+
+
+void DebugUI::ShowMatrix4x4(const Matrix4x4& matrix, const char* label) {
+    if (ImGui::BeginTable(label, 4, ImGuiTableFlags_Borders)) {
+        for (uint32_t row = 0; row < 4; ++row) {
+            ImGui::TableNextRow();
+            for (uint32_t col = 0; col < 4; ++col) {
+                ImGui::TableSetColumnIndex(col);
+                ImGui::Text("%.3f", matrix.m[row][col]);
+            }
+        }
+        ImGui::EndTable();
+    }
+}
+
 
 void DebugUI::CheckBalloonData(Balloon& balloon)
 {
@@ -218,7 +234,7 @@ void DebugUI::CheckFlag(bool& flag, const char* label)
     ImGui::Text("%s", labels.c_str());
 }
 
-void DebugUI::SwitchFlag(bool& flag,const char* label)
+void DebugUI::SwitchFlag(bool& flag, const char* label)
 {
     CheckFlag(flag, label);
 

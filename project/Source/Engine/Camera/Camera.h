@@ -21,6 +21,7 @@ public:
     };
 
     PROJECTION_TYPE projectionType_ = PERSPECTIVE;
+    Matrix4x4 worldMat_;
     //ビュー行列
     static Matrix4x4 viewMat_;
     //射影行列
