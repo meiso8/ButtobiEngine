@@ -61,7 +61,7 @@ void SampleScene::Initialize() {
     worldTransformChild_.rotate_.y = (std::numbers::pi_v<float> / 4.0f);
     WorldTransformUpdate(worldTransformChild_);
 
-    particle_.Initialize(Texture::handle_[Texture::PARTICLE]);
+    particle_.Initialize(Texture::handle_[Texture::UV_CHECKER]);
     sphereMesh_ = std::make_unique<SphereMesh>();
     sphereMesh_->Create(Texture::handle_[Texture::UV_CHECKER]);
     sphereMesh_->SetVertex({ 4.0f });
@@ -117,9 +117,9 @@ void SampleScene::Draw()
     //cube_[0].Draw(*currentCamera_, worldTransformParent_.matWorld_, lightType_);
     quad_.PreDraw();
     quad_.Draw(*currentCamera_, MakeIdentity4x4());
- 
 
-    
+
+
 
     //sphereMesh_->PreDraw(kBlendModeNormal);
     //sphereMesh_->Draw(*currentCamera_, worldTransformChild_.matWorld_, lightType_);
@@ -134,7 +134,8 @@ void SampleScene::Draw()
         sprite->Draw();
     }
 
-    particle_.Draw(*currentCamera_,useBillboard_,kBlendModeAdd);
+    
+    particle_.Draw(*currentCamera_, useBillboard_, blendMode_);
 }
 
 void SampleScene::Debug()
@@ -155,6 +156,7 @@ void SampleScene::Debug()
     DebugUI::CheckWorldTransform(worldTransformChild_, "worldTransform");
     ImGui::Begin("Quad");
     ImGui::Checkbox("useBillboard", &useBillboard_);
+    DebugUI::CheckParticle(particle_, "particle");
     DebugUI::CheckTransforms(quad_.GetUVScale(), quad_.GetUVRotate(), quad_.GetUVTranslate(), "uvTransform");
 
     ImGui::End();
