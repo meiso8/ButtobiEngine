@@ -40,6 +40,8 @@ public:
     static void CheckTransform(Transform& transform, const char* label);
 
     static void CheckTransforms(Vector3& scale, Vector3& rotate, Vector3& translate, const char* label);
+    //行列の要素を見る関数
+    static void ShowMatrix4x4(const Matrix4x4& matrix, const char* label = "Matrix4x4");
     /// @brief 入力
     /// @param input 
     static void CheckInput(Input& input);

@@ -61,14 +61,13 @@ void SampleScene::Initialize() {
     worldTransformChild_.rotate_.y = (std::numbers::pi_v<float> / 4.0f);
     WorldTransformUpdate(worldTransformChild_);
 
-    particle_.Initialize(Texture::handle_[Texture::UV_CHECKER]);
+    particle_.Initialize(Texture::handle_[Texture::PARTICLE]);
     sphereMesh_ = std::make_unique<SphereMesh>();
     sphereMesh_->Create(Texture::handle_[Texture::UV_CHECKER]);
     sphereMesh_->SetVertex({ 4.0f });
 
     quad_.Create(Texture::handle_[Texture::UV_CHECKER]);
-    scale_ = { 1.0f,1.0f };
-    uvMoveVal_ = { 0.0f,0.0f };
+
 }
 
 void SampleScene::Update()
@@ -135,7 +134,7 @@ void SampleScene::Draw()
         sprite->Draw();
     }
 
-    particle_.Draw(*currentCamera_,kBlendModeAdd);
+    particle_.Draw(*currentCamera_,useBillboard_,kBlendModeAdd);
 }
 
 void SampleScene::Debug()
@@ -154,10 +153,8 @@ void SampleScene::Debug()
     DebugUI::CheckCamera(*currentCamera_);
     DebugUI::CheckWorldTransform(worldTransformParent_, "worldTransformParent");
     DebugUI::CheckWorldTransform(worldTransformChild_, "worldTransform");
-
     ImGui::Begin("Quad");
-    ImGui::SliderFloat2("scale", &scale_.x, -10.0f, 10.0f);
-    ImGui::SliderFloat2("uvMoveVol", &uvMoveVal_.x, -10.0f, 10.0f);
+    ImGui::Checkbox("useBillboard", &useBillboard_);
     DebugUI::CheckTransforms(quad_.GetUVScale(), quad_.GetUVRotate(), quad_.GetUVTranslate(), "uvTransform");
 
     ImGui::End();

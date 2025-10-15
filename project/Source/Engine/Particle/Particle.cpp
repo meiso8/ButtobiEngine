@@ -5,6 +5,7 @@
 #include"TextureManager.h"
 #include"MyEngine.h"
 #include"Random.h"
+#include<numbers>
 using namespace  Microsoft::WRL;
 
 void ParticleMesh::Initialize(uint32_t textureHandle)
@@ -112,10 +113,16 @@ void ParticleMesh::CreateTransformationMatrix()
 }
 
 
-void ParticleMesh::Draw(Camera& camera, BlendMode blendMode)
+void ParticleMesh::Draw(Camera& camera, bool useBillboard, BlendMode blendMode)
 {
+    if (useBillboard) {
+        backToFrontMatrix = MakeRotateYMatrix(std::numbers::pi_v<float>);
 
-
+        billboardMatrix = Multiply(backToFrontMatrix, camera.worldMat_);
+        billboardMatrix.m[3][0] = 0.0f;
+        billboardMatrix.m[3][1] = 0.0f;
+        billboardMatrix.m[3][2] = 0.0f;
+    }
 
     const float kDeltaTime = 1.0f / 60.0f;
 
@@ -130,9 +137,16 @@ void ParticleMesh::Draw(Camera& camera, BlendMode blendMode)
         particles[index].transform.translate += particles[index].velocity * kDeltaTime;
         particles[index].currentTime += kDeltaTime;
 
+        if (useBillboard) {
+            Matrix4x4 scaleMatrix = MakeScaleMatrix(particles[index].transform.scale);
+            Matrix4x4 translateMatrix = MakeTranslateMatrix(particles[index].transform.translate);
+            worldMatrix = scaleMatrix * billboardMatrix * translateMatrix;
+        } else {
+            worldMatrix = MakeAffineMatrix(particles[index].transform.scale, particles[index].transform.rotate, particles[index].transform.translate);
+        }
 
-        Matrix4x4 worldMatrix = MakeAffineMatrix(particles[index].transform.scale, particles[index].transform.rotate, particles[index].transform.translate);
         Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
+
         instancingData[numInstance].WVP = worldViewProjectionMatrix;
         instancingData[numInstance].World = worldMatrix;
         instancingData[numInstance].color = particles[index].color;
