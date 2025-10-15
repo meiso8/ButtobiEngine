@@ -3,6 +3,7 @@
 #include"Input.h"
 #include"Sprite.h"
 #include"Model.h"
+#include"Particle/Particle.h"
 
 #include"SphereMesh.h"
 #include"DirectionalLight.h"
@@ -155,6 +156,14 @@ void DebugUI::CheckWaveData(Wave& wave, const char* label)
         ImGui::TreePop();
     }
 }
+void DebugUI::CheckParticle(ParticleMesh& particle, const char* label)
+{
+    for (uint32_t index = 0; index < particle.kNumMaxInstance; ++index) {
+        std::string labels = std::format("{} : {}", label, index);
+        CheckTransform(particle.particles[index].transform, labels.c_str());
+    }
+}
+
 void DebugUI::CheckTransforms(Vector3& scale, Vector3& rotate, Vector3& translate, const char* label) {
 
     if (ImGui::TreeNode(label)) {

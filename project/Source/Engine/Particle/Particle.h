@@ -28,13 +28,11 @@ struct ParticleForGPU {
 
 class ParticleMesh
 {
-
-private:
-
+public:
     const uint32_t kNumMaxInstance = 10;//インスタンス数
-    ParticleForGPU* instancingData = nullptr;
     std::vector<Particle>particles;
-
+private:
+    ParticleForGPU* instancingData = nullptr;
     ModelData modelData_;
     MaterialResource materialResource_{};
     RootSignature* rootSignature_ = nullptr;
@@ -56,7 +54,7 @@ public:
     void Initialize(uint32_t textureHandle);
     void Create();
     Particle MakeNewParticle();
-    void Draw(Camera& camera, bool useBillboard, BlendMode blendMode = BlendMode::kBlendModeAdd);
+    void Draw(Camera& camera, bool useBillboard, uint32_t blendMode = BlendMode::kBlendModeAdd);
 private:
     void CreateModelData();
     void CreateTransformationMatrix();

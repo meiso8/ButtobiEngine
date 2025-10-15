@@ -113,7 +113,7 @@ void ParticleMesh::CreateTransformationMatrix()
 }
 
 
-void ParticleMesh::Draw(Camera& camera, bool useBillboard, BlendMode blendMode)
+void ParticleMesh::Draw(Camera& camera, bool useBillboard, uint32_t blendMode)
 {
     if (useBillboard) {
         backToFrontMatrix = MakeRotateYMatrix(std::numbers::pi_v<float>);
@@ -140,7 +140,8 @@ void ParticleMesh::Draw(Camera& camera, bool useBillboard, BlendMode blendMode)
         if (useBillboard) {
             Matrix4x4 scaleMatrix = MakeScaleMatrix(particles[index].transform.scale);
             Matrix4x4 translateMatrix = MakeTranslateMatrix(particles[index].transform.translate);
-            worldMatrix = scaleMatrix * billboardMatrix * translateMatrix;
+            Matrix4x4 rotateMatrix = MakeRotateXYZMatrix(particles[index].transform.rotate)* billboardMatrix;
+            worldMatrix = scaleMatrix * rotateMatrix * translateMatrix;
         } else {
             worldMatrix = MakeAffineMatrix(particles[index].transform.scale, particles[index].transform.rotate, particles[index].transform.translate);
         }
