@@ -4,11 +4,10 @@
 #include<algorithm>
 #include"Camera/SpriteCamera.h"
 
-std::array<PSO, kCountOfBlendMode> MyEngine::pso = {};
+PSO MyEngine::pso = {};
 MyEngine* MyEngine::instance_ = nullptr;
 
 DirectionalLight* MyEngine::directionalLightData = nullptr;
-std::unique_ptr<RootSignature> MyEngine::rootSignature = nullptr;
 ModelConfig MyEngine::modelConfig_ = {};
 std::unique_ptr<Window> MyEngine::wc = nullptr;
 
@@ -44,79 +43,7 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     directXCommon = std::make_unique<DirectXCommon>();
     directXCommon.get()->Initialize(*wc);
 
-    //RootSignatureを生成する
-    rootSignature = std::make_unique<RootSignature>();
-    //具体的にShaderがどこかでデータを読めばいいのかの情報を取りまとめたもの
-    rootSignature->Create();
-    LogFile::Log("CreateRootSignature");
-
-    //InputLayout
-    inputLayout = std::make_unique<InputLayout>();
-    inputLayout->Create();
-    LogFile::Log("InputLayout");
-
-    //BlendStateの設定を行う
-    blendStates.resize(kCountOfBlendMode);
-    for (int i = 0; i < blendStates.size(); ++i) {
-        blendStates[i].Create(i);
-    }
-    LogFile::Log("SetBlendState");
-
-    //RasterizerStateの設定を行う
-    rasterizerStates.resize(3);
-    rasterizerStates[kCullModeNone].Create(kCullModeNone, kFillModeSolid);//ソリッドモードカリングなし
-    rasterizerStates[kCullModeFront].Create(kCullModeFront, kFillModeSolid);//ソリッドモード裏面
-    rasterizerStates[kCullModeBack].Create(kCullModeBack, kFillModeSolid);//ソリッドモード表面
-    //rasterizerStates[0].Create(kCullModeNone, kFillModeWireframe);//ワイヤーフレームモード
-    LogFile::Log("SetRasterizerState");
-
-    //DepthStencilStateの設定
-    depthStencils[DepthStencil::ZERO].Create(DepthStencil::ZERO);
-    depthStencils[DepthStencil::ALL].Create(DepthStencil::ALL);
-    LogFile::Log("Create depthStencilDesc");
-
-    //PSOを生成する
-    pso[0].Create(
-        *rootSignature,
-        *inputLayout,
-        blendStates[kBlendModeNone],//ブレンドしない
-        rasterizerStates[kCullModeBack],//後ろをカリング
-        depthStencils[DepthStencil::ALL]);
-
-    pso[1].Create(
-        *rootSignature,
-        *inputLayout,
-        blendStates[kBlendModeNormal],//ブレンドする
-        rasterizerStates[kCullModeBack],//後ろをカリング
-        depthStencils[DepthStencil::ALL]);
-
-    pso[2].Create(
-        *rootSignature,
-        *inputLayout,
-        blendStates[kBlendModeAdd],//ブレンドしない
-        rasterizerStates[kCullModeBack],//描画
-        depthStencils[DepthStencil::ZERO]);//マスク０
-
-    pso[3].Create(
-        *rootSignature,
-        *inputLayout,
-        blendStates[kBlendModeSubtract],
-        rasterizerStates[kCullModeBack],//描画
-        depthStencils[DepthStencil::ALL]);
-
-    pso[4].Create(
-        *rootSignature,
-        *inputLayout,
-        blendStates[kBlendModeMultiply],
-        rasterizerStates[kCullModeBack],//描画
-        depthStencils[DepthStencil::ALL]);
-
-    pso[5].Create(
-        *rootSignature,
-        *inputLayout,
-        blendStates[kBlendModeScreen],
-        rasterizerStates[kCullModeBack],//描画
-        depthStencils[DepthStencil::ALL]);
+    pso.CreateALLPSO();
 
     LogFile::Log("CreatePSO");
 
@@ -131,7 +58,7 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     directionalLightData->intensity = 8.0f;
 
 
-    modelConfig_.Initialize(rootSignature.get(), directionalLightResource.Get());
+    modelConfig_.Initialize(PSO::rootSignature.get(), directionalLightResource.Get());
 
     //共通のスプライト
     SpriteCommon::Initialize();
@@ -178,8 +105,8 @@ void MyEngine::Finalize() {
 
 
 //ここでBlenModeを変更する
-void MyEngine::SetBlendMode(uint32_t blendMode) {
+void MyEngine::SetBlendMode(uint32_t blendMode,uint32_t cullMode) {
 
-    DirectXCommon::GetCommandList()->SetPipelineState(pso[blendMode].GetGraphicsPipelineState(PSO::PSOType::TRIANGLE).Get());//PSOを設定
+    DirectXCommon::GetCommandList()->SetPipelineState(pso.GetGraphicsPipelineState(blendMode, cullMode).Get());//PSOを設定
 
 }

@@ -31,6 +31,7 @@ private:
     //パーティクル
     ParticleMesh particle_;
     bool useBillboard_ = false;
+    int createNum = 10;
     //立方体
     std::vector<Cube>cube_;
     std::unique_ptr<SphereMesh> sphereMesh_ = nullptr;

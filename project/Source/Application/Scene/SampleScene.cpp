@@ -80,7 +80,7 @@ void SampleScene::Update()
     //}
 
     if (Input::IsTriggerKey(DIK_A)) {
-        particle_.Create();
+        particle_.Create(3);
     }
 
     worldTransformChild_.parent_ = &worldTransformParent_;
@@ -124,7 +124,7 @@ void SampleScene::Draw()
     //sphereMesh_->PreDraw(kBlendModeNormal);
     //sphereMesh_->Draw(*currentCamera_, worldTransformChild_.matWorld_, lightType_);
 
-    MyEngine::SetBlendMode(blendMode_);
+    MyEngine::SetBlendMode(blendMode_,kCullModeBack);
     samplePlayer_->Draw(*currentCamera_, lightType_);
     MyEngine::SetBlendMode();
 
@@ -135,7 +135,7 @@ void SampleScene::Draw()
     }
 
     
-    particle_.Draw(*currentCamera_, useBillboard_, blendMode_);
+    particle_.Draw(*currentCamera_, blendMode_);
 }
 
 void SampleScene::Debug()
@@ -155,8 +155,8 @@ void SampleScene::Debug()
     DebugUI::CheckWorldTransform(worldTransformParent_, "worldTransformParent");
     DebugUI::CheckWorldTransform(worldTransformChild_, "worldTransform");
     ImGui::Begin("Quad");
-    ImGui::Checkbox("useBillboard", &useBillboard_);
-    DebugUI::CheckParticle(particle_, "particle");
+
+    DebugUI::CheckParticle(particle_, createNum, "particle");
     DebugUI::CheckTransforms(quad_.GetUVScale(), quad_.GetUVRotate(), quad_.GetUVTranslate(), "uvTransform");
 
     ImGui::End();

@@ -30,7 +30,7 @@ public:
     static void CheckSprite(Sprite& sprite, const char* label);
     static void CheckBalloonData(Balloon& balloon);
     static void CheckWaveData(Wave& wave, const char* label);
-    static void CheckParticle(ParticleMesh& particle, const char* label);
+    static void CheckParticle(ParticleMesh& particle, int& createNum, const char* label);
     /// @brief ワールドトランスフォーム
     /// @param worldTransform 
     static void CheckWorldTransform(WorldTransform& worldTransform,const char* label);

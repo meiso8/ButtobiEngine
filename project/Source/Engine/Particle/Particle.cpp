@@ -10,7 +10,7 @@ using namespace  Microsoft::WRL;
 
 void ParticleMesh::Initialize(uint32_t textureHandle)
 {
-    rootSignature_ = MyEngine::GetRootSignature();
+    rootSignature_ = PSO::GetRootSignature();
     textureHandle_ = textureHandle;
 
     CreateModelData();
@@ -29,12 +29,12 @@ void ParticleMesh::Initialize(uint32_t textureHandle)
 
 }
 
-void ParticleMesh::Create()
+void ParticleMesh::Create(uint32_t maxInstance)
 {
+    assert(maxInstance <= kNumMaxInstance);
 
-    for (uint32_t index = 0; index < kNumMaxInstance; ++index) {
-
-        particles[index] = MakeNewParticle();
+    for (uint32_t i = 0; i < maxInstance; ++i) {
+        particles.push_back(MakeNewParticle());
     }
 
 }
@@ -73,8 +73,6 @@ void ParticleMesh::CreateModelData()
 
 void ParticleMesh::CreateTransformationMatrix()
 {
-    particles.resize(kNumMaxInstance);
-
     //Instancing用のTransformationMatrixリソースを作成
     instancingResource = DirectXCommon::CreateBufferResource(sizeof(ParticleForGPU) * kNumMaxInstance);
     //書き込むためのアドレスを取得
@@ -100,22 +98,12 @@ void ParticleMesh::CreateTransformationMatrix()
     instancingSrvHandleCPU = DirectXCommon::GetSRVCPUDescriptorHandle((UINT)Texture::handle_.size() + 1);//この書き方はダメですね
     instancingSrvHandleGPU = DirectXCommon::GetSRVGPUDescriptorHandle((UINT)Texture::handle_.size() + 1);
     DirectXCommon::GetDevice()->CreateShaderResourceView(instancingResource.Get(), &instancingSrvDesc, instancingSrvHandleCPU);
-
-
-    for (uint32_t index = 0; index < kNumMaxInstance; ++index) {
-
-        particles[index].transform.scale = { 1.0f,1.0f,1.0f };
-        particles[index].transform.rotate = { 0.0f,0.0f,0.0f };
-        particles[index].transform.translate = { index * 0.1f,index * 0.1f,index * 0.1f };
-        particles[index].velocity = { 0.0f,1.0f,0.0f };
-    }
-
 }
 
 
-void ParticleMesh::Draw(Camera& camera, bool useBillboard, uint32_t blendMode)
+void ParticleMesh::Draw(Camera& camera, uint32_t blendMode)
 {
-    if (useBillboard) {
+    if (useBillboard_) {
         backToFrontMatrix = MakeRotateYMatrix(std::numbers::pi_v<float>);
 
         billboardMatrix = Multiply(backToFrontMatrix, camera.worldMat_);
@@ -128,51 +116,59 @@ void ParticleMesh::Draw(Camera& camera, bool useBillboard, uint32_t blendMode)
 
     uint32_t numInstance = 0;
 
-    for (uint32_t index = 0; index < kNumMaxInstance; ++index) {
+    for (std::list <Particle>::iterator particleIterator = particles.begin(); particleIterator != particles.end();) {
 
-        if (particles[index].lifeTime <= particles[index].currentTime) {
-            continue;
+        if (numInstance < kNumMaxInstance) {
+            if ((*particleIterator).lifeTime <= (*particleIterator).currentTime) {
+                particleIterator = particles.erase(particleIterator);
+                continue;
+            }
+
+            (*particleIterator).transform.translate += (*particleIterator).velocity * kDeltaTime;
+            (*particleIterator).currentTime += kDeltaTime;
+
+            if (useBillboard_) {
+                Matrix4x4 scaleMatrix = MakeScaleMatrix((*particleIterator).transform.scale);
+                Matrix4x4 translateMatrix = MakeTranslateMatrix((*particleIterator).transform.translate);
+                Matrix4x4 rotateMatrix = MakeRotateXYZMatrix((*particleIterator).transform.rotate) * billboardMatrix;
+                worldMatrix = scaleMatrix * rotateMatrix * translateMatrix;
+            } else {
+                worldMatrix = MakeAffineMatrix((*particleIterator).transform.scale, (*particleIterator).transform.rotate, (*particleIterator).transform.translate);
+            }
+
+            Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
+
+            instancingData[numInstance].WVP = worldViewProjectionMatrix;
+            instancingData[numInstance].World = worldMatrix;
+            instancingData[numInstance].color = (*particleIterator).color;
+            float alpha = 1.0f - ((*particleIterator).currentTime / (*particleIterator).lifeTime);
+            instancingData[numInstance].color.w = alpha;
+
+            ++numInstance;
         }
-
-        particles[index].transform.translate += particles[index].velocity * kDeltaTime;
-        particles[index].currentTime += kDeltaTime;
-
-        if (useBillboard) {
-            Matrix4x4 scaleMatrix = MakeScaleMatrix(particles[index].transform.scale);
-            Matrix4x4 translateMatrix = MakeTranslateMatrix(particles[index].transform.translate);
-            Matrix4x4 rotateMatrix = MakeRotateXYZMatrix(particles[index].transform.rotate)* billboardMatrix;
-            worldMatrix = scaleMatrix * rotateMatrix * translateMatrix;
-        } else {
-            worldMatrix = MakeAffineMatrix(particles[index].transform.scale, particles[index].transform.rotate, particles[index].transform.translate);
-        }
-
-        Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
-
-        instancingData[numInstance].WVP = worldViewProjectionMatrix;
-        instancingData[numInstance].World = worldMatrix;
-        instancingData[numInstance].color = particles[index].color;
-        float alpha = 1.0f - (particles[index].currentTime / particles[index].lifeTime);
-        instancingData[numInstance].color.w = alpha;
-        ++numInstance;
+        ++particleIterator;
     }
 
-    ID3D12GraphicsCommandList* commandList = DirectXCommon::GetCommandList();
-    PSO* pso = MyEngine::GetPSO(blendMode);
-
-    //rootSignatureの設定
-    commandList->SetGraphicsRootSignature(rootSignature_->GetRootSignature(1));
-    commandList->SetPipelineState(pso->GetGraphicsPipelineState(PSO::PARTICLE).Get());
-    //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
-    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
-    //マテリアルの設定
-    commandList->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
-    //粒ごとのトランスフォーム
-    commandList->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU);
-    //テスクチャ
-    commandList->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureHandle_));
 
     if (numInstance > 0) {
+
+        ID3D12GraphicsCommandList* commandList = DirectXCommon::GetCommandList();
+        PSO* pso = MyEngine::GetPSO();
+
+        //rootSignatureの設定
+        commandList->SetGraphicsRootSignature(rootSignature_->GetRootSignature(1));
+        commandList->SetPipelineState(pso->GetGraphicsPipelineStateParticle(blendMode).Get());
+        //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
+        commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
+        //マテリアルの設定
+        commandList->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
+        //粒ごとのトランスフォーム
+        commandList->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU);
+        //テスクチャ
+        commandList->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureHandle_));
+
+
         //描画!（DrawCall/ドローコール）6個のインデックスを使用しインスタンスを描画。
         commandList->DrawInstanced(UINT(modelData_.vertices.size()), numInstance, 0, 0);
     }

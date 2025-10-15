@@ -3,6 +3,7 @@
 #include<d3d12.h>
 #include<wrl.h>
 #include<cstdint>
+#include<array>
 
 class RootSignature
 {
@@ -11,6 +12,6 @@ public:
    ID3D12RootSignature* GetRootSignature(uint32_t index) { return rootSignatures_[index].Get(); };
 
 private:
-    Microsoft::WRL::ComPtr <ID3D12RootSignature> rootSignatures_[2] = {nullptr};
+    std::array<Microsoft::WRL::ComPtr <ID3D12RootSignature>,2> rootSignatures_ = {nullptr};
 };
 
