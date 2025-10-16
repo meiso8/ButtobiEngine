@@ -16,6 +16,7 @@ public:
     void Update()override;
     void Draw()override;
     void Debug()override;
+    bool GetIsEndScene()override;
     ~SampleScene();
 private:
     //ライトタイプ

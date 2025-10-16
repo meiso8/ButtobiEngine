@@ -296,7 +296,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\UIManager.h" />
     <ClInclude Include="Source\Engine\Mesh\ModelManager.h" />
     <ClInclude Include="Source\Engine\Mesh\Quad.h" />
-    <ClInclude Include="Source\Engine\MyHeader.h" />
     <ClInclude Include="Source\Engine\Sound\Sound.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\DirectXCommon.h" />
     <ClInclude Include="externals\imgui\imconfig.h" />

@@ -2,6 +2,7 @@
 #include"DirectXCommon.h"
 #include <fstream>
 #include<assert.h>
+#include"StringUtility.h"
 
 #pragma comment(lib, "Mf.lib")  
 #pragma comment(lib, "mfplat.lib")  
@@ -10,7 +11,9 @@
 
 #pragma comment(lib, "xaudio2.lib") // xaudio2.libをリンクする。  
 
-Microsoft::WRL::ComPtr<IXAudio2> SoundManager::xAudio2_ = nullptr; // ComオブジェクトなのでComPtrで管理する。  
+using namespace Microsoft::WRL;
+
+ComPtr<IXAudio2> SoundManager::xAudio2_ = nullptr; // ComオブジェクトなのでComPtrで管理する。  
 std::vector<IXAudio2SourceVoice*> SoundManager::voices_ = {};
 IXAudio2MasteringVoice* SoundManager::masterVoice_ = nullptr;
 bool SoundManager::isStarted_ = false;
@@ -18,7 +21,7 @@ bool SoundManager::isPaused_ = false;
 
 std::vector<SoundData> SoundManager::soundDatas;
 
-void SoundManager::LoadSoundData(const std::wstring& path) {
+void SoundManager::LoadFile(const std::string& path) {
 
     //読み込み済みテクスチャを検索
     auto it = std::find_if(
@@ -34,70 +37,67 @@ void SoundManager::LoadSoundData(const std::wstring& path) {
         return;
     }
 
+    std::wstring filePathW = StringUtility::ConvertString(path);
+
     //ソースリーダーの作成
-    IMFSourceReader* pMFSourceReader{ nullptr };
-    MFCreateSourceReaderFromURL(path.c_str(), NULL, &pMFSourceReader);
+    ComPtr<IMFSourceReader> pMFSourceReader = { nullptr };
+    HRESULT result = MFCreateSourceReaderFromURL(filePathW.c_str(), NULL, &pMFSourceReader);
+    assert(SUCCEEDED(result));
 
     //メディアタイプの取得
-    IMFMediaType* pMFMediaType{ nullptr };
+    ComPtr<IMFMediaType> pMFMediaType{ nullptr };
     MFCreateMediaType(&pMFMediaType);
     pMFMediaType->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);
     pMFMediaType->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_PCM);
-    pMFSourceReader->SetCurrentMediaType(MF_SOURCE_READER_FIRST_AUDIO_STREAM, nullptr, pMFMediaType);
+    pMFSourceReader->SetCurrentMediaType((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, nullptr, pMFMediaType.Get());
+    assert(SUCCEEDED(result));
 
-    pMFMediaType->Release();
-    pMFMediaType = nullptr;
-    pMFSourceReader->GetCurrentMediaType(MF_SOURCE_READER_FIRST_AUDIO_STREAM, &pMFMediaType);
+    ComPtr<IMFMediaType> pOutType;
+    pMFSourceReader->GetCurrentMediaType((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, &pOutType);
 
     //オーディオデータ形式の作成　メディアタイプからWaveForMatexを生成
     WAVEFORMATEX* waveFormat{ nullptr };
-    MFCreateWaveFormatExFromMFMediaType(pMFMediaType, &waveFormat, nullptr);
-    //データの読み込み
-    std::vector<BYTE>mediaData;
+    MFCreateWaveFormatExFromMFMediaType(pOutType.Get(), &waveFormat, nullptr);
 
-    while (true) {
-        IMFSample* pMFSample{ nullptr };
-        DWORD dwStreamFlags{ 0 };
-        pMFSourceReader->ReadSample(MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, nullptr, &dwStreamFlags, nullptr, &pMFSample);
-
-        if (dwStreamFlags & MF_SOURCE_READERF_ENDOFSTREAM)
-        {
-            break;
-        }
-
-        IMFMediaBuffer* pMFMediaBuffer{ nullptr };
-        pMFSample->ConvertToContiguousBuffer(&pMFMediaBuffer);
-
-        BYTE* pBuffer{ nullptr };
-        DWORD cbCurrentLength{ 0 };
-        pMFMediaBuffer->Lock(&pBuffer, nullptr, &cbCurrentLength);
-
-        mediaData.resize(mediaData.size() + cbCurrentLength);
-        memcpy(mediaData.data() + mediaData.size() - cbCurrentLength, pBuffer, cbCurrentLength);
-
-        pMFMediaBuffer->Unlock();
-
-        pMFMediaBuffer->Release();
-        pMFSample->Release();
-
-    }
 
     //テクスチャデータを追加
     soundDatas.resize(soundDatas.size() + 1);
     //追加したテクスチャデータの参照を取得する
     SoundData& soundData = soundDatas.back();
-    soundData.pWaveFormat = waveFormat;
-    soundData.mediaData = mediaData;
+    soundData.pWaveFormat = *waveFormat;
     soundData.filePath = path;
+
+    while (true) {
+        ComPtr<IMFSample> pMFSample{ nullptr };
+        DWORD streamIndex = 0, flags = 0;
+        LONGLONG llTimeStamp = 0;
+        //サンプルを読み込む
+        result = pMFSourceReader->ReadSample(MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, &streamIndex, &flags, &llTimeStamp, &pMFSample);
+
+        if (flags & MF_SOURCE_READERF_ENDOFSTREAM)break;
+
+        if (pMFSample) {
+            ComPtr<IMFMediaBuffer> pMFMediaBuffer{ nullptr };
+            pMFSample->ConvertToContiguousBuffer(&pMFMediaBuffer);
+
+            BYTE* pBuffer{ nullptr };
+            DWORD maxLength = 0, cbCurrentLength = 0;
+            pMFMediaBuffer->Lock(&pBuffer, &maxLength, &cbCurrentLength);
+            soundData.mediaData.insert(soundData.mediaData.end(), pBuffer, pBuffer + cbCurrentLength);
+            pMFMediaBuffer->Unlock();
+        }
+
+    }
+
 }
 
-uint32_t SoundManager::Load(const std::wstring& path)
+uint32_t SoundManager::Load(const std::string& path)
 {
-    LoadSoundData(path);
+    LoadFile(path);
     return GetSoundByIndex(path);
 }
 
-uint32_t SoundManager::GetSoundByIndex(const std::wstring& filePath)
+uint32_t SoundManager::GetSoundByIndex(const std::string& filePath)
 {
     //読み込み済みデータを検索
     auto it = std::find_if(
@@ -118,7 +118,7 @@ uint32_t SoundManager::GetSoundByIndex(const std::wstring& filePath)
 void SoundManager::Initialize()
 {
     HRESULT result;
-    result = XAudio2Create(xAudio2_.GetAddressOf(), 0, XAUDIO2_DEFAULT_PROCESSOR);
+    result = XAudio2Create(&xAudio2_, 0, XAUDIO2_DEFAULT_PROCESSOR);
     assert(SUCCEEDED(result));
 
     //マスターボイスの生成
@@ -133,31 +133,30 @@ void SoundManager::Initialize()
 
 void SoundManager::Finalize()
 {
-    for (int i = 0; i < soundDatas.size(); ++i) {
-        Unload(&soundDatas[i]);
+    xAudio2_.Reset();
+    for (uint32_t i = 0; i < soundDatas.size(); ++i) {
+        Unload(soundDatas[i]);
     }
+
+    HRESULT result;
+    result = MFShutdown();
+    assert(SUCCEEDED(result));
 }
 
 
-void SoundManager::Unload(SoundData* soundData) {
+void SoundManager::Unload(SoundData& soundData) {
 
     // メディアデータの解放
-    soundData->mediaData.clear();
-    soundData->mediaData.shrink_to_fit();
-    // waveFormatの解放
-    if (soundData->pWaveFormat) {
-        //CoTaskMemFree(soundData->pWaveFormat);
-        soundData->pWaveFormat = nullptr;
-    }
-
+    soundData.mediaData.clear();
+    soundData.pWaveFormat = {};
 };
 
-void SoundManager::Play(const uint32_t tag, const float& volume, bool isLoop) {
+void SoundManager::Play(const uint32_t& tag, const float& volume, bool isLoop) {
     HRESULT result;
 
     IXAudio2SourceVoice* newVoice = nullptr;
 
-    result = xAudio2_->CreateSourceVoice(&newVoice, soundDatas[tag].pWaveFormat);
+    result = xAudio2_->CreateSourceVoice(&newVoice, &soundDatas[tag].pWaveFormat);
     assert(SUCCEEDED(result));
     newVoice->SetVolume(volume);
 

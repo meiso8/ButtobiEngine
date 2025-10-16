@@ -31,29 +31,45 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // シーンの生成
     // =============================================
 
-    //サンプルシーンの生成
-    std::unique_ptr<SampleScene> sampleScene = std::make_unique<SampleScene>();
+    enum Scene {
+        kTitleScene,
+        kGameScene,
+        kGameClearScene,
+        kGameOverScene,
+        kSampleScene,
+    };
+
+    const char* sceneName[] = {
+       "TitleScene",
+       "GameScene",
+       "GameClearScene",
+       "GameOverScene",
+       "SampleScene"
+    };
+
+    std::vector<std::unique_ptr<SceneManager>> scenes;
+    // タイトルシーンの生成
+    scenes.push_back(std::make_unique<TitleScene>());
     // ゲームシーンのインスタンスの取得
-    std::unique_ptr<GameScene> gameScene = std::make_unique<GameScene>();
-	// タイトルシーンの生成
-	std::unique_ptr<TitleScene> titleScene = std::make_unique<TitleScene>();
-	// ゲームクリアシーンの生成
-	std::unique_ptr<GameClearScene> gameClearScene = std::make_unique<GameClearScene>();
-	// ゲームオーバーシーンの生成
-	std::unique_ptr<GameOverScene> gameOverScene = std::make_unique<GameOverScene>();
+    scenes.push_back(std::make_unique<GameScene>());
+    // ゲームクリアシーンの生成
+    scenes.push_back(std::make_unique<GameClearScene>());
+    // ゲームオーバーシーンの生成
+    scenes.push_back(std::make_unique<GameOverScene>());
+    //サンプルシーンの生成
+    scenes.push_back(std::make_unique<SampleScene>());
+
+    //シーンのインデックス
+    int sceneIndex = kTitleScene;
+#ifdef _DEBUG
+    //シーンのインデックス
+    sceneIndex = kGameScene;
+#endif // _DEBUG
 
     //現在のシーン
     SceneManager* currentScene = nullptr;
-
-     // 現在のシーンに代入
-	currentScene = titleScene.get();
-
-   #ifdef _DEBUG
-	// 現在のシーンに代入
-	currentScene = sampleScene.get();
-#endif // DEBUG
-
-
+    // 現在のシーンに代入
+    currentScene = scenes[sceneIndex].get();
     //現在のシーンの初期化
     currentScene->Initialize();
 
@@ -67,20 +83,35 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             break;
         }
 
-        if (titleScene->GetIsEndTitle() || gameScene->GetIsGameClear() || gameScene->GetIsGameOver()) {
-            if (titleScene->GetIsEndTitle()) {
-			    // 現在のシーンに代入
-			    currentScene = gameScene.get();
+
+#ifdef _DEBUG
+
+        if (Input::IsTriggerKey(DIK_RETURN)) {
+            sceneIndex = (sceneIndex + 1) % scenes.size(); // 次のシーンへ
+            currentScene = scenes[sceneIndex].get();
+            // 現在のシーンの初期化
+            currentScene->Initialize();
+        }
+
+#endif // _DEBUG
+
+        if (scenes[kTitleScene]->GetIsEndScene() || scenes[kGameScene]->GetIsEndScene()) {
+
+            GameScene* gameScene = dynamic_cast<GameScene*>(scenes[kGameScene].get());
+
+            if (scenes[kTitleScene]->GetIsEndScene()) {
+                // 現在のシーンに代入
+                currentScene = scenes[kGameScene].get();
             } else if (gameScene->GetIsGameClear()) {
-				currentScene = gameClearScene.get();
+                currentScene = scenes[kGameClearScene].get();
             } else if (gameScene->GetIsGameOver()) {
-				currentScene = gameOverScene.get();
-            } else if (gameClearScene->GetIsEndGameClear() || gameOverScene->GetIsEndGameOver()) {
-				currentScene = titleScene.get();
+                currentScene = scenes[kGameOverScene].get();
+            } else if (scenes[kGameClearScene]->GetIsEndScene() || scenes[kGameOverScene]->GetIsEndScene()) {
+                currentScene = scenes[kTitleScene].get();
             }
 
-			// 現在のシーンの初期化
-			currentScene->Initialize();
+            // 現在のシーンの初期化
+            currentScene->Initialize();
         }
 
 
@@ -89,9 +120,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #ifdef _DEBUG
         //デバック用
+
         DebugUI::CheckColor(screenColor, "screenColor");
+        ImGui::Text("%s", sceneName[sceneIndex]);
+        DebugUI::CheckFPS();
         currentScene->Debug();
-   
+
 #endif // _DEBUG
 
         //シーンの更新処理

@@ -1,10 +1,13 @@
 #include "GameClearScene.h"
 
-void GameClearScene::Initialize() { isEndGameClear_ = false; }
+void GameClearScene::Initialize() { isEndScene_ = false; }
 void GameClearScene::Update() {
 
-isEndGameClear_ = true;
+    isEndScene_ = true;
 
 }
 void GameClearScene::Draw() {}
-bool GameClearScene::GetIsEndGameClear() { return isEndGameClear_; }
+bool GameClearScene::GetIsEndScene()
+{
+    return isEndScene_;
+}

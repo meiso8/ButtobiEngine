@@ -625,9 +625,6 @@
     <ClInclude Include="Source\Application\Scene\SceneManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\MyHeader.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Application\Scene\GameScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>

@@ -1,7 +1,9 @@
 #include "SceneManager.h"
+#include"Input.h"
 
 void SceneManager::Initialize()
 {
+
 }
 
 void SceneManager::Update()

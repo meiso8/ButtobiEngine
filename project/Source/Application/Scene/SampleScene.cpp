@@ -12,6 +12,8 @@
 
 void SampleScene::Initialize() {
 
+    isEndScene_ = false;
+
     DrawGrid::Initialize();
 
     lightType_ = MaterialResource::LIGHTTYPE::NONE;
@@ -27,15 +29,25 @@ void SampleScene::Initialize() {
     debugCamera_->Initialize(static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()));
 
     currentCamera_ = camera_.get();
+#ifdef _DEBUG
+    currentCamera_ = debugCamera_.get();
+#endif // _DEBUG
+
+
 
 #pragma endregion
+
+    uint32_t playerTextureHandle = Texture::GetHandle(Texture::PLAYER) ;
+    uint32_t uvCheckerTextureHandle = Texture::GetHandle(Texture::UV_CHECKER);
+    uint32_t white1x1TextureHandle = Texture::GetHandle(Texture::WHITE_1X1);
+    uint32_t particleTextureHandle = Texture::GetHandle(Texture::PARTICLE);
 
     for (uint32_t i = 0; i < 5; ++i) {
         Sprite* sprite = new Sprite();
         if (i % 2 == 0) {
-            sprite->Create(Texture::handle_[Texture::PLAYER], { i * 256.0f,0.0f }, { 128.0f,128.0f }, { 1.0f,1.0f,1.0f,1.0f });
+            sprite->Create(playerTextureHandle, { i * 256.0f,0.0f }, { 128.0f,128.0f }, { 1.0f,1.0f,1.0f,1.0f });
         } else {
-            sprite->Create(Texture::handle_[Texture::UV_CHECKER], { i * 256.0f,0.0f }, { 128.0f,128.0f }, { 1.0f,1.0f,1.0f,1.0f });
+            sprite->Create(uvCheckerTextureHandle, { i * 256.0f,0.0f }, { 128.0f,128.0f }, { 1.0f,1.0f,1.0f,1.0f });
         }
         sprites_.push_back(sprite);
     }
@@ -44,8 +56,8 @@ void SampleScene::Initialize() {
     samplePlayer_->Init();
 
     cube_.resize(2);
-    cube_[0].Create(Texture::handle_[Texture::WHITE_1X1]);
-    cube_[1].Create(Texture::handle_[Texture::WHITE_1X1]);
+    cube_[0].Create(white1x1TextureHandle);
+    cube_[1].Create(white1x1TextureHandle);
 
     worldTransformParent_.Initialize();
     WorldTransformUpdate(worldTransformParent_);
@@ -59,12 +71,12 @@ void SampleScene::Initialize() {
     worldTransformChild_.rotate_.y = (std::numbers::pi_v<float> / 4.0f);
     WorldTransformUpdate(worldTransformChild_);
 
-    particle_.Initialize(Texture::handle_[Texture::PARTICLE]);
+    particle_.Initialize(particleTextureHandle);
     sphereMesh_ = std::make_unique<SphereMesh>();
-    sphereMesh_->Create(Texture::handle_[Texture::UV_CHECKER]);
+    sphereMesh_->Create(uvCheckerTextureHandle);
     sphereMesh_->SetVertex({ 4.0f });
 
-    quad_.Create(Texture::handle_[Texture::UV_CHECKER]);
+    quad_.Create(uvCheckerTextureHandle);
 
 
 
@@ -75,21 +87,26 @@ void SampleScene::Update()
 
 #ifdef _DEBUG
 
-    //if (!SoundManager::IsPlaying()) {
-    //    SoundManager::Play(Sound::GetHandle(Sound::BGM1), 0.0625f, true);
-    //}
+    Sound::PlayBGM(Sound::BGM1,-0.25f);
+
+    if (Input::IsTriggerMouse(0)) {
+        Sound::PlaySE(Sound::SE1,0.0f);
+    }
+
+    if (Input::IsTriggerMouse(1)) {
+        Sound::PlaySE(Sound::SE2, 0.0f);
+    }
+
 
     worldTransformChild_.parent_ = &worldTransformParent_;
     WorldTransformUpdate(worldTransformChild_);
 
-    //if (Input::IsTriggerMouse(0)) {
-    //    SoundManager::Play(Sound::GetHandle(Sound::SE1), 0.0625f, false);
-    //}
+
 
     currentCamera_->UpdateMatrix();
 
     for (Sprite* sprite : sprites_) {
-        sprite->UpdateUV();
+        sprite->Update();
     }
 
     samplePlayer_->Update();
@@ -137,7 +154,7 @@ void SampleScene::Draw()
 
 void SampleScene::Debug()
 {
-    DebugUI::CheckFPS();
+
     std::function<void()> func = [this]() { SwitchCamera(); };
     DebugUI::Button("ChangeCamera", func);
     DebugUI::CheckCamera(*currentCamera_);
@@ -162,6 +179,11 @@ void SampleScene::Debug()
 
     ImGui::End();
  
+}
+
+bool SampleScene::GetIsEndScene()
+{
+    return isEndScene_;
 }
 
 SampleScene::~SampleScene()

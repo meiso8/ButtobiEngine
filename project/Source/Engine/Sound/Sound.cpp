@@ -1,15 +1,31 @@
 #include "Sound.h"
 #include"SoundManager.h"
 
-std::vector<uint32_t>Sound::soundHandle_;
+std::vector<uint32_t>Sound::handle_;
+
+float Sound::bgmVolume_ = 0.5f;
+float Sound::seVolume_ = 0.5f;
 
 void Sound::LoadAllSound()
 {
-    soundHandle_.resize(SOUNDS);
+    handle_.resize(SOUNDS);
 
     //サウンドの読み込み
-    soundHandle_[BGM1] = SoundManager::Load(L"resources/Sounds/dreamcore.mp3");
-    soundHandle_[BGM2] = SoundManager::Load(L"resources/Sounds/kiritan.mp3");
-    soundHandle_[SE1] = SoundManager::Load(L"resources/Sounds/poppo.mp3");
-    soundHandle_[SE2] = SoundManager::Load(L"resources/Sounds/broken.mp3");
+    handle_[BGM1] = SoundManager::Load("resources/Sounds/fruit_mix.mp3");
+    handle_[BGM2] = SoundManager::Load("resources/Sounds/dreamcore.mp3");
+    handle_[SE1] = SoundManager::Load("resources/Sounds/pico.mp3");
+    handle_[SE2] = SoundManager::Load("resources/Sounds/cracker.mp3");
 }
+
+void Sound::PlayBGM(const uint32_t handle, const float& volumeOffset)
+{
+    if (!SoundManager::IsPlaying()) {
+        SoundManager::Play(handle_[handle], bgmVolume_ + volumeOffset, true);
+    }
+}
+
+void Sound::PlaySE(const uint32_t handle, const float& volumeOffset)
+{
+    SoundManager::Play(handle_[handle], seVolume_ + volumeOffset, false);
+}
+

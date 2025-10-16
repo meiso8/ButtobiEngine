@@ -18,3 +18,8 @@ void ModelConfig::Initialize(RootSignature* rootSignature, ID3D12Resource* direc
 
 }
 
+//ModelConfig::~ModelConfig()
+//{
+//    delete instance_;
+//}
+
