@@ -21,5 +21,5 @@ void Texture::LoadAllTexture()
     handle_[SPACE] = TextureManager::Load("resources/UI/space.png");
     handle_[TIMER] = TextureManager::Load("resources/UI/timer.png");
     handle_[JUICE] = TextureManager::Load("resources/UI/juice.png");
-
+    handle_[PARTICLE] = TextureManager::Load("resources/particle.png");
 }

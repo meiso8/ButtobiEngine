@@ -7,7 +7,7 @@ public:
     void Initialize()override;
     void Update()override;
     void Draw()override;
-	bool GetIsEndTitle();
+    bool GetIsEndScene()override;
 private:
 	bool isEndTitle_ = false;
 	enum class AnimationPhase {

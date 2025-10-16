@@ -8,14 +8,21 @@
 #include<assimp/scene.h>
 #include<assimp/postprocess.h>
 #include"DirectXCommon.h"
-
+#include"Texture.h"
+#include"TextureManager.h"
 std::vector<ModelData> ModelManager::modelDatas_;
 std::vector<uint32_t> ModelManager::handle_;
 
+ModelData& ModelManager::GetModelData(const uint32_t& handle)
+{
+    assert(handle < modelDatas_.size());
+    return modelDatas_[handle];
+}
 
 void ModelManager::LoadAllModel()
 {
     handle_.resize(MODELS);
+
     handle_[PLAYER] = Load("resources/player", "player.obj");
 
     handle_[HEAD] = Load("resources/head", "head.obj");
@@ -30,7 +37,7 @@ void ModelManager::LoadAllModel()
     handle_[PARTICLE] = Load("resources/particle", "particle.obj");
 
     handle_[STAGE] = Load("resources/stage", "stage.obj");
-    
+
 }
 
 // ========================================================================================================
@@ -48,7 +55,7 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
     auto it = std::find_if(
         modelDatas_.begin(),
         modelDatas_.end(),
-        [&](ModelData& soundData) {return soundData.filePath == filename; }
+        [&](ModelData& modelData) {return modelData.filePath == filename; }
     );
 
     //テクスチャ枚数上限チェック
@@ -115,6 +122,12 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
         }
 
     }
+
+    //モデルのテクスチャを読む
+    Texture::GetVectorHandles().push_back(TextureManager::Load(modelData.material.textureFilePath));
+    modelData.textureHandle = UINT(Texture::GetVectorHandles().size() - 1);
+    assert(modelData.textureHandle < Texture::GetVectorHandles().size());
+
 }
 
 uint32_t ModelManager::GetTextureIndexByFileName(const std::string& filePath)

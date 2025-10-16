@@ -1,22 +1,18 @@
 #include "Sprite.h"
 #include"DirectXCommon.h"
 #include"TransformationMatrix.h"
-#include"MakeAffineMatrix.h"
-#include"MakeIdentity4x4.h"
-#include"Multiply.h"
+#include"MakeMatrix.h"
 #include"MyEngine.h"
 #include"TextureManager.h"
 #include"Camera/SpriteCamera.h"  
+#include"ImGuiClass.h"
 
 ID3D12GraphicsCommandList* Sprite::commandList = nullptr;
 
-
-void Sprite::Create(uint32_t textureHandle, const Vector2 & position, const Vector2& size, const Vector4& color)
+void Sprite::Create(uint32_t textureHandle, const Vector2& position, const Vector2& size, const Vector4& color)
 {
     commandList = DirectXCommon::GetCommandList();
-
-    SetSize(size);
-    SetPosition(position);
+    position_ = position;
     textureIndex = textureHandle;
 
     CreateMaterial(color);
@@ -25,33 +21,56 @@ void Sprite::Create(uint32_t textureHandle, const Vector2 & position, const Vect
     CreateUVTransformationMatrix();
     CreateWaveData();
     CreateBalloonData();
-}
 
-void Sprite::ChangeTexture(uint32_t textureHandle)
-{
-    textureIndex = textureHandle;
-}
+    AdjustTextureSize();
 
-void Sprite::ResetSize(const Vector2& size) {
     size_ = size;
-    vertexData_[0].position = { 0.0f,size_.y,0.0f,1.0f };//左下
-    vertexData_[1].position = { 0.0f,0.0f,0.0f,1.0f };//左上
-    vertexData_[2].position = { size_.x,size_.y,0.0f,1.0f };//右下
-    vertexData_[3].position = { size_.x,0.0f,0.0f,1.0f };//右上
+}
+
+void Sprite::Update()
+{
+    float left = 0.0f - anchorPoint_.x;
+    float right = 1.0f - anchorPoint_.x;
+    float top = 0.0f - anchorPoint_.y;
+    float bottom = 1.0f - anchorPoint_.y;
+
+    if (isFlipX_) {
+        left = -left;
+        right = -right;
+    }
+
+    if (isFlipY_) {
+        top = -top;
+        bottom = -bottom;
+    }
+
+    vertexData_[0].position = { left,bottom,0.0f,1.0f };//左下
+    vertexData_[1].position = { left,top,0.0f,1.0f };//左上
+    vertexData_[2].position = { right,bottom,0.0f,1.0f };//右下
+    vertexData_[3].position = { right,top,0.0f,1.0f };//右上
+
+    const DirectX::TexMetadata& metadata = TextureManager::GetMetaData(textureIndex);
+    float tex_left = textureLeftTop.x / metadata.width;
+    float tex_right = (textureLeftTop.x + textureSize.x) / metadata.width;
+    float tex_top = textureLeftTop.y / metadata.height;
+    float tex_bottom = (textureLeftTop.y + textureSize.y) / metadata.height;
+
+    vertexData_[0].texcoord = {tex_left,tex_bottom};
+    vertexData_[1].texcoord = {tex_left,tex_top };
+    vertexData_[2].texcoord = {tex_right,tex_bottom};
+    vertexData_[3].texcoord = {tex_right,tex_top };
+
+    UpdateUV();
 }
 
 void Sprite::SetColor(const Vector4& color) {
     materialResource_.SetColor(color);
 }
 
-void Sprite::UpdateUV() {
-    uvTransformMatrix_ = MakeAffineMatrix(uvTransform_.scale, uvTransform_.rotate, uvTransform_.translate);
-    materialResource_.SetUV(uvTransformMatrix_);
-}
 
 void Sprite::PreDraw(uint32_t blendMode) {
     SpriteCommon::PreDraw(commandList);
-    commandList->SetPipelineState(MyEngine::GetPSO(blendMode)->GetGraphicsPipelineState(PSO::TRIANGLE).Get());//PSOを設定
+    commandList->SetPipelineState(MyEngine::GetPSO()->GetGraphicsPipelineState(blendMode, kCullModeNone).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
@@ -60,8 +79,10 @@ void Sprite::Draw(uint32_t lightType
 ) {
 
     materialResource_.SetLightType(lightType);
-    transform_.translate = { position_.x,position_.y,0.0f };
+    transform_.scale = { size_.x,size_.y,1.0f };
     transform_.rotate = { 0.0f,0.0f,rotate_ };
+    transform_.translate = { position_.x,position_.y,0.0f };
+
     worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
     worldViewProjectionMatrix_ = Multiply(worldMatrix_, SpriteCamera::GetViewProjectionMatrix());
     *transformationMatrixData_ = { worldViewProjectionMatrix_,worldMatrix_ };
@@ -109,19 +130,21 @@ void Sprite::CreateVertex()
     vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
     //1枚目の三角形 四頂点でスプライト描画が完成
 
-    vertexData_[0].position = { 0.0f,size_.y,0.0f,1.0f };//左下
+    vertexData_[0].position = { 0.0f,1.0f,0.0f,1.0f };//左下
+    vertexData_[1].position = { 0.0f,0.0f,0.0f,1.0f };//左上
+    vertexData_[2].position = { 1.0f,1.0f,0.0f,1.0f };//右下
+    vertexData_[3].position = { 1.0f,0.0f,0.0f,1.0f };//右上
+
+
     vertexData_[0].texcoord = { 0.0f,1.0f };
     vertexData_[0].normal = { 0.0f,0.0f,-1.0f };//法線
 
-    vertexData_[1].position = { 0.0f,0.0f,0.0f,1.0f };//左上
     vertexData_[1].texcoord = { 0.0f,0.0f };
     vertexData_[1].normal = { 0.0f,0.0f,-1.0f };
 
-    vertexData_[2].position = { size_.x,size_.y,0.0f,1.0f };//右下
     vertexData_[2].texcoord = { 1.0f,1.0f };
     vertexData_[2].normal = { 0.0f,0.0f,-1.0f };
 
-    vertexData_[3].position = { size_.x,0.0f,0.0f,1.0f };//右上
     vertexData_[3].texcoord = { 1.0f,0.0f };
     vertexData_[3].normal = { 0.0f,0.0f,-1.0f };
 
@@ -159,7 +182,6 @@ void Sprite::CreateMaterial(const Vector4& color) {
     //マテリアルリソースを作成 //ライトなし
     materialResource_.CreateMaterial(color, MaterialResource::LIGHTTYPE::NONE);
 
-
 }
 
 void Sprite::CreateWaveData()
@@ -193,4 +215,17 @@ void Sprite::CreateBalloonData()
     expansionData_->cube = 0.0f;
     expansionData_->isSphere = false;
 
+}
+
+void Sprite::UpdateUV() {
+    uvTransformMatrix_ = MakeAffineMatrix(uvTransform_.scale, uvTransform_.rotate, uvTransform_.translate);
+    materialResource_.SetUV(uvTransformMatrix_);
+}
+
+void Sprite::AdjustTextureSize()
+{
+    const DirectX::TexMetadata& metadata = TextureManager::GetMetaData(textureIndex);
+    textureSize.x = static_cast<float>(metadata.width);
+    textureSize.y = static_cast<float>(metadata.height);
+    size_ = textureSize;
 }

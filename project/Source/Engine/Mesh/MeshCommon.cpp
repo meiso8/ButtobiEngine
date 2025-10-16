@@ -5,30 +5,19 @@
 ModelConfig* MeshCommon::modelConfig_ = nullptr;
 ID3D12GraphicsCommandList* MeshCommon::commandList_ = nullptr;
 
-void MeshCommon::Draw(Camera& camera, const Matrix4x4& worldMatrix, const uint32_t lightType
-) {
-
-};
-
-void MeshCommon::CreateVertex()
-{
- 
-}
-
-void MeshCommon::CreateIndexResource() {
-
-}
-
 void MeshCommon::PreDraw(const BlendMode& blendMode) {
     commandList_->SetGraphicsRootSignature(modelConfig_->rootSignature->GetRootSignature(0));
-    commandList_->SetPipelineState(MyEngine::GetPSO(blendMode)->GetGraphicsPipelineState(PSO::TRIANGLE).Get());//PSOを設定
+    commandList_->SetPipelineState(PSO::GetGraphicsPipelineState(blendMode,kCullModeBack).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-
 void MeshCommon::SetColor(const Vector4& color) {
     materialResource_.SetColor(color);
+}
+
+void MeshCommon::CreateIndexResource()
+{
 }
 
 void MeshCommon::CreateTransformationMatrix() {

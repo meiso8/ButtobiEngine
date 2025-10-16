@@ -2,23 +2,55 @@
 #include "ModelData.h"
 #include"commandList.h"
 #include"WorldTransform.h"
-#include"TransformationMatrix.h"
 #include"MaterialResource.h"
 #include"Transform.h"
 #include"RootSignature.h"
 #include "BlendState.h"
-
+#include<list>
 #include<cstdint>
 class Camera;
 class ShaderResourceView;
-class Particle
+
+struct Emitter
 {
+    Transform transform;//エミッタのTransfrom
+    uint32_t cont;//発生数
+    float frequency;//発生頻度
+    float frequencyTime;//頻度用時刻
+
+};
+
+struct Particle {
+    Transform transform;
+    Vector3 velocity;
+    Vector4 color;
+
+    float lifeTime;
+    float currentTime;
+};
+
+std::list<Particle> Emit(const Emitter& emitter);
+
+
+
+struct ParticleForGPU {
+    Matrix4x4 WVP;
+    Matrix4x4 World;
+    Vector4 color;
+};
+
+class ParticleMesh
+{
+public:
+    const uint32_t kNumMaxInstance = 100;//インスタンス数
+    std::list<Particle>particles;
+    bool useBillboard_ = false;
+    Emitter emitter_{};
 
 private:
-    const uint32_t kNumInstance = 10;//インスタンス数
-    TransformationMatrix* instancingData = nullptr;
-    std::vector<Transform>transforms;
+    const float kDeltaTime = 1.0f / 60.0f;
 
+    ParticleForGPU* instancingData = nullptr;
     ModelData modelData_;
     MaterialResource materialResource_{};
     RootSignature* rootSignature_ = nullptr;
@@ -31,9 +63,18 @@ private:
     Microsoft::WRL::ComPtr<ID3D12Resource> vertexBufferResource_;
     VertexData* vertexBufferData_ = nullptr;
     uint32_t textureHandle_ = 0;
+
+    Matrix4x4 backToFrontMatrix;
+
+    Matrix4x4 billboardMatrix;
+    Matrix4x4 worldMatrix;
+
 public:
-    void Create(uint32_t textureHandle);
-    void Draw(Camera& camera,BlendMode blendMode = BlendMode::kBlendModeNormal);
+    void Initialize(uint32_t textureHandle);
+    static Particle MakeNewParticle(const Vector3& translate);
+    void Draw(Camera& camera,uint32_t blendMode = BlendMode::kBlendModeAdd);
+    void Update();
+
 private:
     void CreateModelData();
     void CreateTransformationMatrix();

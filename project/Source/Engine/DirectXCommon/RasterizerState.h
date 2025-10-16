@@ -3,7 +3,7 @@
 #include<d3d12.h>
 #include<stdint.h>
 
-enum CULL_MODE
+enum CullMode
 {
     kCullModeNone,
     kCullModeFront,
@@ -11,7 +11,7 @@ enum CULL_MODE
     kCountOfCullMode
 };
 
-enum FILL_MODE
+enum FillMode
 {
     kFillModeWireframe,
     kFillModeSolid,

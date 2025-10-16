@@ -16,6 +16,7 @@ class Sprite;
 class SphereMesh;
 class Camera;
 class Model;
+class ParticleMesh;
 
 class DebugUI
 {
@@ -29,6 +30,7 @@ public:
     static void CheckSprite(Sprite& sprite, const char* label);
     static void CheckBalloonData(Balloon& balloon);
     static void CheckWaveData(Wave& wave, const char* label);
+    static void CheckParticle(ParticleMesh& particle,const char* label);
     /// @brief ワールドトランスフォーム
     /// @param worldTransform 
     static void CheckWorldTransform(WorldTransform& worldTransform,const char* label);
@@ -40,6 +42,8 @@ public:
     static void CheckTransform(Transform& transform, const char* label);
 
     static void CheckTransforms(Vector3& scale, Vector3& rotate, Vector3& translate, const char* label);
+    //行列の要素を見る関数
+    static void ShowMatrix4x4(const Matrix4x4& matrix, const char* label = "Matrix4x4");
     /// @brief 入力
     /// @param input 
     static void CheckInput(Input& input);
@@ -57,6 +61,7 @@ public:
     static void CheckBlendMode(uint32_t& blendMode);
     static void CheckInt(int& value, const char* label);
     static void CheckFPS();
+    static void CheckFlag(bool& flag, const char* label);
     static void SwitchFlag(bool& flag, const char* label);
     static void Button(const char* label, std::function<void()> onSwitch);
 };

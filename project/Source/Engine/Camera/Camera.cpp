@@ -1,9 +1,10 @@
 #include"Camera.h"
-#include"Inverse.h"
-#include"MakeAffineMatrix.h"
-#include"Multiply.h"
-#include"MakePerspectiveFovMatrix.h"
-#include"MakeOrthographicMatrix.h"
+#include"MakeMatrix.h"
+
+#ifdef _DEBUG
+#include "../externals/imgui/imgui.h"
+#endif // _DEBUG
+
 
 float Camera::width_;
 float Camera::height_;
@@ -22,14 +23,31 @@ void Camera::Initialize(const float& width, const float& height, const PROJECTIO
     UpdateProjectionMatrix();
 }
 
+#ifdef _DEBUG
+void Camera::EditTransform(const std::string &label) {
+    if (ImGui::TreeNode(label.c_str())) {
+        ImGui::DragFloat3("scale", &scale_.x, 0.01f, -std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+        ImGui::SliderAngle("rotateX", &rotate_.x);
+        ImGui::SliderAngle("rotateY", &rotate_.y);
+        ImGui::SliderAngle("rotateZ", &rotate_.z);
+        ImGui::DragFloat3("translate", &translate_.x, 0.01f, -std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+		ImGui::TreePop();
+    }
+}
+#endif // _DEBUG
+
 void Camera::InitializeTransform()
 {
     scale_ = { 1.0f,1.0f,1.0f };
     rotate_ = { 0.0f,0.0f,0.0f };
     translate_ = { 0.0f,0.0f,0.0f };
+    worldMat_ = MakeIdentity4x4();
 }
 
 void Camera::UpdateMatrix() {
+
+    worldMat_ = MakeAffineMatrix(scale_, rotate_, translate_);
+    viewMat_ = Inverse(worldMat_);
 
     UpdateProjectionMatrix();
 
@@ -41,7 +59,6 @@ void Camera::UpdateMatrix() {
 
 void Camera::UpdateProjectionMatrix()
 {
-    viewMat_ = Inverse(MakeAffineMatrix(scale_, rotate_, translate_));
 
     if (projectionType_ == PERSPECTIVE) {
         //投資投影

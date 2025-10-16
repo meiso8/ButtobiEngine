@@ -4,6 +4,7 @@
 class Model :public MeshCommon
 {
 public:
+
     void Create(const ModelManager::MODEL_HANDLE& modelHandle);
     void PreDraw(const BlendMode& type = BlendMode::kBlendModeNormal)override;
     void Draw(Camera& camera, const Matrix4x4& worldMatrix, const uint32_t lightType = MaterialResource::LIGHTTYPE::NONE)override;
@@ -13,7 +14,6 @@ public:
 private:
     void CreateVertex()override;
     void CreateUV();
-    void LoadTexture();
 private:
     const ModelData* modelData_;
     Transform uvTransform_;

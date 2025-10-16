@@ -4,55 +4,21 @@
 #include"D3DResourceLeakChecker.h"
 #include"Input.h"
 #include"DirectXCommon.h"
-#include "RootSignature.h"
 
 #include"PSO.h"
-#include"Depth.h"//StencilTextureの作成関数　奥行き
-#include"CompileShader.h"
-#include"BlendState.h"
-#include"RasterizerState.h"
 #include"Texture.h"
-
-//#include"ShaderResourceView.h"
-//#include"Sprite.h"
-//#include"SphereMesh.h"
-//#include"LineMesh.h"
-//#include"Cube.h"
 
 #include"ModelManager.h"
 #include"ModelConfig.h"
-//#include"Model.h"
 
 #include"SoundManager.h"
 #include"Sound.h"
 
-//#include"Camera/DebugCamera.h"
-//#include"Camera/Camera.h"
 #include"CrashHandler.h"
 #include"Log.h"
-//#include"ImGuiClass.h"
-#include"InputLayout.h"
 #include"DebugUI.h"
 
-//#include"Material.h"
-//#include"VertexData.h"
 #include"DirectionalLight.h"
-//#include"TransformationMatrix.h"
-//#include"ModelData.h"
-
-//#include"Normalize.h"
-//#include"Transform.h"
-//#include"MakeIdentity4x4.h"
-//#include"MakeAffineMatrix.h"
-//#include"Inverse.h"
-//#include"MakePerspectiveFovMatrix.h"
-//#include"MakeOrthographicMatrix.h"
-//#include"MakeRotateMatrix.h"
-//#include"Multiply.h"
-//#include"SphericalCoordinate.h"
-//#include"Lerp.h"
-
-
 #include<memory>
 
 #pragma endregion
@@ -71,10 +37,9 @@ public:
     void Finalize();
 
     static Window& GetWC() { return *wc; };
-    static RootSignature* GetRootSignature() { return rootSignature.get(); }
-    static PSO* GetPSO(uint32_t index) { return &pso[index]; }
+    static PSO* GetPSO() { return &pso; }
     static DirectionalLight* GetDirectionalLightData() { return directionalLightData; }
-    static void SetBlendMode(uint32_t blendMode = BlendMode::kBlendModeNormal);
+    static void SetBlendMode(uint32_t blendMode = kBlendModeNormal, uint32_t cullMode = kCullModeBack);
 public:
 
 private:
@@ -84,6 +49,7 @@ private:
     std::unique_ptr<DirectXCommon> directXCommon = nullptr;
     std::unique_ptr<LogFile> logFile = nullptr;
     static std::unique_ptr<Window> wc;
+    static ModelConfig modelConfig_;
 
     Input* input = nullptr;
     //音声クラスの作成
@@ -91,12 +57,7 @@ private:
     Microsoft::WRL::ComPtr <ID3D12Resource> directionalLightResource = nullptr;
     static DirectionalLight* directionalLightData;
 
-    static std::array<PSO, kCountOfBlendMode> pso;
-    static std::unique_ptr<RootSignature>rootSignature;
-    static ModelConfig modelConfig_;
-    std::unique_ptr<InputLayout>inputLayout = nullptr;
-    std::vector<BlendState> blendStates = {};
-    std::vector<RasterizerState> rasterizerStates = {};
-    DepthStencil depthStencil = {};
+    static PSO pso;
+
 };
 

@@ -1,6 +1,6 @@
 #include"DrawGrid.h"
 #include<numbers>
-#include"MakeIdentity4x4.h"
+#include"MakeMatrix.h"
 #include"Texture.h"
 
 LineMesh DrawGrid::line_[102];
@@ -8,7 +8,7 @@ Cube DrawGrid::cube_[2];
 
 void DrawGrid::Initialize()
 {
-    uint32_t textureHandle = Texture::handle_[Texture::WHITE_1X1];
+    uint32_t textureHandle = Texture::GetHandle(Texture::WHITE_1X1);
 
     for (int i = 0; i < 102; ++i) {
         line_[i].Create(textureHandle);

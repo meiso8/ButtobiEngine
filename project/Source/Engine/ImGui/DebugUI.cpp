@@ -3,12 +3,12 @@
 #include"Input.h"
 #include"Sprite.h"
 #include"Model.h"
+#include"Particle/Particle.h"
 
 #include"SphereMesh.h"
 #include"DirectionalLight.h"
 #include"PSO.h"
 #include"Camera/Camera.h"
-#include"Normalize.h"
 
 #include<numbers>
 #include<algorithm>
@@ -23,30 +23,34 @@ void DebugUI::CheckInt(int& value, const char* label) {
 }
 
 void DebugUI::CheckCamera(Camera& camera) {
-    ImGui::Begin("Camera");
 
-    CheckTransforms(camera.scale_, camera.rotate_, camera.translate_, "worldMatrix");
-    if (ImGui::Button("InitTransform")) {
-        camera.InitializeTransform();
-    }
-    if (ImGui::TreeNode("ShericalCoordinate")) {
-        ImGui::SliderFloat("polar", &camera.shericalCoordinate_.polar, -10.0f, 10.0f);
-        ImGui::SliderFloat("azimuthal", &camera.shericalCoordinate_.azimuthal, -10.0f, 10.0f);
-        ImGui::SliderFloat("radius", &camera.shericalCoordinate_.radius, -100.0f, 100.0f);
+    if (ImGui::TreeNode("Camera")) {
+
+        CheckTransforms(camera.scale_, camera.rotate_, camera.translate_, "worldMatrix");
+        ShowMatrix4x4(camera.worldMat_);
+        if (ImGui::Button("InitTransform")) {
+            camera.InitializeTransform();
+        }
+        if (ImGui::TreeNode("ShericalCoordinate")) {
+            ImGui::SliderFloat("polar", &camera.shericalCoordinate_.polar, -10.0f, 10.0f);
+            ImGui::SliderFloat("azimuthal", &camera.shericalCoordinate_.azimuthal, -10.0f, 10.0f);
+            ImGui::SliderFloat("radius", &camera.shericalCoordinate_.radius, -100.0f, 100.0f);
+            ImGui::TreePop();
+        }
+
+        ImGui::SliderFloat2("ofsset", &camera.offset_.x, -1000.0f, 1000.0f);
+        ImGui::SliderFloat("nearZ", &camera.nearZ_, 0.0f, 1000.0f);
+        ImGui::SliderFloat("farZ", &camera.farZ_, 0.0f, 1000.0f);
+
+        ImGui::Text("Type : %s", (camera.projectionType_ == Camera::PERSPECTIVE) ? "PERSPECTIVE" : "PARALLEL");
+
+        if (ImGui::Button("ChangeType")) {
+            camera.projectionType_ = (camera.projectionType_ == Camera::PERSPECTIVE) ? Camera::PARALLEL : Camera::PERSPECTIVE;
+        }
+
         ImGui::TreePop();
+
     }
-
-    ImGui::SliderFloat2("ofsset", &camera.offset_.x, -1000.0f, 1000.0f);
-    ImGui::SliderFloat("nearZ", &camera.nearZ_, 0.0f, 1000.0f);
-    ImGui::SliderFloat("farZ", &camera.farZ_, 0.0f, 1000.0f);
-
-    ImGui::Text("Type : %s", (camera.projectionType_ == Camera::PERSPECTIVE) ? "PERSPECTIVE" : "PARALLEL");
-
-    if (ImGui::Button("ChangeType")) {
-        camera.projectionType_ = (camera.projectionType_ == Camera::PERSPECTIVE) ? Camera::PARALLEL : Camera::PERSPECTIVE;
-    }
-
-    ImGui::End();
 
 }
 
@@ -105,16 +109,36 @@ void DebugUI::CheckSprite(Sprite& sprite, const char* label) {
     ImGui::Begin("Sprite");
 
     if (ImGui::TreeNode("transform2D")) {
-        ImGui::SliderFloat3("scale", &sprite.GetScaleRef().x, 0.0f, 10.0f);
-        ImGui::SliderFloat("rotation", &sprite.GetRotateRef(), 0.0f, std::numbers::pi_v<float>*2.0f);
-        ImGui::SliderFloat2("pos", &sprite.GetPositionRef().x, -1280.0f, 1280.0f);
+        ImGui::SliderFloat2("pos", &sprite.GetPosition().x, -1280.0f, 1280.0f);
+        ImGui::SliderFloat("rotation", &sprite.GetRotate(), 0.0f, std::numbers::pi_v<float>*2.0f);
+        ImGui::SliderFloat2("size", &sprite.GetSize().x, -1280.0f, 1280.0f);
         ImGui::TreePop();
     }
 
-    CheckTransforms(sprite.GetUVTranslate(), sprite.GetUVRotate(), sprite.GetUVRotate(), "uvTransform");
+    CheckTransforms(sprite.GetUVScale(), sprite.GetUVRotate(), sprite.GetUVTranslate(), "uvTransform");
+
+    ImGui::SliderFloat2("anchorPoint", &sprite.GetAnchorPoint().x, 0.0f, 1.0f);
+    SwitchFlag(sprite.GetIsFlipX(), "isFlipX");
+    SwitchFlag(sprite.GetIsFlipY(), "isFlipY");
+    ImGui::SliderFloat2("textureLeftTop", &sprite.GetTextureLeftTop().x, 0.0f, 1280.0f);
+    ImGui::SliderFloat2("textureSize", &sprite.GetTextureSize().x, 0.0f, 1280.0f);
 
     ImGui::End();
 }
+
+void DebugUI::ShowMatrix4x4(const Matrix4x4& matrix, const char* label) {
+    if (ImGui::BeginTable(label, 4, ImGuiTableFlags_Borders)) {
+        for (uint32_t row = 0; row < 4; ++row) {
+            ImGui::TableNextRow();
+            for (uint32_t col = 0; col < 4; ++col) {
+                ImGui::TableSetColumnIndex(col);
+                ImGui::Text("%.3f", matrix.m[row][col]);
+            }
+        }
+        ImGui::EndTable();
+    }
+}
+
 
 void DebugUI::CheckBalloonData(Balloon& balloon)
 {
@@ -139,6 +163,39 @@ void DebugUI::CheckWaveData(Wave& wave, const char* label)
         ImGui::TreePop();
     }
 }
+void DebugUI::CheckParticle(ParticleMesh& particle, const char* label)
+{
+
+    ImGui::Begin(label);
+
+    ImGui::Checkbox("useBillboard", &particle.useBillboard_);
+
+    Emitter& emitter = particle.emitter_;
+    int count = emitter.cont;
+    ImGui::SliderInt("createNum", &count, 0, particle.kNumMaxInstance);
+    emitter.cont = count;
+
+    CheckTransform(emitter.transform, "EmitterTransform");
+
+    ImGui::SliderFloat("frequency", &emitter.frequency, 0.0f, 10.0f);
+    ImGui::Text("frequencyTime : %f", emitter.frequencyTime);
+
+    if (ImGui::Button("Add　Particle")) {
+        particle.particles.splice(particle.particles.end(), Emit(emitter));
+    }
+
+
+
+    int index = 0;
+    for (std::list<Particle>::iterator itr = particle.particles.begin(); itr != particle.particles.end(); ++itr) {
+        std::string labels = std::format("{}", index);
+        CheckTransform((*itr).transform, labels.c_str());
+        ++index;
+    }
+
+    ImGui::End();
+}
+
 void DebugUI::CheckTransforms(Vector3& scale, Vector3& rotate, Vector3& translate, const char* label) {
 
     if (ImGui::TreeNode(label)) {
@@ -169,42 +226,46 @@ void DebugUI::CheckWorldTransform(WorldTransform& worldTransform, const char* la
 
 void DebugUI::CheckDirectionalLight(uint32_t& lightType) {
 
-    DirectionalLight* directionalLight = MyEngine::GetDirectionalLightData();
+    if (ImGui::TreeNode("DirectionalLight")) {
+        DirectionalLight* directionalLight = MyEngine::GetDirectionalLightData();
+        Vector3 direction = directionalLight->direction;
 
-    Vector3 direction = directionalLight->direction;
-    ImGui::Begin("DirectionalLight");
-    ImGui::ColorEdit4("color", &directionalLight->color.x);
-    ImGui::SliderFloat3("direction", &direction.x, -1.0f, 1.0f);//後で正規化する
-    directionalLight->direction = Normalize(direction);
-    ImGui::DragFloat("intensity", &directionalLight->intensity);
+        ImGui::ColorEdit4("color", &directionalLight->color.x);
+        ImGui::SliderFloat3("direction", &direction.x, -1.0f, 1.0f);//後で正規化する
+        directionalLight->direction = Normalize(direction);
+        ImGui::DragFloat("intensity", &directionalLight->intensity);
 
-    const char* lights[] = { "NONE", "LambertianReflectance", "HalfLambert" };
+        const char* lights[] = { "NONE", "LambertianReflectance", "HalfLambert" };
 
-    static int light_current = 0;
+        static int light_current = 0;
 
-    ImGui::Combo("LightMode", &light_current, lights, IM_ARRAYSIZE(lights));
-    lightType = light_current % 3;
-    ImGui::End();
+        ImGui::Combo("LightMode", &light_current, lights, IM_ARRAYSIZE(lights));
+        lightType = light_current % 3;
+
+        ImGui::TreePop();
+    }
 
 };
 
 void DebugUI::CheckBlendMode(uint32_t& blendMode) {
 
-    ImGui::Begin("BlendMode");
-    const char* blendModes[] = {
-        "kBlendModeNone",
-        "kBlendModeNormal",
-        "kBlendModeAdd",
-        "kBlendModeSubtract",
-        "kBlendModeMultiply",
-        "kBlendModeScreen"
-    };
+    if (ImGui::TreeNode("BlendMode")) {
 
-    static int blendMode_current = 1;
+        const char* blendModes[] = {
+            "kBlendModeNone",
+            "kBlendModeNormal",
+            "kBlendModeAdd",
+            "kBlendModeSubtract",
+            "kBlendModeMultiply",
+            "kBlendModeScreen"
+        };
 
-    ImGui::Combo("blendMode", &blendMode_current, blendModes, IM_ARRAYSIZE(blendModes));
-    blendMode = blendMode_current % 6;
-    ImGui::End();
+        static int blendMode_current = 1;
+
+        ImGui::Combo("blendMode", &blendMode_current, blendModes, IM_ARRAYSIZE(blendModes));
+        blendMode = blendMode_current % 6;
+        ImGui::TreePop();
+    }
 
 };
 
@@ -212,15 +273,22 @@ void DebugUI::CheckFPS() {
     ImGui::Text("FPS : %f", ImGui::GetIO().Framerate);
 }
 
-void DebugUI::SwitchFlag(bool& flag,const char* label)
+void DebugUI::CheckFlag(bool& flag, const char* label)
 {
+    std::string labels = std::string(label) + " : " + (flag ? "true" : "false");
+    ImGui::Text("%s", labels.c_str());
+}
+
+void DebugUI::SwitchFlag(bool& flag, const char* label)
+{
+    CheckFlag(flag, label);
+
     if (ImGui::Button(label)) {
         // スペースキーを押すとデバッグカメラに切り替える
         flag = flag ? false : true;
-
     }
-    std::string labels = std::string(label) + " : " + (flag ? "true" : "false");
-    ImGui::Text("%s", labels.c_str());
+
+
 }
 void DebugUI::Button(const char* label, std::function<void()> onSwitch)
 {

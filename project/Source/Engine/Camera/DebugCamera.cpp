@@ -1,17 +1,10 @@
 #include "DebugCamera.h"
-#include"Inverse.h"
-#include"MakeAffineMatrix.h"
-#include"MakeRotateMatrix.h"
-#include"MakeIdentity4x4.h"
-#include"MakeTranslateMatrix.h"
-#include"MakePerspectiveFovMatrix.h"
-#include"MakeOrthographicMatrix.h"
+#include"MakeMatrix.h"
 #include"CoordinateTransform.h"
-#include"Multiply.h"
+#include"Lerp.h"
 #include<numbers>
 #include<cmath>
 #include"Input.h"
-#include"Lerp.h"
 
 void DebugCamera::Initialize(const float& width, const float& height, const PROJECTION_TYPE& type)
 {
@@ -29,7 +22,7 @@ void DebugCamera::Initialize(const float& width, const float& height, const PROJ
     rotate_ = { 0.0f,0.0f,0.0f };
     translate_ = { 0.0f,0.0f,-30.0f };
     shericalCoordinate_.radius = -30.0f;
-
+    worldMat_ = MakeIdentity4x4();
     viewMat_ = Inverse(MakeAffineMatrix(scale_, rotate_, translate_));
     projectionMat_ = MakePerspectiveFovMatrix(0.45f, width_ / height_, nearZ_, farZ_);
 
@@ -40,7 +33,7 @@ void DebugCamera::UpdateMatrix() {
 
     //InputRotate();
     //InputTranslate();
-    EyeOperation();
+    MouseInputMove();
 
     Matrix4x4 matRotDelta = MakeIdentity4x4();
     matRotDelta = Multiply(matRotDelta, MakeRotateXMatrix(deltaRotate_.x));
@@ -51,7 +44,8 @@ void DebugCamera::UpdateMatrix() {
 
     //累積の回転行列を合成
     matRot_ = Multiply(matRot_, matRotDelta);
-    viewMat_ = Inverse(Multiply(matRot_, MakeAffineMatrix(scale_, rotate_, translate_)));
+    worldMat_ = MakeAffineMatrix(scale_, rotate_, translate_);
+    viewMat_ = Inverse(Multiply(matRot_, worldMat_));
 
     UpdateProjectionMatrix();
     viewProjectionMat_ = Multiply(viewMat_, projectionMat_);
@@ -138,7 +132,7 @@ void DebugCamera::MoveY(const float& speed) {
     translate_ += CoordinateTransform({ 0.0f, speed, 0.0f }, matRot_);
 };
 
-void DebugCamera::EyeOperation() {
+void DebugCamera::MouseInputMove() {
 
     if (Input::IsPressMouse(2) && Input::IsPushKey(DIK_LSHIFT)) {
         //視点の移動 offset をずらす

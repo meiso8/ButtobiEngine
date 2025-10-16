@@ -1,5 +1,6 @@
 #pragma once
 #include<vector>
+#include<assert.h>
 
 class Texture {
 public:
@@ -18,11 +19,24 @@ public:
         TIMER,
         JUICE,
 
+        PARTICLE,
+
         TEXTURES
     };
-
-    static std::vector<uint32_t>handle_;
     static void LoadAllTexture();
+
+    static uint32_t GetHandle(uint32_t index) {
+        assert(index < handle_.size());
+        return handle_[index];
+    };
+
+    static std::vector<uint32_t>&GetVectorHandles() {
+        return handle_;
+    }
+
+private:
+    static std::vector<uint32_t>handle_;
+
 
 };
 

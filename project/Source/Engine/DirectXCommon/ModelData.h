@@ -7,4 +7,5 @@ struct ModelData {
     std::vector<VertexData> vertices;
     MaterialData material;
     std::string filePath;
+    uint32_t textureHandle;
 };

@@ -9,13 +9,18 @@
 #include "../Stage.h"
 #include <vector>
 #include<list>
-#include"Camera/Camera.h"
-#include"Camera/DebugCamera.h"
+
+class CollisionManager;
+class PlaneRenderer;
+class OBBRenderer;
 
 // ゲームシーン
 class GameScene:public SceneManager {
 
 public:
+	/// @brief コンストラクタ
+	GameScene();
+
 	// 初期化
 	void Initialize()override;
 
@@ -24,6 +29,7 @@ public:
 
 	// 描画
 	void Draw()override;
+	bool GetIsEndScene()override;
 
 	bool GetIsGameOver();
 	bool GetIsGameClear();
@@ -37,44 +43,38 @@ public:
 	void CheckAllCollisions();
 
 private:
-	
-	// カメラ
-	Camera camera_;
 	// カメラ操作
-	CameraController* cameraController_ = nullptr;
-
+	std::unique_ptr <CameraController> cameraController_ = nullptr;
 	// 自キャラ
-	Player* player_ = nullptr;
-	// 自キャラモデル
-	Model* playerModel_ = nullptr;
+	std::unique_ptr<Player> player_ = nullptr;
 	// 敵キャラを複数用意
 	std::list<Enemy*> enemies_;
-	//  敵キャラモデル
-	Model* enemyModel_ = nullptr;
-	// 敵の発生させる数
-	static inline const int kEnemyMax = 3;
+
+	bool isWaitingToPop_ = false;
+	int32_t waitToPopTimer_ = 0;
+
+	// 衝突マネージャ
+	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
 
 	// 天球
-	Skydome* skyDome_ = nullptr;
-	// 天球モデル
-	Model* skyDomeModel_ = nullptr;
-	// 死亡時パーティクル
-	Model* deathParticleModel_ = nullptr;
+	std::unique_ptr <Skydome> skyDome_ = nullptr;
 	DeathParticles* deathParticles_ = nullptr;
 
 	// 地形
-	Stage* stage_ = nullptr;
+	std::unique_ptr <Stage> stage_ = nullptr;
 
 	// UIマネージャー
 	UIManager* uiManager_ = nullptr;
 
-	// デバッグカメラ有効
-	bool isDebugCameraActive_ = false;
-	// デバッグカメラの生成
-	DebugCamera* debugCamera_ = nullptr;
+	// 平面のデバッグ描画
+	std::array<std::unique_ptr<PlaneRenderer>, 2> planeRenderers_;
 
+	// OBBのデバッグ描画
+	std::array<std::unique_ptr<OBBRenderer>, 4> obbRenderers_;
 
 	bool isGameOver = false;
 	bool isGameClear = false;
 
+	/// @brief 敵の出現
+	void PopEnemy();
 };

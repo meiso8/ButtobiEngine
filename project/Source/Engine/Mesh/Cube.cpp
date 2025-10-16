@@ -1,11 +1,9 @@
 #include "Cube.h"
 #include"DirectXCommon.h"
-#include"Multiply.h"
 #include"TextureManager.h"
 #include"MyEngine.h"
 
 void Cube::Create(uint32_t& textureHandle) {
-
 
     commandList_ = DirectXCommon::GetCommandList();
     modelConfig_ = ModelConfig::GetInstance();

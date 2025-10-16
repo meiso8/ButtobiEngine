@@ -1,14 +1,17 @@
 #pragma once
-
-struct AABB;
-class Enemy;
-class Camera;
-class Model;
 #include<array>
+#include<memory>
 
 #include"Vector3.h"
 #include"Vector4.h"
 #include"WorldTransform.h"
+
+struct AABB;
+
+class Enemy;
+class Camera;
+class Model;
+class AABBRenderer;
 
 /// @brief 自キャラ
 class Player {
@@ -54,7 +57,7 @@ public:
 	/// @brief 初期化
 	/// @param model モデル
 	/// @param textureHandle テクスチャハンドル
-	void Initialize(Camera* camera, const Vector3& position);
+	void Initialize(Camera& camera,const Vector3& position);
 
 	/// @brief 更新
 	void Update();
@@ -92,7 +95,7 @@ public:
 	void WallHit(const CollisionMapInfo& info);
 
 	/// @brief 描画
-	void Draw();
+	void Draw(Camera& camera);
 
 	const WorldTransform& GetWorldTransform() const { return worldTransform_; };
 	const Vector3& GetVelocity() const { return velocity_; };
@@ -114,6 +117,7 @@ public:
 	//ImGUi用
 	void Debug();
 private:
+	Camera* camera_ = nullptr;
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 
@@ -122,8 +126,6 @@ private:
 
 	// モデル
 	std::array<Model*, Parts::kNumParts> model_ = {nullptr,nullptr,nullptr,nullptr,nullptr,nullptr};
-	// カメラ
-	Camera* camera_ = nullptr;
 	// 速度
 	Vector3 velocity_ = {};
 	// 加速度
@@ -154,8 +156,8 @@ private:
 	static inline const float kJumpAcceleration = 1.0f;
 
 	// キャラクターの当たり判定サイズ
-	static inline const float kWidth = 0.8f;
-	static inline const float kHeight = 0.8f;
+	static inline const float kWidth = 2.0f;
+	static inline const float kHeight = 2.0f;
 
 	static inline const float kBlank = 0.2f;
 
@@ -185,6 +187,9 @@ private:
 
 	//色　変更しましたyoshida
 	Vector4 objectColor_ = {1.0f,1.0f,1.0f,1.0f};
+
+	// AABB描画
+	std::unique_ptr<AABBRenderer> aabbRenderer_ = nullptr;
 private:
 
 	};

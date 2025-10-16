@@ -3,6 +3,7 @@
 #include"Transform.h"
 #include"Vector2.h"
 #include"SphericalCoordinate.h"
+#include <string>
 
 class Camera {
 public:
@@ -21,6 +22,7 @@ public:
     };
 
     PROJECTION_TYPE projectionType_ = PERSPECTIVE;
+    Matrix4x4 worldMat_;
     //ビュー行列
     static Matrix4x4 viewMat_;
     //射影行列
@@ -43,6 +45,12 @@ public:
         rotate_ = transform.rotate;
         translate_ = transform.translate;
     };
+
+#ifdef _DEBUG
+	/// @brief ワールド変換データの編集
+	/// @param label ラベル
+    void EditTransform(const std::string &label);
+#endif // _DEBUG
 
     void InitializeTransform();
 };
