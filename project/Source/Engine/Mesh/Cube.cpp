@@ -37,6 +37,8 @@ void Cube::CreateVertex()
 
     SetMinMax(min, max);
 
+    vertexResource_->Unmap(0, nullptr);
+
 #pragma endregion
 
 }
@@ -78,6 +80,8 @@ void Cube::CreateIndexResource() {
         // Bottom face
         indexData_[30] = 4, indexData_[31] = 0, indexData_[32] = 6,
         indexData_[33] = 6, indexData_[34] = 0, indexData_[35] = 2;
+
+    indexResource_->Unmap(0, nullptr);
 
 #pragma endregion
 }

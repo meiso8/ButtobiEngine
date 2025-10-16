@@ -56,7 +56,8 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
 
     directionalLightData->direction = { 0.0f,-1.0f,0.0f };//向きは正規化する
     directionalLightData->intensity = 8.0f;
-
+    //書き込み終了
+    directionalLightResource->Unmap(0, nullptr);
 
     modelConfig_.Initialize(PSO::rootSignature.get(), directionalLightResource.Get());
 
@@ -65,7 +66,7 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     //スプライト用カメラ
     SpriteCamera::Initialize(static_cast<float>(wc->GetClientWidth()), static_cast<float>(wc->GetClientHeight()));
     //サウンド管理
-    SoundManager::Initialize();
+    Sound::Initialize();
     //テクスチャ管理
     TextureManager::Initialize();
 
@@ -98,7 +99,7 @@ void MyEngine::PostCommandSet() {
 void MyEngine::Finalize() {
 
     TextureManager::Finalize();
-    SoundManager::Finalize();
+    Sound::Finalize();
     directXCommon->EndFrame();
     wc->Finalize();
     //delete instance_;

@@ -37,8 +37,10 @@ void LineMesh::CreateVertex() {
 
     vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 
+
     SetVertexData({ -0.5f,0.0f,0.0f }, { 0.5f, 0.0f,0.0f });
 
+    vertexResource_->Unmap(0, nullptr);
 #pragma endregion
 
 }

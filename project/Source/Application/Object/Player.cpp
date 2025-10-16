@@ -16,7 +16,6 @@
 #include"Model.h"
 #include"CoordinateTransform.h"
 #include"Sound.h"
-#include"SoundManager.h"
 
 Player::~Player() {
 	for (size_t i = 0; i < model_.size(); ++i) {
@@ -299,7 +298,7 @@ void Player::InputAttack() {
 			if (Input::IsPushKey(DIK_SPACE)) {
 
 				attackPhase_ = Player::kCharge;
-				Sound::PlaySE(Sound::SE1, 0.0f);
+				Sound::PlayLoopSE(Sound::CHARGE, 0.0f);
 			}
 
 			break;
@@ -308,7 +307,9 @@ void Player::InputAttack() {
 			if (!Input::IsPushKey(DIK_SPACE)) {
 
 				attackPhase_ = Player::kFire;
-				Sound::PlaySE(Sound::SE2, 0.0f);
+				Sound::Stop(Sound::CHARGE);
+				Sound::PlaySE(Sound::PICO,0.0f);
+			}
 
 				isAttack_ = true;
 			}

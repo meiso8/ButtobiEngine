@@ -51,7 +51,7 @@ void QuadMesh::CreateVertex() {
     vertexData_[2].normal = { 0.0f,0.0f,1.0f };
     vertexData_[3].normal = { 0.0f,0.0f,1.0f };
 
-
+    vertexResource_->Unmap(0, nullptr);
 #pragma endregion
 
 
@@ -151,5 +151,6 @@ void QuadMesh::CreateIndexResource() {
     indexData_[4] = 3;
     indexData_[5] = 0;
 
+    indexResource_->Unmap(0, nullptr);
 #pragma endregion
 }

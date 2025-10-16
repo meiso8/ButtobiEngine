@@ -18,6 +18,7 @@ void OBBRenderer::Initialize() {
 	}
 	Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	for (auto &line : lines_) {
+
 		line->SetColor(color);
 	}
 }
