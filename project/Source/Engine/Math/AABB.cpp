@@ -7,7 +7,6 @@
 #include "../externals/imgui/imgui.h"
 #endif // _DEBUG
 
-
 AABBRenderer::AABBRenderer() = default;
 AABBRenderer::~AABBRenderer() = default;
 

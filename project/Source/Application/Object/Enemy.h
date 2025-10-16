@@ -1,6 +1,7 @@
 #pragma once
 #include "WorldTransform.h"
 #include "Vector4.h"
+#include "Collider.h"
 #include <memory>
 #include <string>
 
@@ -15,7 +16,7 @@ class AABBRenderer;
 class SphereRenderer;
 
 /// @brief 敵
-class Enemy {
+class Enemy : public Collider {
 public:
 	/// @brief コンストラクタ
 	Enemy();
@@ -44,11 +45,14 @@ public:
 
 	/// @brief ワールド座標を取得
 	/// @return ワールド座標
-	Vector3 GetWorldPosition();
+	Vector3 GetWorldPosition() const override;
 
 	/// @brief プレイヤーとの当たり判定
 	/// @param player プレイヤー
 	void OnCollision(Player* player);
+
+	/// @brief 衝突応答
+	void OnCollision() override;
 
 	/// @brief 位置の加算
 	/// @param translate 加算する位置
@@ -57,6 +61,10 @@ public:
 	/// @brief 剛体の取得
 	/// @return 剛体
 	RigidBody *GetRigidBody() { return rigidBody_.get(); };
+
+	/// @brief 死亡しているか
+	/// @return　死亡しているならtrue
+	bool IsDead() const { return isDead_; };
 
 #ifdef _DEBUG
 	/// @brief 編集
@@ -91,6 +99,12 @@ private:
 	std::unique_ptr<RigidBody> rigidBody_ = nullptr;
 	// AABBのデバッグ描画
 	std::unique_ptr<AABBRenderer> aabbRenderer_ = nullptr;
+	// AABBのデバッグ描画の切り替えフラグ
+	bool isExistAABB_ = false;
 	// 球のデバッグ描画
 	std::unique_ptr<SphereRenderer> sphereRenderer_ = nullptr;
+	// 球のデバッグ描画の切り替えフラグ
+	bool isExistSphere_ = false;
+	// 死亡フラグ
+	bool isDead_ = false;
 };

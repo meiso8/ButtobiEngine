@@ -1,5 +1,7 @@
 #define NOMINMAX
 #include"Collision.h"
+#include"MakeMatrix.h"
+#include"CoordinateTransform.h"
 #include<algorithm>
 #include<cmath>
 
@@ -13,8 +15,41 @@ Vector3 Project(const Vector3 &v1, const Vector3 &v2) {
 	return v2n * d;
 }
 
+Vector3 ClosestPoint(const Vector3 &point, const AABB &aabb) {
+	Vector3 result;
+	result.x = std::clamp(point.x, aabb.min.x, aabb.max.x);
+	result.y = std::clamp(point.y, aabb.min.y, aabb.max.y);
+	result.z = std::clamp(point.z, aabb.min.z, aabb.max.z);
+	return result;
+}
+
+Vector3 ClosestPoint(const Vector3 &point, const OBB &obb) {
+	Vector3 result;
+	Matrix4x4 obbWorldMatrix = {
+		obb.axis[0].x, obb.axis[0].y, obb.axis[0].z, 0.0f,
+		obb.axis[1].x, obb.axis[1].y, obb.axis[1].z, 0.0f,
+		obb.axis[2].x, obb.axis[2].y, obb.axis[2].z, 0.0f,
+		obb.center.x, obb.center.y, obb.center.z, 1.0f
+	};
+	AABB aabbInOBBLocalSpace{ .min = -obb.halfSizes, .max = obb.halfSizes };
+	Vector3 centerInOBBLocalSpace = CoordinateTransform(point, Inverse(obbWorldMatrix));
+	result = ClosestPoint(centerInOBBLocalSpace, aabbInOBBLocalSpace);
+	result = CoordinateTransform(result, obbWorldMatrix);
+	return result;
+}
+
 float Distance(const Sphere &sphere, const Plane &plane) {
 	return std::abs(Dot(sphere.center, plane.normal) - plane.distance);
+}
+
+float Distance(const Sphere &sphere, const AABB &aabb) {
+	Vector3 closestPoint = ClosestPoint(sphere.center, aabb);
+	return Length(closestPoint - sphere.center);
+}
+
+float Distance(const Sphere &sphere, const OBB &obb) {
+	Vector3 closestPoint = ClosestPoint(sphere.center, obb);
+	return Length(closestPoint - sphere.center);
 }
 
 bool IsCollision(const Sphere &s1, const Sphere &s2) {
@@ -177,10 +212,7 @@ bool IsCollision(const AABB &aabb, const Sphere &sphere) {
 	//球の中心とAABBとの最近接点を求める
 	//球の中心の座標をAABBの[min,max]内にclampすればそれが最近接点となる
 	//clampとは範囲内に値を収めることである
-	Vector3 closestPoint(
-		std::clamp(sphere.center.x, aabb.min.x, aabb.max.x),
-		std::clamp(sphere.center.y, aabb.min.y, aabb.max.y),
-		std::clamp(sphere.center.z, aabb.min.z, aabb.max.z));
+	Vector3 closestPoint = ClosestPoint(sphere.center, aabb);
 
 	//球の中心がAABB内部の場合は、最近接点の球の中心となる
 
@@ -229,4 +261,8 @@ bool IsCollision(const AABB &aabb, const Segment &segment) {
 	}
 
 	return false;
-};
+}
+
+bool IsCollision(const OBB &obb, const Sphere &sphere) {
+	return Distance(sphere, obb) <= sphere.radius;
+}
