@@ -184,8 +184,6 @@ void DebugUI::CheckParticle(ParticleMesh& particle, const char* label)
         particle.particles.splice(particle.particles.end(), Emit(emitter));
     }
 
-
-
     int index = 0;
     for (std::list<Particle>::iterator itr = particle.particles.begin(); itr != particle.particles.end(); ++itr) {
         std::string labels = std::format("{}", index);
