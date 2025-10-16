@@ -51,130 +51,130 @@ void Player::Initialize(Camera &camera, const Vector3 &position) {
 		PartsWorldTransform_[i].translate_ = worldTransform_.translate_;
 		DrawPartsWorldTransform_[i].Initialize();
 	}
-	
-	defaultPartsOffset_[Parts::kHead] = {0, 1.5f, 0};
-	defaultPartsOffset_[Parts::kBody] = {0, 0.8f, 0};
-	defaultPartsOffset_[Parts::kLeftArm] = {-0.8f, 1.0f, 0};
-	defaultPartsOffset_[Parts::kRightArm] = {0.8f, 1.0f, 0};
-	defaultPartsOffset_[Parts::kLeftLeg] = {-0.2f, 0.0f, 0};
-	defaultPartsOffset_[Parts::kRightLeg] = {0.2f, 0.0f, 0};
+
+	defaultPartsOffset_[Parts::kHead] = { 0, 1.5f, 0 };
+	defaultPartsOffset_[Parts::kBody] = { 0, 0.8f, 0 };
+	defaultPartsOffset_[Parts::kLeftArm] = { -0.8f, 1.0f, 0 };
+	defaultPartsOffset_[Parts::kRightArm] = { 0.8f, 1.0f, 0 };
+	defaultPartsOffset_[Parts::kLeftLeg] = { -0.2f, 0.0f, 0 };
+	defaultPartsOffset_[Parts::kRightLeg] = { 0.2f, 0.0f, 0 };
 
 #pragma region Head
 
-	targetPartsScale_[AttackPhase::kNone][Parts::kHead] = {1.0f, 1.0f, 1.0f};
-	targetPartsRotate_[AttackPhase::kNone][Parts::kHead] = {0.0f, 0.0f, 0.0f};
+	targetPartsScale_[AttackPhase::kNone][Parts::kHead] = { 1.0f, 1.0f, 1.0f };
+	targetPartsRotate_[AttackPhase::kNone][Parts::kHead] = { 0.0f, 0.0f, 0.0f };
 	targetPartsTranslate_[AttackPhase::kNone][Parts::kHead] = defaultPartsOffset_[Parts::kHead];
 
-	targetPartsScale_[AttackPhase::kCharge][Parts::kHead] = {1.0f, 1.0f, 1.0f};
-	targetPartsRotate_[AttackPhase::kCharge][Parts::kHead] = {1.0f, 0.0f, 0.1f};
-	targetPartsTranslate_[AttackPhase::kCharge][Parts::kHead] = defaultPartsOffset_[Parts::kHead]+Vector3{0.0f, -0.4f, 0.8f};
+	targetPartsScale_[AttackPhase::kCharge][Parts::kHead] = { 1.0f, 1.0f, 1.0f };
+	targetPartsRotate_[AttackPhase::kCharge][Parts::kHead] = { 1.0f, 0.0f, 0.1f };
+	targetPartsTranslate_[AttackPhase::kCharge][Parts::kHead] = defaultPartsOffset_[Parts::kHead] + Vector3{ 0.0f, -0.4f, 0.8f };
 
-	targetPartsScale_[AttackPhase::kFire][Parts::kHead] = {1.0f, 1.0f, 1.0f};
-	targetPartsRotate_[AttackPhase::kFire][Parts::kHead] = {0.0f, 0.0f, 0.1f};
+	targetPartsScale_[AttackPhase::kFire][Parts::kHead] = { 1.0f, 1.0f, 1.0f };
+	targetPartsRotate_[AttackPhase::kFire][Parts::kHead] = { 0.0f, 0.0f, 0.1f };
 	targetPartsTranslate_[AttackPhase::kFire][Parts::kHead] = defaultPartsOffset_[Parts::kHead];
 
-	targetPartsScale_[AttackPhase::kEnd][Parts::kHead] = {1.0f, 1.0f, 1.0f};
-	targetPartsRotate_[AttackPhase::kEnd][Parts::kHead] = {0.0f, 0.0f, 0.0f};
+	targetPartsScale_[AttackPhase::kEnd][Parts::kHead] = { 1.0f, 1.0f, 1.0f };
+	targetPartsRotate_[AttackPhase::kEnd][Parts::kHead] = { 0.0f, 0.0f, 0.0f };
 	targetPartsTranslate_[AttackPhase::kEnd][Parts::kHead] = defaultPartsOffset_[Parts::kHead];
 
 #pragma endregion
 
 #pragma region Body
 
-	targetPartsScale_[AttackPhase::kNone][Parts::kBody] = {1.0f, 1.0f, 1.0f};
-	targetPartsRotate_[AttackPhase::kNone][Parts::kBody] = {0.0f, 0.0f, 0.0f};
+	targetPartsScale_[AttackPhase::kNone][Parts::kBody] = { 1.0f, 1.0f, 1.0f };
+	targetPartsRotate_[AttackPhase::kNone][Parts::kBody] = { 0.0f, 0.0f, 0.0f };
 	targetPartsTranslate_[AttackPhase::kNone][Parts::kBody] = defaultPartsOffset_[Parts::kBody];
 
-	targetPartsScale_[AttackPhase::kCharge][Parts::kBody] = {1.0f, 1.0f, 1.0f};
-	targetPartsRotate_[AttackPhase::kCharge][Parts::kBody] = {1.5f, 0.0f, 0.2f};
-	targetPartsTranslate_[AttackPhase::kCharge][Parts::kBody] = defaultPartsOffset_[Parts::kBody] +Vector3{0.0f, 0.0f, 0.2f};
-
-	targetPartsScale_[AttackPhase::kFire][Parts::kBody] = {1.0f, 1.0f, 1.0f};
-	targetPartsRotate_[AttackPhase::kFire][Parts::kBody] = {-0.3f, 0.2f, 0.0f};
+	targetPartsScale_[AttackPhase::kCharge][Parts::kBody] = { 1.0f, 1.0f, 1.0f };
+	targetPartsRotate_[AttackPhase::kCharge][Parts::kBody] = { 1.5f, 0.0f, 0.2f };
+	targetPartsTranslate_[AttackPhase::kCharge][Parts::kBody] = defaultPartsOffset_[Parts::kBody] + Vector3{ 0.0f, 0.0f, 0.2f };
+	
+	targetPartsScale_[AttackPhase::kFire][Parts::kBody] = { 1.0f, 1.0f, 1.0f };
+	targetPartsRotate_[AttackPhase::kFire][Parts::kBody] = { -0.3f, 0.2f, 0.0f };
 	targetPartsTranslate_[AttackPhase::kFire][Parts::kBody] = defaultPartsOffset_[Parts::kBody];
 
-	targetPartsScale_[AttackPhase::kEnd][Parts::kBody] = {1.0f, 1.0f, 1.0f};
-	targetPartsRotate_[AttackPhase::kEnd][Parts::kBody] = {0.0f, 0.0f, 0.0f};
+	targetPartsScale_[AttackPhase::kEnd][Parts::kBody] = { 1.0f, 1.0f, 1.0f };
+	targetPartsRotate_[AttackPhase::kEnd][Parts::kBody] = { 0.0f, 0.0f, 0.0f };
 	targetPartsTranslate_[AttackPhase::kEnd][Parts::kBody] = defaultPartsOffset_[Parts::kBody];
 
 #pragma endregion
 
 #pragma region LeftArm
 
-	targetPartsScale_[AttackPhase::kNone][Parts::kLeftArm] = {1.0f, 1.0f, 1.0f};
-	targetPartsRotate_[AttackPhase::kNone][Parts::kLeftArm] = {0.0f, 0.0f, 0.0f};
+	targetPartsScale_[AttackPhase::kNone][Parts::kLeftArm] = { 1.0f, 1.0f, 1.0f };
+	targetPartsRotate_[AttackPhase::kNone][Parts::kLeftArm] = { 0.0f, 0.0f, 0.0f };
 	targetPartsTranslate_[AttackPhase::kNone][Parts::kLeftArm] = defaultPartsOffset_[Parts::kLeftArm];
 
-	targetPartsScale_[AttackPhase::kCharge][Parts::kLeftArm] = {1.0f, 1.0f, 1.0f};
-	targetPartsRotate_[AttackPhase::kCharge][Parts::kLeftArm] = {1.5f, 0.0f, -0.3f};
-	targetPartsTranslate_[AttackPhase::kCharge][Parts::kLeftArm] = defaultPartsOffset_[Parts::kLeftArm] + Vector3{0.0f, -0.18f, 0.3f};
+	targetPartsScale_[AttackPhase::kCharge][Parts::kLeftArm] = { 1.0f, 1.0f, 1.0f };
+	targetPartsRotate_[AttackPhase::kCharge][Parts::kLeftArm] = { 1.5f, 0.0f, -0.3f };
+	targetPartsTranslate_[AttackPhase::kCharge][Parts::kLeftArm] = defaultPartsOffset_[Parts::kLeftArm] + Vector3{ 0.0f, -0.18f, 0.3f };
 
-	targetPartsScale_[AttackPhase::kFire][Parts::kLeftArm] = {1.0f, 1.0f, 1.0f};
-	targetPartsRotate_[AttackPhase::kFire][Parts::kLeftArm] = {0.0f, 0.0f, 0.2f};
-	targetPartsTranslate_[AttackPhase::kFire][Parts::kLeftArm] = defaultPartsOffset_[Parts::kLeftArm]+Vector3{0.2f, -0.2f, -0.2f};
+	targetPartsScale_[AttackPhase::kFire][Parts::kLeftArm] = { 1.0f, 1.0f, 1.0f };
+	targetPartsRotate_[AttackPhase::kFire][Parts::kLeftArm] = { 0.0f, 0.0f, 0.2f };
+	targetPartsTranslate_[AttackPhase::kFire][Parts::kLeftArm] = defaultPartsOffset_[Parts::kLeftArm] + Vector3{ 0.2f, -0.2f, -0.2f };
 
-	targetPartsScale_[AttackPhase::kEnd][Parts::kLeftArm] = {1.0f, 1.0f, 1.0f};
-	targetPartsRotate_[AttackPhase::kEnd][Parts::kLeftArm] = {0.0f, 0.0f, 0.0f};
+	targetPartsScale_[AttackPhase::kEnd][Parts::kLeftArm] = { 1.0f, 1.0f, 1.0f };
+	targetPartsRotate_[AttackPhase::kEnd][Parts::kLeftArm] = { 0.0f, 0.0f, 0.0f };
 	targetPartsTranslate_[AttackPhase::kEnd][Parts::kLeftArm] = defaultPartsOffset_[Parts::kLeftArm];
 
 #pragma endregion
 
 #pragma region RightArm
 
-	targetPartsScale_[AttackPhase::kNone][Parts::kRightArm] = {1.0f, 1.0f, 1.0f};
-	targetPartsRotate_[AttackPhase::kNone][Parts::kRightArm] = {0.0f, 0.0f, 0.0f};
+	targetPartsScale_[AttackPhase::kNone][Parts::kRightArm] = { 1.0f, 1.0f, 1.0f };
+	targetPartsRotate_[AttackPhase::kNone][Parts::kRightArm] = { 0.0f, 0.0f, 0.0f };
 	targetPartsTranslate_[AttackPhase::kNone][Parts::kRightArm] = defaultPartsOffset_[Parts::kRightArm];
 
-	targetPartsScale_[AttackPhase::kCharge][Parts::kRightArm] = {1.0f, 1.0f, 1.0f};
-	targetPartsRotate_[AttackPhase::kCharge][Parts::kRightArm] = {1.5f, 0.0f, -0.2f};
-	targetPartsTranslate_[AttackPhase::kCharge][Parts::kRightArm] = defaultPartsOffset_[Parts::kRightArm]+Vector3{0.0f, -0.28f, 0.3f};
+	targetPartsScale_[AttackPhase::kCharge][Parts::kRightArm] = { 1.0f, 1.0f, 1.0f };
+	targetPartsRotate_[AttackPhase::kCharge][Parts::kRightArm] = { 1.5f, 0.0f, -0.2f };
+	targetPartsTranslate_[AttackPhase::kCharge][Parts::kRightArm] = defaultPartsOffset_[Parts::kRightArm] + Vector3{ 0.0f, -0.28f, 0.3f };
 
-	targetPartsScale_[AttackPhase::kFire][Parts::kRightArm] = {1.0f, 1.0f, 1.0f};
-	targetPartsRotate_[AttackPhase::kFire][Parts::kRightArm] = {0.0f, 0.3f, 0.0f};
-	targetPartsTranslate_[AttackPhase::kFire][Parts::kRightArm] = defaultPartsOffset_[Parts::kRightArm]+Vector3{0.0f, 0.0f, -0.2f};
+	targetPartsScale_[AttackPhase::kFire][Parts::kRightArm] = { 1.0f, 1.0f, 1.0f };
+	targetPartsRotate_[AttackPhase::kFire][Parts::kRightArm] = { 0.0f, 0.3f, 0.0f };
+	targetPartsTranslate_[AttackPhase::kFire][Parts::kRightArm] = defaultPartsOffset_[Parts::kRightArm] + Vector3{ 0.0f, 0.0f, -0.2f };
 
-	targetPartsScale_[AttackPhase::kEnd][Parts::kRightArm] = {1.0f, 1.0f, 1.0f};
-	targetPartsRotate_[AttackPhase::kEnd][Parts::kRightArm] = {0.0f, 0.0f, 0.0f};
+	targetPartsScale_[AttackPhase::kEnd][Parts::kRightArm] = { 1.0f, 1.0f, 1.0f };
+	targetPartsRotate_[AttackPhase::kEnd][Parts::kRightArm] = { 0.0f, 0.0f, 0.0f };
 	targetPartsTranslate_[AttackPhase::kEnd][Parts::kRightArm] = defaultPartsOffset_[Parts::kRightArm];
 
 #pragma endregion
 
 #pragma region LeftLeg
 
-	targetPartsScale_[AttackPhase::kNone][Parts::kLeftLeg] = {1.0f, 1.0f, 1.0f};
-	targetPartsRotate_[AttackPhase::kNone][Parts::kLeftLeg] = {0.0f, 0.0f, 0.0f};
+	targetPartsScale_[AttackPhase::kNone][Parts::kLeftLeg] = { 1.0f, 1.0f, 1.0f };
+	targetPartsRotate_[AttackPhase::kNone][Parts::kLeftLeg] = { 0.0f, 0.0f, 0.0f };
 	targetPartsTranslate_[AttackPhase::kNone][Parts::kLeftLeg] = defaultPartsOffset_[Parts::kLeftLeg];
 
-	targetPartsScale_[AttackPhase::kCharge][Parts::kLeftLeg] = {1.0f, 1.0f, 1.0f};
-	targetPartsRotate_[AttackPhase::kCharge][Parts::kLeftLeg] = {0.0f, 0.0f, 0.1f};
+	targetPartsScale_[AttackPhase::kCharge][Parts::kLeftLeg] = { 1.0f, 1.0f, 1.0f };
+	targetPartsRotate_[AttackPhase::kCharge][Parts::kLeftLeg] = { 0.0f, 0.0f, 0.1f };
 	targetPartsTranslate_[AttackPhase::kCharge][Parts::kLeftLeg] = defaultPartsOffset_[Parts::kLeftLeg];
 
-	targetPartsScale_[AttackPhase::kFire][Parts::kLeftLeg] = {1.0f, 1.0f, 1.0f};
-	targetPartsRotate_[AttackPhase::kFire][Parts::kLeftLeg] = {-0.2f, 0.0f, 0.1f};
-	targetPartsTranslate_[AttackPhase::kFire][Parts::kLeftLeg] = defaultPartsOffset_[Parts::kLeftLeg]+Vector3{0.1f, 0.0f, 0.0f};
+	targetPartsScale_[AttackPhase::kFire][Parts::kLeftLeg] = { 1.0f, 1.0f, 1.0f };
+	targetPartsRotate_[AttackPhase::kFire][Parts::kLeftLeg] = { -0.2f, 0.0f, 0.1f };
+	targetPartsTranslate_[AttackPhase::kFire][Parts::kLeftLeg] = defaultPartsOffset_[Parts::kLeftLeg] + Vector3{ 0.1f, 0.0f, 0.0f };
 
-	targetPartsScale_[AttackPhase::kEnd][Parts::kLeftLeg] = {1.0f, 1.0f, 1.0f};
-	targetPartsRotate_[AttackPhase::kEnd][Parts::kLeftLeg] = {0.0f, 0.0f, 0.0f};
+	targetPartsScale_[AttackPhase::kEnd][Parts::kLeftLeg] = { 1.0f, 1.0f, 1.0f };
+	targetPartsRotate_[AttackPhase::kEnd][Parts::kLeftLeg] = { 0.0f, 0.0f, 0.0f };
 	targetPartsTranslate_[AttackPhase::kEnd][Parts::kLeftLeg] = defaultPartsOffset_[Parts::kLeftLeg];
 
 #pragma endregion
 
 #pragma region RightLeg
 
-	targetPartsScale_[AttackPhase::kNone][Parts::kRightLeg] = {1.0f, 1.0f, 1.0f};
-	targetPartsRotate_[AttackPhase::kNone][Parts::kRightLeg] = {0.0f, 0.0f, 0.0f};
+	targetPartsScale_[AttackPhase::kNone][Parts::kRightLeg] = { 1.0f, 1.0f, 1.0f };
+	targetPartsRotate_[AttackPhase::kNone][Parts::kRightLeg] = { 0.0f, 0.0f, 0.0f };
 	targetPartsTranslate_[AttackPhase::kNone][Parts::kRightLeg] = defaultPartsOffset_[Parts::kRightLeg];
 
-	targetPartsScale_[AttackPhase::kCharge][Parts::kRightLeg] = {1.0f, 1.0f, 1.0f};
-	targetPartsRotate_[AttackPhase::kCharge][Parts::kRightLeg] = {2.5f, 0.0f, 0.0f};
-	targetPartsTranslate_[AttackPhase::kCharge][Parts::kRightLeg] = defaultPartsOffset_[Parts::kRightLeg]+Vector3{0.0f, 1.2f, -0.6f};
+	targetPartsScale_[AttackPhase::kCharge][Parts::kRightLeg] = { 1.0f, 1.0f, 1.0f };
+	targetPartsRotate_[AttackPhase::kCharge][Parts::kRightLeg] = { 2.5f, 0.0f, 0.0f };
+	targetPartsTranslate_[AttackPhase::kCharge][Parts::kRightLeg] = defaultPartsOffset_[Parts::kRightLeg] + Vector3{ 0.0f, 1.2f, -0.6f };
 
-	targetPartsScale_[AttackPhase::kFire][Parts::kRightLeg] = {1.0f, 1.0f, 1.0f};
-	targetPartsRotate_[AttackPhase::kFire][Parts::kRightLeg] = {-2.0f, -0.6f, -0.2f};
-	targetPartsTranslate_[AttackPhase::kFire][Parts::kRightLeg] = defaultPartsOffset_[Parts::kRightLeg]+Vector3{-0.2f, 0.7f, 0.5f};
+	targetPartsScale_[AttackPhase::kFire][Parts::kRightLeg] = { 1.0f, 1.0f, 1.0f };
+	targetPartsRotate_[AttackPhase::kFire][Parts::kRightLeg] = { -2.0f, -0.6f, -0.2f };
+	targetPartsTranslate_[AttackPhase::kFire][Parts::kRightLeg] = defaultPartsOffset_[Parts::kRightLeg] + Vector3{ -0.2f, 0.7f, 0.5f };
 
-	targetPartsScale_[AttackPhase::kEnd][Parts::kRightLeg] = {1.0f, 1.0f, 1.0f};
-	targetPartsRotate_[AttackPhase::kEnd][Parts::kRightLeg] = {0.0f, 0.0f, 0.0f};
+	targetPartsScale_[AttackPhase::kEnd][Parts::kRightLeg] = { 1.0f, 1.0f, 1.0f };
+	targetPartsRotate_[AttackPhase::kEnd][Parts::kRightLeg] = { 0.0f, 0.0f, 0.0f };
 	targetPartsTranslate_[AttackPhase::kEnd][Parts::kRightLeg] = defaultPartsOffset_[Parts::kRightLeg];
 
 #pragma endregion
@@ -281,6 +281,7 @@ void Player::InputAttack() {
 
 	if (Input::IsTriggerKey(DIK_1)) {
 		attackPhase_ = kNone;
+		ResetAttack();
 	}
 	if (Input::IsTriggerKey(DIK_2)) {
 		attackPhase_ = kCharge;
@@ -310,47 +311,48 @@ void Player::InputAttack() {
 				Sound::PlaySE(Sound::PICO,0.0f);
 			}
 
+				isAttack_ = true;
+			}
 
+			chargeTimer_++;
+			chargeTimer_ = std::clamp(chargeTimer_, 1000.0f, kMaxChargeTime);
+			kickForce_ = GetForward() * chargeTimer_;
 			break;
 		case Player::kFire:
+			if (PartsWorldTransform_[0].scale_ == targetPartsScale_[AttackPhase::kFire][0] && PartsWorldTransform_[0].rotate_ == targetPartsRotate_[AttackPhase::kFire][0]) {
+				if (PartsWorldTransform_[1].scale_ == targetPartsScale_[AttackPhase::kFire][1] && PartsWorldTransform_[1].rotate_ == targetPartsRotate_[AttackPhase::kFire][1]) {
+					if (PartsWorldTransform_[2].scale_ == targetPartsScale_[AttackPhase::kFire][2] && PartsWorldTransform_[2].rotate_ == targetPartsRotate_[AttackPhase::kFire][2]) {
+						if (PartsWorldTransform_[3].scale_ == targetPartsScale_[AttackPhase::kFire][3] && PartsWorldTransform_[3].rotate_ == targetPartsRotate_[AttackPhase::kFire][3]) {
+							if (PartsWorldTransform_[4].scale_ == targetPartsScale_[AttackPhase::kFire][4] && PartsWorldTransform_[4].rotate_ == targetPartsRotate_[AttackPhase::kFire][4]) {
+								if (PartsWorldTransform_[5].scale_ == targetPartsScale_[AttackPhase::kFire][5] && PartsWorldTransform_[5].rotate_ == targetPartsRotate_[AttackPhase::kFire][5]) {
 
-		isAttack_ = true;
-		
-		
-		if (PartsWorldTransform_[0].scale_ == targetPartsScale_[AttackPhase::kFire][0] && PartsWorldTransform_[0].rotate_ == targetPartsRotate_[AttackPhase::kFire][0]) {
-			if (PartsWorldTransform_[1].scale_ == targetPartsScale_[AttackPhase::kFire][1] && PartsWorldTransform_[1].rotate_ == targetPartsRotate_[AttackPhase::kFire][1]) {
-				if (PartsWorldTransform_[2].scale_ == targetPartsScale_[AttackPhase::kFire][2] && PartsWorldTransform_[2].rotate_ == targetPartsRotate_[AttackPhase::kFire][2]) {
-					if (PartsWorldTransform_[3].scale_ == targetPartsScale_[AttackPhase::kFire][3] && PartsWorldTransform_[3].rotate_ == targetPartsRotate_[AttackPhase::kFire][3]) {
-						if (PartsWorldTransform_[4].scale_ == targetPartsScale_[AttackPhase::kFire][4] && PartsWorldTransform_[4].rotate_ == targetPartsRotate_[AttackPhase::kFire][4]) {
-							if (PartsWorldTransform_[5].scale_ == targetPartsScale_[AttackPhase::kFire][5] && PartsWorldTransform_[5].rotate_ == targetPartsRotate_[AttackPhase::kFire][5]) {
-								
-							
-							attackPhase_ = Player::kEnd;
+
+									attackPhase_ = Player::kEnd;
+								}
 							}
 						}
 					}
 				}
 			}
-		}
 
 			break;
 		case Player::kEnd:
 
-		isAttack_ = false;
-		if (PartsWorldTransform_[0].scale_ == targetPartsScale_[AttackPhase::kEnd][0] && PartsWorldTransform_[0].rotate_ == targetPartsRotate_[AttackPhase::kEnd][0]) {
-			if (PartsWorldTransform_[1].scale_ == targetPartsScale_[AttackPhase::kEnd][1] && PartsWorldTransform_[1].rotate_ == targetPartsRotate_[AttackPhase::kEnd][1]) {
-				if (PartsWorldTransform_[2].scale_ == targetPartsScale_[AttackPhase::kEnd][2] && PartsWorldTransform_[2].rotate_ == targetPartsRotate_[AttackPhase::kEnd][2]) {
-					if (PartsWorldTransform_[3].scale_ == targetPartsScale_[AttackPhase::kEnd][3] && PartsWorldTransform_[3].rotate_ == targetPartsRotate_[AttackPhase::kEnd][3]) {
-						if (PartsWorldTransform_[4].scale_ == targetPartsScale_[AttackPhase::kEnd][4] && PartsWorldTransform_[4].rotate_ == targetPartsRotate_[AttackPhase::kEnd][4]) {
-							if (PartsWorldTransform_[5].scale_ == targetPartsScale_[AttackPhase::kEnd][5] && PartsWorldTransform_[5].rotate_ == targetPartsRotate_[AttackPhase::kEnd][5]) {
+			if (PartsWorldTransform_[0].scale_ == targetPartsScale_[AttackPhase::kEnd][0] && PartsWorldTransform_[0].rotate_ == targetPartsRotate_[AttackPhase::kEnd][0]) {
+				if (PartsWorldTransform_[1].scale_ == targetPartsScale_[AttackPhase::kEnd][1] && PartsWorldTransform_[1].rotate_ == targetPartsRotate_[AttackPhase::kEnd][1]) {
+					if (PartsWorldTransform_[2].scale_ == targetPartsScale_[AttackPhase::kEnd][2] && PartsWorldTransform_[2].rotate_ == targetPartsRotate_[AttackPhase::kEnd][2]) {
+						if (PartsWorldTransform_[3].scale_ == targetPartsScale_[AttackPhase::kEnd][3] && PartsWorldTransform_[3].rotate_ == targetPartsRotate_[AttackPhase::kEnd][3]) {
+							if (PartsWorldTransform_[4].scale_ == targetPartsScale_[AttackPhase::kEnd][4] && PartsWorldTransform_[4].rotate_ == targetPartsRotate_[AttackPhase::kEnd][4]) {
+								if (PartsWorldTransform_[5].scale_ == targetPartsScale_[AttackPhase::kEnd][5] && PartsWorldTransform_[5].rotate_ == targetPartsRotate_[AttackPhase::kEnd][5]) {
 
-								attackPhase_ = Player::kNone;
+									attackPhase_ = Player::kNone;
+									ResetAttack();
+								}
 							}
 						}
 					}
 				}
 			}
-		}
 
 			break;
 		default:
@@ -367,36 +369,36 @@ void Player::AttackAnimation() {
 		case Player::kNone:
 			/*objectColor_.SetColor({1, 1, 1, 1});*/
 
-	
+
 
 			break;
 		case Player::kCharge:
 
 			objectColor_ = { 0.0f,1.0f,0.0f,1.0f };
 
-	
+
 
 			break;
 		case Player::kFire:
 
-		objectColor_ = { 1.0f,0.0f,0.0f,1.0f };
+			objectColor_ = { 1.0f,0.0f,0.0f,1.0f };
 
 
 			break;
 		case Player::kEnd:
 
-		objectColor_ = { 0.0f,0.0f,1.0f,1.0f };
-	
-		break;
-	default:
-		break;
+			objectColor_ = { 0.0f,0.0f,1.0f,1.0f };
+
+			break;
+		default:
+			break;
 	}
 
 
 
 
 
-	 for (int i = 0; i < Parts::kNumParts; i++) {
+	for (int i = 0; i < Parts::kNumParts; i++) {
 		PartsWorldTransform_[i].scale_ = Lerp(PartsWorldTransform_[i].scale_, targetPartsScale_[attackPhase_][i], kInterVal_);
 		PartsWorldTransform_[i].rotate_ = Lerp(PartsWorldTransform_[i].rotate_, targetPartsRotate_[attackPhase_][i], kInterVal_);
 		PartsWorldTransform_[i].translate_ = Lerp(PartsWorldTransform_[i].translate_, targetPartsTranslate_[attackPhase_][i], kInterVal_);
@@ -409,10 +411,10 @@ void Player::AttackAnimation() {
 
 		// 合成結果
 		PartsWorldTransform_[i].parent_ = &worldTransform_;
-		
+
 		WorldTransformUpdate(PartsWorldTransform_[i]);
 	}
-	 WorldTransformUpdate(worldTransform_);
+	WorldTransformUpdate(worldTransform_);
 
 }
 
@@ -570,11 +572,15 @@ void Player::WallHit(const CollisionMapInfo &info) {
 	}
 }
 
-Vector3 Player::GetWorldPosition() { return { worldTransform_.matWorld_.m[3][0], worldTransform_.matWorld_.m[3][1], worldTransform_.matWorld_.m[3][2] }; }
+Vector3 Player::GetForward() const {
+	return Normalize({ worldTransform_.matWorld_.m[2][0], worldTransform_.matWorld_.m[2][1], worldTransform_.matWorld_.m[2][2] });
+}
+
+Vector3 Player::GetWorldPosition() const { return { worldTransform_.matWorld_.m[3][0], worldTransform_.matWorld_.m[3][1], worldTransform_.matWorld_.m[3][2] }; }
 
 void Player::Update() {
 
-	
+
 	// ==============================
 	// 1.移動入力
 	// ==============================
@@ -706,8 +712,7 @@ void Player::OnCollision(const Enemy *enemy) {
 		}
 
 	} else {
-		
-	
+		ResetAttack();
 	}
 
 };
@@ -798,9 +803,40 @@ void Player::Debug() {
 	ImGui::DragFloat3("velocity", &velocity_.x);
 	ImGui::Text("onGround_ : %d", onGround_);
 
+	ImGui::Separator();
+	Vector3 worldPosition = GetWorldPosition();
+	ImGui::DragFloat3("WorldPosition", &worldPosition.x);
+	Vector3 forward = GetForward();
+	ImGui::DragFloat3("Forward", &forward.x);
+	ImGui::Separator();
+	ImGui::DragFloat3("kickForce", &kickForce_.x);
+	ImGui::Checkbox("isAttack", &isAttack_);
+
+	switch (attackPhase_) {
+		case Player::kNone:
+			ImGui::Text("kNone");
+			break;
+		case Player::kCharge:
+			ImGui::Text("kCharge");
+			break;
+		case Player::kFire:
+			ImGui::Text("kFire");
+			break;
+		case Player::kEnd:
+			ImGui::Text("kEnd");
+			break;
+		default:
+			break;
+	}
 
 	//ImGui::Text("isWallHit : %d ", collisionMapInfo.isWallHit);
 	//ImGui::DragFloat3("moveVol", &collisionMapInfo.moveVol.x);
 
 	ImGui::End();
+}
+
+void Player::ResetAttack() {
+	isAttack_ = false;
+	chargeTimer_ = 1000.0f;
+	kickForce_ = GetForward() * chargeTimer_;
 }
