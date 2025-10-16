@@ -294,26 +294,18 @@ void Player::InputAttack() {
 	}
 	switch (attackPhase_) {
 		case Player::kNone:
-
 			if (Input::IsPushKey(DIK_SPACE)) {
-
 				attackPhase_ = Player::kCharge;
 				Sound::PlayLoopSE(Sound::CHARGE, 0.0f);
 			}
-
 			break;
 		case Player::kCharge:
-
 			if (!Input::IsPushKey(DIK_SPACE)) {
-
 				attackPhase_ = Player::kFire;
 				Sound::Stop(Sound::CHARGE);
-				Sound::PlaySE(Sound::PICO,0.0f);
-			}
-
+				Sound::PlaySE(Sound::PICO, 0.0f);
 				isAttack_ = true;
 			}
-
 			chargeTimer_++;
 			chargeTimer_ = std::clamp(chargeTimer_, 1000.0f, kMaxChargeTime);
 			kickForce_ = GetForward() * chargeTimer_;
@@ -325,8 +317,6 @@ void Player::InputAttack() {
 						if (PartsWorldTransform_[3].scale_ == targetPartsScale_[AttackPhase::kFire][3] && PartsWorldTransform_[3].rotate_ == targetPartsRotate_[AttackPhase::kFire][3]) {
 							if (PartsWorldTransform_[4].scale_ == targetPartsScale_[AttackPhase::kFire][4] && PartsWorldTransform_[4].rotate_ == targetPartsRotate_[AttackPhase::kFire][4]) {
 								if (PartsWorldTransform_[5].scale_ == targetPartsScale_[AttackPhase::kFire][5] && PartsWorldTransform_[5].rotate_ == targetPartsRotate_[AttackPhase::kFire][5]) {
-
-
 									attackPhase_ = Player::kEnd;
 								}
 							}
@@ -334,17 +324,14 @@ void Player::InputAttack() {
 					}
 				}
 			}
-
 			break;
 		case Player::kEnd:
-
 			if (PartsWorldTransform_[0].scale_ == targetPartsScale_[AttackPhase::kEnd][0] && PartsWorldTransform_[0].rotate_ == targetPartsRotate_[AttackPhase::kEnd][0]) {
 				if (PartsWorldTransform_[1].scale_ == targetPartsScale_[AttackPhase::kEnd][1] && PartsWorldTransform_[1].rotate_ == targetPartsRotate_[AttackPhase::kEnd][1]) {
 					if (PartsWorldTransform_[2].scale_ == targetPartsScale_[AttackPhase::kEnd][2] && PartsWorldTransform_[2].rotate_ == targetPartsRotate_[AttackPhase::kEnd][2]) {
 						if (PartsWorldTransform_[3].scale_ == targetPartsScale_[AttackPhase::kEnd][3] && PartsWorldTransform_[3].rotate_ == targetPartsRotate_[AttackPhase::kEnd][3]) {
 							if (PartsWorldTransform_[4].scale_ == targetPartsScale_[AttackPhase::kEnd][4] && PartsWorldTransform_[4].rotate_ == targetPartsRotate_[AttackPhase::kEnd][4]) {
 								if (PartsWorldTransform_[5].scale_ == targetPartsScale_[AttackPhase::kEnd][5] && PartsWorldTransform_[5].rotate_ == targetPartsRotate_[AttackPhase::kEnd][5]) {
-
 									attackPhase_ = Player::kNone;
 									ResetAttack();
 								}
@@ -353,14 +340,10 @@ void Player::InputAttack() {
 					}
 				}
 			}
-
 			break;
 		default:
 			break;
 	}
-
-
-
 }
 
 
