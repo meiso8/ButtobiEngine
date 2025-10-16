@@ -5,7 +5,7 @@
 /// @brief 剛体
 class RigidBody {
 public:
-	static inline const float miu = 0.1f; // 動摩擦係数
+	static inline const float miu = 0.0f; // 動摩擦係数
 
 	/// @brief コンストラクタ
 	RigidBody() = default;

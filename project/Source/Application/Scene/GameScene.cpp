@@ -217,10 +217,10 @@ void GameScene::CheckAllCollisions() {
 
         // AABB同士の交差判定
         if (IsCollision(aabb1, aabb2)) {
-            // 自キャラ衝突時コールバックを呼び出す
-            player_->OnCollision(enemy);
             // 敵弾の衝突時コールバックを呼び出す
             enemy->OnCollision(player_.get());
+            // 自キャラ衝突時コールバックを呼び出す
+            player_->OnCollision(enemy);
         }
     }
 
@@ -234,16 +234,7 @@ void GameScene::CheckAllCollisions() {
         for (auto& planeRenderer : planeRenderers_) {
             Plane& plane = planeRenderer->GetPlane();
             if (IsCollision(sphere, plane)) {
-                float e = 0.8f;                                                 // 反発係数
-                float distance = Distance(sphere, plane);                       // 球の中心から平面までの距離
-                float penetration = sphere.radius - distance;                   // 貫入量を球の半径に設定
-                RigidBody* rigidBody = enemy->GetRigidBody();                   // フルーツの剛体
-                Vector3 velocity = rigidBody->GetVelocity();                    // フルーツの速度
-                Vector3 reflected = Reflect(velocity, plane.normal);            // 反射ベクトルの計算
-                Vector3 projectNormal = Project(reflected, plane.normal);       // 法線方向の投影
-                Vector3 movingDirection = reflected - projectNormal;            // 移動方向の計算
-                rigidBody->SetVelocity(projectNormal * e + movingDirection);    // 衝突後のフルーツの速度を更新
-                enemy->AddTranslate(projectNormal * penetration);               // 貫入量分フルーツの位置を修正
+				enemy->OnCollision(plane);
             }
         }
     }
@@ -257,18 +248,7 @@ void GameScene::CheckAllCollisions() {
 		for (auto &obbRenderer : obbRenderers_) {
 			OBB &obb = obbRenderer->GetOBB();
 			if (IsCollision(obb, sphere)) {
-				float e = 0.8f;                                                 // 反発係数
-				float distance = Distance(sphere, obb);							// 球の中心から平面までの距離
-				float penetration = sphere.radius - distance;                   // 球の半径と距離の差分を貫入量に設定
-				RigidBody *rigidBody = enemy->GetRigidBody();                   // フルーツの剛体
-				Vector3 velocity = rigidBody->GetVelocity();                    // フルーツの速度
-				Vector3 closestPoint = ClosestPoint(sphere.center, obb);		// 球の中心から最も近い点を取得
-				Vector3 normal = Normalize(sphere.center - closestPoint);		// 法線ベクトルの計算
-				Vector3 reflected = Reflect(velocity, normal);					// 反射ベクトルの計算
-				Vector3 projectNormal = Project(reflected, normal);				// 法線方向の投影
-				Vector3 movingDirection = reflected - projectNormal;            // 移動方向の計算
-				rigidBody->SetVelocity(projectNormal * e + movingDirection);	// 衝突後のフルーツの速度を更新
-				enemy->AddTranslate(projectNormal * penetration);               // 貫入量分フルーツの位置を修正
+				enemy->OnCollision(obb);
 			}
 		}
 	}
