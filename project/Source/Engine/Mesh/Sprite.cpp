@@ -226,6 +226,6 @@ void Sprite::AdjustTextureSize()
 {
     const DirectX::TexMetadata& metadata = TextureManager::GetMetaData(textureIndex);
     textureSize.x = static_cast<float>(metadata.width);
-    textureSize.x = static_cast<float>(metadata.height);
+    textureSize.y = static_cast<float>(metadata.height);
     size_ = textureSize;
 }
