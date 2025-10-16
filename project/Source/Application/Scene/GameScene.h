@@ -10,7 +10,9 @@
 #include <vector>
 #include<list>
 
+class CollisionManager;
 class PlaneRenderer;
+class OBBRenderer;
 
 // ゲームシーン
 class GameScene:public SceneManager {
@@ -47,8 +49,13 @@ private:
 	std::unique_ptr<Player> player_ = nullptr;
 	// 敵キャラを複数用意
 	std::list<Enemy*> enemies_;
-	// 敵の発生させる数
-	static inline const int kEnemyMax = 3;
+
+	bool isWaitingToPop_ = false;
+	int32_t waitToPopTimer_ = 0;
+
+	// 衝突マネージャ
+	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
+
 	// 天球
 	std::unique_ptr <Skydome> skyDome_ = nullptr;
 	DeathParticles* deathParticles_ = nullptr;
@@ -60,10 +67,14 @@ private:
 	UIManager* uiManager_ = nullptr;
 
 	// 平面のデバッグ描画
-	std::array<std::unique_ptr<PlaneRenderer>, 6> planeRenderers_;
+	std::array<std::unique_ptr<PlaneRenderer>, 2> planeRenderers_;
+
+	// OBBのデバッグ描画
+	std::array<std::unique_ptr<OBBRenderer>, 4> obbRenderers_;
 
 	bool isGameOver = false;
 	bool isGameClear = false;
 
-
+	/// @brief 敵の出現
+	void PopEnemy();
 };

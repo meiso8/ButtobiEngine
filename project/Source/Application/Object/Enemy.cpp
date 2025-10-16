@@ -5,6 +5,7 @@
 #include "Player.h" // 追加
 #include "Model.h"
 #include "RigidBody.h"
+#include "CollisionConfig.h"
 #include <cmath>
 #include <numbers>
 #include <cassert>
@@ -21,7 +22,6 @@ Enemy::~Enemy() {
 }
 
 void Enemy::Initialize(Vector3 &position) {
-
 	model_ = new Model();
 	model_->Create(ModelManager::ENEMY);
 	color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -37,16 +37,21 @@ void Enemy::Initialize(Vector3 &position) {
 	rigidBody_ = std::make_unique<RigidBody>();
 
 	// AABB描画の生成
-	aabbRenderer_ = std::make_unique<AABBRenderer>();
-	aabbRenderer_->Initialize();
+	isExistAABB_ = false;
+	if (isExistAABB_) {
+		aabbRenderer_ = std::make_unique<AABBRenderer>();
+		aabbRenderer_->Initialize();
+	}
 
 	// 球描画の生成
-	sphereRenderer_ = std::make_unique<SphereRenderer>();
-	sphereRenderer_->Initialize();
+	isExistSphere_ = false;
+	if (isExistSphere_) {
+		sphereRenderer_ = std::make_unique<SphereRenderer>();
+		sphereRenderer_->Initialize();
+	}
 }
 
 void Enemy::Update() {
-
 	// 移動
 	/*worldTransform_.translate_ += velocity_;*/
 
@@ -64,30 +69,36 @@ void Enemy::Update() {
 
 	WorldTransformUpdate(worldTransform_);
 
-	aabbRenderer_->SetAABB(GetAABB());
-	aabbRenderer_->Update();
+	if (isExistAABB_) {
+		aabbRenderer_->SetAABB(GetAABB());
+		aabbRenderer_->Update();
+	}
 
-	sphereRenderer_->SetSphere(GetSphere());
-	sphereRenderer_->Update();
+	if (isExistSphere_) {
+		sphereRenderer_->SetSphere(GetSphere());
+		sphereRenderer_->Update();
+	}
 }
 
 void Enemy::Draw(Camera &camera) {
 	// 球の描画
-	sphereRenderer_->Draw(camera);
+	if (isExistSphere_) {
+		sphereRenderer_->Draw(camera);
+	}
 
 	// AABBの描画
-	aabbRenderer_->Draw(camera);
+	if (isExistAABB_) {
+		aabbRenderer_->Draw(camera);
+	}
 
 	// 3Dモデル描画前処理
 	model_->PreDraw(BlendMode::kBlendModeNormal);
 	model_->SetColor(color_);
 	// 3Dモデルを描画
 	model_->Draw(camera, worldTransform_.matWorld_, MaterialResource::LIGHTTYPE::HALF_L);
-
 }
 
 AABB Enemy::GetAABB() {
-
 	Vector3 worldPos = GetWorldPosition();
 
 	AABB aabb;
@@ -105,10 +116,9 @@ Sphere Enemy::GetSphere() {
 	return sphere;
 }
 
-Vector3 Enemy::GetWorldPosition() { return { worldTransform_.matWorld_.m[3][0],worldTransform_.matWorld_.m[3][1],worldTransform_.matWorld_.m[3][2] }; }
+Vector3 Enemy::GetWorldPosition() const { return { worldTransform_.matWorld_.m[3][0],worldTransform_.matWorld_.m[3][1],worldTransform_.matWorld_.m[3][2] }; }
 
 void Enemy::OnCollision(Player *player) {
-
 	if (player->IsAttack()) {
 		color_ = { 0.0f,0.0f,1.0f,1.0f };
 	}
@@ -119,12 +129,19 @@ void Enemy::OnCollision(Player *player) {
 
 }
 
+void Enemy::OnCollision() {
+	isDead_ = true;
+}
+
 #ifdef _DEBUG
 void Enemy::Edit(const std::string &label) {
 	if (ImGui::TreeNode(label.c_str())) {
 		ImGui::DragFloat3("translate", &worldTransform_.translate_.x, 0.01f, -std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
 		rigidBody_->Edit("RigidBody");
 		aabbRenderer_->Edit("AABB");
+		sphereRenderer_->Edit("Sphere");
+		ImGui::Checkbox("DrawAABB", &isExistAABB_);
+		ImGui::Checkbox("DrawSphere", &isExistSphere_);
 		ImGui::TreePop();
 	}
 }

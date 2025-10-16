@@ -157,6 +157,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\Physics\OBB.cpp" />
+    <ClCompile Include="Source\Application\System\CollisionManager.cpp" />
     <ClCompile Include="Source\Engine\Particle\Emitter.cpp" />
     <ClCompile Include="Source\Application\Physics\RigidBody.cpp" />
     <ClCompile Include="Source\Engine\Math\Perpendicular.cpp" />
@@ -270,6 +272,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\Physics\OBB.h" />
+    <ClInclude Include="Source\Application\System\Collider.h" />
+    <ClInclude Include="Source\Application\System\CollisionConfig.h" />
+    <ClInclude Include="Source\Application\System\CollisionManager.h" />
     <ClInclude Include="Source\Engine\Particle\Emitter.h" />
     <ClInclude Include="Source\Application\Physics\RigidBody.h" />
     <ClInclude Include="Source\Engine\Math\Perpendicular.h" />

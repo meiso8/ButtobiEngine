@@ -4,6 +4,7 @@
 #include"Line.h"
 #include"Triangle.h"
 #include"AABB.h"
+#include"OBB.h"
 
 /// @brief 反射ベクトルを求める関数
 /// @param input 入射ベクトル
@@ -17,11 +18,35 @@ Vector3 Reflect(const Vector3 &input, const Vector3 &normal);
 /// @return 正射影ベクトル
 Vector3 Project(const Vector3 &v1, const Vector3 &v2);
 
+/// @brief 点とAABBの最近接点を求める
+/// @param point 点
+/// @param aabb AABB
+/// @return 最近接点
+Vector3 ClosestPoint(const Vector3 &point, const AABB &aabb);
+
+/// @brief 点とOBBの最近接点を求める
+/// @param point 点
+/// @param obb OBB
+/// @return 最近接点
+Vector3 ClosestPoint(const Vector3 &point, const OBB &obb);
+
 /// @brief 球と平面の距離を求める
 /// @param sphere 球
 /// @param plane 平面
 /// @return 距離
 float Distance(const Sphere &sphere, const Plane &plane);
+
+/// @brief 球とAABBの距離を求める
+/// @param sphere 球
+/// @param aabb AABB
+/// @return 距離
+float Distance(const Sphere &sphere, const AABB &aabb);
+
+/// @brief 球とOBBの距離を求める
+/// @param sphere 球
+/// @param obb OBB
+/// @return 距離
+float Distance(const Sphere &sphere, const OBB &obb);
 
 /// @brief 球と球の衝突判定
 /// @param s1 球1
@@ -76,3 +101,9 @@ bool IsCollision(const AABB &aabb, const Sphere &sphere);
 /// @param segment 線分
 /// @return 当たったかどうか
 bool IsCollision(const AABB &aabb, const Segment &segment);
+
+/// @brief OBBと球の衝突判定
+/// @param obb OBB
+/// @param sphere 球
+/// @return 当たったかどうか
+bool IsCollision(const OBB &obb, const Sphere &sphere);
