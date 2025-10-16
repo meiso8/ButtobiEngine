@@ -228,7 +228,7 @@
     <ClCompile Include="Source\Engine\Math\SphericalCoordinate.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Sound\SoundManager.cpp">
+    <ClCompile Include="Source\Engine\Sound\Sound.cpp">
       <Filter>ソース ファイル\Engine\Sound</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Mesh\Sprite.cpp">
@@ -274,9 +274,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Surface\Texture.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Sound\Sound.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Mesh\ModelManager.cpp">
@@ -484,7 +481,7 @@
     <ClInclude Include="Source\Engine\DirectXCommon\VertexData.h">
       <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Sound\SoundManager.h">
+    <ClInclude Include="Source\Engine\Sound\Sound.h">
       <Filter>ヘッダー ファイル\Engine\Sound</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Math\Pendulum.h">
@@ -605,9 +602,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Surface\Texture.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Sound\Sound.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Mesh\ModelManager.h">
