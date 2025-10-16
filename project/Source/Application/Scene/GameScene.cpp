@@ -6,7 +6,8 @@
 
 #include "DebugUI.h"
 #include "DrawGrid.h"
-
+#include"SoundManager.h"
+#include"Sound.h"
 const int winWidth = 1280;
 const int winHeight = 720;
 
@@ -30,7 +31,7 @@ void GameScene::Initialize() {
     currentCamera_ = camera_.get();
 
     // 自キャラの生成
-    player_ = new Player();
+    player_ = std::make_unique<Player>();
     Vector3 playerPosition = { 0.0f, 1.0f, 0.0f };
     // 自キャラの初期化 //ここはmainCamera
     player_->Initialize(*camera_, playerPosition);
@@ -43,7 +44,7 @@ void GameScene::Initialize() {
         enemies_.push_back(newEnemy);
     }
 
-    skyDome_ = new Skydome();
+    skyDome_ = std::make_unique <Skydome>();
     // 天球の生成
     skyDome_->Initialize();
 
@@ -52,9 +53,9 @@ void GameScene::Initialize() {
     deathParticles_->Initialize(playerPosition);
 
     // カメラ操作の初期化
-    cameraController_ = new CameraController();
-    cameraController_->Initialize(currentCamera_);
-    cameraController_->SetTarget(player_);
+    cameraController_ = std::make_unique <CameraController>();
+    cameraController_->Initialize(camera_.get());
+    cameraController_->SetTarget(player_.get());
     cameraController_->Reset();
     cameraController_->SetMovableArea({ 0.0f, 100.0f, 0.0f, 100.0f });
 
@@ -63,7 +64,7 @@ void GameScene::Initialize() {
     uiManager_->Initialize();
 
     // 地形
-    stage_ = new Stage();
+    stage_ = std::make_unique <Stage>();
     stage_->Initialize();
 
     player_->InitializeLife(uiManager_->GetMaxLife());
@@ -89,6 +90,9 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
     // ここにインゲームの更新処理を書く
+     //BGMを鳴らす
+    Sound::PlayBGM(Sound::BGM1,-0.5f);
+  
 #ifdef _DEBUG
     currentCamera_->EditTransform("CurrentCamera");
     uint32_t planeCount = 0;
@@ -133,10 +137,7 @@ void GameScene::Update() {
     skyDome_->Update();
 
     // カメラの処理
-    if (isDebugCameraActive_) {
-        //camera_->viewMat_ = debugCamera_->viewMat_;
-        //camera_->projectionMat_ = debugCamera_->projectionMat_;
-    } else {
+    if (!isDebugCameraActive_) {
         // 行列更新
         cameraController_->Update();
     }
@@ -165,7 +166,7 @@ void GameScene::CheckAllCollisions() {
             // 自キャラ衝突時コールバックを呼び出す
             player_->OnCollision(enemy);
             // 敵弾の衝突時コールバックを呼び出す
-            enemy->OnCollision(player_);
+            enemy->OnCollision(player_.get());
         }
     }
 
@@ -247,9 +248,7 @@ void GameScene::Debug() {
 ;
 
 GameScene::~GameScene() {
-    delete player_;
-    delete skyDome_;
-    delete cameraController_;
+
     // パーティクルモデルの解放
 
     // パーティクルの解放
@@ -266,7 +265,7 @@ GameScene::~GameScene() {
     enemies_.clear();
 }
 
-bool GameScene::GetIsEndScene() { return isEndScene_;}
+bool GameScene::GetIsEndScene() { return isEndScene_; }
 
 bool GameScene::GetIsGameOver() { return isGameOver; }
 bool GameScene::GetIsGameClear() { return isGameClear; }

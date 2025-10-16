@@ -21,6 +21,8 @@ void BezierMesh::Create(const Vector3& p0, const Vector3& p1, const Vector3& p2,
 
     lineMesh_.resize(divisionNum);
 
+    uint32_t handle = Texture::GetHandle(Texture::WHITE_1X1);
+
     for (uint32_t i = 0; i < divisionNum; i++) {
         float t0 = i / static_cast<float>(divisionNum);
         float t1 = (i + 1) / static_cast<float>(divisionNum);
@@ -28,7 +30,7 @@ void BezierMesh::Create(const Vector3& p0, const Vector3& p1, const Vector3& p2,
         //t0とt1と制御点を使ってベジェ曲線上の点を求める
         Vector3 bezier0 = Bezier(p0, p1, p2, t0);
         Vector3 bezier1 = Bezier(p0, p1, p2, t1);
-        lineMesh_[i].Create(Texture::handle_[Texture::WHITE_1X1]);
+        lineMesh_[i].Create(handle);
         lineMesh_[i].SetVertexData(bezier0, bezier1);
     }
 

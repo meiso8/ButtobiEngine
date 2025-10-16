@@ -93,8 +93,8 @@ void ParticleMesh::CreateTransformationMatrix()
     instancingSrvDesc.Buffer.NumElements = kNumMaxInstance;
     instancingSrvDesc.Buffer.StructureByteStride = sizeof(ParticleForGPU);
 
-    instancingSrvHandleCPU = DirectXCommon::GetSRVCPUDescriptorHandle((UINT)Texture::handle_.size() + 1);//この書き方はダメですね
-    instancingSrvHandleGPU = DirectXCommon::GetSRVGPUDescriptorHandle((UINT)Texture::handle_.size() + 1);
+    instancingSrvHandleCPU = DirectXCommon::GetSRVCPUDescriptorHandle((UINT)Texture::GetVectorHandles().size() + 1);//この書き方はダメですね
+    instancingSrvHandleGPU = DirectXCommon::GetSRVGPUDescriptorHandle((UINT)Texture::GetVectorHandles().size() + 1);
     DirectXCommon::GetDevice()->CreateShaderResourceView(instancingResource.Get(), &instancingSrvDesc, instancingSrvHandleCPU);
 }
 

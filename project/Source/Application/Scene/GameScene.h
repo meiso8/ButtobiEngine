@@ -42,20 +42,19 @@ public:
 
 private:
 	// カメラ操作
-	CameraController* cameraController_ = nullptr;
-
+	std::unique_ptr <CameraController> cameraController_ = nullptr;
 	// 自キャラ
-	Player* player_ = nullptr;
+	std::unique_ptr<Player> player_ = nullptr;
 	// 敵キャラを複数用意
 	std::list<Enemy*> enemies_;
 	// 敵の発生させる数
 	static inline const int kEnemyMax = 3;
 	// 天球
-	Skydome* skyDome_ = nullptr;
+	std::unique_ptr <Skydome> skyDome_ = nullptr;
 	DeathParticles* deathParticles_ = nullptr;
 
 	// 地形
-	Stage* stage_ = nullptr;
+	std::unique_ptr <Stage> stage_ = nullptr;
 
 	// UIマネージャー
 	UIManager* uiManager_ = nullptr;

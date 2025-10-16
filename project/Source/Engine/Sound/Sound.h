@@ -1,5 +1,6 @@
 #pragma once
 #include<vector>
+#include<assert.h>
 
 class Sound {
 public:
@@ -11,14 +12,11 @@ public:
        SOUNDS
     };
     static void LoadAllSound();
-    static uint32_t GetHandle(uint32_t tag) {
-        if (tag > SOUNDS) {
-            return 0;
-        }
-        return soundHandle_
-            [tag];
-    };
+    static void PlayBGM(const uint32_t handle, const float& volumeOffset = 0.0f);
+    static void PlaySE(const uint32_t handle, const float& volumeOffset = 0.0f);
+    static float bgmVolume_;
+    static float seVolume_;
 private:
-    static std::vector<uint32_t>soundHandle_;
+    static std::vector<uint32_t>handle_;
 };
 

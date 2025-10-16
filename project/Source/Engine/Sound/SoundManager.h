@@ -9,8 +9,8 @@
 #include <string>
 
 struct SoundData {
-    std::wstring filePath;
-    WAVEFORMATEX* pWaveFormat;
+    std::string filePath;
+    WAVEFORMATEX pWaveFormat;
     std::vector<BYTE> mediaData;
 };
 
@@ -25,23 +25,23 @@ struct SoundData {
 class SoundManager {
 public:
 
-    static void LoadSoundData(const std::wstring& path);
-    static uint32_t Load(const std::wstring& path);
-    static uint32_t GetSoundByIndex(const std::wstring& filePath);
+    static void LoadFile(const std::string& path);
+    static uint32_t Load(const std::string& path);
+    static uint32_t GetSoundByIndex(const std::string& filePath);
     static void Initialize();
     static void Finalize();
 
-    static void Play(const uint32_t tag, const float& volume, bool isLoop = false);
+    static void Play(const uint32_t& tag, const float& volume, bool isLoop = false);
     /// @brief 音声データの解放関数  
     /// @param soundData 音声データ  
-    static void Unload(SoundData* soundData);
+    static void Unload(SoundData& soundData);
     static void Stop();
     static void Pause();  // 一時停止
     static void Resume(); // 再開
 
     static bool IsActuallyPlaying();
     static bool IsPlaying();
- 
+
 private:
     SoundManager() = default;
     ~SoundManager() = default;

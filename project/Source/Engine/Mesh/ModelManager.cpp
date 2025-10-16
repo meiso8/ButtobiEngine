@@ -13,8 +13,6 @@
 std::vector<ModelData> ModelManager::modelDatas_;
 std::vector<uint32_t> ModelManager::handle_;
 
-
-
 ModelData& ModelManager::GetModelData(const uint32_t& handle)
 {
     assert(handle < modelDatas_.size());
@@ -57,7 +55,7 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
     auto it = std::find_if(
         modelDatas_.begin(),
         modelDatas_.end(),
-        [&](ModelData& soundData) {return soundData.filePath == filename; }
+        [&](ModelData& modelData) {return modelData.filePath == filename; }
     );
 
     //テクスチャ枚数上限チェック
@@ -126,9 +124,9 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
     }
 
     //モデルのテクスチャを読む
-    Texture::handle_.push_back(TextureManager::Load(modelData.material.textureFilePath));
-    modelData.textureHandle = UINT(Texture::handle_.size() - 1);
-    assert(modelData.textureHandle < Texture::handle_.size());
+    Texture::GetVectorHandles().push_back(TextureManager::Load(modelData.material.textureFilePath));
+    modelData.textureHandle = UINT(Texture::GetVectorHandles().size() - 1);
+    assert(modelData.textureHandle < Texture::GetVectorHandles().size());
 
 }
 
