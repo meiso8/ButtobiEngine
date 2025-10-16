@@ -177,7 +177,7 @@ void DebugUI::CheckParticle(ParticleMesh& particle, const char* label)
 
     CheckTransform(emitter.transform, "EmitterTransform");
 
-    ImGui::SliderFloat("frequency", &emitter.frequency, 0.0f, 10.0f);
+    ImGui::SliderFloat("frequency", &emitter.frequency, 0.1f, 10.0f);
     ImGui::Text("frequencyTime : %f", emitter.frequencyTime);
 
     if (ImGui::Button("Add　Particle")) {

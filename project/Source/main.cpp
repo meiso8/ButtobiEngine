@@ -60,7 +60,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     scenes.push_back(std::make_unique<SampleScene>());
 
     //シーンのインデックス
-    int sceneIndex = kTitleScene;
+    int sceneIndex = kGameScene;
 #ifdef _DEBUG
     //シーンのインデックス
     sceneIndex = kGameScene;

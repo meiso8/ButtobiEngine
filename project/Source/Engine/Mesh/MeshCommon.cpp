@@ -52,6 +52,9 @@ void MeshCommon::CreateWaveData()
     waveData_[1].time = 0.0f;
     waveData_[1].amplitude = 0.0f;
     waveData_[1].frequency = 4;
+
+    waveResource_->Unmap(0, nullptr);
+
 }
 
 void MeshCommon::CreateBalloonData()
@@ -65,5 +68,5 @@ void MeshCommon::CreateBalloonData()
     balloonData_->sphere = 0.0f;
     balloonData_->cube = 0.0f;
     balloonData_->isSphere = false;
-
+    expansionResource_->Unmap(0, nullptr);
 }

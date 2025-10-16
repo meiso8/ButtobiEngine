@@ -19,13 +19,14 @@ GameScene::GameScene() = default;
 void GameScene::Initialize() {
     // メンバ変数への代入処理
 
-    DrawGrid::Initialize();
-
     // カメラの初期化
     camera_ = std::make_unique<Camera>();
     camera_->Initialize(winWidth, winHeight, Camera::PERSPECTIVE);
 
 #ifdef _DEBUG
+
+    DrawGrid::Initialize();
+
     // デバッグカメラの生成
     debugCamera_ = std::make_unique<DebugCamera>();
     debugCamera_->Initialize(winWidth, winHeight);

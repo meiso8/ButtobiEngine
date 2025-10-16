@@ -166,7 +166,6 @@ void SphereMesh::CreateVertex() {
 
     //緯度の方向に分割　-pi/2 ~ pi/2
 
-
-
+    vertexResource_->Unmap(0, nullptr);
 }
 

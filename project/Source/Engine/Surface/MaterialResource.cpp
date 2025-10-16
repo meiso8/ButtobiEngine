@@ -13,6 +13,8 @@ void MaterialResource::CreateMaterial(const Vector4& color, uint32_t lightType) 
     material_->color = color;
     SetLightType(lightType);
     material_->uvTransform = MakeIdentity4x4();
+
+    materialResource_->Unmap(0, nullptr);
 };
 
 void MaterialResource::SetColor(const Vector4& color) {

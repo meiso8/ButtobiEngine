@@ -38,7 +38,7 @@ void Model::CreateVertex() {
     //頂点リソースにデータを書き込む
     vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));//書き込むためのアドレスを取得
     std::memcpy(vertexData_, modelData_->vertices.data(), sizeof(VertexData) * modelData_->vertices.size());//頂点データをリソースにコピー
-
+    vertexResource_->Unmap(0, nullptr);
 
 };
 

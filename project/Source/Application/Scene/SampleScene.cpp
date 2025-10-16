@@ -14,7 +14,9 @@ void SampleScene::Initialize() {
 
     isEndScene_ = false;
 
+#ifdef _DEBUG
     DrawGrid::Initialize();
+#endif // _DEBUG
 
     lightType_ = MaterialResource::LIGHTTYPE::NONE;
     blendMode_ = BlendMode::kBlendModeNormal;
@@ -27,13 +29,7 @@ void SampleScene::Initialize() {
 
     debugCamera_ = std::make_unique<DebugCamera>();
     debugCamera_->Initialize(static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()));
-
-    currentCamera_ = camera_.get();
-#ifdef _DEBUG
     currentCamera_ = debugCamera_.get();
-#endif // _DEBUG
-
-
 
 #pragma endregion
 
@@ -85,8 +81,6 @@ void SampleScene::Initialize() {
 void SampleScene::Update()
 {
 
-#ifdef _DEBUG
-
     Sound::PlayBGM(Sound::BGM1,-0.25f);
 
     if (Input::IsTriggerMouse(0)) {
@@ -97,11 +91,8 @@ void SampleScene::Update()
         Sound::PlaySE(Sound::SE2, 0.0f);
     }
 
-
     worldTransformChild_.parent_ = &worldTransformParent_;
     WorldTransformUpdate(worldTransformChild_);
-
-
 
     currentCamera_->UpdateMatrix();
 
@@ -111,7 +102,6 @@ void SampleScene::Update()
 
     samplePlayer_->Update();
 
-
     WorldTransformUpdate(worldTransformParent_);
 
     WorldTransformUpdate(worldTransformChild_);
@@ -119,7 +109,6 @@ void SampleScene::Update()
 
     particle_.Update();
 
-#endif
 }
 
 void SampleScene::Draw()
