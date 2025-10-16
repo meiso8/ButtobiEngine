@@ -41,6 +41,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         kSampleScene,
     };
 
+    const char* sceneName[] = {
+       "TitleScene",
+       "GameScene",
+       "GameClearScene",
+       "GameOverScene",
+       "SampleScene"
+    };
+
     std::vector<std::unique_ptr<SceneManager>> scenes;
     // タイトルシーンの生成
     scenes.push_back(std::make_unique<TitleScene>());
@@ -55,15 +63,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
     //現在のシーン
     SceneManager* currentScene = nullptr;
-
-     // 現在のシーンに代入
-	currentScene = scenes[kTitleScene].get();
-
-   #ifdef _DEBUG
-	// 現在のシーンに代入
-	currentScene = scenes[kGameScene].get();
-#endif // DEBUG
-
+    // 現在のシーンに代入
+    currentScene = scenes[kTitleScene].get();
     //現在のシーンの初期化
     currentScene->Initialize();
 
@@ -90,22 +91,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #endif // _DEBUG
 
         if (scenes[kTitleScene]->GetIsEndScene() || scenes[kGameScene]->GetIsEndScene()) {
-          
+
             GameScene* gameScene = dynamic_cast<GameScene*>(scenes[kGameScene].get());
 
             if (scenes[kTitleScene]->GetIsEndScene()) {
-			    // 現在のシーンに代入
-			    currentScene = scenes[kGameScene].get();
+                // 現在のシーンに代入
+                currentScene = scenes[kGameScene].get();
             } else if (gameScene->GetIsGameClear()) {
-				currentScene = scenes[kGameClearScene].get();
+                currentScene = scenes[kGameClearScene].get();
             } else if (gameScene->GetIsGameOver()) {
-				currentScene = scenes[kGameOverScene].get();
+                currentScene = scenes[kGameOverScene].get();
             } else if (scenes[kGameClearScene]->GetIsEndScene() || scenes[kGameOverScene]->GetIsEndScene()) {
-				currentScene = scenes[kTitleScene].get();
+                currentScene = scenes[kTitleScene].get();
             }
 
-			// 現在のシーンの初期化
-			currentScene->Initialize();
+            // 現在のシーンの初期化
+            currentScene->Initialize();
         }
 
 
@@ -116,10 +117,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         //デバック用
 
         DebugUI::CheckColor(screenColor, "screenColor");
-        ImGui::Text("sceneIndex : %d", sceneIndex);
+        ImGui::Text("%s", sceneName[sceneIndex]);
         DebugUI::CheckFPS();
         currentScene->Debug();
-   
+
 #endif // _DEBUG
 
         //シーンの更新処理
