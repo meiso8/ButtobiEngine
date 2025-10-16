@@ -12,6 +12,8 @@
 
 void SampleScene::Initialize() {
 
+    isEndScene_ = false;
+
     DrawGrid::Initialize();
 
     lightType_ = MaterialResource::LIGHTTYPE::NONE;
@@ -27,6 +29,11 @@ void SampleScene::Initialize() {
     debugCamera_->Initialize(static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()));
 
     currentCamera_ = camera_.get();
+#ifdef _DEBUG
+    currentCamera_ = debugCamera_.get();
+#endif // _DEBUG
+
+
 
 #pragma endregion
 
@@ -89,7 +96,7 @@ void SampleScene::Update()
     currentCamera_->UpdateMatrix();
 
     for (Sprite* sprite : sprites_) {
-        sprite->UpdateUV();
+        sprite->Update();
     }
 
     samplePlayer_->Update();
@@ -137,7 +144,7 @@ void SampleScene::Draw()
 
 void SampleScene::Debug()
 {
-    DebugUI::CheckFPS();
+
     std::function<void()> func = [this]() { SwitchCamera(); };
     DebugUI::Button("ChangeCamera", func);
     DebugUI::CheckCamera(*currentCamera_);
@@ -162,6 +169,11 @@ void SampleScene::Debug()
 
     ImGui::End();
  
+}
+
+bool SampleScene::GetIsEndScene()
+{
+    return isEndScene_;
 }
 
 SampleScene::~SampleScene()

@@ -109,18 +109,22 @@ void DebugUI::CheckSprite(Sprite& sprite, const char* label) {
     ImGui::Begin("Sprite");
 
     if (ImGui::TreeNode("transform2D")) {
-        ImGui::SliderFloat3("scale", &sprite.GetScaleRef().x, 0.0f, 10.0f);
-        ImGui::SliderFloat("rotation", &sprite.GetRotateRef(), 0.0f, std::numbers::pi_v<float>*2.0f);
-        ImGui::SliderFloat2("pos", &sprite.GetPositionRef().x, -1280.0f, 1280.0f);
+        ImGui::SliderFloat2("pos", &sprite.GetPosition().x, -1280.0f, 1280.0f);
+        ImGui::SliderFloat("rotation", &sprite.GetRotate(), 0.0f, std::numbers::pi_v<float>*2.0f);
+        ImGui::SliderFloat2("size", &sprite.GetSize().x, -1280.0f, 1280.0f);
         ImGui::TreePop();
     }
 
     CheckTransforms(sprite.GetUVScale(), sprite.GetUVRotate(), sprite.GetUVTranslate(), "uvTransform");
 
+    ImGui::SliderFloat2("anchorPoint", &sprite.GetAnchorPoint().x, 0.0f, 1.0f);
+    SwitchFlag(sprite.GetIsFlipX(), "isFlipX");
+    SwitchFlag(sprite.GetIsFlipY(), "isFlipY");
+    ImGui::SliderFloat2("textureLeftTop", &sprite.GetTextureLeftTop().x, 0.0f, 1280.0f);
+    ImGui::SliderFloat2("textureSize", &sprite.GetTextureSize().x, 0.0f, 1280.0f);
 
     ImGui::End();
 }
-
 
 void DebugUI::ShowMatrix4x4(const Matrix4x4& matrix, const char* label) {
     if (ImGui::BeginTable(label, 4, ImGuiTableFlags_Borders)) {
@@ -179,6 +183,8 @@ void DebugUI::CheckParticle(ParticleMesh& particle, const char* label)
     if (ImGui::Button("Add　Particle")) {
         particle.particles.splice(particle.particles.end(), Emit(emitter));
     }
+
+
 
     int index = 0;
     for (std::list<Particle>::iterator itr = particle.particles.begin(); itr != particle.particles.end(); ++itr) {

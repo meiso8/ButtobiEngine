@@ -1,7 +1,13 @@
 #include "GameOverScene.h"
 
 void GameOverScene::Initialize() {
-	isEndGameOver_ = false; }
-void GameOverScene::Update() { isEndGameOver_ = true; }
+    isEndScene_ = false;
+}
+void GameOverScene::Update() { isEndScene_ = true; }
 void GameOverScene::Draw() {}
-bool GameOverScene::GetIsEndGameOver() { return isEndGameOver_; }
+bool GameOverScene::GetIsEndScene()
+{
+    return isEndScene_;
+}
+
+

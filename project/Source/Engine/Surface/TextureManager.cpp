@@ -11,7 +11,7 @@ std::vector<TextureManager::TextureData> TextureManager::textureDatas;
 void TextureManager::Finalize()
 {
     //for (int i = 0; i < textureDatas.size(); ++i) {
-    //    Unload(&soundDatas[i]);
+    //    Unload(&textureDatas[i]);
     //}
 }
 
@@ -119,4 +119,13 @@ D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSrvHandleGPU(uint32_t textureInde
     TextureData& textureData = textureDatas[textureIndex];
 
     return textureData.srvHandleGPU;
+}
+
+const DirectX::TexMetadata& TextureManager::GetMetaData(uint32_t textureIndex)
+{
+    //テクスチャ番号が正常範囲内にある
+    assert(textureIndex + kSRVIndexTop < DirectXCommon::kMaxSRVCount);
+    //テクスチャデータの参照を取得
+    TextureData& textureData = textureDatas[textureIndex];
+    return textureData.metadata;
 }
