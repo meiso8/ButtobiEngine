@@ -108,10 +108,6 @@ void DirectXCommon::PostDraw()
 
 #endif // _DEBUG
 
-
-    //UINT backBufferIndex = swapChainClass.GetSwapChain()->GetCurrentBackBufferIndex();
-    //barrier.SettingBarrier(swapChainResources[backBufferIndex], commandList->GetComandList());
-
     //画面に書く処理は終わり、画面に移すので、状態を遷移
     barrier.Transition();
 
@@ -121,7 +117,7 @@ void DirectXCommon::PostDraw()
     //4.コマンドリストの内容を確定させる。全てのコマンドを詰んでから　Closesすること。
     HRESULT hr = commandList->GetCommandList()->Close();
     assert(SUCCEEDED(hr));
-    LogFile::Log("CloseCommandList");
+  /*  LogFile::Log("CloseCommandList");*/
 
     //5.GPUにコマンドリストの実行を行わせる
     ID3D12CommandList* commandLists[] = { commandList->GetCommandList().Get() };

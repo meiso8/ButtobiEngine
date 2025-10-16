@@ -27,6 +27,8 @@ void ParticleMesh::Initialize(uint32_t textureHandle)
     vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData) * modelData_.vertices.size());
     vertexBufferView_.StrideInBytes = sizeof(VertexData);
 
+    vertexBufferResource_->Unmap(0, nullptr);
+
     emitter_.cont = 3;
     emitter_.frequency = 0.5f;
     emitter_.frequencyTime = 0.0f;
@@ -83,6 +85,8 @@ void ParticleMesh::CreateTransformationMatrix()
         instancingData[index].World = MakeIdentity4x4();
         instancingData[index].color = Vector4{ 1.0f,1.0f,1.0f,1.0f };
     }
+    instancingResource->Unmap(0, nullptr);
+
 
     D3D12_SHADER_RESOURCE_VIEW_DESC instancingSrvDesc{};
     instancingSrvDesc.Format = DXGI_FORMAT_UNKNOWN;
@@ -133,12 +137,13 @@ void ParticleMesh::Draw(Camera& camera, uint32_t blendMode)
             }
 
             Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
-
+      /*      instancingResource->Map(0, nullptr, reinterpret_cast<void**>(&instancingData));*/
             instancingData[numInstance].WVP = worldViewProjectionMatrix;
             instancingData[numInstance].World = worldMatrix;
             instancingData[numInstance].color = (*particleIterator).color;
             float alpha = 1.0f - ((*particleIterator).currentTime / (*particleIterator).lifeTime);
             instancingData[numInstance].color.w = alpha;
+       /*     instancingResource->Unmap(0, nullptr);*/
 
             ++numInstance;
         }
