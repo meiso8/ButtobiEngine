@@ -27,6 +27,7 @@ public:
 
 	// 描画
 	void Draw()override;
+	bool GetIsEndScene()override;
 
 	bool GetIsGameOver();
 	bool GetIsGameClear();

@@ -36,6 +36,7 @@ public:
     static uint32_t GetTextureIndexByFilePath(const std::string& filePath);
     //テクスチャ番号からGPUハンドルを取得
     static D3D12_GPU_DESCRIPTOR_HANDLE GetSrvHandleGPU(uint32_t textureIndex);
+    static const DirectX::TexMetadata& GetMetaData(uint32_t textureIndex);
 private:
     static std::vector<TextureData> textureDatas;
 private:
