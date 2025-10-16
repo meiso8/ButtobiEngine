@@ -90,7 +90,7 @@ void SampleScene::Update()
     Sound::PlayBGM(Sound::BGM1,-0.25f);
 
     if (Input::IsTriggerMouse(0)) {
-        Sound::PlaySE(Sound::SE1,0.0f);
+        Sound::PlaySE(Sound::PICO,0.0f);
     }
 
     if (Input::IsTriggerMouse(1)) {

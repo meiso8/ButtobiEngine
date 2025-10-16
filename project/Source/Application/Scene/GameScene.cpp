@@ -9,8 +9,8 @@
 
 #include "DebugUI.h"
 #include "DrawGrid.h"
-#include"SoundManager.h"
 #include"Sound.h"
+
 const int winWidth = 1280;
 const int winHeight = 720;
 
@@ -109,7 +109,7 @@ void GameScene::Initialize() {
 void GameScene::Update() {
     // ここにインゲームの更新処理を書く
      //BGMを鳴らす
-    Sound::PlayBGM(Sound::BGM1,-0.5f);
+    Sound::PlayBGM(Sound::BGM1);
   
 #ifdef _DEBUG
 	ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
@@ -304,7 +304,11 @@ void GameScene::PopEnemy() {
 void GameScene::Draw() {
 
 
+#ifdef _DEBUG
     DrawGrid::Draw(*currentCamera_);
+#endif // _DEBUG
+
+
     // 天球の描画
     skyDome_->Draw(*currentCamera_);
 

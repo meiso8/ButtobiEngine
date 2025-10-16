@@ -65,7 +65,7 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     //スプライト用カメラ
     SpriteCamera::Initialize(static_cast<float>(wc->GetClientWidth()), static_cast<float>(wc->GetClientHeight()));
     //サウンド管理
-    SoundManager::Initialize();
+    Sound::Initialize();
     //テクスチャ管理
     TextureManager::Initialize();
 
@@ -98,7 +98,7 @@ void MyEngine::PostCommandSet() {
 void MyEngine::Finalize() {
 
     TextureManager::Finalize();
-    SoundManager::Finalize();
+    Sound::Finalize();
     directXCommon->EndFrame();
     wc->Finalize();
     //delete instance_;
