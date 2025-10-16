@@ -11,7 +11,7 @@
 
 
 void PlaneRenderer::Initialize() {
-	uint32_t textureHandle = Texture::handle_[Texture::WHITE_1X1];
+	uint32_t textureHandle = Texture::GetHandle(Texture::WHITE_1X1);
 	for(auto &line : lines_){
 		line = std::make_unique<LineMesh>();
 		line->Create(textureHandle);

@@ -31,8 +31,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // シーンの生成
     // =============================================
 
-    int sceneIndex = 0;
-
     enum Scene {
         kTitleScene,
         kGameScene,
@@ -61,10 +59,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     //サンプルシーンの生成
     scenes.push_back(std::make_unique<SampleScene>());
 
+    //シーンのインデックス
+    int sceneIndex = kTitleScene;
+#ifdef _DEBUG
+    //シーンのインデックス
+    sceneIndex = kGameScene;
+#endif // _DEBUG
+
     //現在のシーン
     SceneManager* currentScene = nullptr;
     // 現在のシーンに代入
-    currentScene = scenes[kTitleScene].get();
+    currentScene = scenes[sceneIndex].get();
     //現在のシーンの初期化
     currentScene->Initialize();
 

@@ -11,6 +11,7 @@ protected:
     std::unique_ptr<DebugCamera> debugCamera_ = nullptr;
     Camera* currentCamera_ = nullptr;
     bool isEndScene_ = false;
+
 public:
     SceneManager() = default;
     ~SceneManager() = default;

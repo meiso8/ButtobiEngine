@@ -373,4 +373,5 @@ Input::~Input() {
     mouse_->Release();
     mouse_ = nullptr;
 
+    //delete instance_;
 }
