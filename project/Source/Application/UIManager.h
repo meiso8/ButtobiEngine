@@ -109,6 +109,7 @@ public:
     void Update();
     // 描画	
     void Draw();
+    void Debug();
 
     //フルーツのスピードを取得する
     void SetFruitSpeed(const float& speedA, const float& speedB);

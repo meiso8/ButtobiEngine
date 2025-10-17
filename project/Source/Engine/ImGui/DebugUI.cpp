@@ -108,20 +108,33 @@ void DebugUI::CheckInput(Input& input) {
 void DebugUI::CheckSprite(Sprite& sprite, const char* label) {
     ImGui::Begin("Sprite");
 
-    if (ImGui::TreeNode("transform2D")) {
-        ImGui::SliderFloat2("pos", &sprite.GetPosition().x, -1280.0f, 1280.0f);
-        ImGui::SliderFloat("rotation", &sprite.GetRotate(), 0.0f, std::numbers::pi_v<float>*2.0f);
-        ImGui::SliderFloat2("size", &sprite.GetSize().x, -1280.0f, 1280.0f);
+    if (ImGui::TreeNode(label)) {
+
+        if (ImGui::TreeNode("transform2D")) {
+            ImGui::SliderFloat2("pos", &sprite.GetPosition().x, -1280.0f, 1280.0f);
+            ImGui::SliderFloat("rotation", &sprite.GetRotate(), 0.0f, std::numbers::pi_v<float>*2.0f);
+            ImGui::SliderFloat2("size", &sprite.GetSize().x, -1280.0f, 1280.0f);
+            ImGui::TreePop();
+        }
+
+        CheckTransforms(sprite.GetUVScale(), sprite.GetUVRotate(), sprite.GetUVTranslate(), "uvTransform");
+
+        if (ImGui::TreeNode("anchorPointTextureSize")) {
+
+            ImGui::SliderFloat2("anchorPoint", &sprite.GetAnchorPoint().x, 0.0f, 1.0f);
+            ImGui::Checkbox("isFlipX",&sprite.GetIsFlipX());
+            ImGui::Checkbox("isFlipY", &sprite.GetIsFlipY());
+            ImGui::SliderFloat2("textureLeftTop", &sprite.GetTextureLeftTop().x, 0.0f, 1280.0f);
+            ImGui::SliderFloat2("textureSize", &sprite.GetTextureSize().x, 0.0f, 1280.0f);
+            ImGui::TreePop();
+        }
+
+        CheckColor(sprite.GetColor(),"color");
+
         ImGui::TreePop();
     }
 
-    CheckTransforms(sprite.GetUVScale(), sprite.GetUVRotate(), sprite.GetUVTranslate(), "uvTransform");
 
-    ImGui::SliderFloat2("anchorPoint", &sprite.GetAnchorPoint().x, 0.0f, 1.0f);
-    SwitchFlag(sprite.GetIsFlipX(), "isFlipX");
-    SwitchFlag(sprite.GetIsFlipY(), "isFlipY");
-    ImGui::SliderFloat2("textureLeftTop", &sprite.GetTextureLeftTop().x, 0.0f, 1280.0f);
-    ImGui::SliderFloat2("textureSize", &sprite.GetTextureSize().x, 0.0f, 1280.0f);
 
     ImGui::End();
 }

@@ -2,6 +2,8 @@
 #include"Texture.h"
 #include"Sprite.h"
 
+#include"DebugUI.h"
+
 UIManager::UIManager()
 {
     LifeTextureHandle_ = Texture::GetHandle(Texture::LIFE);
@@ -75,6 +77,24 @@ void UIManager::Draw() {
     WASDSprite->Draw();
     SpaceSprite->Draw();
     TimerSprite->Draw();
+
+}
+
+void UIManager::Debug()
+{
+   
+    DebugUI::CheckSprite(*JuiceSprite, "JuiceSprite");
+    DebugUI::CheckSprite(*scoreSprite, "scoreSprite");
+    DebugUI::CheckSprite(*comboSprite, "comboSprite");
+    DebugUI::CheckSprite(*speedBonusSprite, "speedBonusSprite");
+    DebugUI::CheckSprite(*WASDSprite, "WASDSprite");
+    DebugUI::CheckSprite(*SpaceSprite, "SpaceSprite");
+    DebugUI::CheckSprite(*TimerSprite, "TimerSprite");
+ 
+    for (int i = 0; i < Life_; i++) {
+        DebugUI::CheckSprite(lifeSprites[i], "lifeSprites");
+    }
+
 
 }
 

@@ -34,24 +34,54 @@ PixelShaderOutput main(VertexShaderOutput input)
         discard;
     }
     
-    output.color = gMaterial.color * textureColor; //ベクトル*ベクトルと記述すると乗算が行われる
-    float3 targetTint = float3(0.85, 0.9, 1.0); // 赤と緑を少し抑えて青みを足す
-    output.color.rgb *= targetTint;
     
-    float3 color = output.color.rgb;
-    //// トーン調整スケール
-    //float3 toneScale = float3(0.95f, 0.98f, 0.98f);
+    float3 color = { 60.0f / 255.0f, 40.0f / 255.0f, 40.0f / 255.0f };
+    
+    if (textureColor.r > 0.5f){
+        textureColor.r = 1.0f - 2.0f * (1.0f - textureColor.r) * (1.0f - color.r);
+    } else {
+        textureColor.r = 2.0f * textureColor.r * color.r;
+    }
+    
+    if (textureColor.g > 0.5f)
+    {
+        textureColor.g = 1.0f - 2.0f * (1.0f - textureColor.g) * (1.0f - color.g);
+    }
+    else
+    {
+        textureColor.g = 2.0f * textureColor.g * color.g;
+    }
+    if (textureColor.b > 0.5f)
+    {
+        textureColor.b = 1.0f - 2.0f * (1.0f - textureColor.b) * (1 - color.b);
+    }
+    else
+    {
+        textureColor.b = 2.0f * textureColor.b * color.b;
+    }
+    
+    
+    output.color = gMaterial.color * textureColor; //ベクトル*ベクトルと記述すると乗算が行われる
+    //float3 targetTint = float3(0.65, 0.9, 1.0); // 赤と緑を少し抑えて青みを足す
+    //output.color.rgb *= targetTint;
+    
+    //float3 color = output.color.rgb;
+    ////// トーン調整スケール
+    ////float3 toneScale = float3(0.95f, 0.98f, 0.98f);
 
-    //// 色補正
-    //color *= toneScale;
+    ////// 色補正
+    ////color *= toneScale;
 
-    // 彩度調整（オプション）
-    float gray = dot(color, float3(0.299f, 0.587f, 0.114f));
-    float saturation = 1.0f; // 少し鮮やかに
-    color = lerp(float3(gray, gray, gray), color, saturation);
+    //// 彩度調整（オプション）
+    //float gray = dot(color, float3(0.299f, 0.587f, 0.114f));
+    //float saturation = 1.5f; // 少し鮮やかに
+    //color = lerp(float3(gray, gray, gray), color, saturation);
 
     //// 最終色
     //output.color.rgb = saturate(color);
       
+    
+
+
     return output;
 }

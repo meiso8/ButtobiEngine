@@ -341,12 +341,13 @@ void GameScene::Draw() {
 }
 void GameScene::Debug() {
     player_->Debug();
-
+    uiManager_->Debug();
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
     std::function<void()> func = [this]() { SwitchCamera(); };
     DebugUI::Button("ChangeCamera", func);
     uint32_t lightType = 0;
     DebugUI::CheckDirectionalLight(lightType);
+
 }
 ;
 
