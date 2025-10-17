@@ -24,7 +24,7 @@ Enemy::~Enemy() {
 
 void Enemy::Initialize(Vector3 &position) {
 	model_ = new Model();
-	model_->Create(ModelManager::ENEMY);
+	model_->Create(ModelManager::FRUIT_APPLE);
 	color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 	worldTransform_.Initialize();
 	worldTransform_.translate_ = position; // 初期位置をオリジンにしておく

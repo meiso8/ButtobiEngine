@@ -353,10 +353,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="resources\shader\Object3d.PS.hlsl">
+    <FxCompile Include="Resources\shader\Object3d.PS.hlsl">
       <Filter>リソース ファイル\shader</Filter>
     </FxCompile>
-    <FxCompile Include="resources\shader\Object3d.VS.hlsl">
+    <FxCompile Include="Resources\shader\Object3d.VS.hlsl">
       <Filter>リソース ファイル\shader</Filter>
     </FxCompile>
   </ItemGroup>
@@ -714,7 +714,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="resources\particle.png">
+    <Image Include="Resources\particle.png">
       <Filter>リソース ファイル</Filter>
     </Image>
   </ItemGroup>

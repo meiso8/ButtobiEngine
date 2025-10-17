@@ -303,7 +303,7 @@ void Player::InputAttack() {
 			if (!Input::IsPushKey(DIK_SPACE)) {
 				attackPhase_ = Player::kFire;
 				Sound::Stop(Sound::CHARGE);
-				Sound::PlaySE(Sound::PICO, 0.0f);
+				Sound::PlaySE(Sound::CRACKER, 0.0f);
 				isAttack_ = true;
 			}
 			chargeTimer_++;

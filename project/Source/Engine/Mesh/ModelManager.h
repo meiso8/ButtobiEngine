@@ -15,7 +15,7 @@ public:
         LEFTLEG,
         RIGHTLEG,
   
-        ENEMY,
+        FRUIT_APPLE,
         WORLD,
         PARTICLE,
 
