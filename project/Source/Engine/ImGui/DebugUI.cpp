@@ -32,9 +32,9 @@ void DebugUI::CheckCamera(Camera& camera) {
             camera.InitializeTransform();
         }
         if (ImGui::TreeNode("ShericalCoordinate")) {
-            ImGui::SliderFloat("polar", &camera.shericalCoordinate_.polar, -10.0f, 10.0f);
-            ImGui::SliderFloat("azimuthal", &camera.shericalCoordinate_.azimuthal, -10.0f, 10.0f);
-            ImGui::SliderFloat("radius", &camera.shericalCoordinate_.radius, -100.0f, 100.0f);
+            ImGui::SliderFloat("polar", &camera.sphericalCoordinate_.polar, -10.0f, 10.0f);
+            ImGui::SliderFloat("azimuthal", &camera.sphericalCoordinate_.azimuthal, -10.0f, 10.0f);
+            ImGui::SliderFloat("radius", &camera.sphericalCoordinate_.radius, -100.0f, 100.0f);
             ImGui::TreePop();
         }
 

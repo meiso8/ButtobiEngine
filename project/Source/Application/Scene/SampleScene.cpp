@@ -10,30 +10,16 @@
 #include"SphereMesh.h"
 #include <functional>
 
-void SampleScene::Initialize() {
-
-    isEndScene_ = false;
-
+SampleScene::SampleScene()
+{
+    camera_ = std::make_unique<Camera>();
 #ifdef _DEBUG
     DrawGrid::Initialize();
-#endif // _DEBUG
-
-    lightType_ = MaterialResource::LIGHTTYPE::NONE;
-    blendMode_ = BlendMode::kBlendModeNormal;
-
-#pragma region//Camera
-
-    camera_ = std::make_unique<Camera>();
-    camera_->Initialize(static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()), Camera::PERSPECTIVE);
-    cameraTransform_ = { { 1.0f, 1.0f, 1.0f }, { 0.0f,0.0f,0.0f }, { 0.0f,0.0f,-10.0f } };
 
     debugCamera_ = std::make_unique<DebugCamera>();
-    debugCamera_->Initialize(static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()));
-    currentCamera_ = debugCamera_.get();
+#endif // _DEBUG
 
-#pragma endregion
-
-    uint32_t playerTextureHandle = Texture::GetHandle(Texture::PLAYER) ;
+    uint32_t playerTextureHandle = Texture::GetHandle(Texture::PLAYER);
     uint32_t uvCheckerTextureHandle = Texture::GetHandle(Texture::UV_CHECKER);
     uint32_t white1x1TextureHandle = Texture::GetHandle(Texture::WHITE_1X1);
     uint32_t particleTextureHandle = Texture::GetHandle(Texture::PARTICLE);
@@ -48,33 +34,52 @@ void SampleScene::Initialize() {
         sprites_.push_back(sprite);
     }
 
+
     samplePlayer_ = std::make_unique<SamplePlayer>();
-    samplePlayer_->Init();
 
     cube_.resize(2);
     cube_[0].Create(white1x1TextureHandle);
     cube_[1].Create(white1x1TextureHandle);
 
+    sphereMesh_ = std::make_unique<SphereMesh>();
+    sphereMesh_->Create(particleTextureHandle);
+
+    quad_.Create(uvCheckerTextureHandle);
+}
+
+void SampleScene::Initialize() {
+
+    isEndScene_ = false;
+
+    lightType_ = MaterialResource::LIGHTTYPE::NONE;
+    blendMode_ = BlendMode::kBlendModeNormal;
+
+    camera_->Initialize(static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()), Camera::PERSPECTIVE);
+    cameraTransform_ = { { 1.0f, 1.0f, 1.0f }, { 0.0f,0.0f,0.0f }, { 0.0f,0.0f,-10.0f } };
+    camera_->SetTransform(cameraTransform_);
+
+    currentCamera_ = camera_.get();
+
+#ifdef _DEBUG
+    debugCamera_->Initialize(static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()));
+    currentCamera_ = debugCamera_.get();
+#endif // _DEBUG
+
+    samplePlayer_->Init();
+
     worldTransformParent_.Initialize();
     WorldTransformUpdate(worldTransformParent_);
 
-
     worldTransformChild_.Initialize();
     worldTransformChild_.parent_ = &worldTransformParent_;
-
     worldTransformChild_.translate_ = { 0.0f,0.0f,1.0f };
     worldTransformChild_.scale_ = { 1.0f,1.0f,1.0f };
     worldTransformChild_.rotate_.y = (std::numbers::pi_v<float> / 4.0f);
     WorldTransformUpdate(worldTransformChild_);
 
-    particle_.Initialize(particleTextureHandle);
-    sphereMesh_ = std::make_unique<SphereMesh>();
-    sphereMesh_->Create(uvCheckerTextureHandle);
+    particle_.Initialize(Texture::GetHandle(Texture::PARTICLE));
+
     sphereMesh_->SetVertex({ 4.0f });
-
-    quad_.Create(uvCheckerTextureHandle);
-
-
 
 }
 
@@ -117,18 +122,16 @@ void SampleScene::Draw()
     DrawGrid::Draw(*currentCamera_);
 #endif // _DEBUG
 
-    //cube_[0].PreDraw(kBlendModeNormal);
-    //cube_[0].Draw(*currentCamera_, worldTransformParent_.matWorld_, lightType_);
+    cube_[0].PreDraw(kBlendModeNormal);
+    cube_[0].Draw(*currentCamera_, worldTransformParent_.matWorld_, lightType_);
+
     quad_.PreDraw();
     quad_.Draw(*currentCamera_, MakeIdentity4x4());
 
+    sphereMesh_->PreDraw(kBlendModeNormal);
+    sphereMesh_->Draw(*currentCamera_, worldTransformChild_.matWorld_, lightType_);
 
-
-
-    //sphereMesh_->PreDraw(kBlendModeNormal);
-    //sphereMesh_->Draw(*currentCamera_, worldTransformChild_.matWorld_, lightType_);
-
-    MyEngine::SetBlendMode(blendMode_,kCullModeBack);
+    MyEngine::SetBlendMode(blendMode_, kCullModeBack);
     samplePlayer_->Draw(*currentCamera_, lightType_);
     MyEngine::SetBlendMode();
 

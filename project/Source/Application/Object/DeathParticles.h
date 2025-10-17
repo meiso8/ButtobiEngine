@@ -15,6 +15,7 @@ public:
 	void Initialize(const Vector3& position);
 	void Update();
 	void Draw(Camera& camera);
+	DeathParticles();
 	~DeathParticles();
 private:
 	// モデル

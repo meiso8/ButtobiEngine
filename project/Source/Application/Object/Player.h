@@ -53,6 +53,7 @@ public:
 	};
 
 public:
+	Player();
 	~Player();
 	/// @brief 初期化
 	/// @param model モデル

@@ -21,17 +21,22 @@ void Camera::Initialize(const float& width, const float& height, const PROJECTIO
     offset_ = { 0.0f };
     InitializeTransform();
     UpdateProjectionMatrix();
+
+    sphericalCoordinate_.radius = 0.0f;
+    sphericalCoordinate_.azimuthal = 0.0f;
+    sphericalCoordinate_.polar = 0.0f;
+
 }
 
 #ifdef _DEBUG
-void Camera::EditTransform(const std::string &label) {
+void Camera::EditTransform(const std::string& label) {
     if (ImGui::TreeNode(label.c_str())) {
         ImGui::DragFloat3("scale", &scale_.x, 0.01f, -std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
         ImGui::SliderAngle("rotateX", &rotate_.x);
         ImGui::SliderAngle("rotateY", &rotate_.y);
         ImGui::SliderAngle("rotateZ", &rotate_.z);
         ImGui::DragFloat3("translate", &translate_.x, 0.01f, -std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
-		ImGui::TreePop();
+        ImGui::TreePop();
     }
 }
 #endif // _DEBUG

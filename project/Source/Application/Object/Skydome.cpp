@@ -1,18 +1,20 @@
 #include "Skydome.h"
 #include"Model.h"
 
-void Skydome::Initialize() {
-
+Skydome::Skydome()
+{
 	// 引数として受け取ったデータをメンバ変数に記録する
 	model_ = new Model();
 	model_->Create(ModelManager::WORLD);
+}
 
+void Skydome::Initialize() {
 	// ワールド変換の初期化
 	worldTransform_.Initialize();
 }
 
 void Skydome::Update() {
-
+	
 	WorldTransformUpdate(worldTransform_);
 
 }

@@ -16,6 +16,8 @@ class Camera;
 /// @brief 平面のデバッグ描画
 class PlaneRenderer {
 public:
+	/// @brief コンストラクタを追加しました・yoshida
+	PlaneRenderer();
 	/// @brief 初期化
 	void Initialize();
 	

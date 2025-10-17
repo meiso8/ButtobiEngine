@@ -6,54 +6,59 @@
 #include"ModelManager.h"
 #include"Lerp.h"
 
+TitleScene::TitleScene()
+{
+    camera_ = std::make_unique<Camera>();
+
+    for (uint32_t i = 0; i < 8; i++) {
+        titleStringModel[i] = new Model();
+        ModelManager::MODEL_HANDLE handle = static_cast<ModelManager::MODEL_HANDLE>(ModelManager::TITLE_BU + i);
+        titleStringModel[i]->Create(handle);
+    }
+
+    juiceCupModel = new Model();
+    juiceCupModel->Create(ModelManager::JUICE_CUP);
+
+    tableModel = new Model();
+    tableModel->Create(ModelManager::TABLE);
+
+    appleModel = new Model();
+    appleModel->Create(ModelManager::FRUIT_APPLE);
+}
+
 void TitleScene::Initialize() {
 
     isEndScene_ = false;
 
-    camera_ = std::make_unique<Camera>();
     camera_->Initialize(1280.0f, 720.0f);
     camera_->translate_ = cameraPositionStart;
     camera_->UpdateMatrix();
 
     for (uint32_t i = 0; i < 8; i++) {
+    //ぶっ飛びミックスのぶの文字から始める
 
-        titleStringModel[i] = new Model();
-        //ぶっ飛びミックスのぶの文字から始める
-        ModelManager::MODEL_HANDLE handle = static_cast<ModelManager::MODEL_HANDLE>(ModelManager::TITLE_BU + i);
-        titleStringModel[i]->Create(handle);
         titleStringWorldTransform[i].Initialize();
         titleStringWorldTransform[i].scale_ = { 1.0f, 1.0f, 1.0f };
         titleStringWorldTransform[i].translate_ = stringInStartPosition[i];
         WorldTransformUpdate(titleStringWorldTransform[i]);
     }
 
-    juiceCupModel = new Model();
-    juiceCupModel->Create(ModelManager::JUICE_CUP);
 
     juiceCupWorldTransform.Initialize();
     juiceCupWorldTransform.scale_ = { 2.5f, 2.5f, 2.5f };
     juiceCupWorldTransform.rotate_ = { 0, 0, 0 };
     juiceCupWorldTransform.translate_ = { 0, -1.8f, 0 };
-
     WorldTransformUpdate(juiceCupWorldTransform);
 
-    tableModel = new Model();
-    tableModel->Create(ModelManager::TABLE);
     tableWorldTransform.Initialize();
     tableWorldTransform.scale_ = { 100.0f, 1.0f, 100.0f };
     tableWorldTransform.translate_ = { 0, -5.0f, 0 };
     WorldTransformUpdate(tableWorldTransform);
     
-
-    appleModel = new Model();
-    appleModel->Create(ModelManager::FRUIT_APPLE);
     appleWorldTransform.Initialize();
     //appleWorldTransform.scale_ = { 100.0f, 1.0f, 100.0f };
     //appleWorldTransform.translate_ = { 0, -5.0f, 0 };
     WorldTransformUpdate(appleWorldTransform);
-
-
-
 
     jInOutPhase_ = JuiceInOutPhase::InJuice;
     IsAnimationEnd = false;
@@ -238,6 +243,8 @@ void TitleScene::Move() {
 
 
 }
+
+
 
 TitleScene::~TitleScene()
 {

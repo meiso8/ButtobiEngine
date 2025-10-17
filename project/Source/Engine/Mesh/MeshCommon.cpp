@@ -7,13 +7,36 @@ ID3D12GraphicsCommandList* MeshCommon::commandList_ = nullptr;
 
 void MeshCommon::PreDraw(const BlendMode& blendMode) {
     commandList_->SetGraphicsRootSignature(modelConfig_->rootSignature->GetRootSignature(0));
-    commandList_->SetPipelineState(PSO::GetGraphicsPipelineState(blendMode,kCullModeBack).Get());//PSOを設定
+    commandList_->SetPipelineState(PSO::GetGraphicsPipelineState(blendMode, kCullModeBack).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void MeshCommon::SetColor(const Vector4& color) {
     materialResource_.SetColor(color);
+}
+
+void MeshCommon::InitWaveData()
+{
+    waveData_[0].direction = { 1.0f,0.0f,0.0f };
+    waveData_[0].time = 0.0f;
+    waveData_[0].amplitude = 0.0f;
+    waveData_[0].frequency = 4;
+
+    waveData_[1].direction = { 1.0f,0.0f,0.0f };
+    waveData_[1].time = 0.0f;
+    waveData_[1].amplitude = 0.0f;
+    waveData_[1].frequency = 4;
+
+}
+
+void MeshCommon::InitBalloonData()
+{
+    //データを書き込む
+    balloonData_->expansion = 0.0f;
+    balloonData_->sphere = 0.0f;
+    balloonData_->cube = 0.0f;
+    balloonData_->isSphere = false;
 }
 
 void MeshCommon::CreateIndexResource()
@@ -46,15 +69,7 @@ void MeshCommon::CreateWaveData()
     //書き込むためのアドレスを取得
     waveResource_->Map(0, nullptr, reinterpret_cast<void**>(&waveData_));
 
-    waveData_[0].direction = { 1.0f,0.0f,0.0f };
-    waveData_[0].time = 0.0f;
-    waveData_[0].amplitude = 0.0f;
-    waveData_[0].frequency = 4;
-
-    waveData_[1].direction = { 1.0f,0.0f,0.0f };
-    waveData_[1].time = 0.0f;
-    waveData_[1].amplitude = 0.0f;
-    waveData_[1].frequency = 4;
+    InitWaveData();
 
     waveResource_->Unmap(0, nullptr);
 
@@ -66,10 +81,7 @@ void MeshCommon::CreateBalloonData()
 
     //書き込むためのアドレスを取得
     expansionResource_->Map(0, nullptr, reinterpret_cast<void**>(&balloonData_));
-    //データを書き込む
-    balloonData_->expansion = 0.0f;
-    balloonData_->sphere = 0.0f;
-    balloonData_->cube = 0.0f;
-    balloonData_->isSphere = false;
+    //データを初期化する
+    InitBalloonData();
     expansionResource_->Unmap(0, nullptr);
 }

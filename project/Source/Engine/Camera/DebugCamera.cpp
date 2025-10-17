@@ -21,12 +21,16 @@ void DebugCamera::Initialize(const float& width, const float& height, const PROJ
     scale_ = { 1.0f,1.0f,1.0f };
     rotate_ = { 0.0f,0.0f,0.0f };
     translate_ = { 0.0f,0.0f,-30.0f };
-    shericalCoordinate_.radius = -30.0f;
     worldMat_ = MakeIdentity4x4();
+
     viewMat_ = Inverse(MakeAffineMatrix(scale_, rotate_, translate_));
     projectionMat_ = MakePerspectiveFovMatrix(0.45f, width_ / height_, nearZ_, farZ_);
 
     matRot_ = MakeIdentity4x4();
+
+    sphericalCoordinate_.radius = -30.0f;
+    sphericalCoordinate_.azimuthal = 0.0f;
+    sphericalCoordinate_.polar = 0.0f;
 }
 
 void DebugCamera::UpdateMatrix() {
@@ -147,7 +151,7 @@ void DebugCamera::MouseInputMove() {
     }
 
     //マウススクロールする //初期位置-30
-    shericalCoordinate_.radius += Input::GetMouseWheel();
+    sphericalCoordinate_.radius += Input::GetMouseWheel();
 
     if (!Input::IsPressMouse(2)) {
         Input::isDragging_ = false;
@@ -155,12 +159,12 @@ void DebugCamera::MouseInputMove() {
 
     if (Input::isDragging_) {
         Vector2 currentPos = Input::GetMousePos();
-        shericalCoordinate_.polar += currentPos.x / FPS;
-        shericalCoordinate_.azimuthal += currentPos.y / FPS;
-        rotate_.y = shericalCoordinate_.polar;
-        rotate_.z = shericalCoordinate_.azimuthal;
+        sphericalCoordinate_.polar += currentPos.x / FPS;
+        sphericalCoordinate_.azimuthal += currentPos.y / FPS;
+        rotate_.y = sphericalCoordinate_.polar;
+        rotate_.z = sphericalCoordinate_.azimuthal;
     }
 
-    translate_ = TransformCoordinate(shericalCoordinate_);
+    translate_ = TransformCoordinate(sphericalCoordinate_);
 
 }
