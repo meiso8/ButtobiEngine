@@ -107,9 +107,9 @@ class TitleScene :public SceneManager {
     };
     Vector3 titleStringSize = { 1,1,1 };
 
-    Vector3 cameraPositionStart = { 0, 0, -30 };
+    Vector3 cameraPositionStart = { 0, 0, -15.0f };
 
-    Vector3 cameraPositionEnd = { -15.0f, 0, -30 };
+    Vector3 cameraPositionEnd = { -15.0f, 0, -15.0f };
 
     Model* titleStringModel[8] = { nullptr };
     WorldTransform titleStringWorldTransform[8];
