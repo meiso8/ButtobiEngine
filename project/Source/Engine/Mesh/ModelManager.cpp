@@ -10,6 +10,7 @@
 #include"DirectXCommon.h"
 #include"Texture.h"
 #include"TextureManager.h"
+
 std::vector<ModelData> ModelManager::modelDatas_;
 std::vector<uint32_t> ModelManager::handle_;
 
@@ -37,6 +38,20 @@ void ModelManager::LoadAllModel()
     handle_[PARTICLE] = Load("resources/particle", "particle.obj");
 
     handle_[STAGE] = Load("resources/stage", "stage.obj");
+
+    std::string titleString = "titleString";
+    std::string titleStrings[8] = { "bu", "tt", "to", "bi", "mi", "kk", "ku", "su" };
+    std::string objString = ".obj";
+
+    for (int i = 0; i < 8; i++) {
+        std::string modelname = titleString + titleStrings[i] + objString;
+        handle_[TITLE_BU+i] = Load("resources", modelname);
+    }
+
+    handle_[JUICE_CUP] = Load("resources", "juiceCup.obj");
+    handle_[TABLE] = Load("resources", "juiceCup.obj");
+    handle_[FRUIT_APPLE] = Load("resources/fruit","fruit.obj");
+
 
 }
 
