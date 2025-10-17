@@ -19,9 +19,6 @@ void Sprite::Create(uint32_t textureHandle, const Vector2& position, const Vecto
     CreateVertex();
     CreateTransformationMatrix();
     CreateUVTransformationMatrix();
-    CreateWaveData();
-    CreateBalloonData();
-
     AdjustTextureSize();
 
     size_ = size;
@@ -72,7 +69,7 @@ void Sprite::SetColor(const Vector4& color) {
 
 void Sprite::PreDraw(uint32_t blendMode) {
     SpriteCommon::PreDraw(commandList);
-    commandList->SetPipelineState(MyEngine::GetPSO()->GetGraphicsPipelineState(blendMode, kCullModeNone).Get());//PSOを設定
+    commandList->SetPipelineState(MyEngine::GetPSO()->GetGraphicsPipelineStateSprite(blendMode).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
@@ -98,14 +95,6 @@ void Sprite::Draw(uint32_t lightType
     commandList->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
     commandList->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureIndex));
-
-
-    SpriteCommon::LightDraw(commandList);
-
-    //Wave timeのSRVの場所を設定
-    commandList->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
-    //expansionのCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
 
     SpriteCommon::DrawCall(commandList);
 
@@ -187,42 +176,6 @@ void Sprite::CreateMaterial(const Vector4& color) {
     //マテリアルリソースを作成 //ライトなし
     materialResource_.CreateMaterial(color, MaterialResource::LIGHTTYPE::NONE);
 
-}
-
-void Sprite::CreateWaveData()
-{
-    int waveCount = 2;
-    waveResource_ = DirectXCommon::CreateBufferResource(sizeof(Wave) * waveCount);
-
-    //書き込むためのアドレスを取得
-    waveResource_->Map(0, nullptr, reinterpret_cast<void**>(&waveData));
-
-    waveData[0].direction = { 1.0f,0.0f,0.0f };
-    waveData[0].time = 0.0f;
-    waveData[0].amplitude = 0.0f;
-    waveData[0].frequency = 4;
-
-    waveData[1].direction = { 1.0f,0.0f,0.0f };
-    waveData[1].time = 0.0f;
-    waveData[1].amplitude = 0.0f;
-    waveData[1].frequency = 4;
-
-    waveResource_->Unmap(0, nullptr);
-}
-
-void Sprite::CreateBalloonData()
-{
-    expansionResource_ = DirectXCommon::CreateBufferResource(sizeof(Balloon));
-
-    //書き込むためのアドレスを取得
-    expansionResource_->Map(0, nullptr, reinterpret_cast<void**>(&expansionData_));
-    //データを書き込む
-    expansionData_->expansion = 0.0f;
-    expansionData_->sphere = 0.0f;
-    expansionData_->cube = 0.0f;
-    expansionData_->isSphere = false;
-
-    expansionResource_->Unmap(0, nullptr);
 }
 
 void Sprite::UpdateUV() {

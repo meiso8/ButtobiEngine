@@ -359,8 +359,6 @@
     <FxCompile Include="Resources\shader\Object3d.VS.hlsl">
       <Filter>リソース ファイル\shader</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shader\SpriteVS.hlsl" />
-    <FxCompile Include="Resources\shader\SpritePS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -717,7 +715,6 @@
     <None Include="externals\assimp\lib\Debug\assimp-vc143-mtd.pdb">
       <Filter>externals\assimp</Filter>
     </None>
-    <None Include="Resources\shader\Sprite.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\particle.png">

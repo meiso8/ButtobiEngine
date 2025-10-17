@@ -5,4 +5,8 @@ struct VertexShaderOutput
     float32_t3 normal : NORMAL0;
 };
 
-
+struct TransformationMatrix
+{
+    float32_t4x4 WVP;
+    float32_t4x4 World;
+};

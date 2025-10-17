@@ -69,22 +69,6 @@ PixelShaderOutput main(VertexShaderOutput input)
     }
     
 
-    float3 color = output.color.rgb;
-
-// トーン調整スケール
-    float3 toneScale = float3(0.74f, 0.80f, 0.84f);
-
-// 色補正
-    color *= toneScale;
-
-// 彩度調整（オプション）
-    float gray = dot(color, float3(0.299f, 0.587f, 0.114f));
-    float saturation = 1.2f; // 少し鮮やかに
-    color = lerp(float3(gray, gray, gray), color, saturation);
-
-// 最終色
-    output.color.rgb = saturate(color);
-
     //output.colorのαの値が0の時にPixelを棄却
     if (output.color.a == 0.0)
     {

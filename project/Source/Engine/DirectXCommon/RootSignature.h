@@ -8,14 +8,21 @@
 class RootSignature
 {
 public:
+
+    enum TYPE {
+        NORMAL,
+        PARTICLE,
+        SPRITE,
+        TYPES
+    };
+
    void Create();
    ID3D12RootSignature* GetRootSignature(uint32_t index) {
        assert(index < rootSignatures_.size());
        return
-         
        rootSignatures_[index].Get(); };
 
 private:
-    std::array<Microsoft::WRL::ComPtr <ID3D12RootSignature>,3> rootSignatures_ = {nullptr};
+    std::array<Microsoft::WRL::ComPtr <ID3D12RootSignature>, TYPES> rootSignatures_ = {nullptr};
 };
 

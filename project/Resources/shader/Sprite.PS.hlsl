@@ -1,4 +1,4 @@
-#include "Particle.hlsli"
+#include "Sprite.hlsli"
 
 //テクスチャを貼り付けたり、ライティングを行ったりと、もっとも主要なShaderである
 struct Material
@@ -21,30 +21,37 @@ struct PixelShaderOutput
     float32_t4 color : SV_TARGET0;
 };
 
-
-float3 ApplySRGBGamma(float3 linearColor)
-{
-    return linearColor < 0.0031308 ? 12.92 * linearColor : 1.055 * pow(linearColor, 1.0 / 2.4) - 0.055;
-}
-
-
 PixelShaderOutput main(VertexShaderOutput input)
 {
- 
     PixelShaderOutput output;
     
     float4 transformedUV = mul(float32_t4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
     float32_t4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
-    output.color = gMaterial.color * textureColor * input.color; //ベクトル*ベクトルと記述すると乗算が行われる
     
-    //色を調整する
-    output.color.rgb = ApplySRGBGamma(output.color.rgb);
-    
-    //textureのα値ガ0.0以下の時にpixleを棄却
+     //textureのα値ガ0.0以下の時にpixleを棄却
     if (textureColor.a == 0.0)
     {
         discard;
     }
     
+    output.color = gMaterial.color * textureColor; //ベクトル*ベクトルと記述すると乗算が行われる
+    float3 targetTint = float3(0.85, 0.9, 1.0); // 赤と緑を少し抑えて青みを足す
+    output.color.rgb *= targetTint;
+    
+    float3 color = output.color.rgb;
+    //// トーン調整スケール
+    //float3 toneScale = float3(0.95f, 0.98f, 0.98f);
+
+    //// 色補正
+    //color *= toneScale;
+
+    // 彩度調整（オプション）
+    float gray = dot(color, float3(0.299f, 0.587f, 0.114f));
+    float saturation = 1.0f; // 少し鮮やかに
+    color = lerp(float3(gray, gray, gray), color, saturation);
+
+    //// 最終色
+    //output.color.rgb = saturate(color);
+      
     return output;
 }
