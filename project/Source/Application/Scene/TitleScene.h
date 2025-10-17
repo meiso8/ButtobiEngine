@@ -133,6 +133,7 @@ class TitleScene :public SceneManager {
 
     JuiceInOutPhase jInOutPhase_;
 public:
+    TitleScene();
     ~TitleScene();
     void Initialize()override;
     void Update()override;

@@ -17,6 +17,23 @@
 #include"CoordinateTransform.h"
 #include"Sound.h"
 
+Player::Player()
+{
+	for (size_t i = 0; i < model_.size(); ++i) {
+		model_[i] = new Model();
+	}
+
+	model_[Parts::kHead]->Create(ModelManager::HEAD);
+	model_[Parts::kBody]->Create(ModelManager::BODY);
+	model_[Parts::kLeftArm]->Create(ModelManager::LEFTARM);
+	model_[Parts::kRightArm]->Create(ModelManager::RIGHTARM);
+	model_[Parts::kLeftLeg]->Create(ModelManager::LEFTLEG);
+	model_[Parts::kRightLeg]->Create(ModelManager::RIGHTLEG);
+
+	aabbRenderer_ = std::make_unique<AABBRenderer>();
+
+}
+
 Player::~Player() {
 	for (size_t i = 0; i < model_.size(); ++i) {
 		delete model_[i];
@@ -29,16 +46,8 @@ void Player::Initialize(Camera &camera, const Vector3 &position) {
 
 	camera_ = &camera;
 
-	for (size_t i = 0; i < model_.size(); ++i) {
-		model_[i] = new Model();
-	}
-
-	model_[Parts::kHead]->Create(ModelManager::HEAD);
-	model_[Parts::kBody]->Create(ModelManager::BODY);
-	model_[Parts::kLeftArm]->Create(ModelManager::LEFTARM);
-	model_[Parts::kRightArm]->Create(ModelManager::RIGHTARM);
-	model_[Parts::kLeftLeg]->Create(ModelManager::LEFTLEG);
-	model_[Parts::kRightLeg]->Create(ModelManager::RIGHTLEG);
+	//アタックフェーズの初期化
+	attackPhase_ = AttackPhase::kNone;
 
 	// ワールド変換の初期化
 	worldTransform_.Initialize();
@@ -181,7 +190,7 @@ void Player::Initialize(Camera &camera, const Vector3 &position) {
 
 	objectColor_ = { 1.0f,1.0f,1.0f,1.0f };
 
-	aabbRenderer_ = std::make_unique<AABBRenderer>();
+
 	aabbRenderer_->Initialize();
 }
 

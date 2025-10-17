@@ -12,6 +12,7 @@ class Sprite;
 class SampleScene :public  SceneManager
 {
 public:
+    SampleScene();
     void Initialize()override;
     void Update()override;
     void Draw()override;

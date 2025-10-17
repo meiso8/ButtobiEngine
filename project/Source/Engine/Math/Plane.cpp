@@ -10,12 +10,17 @@
 #endif // _DEBUG
 
 
-void PlaneRenderer::Initialize() {
+PlaneRenderer::PlaneRenderer()
+{
 	uint32_t textureHandle = Texture::GetHandle(Texture::WHITE_1X1);
-	for(auto &line : lines_){
+	for (auto& line : lines_) {
 		line = std::make_unique<LineMesh>();
 		line->Create(textureHandle);
 	}
+
+}
+
+void PlaneRenderer::Initialize() {
 
 	Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	for (auto &line : lines_) {

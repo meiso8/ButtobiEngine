@@ -102,7 +102,7 @@ private:
 
 
 public:
-
+    UIManager();
     //初期化
     void Initialize();
     // 更新

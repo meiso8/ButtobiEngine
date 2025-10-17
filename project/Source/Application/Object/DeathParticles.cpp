@@ -9,11 +9,13 @@
 #include"Camera/Camera.h"
 #include"Model.h"
 
-void DeathParticles::Initialize(const Vector3& position) {
-
-    // 引数として受け取ったデータをメンバ変数に記録する
+DeathParticles::DeathParticles()
+{
     model_ = new Model();
     model_->Create(ModelManager::PARTICLE);;
+}
+
+void DeathParticles::Initialize(const Vector3& position) {
 
     // ワールド変換の初期化
     for (auto& worldTransform : worldTransforms_) {
@@ -84,6 +86,7 @@ void DeathParticles::Draw(Camera& camera) {
     }
 
 }
+
 DeathParticles::~DeathParticles()
 {
    delete model_;

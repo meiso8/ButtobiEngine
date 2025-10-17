@@ -28,6 +28,9 @@ public:
         return *balloonData_;
     }
     Wave& GetWaveData(size_t index) { return waveData_[index]; };
+
+    void InitWaveData();
+    void InitBalloonData();
 protected:
     uint32_t textureHandle_ = 0;
     MaterialResource materialResource_{};

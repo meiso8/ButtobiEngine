@@ -2,8 +2,8 @@
 #include"Texture.h"
 #include"Sprite.h"
 
-void UIManager::Initialize() {
-
+UIManager::UIManager()
+{
     LifeTextureHandle_ = Texture::GetHandle(Texture::LIFE);
     scoreTextureHandle_ = Texture::GetHandle(Texture::SCORE);
     comboTextureHandle_ = Texture::GetHandle(Texture::COMBO);
@@ -12,29 +12,32 @@ void UIManager::Initialize() {
     SpaceTextureHandle_ = Texture::GetHandle(Texture::SPACE);
     TimerTextureHandle_ = Texture::GetHandle(Texture::TIMER);
     JuiceTextureHandle_ = Texture::GetHandle(Texture::JUICE);
-	NumbersTextureHandle_ = Texture::GetHandle(Texture::NUMBERS);
+    NumbersTextureHandle_ = Texture::GetHandle(Texture::NUMBERS);
 
+    scoreSprite = std::make_unique<Sprite>();
+    scoreSprite->Create(scoreTextureHandle_, ScorePosition_, ScoreSize_, { 1, 1, 1, 1 });
+    comboSprite = std::make_unique<Sprite>();
+    comboSprite->Create(comboTextureHandle_, ComboPosition_, ComboSize_, { 1, 1, 1, 1 });
+    speedBonusSprite = std::make_unique<Sprite>();
+    speedBonusSprite->Create(speedBonusTextureHandle_, speedBonusPosition_, SpeedBonusSize_, { 1, 1, 1, 1 });
+    WASDSprite = std::make_unique<Sprite>();
+    WASDSprite->Create(WASDTextureHandle_, WASDPosition_, WASDSize_, { 1, 1, 1, 1 });
+    SpaceSprite = std::make_unique<Sprite>();
+    SpaceSprite->Create(SpaceTextureHandle_, SpacePosition_, SpaceSize_, { 1, 1, 1, 1 });
+    TimerSprite = std::make_unique<Sprite>();
+    TimerSprite->Create(TimerTextureHandle_, TimerPosition_, TimerSize_, { 1, 1, 1, 1 });
+    JuiceSprite = std::make_unique<Sprite>();
+    JuiceSprite->Create(JuiceTextureHandle_, JuicePosition_, JuiceSize_, { 1, 1, 1, 1 });
+    numbersSprite = std::make_unique<Sprite>();
+    numbersSprite->Create(NumbersTextureHandle_, { 0, 0 }, { 256, 32 }, { 1, 1, 1, 1 });
 
     for (int i = 0; i < MaxLife_; i++) {
         lifeSprites[i].Create(LifeTextureHandle_, LifeFirstPosition_, LifeSize_, { 1.0f, 1.0f, 1.0f, 1.0f });
     }
 
-    scoreSprite = std::make_unique<Sprite>();
-    scoreSprite->Create(scoreTextureHandle_, ScorePosition_, ScoreSize_, { 1, 1, 1, 1 });
-    comboSprite = std::make_unique<Sprite>();
-    comboSprite->Create(comboTextureHandle_, ComboPosition_, ComboSize_,{ 1, 1, 1, 1 });
-    speedBonusSprite = std::make_unique<Sprite>();
-    speedBonusSprite->Create(speedBonusTextureHandle_, speedBonusPosition_, SpeedBonusSize_,{ 1, 1, 1, 1 });
-    WASDSprite = std::make_unique<Sprite>();
-    WASDSprite->Create(WASDTextureHandle_, WASDPosition_, WASDSize_,{ 1, 1, 1, 1 });
-    SpaceSprite = std::make_unique<Sprite>();
-    SpaceSprite->Create(SpaceTextureHandle_, SpacePosition_, SpaceSize_,{ 1, 1, 1, 1 });
-    TimerSprite = std::make_unique<Sprite>();
-    TimerSprite->Create(TimerTextureHandle_, TimerPosition_, TimerSize_,{ 1, 1, 1, 1 });
-    JuiceSprite = std::make_unique<Sprite>();
-    JuiceSprite->Create(JuiceTextureHandle_, JuicePosition_, JuiceSize_,{ 1, 1, 1, 1 });
-	numbersSprite = std::make_unique<Sprite>();
-	numbersSprite->Create(NumbersTextureHandle_, {0, 0}, {256, 32}, {1, 1, 1, 1});
+}
+
+void UIManager::Initialize() {
 
     for (int i = 0; i < lifeSprites.size(); i++) {
         lifeSprites[i].SetPosition({ LifeFirstPosition_.x + LifePositionInterval_ * i, LifeFirstPosition_.y });

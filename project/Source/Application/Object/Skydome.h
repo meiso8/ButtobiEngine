@@ -8,6 +8,7 @@ class Camera;
 /// @brief 天球
 class Skydome {
 public:
+    Skydome();
     /// @brief 初期化
     void Initialize();
     /// @brief 更新

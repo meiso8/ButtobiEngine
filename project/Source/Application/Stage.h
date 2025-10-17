@@ -10,7 +10,7 @@ private:
     Model* model_ = nullptr;
     WorldTransform worldTransform_;
 public:
-
+    Stage();
     void Initialize();
     void Update();
     void Draw(Camera& camera);

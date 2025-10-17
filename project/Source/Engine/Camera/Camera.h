@@ -28,7 +28,9 @@ public:
     //射影行列
     Matrix4x4 projectionMat_ = {0.0f};
     Matrix4x4 viewProjectionMat_ = { 0.0f };
-    ShericalCoordinate shericalCoordinate_;
+
+    //球面座標系
+    SphericalCoordinate sphericalCoordinate_;
 
 protected:
     static float width_;

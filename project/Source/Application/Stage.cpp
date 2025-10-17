@@ -3,6 +3,13 @@
 #include"Camera/Camera.h"
 #include"Model.h"
 
+Stage::Stage()
+{
+    model_ = new Model();
+    // モデルの生成 OBJからの生成
+    model_->Create(ModelManager::STAGE);
+}
+
 void Stage::Initialize() {
     // ワールド変換の初期化
     worldTransform_.Initialize();
@@ -13,9 +20,6 @@ void Stage::Initialize() {
 
     WorldTransformUpdate(worldTransform_);
 
-    model_ = new Model();
-    // モデルの生成 OBJからの生成
-    model_->Create(ModelManager::STAGE);
 }
 void Stage::Update() {
 

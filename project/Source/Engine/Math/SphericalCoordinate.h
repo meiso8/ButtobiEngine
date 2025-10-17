@@ -3,12 +3,12 @@
 #include<cmath>
 #include"Vector3.h"
 
-struct ShericalCoordinate {
+struct SphericalCoordinate {
     float radius;
     float azimuthal;//θ
     float polar;//φ
 };
 
-ShericalCoordinate TransformCoordinate(const Vector3& v);
+SphericalCoordinate TransformCoordinate(const Vector3& v);
 
-Vector3 TransformCoordinate(const ShericalCoordinate& sc);
+Vector3 TransformCoordinate(const SphericalCoordinate& sc);
