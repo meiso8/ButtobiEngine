@@ -178,6 +178,8 @@ void Sprite::CreateTransformationMatrix() {
     transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f} ,{ position_.x,position_.y,0.0f } };
     worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 
+    transformationMatrixResource_->Unmap(0, nullptr);
+
 }
 
 void Sprite::CreateMaterial(const Vector4& color) {

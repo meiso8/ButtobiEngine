@@ -10,12 +10,6 @@ void TitleScene::Initialize() {
 
     isEndScene_ = false;
 
-    //std::string titlestrings = "titleString";
-    //std::string titleString[8] = { "bu", "tt", "to", "bi", "mi", "kk", "ku", "su" };
-
-    //ModelManager::Load("resources/titleString", modelname);
-
-
     camera_ = std::make_unique<Camera>();
     camera_->Initialize(1280.0f, 720.0f);
     camera_->translate_ = cameraPositionStart;
@@ -358,7 +352,7 @@ void TitleScene::KorokoroAnimation() {
         titleStringWorldTransform[i].rotate_.z += 0.05f;
     }
 
-    camera_->translate_ = Lerp(camera_->translate_, { -15, -3, -15 }, stringAnimationTimer);
+    camera_->translate_ = Lerp(camera_->translate_, { -15, -3, -30 }, stringAnimationTimer);
     camera_->UpdateMatrix();
     if (stringAnimationTimer >= 1.0f) {
         IsAnimationEnd = true;

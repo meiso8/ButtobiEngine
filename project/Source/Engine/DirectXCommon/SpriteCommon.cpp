@@ -64,6 +64,9 @@ void SpriteCommon::CreateIndexResource() {
     indexData_[4] = 3;
     indexData_[5] = 2;
 
+    indexResource_->Unmap(0, nullptr);
+
+
 #pragma endregion
 }
 
