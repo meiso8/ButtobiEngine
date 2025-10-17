@@ -1,8 +1,6 @@
 #include "Particle.hlsli"
-#include"DirectionalLight.hlsli"
 
 //テクスチャを貼り付けたり、ライティングを行ったりと、もっとも主要なShaderである
-
 
 struct Material
 {
