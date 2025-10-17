@@ -74,3 +74,8 @@ void UIManager::Draw() {
     TimerSprite->Draw();
 
 }
+
+void UIManager::SetFruitSpeed(const float& speedA, const float& speedB)
+{
+
+}

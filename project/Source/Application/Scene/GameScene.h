@@ -15,66 +15,66 @@ class PlaneRenderer;
 class OBBRenderer;
 
 // ゲームシーン
-class GameScene:public SceneManager {
+class GameScene :public SceneManager {
 
 public:
-	/// @brief コンストラクタ
-	GameScene();
+    /// @brief コンストラクタ
+    GameScene();
 
-	// 初期化
-	void Initialize()override;
+    // 初期化
+    void Initialize()override;
 
-	// 更新
-	void Update()override;
+    // 更新
+    void Update()override;
 
-	// 描画
-	void Draw()override;
-	bool GetIsEndScene()override;
+    // 描画
+    void Draw()override;
+    bool GetIsEndScene()override;
 
-	bool GetIsGameOver();
-	bool GetIsGameClear();
+    bool GetIsGameOver();
+    bool GetIsGameClear();
 
-	void Debug()override;
+    void Debug()override;
 
-	// デストラクタ
-	~GameScene();
+    // デストラクタ
+    ~GameScene();
 
-	// 全ての当たり判定を行う
-	void CheckAllCollisions();
+    // 全ての当たり判定を行う
+    void CheckAllCollisions();
 
 private:
-	// カメラ操作
-	std::unique_ptr <CameraController> cameraController_ = nullptr;
-	// 自キャラ
-	std::unique_ptr<Player> player_ = nullptr;
-	// 敵キャラを複数用意
-	std::list<Enemy*> enemies_;
+    // カメラ操作
+    std::unique_ptr <CameraController> cameraController_ = nullptr;
+    // 自キャラ
+    std::unique_ptr<Player> player_ = nullptr;
+    // 敵キャラを複数用意
+    std::list<Enemy*> enemies_;
 
-	bool isWaitingToPop_ = false;
-	int32_t waitToPopTimer_ = 0;
+    bool isWaitingToPop_ = false;
+    int32_t waitToPopTimer_ = 0;
 
-	// 衝突マネージャ
-	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
+    // 衝突マネージャ
+    std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
 
-	// 天球
-	std::unique_ptr <Skydome> skyDome_ = nullptr;
-	DeathParticles* deathParticles_ = nullptr;
+    // 天球
+    std::unique_ptr <Skydome> skyDome_ = nullptr;
+    DeathParticles* deathParticles_ = nullptr;
 
-	// 地形
-	std::unique_ptr <Stage> stage_ = nullptr;
+    // 地形
+    std::unique_ptr <Stage> stage_ = nullptr;
 
-	// UIマネージャー
-	UIManager* uiManager_ = nullptr;
+    // UIマネージャー
+    UIManager* uiManager_ = nullptr;
 
-	// 平面のデバッグ描画
-	std::array<std::unique_ptr<PlaneRenderer>, 2> planeRenderers_;
+    // 平面のデバッグ描画
+    std::array<std::unique_ptr<PlaneRenderer>, 2> planeRenderers_;
 
-	// OBBのデバッグ描画
-	std::array<std::unique_ptr<OBBRenderer>, 4> obbRenderers_;
+    // OBBのデバッグ描画
+    std::array<std::unique_ptr<OBBRenderer>, 4> obbRenderers_;
 
-	bool isGameOver = false;
-	bool isGameClear = false;
+    bool isGameOver = false;
+    bool isGameClear = false;
 
-	/// @brief 敵の出現
-	void PopEnemy();
+    /// @brief 敵の出現
+    void PopEnemy();
 };

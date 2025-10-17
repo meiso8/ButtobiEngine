@@ -110,6 +110,9 @@ public:
     // 描画	
     void Draw();
 
+    //フルーツのスピードを取得する
+    void SetFruitSpeed(const float& speedA, const float& speedB);
+
     void SetLife(int life) {
         Life_ = life;
         if (Life_ < 0) {

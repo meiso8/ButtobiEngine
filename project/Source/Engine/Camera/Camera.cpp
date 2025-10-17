@@ -8,8 +8,8 @@
 
 float Camera::width_;
 float Camera::height_;
-Matrix4x4 Camera::viewMat_;
-ShericalCoordinate Camera::shericalCoordinate_;
+//Matrix4x4 Camera::viewMat_;
+//ShericalCoordinate Camera::shericalCoordinate_;
 
 void Camera::Initialize(const float& width, const float& height, const PROJECTION_TYPE& type) {
 

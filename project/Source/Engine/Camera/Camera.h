@@ -24,11 +24,11 @@ public:
     PROJECTION_TYPE projectionType_ = PERSPECTIVE;
     Matrix4x4 worldMat_;
     //ビュー行列
-    static Matrix4x4 viewMat_;
+    Matrix4x4 viewMat_;
     //射影行列
     Matrix4x4 projectionMat_ = {0.0f};
     Matrix4x4 viewProjectionMat_ = { 0.0f };
-    static ShericalCoordinate shericalCoordinate_;
+    ShericalCoordinate shericalCoordinate_;
 
 protected:
     static float width_;
