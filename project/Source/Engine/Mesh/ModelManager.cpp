@@ -24,20 +24,20 @@ void ModelManager::LoadAllModel()
 {
     handle_.resize(MODELS);
 
-    handle_[PLAYER] = Load("resources/player", "player.obj");
+    handle_[PLAYER] = Load("Resources/Models/player", "player.obj");
 
-    handle_[HEAD] = Load("resources/head", "head.obj");
-    handle_[BODY] = Load("resources/body", "body.obj");
-    handle_[LEFTARM] = Load("resources/leftArm", "leftArm.obj");
-    handle_[RIGHTARM] = Load("resources/rightArm", "rightArm.obj");
-    handle_[LEFTLEG] = Load("resources/leftLeg", "leftLeg.obj");
-    handle_[RIGHTLEG] = Load("resources/rightLeg", "rightLeg.obj");
+    handle_[HEAD] = Load("Resources/Models/head", "head.obj");
+    handle_[BODY] = Load("Resources/Models/body", "body.obj");
+    handle_[LEFTARM] = Load("Resources/Models/leftArm", "leftArm.obj");
+    handle_[RIGHTARM] = Load("Resources/Models/rightArm", "rightArm.obj");
+    handle_[LEFTLEG] = Load("Resources/Models/leftLeg", "leftLeg.obj");
+    handle_[RIGHTLEG] = Load("Resources/Models/rightLeg", "rightLeg.obj");
 
-    handle_[ENEMY] = Load("resources/enemy", "enemy.obj");
-    handle_[WORLD] = Load("resources/world", "world.obj");
-    handle_[PARTICLE] = Load("resources/particle", "particle.obj");
+    handle_[FRUIT_APPLE] = Load("Resources/Models/fruit", "fruit.obj");
+    handle_[WORLD] = Load("Resources/Models/world", "world.obj");
+    handle_[PARTICLE] = Load("Resources/Models/particle", "particle.obj");
 
-    handle_[STAGE] = Load("resources/stage", "stage.obj");
+    handle_[STAGE] = Load("Resources/Models/stage", "stage.obj");
 
     std::string resourceString = "resources/";
     std::string titleString = "titleString";

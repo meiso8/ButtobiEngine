@@ -88,7 +88,7 @@ void SampleScene::Update()
     }
 
     if (Input::IsTriggerMouse(1)) {
-        Sound::PlaySE(Sound::SE2, 0.0f);
+        Sound::PlaySE(Sound::CRACKER, 0.0f);
     }
 
     worldTransformChild_.parent_ = &worldTransformParent_;

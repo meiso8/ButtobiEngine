@@ -28,10 +28,10 @@ public:
 
     enum TAG {
         BGM1,
-        BGM2,
         PICO,
-        SE2,
+        CRACKER,
         CHARGE,
+        FRUIT_FALL,
         SOUNDS
     };
 

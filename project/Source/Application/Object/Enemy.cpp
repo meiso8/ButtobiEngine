@@ -6,6 +6,7 @@
 #include "Model.h"
 #include "RigidBody.h"
 #include "CollisionConfig.h"
+#include "Collision.h"
 #include <cmath>
 #include <numbers>
 #include <cassert>
@@ -23,7 +24,7 @@ Enemy::~Enemy() {
 
 void Enemy::Initialize(Vector3 &position) {
 	model_ = new Model();
-	model_->Create(ModelManager::ENEMY);
+	model_->Create(ModelManager::FRUIT_APPLE);
 	color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 	worldTransform_.Initialize();
 	worldTransform_.translate_ = position; // 初期位置をオリジンにしておく
@@ -100,12 +101,9 @@ void Enemy::Draw(Camera &camera) {
 
 AABB Enemy::GetAABB() {
 	Vector3 worldPos = GetWorldPosition();
-
 	AABB aabb;
-
 	aabb.min = { worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kWidth / 2.0f };
 	aabb.max = { worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kWidth / 2.0f };
-
 	return aabb;
 }
 
@@ -120,13 +118,42 @@ Vector3 Enemy::GetWorldPosition() const { return { worldTransform_.matWorld_.m[3
 
 void Enemy::OnCollision(Player *player) {
 	if (player->IsAttack()) {
-		color_ = { 0.0f,0.0f,1.0f,1.0f };
+		rigidBody_->ApplyForce(player->GetKickForce());
 	}
+}
 
-	Vector3 normal = Normalize(GetWorldPosition() - player->GetWorldPosition());
-	rigidBody_->ApplyForce(normal * 1000.0f);
-	// 無意味な処理を入れることで警告を抑制できる
+void Enemy::OnCollision(const Plane &plane) {
+	constexpr float exz = 1.0f;												// XZ軸の反発係数
+	constexpr float ey = 0.8f;												// Y軸の反発係数
+	float distance = Distance(GetSphere(), plane);							// 球の中心から平面までの距離
+	float penetration = GetSphere().radius - distance;						// 貫入量を球の半径に設定
+	Vector3 reflected = Reflect(rigidBody_->GetVelocity(), plane.normal);	// 反射ベクトルの計算
+	Vector3 projectNormal = Project(reflected, plane.normal);				// 法線方向の投影
+	Vector3 movingDirection = reflected - projectNormal;					// 移動方向の計算
+	Vector3 velocity;														// フルーツの速度
+	velocity.x = projectNormal.x * exz + movingDirection.x;
+	velocity.y = projectNormal.y * ey + movingDirection.y;
+	velocity.z = projectNormal.z * exz + movingDirection.z;
+	rigidBody_->SetVelocity(velocity);							// 衝突後のフルーツの速度を更新
+	worldTransform_.translate_ += projectNormal * penetration;	// 貫入量分フルーツの位置を修正
+}
 
+void Enemy::OnCollision(const OBB &obb) {
+	constexpr float exz = 1.0f;										// XZ軸の反発係数
+	constexpr float ey = 0.8f;										// Y軸の反発係数
+	float distance = Distance(GetSphere(), obb);					// 球の中心から平面までの距離
+	float penetration = GetSphere().radius - distance;              // 球の半径と距離の差分を貫入量に設定
+	Vector3 closestPoint = ClosestPoint(GetSphere().center, obb);	// 球の中心から最も近い点を取得
+	Vector3 normal = Normalize(GetSphere().center - closestPoint);	// 法線ベクトルの計算
+	Vector3 reflected = Reflect(rigidBody_->GetVelocity(), normal);	// 反射ベクトルの計算
+	Vector3 projectNormal = Project(reflected, normal);				// 法線方向の投影
+	Vector3 movingDirection = reflected - projectNormal;            // 移動方向の計算
+	Vector3 velocity;												// フルーツの速度
+	velocity.x = projectNormal.x * exz + movingDirection.x;
+	velocity.y = projectNormal.y * ey + movingDirection.y;
+	velocity.z = projectNormal.z * exz + movingDirection.z;
+	rigidBody_->SetVelocity(velocity);							// 衝突後のフルーツの速度を更新
+	worldTransform_.translate_ += projectNormal * penetration;	// 貫入量分フルーツの位置を修正
 }
 
 void Enemy::OnCollision() {

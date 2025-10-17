@@ -20,7 +20,7 @@ IXAudio2MasteringVoice* Sound::masterVoice_ = nullptr;
 std::vector<SoundData> Sound::soundDatas;
 std::vector<uint32_t> Sound::handles_;
 
-float Sound::bgmVolume_ = 0.0f;
+float Sound::bgmVolume_ = 0.125f;
 float Sound::seVolume_ = 0.5f;
 
 void Sound::LoadAllSound()
@@ -28,11 +28,11 @@ void Sound::LoadAllSound()
     handles_.resize(SOUNDS);
 
     //サウンドの読み込み
-    handles_[BGM1] = Load("resources/Sounds/fruit_mix.mp3");
-    handles_[BGM2] = Load("resources/Sounds/dreamcore.mp3");
-    handles_[PICO] = Load("resources/Sounds/pico.mp3");
-    handles_[SE2] = Load("resources/Sounds/cracker.mp3");
-    handles_[CHARGE] = Load("resources/Sounds/charge.mp3");
+    handles_[BGM1] = Load("Resources/Sounds/fruit_mix.mp3");
+    handles_[PICO] = Load("Resources/Sounds/pico.mp3");
+    handles_[CRACKER] = Load("Resources/Sounds/cracker_short.mp3");
+    handles_[CHARGE] = Load("Resources/Sounds/charge.mp3");
+    handles_[FRUIT_FALL] = Load("Resources/Sounds/poi.mp3");
 }
 
 void Sound::PlayBGM(const uint32_t index, const float& volumeOffset, const bool& loop)

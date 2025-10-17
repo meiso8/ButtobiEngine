@@ -5,8 +5,10 @@
 #include <memory>
 #include <string>
 
+struct OBB;
 struct AABB;
 struct Sphere;
+struct Plane;
 
 class Player;
 class Model;
@@ -50,6 +52,14 @@ public:
 	/// @brief プレイヤーとの当たり判定
 	/// @param player プレイヤー
 	void OnCollision(Player* player);
+
+	/// @brief 平面との当たり判定
+	/// @param plane 平面
+	void OnCollision(const Plane &plane);
+
+	/// @brief OBBとの当たり判定
+	/// @param obb OBB
+	void OnCollision(const OBB &obb);
 
 	/// @brief 衝突応答
 	void OnCollision() override;

@@ -25,11 +25,11 @@ void CameraController::Update() {
 	float distance = targetOffset_.z; // 背後距離
 	Vector3 behindPos = playerPos - forward * distance;
 	// 見下ろし高さ
-	float height = 10.0f;
+	float height = 15.0f;
 	behindPos.y += height;
 
 	camera_->translate_ = behindPos;
-	camera_->rotate_.x = 0.3f;
+	camera_->rotate_.x = 0.45f;
 	camera_->rotate_.y = targetWorldTransform.rotate_.y;
 }
 

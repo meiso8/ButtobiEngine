@@ -35,14 +35,14 @@ public:
 		kNumCorner // 要素
 	};
 
-	enum AttackPhase{
+	enum AttackPhase {
 		kNone,
 		kCharge,
 		kFire,
-		kEnd 
+		kEnd
 	};
-	
-	enum Parts{
+
+	enum Parts {
 		kHead,
 		kBody,
 		kLeftArm,
@@ -57,7 +57,7 @@ public:
 	/// @brief 初期化
 	/// @param model モデル
 	/// @param textureHandle テクスチャハンドル
-	void Initialize(Camera& camera,const Vector3& position);
+	void Initialize(Camera &camera, const Vector3 &position);
 
 	/// @brief 更新
 	void Update();
@@ -67,7 +67,7 @@ public:
 
 	/// @brief マップ衝突判定
 	/// @param info 衝突情報
-	void CheckCollisionMap(CollisionMapInfo& info);
+	void CheckCollisionMap(CollisionMapInfo &info);
 
 	// @brief 攻撃入力
 	void InputAttack();
@@ -75,38 +75,42 @@ public:
 	// @brief 攻撃アニメーション
 	void AttackAnimation();
 
-	void CheckCollisionTop(CollisionMapInfo& info);
-	void CheckCollisionBottom(CollisionMapInfo& info);
-	void CheckCollisionRight(CollisionMapInfo& info);
-	void CheckCollisionLeft(CollisionMapInfo& info);
+	void CheckCollisionTop(CollisionMapInfo &info);
+	void CheckCollisionBottom(CollisionMapInfo &info);
+	void CheckCollisionRight(CollisionMapInfo &info);
+	void CheckCollisionLeft(CollisionMapInfo &info);
 
-	Vector3 CornerPosition(const Vector3& center, Corner corner);
+	Vector3 CornerPosition(const Vector3 &center, Corner corner);
 
 	// 判定結果を反映して移動させる
-	void ApplyResultAndMove(const CollisionMapInfo& info);
+	void ApplyResultAndMove(const CollisionMapInfo &info);
 	/// @brief 天井に接触している場合の処理
 	/// @param info
-	void CeilingHit(const CollisionMapInfo& info);
+	void CeilingHit(const CollisionMapInfo &info);
 
 	// 設置状態切り替え処理
-	void SwitchOnGround(const CollisionMapInfo& info);
+	void SwitchOnGround(const CollisionMapInfo &info);
 
 	/// @brief 壁に接触している場合の処理
-	void WallHit(const CollisionMapInfo& info);
+	void WallHit(const CollisionMapInfo &info);
 
 	/// @brief 描画
-	void Draw(Camera& camera);
+	void Draw(Camera &camera);
 
-	const WorldTransform& GetWorldTransform() const { return worldTransform_; };
-	const Vector3& GetVelocity() const { return velocity_; };
+	const WorldTransform &GetWorldTransform() const { return worldTransform_; };
+	const Vector3 &GetVelocity() const { return velocity_; };
+
+	/// @brief 前方向を取得
+	/// @return 前方向
+	Vector3 GetForward() const;
 
 	//ワールド座標を取得
-	Vector3 GetWorldPosition();
+	Vector3 GetWorldPosition() const;
 
 	//AABBを取得する関数
 	AABB GetAABB();
 
-	void OnCollision(const Enemy* enemy);
+	void OnCollision(const Enemy *enemy);
 
 	bool IsAttack()const;
 
@@ -114,10 +118,14 @@ public:
 
 	int GetLife() const { return life_; };
 
+	/// @brief キック力を取得
+	/// @return キック力
+	Vector3 GetKickForce() const { return kickForce_; };
+
 	//ImGUi用
 	void Debug();
 private:
-	Camera* camera_ = nullptr;
+	Camera *camera_ = nullptr;
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 
@@ -125,7 +133,7 @@ private:
 	WorldTransform DrawPartsWorldTransform_[Parts::kNumParts];
 
 	// モデル
-	std::array<Model*, Parts::kNumParts> model_ = {nullptr,nullptr,nullptr,nullptr,nullptr,nullptr};
+	std::array<Model *, Parts::kNumParts> model_ = { nullptr,nullptr,nullptr,nullptr,nullptr,nullptr };
 	// 速度
 	Vector3 velocity_ = {};
 	// 加速度
@@ -161,6 +169,8 @@ private:
 
 	static inline const float kBlank = 0.2f;
 
+	// チャージ最大時間
+	static inline constexpr float kMaxChargeTime = 10000.0f;
 
 	AttackPhase attackPhase_ = AttackPhase::kNone;
 
@@ -182,14 +192,19 @@ private:
 	int life_;
 
 	bool isInvincible_ = false;
-	float invincibleTimer_ =0.0f;
+	float invincibleTimer_ = 0.0f;
 	float invincibleTimerMax_ = 1.0f;
 
+	// チャージ時間
+	float chargeTimer_ = 1000.0f;
+	// キック力
+	Vector3 kickForce_ = { 0.0f,0.0f,0.0f };
+
 	//色　変更しましたyoshida
-	Vector4 objectColor_ = {1.0f,1.0f,1.0f,1.0f};
+	Vector4 objectColor_ = { 1.0f,1.0f,1.0f,1.0f };
 
 	// AABB描画
 	std::unique_ptr<AABBRenderer> aabbRenderer_ = nullptr;
-private:
 
-	};
+	void ResetAttack();
+};

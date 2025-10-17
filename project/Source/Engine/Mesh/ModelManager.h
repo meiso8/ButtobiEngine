@@ -14,9 +14,9 @@ public:
         RIGHTARM,
         LEFTLEG,
         RIGHTLEG,
-
-        ENEMY,
+      
         WORLD,
+      
         PARTICLE,
 
         STAGE,
@@ -33,6 +33,7 @@ public:
         JUICE_CUP,
 
         TABLE,
+      
         FRUIT_APPLE,//リンゴ
 
         MODELS,
