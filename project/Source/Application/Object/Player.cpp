@@ -46,6 +46,9 @@ void Player::Initialize(Camera &camera, const Vector3 &position) {
 
 	camera_ = &camera;
 
+	//アタックフェーズの初期化
+	attackPhase_ = AttackPhase::kNone;
+
 	// ワールド変換の初期化
 	worldTransform_.Initialize();
 	worldTransform_.translate_ = position;

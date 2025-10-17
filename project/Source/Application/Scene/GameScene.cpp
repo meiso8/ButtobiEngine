@@ -112,6 +112,14 @@ void GameScene::Initialize() {
     for (auto& obbRenderer : obbRenderers_) {
         obbRenderer->Initialize();
     }
+
+
+    //シーン切り替え時にエネミーを削除
+    for (Enemy* newEnemy : enemies_) {
+        delete newEnemy;
+    }
+
+    enemies_.clear();
 };
 
 void GameScene::Update() {
