@@ -32,14 +32,14 @@ void ModelManager::LoadAllModel()
     handle_[RIGHTARM] = Load("Resources/Models/rightArm", "rightArm.obj");
     handle_[LEFTLEG] = Load("Resources/Models/leftLeg", "leftLeg.obj");
     handle_[RIGHTLEG] = Load("Resources/Models/rightLeg", "rightLeg.obj");
-
-    handle_[FRUIT_APPLE] = Load("Resources/Models/fruit", "fruit.obj");
+   
     handle_[WORLD] = Load("Resources/Models/world", "world.obj");
+    
     handle_[PARTICLE] = Load("Resources/Models/particle", "particle.obj");
 
     handle_[STAGE] = Load("Resources/Models/stage", "stage.obj");
 
-    std::string resourceString = "resources/";
+    std::string resourceString = "Resources/";
     std::string titleString = "titleString";
     std::string titleStrings[8] = { "bu", "tt", "to", "bi", "mi", "kk", "ku", "su" };
     std::string objString = ".obj";
@@ -51,11 +51,11 @@ void ModelManager::LoadAllModel()
         handle_[TITLE_BU+i] = Load(directoryPath, modelname);
     }
 
-    handle_[JUICE_CUP] = Load("resources/juiceCup", "juiceCup.obj");
-    handle_[TABLE] = Load("resources/cube", "cube.obj");
-    handle_[FRUIT_APPLE] = Load("resources/apple","apple.obj");
+    handle_[JUICE_CUP] = Load("Resources/juiceCup", "juiceCup.obj");
 
+    handle_[FRUIT_APPLE] = Load("Resources/apple", "apple.obj");
 
+    handle_[TABLE] = Load("Resources/Models/cube", "cube.obj");
 }
 
 // ========================================================================================================

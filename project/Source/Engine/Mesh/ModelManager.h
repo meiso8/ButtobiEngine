@@ -32,9 +32,9 @@ public:
 
         JUICE_CUP,
 
-        TABLE,
-      
         FRUIT_APPLE,//リンゴ
+
+        TABLE,
 
         MODELS,
     };
