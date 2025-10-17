@@ -6,15 +6,17 @@
 #include<vector>
 
 //CompileShader関数
-
+enum ShaderType {
+    kNormal,
+    kParticle,
+    kSprite,
+    Shaders,
+};
 
 class DxcCompiler
 {
 public:
-    enum PSType {
-        NORMAL,
-        PS_MAX
-    };
+
     void Initialize();
     void ShaderSetting();
     Microsoft::WRL::ComPtr <IDxcBlob>& GetVertexShaderBlob(uint32_t index) { return vertexShaderBlobs_[index]; };

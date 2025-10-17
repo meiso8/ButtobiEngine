@@ -1,12 +1,6 @@
 
 #include "Particle.hlsli"
 
-struct TransformationMatrix
-{
-    float32_t4x4 WVP;
-    float32_t4x4 World;
-};
-
 StructuredBuffer<ParticleForGPU> gParticle : register(t3);
 
 struct VertexShaderInput

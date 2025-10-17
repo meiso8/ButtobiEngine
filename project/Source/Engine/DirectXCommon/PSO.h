@@ -14,6 +14,8 @@
 #include<memory>
 #include<array>
 
+
+
 class PSO {
 public:
 
@@ -24,11 +26,7 @@ public:
         TopologyTypes
     };
 
-    enum ShaderType {
-        kNormal,
-        kParticle,
-        Shaders,
-    };
+
 
     static Microsoft::WRL::ComPtr <ID3D12PipelineState>& GetGraphicsPipelineState(uint32_t blendMode,uint32_t cullMode ) {
         return graphicsPipelineStates_[blendMode][cullMode];
@@ -44,7 +42,10 @@ public:
         return graphicsPipelineStatesLine_;
         ;
     }
-
+    static Microsoft::WRL::ComPtr <ID3D12PipelineState>& GetGraphicsPipelineStateSprite(uint32_t blendMode) {
+        return graphicsPipelineStateSprite_[blendMode];
+        ;
+    }
     void CreateALLPSO();
     static RootSignature* GetRootSignature() { return rootSignature.get(); }
 private:
@@ -60,6 +61,7 @@ private:
     static std::array<std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfCullMode>, kCountOfBlendMode> graphicsPipelineStates_;
     static std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState> ,kCountOfBlendMode> graphicsPipelineStatesParticle_;
     static Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineStatesLine_;
+    static std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> graphicsPipelineStateSprite_;
     std::unique_ptr<InputLayout>inputLayout = nullptr;
     std::vector<BlendState> blendStates = {};
     std::vector<RasterizerState> rasterizerStates = {};

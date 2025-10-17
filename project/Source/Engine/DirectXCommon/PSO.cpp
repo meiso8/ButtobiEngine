@@ -10,6 +10,7 @@ std::unique_ptr<RootSignature>PSO::rootSignature = nullptr;
 std::array<std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfCullMode>, kCountOfBlendMode>PSO::graphicsPipelineStates_;
 std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode>PSO::graphicsPipelineStatesParticle_;
 Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::graphicsPipelineStatesLine_;
+ std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> PSO::graphicsPipelineStateSprite_;
 
 Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
     RootSignature& rootSignature,
@@ -139,5 +140,16 @@ void PSO::CreateALLPSO()
             depthStencils[kAll],
             kNormal,
             kLine);
+
+    for (int b = 0; b < kCountOfBlendMode; ++b) {
+        graphicsPipelineStateSprite_[b] = Create(
+            *rootSignature,
+            *inputLayout,
+            blendStates[b],
+            rasterizerStates[kCullModeBack],
+            depthStencils[kAll], kSprite, kTriangle
+        );
+    }
+
 }
 
