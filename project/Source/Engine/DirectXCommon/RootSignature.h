@@ -4,14 +4,18 @@
 #include<wrl.h>
 #include<cstdint>
 #include<array>
-
+#include<cassert>
 class RootSignature
 {
 public:
    void Create();
-   ID3D12RootSignature* GetRootSignature(uint32_t index) { return rootSignatures_[index].Get(); };
+   ID3D12RootSignature* GetRootSignature(uint32_t index) {
+       assert(index < rootSignatures_.size());
+       return
+         
+       rootSignatures_[index].Get(); };
 
 private:
-    std::array<Microsoft::WRL::ComPtr <ID3D12RootSignature>,2> rootSignatures_ = {nullptr};
+    std::array<Microsoft::WRL::ComPtr <ID3D12RootSignature>,3> rootSignatures_ = {nullptr};
 };
 

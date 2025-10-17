@@ -8,6 +8,8 @@
 #include "BlendState.h"
 #include<list>
 #include<cstdint>
+#include"AccelerationField.h"
+
 class Camera;
 class ShaderResourceView;
 
@@ -46,8 +48,9 @@ public:
     std::list<Particle>particles;
     bool useBillboard_ = false;
     Emitter emitter_{};
-
+    AccelerationField accelerationField;
 private:
+
     const float kDeltaTime = 1.0f / 60.0f;
 
     ParticleForGPU* instancingData = nullptr;

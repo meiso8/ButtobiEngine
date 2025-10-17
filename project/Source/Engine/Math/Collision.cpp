@@ -228,6 +228,29 @@ bool IsCollision(const AABB &aabb, const Sphere &sphere) {
 
 };
 
+//AABBとpointの衝突判定
+bool IsCollision(const AABB& aabb, const Vector3&point) {
+
+	//球の中心とAABBとの最近接点を求める
+	//球の中心の座標をAABBの[min,max]内にclampすればそれが最近接点となる
+	//clampとは範囲内に値を収めることである
+	Vector3 closestPoint = ClosestPoint(point, aabb);
+
+	//球の中心がAABB内部の場合は、最近接点の球の中心となる
+
+	//最近接点と球の中心との距離を求める
+	float distance = Length(closestPoint - point);
+	//距離が半径よりも小さければ衝突　    //球の中心と最近接点との距離が球の半径よりも短ければ衝突
+	if (distance <= 0.1f) {
+		//衝突
+		return true;
+	}
+
+	return false;
+
+};
+
+
 bool IsCollision(const AABB &aabb, const Segment &segment) {
 
 

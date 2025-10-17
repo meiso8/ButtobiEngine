@@ -12,11 +12,12 @@ void RootSignature::Create() {
 
 #pragma region//rootSignature
     //rootSignature作成
-    D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature[2]{};
-    descriptionRootSignature[0].Flags =
-        D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-    descriptionRootSignature[1].Flags =
-        D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+    D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature[3]{};
+    for (uint32_t i = 0; i < 3; ++i) {
+        descriptionRootSignature[i].Flags =
+            D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+    }
+
 #pragma endregion
 
 #pragma region//DescriptorRange
@@ -54,14 +55,13 @@ void RootSignature::Create() {
     staticSamplers[0].ShaderRegister = 0;
     staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
 
-    descriptionRootSignature[0].pStaticSamplers = staticSamplers;
-    descriptionRootSignature[0].NumStaticSamplers = _countof(staticSamplers);
+    for (uint32_t i = 0; i < 3; ++i) {
+        //同じサンプラーをセットする
+        descriptionRootSignature[i].pStaticSamplers = staticSamplers;
+        descriptionRootSignature[i].NumStaticSamplers = _countof(staticSamplers);
+    }
 
-    descriptionRootSignature[1].pStaticSamplers = staticSamplers;
-    descriptionRootSignature[1].NumStaticSamplers = _countof(staticSamplers);
 #pragma endregion
-
-
 
 #pragma region//NormalRootParameters
     //CBufferを利用することになったので、RootParameterに設定を追加する
@@ -121,6 +121,28 @@ void RootSignature::Create() {
     rootParametersForInstancing[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);//Tableで利用する数
 #pragma endregion
 
+
+#pragma region//NormalRootParameters
+    //CBufferを利用することになったので、RootParameterに設定を追加する
+   /* RootParameter作成。PixelShaderのMaterialとVertexShaderのTransform*/
+    D3D12_ROOT_PARAMETER rootParameters[6] = {};
+    //Material
+    rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+    rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParameters[0].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
+    //Transform用
+    rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+    rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
+    rootParameters[1].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
+    //Texture?
+    rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRange;//Tableの中身の配列を指定
+    rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);//Tableで利用する数
+
+#pragma endregion
+
+
     descriptionRootSignature[0].pParameters = rootParameters;//ルートパラメータ配列へのポインタ
     descriptionRootSignature[0].NumParameters = _countof(rootParameters);//配列の長さ
 
@@ -151,7 +173,7 @@ void RootSignature::Create() {
 
 #pragma region//InstancingRootParameterシリアライズしてバイナリにする
 
-     result = D3D12SerializeRootSignature(&descriptionRootSignature[1],
+    result = D3D12SerializeRootSignature(&descriptionRootSignature[1],
         D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
 
     if (FAILED(result)) {
