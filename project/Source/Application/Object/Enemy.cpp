@@ -16,15 +16,17 @@
 #endif // _DEBUG
 
 
-Enemy::Enemy() = default;
+Enemy::Enemy() {
+	model_ = new Model();
+	model_->Create(ModelManager::FRUIT_APPLE);
+};
 
 Enemy::~Enemy() {
 	delete model_;
 }
 
 void Enemy::Initialize(Vector3 &position) {
-	model_ = new Model();
-	model_->Create(ModelManager::FRUIT_APPLE);
+
 	color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 	worldTransform_.Initialize();
 	worldTransform_.translate_ = position; // 初期位置をオリジンにしておく

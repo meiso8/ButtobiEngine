@@ -14,7 +14,7 @@
 using namespace Microsoft::WRL;
 
 ComPtr<IXAudio2> Sound::xAudio2_ = nullptr; // ComオブジェクトなのでComPtrで管理する。  
-std::unordered_map<uint32_t, IXAudio2SourceVoice*>Sound:: voices_;
+std::unordered_map<uint32_t, IXAudio2SourceVoice*>Sound::voices_;
 IXAudio2MasteringVoice* Sound::masterVoice_ = nullptr;
 
 std::vector<SoundData> Sound::soundDatas;
@@ -25,6 +25,13 @@ float Sound::seVolume_ = 0.5f;
 
 void Sound::LoadAllSound()
 {
+#ifdef _DEBUG
+
+    bgmVolume_ = 0.0f;
+
+#endif // _DEBUG
+
+
     handles_.resize(SOUNDS);
 
     //サウンドの読み込み
@@ -77,7 +84,7 @@ void Sound::Stop(const uint32_t index)
         it->second->Stop(); // バッファは保持されたまま停止
         it->second->Discontinuity();
         it->second->FlushSourceBuffers();
-      /*  it->second->DestroyVoice();*/
+        /*  it->second->DestroyVoice();*/
     }
 
 }
@@ -159,7 +166,7 @@ void Sound::Play(const uint32_t& handle, const float& volume, const bool& isLoop
 
 
 bool Sound::IsPlayingAll() {
-   
+
     for (const auto& pair : voices_) {
         IXAudio2SourceVoice* voice = pair.second;
         if (voice) {
