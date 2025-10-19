@@ -102,8 +102,9 @@ void ParticleMesh::CreateTransformationMatrix()
     instancingSrvDesc.Buffer.NumElements = kNumMaxInstance;
     instancingSrvDesc.Buffer.StructureByteStride = sizeof(ParticleForGPU);
 
-    instancingSrvHandleCPU = DirectXCommon::GetSRVCPUDescriptorHandle((UINT)Texture::GetVectorHandles().size() + 1);//この書き方はダメですね
-    instancingSrvHandleGPU = DirectXCommon::GetSRVGPUDescriptorHandle((UINT)Texture::GetVectorHandles().size() + 1);
+    uint32_t srvIndex = static_cast<UINT>(Texture::GetVectorHandleSize() + 3);
+    instancingSrvHandleCPU = DirectXCommon::GetSRVCPUDescriptorHandle(srvIndex);//この書き方はダメですね
+    instancingSrvHandleGPU = DirectXCommon::GetSRVGPUDescriptorHandle(srvIndex);
     DirectXCommon::GetDevice()->CreateShaderResourceView(instancingResource.Get(), &instancingSrvDesc, instancingSrvHandleCPU);
 }
 
@@ -166,7 +167,7 @@ void ParticleMesh::Draw(Camera& camera, uint32_t blendMode)
         PSO* pso = MyEngine::GetPSO();
 
         //rootSignatureの設定
-        commandList->SetGraphicsRootSignature(rootSignature_->GetRootSignature(1));
+        commandList->SetGraphicsRootSignature(rootSignature_->GetRootSignature(RootSignature::PARTICLE));
         commandList->SetPipelineState(pso->GetGraphicsPipelineStateParticle(blendMode).Get());
         //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
         commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

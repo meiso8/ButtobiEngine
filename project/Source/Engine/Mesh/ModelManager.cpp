@@ -26,12 +26,12 @@ void ModelManager::LoadAllModel()
 
     handle_[PLAYER] = Load("Resources/Models/player", "player.obj");
 
-    handle_[HEAD] = Load("Resources/Models/head", "head.obj");
-    handle_[BODY] = Load("Resources/Models/body", "body.obj");
-    handle_[LEFTARM] = Load("Resources/Models/leftArm", "leftArm.obj");
-    handle_[RIGHTARM] = Load("Resources/Models/rightArm", "rightArm.obj");
-    handle_[LEFTLEG] = Load("Resources/Models/leftLeg", "leftLeg.obj");
-    handle_[RIGHTLEG] = Load("Resources/Models/rightLeg", "rightLeg.obj");
+    handle_[HEAD] = Load("Resources/Models/player", "head.obj");
+    handle_[BODY] = Load("Resources/Models/player", "body.obj");
+    handle_[LEFTARM] = Load("Resources/Models/player/", "armL.obj");
+    handle_[RIGHTARM] = Load("Resources/Models/player", "armR.obj");
+    handle_[LEFTLEG] = Load("Resources/Models/player", "legL.obj");
+    handle_[RIGHTLEG] = Load("Resources/Models/player", "legR.obj");
    
     handle_[WORLD] = Load("Resources/Models/world", "world.obj");
     
@@ -142,9 +142,7 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
     }
 
     //モデルのテクスチャを読む
-    Texture::GetVectorHandles().push_back(TextureManager::Load(modelData.material.textureFilePath));
-    modelData.textureHandle = UINT(Texture::GetVectorHandles().size() - 1);
-    assert(modelData.textureHandle < Texture::GetVectorHandles().size());
+    modelData.textureHandle = Texture::AddTextureHandle(modelData.material.textureFilePath);
 
 }
 

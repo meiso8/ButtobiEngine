@@ -28,6 +28,7 @@ void SamplePlayer::Init()
 
 void SamplePlayer::Draw(Camera& camera, uint32_t lightType)
 {
+    model_->PreDraw(kBlendModeNormal);
     model_->Draw( camera, worldTransform_.matWorld_, lightType);
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 #include<vector>
 #include<assert.h>
+#include<string>
 
 class Texture {
 public:
@@ -30,9 +31,11 @@ public:
         return handle_[index];
     };
 
-    static std::vector<uint32_t>&GetVectorHandles() {
-        return handle_;
+    static size_t GetVectorHandleSize() {
+        return handle_.size();
     }
+
+    static uint32_t AddTextureHandle(const std::string& filePath);
 
 private:
     static std::vector<uint32_t>handle_;
