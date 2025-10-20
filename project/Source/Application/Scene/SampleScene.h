@@ -45,5 +45,9 @@ private:
     //矩形
     QuadMesh quad_;
 
+    float timer_ = 0.0f;
+    float prePos_ = 0.0f;
+    float postPos_ = 0.0f;
+
 };
 

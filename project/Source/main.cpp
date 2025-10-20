@@ -63,7 +63,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     int sceneIndex = kGameScene;
 #ifdef _DEBUG
     //シーンのインデックス
-    sceneIndex = kGameScene;
+    sceneIndex = kSampleScene;
 #endif // _DEBUG
 
     //現在のシーン
