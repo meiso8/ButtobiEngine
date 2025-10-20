@@ -6,7 +6,7 @@
 class DrawGrid {
 public:
     static void Initialize();
-    static void Draw(Camera& camera);
+    static void Draw(Camera& camera, bool isDraw = true);
 private:
     static LineMesh line_[102];
     static Cube cube_[2];

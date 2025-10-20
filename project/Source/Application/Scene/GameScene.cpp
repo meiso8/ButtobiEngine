@@ -302,7 +302,7 @@ void GameScene::Draw() {
 
 
 #ifdef _DEBUG
-    DrawGrid::Draw(*currentCamera_);
+    DrawGrid::Draw(*currentCamera_,false);
 #endif // _DEBUG
 
 

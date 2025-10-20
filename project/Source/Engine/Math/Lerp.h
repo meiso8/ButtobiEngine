@@ -25,13 +25,3 @@ template <typename T> T Bezier(const T& p0, const T& p1, const T& p2, float t) {
     return static_cast<T>(p);
 
 };
-
-class BezierMesh {
-
-public:
-    void Create(const Vector3& p0, const Vector3& p1, const Vector3& p2, const uint32_t divisionNum);
-    void Draw(Camera& camera, const Vector4& color);
-private:
-    std::vector<LineMesh> lineMesh_;
-};
-

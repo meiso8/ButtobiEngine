@@ -1,7 +1,7 @@
 #include "SampleScene.h"
 #include"MyEngine.h"
 #include"Lerp.h"
-
+#include"Easing.h"
 #include"DrawGrid.h"
 #include"DebugUI.h"
 #include<numbers>
@@ -81,15 +81,23 @@ void SampleScene::Initialize() {
 
     sphereMesh_->SetVertex({ 4.0f });
 
+
+    timer_ = 0.0f;
 }
 
 void SampleScene::Update()
 {
+    timer_ += 1.0f / 60.0f;
 
-    Sound::PlayBGM(Sound::BGM1,-0.25f);
+    if (timer_ > 1.0f) {
+        timer_ = 0.0f;
+    }
+
+
+    Sound::PlayBGM(Sound::BGM1, -0.25f);
 
     if (Input::IsTriggerMouse(0)) {
-        Sound::PlaySE(Sound::PICO,0.0f);
+        Sound::PlaySE(Sound::PICO, 0.0f);
     }
 
     if (Input::IsTriggerMouse(1)) {
@@ -113,6 +121,12 @@ void SampleScene::Update()
     quad_.UpdateUV();
 
     particle_.Update();
+
+    prePos_ = sphereMesh_->GetBalloonData().expansion;
+
+    sphereMesh_->GetBalloonData().expansion = Easing::EaseInQuart(0.0f, 1.0f, timer_);
+    postPos_ = sphereMesh_->GetBalloonData().expansion;
+
 
 }
 
@@ -162,15 +176,16 @@ void SampleScene::Debug()
     DebugUI::CheckWorldTransform(worldTransformChild_, "worldTransform");
 
     DebugUI::CheckSprite(*sprites_[0], "sprite0");
-
+    ImGui::SliderFloat("easing", &sphereMesh_->GetBalloonData().expansion, 0.0f, 1.0f);
+    ImGui::Text("velocity : %f", postPos_ - prePos_);
 
     ImGui::Begin("Quad");
 
-    DebugUI::CheckParticle(particle_,"particle");
+    DebugUI::CheckParticle(particle_, "particle");
     DebugUI::CheckTransforms(quad_.GetUVScale(), quad_.GetUVRotate(), quad_.GetUVTranslate(), "uvTransform");
 
     ImGui::End();
- 
+
 }
 
 bool SampleScene::GetIsEndScene()
