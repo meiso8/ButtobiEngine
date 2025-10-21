@@ -29,13 +29,15 @@ private:
 
     //--コンボ
     // 現在のコンボ数
-    int Combo_ = 0;
+    uint32_t Combo_ = 0;
     // 最大コンボ数
     int MaxCombo_ = 15;
     //　コンボボーナス倍率
     float ComboBonus_ = 1.0f;
     // コンボタイマー
     float ComboTimer_ = 0.0f;
+    //コンボタイマーのカウント
+    bool isUpdateComboTimer_ = false;
 
     //--スピードボーナス
     // スピードボーナス倍率
@@ -111,10 +113,7 @@ public:
     void Draw();
     void Debug();
 
-    void AddCombo();
-
-    //フルーツのスピードを取得する
-    void SetFruitSpeed(const float& speedA, const float& speedB);
+    void UpdateCombo();
 
     void SetLife(int life) {
         Life_ = life;
@@ -127,5 +126,8 @@ public:
     };
 
     int GetMaxLife() { return MaxLife_; };
-
+    uint32_t* GetComboPointer() { return &Combo_; }
+    void SetIsUpdateComboTimer(const bool& isUpdateComboTimer) {
+        isUpdateComboTimer_ = isUpdateComboTimer;
+    };
 };
