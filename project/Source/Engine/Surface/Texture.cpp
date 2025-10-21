@@ -20,6 +20,7 @@ void Texture::LoadAllTexture()
     handle_[WASD] = TextureManager::Load("Resources/Textures/UI/WASD.png");
     handle_[SPACE] = TextureManager::Load("Resources/Textures/UI/space.png");
     handle_[TIMER] = TextureManager::Load("Resources/Textures/UI/timer.png");
+    handle_[TIMERNUMBERS] = TextureManager::Load("Resources/Textures/UI/timerNumbers.png");
     handle_[JUICE] = TextureManager::Load("Resources/Textures/UI/juice.png");
     handle_[PARTICLE] = TextureManager::Load("Resources/Textures/particle.png");
 }

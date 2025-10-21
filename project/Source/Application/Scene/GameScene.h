@@ -2,6 +2,7 @@
 #include"SceneManager.h"
 #include "../CameraController.h"
 #include "DeathParticles.h"
+#include"Particle/Particle.h"
 #include "Enemy.h"
 #include "../UIManager.h"
 #include "Player.h"
@@ -62,6 +63,9 @@ private:
     // 天球
     std::unique_ptr <Skydome> skyDome_ = nullptr;
     std::unique_ptr <DeathParticles>deathParticles_ = nullptr;
+
+    //パーティクル
+    ParticleMesh particle_;
 
     // 地形
     std::unique_ptr <Stage> stage_ = nullptr;

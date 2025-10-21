@@ -12,6 +12,7 @@
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
+    D3DResourceLeakChecker leakCheck = {};
     // ==============================================//↓基本いじらない↓//============================================
     //エンジンの生成
     MyEngine* myEngine = MyEngine::GetInstance();
@@ -142,11 +143,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
     //エンジンの終了
     myEngine->Finalize();
-
-    //Microsoft::WRL::ComPtr<ID3D12DebugDevice> debugDevice;
-    //if (SUCCEEDED(DirectXCommon::GetDevice().As(&debugDevice))) {
-    //    debugDevice->ReportLiveDeviceObjects(D3D12_RLDO_DETAIL);
-    //}
 
     return 0;
 
