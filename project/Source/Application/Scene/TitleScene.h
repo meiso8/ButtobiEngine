@@ -60,6 +60,7 @@ class TitleScene :public SceneManager {
     CloseGame closeGame_ = CloseGame::NO;
 
     bool IsAnimationEnd = false;
+	bool iscameraTranslateEnd = false;
     //位置
     Vector3 titleStringPosition_[8] = {
         {-3.5f,1.0f,0.0f}, // ぶ
@@ -111,6 +112,9 @@ class TitleScene :public SceneManager {
 
     Vector3 cameraPositionEnd = { -15.0f, 0, -30 };
 
+    int prerandum{};
+	int randum {};
+
     Model* titleStringModel[8] = { nullptr };
     WorldTransform titleStringWorldTransform[8];
 
@@ -129,6 +133,11 @@ class TitleScene :public SceneManager {
         return start + (end - start) * easedT;
     }
 
+    // スカラー版 easeInOutQuart
+	float easeInOutQuart(float t) { return (t < 0.5f) ? 8.0f * t * t * t * t : 1.0f - std::pow(-2.0f * t + 2.0f, 4.0f) / 2.0f; }
+
+	// Vector3 用の補間 (start→end を t で easeInOutQuart補間)
+	Vector3 easeInOutQuart(const Vector3& start, const Vector3& end, float t);
     float stringAnimationTimer = 0.0f;
 
     JuiceInOutPhase jInOutPhase_;
