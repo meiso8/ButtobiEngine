@@ -10,6 +10,13 @@ struct Plane {
     float distance;//距離
 };
 
+#ifdef _DEBUG
+/// @brief 編集
+/// @param label ラベル
+/// @param plane 平面
+void EditPlane(const std::string &label, Plane &plane);
+#endif // _DEBUG
+
 class LineMesh;
 class Camera;
 
@@ -22,28 +29,14 @@ public:
 	void Initialize();
 	
 	/// @brief 更新
-	void Update();
+	/// @param plane 平面
+	void Update(const Plane &plane);
 	
 	/// @brief 描画
 	/// @param camera カメラ
     void Draw(Camera &camera);
 	
-	/// @brief 平面の設定
-	/// @param plane 平面
-	void SetPlane(const Plane &plane) { plane_ = plane; }
-	
-	/// @brief 平面の取得
-	/// @return 平面
-	Plane &GetPlane() { return plane_; }
-
-#ifdef _DEBUG
-	/// @brief 編集
-	/// @param label ラベル
-	void Edit(const std::string &label);
-#endif // _DEBUG
-
 private:
 	using LineMeshes = std::array<std::unique_ptr<LineMesh>, 4>;
-	Plane plane_;		// 平面
 	LineMeshes lines_;	// 線分メッシュ
 };

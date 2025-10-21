@@ -7,8 +7,15 @@
 
 #ifdef _DEBUG
 #include "../externals/imgui/imgui.h"
-#endif // _DEBUG
 
+void EditPlane(const std::string &label, Plane &plane) {
+	if (ImGui::TreeNode(label.c_str())) {
+		ImGui::DragFloat3("normal", &plane.normal.x, 0.01f, -1.0f, 1.0f);
+		ImGui::DragFloat("distance", &plane.distance, 0.1f, -100.0f, 100.0f);
+		ImGui::TreePop();
+	}
+}
+#endif // _DEBUG
 
 PlaneRenderer::PlaneRenderer()
 {
@@ -28,12 +35,12 @@ void PlaneRenderer::Initialize() {
 	}
 }
 
-void PlaneRenderer::Update() {
-	Vector3 center = plane_.normal * plane_.distance;	// 平面の中心
+void PlaneRenderer::Update(const Plane &plane) {
+	Vector3 center = plane.normal * plane.distance;	// 平面の中心
 	Vector3 perpendiculars[4];
-	perpendiculars[0] = Normalize(Perpendicular(plane_.normal));	// 平面の法線に垂直なベクトル
+	perpendiculars[0] = Normalize(Perpendicular(plane.normal));	// 平面の法線に垂直なベクトル
 	perpendiculars[1] = -perpendiculars[0];							// perpendiculars[0]の逆ベクトル
-	perpendiculars[2] = Cross(perpendiculars[0], plane_.normal);	// 法線とperpendiculars[0]の外積
+	perpendiculars[2] = Cross(perpendiculars[0], plane.normal);	// 法線とperpendiculars[0]の外積
 	perpendiculars[3] = -perpendiculars[2];							// perpendiculars[2]の逆ベクトル
 	Vector3 points[4];
 	for (int32_t index = 0; index < 4; ++index) {
@@ -53,13 +60,3 @@ void PlaneRenderer::Draw(Camera &camera) {
 		line->Draw(camera, MakeIdentity4x4());
 	}
 }
-
-#ifdef _DEBUG
-void PlaneRenderer::Edit(const std::string &label) {
-	if (ImGui::TreeNode(label.c_str())) {
-		ImGui::DragFloat3("normal", &plane_.normal.x, 0.01f, -1.0f, 1.0f);
-		ImGui::DragFloat("distance", &plane_.distance, 0.1f, -100.0f, 100.0f);
-		ImGui::TreePop();
-	}
-}
-#endif // _DEBUG

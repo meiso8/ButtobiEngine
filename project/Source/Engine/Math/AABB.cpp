@@ -7,6 +7,16 @@
 #include "../externals/imgui/imgui.h"
 #endif // _DEBUG
 
+#ifdef _DEBUG
+void EditAABB(const std::string &label, AABB &aabb) {
+	if (ImGui::TreeNode(label.c_str())) {
+		ImGui::DragFloat3("min", &aabb.min.x, 0.1f, -100.0f, 100.0f);
+		ImGui::DragFloat3("max", &aabb.max.x, 0.1f, -100.0f, 100.0f);
+		ImGui::TreePop();
+	}
+}
+#endif // _DEBUG
+
 AABBRenderer::AABBRenderer() = default;
 AABBRenderer::~AABBRenderer() = default;
 
@@ -22,16 +32,16 @@ void AABBRenderer::Initialize() {
 	}
 }
 
-void AABBRenderer::Update() {
+void AABBRenderer::Update(const AABB &aabb) {
 	Vector3 vertices[8] = {
-		{aabb_.min.x, aabb_.min.y, aabb_.min.z},
-		{aabb_.max.x, aabb_.min.y, aabb_.min.z},
-		{aabb_.max.x, aabb_.max.y, aabb_.min.z},
-		{aabb_.min.x, aabb_.max.y, aabb_.min.z},
-		{aabb_.min.x, aabb_.min.y, aabb_.max.z},
-		{aabb_.max.x, aabb_.min.y, aabb_.max.z},
-		{aabb_.max.x, aabb_.max.y, aabb_.max.z},
-		{aabb_.min.x, aabb_.max.y, aabb_.max.z}
+		{aabb.min.x, aabb.min.y, aabb.min.z},
+		{aabb.max.x, aabb.min.y, aabb.min.z},
+		{aabb.max.x, aabb.max.y, aabb.min.z},
+		{aabb.min.x, aabb.max.y, aabb.min.z},
+		{aabb.min.x, aabb.min.y, aabb.max.z},
+		{aabb.max.x, aabb.min.y, aabb.max.z},
+		{aabb.max.x, aabb.max.y, aabb.max.z},
+		{aabb.min.x, aabb.max.y, aabb.max.z}
 	};
 
 	// 12本の線を引く
@@ -55,13 +65,3 @@ void AABBRenderer::Draw(Camera &camera) {
 		line->Draw(camera, MakeIdentity4x4());
 	}
 }
-
-#ifdef _DEBUG
-void AABBRenderer::Edit(const std::string &label) {
-	if (ImGui::TreeNode(label.c_str())) {
-		ImGui::DragFloat3("min", &aabb_.min.x, 0.1f, -100.0f, 100.0f);
-		ImGui::DragFloat3("max", &aabb_.max.x, 0.1f, -100.0f, 100.0f);
-		ImGui::TreePop();
-	}
-}
-#endif // _DEBUG

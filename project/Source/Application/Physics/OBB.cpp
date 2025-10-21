@@ -7,7 +7,42 @@
 #include "../externals/imgui/imgui.h"
 #endif // _DEBUG
 
-OBBRenderer::OBBRenderer() {
+void SetAxis(const Vector3 &rotate, OBB &obb) {
+	// 回転行列の作成
+	Matrix4x4 rotationMatrix = MakeRotateXYZMatrix(rotate);
+
+	// 各軸の設定
+	obb.axis[0] = { rotationMatrix.m[0][0], rotationMatrix.m[0][1], rotationMatrix.m[0][2] };
+	obb.axis[1] = { rotationMatrix.m[1][0], rotationMatrix.m[1][1], rotationMatrix.m[1][2] };
+	obb.axis[2] = { rotationMatrix.m[2][0], rotationMatrix.m[2][1], rotationMatrix.m[2][2] };
+}
+
+#ifdef _DEBUG
+void EditOBB(const std::string &label, Vector3 &rotate, OBB &obb) {
+	if (ImGui::TreeNode(label.c_str())) {
+		ImGui::Text("Center");
+		ImGui::DragFloat3("Center", &obb.center.x, 0.1f);
+		ImGui::Separator();
+		ImGui::Text("Rotate");
+		ImGui::SliderAngle("Rotate X", &rotate.x, -180.0f, 180.0f);
+		ImGui::SliderAngle("Rotate Y", &rotate.y, -180.0f, 180.0f);
+		ImGui::SliderAngle("Rotate Z", &rotate.z, -180.0f, 180.0f);
+		SetAxis(rotate, obb);
+		ImGui::Separator();
+		ImGui::Text("Axis");
+		ImGui::DragFloat3("Axis X", &obb.axis[0].x, 0.01f, -1.0f, 1.0f);
+		ImGui::DragFloat3("Axis Y", &obb.axis[1].x, 0.01f, -1.0f, 1.0f);
+		ImGui::DragFloat3("Axis Z", &obb.axis[2].x, 0.01f, -1.0f, 1.0f);
+		ImGui::Separator();
+		ImGui::Text("Half Sizes");
+		ImGui::DragFloat3("Half Sizes", &obb.halfSizes.x, 0.1f, 0.0f);
+		ImGui::TreePop();
+	}
+}
+#endif // _DEBUG
+
+OBBRenderer::OBBRenderer() = default;
+OBBRenderer::~OBBRenderer() = default;
 
 	uint32_t textureHandle = Texture::GetHandle(Texture::WHITE_1X1);
 	for (auto& line : lines_) {
@@ -27,21 +62,21 @@ void OBBRenderer::Initialize() {
 	}
 }
 
-void OBBRenderer::Update() {
+void OBBRenderer::Update(const OBB &obb) {
 	// OBBの8頂点を計算
 	Vector3 vertices[8];
-	Vector3 halfSizes = obb_.halfSizes;
-	Vector3 axisX = obb_.axis[0] * halfSizes.x;
-	Vector3 axisY = obb_.axis[1] * halfSizes.y;
-	Vector3 axisZ = obb_.axis[2] * halfSizes.z;
-	vertices[0] = obb_.center + axisX + axisY + axisZ;	// 0: +X, +Y, +Z
-	vertices[1] = obb_.center - axisX + axisY + axisZ;	// 1: -X, +Y, +Z
-	vertices[2] = obb_.center + axisX - axisY + axisZ;	// 2: +X, -Y, +Z
-	vertices[3] = obb_.center - axisX - axisY + axisZ;	// 3: -X, -Y, +Z
-	vertices[4] = obb_.center + axisX + axisY - axisZ;	// 4: +X, +Y, -Z
-	vertices[5] = obb_.center - axisX + axisY - axisZ;	// 5: -X, +Y, -Z
-	vertices[6] = obb_.center + axisX - axisY - axisZ;	// 6: +X, -Y, -Z
-	vertices[7] = obb_.center - axisX - axisY - axisZ;	// 7: -X, -Y, -Z
+	Vector3 halfSizes = obb.halfSizes;
+	Vector3 axisX = obb.axis[0] * halfSizes.x;
+	Vector3 axisY = obb.axis[1] * halfSizes.y;
+	Vector3 axisZ = obb.axis[2] * halfSizes.z;
+	vertices[0] = obb.center + axisX + axisY + axisZ;	// 0: +X, +Y, +Z
+	vertices[1] = obb.center - axisX + axisY + axisZ;	// 1: -X, +Y, +Z
+	vertices[2] = obb.center + axisX - axisY + axisZ;	// 2: +X, -Y, +Z
+	vertices[3] = obb.center - axisX - axisY + axisZ;	// 3: -X, -Y, +Z
+	vertices[4] = obb.center + axisX + axisY - axisZ;	// 4: +X, +Y, -Z
+	vertices[5] = obb.center - axisX + axisY - axisZ;	// 5: -X, +Y, -Z
+	vertices[6] = obb.center + axisX - axisY - axisZ;	// 6: +X, -Y, -Z
+	vertices[7] = obb.center - axisX - axisY - axisZ;	// 7: -X, -Y, -Z
 
 	// 線分メッシュの頂点を設定
 	lines_[0]->SetVertexData(vertices[0], vertices[1]);		// 上面前辺
@@ -64,40 +99,3 @@ void OBBRenderer::Draw(Camera &camera) {
 		line->Draw(camera, MakeIdentity4x4());
 	}
 }
-
-void OBBRenderer::SetAxis(const Vector3 &rotate) {
-	// 回転角の保存
-	rotate_ = rotate;
-
-	// 回転行列の作成
-	Matrix4x4 rotationMatrix = MakeRotateXYZMatrix(rotate_);
-
-	// 各軸の設定
-	obb_.axis[0] = { rotationMatrix.m[0][0], rotationMatrix.m[0][1], rotationMatrix.m[0][2] };
-	obb_.axis[1] = { rotationMatrix.m[1][0], rotationMatrix.m[1][1], rotationMatrix.m[1][2] };
-	obb_.axis[2] = { rotationMatrix.m[2][0], rotationMatrix.m[2][1], rotationMatrix.m[2][2] };
-}
-
-#ifdef _DEBUG
-void OBBRenderer::Edit(const std::string &label) {
-	if (ImGui::TreeNode(label.c_str())) {
-		ImGui::Text("Center");
-		ImGui::DragFloat3("Center", &obb_.center.x, 0.1f);
-		ImGui::Separator();
-		ImGui::Text("Rotate");
-		ImGui::SliderAngle("Rotate X", &rotate_.x, -180.0f, 180.0f);
-		ImGui::SliderAngle("Rotate Y", &rotate_.y, -180.0f, 180.0f);
-		ImGui::SliderAngle("Rotate Z", &rotate_.z, -180.0f, 180.0f);
-		SetAxis(rotate_);
-		ImGui::Separator();
-		ImGui::Text("Axis");
-		ImGui::DragFloat3("Axis X", &obb_.axis[0].x, 0.01f, -1.0f, 1.0f);
-		ImGui::DragFloat3("Axis Y", &obb_.axis[1].x, 0.01f, -1.0f, 1.0f);
-		ImGui::DragFloat3("Axis Z", &obb_.axis[2].x, 0.01f, -1.0f, 1.0f);
-		ImGui::Separator();
-		ImGui::Text("Half Sizes");
-		ImGui::DragFloat3("Half Sizes", &obb_.halfSizes.x, 0.1f, 0.0f);
-		ImGui::TreePop();
-	}
-}
-#endif // _DEBUG
