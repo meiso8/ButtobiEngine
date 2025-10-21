@@ -27,6 +27,8 @@ PlaneRenderer::PlaneRenderer()
 
 }
 
+PlaneRenderer::~PlaneRenderer() = default;
+
 void PlaneRenderer::Initialize() {
 
 	Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f };

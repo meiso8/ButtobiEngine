@@ -23,12 +23,12 @@ public:
 	/// @brief コンストラクタ
 	Enemy();
 
-	/// @brief デストラクタ
+	/// @brief デフォルトデストラクタ
 	~Enemy();
 
 	/// @brief 初期化
 	/// @param position 位置
-	void Initialize(Vector3 &position);
+	void Initialize(const Vector3 &position);
 
 	/// @brief 更新
 	void Update();
@@ -94,7 +94,7 @@ private:
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
 	// モデル
-	Model *model_ = nullptr;
+	std::unique_ptr<Model> model_ = nullptr;
 	// カメラ
 	Camera *camera_ = nullptr;
 	//歩行の速さ

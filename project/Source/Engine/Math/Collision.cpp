@@ -9,10 +9,20 @@ Vector3 Reflect(const Vector3 &input, const Vector3 &normal) {
 	return input - 2.0f * Dot(input, normal) * normal;
 }
 
+Vector3 Impulse(const Vector3 &relativeVelocity, const Vector3 &normal, float mass1, float mass2, float restitution) {
+	float e = restitution;
+	float j = -(1 + e) * Dot(relativeVelocity, normal) / (1 / mass1 + 1 / mass2);
+	return j * normal;
+}
+
 Vector3 Project(const Vector3 &v1, const Vector3 &v2) {
 	Vector3 v2n = Normalize(v2);
 	float d = Dot(v1, v2n);
 	return v2n * d;
+}
+
+Vector3 ClosestPoint(const Vector3 &point, const Plane &plane) {
+	return point - Distance(point, plane) * plane.normal;
 }
 
 Vector3 ClosestPoint(const Vector3 &point, const AABB &aabb) {
@@ -38,18 +48,18 @@ Vector3 ClosestPoint(const Vector3 &point, const OBB &obb) {
 	return result;
 }
 
-float Distance(const Sphere &sphere, const Plane &plane) {
-	return std::abs(Dot(sphere.center, plane.normal) - plane.distance);
+float Distance(const Vector3 &point, const Plane &plane) {
+	return std::abs(Dot(point, plane.normal) - plane.distance);
 }
 
-float Distance(const Sphere &sphere, const AABB &aabb) {
-	Vector3 closestPoint = ClosestPoint(sphere.center, aabb);
-	return Length(closestPoint - sphere.center);
+float Distance(const Vector3 &point, const AABB &aabb) {
+	Vector3 closestPoint = ClosestPoint(point, aabb);
+	return Length(closestPoint - point);
 }
 
-float Distance(const Sphere &sphere, const OBB &obb) {
-	Vector3 closestPoint = ClosestPoint(sphere.center, obb);
-	return Length(closestPoint - sphere.center);
+float Distance(const Vector3 &point, const OBB &obb) {
+	Vector3 closestPoint = ClosestPoint(point, obb);
+	return Length(closestPoint - point);
 }
 
 bool IsCollision(const Sphere &s1, const Sphere &s2) {
@@ -65,7 +75,7 @@ bool IsCollision(const Sphere &s1, const Sphere &s2) {
 }
 
 bool IsCollision(const Sphere &sphere, const Plane &plane) {
-	return Distance(sphere, plane) <= sphere.radius;
+	return Distance(sphere.center, plane) <= sphere.radius;
 }
 
 //線分　Segment
@@ -229,7 +239,7 @@ bool IsCollision(const AABB &aabb, const Sphere &sphere) {
 };
 
 //AABBとpointの衝突判定
-bool IsCollision(const AABB& aabb, const Vector3&point) {
+bool IsCollision(const AABB &aabb, const Vector3 &point) {
 
 	//球の中心とAABBとの最近接点を求める
 	//球の中心の座標をAABBの[min,max]内にclampすればそれが最近接点となる
@@ -287,5 +297,5 @@ bool IsCollision(const AABB &aabb, const Segment &segment) {
 }
 
 bool IsCollision(const OBB &obb, const Sphere &sphere) {
-	return Distance(sphere, obb) <= sphere.radius;
+	return Distance(sphere.center, obb) <= sphere.radius;
 }

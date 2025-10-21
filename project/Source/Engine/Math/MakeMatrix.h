@@ -1,7 +1,12 @@
 #pragma once
 
+#include "Matrix3x3.h"
 #include "Matrix4x4.h"
-#include"Vector3.h"
+#include "Vector3.h"
+
+/// @brief 3×3単位行列の作成
+/// @return 3x3単位行列
+Matrix3x3 MakeIdentity3x3();
 
 //単位行列の作成  
 Matrix4x4 MakeIdentity4x4();
@@ -38,6 +43,11 @@ Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip
 
 //転置行列
 Matrix4x4 Transpose(const Matrix4x4& m);
+
+/// @brief 3x3逆行列を求める
+/// @param m 3x3行列
+/// @return 3x3逆行列
+Matrix3x3 Inverse(const Matrix3x3& m);
 
 //逆行列
 Matrix4x4 Inverse(const Matrix4x4& m);

@@ -43,17 +43,15 @@ public:
     // デストラクタ
     ~GameScene();
 
-    // 全ての当たり判定を行う
-    void CheckAllCollisions();
-
 private:
     // カメラ操作
     std::unique_ptr <CameraController> cameraController_ = nullptr;
     // 自キャラ
     std::unique_ptr<Player> player_ = nullptr;
-    // 敵キャラを複数用意
-    std::list<Enemy*> enemies_;
+    // 敵キャラリスト
+    std::list<std::unique_ptr<Enemy>> enemies_;
 
+	// 敵出現待機フラグとタイマー
     bool isWaitingToPop_ = false;
     int32_t waitToPopTimer_ = 0;
 
@@ -76,17 +74,11 @@ private:
     // UIマネージャー
     std::unique_ptr <UIManager> uiManager_ = nullptr;
 
-	// 平面
-	std::array<std::unique_ptr<Plane>, 2> planes_;
-	std::array<std::unique_ptr<PlaneRenderer>, 2> planeRenderers_;
-
-	// OBB
-	std::array<Vector3, 4> obbRotates_;
-	std::array<std::unique_ptr<OBB>, 4> obbs_;
-	std::array<std::unique_ptr<OBBRenderer>, 4> obbRenderers_;
-
     bool isGameOver = false;
     bool isGameClear = false;
+
+    // 全ての当たり判定を行う
+    void CheckAllCollisions();
 
     /// @brief 敵の出現
     void PopEnemy();

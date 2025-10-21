@@ -12,11 +12,26 @@
 /// @return 反射ベクトル
 Vector3 Reflect(const Vector3 &input, const Vector3 &normal);
 
+/// @brief 衝突時のインパルスを求める関数
+/// @param relativeVelocity 相対速度
+/// @param normal 法線
+/// @param mass1 質量1
+/// @param mass2 質量2
+/// @param restitution 反発係数
+/// @return インパルスベクトル
+Vector3 Impulse(const Vector3 &relativeVelocity, const Vector3 &normal, float mass1, float mass2, float restitution);
+
 /// @brief 射影関数
 /// @param v1 ベクトル1
 /// @param v2 ベクトル2
 /// @return 正射影ベクトル
 Vector3 Project(const Vector3 &v1, const Vector3 &v2);
+
+/// @brief 点と平面の最近接点を求める
+/// @param point 点
+/// @param plane 平面
+/// @return 最近接点
+Vector3 ClosestPoint(const Vector3 &point, const Plane &plane);
 
 /// @brief 点とAABBの最近接点を求める
 /// @param point 点
@@ -30,23 +45,23 @@ Vector3 ClosestPoint(const Vector3 &point, const AABB &aabb);
 /// @return 最近接点
 Vector3 ClosestPoint(const Vector3 &point, const OBB &obb);
 
-/// @brief 球と平面の距離を求める
-/// @param sphere 球
+/// @brief 点と平面の距離を求める
+/// @param point 点
 /// @param plane 平面
 /// @return 距離
-float Distance(const Sphere &sphere, const Plane &plane);
+float Distance(const Vector3 &point, const Plane &plane);
 
-/// @brief 球とAABBの距離を求める
-/// @param sphere 球
+/// @brief 点とAABBの距離を求める
+/// @param point 点
 /// @param aabb AABB
 /// @return 距離
-float Distance(const Sphere &sphere, const AABB &aabb);
+float Distance(const Vector3 &point, const AABB &aabb);
 
-/// @brief 球とOBBの距離を求める
-/// @param sphere 球
+/// @brief 点とOBBの距離を求める
+/// @param point 点
 /// @param obb OBB
 /// @return 距離
-float Distance(const Sphere &sphere, const OBB &obb);
+float Distance(const Vector3 &point, const OBB &obb);
 
 /// @brief 球と球の衝突判定
 /// @param s1 球1
