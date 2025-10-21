@@ -11,7 +11,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // ==============================================//↓基本いじらない↓//============================================
     //エンジンの生成
     MyEngine* myEngine = MyEngine::GetInstance();
-    myEngine->Create(L"2102_ぶっとびミックス", WIN_WIDTH, WIN_HEIGHT);
+    myEngine->Create(L"GE3", WIN_WIDTH, WIN_HEIGHT);
     //音声の読み込み
     Sound::LoadAllSound();
     //テスクチャ読み込み
