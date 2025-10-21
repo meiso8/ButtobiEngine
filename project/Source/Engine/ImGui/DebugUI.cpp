@@ -106,7 +106,7 @@ void DebugUI::CheckInput(Input& input) {
 }
 
 void DebugUI::CheckSprite(Sprite& sprite, const char* label) {
-    ImGui::Begin("Sprite");
+
 
     if (ImGui::TreeNode(label)) {
 
@@ -135,8 +135,6 @@ void DebugUI::CheckSprite(Sprite& sprite, const char* label) {
     }
 
 
-
-    ImGui::End();
 }
 
 void DebugUI::ShowMatrix4x4(const Matrix4x4& matrix, const char* label) {

@@ -4,6 +4,7 @@
 #include<memory>
 class SceneManager
 {
+
 protected:
     //カメラ
     bool isDebugCameraActive_ = false;

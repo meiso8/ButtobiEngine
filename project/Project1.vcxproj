@@ -157,28 +157,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Application\Physics\OBB.cpp" />
     <ClCompile Include="Source\Application\System\CollisionManager.cpp" />
     <ClCompile Include="Source\Engine\Particle\Emitter.cpp" />
-    <ClCompile Include="Source\Application\Physics\RigidBody.cpp" />
     <ClCompile Include="Source\Engine\Math\Perpendicular.cpp" />
-    <ClCompile Include="Source\Engine\Math\Plane.cpp" />
-    <ClCompile Include="Source\Engine\Math\Sphere.cpp" />
     <ClCompile Include="Source\Engine\Math\Random.cpp" />
     <ClCompile Include="Source\Engine\Mesh\MeshCommon.cpp" />
-    <ClCompile Include="Source\Application\CameraController.cpp" />
-    <ClCompile Include="Source\Application\Object\DeathParticles.cpp" />
-    <ClCompile Include="Source\Application\Object\Enemy.cpp" />
-    <ClCompile Include="Source\Application\Object\Player.cpp" />
-    <ClCompile Include="Source\Application\Scene\GameClearScene.cpp" />
-    <ClCompile Include="Source\Application\Scene\GameOverScene.cpp" />
-    <ClCompile Include="Source\Application\Scene\GameScene.cpp" />
     <ClCompile Include="Source\Application\Scene\SceneManager.cpp" />
     <ClCompile Include="Source\Application\Scene\SampleScene.cpp" />
-    <ClCompile Include="Source\Application\Object\Skydome.cpp" />
-    <ClCompile Include="Source\Application\Scene\TitleScene.cpp" />
-    <ClCompile Include="Source\Application\Stage.cpp" />
-    <ClCompile Include="Source\Application\UIManager.cpp" />
     <ClCompile Include="Source\Engine\Mesh\ModelManager.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Quad.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\DirectXCommon.cpp" />
@@ -190,7 +175,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Mesh\Cube.cpp" />
     <ClCompile Include="Source\Engine\Mesh\LineMesh.cpp" />
     <ClCompile Include="Source\Engine\Mesh\DrawGrid.cpp" />
-    <ClCompile Include="Source\Engine\Math\AABB.cpp" />
     <ClCompile Include="Source\Engine\Math\CatmullRom.cpp" />
     <ClCompile Include="Source\Engine\Math\Collision.cpp" />
     <ClCompile Include="Source\Engine\Math\Vector2.cpp" />
@@ -271,29 +255,16 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Application\Physics\OBB.h" />
     <ClInclude Include="Source\Application\System\Collider.h" />
     <ClInclude Include="Source\Application\System\CollisionConfig.h" />
     <ClInclude Include="Source\Application\System\CollisionManager.h" />
     <ClInclude Include="Source\Engine\Particle\AccelerationField.h" />
     <ClInclude Include="Source\Engine\Particle\Emitter.h" />
-    <ClInclude Include="Source\Application\Physics\RigidBody.h" />
     <ClInclude Include="Source\Engine\Math\Perpendicular.h" />
     <ClInclude Include="Source\Engine\Math\Random.h" />
     <ClInclude Include="Source\Engine\Mesh\MeshCommon.h" />
-    <ClInclude Include="Source\Application\CameraController.h" />
-    <ClInclude Include="Source\Application\Object\DeathParticles.h" />
-    <ClInclude Include="Source\Application\Object\Enemy.h" />
-    <ClInclude Include="Source\Application\Object\Player.h" />
-    <ClInclude Include="Source\Application\Scene\GameClearScene.h" />
-    <ClInclude Include="Source\Application\Scene\GameOverScene.h" />
-    <ClInclude Include="Source\Application\Scene\GameScene.h" />
     <ClInclude Include="Source\Application\Scene\SceneManager.h" />
     <ClInclude Include="Source\Application\Scene\SampleScene.h" />
-    <ClInclude Include="Source\Application\Object\Skydome.h" />
-    <ClInclude Include="Source\Application\Scene\TitleScene.h" />
-    <ClInclude Include="Source\Application\Stage.h" />
-    <ClInclude Include="Source\Application\UIManager.h" />
     <ClInclude Include="Source\Engine\Mesh\ModelManager.h" />
     <ClInclude Include="Source\Engine\Mesh\Quad.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\DirectXCommon.h" />

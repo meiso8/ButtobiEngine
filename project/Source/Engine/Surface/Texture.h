@@ -10,18 +10,7 @@ public:
         UV_CHECKER,
         NUMBERS,
         PLAYER,
-
-        LIFE,
-        SCORE,
-        COMBO,
-        SPEED_BONUS,
-        WASD,
-        SPACE,
-        TIMER,
-        JUICE,
-
         PARTICLE,
-
         TEXTURES
     };
     static void LoadAllTexture();

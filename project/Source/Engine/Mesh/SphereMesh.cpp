@@ -6,7 +6,7 @@
 #include<numbers>
 #include"TextureManager.h"
 
-void SphereMesh::Create(uint32_t& textureHandle)
+void SphereMesh::Create(uint32_t textureHandle)
 {
     commandList_ = DirectXCommon::GetCommandList();
     modelConfig_ = ModelConfig::GetInstance();

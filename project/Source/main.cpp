@@ -1,9 +1,5 @@
 #include"MyEngine.h"
 #include"SampleScene.h"
-#include"GameScene.h"
-#include"TitleScene.h"
-#include"GameClearScene.h"
-#include"GameOverScene.h"
 
 #define WIN_WIDTH 1280
 #define WIN_HEIGHT 720
@@ -32,39 +28,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // =============================================
 
     enum Scene {
-        kTitleScene,
-        kGameScene,
-        kGameClearScene,
-        kGameOverScene,
         kSampleScene,
     };
 
     const char* sceneName[] = {
-       "TitleScene",
-       "GameScene",
-       "GameClearScene",
-       "GameOverScene",
        "SampleScene"
     };
 
     std::vector<std::unique_ptr<SceneManager>> scenes;
-    // タイトルシーンの生成
-    scenes.push_back(std::make_unique<TitleScene>());
-    // ゲームシーンのインスタンスの取得
-    scenes.push_back(std::make_unique<GameScene>());
-    // ゲームクリアシーンの生成
-    scenes.push_back(std::make_unique<GameClearScene>());
-    // ゲームオーバーシーンの生成
-    scenes.push_back(std::make_unique<GameOverScene>());
+
     //サンプルシーンの生成
     scenes.push_back(std::make_unique<SampleScene>());
 
     //シーンのインデックス
-    int sceneIndex = kGameScene;
-#ifdef _DEBUG
-    //シーンのインデックス
-    sceneIndex = kSampleScene;
-#endif // _DEBUG
+    int sceneIndex = kSampleScene;
 
     //現在のシーン
     SceneManager* currentScene = nullptr;
@@ -82,38 +59,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         if (myEngine->GetWC().ProcessMassage()) {
             break;
         }
-
-
-#ifdef _DEBUG
-
-        if (Input::IsTriggerKey(DIK_RETURN)) {
-            sceneIndex = (sceneIndex + 1) % scenes.size(); // 次のシーンへ
-            currentScene = scenes[sceneIndex].get();
-            // 現在のシーンの初期化
-            currentScene->Initialize();
-        }
-
-#endif // _DEBUG
-
-        if (scenes[kTitleScene]->GetIsEndScene() || scenes[kGameScene]->GetIsEndScene()) {
-
-            GameScene* gameScene = dynamic_cast<GameScene*>(scenes[kGameScene].get());
-
-            if (scenes[kTitleScene]->GetIsEndScene()) {
-                // 現在のシーンに代入
-                currentScene = scenes[kGameScene].get();
-            } else if (gameScene->GetIsGameClear()) {
-                currentScene = scenes[kGameClearScene].get();
-            } else if (gameScene->GetIsGameOver()) {
-                currentScene = scenes[kGameOverScene].get();
-            } else if (scenes[kGameClearScene]->GetIsEndScene() || scenes[kGameOverScene]->GetIsEndScene()) {
-                currentScene = scenes[kTitleScene].get();
-            }
-
-            // 現在のシーンの初期化
-            currentScene->Initialize();
-        }
-
 
         //エンジンの更新処理
         myEngine->Update();

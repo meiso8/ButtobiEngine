@@ -29,7 +29,6 @@ public:
     void SetSize(const Vector2& size) { size_ = size; };
     void SetPosition(const Vector2& position) { position_ = position; }
     void SetRotate(const float& rotate) { rotate_ = rotate; }
-    void SetScale(const Vector3& scale) { transform_.scale = scale; };
 
     Vector2& GetSize() { return size_; }
     Vector3& GetScale() { return transform_.scale; };

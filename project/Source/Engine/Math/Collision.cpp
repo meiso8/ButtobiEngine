@@ -5,10 +5,6 @@
 #include<algorithm>
 #include<cmath>
 
-Vector3 Reflect(const Vector3 &input, const Vector3 &normal) {
-	return input - 2.0f * Dot(input, normal) * normal;
-}
-
 Vector3 Project(const Vector3 &v1, const Vector3 &v2) {
 	Vector3 v2n = Normalize(v2);
 	float d = Dot(v1, v2n);
@@ -23,32 +19,12 @@ Vector3 ClosestPoint(const Vector3 &point, const AABB &aabb) {
 	return result;
 }
 
-Vector3 ClosestPoint(const Vector3 &point, const OBB &obb) {
-	Vector3 result;
-	Matrix4x4 obbWorldMatrix = {
-		obb.axis[0].x, obb.axis[0].y, obb.axis[0].z, 0.0f,
-		obb.axis[1].x, obb.axis[1].y, obb.axis[1].z, 0.0f,
-		obb.axis[2].x, obb.axis[2].y, obb.axis[2].z, 0.0f,
-		obb.center.x, obb.center.y, obb.center.z, 1.0f
-	};
-	AABB aabbInOBBLocalSpace{ .min = -obb.halfSizes, .max = obb.halfSizes };
-	Vector3 centerInOBBLocalSpace = CoordinateTransform(point, Inverse(obbWorldMatrix));
-	result = ClosestPoint(centerInOBBLocalSpace, aabbInOBBLocalSpace);
-	result = CoordinateTransform(result, obbWorldMatrix);
-	return result;
-}
-
 float Distance(const Sphere &sphere, const Plane &plane) {
 	return std::abs(Dot(sphere.center, plane.normal) - plane.distance);
 }
 
 float Distance(const Sphere &sphere, const AABB &aabb) {
 	Vector3 closestPoint = ClosestPoint(sphere.center, aabb);
-	return Length(closestPoint - sphere.center);
-}
-
-float Distance(const Sphere &sphere, const OBB &obb) {
-	Vector3 closestPoint = ClosestPoint(sphere.center, obb);
 	return Length(closestPoint - sphere.center);
 }
 
@@ -284,8 +260,4 @@ bool IsCollision(const AABB &aabb, const Segment &segment) {
 	}
 
 	return false;
-}
-
-bool IsCollision(const OBB &obb, const Sphere &sphere) {
-	return Distance(sphere, obb) <= sphere.radius;
 }

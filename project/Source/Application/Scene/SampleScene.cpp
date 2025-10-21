@@ -42,7 +42,7 @@ SampleScene::SampleScene()
     cube_[1].Create(white1x1TextureHandle);
 
     sphereMesh_ = std::make_unique<SphereMesh>();
-    sphereMesh_->Create(particleTextureHandle);
+    sphereMesh_->Create(uvCheckerTextureHandle);
 
     quad_.Create(uvCheckerTextureHandle);
 }
@@ -91,6 +91,15 @@ void SampleScene::Update()
 
     if (timer_ > 1.0f) {
         timer_ = 0.0f;
+        animeCount++;
+        for (Sprite* sprite : sprites_) {
+            if (animeCount % 2 == 0) {
+                sprite->SetTexture(Texture::GetHandle(Texture::PLAYER));
+            } else {
+                sprite->SetTexture(Texture::GetHandle(Texture::UV_CHECKER));
+            }
+
+        }
     }
 
 
@@ -104,13 +113,26 @@ void SampleScene::Update()
         Sound::PlaySE(Sound::CRACKER, 0.0f);
     }
 
+    if (Input::IsTriggerKey(DIK_SPACE)) {
+        isEasing = isEasing ? false : true;
+    }
+
     worldTransformChild_.parent_ = &worldTransformParent_;
     WorldTransformUpdate(worldTransformChild_);
 
     currentCamera_->UpdateMatrix();
 
+    if (isEasing) {
+        easing = Easing::EaseInQuart(0.0f, 1.0f, timer_);
+    } else {
+        easing = 1.0f;
+    }
+
     for (Sprite* sprite : sprites_) {
+        float scale = { (1.0f+easing) * 128.0f };
+        sprite->SetSize({scale,scale});
         sprite->Update();
+      
     }
 
     samplePlayer_->Update();
@@ -124,7 +146,7 @@ void SampleScene::Update()
 
     prePos_ = sphereMesh_->GetBalloonData().expansion;
 
-    sphereMesh_->GetBalloonData().expansion = Easing::EaseInQuart(0.0f, 1.0f, timer_);
+    sphereMesh_->GetBalloonData().expansion = easing;
     postPos_ = sphereMesh_->GetBalloonData().expansion;
 
 
@@ -175,8 +197,16 @@ void SampleScene::Debug()
     DebugUI::CheckWorldTransform(worldTransformParent_, "worldTransformParent");
     DebugUI::CheckWorldTransform(worldTransformChild_, "worldTransform");
 
-    DebugUI::CheckSprite(*sprites_[0], "sprite0");
-    ImGui::SliderFloat("easing", &sphereMesh_->GetBalloonData().expansion, 0.0f, 1.0f);
+    ImGui::Begin("Sprite");
+    for (uint32_t i = 0; i < sprites_.size(); ++i) {
+        ImGui::PushID(i);
+        DebugUI::CheckSprite(*sprites_[i], "sprite");
+        ImGui::PopID();
+    }
+    ImGui::End();
+
+    ImGui::Checkbox("isEasing", &isEasing);
+    ImGui::SliderFloat("easing", &easing, 0.0f, 1.0f);
     ImGui::Text("velocity : %f", postPos_ - prePos_);
 
     ImGui::Begin("Quad");

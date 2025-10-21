@@ -48,6 +48,9 @@ private:
     float timer_ = 0.0f;
     float prePos_ = 0.0f;
     float postPos_ = 0.0f;
-
+private:
+    float easing = 0.0f;
+    bool isEasing = false;
+    uint32_t animeCount = 0;
 };
 
