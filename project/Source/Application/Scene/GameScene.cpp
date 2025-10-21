@@ -290,10 +290,8 @@ void GameScene::PopEnemy() {
 
 void GameScene::Draw() {
 #ifdef _DEBUG
-
+	// グリッドの描画
     DrawGrid::Draw(*currentCamera_,false);
-#endif // _DEBUG
-
 
 	// 平面のデバッグ描画
 	for (auto &planeRenderer : planeRenderers_) {
