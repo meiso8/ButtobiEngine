@@ -55,7 +55,7 @@ void SampleScene::Initialize() {
     blendMode_ = BlendMode::kBlendModeNormal;
 
     camera_->Initialize(static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()), Camera::PERSPECTIVE);
-    cameraTransform_ = { { 1.0f, 1.0f, 1.0f }, { 0.0f,0.0f,0.0f }, { 0.0f,0.0f,-10.0f } };
+    cameraTransform_ = { { 1.0f, 1.0f, 1.0f }, { 0.0f,0.0f,0.0f }, { 0.0f,0.0f,-30.0f } };
     camera_->SetTransform(cameraTransform_);
 
     currentCamera_ = camera_.get();
@@ -87,6 +87,8 @@ void SampleScene::Initialize() {
 
 void SampleScene::Update()
 {
+    Sound::PlayBGM(Sound::BGM1);
+
     timer_ += 1.0f / 60.0f;
 
     if (timer_ > 1.0f) {
@@ -105,11 +107,11 @@ void SampleScene::Update()
 
     Sound::PlayBGM(Sound::BGM1, -0.25f);
 
-    if (Input::IsTriggerMouse(0)) {
+    if (Input::IsTriggerKey(DIK_A)) {
         Sound::PlaySE(Sound::PICO, 0.0f);
     }
 
-    if (Input::IsTriggerMouse(1)) {
+    if (Input::IsTriggerKey(DIK_D)) {
         Sound::PlaySE(Sound::CRACKER, 0.0f);
     }
 
