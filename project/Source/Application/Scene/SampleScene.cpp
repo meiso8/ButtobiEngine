@@ -24,14 +24,16 @@ SampleScene::SampleScene()
     uint32_t white1x1TextureHandle = Texture::GetHandle(Texture::WHITE_1X1);
     uint32_t particleTextureHandle = Texture::GetHandle(Texture::PARTICLE);
 
-    for (uint32_t i = 0; i < 5; ++i) {
-        Sprite* sprite = new Sprite();
-        if (i % 2 == 0) {
-            sprite->Create(playerTextureHandle, { i * 256.0f,0.0f }, { 128.0f,128.0f }, { 1.0f,1.0f,1.0f,1.0f });
-        } else {
-            sprite->Create(uvCheckerTextureHandle, { i * 256.0f,0.0f }, { 128.0f,128.0f }, { 1.0f,1.0f,1.0f,1.0f });
+    for (uint32_t i = 0; i < 2; ++i) {
+        for (int j = 0; j < 2; ++j) {
+            Sprite* sprite = new Sprite();
+
+                sprite->Create(uvCheckerTextureHandle, { i * 8.0f,j*8.0f }, { 8.0f,8.0f }, { 1.0f,1.0f,1.0f,1.0f });
+                sprite->Update();
+            sprites_.push_back(sprite);
         }
-        sprites_.push_back(sprite);
+
+  
     }
 
 
@@ -108,10 +110,6 @@ void SampleScene::Update()
     WorldTransformUpdate(worldTransformChild_);
 
     currentCamera_->UpdateMatrix();
-
-    for (Sprite* sprite : sprites_) {
-        sprite->Update();
-    }
 
     samplePlayer_->Update();
 

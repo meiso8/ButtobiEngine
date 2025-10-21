@@ -1,8 +1,9 @@
 #include "ModelConfig.h"
 
+
 ModelConfig* ModelConfig::instance_ = nullptr;
 RootSignature* ModelConfig::rootSignature = nullptr;
-ID3D12Resource* ModelConfig::directionalLightResource = nullptr;//共通のライトリソース
+Microsoft::WRL::ComPtr<ID3D12Resource> ModelConfig::directionalLightResource = nullptr;//共通のライトリソース
 ModelConfig* ModelConfig::GetInstance()
 {
     if (instance_ == nullptr) {
@@ -11,7 +12,7 @@ ModelConfig* ModelConfig::GetInstance()
     return instance_;
 }
 
-void ModelConfig::Initialize(RootSignature* rootSignature, ID3D12Resource* directionalLightResource)
+void ModelConfig::Initialize(RootSignature* rootSignature, const Microsoft::WRL::ComPtr <ID3D12Resource> directionalLightResource)
 {
     this->rootSignature =rootSignature;
     this->directionalLightResource =directionalLightResource;

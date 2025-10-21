@@ -3,12 +3,14 @@
 #include<cassert> //assertも利用するため
 #include"DirectXCommon.h"
 
+using namespace  Microsoft::WRL;
+
 Microsoft::WRL::ComPtr <ID3D12GraphicsCommandList> CommandList::commandList_ = nullptr;
  Microsoft::WRL::ComPtr<ID3D12CommandAllocator> CommandList::commandAllocator_ = nullptr;
 //コマンドリストに必要な命令保存用メモリ管理構造を生成
 void CommandList::Create() {
 
-    ID3D12Device* device = DirectXCommon::GetDevice();
+    ComPtr<ID3D12Device> device = DirectXCommon::GetDevice();
 
     HRESULT result = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator_));
     //コマンドアロケータの生成が上手くいかなかったので起動できない
