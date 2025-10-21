@@ -39,30 +39,27 @@ void Enemy::Initialize(Vector3 &position) {
 	// 剛体の生成
 	rigidBody_ = std::make_unique<RigidBody>();
 
-	// AABB描画の生成
+#ifdef _DEBUG
+	// AABBのデバッグ描画の生成と初期化
 	isExistAABB_ = false;
-	if (isExistAABB_) {
-		aabbRenderer_ = std::make_unique<AABBRenderer>();
-		aabbRenderer_->Initialize();
-	}
+	aabbRenderer_ = std::make_unique<AABBRenderer>();
+	aabbRenderer_->Initialize();
 
-	// 球描画の生成
+	// 球のデバッグ描画の生成と初期化
 	isExistSphere_ = false;
-	if (isExistSphere_) {
-		sphereRenderer_ = std::make_unique<SphereRenderer>();
-		sphereRenderer_->Initialize();
-	}
+	sphereRenderer_ = std::make_unique<SphereRenderer>();
+	sphereRenderer_->Initialize();
+#endif // _DEBUG
 }
 
 void Enemy::Update() {
-	// 移動
-	/*worldTransform_.translate_ += velocity_;*/
-
 	walkTimer_ += 1.0f / 60.0f;
 	// 回転アニメーション
 	float param = std::sin(std::numbers::pi_v<float> *walkTimer_ / kWalkMotionTime);
 	float radian = kWalkMotionStart + kWalkMotionAngleEnd * (param + 1.0f) / 2.0f;
 	worldTransform_.rotate_.x = radian * std::numbers::pi_v<float> / 180.0f;
+
+	// 移動
 	rigidBody_->Update(1.0f / 60.0f);
 	worldTransform_.translate_ += rigidBody_->GetVelocity() / 60.0f;
 
@@ -72,27 +69,31 @@ void Enemy::Update() {
 
 	WorldTransformUpdate(worldTransform_);
 
+#ifdef _DEBUG
+	// AABBのデバッグ描画の更新
 	if (isExistAABB_) {
-		aabbRenderer_->SetAABB(GetAABB());
-		aabbRenderer_->Update();
+		aabbRenderer_->Update(GetAABB());
 	}
 
+	// 球のデバッグ描画の更新
 	if (isExistSphere_) {
-		sphereRenderer_->SetSphere(GetSphere());
-		sphereRenderer_->Update();
+		sphereRenderer_->Update(GetSphere());
 	}
+#endif // _DEBUG
 }
 
 void Enemy::Draw(Camera &camera) {
-	// 球の描画
+#ifdef _DEBUG
+	// 球のデバッグ描画
 	if (isExistSphere_) {
 		sphereRenderer_->Draw(camera);
 	}
 
-	// AABBの描画
+	// AABBのデバッグ描画
 	if (isExistAABB_) {
 		aabbRenderer_->Draw(camera);
 	}
+#endif // _DEBUG
 
 	// 3Dモデル描画前処理
 	model_->PreDraw(BlendMode::kBlendModeNormal);
@@ -167,8 +168,6 @@ void Enemy::Edit(const std::string &label) {
 	if (ImGui::TreeNode(label.c_str())) {
 		ImGui::DragFloat3("translate", &worldTransform_.translate_.x, 0.01f, -std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
 		rigidBody_->Edit("RigidBody");
-		aabbRenderer_->Edit("AABB");
-		sphereRenderer_->Edit("Sphere");
 		ImGui::Checkbox("DrawAABB", &isExistAABB_);
 		ImGui::Checkbox("DrawSphere", &isExistSphere_);
 		ImGui::TreePop();

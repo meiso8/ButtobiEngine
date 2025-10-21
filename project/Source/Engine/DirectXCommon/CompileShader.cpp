@@ -31,19 +31,28 @@ void DxcCompiler::ShaderSetting() {
 
     vertexShaderBlobs_.push_back(CompileShader(L"resources/shader/Object3d.VS.hlsl",
         L"vs_6_0"));
-    assert(vertexShaderBlobs_[0] != nullptr);
+    assert(vertexShaderBlobs_[kNormal] != nullptr);
 
     pixelShaderBlobs_.push_back(CompileShader(L"resources/shader/Object3d.PS.hlsl",
         L"ps_6_0"));
-    assert(pixelShaderBlobs_[0] != nullptr);
+    assert(pixelShaderBlobs_[kNormal] != nullptr);
 
     vertexShaderBlobs_.push_back(CompileShader(L"resources/shader/Particle.VS.hlsl",
         L"vs_6_0"));
-    assert(vertexShaderBlobs_[1] != nullptr);
+    assert(vertexShaderBlobs_[kParticle] != nullptr);
 
     pixelShaderBlobs_.push_back(CompileShader(L"resources/shader/Particle.PS.hlsl",
         L"ps_6_0"));
-    assert(pixelShaderBlobs_[1] != nullptr);
+    assert(pixelShaderBlobs_[kParticle] != nullptr);
+
+    vertexShaderBlobs_.push_back(CompileShader(L"resources/shader/Sprite.VS.hlsl",
+        L"vs_6_0"));
+    assert(vertexShaderBlobs_[kSprite] != nullptr);
+
+    pixelShaderBlobs_.push_back(CompileShader(L"resources/shader/Sprite.PS.hlsl",
+        L"ps_6_0"));
+    assert(pixelShaderBlobs_[kSprite] != nullptr);
+
 
 }
 

@@ -81,38 +81,38 @@ void GameScene::Initialize() {
     // 地形
     stage_->Initialize();
 
-    player_->InitializeLife(uiManager_->GetMaxLife());
+	player_->InitializeLife(uiManager_->GetMaxLife());
 
+#ifdef _DEBUG
+	// 平面のデバッグ描画の生成と初期化
+	for (auto &planeRenderer : planeRenderers_) {
+		planeRenderer->Initialize();
+	}
+#endif // _DEBUG
 
-    // 平面のデバッグ描画の初期化
-    for (auto& planeRenderer : planeRenderers_) {
-        planeRenderer->Initialize();
-    }
+	// 平面の初期化
+	planes_[0] = std::make_unique<Plane>(Plane{ .normal{ 0.0f, 1.0f, 0.0f }, .distance = 50.0f });	// 上
+	planes_[1] = std::make_unique<Plane>(Plane{ .normal{ 0.0f, -1.0f, 0.0f }, .distance = 0.0f });	// 下
 
-    // 平面の初期化
-    planeRenderers_[0]->SetPlane({ { 0.0f, 1.0f, 0.0f }, 50.0f });  // 上
-    planeRenderers_[1]->SetPlane({ { 0.0f, -1.0f, 0.0f }, 0.0f });  // 下
+#ifdef _DEBUG
+	// OBBのデバッグ描画の生成と初期化
+	for (auto &obbRenderer : obbRenderers_) {
+		obbRenderer->Initialize();
+	}
+#endif // _DEBUG
 
+	// OBBの初期化
+	obbs_[0] = std::make_unique<OBB>(OBB{ .center{-80.0f, 20.0f, 0.0f}, .axis{}, .halfSizes{1.0f, 40.0f, 80.0f} });
+	SetAxis({ 0.0f, 0.0f, std::numbers::pi_v<float> / 4.0f }, *obbs_[0]);
 
-    // OBBの初期化
-    obbRenderers_[0]->SetCenter({ -80.0f, 20.0f, 0.0f });
-    obbRenderers_[0]->SetAxis({ 0.0f, 0.0f, std::numbers::pi_v<float> / 4.0f });
-    obbRenderers_[0]->SetHalfSizes({ 1.0f, 40.0f, 80.0f });
-    obbRenderers_[1]->SetCenter({ 80.0f, 20.0f, 0.0f });
-    obbRenderers_[1]->SetAxis({ 0.0f, 0.0f, -std::numbers::pi_v<float> / 4.0f });
-    obbRenderers_[1]->SetHalfSizes({ 1.0f, 40.0f, 80.0f });
-    obbRenderers_[2]->SetCenter({ 0.0f, 20.0f, -80.0f });
-    obbRenderers_[2]->SetAxis({ -std::numbers::pi_v<float> / 4.0f, 0.0f, 0.0f });
-    obbRenderers_[2]->SetHalfSizes({ 80.0f, 40.0f, 1.0f });
-    obbRenderers_[3]->SetCenter({ 0.0f, 20.0f, 80.0f });
-    obbRenderers_[3]->SetAxis({ std::numbers::pi_v<float> / 4.0f, 0.0f, 0.0f });
-    obbRenderers_[3]->SetHalfSizes({ 80.0f, 40.0f, 1.0f });
+	obbs_[1] = std::make_unique<OBB>(OBB{ .center{80.0f, 20.0f, 0.0f}, .axis{}, .halfSizes{1.0f, 40.0f, 80.0f} });
+	SetAxis({ 0.0f, 0.0f, -std::numbers::pi_v<float> / 4.0f }, *obbs_[1]);
 
-    // OBBのデバッグ描画の初期化
-    for (auto& obbRenderer : obbRenderers_) {
-        obbRenderer->Initialize();
-    }
+	obbs_[2] = std::make_unique<OBB>(OBB{ .center{0.0f, 20.0f, -80.0f}, .axis{}, .halfSizes{80.0f, 40.0f, 1.0f} });
+	SetAxis({ -std::numbers::pi_v<float> / 4.0f, 0.0f, 0.0f }, *obbs_[2]);
 
+	obbs_[3] = std::make_unique<OBB>(OBB{ .center{0.0f, 20.0f, 80.0f}, .axis{}, .halfSizes{80.0f, 40.0f, 1.0f} });
+	SetAxis({ std::numbers::pi_v<float> / 4.0f, 0.0f, 0.0f }, *obbs_[3]);
 
     //シーン切り替え時にエネミーを削除
     for (Enemy* newEnemy : enemies_) {
@@ -131,36 +131,28 @@ void GameScene::Update() {
     ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
     currentCamera_->EditTransform("CurrentCamera");
 
-    // 平面の編集
-    uint32_t planeCount = 0;
-    for (auto& planeRenderer : planeRenderers_) {
-        planeRenderer->Edit("plane" + std::to_string(planeCount));
-        planeCount++;
-    }
+	// 平面の編集
+	uint32_t planeCount = 0;
+	for (size_t i = 0; i < planes_.size(); ++i) {
+		EditPlane("plane" + std::to_string(planeCount), *planes_[i]);
+		planeRenderers_[i]->Update(*planes_[i]);
+		planeCount++;
+	}
 
-    // OBBの編集
-    uint32_t obbCount = 0;
-    for (auto& obbRenderer : obbRenderers_) {
-        obbRenderer->Edit("OBB" + std::to_string(obbCount));
-        obbCount++;
-    }
+	// OBBの編集
+	uint32_t obbCount = 0;
+	for (size_t i = 0; i < obbs_.size(); ++i) {
+		EditOBB("OBB" + std::to_string(obbCount), obbRotates_[i], *obbs_[i]);
+		obbRenderers_[i]->Update(*obbs_[i]);
+		obbCount++;
+	}
 #endif // _DEBUG
 
-    // 平面の更新処理
-    for (auto& planeRenderer : planeRenderers_) {
-        planeRenderer->Update();
-    }
+	// 地形の更新処理
+	stage_->Update();
 
-    // OBBの更新処理
-    for (auto& obbRenderer : obbRenderers_) {
-        obbRenderer->Update();
-    }
-
-    // 地形の更新処理
-    stage_->Update();
-
-    // 自キャラの更新処理
-    player_->Update();
+	// 自キャラの更新処理
+	player_->Update();
 
     // 敵キャラの更新処理
     PopEnemy();
@@ -175,39 +167,39 @@ void GameScene::Update() {
         return false; // 削除しない
         });
 
-    uint32_t enemyCount = 0;
-    for (Enemy* newEnemy : enemies_) {
-        if (!newEnemy)
-            // ガード節と呼ぶ。
-            continue;
-        newEnemy->Update();
+	uint32_t enemyCount = 0;
+	for (Enemy *newEnemy : enemies_) {
+		if (!newEnemy)
+			// ガード節と呼ぶ。
+			continue;
 #ifdef _DEBUG
-        newEnemy->Edit("Enemy" + std::to_string(enemyCount));
+		newEnemy->Edit("Enemy" + std::to_string(enemyCount));
 #endif // _DEBUG
-        enemyCount++;
-    }
+		newEnemy->Update();
+		enemyCount++;
+	}
 
-    uiManager_->SetLife(player_->GetLife());
+	uiManager_->SetLife(player_->GetLife());
 
-    // デスパーティクルの更新処理
-    if (deathParticles_) {
-        deathParticles_->Update();
-    }
+	// デスパーティクルの更新処理
+	if (deathParticles_) {
+		deathParticles_->Update();
+	}
 
-    // 天球の更新処理
-    skyDome_->Update();
+	// 天球の更新処理
+	skyDome_->Update();
 
-    // カメラの処理
-    if (!isDebugCameraActive_) {
-        // 行列更新
-        cameraController_->Update();
-    }
+	// カメラの処理
+	if (!isDebugCameraActive_) {
+		// 行列更新
+		cameraController_->Update();
+	}
 
-    currentCamera_->UpdateMatrix();
+	currentCamera_->UpdateMatrix();
 
-    // 全ての当たり判定を行う
-    CheckAllCollisions();
-    uiManager_->Update();
+	// 全ての当たり判定を行う
+	CheckAllCollisions();
+	uiManager_->Update();
 };
 
 void GameScene::CheckAllCollisions() {
@@ -223,52 +215,50 @@ void GameScene::CheckAllCollisions() {
     collisionManager_->CheckAllCollisions();
 
 #pragma region // 自キャラと敵キャラの当たり判定
-    // 自キャラと敵キャラの当たり判定
+	// 自キャラと敵キャラの当たり判定
 
-    AABB aabb1, aabb2;
+	AABB aabb1, aabb2;
 
-    aabb1 = player_->GetAABB();
+	aabb1 = player_->GetAABB();
 
-    for (Enemy* enemy : enemies_) {
-        aabb2 = enemy->GetAABB();
+	for (Enemy *enemy : enemies_) {
+		aabb2 = enemy->GetAABB();
 
-        // AABB同士の交差判定
-        if (IsCollision(aabb1, aabb2)) {
-            // 敵弾の衝突時コールバックを呼び出す
-            enemy->OnCollision(player_.get());
-            // 自キャラ衝突時コールバックを呼び出す
-            player_->OnCollision(enemy);
-        }
-    }
+		// AABB同士の交差判定
+		if (IsCollision(aabb1, aabb2)) {
+			// 敵弾の衝突時コールバックを呼び出す
+			enemy->OnCollision(player_.get());
+			// 自キャラ衝突時コールバックを呼び出す
+			player_->OnCollision(enemy);
+		}
+	}
 
 #pragma endregion
 
 #pragma region // 敵キャラと平面の当たり判定
-    for (Enemy* enemy : enemies_) {
-        if (!enemy)
-            continue;
-        Sphere sphere = enemy->GetSphere();
-        for (auto& planeRenderer : planeRenderers_) {
-            Plane& plane = planeRenderer->GetPlane();
-            if (IsCollision(sphere, plane)) {
-                enemy->OnCollision(plane);
-            }
-        }
-    }
+	for (Enemy *enemy : enemies_) {
+		if (!enemy)
+			continue;
+		Sphere sphere = enemy->GetSphere();
+		for (auto &plane : planes_) {
+			if (IsCollision(sphere, *plane)) {
+				enemy->OnCollision(*plane);
+			}
+		}
+	}
 #pragma endregion
 
 #pragma region // 敵キャラとOBBの当たり判定
-    for (Enemy* enemy : enemies_) {
-        if (!enemy)
-            continue;
-        Sphere sphere = enemy->GetSphere();
-        for (auto& obbRenderer : obbRenderers_) {
-            OBB& obb = obbRenderer->GetOBB();
-            if (IsCollision(obb, sphere)) {
-                enemy->OnCollision(obb);
-            }
-        }
-    }
+	for (Enemy *enemy : enemies_) {
+		if (!enemy)
+			continue;
+		Sphere sphere = enemy->GetSphere();
+		for (auto &obb : obbs_) {
+			if (IsCollision(*obb, sphere)) {
+				enemy->OnCollision(*obb);
+			}
+		}
+	}
 #pragma endregion
 }
 
@@ -299,70 +289,69 @@ void GameScene::PopEnemy() {
 }
 
 void GameScene::Draw() {
-
-
 #ifdef _DEBUG
-    DrawGrid::Draw(*currentCamera_);
+	// グリッドの描画
+    DrawGrid::Draw(*currentCamera_,false);
+
+	// 平面のデバッグ描画
+	for (auto &planeRenderer : planeRenderers_) {
+		planeRenderer->Draw(*currentCamera_);
+	}
+
+	// OBBのデバッグ描画
+	for (auto &obbRenderer : obbRenderers_) {
+		obbRenderer->Draw(*currentCamera_);
+	}
 #endif // _DEBUG
 
+	// 天球の描画
+	skyDome_->Draw(*currentCamera_);
 
-    // 天球の描画
-    skyDome_->Draw(*currentCamera_);
+	// 地形の描画
+	//stage_->Draw(*currentCamera_);
 
-    // 地形の描画
-    //stage_->Draw(*currentCamera_);
+	// 自キャラの描画
+	player_->Draw(*currentCamera_);
 
-  // 平面のデバッグ描画
-    for (auto& planeRenderer : planeRenderers_) {
-        planeRenderer->Draw(*currentCamera_);
-    }
+	// 敵キャラの描画
+	for (Enemy *newEnemy : enemies_) {
+		if (!newEnemy)
+			// ガード節と呼ぶ。
+			continue;
+		newEnemy->Draw(*currentCamera_);
+	}
 
-    // OBBのデバッグ描画
-    for (auto& obbRenderer : obbRenderers_) {
-        obbRenderer->Draw(*currentCamera_);
-    }
-
-    // 自キャラの描画
-    player_->Draw(*currentCamera_);
-
-    // 敵キャラの描画
-    for (Enemy* newEnemy : enemies_) {
-        if (!newEnemy)
-            // ガード節と呼ぶ。
-            continue;
-        newEnemy->Draw(*currentCamera_);
-    }
-
-    //デスパーティクルの描画処理
-    if (deathParticles_) {
-        deathParticles_->Draw(*currentCamera_);
-    }
-    uiManager_->Draw();
+	//デスパーティクルの描画処理
+	if (deathParticles_) {
+		deathParticles_->Draw(*currentCamera_);
+	}
+	uiManager_->Draw();
 }
 void GameScene::Debug() {
     player_->Debug();
-
+    uiManager_->Debug();
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
     std::function<void()> func = [this]() { SwitchCamera(); };
     DebugUI::Button("ChangeCamera", func);
     uint32_t lightType = 0;
     DebugUI::CheckDirectionalLight(lightType);
+
 }
 ;
 
 GameScene::~GameScene() {
 
-    // パーティクルモデルの解放
+	// パーティクルモデルの解放
 
-    // パーティクルの解放
-    if (deathParticles_) {
-        delete deathParticles_;
-    }
+	// パーティクルの解放
+	if (deathParticles_) {
+		delete deathParticles_;
+	}
 
-    // 敵delete
-    for (Enemy* newEnemy : enemies_) {
-        delete newEnemy;
-    }
+	// 敵delete
+	for (Enemy *newEnemy : enemies_) {
+		delete newEnemy;
+	}
 
     // 敵のポインタの残骸を一掃
     enemies_.clear();

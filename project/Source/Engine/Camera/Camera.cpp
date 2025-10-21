@@ -67,7 +67,8 @@ void Camera::UpdateProjectionMatrix()
 
     if (projectionType_ == PERSPECTIVE) {
         //投資投影
-        projectionMat_ = MakePerspectiveFovMatrix(fovAngleY, width_ / height_, nearZ_, farZ_);
+        projectionMat_ = MakePerspectiveFovMatrix(fovAngleY_, width_ / height_, nearZ_, farZ_);
+
     } else if (projectionType_ == PARALLEL) {
         //平行投影
         float halfWidth = width_ * 0.5f;

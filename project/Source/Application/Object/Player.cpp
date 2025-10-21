@@ -190,8 +190,11 @@ void Player::Initialize(Camera &camera, const Vector3 &position) {
 
 	objectColor_ = { 1.0f,1.0f,1.0f,1.0f };
 
-
+#ifdef _DEBUG
+	// AABBのデバッグ描画の生成と初期化
+	aabbRenderer_ = std::make_unique<AABBRenderer>();
 	aabbRenderer_->Initialize();
+#endif // _DEBUG
 }
 
 void Player::InputMove() {
@@ -357,6 +360,8 @@ void Player::InputAttack() {
 
 
 void Player::AttackAnimation() {
+
+	//色の具合を調整しました。ヨシダ
 	switch (attackPhase_) {
 		case Player::kNone:
 			/*objectColor_.SetColor({1, 1, 1, 1});*/
@@ -366,20 +371,20 @@ void Player::AttackAnimation() {
 			break;
 		case Player::kCharge:
 
-			objectColor_ = { 0.0f,1.0f,0.0f,1.0f };
+			objectColor_ = { 0.25f,1.0f,0.25f,1.0f };
 
 
 
 			break;
 		case Player::kFire:
 
-			objectColor_ = { 1.0f,0.0f,0.0f,1.0f };
+			objectColor_ = { 1.0f,0.25f,0.25f,1.0f };
 
 
 			break;
 		case Player::kEnd:
 
-			objectColor_ = { 0.0f,0.0f,1.0f,1.0f };
+			objectColor_ = { 0.25f,0.25f,1.0f,1.0f };
 
 			break;
 		default:
@@ -652,14 +657,17 @@ void Player::Update() {
 
 	AttackAnimation();
 
-	// AABB描画の更新
-	aabbRenderer_->SetAABB(GetAABB());
-	aabbRenderer_->Update();
+#ifdef _DEBUG
+	// AABBのデバッグ描画の更新
+	aabbRenderer_->Update(GetAABB());
+#endif // _DEBUG
 }
 
 void Player::Draw(Camera &camera) {
-	// AABBの描画
+#ifdef _DEBUG
+	// AABBのデバッグ描画の描画
 	aabbRenderer_->Draw(camera);
+#endif // _DEBUG
 
 	// 3Dモデル描画前処理
 	model_[0]->PreDraw(BlendMode::kBlendModeNormal);

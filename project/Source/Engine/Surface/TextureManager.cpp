@@ -109,6 +109,7 @@ uint32_t TextureManager::GetTextureIndexByFilePath(const std::string& filePath)
     return 0;
 }
 
+
 D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSrvHandleGPU(uint32_t textureIndex)
 {
 

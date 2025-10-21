@@ -10,6 +10,9 @@
 #include <vector>
 #include<list>
 
+struct Plane;
+struct OBB;
+
 class CollisionManager;
 class PlaneRenderer;
 class OBBRenderer;
@@ -66,11 +69,14 @@ private:
     // UIマネージャー
     UIManager* uiManager_ = nullptr;
 
-    // 平面のデバッグ描画
-    std::array<std::unique_ptr<PlaneRenderer>, 2> planeRenderers_;
+	// 平面
+	std::array<std::unique_ptr<Plane>, 2> planes_;
+	std::array<std::unique_ptr<PlaneRenderer>, 2> planeRenderers_;
 
-    // OBBのデバッグ描画
-    std::array<std::unique_ptr<OBBRenderer>, 4> obbRenderers_;
+	// OBB
+	std::array<Vector3, 4> obbRotates_;
+	std::array<std::unique_ptr<OBB>, 4> obbs_;
+	std::array<std::unique_ptr<OBBRenderer>, 4> obbRenderers_;
 
     bool isGameOver = false;
     bool isGameClear = false;

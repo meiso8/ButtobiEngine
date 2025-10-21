@@ -9,8 +9,6 @@
 #include"Vector2.h"  
 #include"RootSignature.h"  
 
-#include"Balloon.h"
-#include"Wave.h"
 #include<d3d12.h>
 #include"SpriteCommon.h"
 
@@ -42,7 +40,7 @@ public:
     Vector3& GetUVScale() { return uvTransform_.scale; };
     Vector3& GetUVRotate() { return uvTransform_.rotate; };
     Vector3& GetUVTranslate() { return uvTransform_.translate; };
-    const Vector4& GetColor() { return materialResource_.GetMaterial()->color; }
+    Vector4& GetColor() { return materialResource_.GetMaterial()->color; }
 
     Vector2& GetAnchorPoint() { return anchorPoint_; }
     void SetAnchorPoint(const Vector2& anchorPoint) { anchorPoint_ = anchorPoint; }
@@ -60,8 +58,6 @@ private:
     void CreateUVTransformationMatrix();
     void CreateTransformationMatrix();
     void CreateMaterial(const Vector4& color);
-    void CreateWaveData();
-    void CreateBalloonData();
     void UpdateUV();
     void AdjustTextureSize();
 private:
@@ -93,10 +89,5 @@ private:
 
     MaterialResource materialResource_{};
 
-    Microsoft::WRL::ComPtr<ID3D12Resource> expansionResource_;
-    Balloon* expansionData_ = nullptr;
-
-    Microsoft::WRL::ComPtr<ID3D12Resource> waveResource_;
-    Wave* waveData = nullptr;
 
 };

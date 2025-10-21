@@ -387,7 +387,7 @@ void TitleScene::KorokoroAnimation() {
 
     
 
-    camera_->translate_ = Lerp(camera_->translate_, { -15, -3, -30 }, stringAnimationTimer);
+    camera_->translate_ = Lerp(camera_->translate_, { -15, -3, -15 }, stringAnimationTimer);
     camera_->UpdateMatrix();
 	if (stringAnimationTimer >= 0.75f && (titleStringWorldTransform[0].rotate_.z - static_cast<int>(titleStringWorldTransform[0].rotate_.z) <= 0.05f &&
 	                                      titleStringWorldTransform[0].rotate_.z - static_cast<int>(titleStringWorldTransform[0].rotate_.z) >= -0.05f)) {

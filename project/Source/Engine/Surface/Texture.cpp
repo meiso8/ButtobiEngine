@@ -23,3 +23,22 @@ void Texture::LoadAllTexture()
     handle_[JUICE] = TextureManager::Load("Resources/UI/juice.png");
     handle_[PARTICLE] = TextureManager::Load("Resources/particle.png");
 }
+
+uint32_t Texture::AddTextureHandle(const std::string& filePath)
+{
+    uint32_t handle = TextureManager::Load(filePath);
+
+    auto it = std::find_if(
+        handle_.begin(),
+        handle_.end(),
+        [&](uint32_t existingHandle) { return existingHandle == handle; }
+    );
+
+    if (it != handle_.end()) {
+        return static_cast<uint32_t>(std::distance(handle_.begin(), it));
+    }
+
+    handle_.push_back(handle);
+    return static_cast<uint32_t>(Texture::handle_.size() - 1);;
+
+}

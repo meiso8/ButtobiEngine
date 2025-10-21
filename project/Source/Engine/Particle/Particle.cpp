@@ -5,6 +5,7 @@
 #include"TextureManager.h"
 #include"MyEngine.h"
 #include"Random.h"
+#include"Collision.h"
 #include<numbers>
 using namespace  Microsoft::WRL;
 
@@ -35,6 +36,10 @@ void ParticleMesh::Initialize(uint32_t textureHandle)
     emitter_.transform.rotate = { 0.0f,0.0f,0.0f };
     emitter_.transform.scale = { 1.0f,1.0f,1.0f };
     emitter_.transform.translate = { 1.0f,1.0f,1.0f };
+
+    accelerationField.acceleration = { 15.0f,0.0f,0.0f };
+    accelerationField.area.min = { -1.0f,-1.0f,-1.0f };
+    accelerationField.area.max = { 1.0f,1.0f,1.0f };
 
 }
 
@@ -97,8 +102,9 @@ void ParticleMesh::CreateTransformationMatrix()
     instancingSrvDesc.Buffer.NumElements = kNumMaxInstance;
     instancingSrvDesc.Buffer.StructureByteStride = sizeof(ParticleForGPU);
 
-    instancingSrvHandleCPU = DirectXCommon::GetSRVCPUDescriptorHandle((UINT)Texture::GetVectorHandles().size() + 1);//この書き方はダメですね
-    instancingSrvHandleGPU = DirectXCommon::GetSRVGPUDescriptorHandle((UINT)Texture::GetVectorHandles().size() + 1);
+    uint32_t srvIndex = static_cast<UINT>(Texture::GetVectorHandleSize() + 3);
+    instancingSrvHandleCPU = DirectXCommon::GetSRVCPUDescriptorHandle(srvIndex);//この書き方はダメですね
+    instancingSrvHandleGPU = DirectXCommon::GetSRVGPUDescriptorHandle(srvIndex);
     DirectXCommon::GetDevice()->CreateShaderResourceView(instancingResource.Get(), &instancingSrvDesc, instancingSrvHandleCPU);
 }
 
@@ -124,6 +130,10 @@ void ParticleMesh::Draw(Camera& camera, uint32_t blendMode)
                 continue;
             }
 
+            if (IsCollision(accelerationField.area, (*particleIterator).transform.translate)) {
+                (*particleIterator).velocity += accelerationField.acceleration * kDeltaTime;
+            }
+
             (*particleIterator).transform.translate += (*particleIterator).velocity * kDeltaTime;
             (*particleIterator).currentTime += kDeltaTime;
 
@@ -137,13 +147,13 @@ void ParticleMesh::Draw(Camera& camera, uint32_t blendMode)
             }
 
             Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
-      /*      instancingResource->Map(0, nullptr, reinterpret_cast<void**>(&instancingData));*/
+
             instancingData[numInstance].WVP = worldViewProjectionMatrix;
             instancingData[numInstance].World = worldMatrix;
             instancingData[numInstance].color = (*particleIterator).color;
             float alpha = 1.0f - ((*particleIterator).currentTime / (*particleIterator).lifeTime);
             instancingData[numInstance].color.w = alpha;
-       /*     instancingResource->Unmap(0, nullptr);*/
+
 
             ++numInstance;
         }
@@ -157,7 +167,7 @@ void ParticleMesh::Draw(Camera& camera, uint32_t blendMode)
         PSO* pso = MyEngine::GetPSO();
 
         //rootSignatureの設定
-        commandList->SetGraphicsRootSignature(rootSignature_->GetRootSignature(1));
+        commandList->SetGraphicsRootSignature(rootSignature_->GetRootSignature(RootSignature::PARTICLE));
         commandList->SetPipelineState(pso->GetGraphicsPipelineStateParticle(blendMode).Get());
         //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
         commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

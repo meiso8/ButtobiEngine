@@ -40,7 +40,11 @@ void DrawGrid::Initialize()
     cube_[1].SetColor(Vector4(1.0f, 0.0f, 0.0f, 1.0f));
 }
 
-void DrawGrid::Draw(Camera& camera) {
+void DrawGrid::Draw(Camera& camera, bool isDraw) {
+
+    if (!isDraw) {
+        return;
+    }
 
     Matrix4x4 identity4x4 = MakeIdentity4x4();
 

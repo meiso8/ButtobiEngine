@@ -96,6 +96,12 @@ bool IsCollision(const AABB &aabb1, const AABB &aabb2);
 /// @return 当たったかどうか
 bool IsCollision(const AABB &aabb, const Sphere &sphere);
 
+/// @brief AABBと点の衝突判定
+/// @param aabb AABB
+/// @param point 点
+/// @return 当たったかどうか
+bool IsCollision(const AABB& aabb, const Vector3& point);
+
 /// @brief AABBと線分の衝突判定
 /// @param aabb AABB
 /// @param segment 線分
