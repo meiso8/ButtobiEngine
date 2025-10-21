@@ -15,7 +15,7 @@ void DebugCamera::Initialize(const float& width, const float& height, const PROJ
     nearZ_ = 0.1f;
     offset_ = { 0.0f };
 
-    rotateSpeed_ = std::numbers::pi_v<float> / 20.0f / FPS;
+    rotateSpeed_ = std::numbers::pi_v<float> / 20.0f * InverseFPS;
     speed_ = 1.0f;
 
     scale_ = { 1.0f,1.0f,1.0f };
@@ -143,7 +143,7 @@ void DebugCamera::MouseInputMove() {
         //後でoffsetをくわえる
         Vector2 deltaOffset = { 0.0f,0.0f };
         deltaOffset += Input::GetMousePos();
-        offset_ += { deltaOffset.x / FPS,deltaOffset.y / FPS * 2.0f };
+        offset_ += { deltaOffset.x * InverseFPS,deltaOffset.y* InverseFPS * 2.0f };
     } else if (Input::IsPressMouse(2)) {
         //視点の回転
         //中ボタン押し込み&&ドラッグ
@@ -159,8 +159,8 @@ void DebugCamera::MouseInputMove() {
 
     if (Input::isDragging_) {
         Vector2 currentPos = Input::GetMousePos();
-        sphericalCoordinate_.polar += currentPos.x / FPS;
-        sphericalCoordinate_.azimuthal += currentPos.y / FPS;
+        sphericalCoordinate_.polar += currentPos.x * InverseFPS;
+        sphericalCoordinate_.azimuthal += currentPos.y * InverseFPS;
         rotate_.y = sphericalCoordinate_.polar;
         rotate_.z = sphericalCoordinate_.azimuthal;
     }
