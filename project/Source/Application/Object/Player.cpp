@@ -328,7 +328,7 @@ void Player::InputAttack() {
 
 			attackPhase_ = Player::kFire;
 			Sound::Stop(Sound::CHARGE);
-			Sound::PlaySE(Sound::CRACKER, 0.0f);
+			Sound::PlaySE(Sound::ATTACK, 0.0f);
 			isAttack_ = true;
 		}
 
@@ -724,6 +724,7 @@ void Player::OnCollision(const Enemy *enemy) {
 
 			life_--;
 			isInvincible_ = true;
+			Sound::PlaySE(Sound::PLAYER_HIT);
 		}
 
 	} else {

@@ -40,6 +40,12 @@ void Sound::LoadAllSound()
     handles_[CRACKER] = Load("Resources/Sounds/cracker_short.mp3");
     handles_[CHARGE] = Load("Resources/Sounds/charge.mp3");
     handles_[FRUIT_FALL] = Load("Resources/Sounds/poi.mp3");
+
+    handles_[ATTACK] = Load("Resources/Sounds/externals/attack.mp3");
+    handles_[CHREERS] = Load("Resources/Sounds/externals/cheers!.mp3");
+    handles_[PLAYER_HIT] = Load("Resources/Sounds/externals/playerHit.mp3");
+    handles_[POUR_DRINK] = Load("Resources/Sounds/externals/pour_drink.mp3");
+
 }
 
 void Sound::PlayBGM(const uint32_t index, const float& volumeOffset, const bool& loop)
