@@ -1,12 +1,15 @@
 #include "MyEngine.h"
+#include"SpriteCommon.h"
+#include"TextureManager.h"
 #include<algorithm>
+#include"Camera/SpriteCamera.h"
 
-std::array<PSO, kCountOfBlendMode> MyEngine::pso = {};
+PSO MyEngine::pso = {};
 MyEngine* MyEngine::instance_ = nullptr;
 
 DirectionalLight* MyEngine::directionalLightData = nullptr;
-std::unique_ptr<RootSignature> MyEngine::rootSignature = nullptr;
 ModelConfig MyEngine::modelConfig_ = {};
+std::unique_ptr<Window> MyEngine::wc = nullptr;
 
 MyEngine* MyEngine::GetInstance()
 {
@@ -40,108 +43,37 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     directXCommon = std::make_unique<DirectXCommon>();
     directXCommon.get()->Initialize(*wc);
 
-    //TextureManagerの初期化
-
-#pragma region//RootSignatureを生成する
-
-    rootSignature = std::make_unique<RootSignature>();
-    //具体的にShaderがどこかでデータを読めばいいのかの情報を取りまとめたもの
-    rootSignature->Create();
-    LogFile::Log("CreateRootSignature");
-
-#pragma endregion
-
-#pragma region//InputLayout
-    inputLayout = std::make_unique<InputLayout>();
-    inputLayout->Create();
-    LogFile::Log("InputLayout");
-#pragma endregion
-
-    //BlendStateの設定を行う
-
-    blendStates.resize(kCountOfBlendMode);
-    for (int i = 0; i < blendStates.size(); ++i) {
-        blendStates[i].Create(i);
-    }
-
-    LogFile::Log("SetBlendState");
-
-
-    rasterizerStates.resize(3);
-    //RasterizerStateの設定を行う
-    rasterizerStates[kCullModeNone].Create(kCullModeNone, kFillModeSolid);//ソリッドモードカリングなし
-    rasterizerStates[kCullModeFront].Create(kCullModeFront, kFillModeSolid);//ソリッドモード裏面
-    rasterizerStates[kCullModeBack].Create(kCullModeBack, kFillModeSolid);//ソリッドモード表面
-    //rasterizerStates[0].Create(kCullModeNone, kFillModeWireframe);//ワイヤーフレームモード
-    LogFile::Log("SetRasterizerState");
-
-#pragma region //DepthStencilStateの設定
-    depthStencil.Create();
-    LogFile::Log("Create depthStencilDesc");
-#pragma endregion
-
-    //PSOを生成する
-    pso[0].Create(
-        *rootSignature,
-        *inputLayout,
-        blendStates[kBlendModeNone],//ブレンドしない
-        rasterizerStates[kCullModeBack],//後ろをカリング
-        depthStencil);
-
-    pso[1].Create(
-        *rootSignature,
-        *inputLayout,
-        blendStates[kBlendModeNormal],//ブレンドする
-        rasterizerStates[kCullModeBack],//後ろをカリング
-        depthStencil);
-
-    pso[2].Create(
-        *rootSignature,
-        *inputLayout,
-        blendStates[kBlendModeAdd],//ブレンドしない
-        rasterizerStates[kCullModeBack],//描画
-        depthStencil);
-
-    pso[3].Create(
-        *rootSignature,
-        *inputLayout,
-        blendStates[kBlendModeSubtract],
-        rasterizerStates[kCullModeBack],//描画
-        depthStencil);
-
-    pso[4].Create(
-        *rootSignature,
-        *inputLayout,
-        blendStates[kBlendModeMultiply],
-        rasterizerStates[kCullModeBack],//描画
-        depthStencil);
-
-    pso[5].Create(
-        *rootSignature,
-        *inputLayout,
-        blendStates[kBlendModeScreen],
-        rasterizerStates[kCullModeBack],//描画
-        depthStencil);
+    pso.CreateALLPSO();
 
     LogFile::Log("CreatePSO");
 
-#pragma region//平行光源用のResourceを作成する
+    //平行光源用のResourceを作成する
     directionalLightResource = DirectXCommon::CreateBufferResource(sizeof(DirectionalLight));
     //書き込むためのアドレスを取得
     directionalLightResource->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData));
     //デフォルト値はとりあえず以下のようにしておく   
     directionalLightData->color = { 1.0f,1.0f,1.0f,1.0f };
-    directionalLightData->direction = { 0.0f,1.0f,0.0f };//向きは正規化する
+
+    directionalLightData->direction = { 0.0f,0.0f,1.0f };//向きは正規化する
     directionalLightData->intensity = 1.0f;
+    //書き込み終了！
+    directionalLightResource->Unmap(0, nullptr);
 
-#pragma endregion
+    modelConfig_.Initialize(PSO::rootSignature.get(), directionalLightResource.Get());
+
+    //共通のスプライト
+    SpriteCommon::Initialize();
+    //スプライト用カメラ
+    SpriteCamera::Initialize(static_cast<float>(wc->GetClientWidth()), static_cast<float>(wc->GetClientHeight()));
+    //サウンド管理
+    Sound::Initialize();
+    //テクスチャ管理
+    TextureManager::Initialize();
+
+    ////ランダム関数の初期化
+    //srand(static_cast<unsigned int>(time(nullptr)));
 
 
-    modelConfig_.Initialize(rootSignature.get(), directionalLightResource.Get());
-
-    srand(static_cast<unsigned int>(time(nullptr)));
-
-    SpriteCommon::GetInstance()->Initialize();
 
     //ファイルへのログ出力
     LogFile::Log("LoopStart");
@@ -156,35 +88,27 @@ void MyEngine::Update() {
 
 }
 
-void MyEngine::PreCommandSet(Vector4& color) {
-    directXCommon->PreDraw(color);
+void MyEngine::PreCommandSet(Vector4& screenColor) {
+    directXCommon->PreDraw(screenColor);
 };
 
 void MyEngine::PostCommandSet() {
-
     directXCommon->PostDraw();
-
 };
 
 void MyEngine::Finalize() {
 
-    TextureManager::GetInstance()->Finalize();
-
-    /*  sound->Finalize();*/
-      //modelConfig_.Finalize();
+    TextureManager::Finalize();
+    Sound::Finalize();
     directXCommon->EndFrame();
-    /*input->Finalize();*/
     wc->Finalize();
-
     //delete instance_;
-    //instance_ = nullptr;
-    //TextureManager::GetInstance()->Finalize();
 }
 
 
 //ここでBlenModeを変更する
-void MyEngine::SetBlendMode(uint32_t blendMode) {
+void MyEngine::SetBlendMode(uint32_t blendMode,uint32_t cullMode) {
 
-    DirectXCommon::GetCommandList()->SetPipelineState(pso[blendMode].GetGraphicsPipelineState(PSO::PSOType::TRIANGLE).Get());//PSOを設定
+    DirectXCommon::GetCommandList()->SetPipelineState(pso.GetGraphicsPipelineState(blendMode, cullMode).Get());//PSOを設定
 
 }

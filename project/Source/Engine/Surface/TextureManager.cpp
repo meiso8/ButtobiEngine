@@ -7,20 +7,12 @@ using namespace StringUtility;
 
 uint32_t TextureManager::kSRVIndexTop = 1;
 std::vector<TextureManager::TextureData> TextureManager::textureDatas;
-TextureManager* TextureManager::instance = nullptr;
-
-TextureManager* TextureManager::GetInstance()
-{
-    if (instance == nullptr) {
-        instance = new TextureManager;
-    }
-    return instance;
-}
 
 void TextureManager::Finalize()
 {
-    delete instance;
-    instance = nullptr;
+    //for (int i = 0; i < textureDatas.size(); ++i) {
+    //    Unload(&textureDatas[i]);
+    //}
 }
 
 void TextureManager::Initialize()
@@ -117,6 +109,7 @@ uint32_t TextureManager::GetTextureIndexByFilePath(const std::string& filePath)
     return 0;
 }
 
+
 D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSrvHandleGPU(uint32_t textureIndex)
 {
 
@@ -127,4 +120,13 @@ D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSrvHandleGPU(uint32_t textureInde
     TextureData& textureData = textureDatas[textureIndex];
 
     return textureData.srvHandleGPU;
+}
+
+const DirectX::TexMetadata& TextureManager::GetMetaData(uint32_t textureIndex)
+{
+    //テクスチャ番号が正常範囲内にある
+    assert(textureIndex + kSRVIndexTop < DirectXCommon::kMaxSRVCount);
+    //テクスチャデータの参照を取得
+    TextureData& textureData = textureDatas[textureIndex];
+    return textureData.metadata;
 }

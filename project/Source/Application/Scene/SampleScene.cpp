@@ -1,0 +1,235 @@
+#include "SampleScene.h"
+#include"MyEngine.h"
+#include"Lerp.h"
+#include"Easing.h"
+#include"DrawGrid.h"
+#include"DebugUI.h"
+#include<numbers>
+#include"MakeMatrix.h"
+#include"Sprite.h"
+#include"SphereMesh.h"
+#include <functional>
+
+SampleScene::SampleScene()
+{
+    camera_ = std::make_unique<Camera>();
+#ifdef _DEBUG
+    DrawGrid::Initialize();
+
+    debugCamera_ = std::make_unique<DebugCamera>();
+#endif // _DEBUG
+
+    uint32_t playerTextureHandle = Texture::GetHandle(Texture::PLAYER);
+    uint32_t uvCheckerTextureHandle = Texture::GetHandle(Texture::UV_CHECKER);
+    uint32_t white1x1TextureHandle = Texture::GetHandle(Texture::WHITE_1X1);
+    uint32_t particleTextureHandle = Texture::GetHandle(Texture::PARTICLE);
+
+    for (uint32_t i = 0; i < 5; ++i) {
+        Sprite* sprite = new Sprite();
+        if (i % 2 == 0) {
+            sprite->Create(playerTextureHandle, { i * 256.0f,0.0f }, { 128.0f,128.0f }, { 1.0f,1.0f,1.0f,1.0f });
+        } else {
+            sprite->Create(uvCheckerTextureHandle, { i * 256.0f,0.0f }, { 128.0f,128.0f }, { 1.0f,1.0f,1.0f,1.0f });
+        }
+        sprites_.push_back(sprite);
+    }
+
+
+    samplePlayer_ = std::make_unique<SamplePlayer>();
+
+    cube_.resize(2);
+    cube_[0].Create(white1x1TextureHandle);
+    cube_[1].Create(white1x1TextureHandle);
+
+    sphereMesh_ = std::make_unique<SphereMesh>();
+    sphereMesh_->Create(uvCheckerTextureHandle);
+
+    quad_.Create(uvCheckerTextureHandle);
+}
+
+void SampleScene::Initialize() {
+
+    isEndScene_ = false;
+
+    lightType_ = MaterialResource::LIGHTTYPE::NONE;
+    blendMode_ = BlendMode::kBlendModeNormal;
+
+    camera_->Initialize(static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()), Camera::PERSPECTIVE);
+    cameraTransform_ = { { 1.0f, 1.0f, 1.0f }, { 0.0f,0.0f,0.0f }, { 0.0f,0.0f,-10.0f } };
+    camera_->SetTransform(cameraTransform_);
+
+    currentCamera_ = camera_.get();
+
+#ifdef _DEBUG
+    debugCamera_->Initialize(static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()));
+    currentCamera_ = debugCamera_.get();
+#endif // _DEBUG
+
+    samplePlayer_->Init();
+
+    worldTransformParent_.Initialize();
+    WorldTransformUpdate(worldTransformParent_);
+
+    worldTransformChild_.Initialize();
+    worldTransformChild_.parent_ = &worldTransformParent_;
+    worldTransformChild_.translate_ = { 0.0f,0.0f,1.0f };
+    worldTransformChild_.scale_ = { 1.0f,1.0f,1.0f };
+    worldTransformChild_.rotate_.y = (std::numbers::pi_v<float> / 4.0f);
+    WorldTransformUpdate(worldTransformChild_);
+
+    particle_.Initialize(Texture::GetHandle(Texture::PARTICLE));
+
+    sphereMesh_->SetVertex({ 4.0f });
+
+
+    timer_ = 0.0f;
+}
+
+void SampleScene::Update()
+{
+    timer_ += 1.0f / 60.0f;
+
+    if (timer_ > 1.0f) {
+        timer_ = 0.0f;
+        animeCount++;
+        for (Sprite* sprite : sprites_) {
+            if (animeCount % 2 == 0) {
+                sprite->SetTexture(Texture::GetHandle(Texture::PLAYER));
+            } else {
+                sprite->SetTexture(Texture::GetHandle(Texture::UV_CHECKER));
+            }
+
+        }
+    }
+
+
+    Sound::PlayBGM(Sound::BGM1, -0.25f);
+
+    if (Input::IsTriggerMouse(0)) {
+        Sound::PlaySE(Sound::PICO, 0.0f);
+    }
+
+    if (Input::IsTriggerMouse(1)) {
+        Sound::PlaySE(Sound::CRACKER, 0.0f);
+    }
+
+    if (Input::IsTriggerKey(DIK_SPACE)) {
+        isEasing = isEasing ? false : true;
+    }
+
+    worldTransformChild_.parent_ = &worldTransformParent_;
+    WorldTransformUpdate(worldTransformChild_);
+
+    currentCamera_->UpdateMatrix();
+
+    if (isEasing) {
+        easing = Easing::EaseInQuart(0.0f, 1.0f, timer_);
+    } else {
+        easing = 1.0f;
+    }
+
+    for (Sprite* sprite : sprites_) {
+        float scale = { (1.0f+easing) * 128.0f };
+        sprite->SetSize({scale,scale});
+        sprite->Update();
+      
+    }
+
+    samplePlayer_->Update();
+
+    WorldTransformUpdate(worldTransformParent_);
+
+    WorldTransformUpdate(worldTransformChild_);
+    quad_.UpdateUV();
+
+    particle_.Update();
+
+    prePos_ = sphereMesh_->GetBalloonData().expansion;
+
+    sphereMesh_->GetBalloonData().expansion = easing;
+    postPos_ = sphereMesh_->GetBalloonData().expansion;
+
+
+}
+
+void SampleScene::Draw()
+{
+#ifdef _DEBUG
+    DrawGrid::Draw(*currentCamera_);
+#endif // _DEBUG
+
+    cube_[0].PreDraw(kBlendModeNormal);
+    cube_[0].Draw(*currentCamera_, worldTransformParent_.matWorld_, lightType_);
+
+    quad_.PreDraw();
+    quad_.Draw(*currentCamera_, MakeIdentity4x4());
+
+    sphereMesh_->PreDraw(kBlendModeNormal);
+    sphereMesh_->Draw(*currentCamera_, worldTransformChild_.matWorld_, lightType_);
+
+    MyEngine::SetBlendMode(blendMode_, kCullModeBack);
+    samplePlayer_->Draw(*currentCamera_, lightType_);
+    MyEngine::SetBlendMode();
+
+    Sprite::PreDraw(blendMode_);
+
+    for (Sprite* sprite : sprites_) {
+        sprite->Draw();
+    }
+
+    particle_.Draw(*currentCamera_, blendMode_);
+}
+
+void SampleScene::Debug()
+{
+
+    std::function<void()> func = [this]() { SwitchCamera(); };
+    DebugUI::Button("ChangeCamera", func);
+    DebugUI::CheckCamera(*currentCamera_);
+    DebugUI::CheckDirectionalLight(lightType_);
+    DebugUI::CheckBlendMode(blendMode_);
+
+    samplePlayer_->Debug();
+
+    DebugUI::CheckBalloonData(cube_[0].GetBalloonData());
+    DebugUI::CheckWaveData(cube_[0].GetWaveData(0), "waveData0");
+    DebugUI::CheckWaveData(cube_[0].GetWaveData(1), "waveData1");
+    DebugUI::CheckWorldTransform(worldTransformParent_, "worldTransformParent");
+    DebugUI::CheckWorldTransform(worldTransformChild_, "worldTransform");
+
+    ImGui::Begin("Sprite");
+    for (uint32_t i = 0; i < sprites_.size(); ++i) {
+        ImGui::PushID(i);
+        DebugUI::CheckSprite(*sprites_[i], "sprite");
+        ImGui::PopID();
+    }
+    ImGui::End();
+
+    ImGui::Checkbox("isEasing", &isEasing);
+    ImGui::SliderFloat("easing", &easing, 0.0f, 1.0f);
+    ImGui::Text("velocity : %f", postPos_ - prePos_);
+
+    ImGui::Begin("Quad");
+
+    DebugUI::CheckParticle(particle_, "particle");
+    DebugUI::CheckTransforms(quad_.GetUVScale(), quad_.GetUVRotate(), quad_.GetUVTranslate(), "uvTransform");
+
+    ImGui::End();
+
+}
+
+bool SampleScene::GetIsEndScene()
+{
+    return isEndScene_;
+}
+
+SampleScene::~SampleScene()
+{
+
+    for (Sprite* sprite : sprites_) {
+        delete sprite;
+    }
+
+    sprites_.clear();
+}
+

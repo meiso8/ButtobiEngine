@@ -4,16 +4,19 @@
 #include"Vector3.h"
 #include"Vector4.h"
 #include"WorldTransform.h"
-#include"Model.h"
+#include<list>
+#include"Transform.h"
+#include"Balloon.h"
+#include"Wave.h"
+#include <functional>
 
 enum BlendMode;
 class Input;
 class Sprite;
 class SphereMesh;
 class Camera;
-class Player;
-
-#include<list>
+class Model;
+class ParticleMesh;
 
 class DebugUI
 {
@@ -21,40 +24,45 @@ public:
 
     /// @brief モデル
     /// @param model 
-    void CheckModel(Model& model);
+    static void CheckModel(Model& model,const char* label);
     /// @brief スプライト
     /// @param sprite 
-    void CheckSprite(Sprite& sprite);
-    /// @brief 球
-    /// @param sphere 
-    void CheckSphere(SphereMesh& sphere);
+    static void CheckSprite(Sprite& sprite, const char* label);
+    static void CheckBalloonData(Balloon& balloon);
+    static void CheckWaveData(Wave& wave, const char* label);
+    static void CheckParticle(ParticleMesh& particle,const char* label);
     /// @brief ワールドトランスフォーム
     /// @param worldTransform 
-    void CheckWorldTransform(WorldTransform& worldTransform);
+    static void CheckWorldTransform(WorldTransform& worldTransform,const char* label);
     /// @brief ワールドマトリックス
     /// @param scale 
     /// @param rotate 
     /// @param translate 
     /// @param label 
-    void CheckWorldMatrix(Vector3& scale, Vector3& rotate, Vector3& translate, const char* label);
+    static void CheckTransform(Transform& transform, const char* label);
+
+    static void CheckTransforms(Vector3& scale, Vector3& rotate, Vector3& translate, const char* label);
+    //行列の要素を見る関数
+    static void ShowMatrix4x4(const Matrix4x4& matrix, const char* label = "Matrix4x4");
     /// @brief 入力
     /// @param input 
-    void CheckInput(Input& input);
+    static void CheckInput(Input& input);
     /// @brief カメラ
     /// @param camera 
-    void CheckCamera(Camera& camera);
+    static void CheckCamera(Camera& camera);
     /// @brief 光源
     /// @param directionalLights 
     /// @param lightType 
-    void CheckDirectionalLight(int& lightType);
+    static void CheckDirectionalLight(uint32_t& lightType);
     /// @brief 色
     /// @param color 
-    void CheckColor(Vector4& color);
+    static void CheckColor(Vector4& color, const char* label);
 
-    void CheckBlendMode(uint32_t& blendMode);
-    void CheckInt(int& value);
-    void CheckFPS();
-
-
+    static void CheckBlendMode(uint32_t& blendMode);
+    static void CheckInt(int& value, const char* label);
+    static void CheckFPS();
+    static void CheckFlag(bool& flag, const char* label);
+    static void SwitchFlag(bool& flag, const char* label);
+    static void Button(const char* label, std::function<void()> onSwitch);
 };
 

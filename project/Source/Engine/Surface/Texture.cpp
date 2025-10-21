@@ -1,25 +1,35 @@
 #include"Texture.h"
 #include"TextureManager.h"
+#include"ModelManager.h"
 
-std::vector<uint32_t>Texture::textureHandle_;
-Texture* Texture::instance_ = nullptr;
+std::vector<uint32_t>Texture::handle_;
 
-Texture* Texture::GetInstance()
+void Texture::LoadAllTexture()
 {
-    if (instance_ == nullptr) {
-        instance_ = new Texture();
-    }
-    return instance_;
+    handle_.resize(TEXTURES);
+
+    handle_[WHITE_1X1] = TextureManager::Load("Resources/white1x1.png");
+    handle_[UV_CHECKER] = TextureManager::Load("Resources/uvChecker.png");
+    handle_[NUMBERS] = TextureManager::Load("Resources/numbers.png");
+    handle_[PLAYER] = TextureManager::Load("Resources/player.png");
+    handle_[PARTICLE] = TextureManager::Load("Resources/particle.png");
 }
 
-void Texture::Load()
+uint32_t Texture::AddTextureHandle(const std::string& filePath)
 {
-    TextureManager* textureManager = TextureManager::GetInstance();
-    textureManager->Initialize();
-    textureHandle_.resize(TEXTURES);
-    textureHandle_[WHITE_1X1] = textureManager->Load("resources/white1x1.png");
-    textureHandle_[UV_CHECKER] = textureManager->Load("resources/uvChecker.png");
-    textureHandle_[NUMBERS] = textureManager->Load("resources/numbers.png");
-    textureHandle_[PLAYER] = textureManager->Load("resources/player.png");
+    uint32_t handle = TextureManager::Load(filePath);
+
+    auto it = std::find_if(
+        handle_.begin(),
+        handle_.end(),
+        [&](uint32_t existingHandle) { return existingHandle == handle; }
+    );
+
+    if (it != handle_.end()) {
+        return static_cast<uint32_t>(std::distance(handle_.begin(), it));
+    }
+
+    handle_.push_back(handle);
+    return static_cast<uint32_t>(Texture::handle_.size() - 1);;
 
 }

@@ -11,10 +11,10 @@ public:
     void Create(const std::wstring& title, const int32_t& clientWidth, const int32_t& clientHeight);
     HINSTANCE GetHInstance()const { return wc_.hInstance; }
     HWND GetHwnd() const{ return hwnd_; }
-    int32_t GetClientWidth() const {
+    static int32_t GetClientWidth(){
         return clientWidth_;
     }
-    int32_t GetClientHeight() const {
+    static int32_t GetClientHeight(){
         return clientHeight_;
     }
     
@@ -28,6 +28,6 @@ private:
     /// @brief ウィンドウハンドル  
     HWND hwnd_ = nullptr;
     //クライアント領域のサイズ  
-   int32_t clientWidth_{};
-    int32_t clientHeight_{};
+   static int32_t clientWidth_;
+    static int32_t clientHeight_;
 };

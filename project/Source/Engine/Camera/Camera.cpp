@@ -1,59 +1,83 @@
 #include"Camera.h"
-#include"Inverse.h"
-#include"MakeAffineMatrix.h"
-#include"Multiply.h"
-#include"MakePerspectiveFovMatrix.h"
-#include"MakeOrthographicMatrix.h"
+#include"MakeMatrix.h"
 
-void Camera::Initialize(const float& width, const float& height, const bool& isOrthographic) {
+#ifdef _DEBUG
+#include "../externals/imgui/imgui.h"
+#endif // _DEBUG
 
-    viewMatrix_ = Inverse(MakeAffineMatrix(scale_, rotation_, translate_));
+
+float Camera::width_;
+float Camera::height_;
+//Matrix4x4 Camera::viewMat_;
+//ShericalCoordinate Camera::shericalCoordinate_;
+
+void Camera::Initialize(const float& width, const float& height, const PROJECTION_TYPE& type) {
 
     width_ = width;
     height_ = height;
-    farZ_ = 100.0f;
-    isOrthographic_ = isOrthographic;
+    projectionType_ = type;
+
+    farZ_ = 1000.0f;
     offset_ = { 0.0f };
+    InitializeTransform();
+    UpdateProjectionMatrix();
 
-    if (isOrthographic_) {
-        //平行投影
-        projectionMatrix_ = MakeOrthographicMatrix(0.0f, 0.0f, width_, height_, 0.0f, farZ_);
+    sphericalCoordinate_.radius = 0.0f;
+    sphericalCoordinate_.azimuthal = 0.0f;
+    sphericalCoordinate_.polar = 0.0f;
 
-    } else {
-        //投資投影
-        projectionMatrix_ = MakePerspectiveFovMatrix(0.45f, width_ / height_, 0.1f, farZ_);
+}
+
+#ifdef _DEBUG
+void Camera::EditTransform(const std::string& label) {
+    if (ImGui::TreeNode(label.c_str())) {
+        ImGui::DragFloat3("scale", &scale_.x, 0.01f, -std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+        ImGui::SliderAngle("rotateX", &rotate_.x);
+        ImGui::SliderAngle("rotateY", &rotate_.y);
+        ImGui::SliderAngle("rotateZ", &rotate_.z);
+        ImGui::DragFloat3("translate", &translate_.x, 0.01f, -std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+        ImGui::TreePop();
     }
 }
+#endif // _DEBUG
 
 void Camera::InitializeTransform()
 {
     scale_ = { 1.0f,1.0f,1.0f };
-    rotation_ = { 0.0f,0.0f,0.0f };
+    rotate_ = { 0.0f,0.0f,0.0f };
     translate_ = { 0.0f,0.0f,0.0f };
+    worldMat_ = MakeIdentity4x4();
 }
 
-void Camera::Update() {
+void Camera::UpdateMatrix() {
 
-    viewMatrix_ = Inverse(MakeAffineMatrix(scale_, rotation_, translate_));
+    worldMat_ = MakeAffineMatrix(scale_, rotate_, translate_);
+    viewMat_ = Inverse(worldMat_);
 
-    if (isOrthographic_) {
+    UpdateProjectionMatrix();
+
+    projectionMat_.m[3][0] += offset_.x;
+    projectionMat_.m[3][1] -= offset_.y;
+
+    viewProjectionMat_ = Multiply(viewMat_, projectionMat_);
+}
+
+void Camera::UpdateProjectionMatrix()
+{
+
+    if (projectionType_ == PERSPECTIVE) {
+        //投資投影
+        projectionMat_ = MakePerspectiveFovMatrix(fovAngleY_, width_ / height_, nearZ_, farZ_);
+
+    } else if (projectionType_ == PARALLEL) {
         //平行投影
         float halfWidth = width_ * 0.5f;
         float halfHeight = height_ * 0.5f;
-        projectionMatrix_ = MakeOrthographicMatrix(halfWidth, halfHeight, -halfWidth, -halfHeight, nearZ_, farZ_);
-        projectionMatrix_.m[3][0] += offset_.x;
-        projectionMatrix_.m[3][1] -= offset_.y;
 
-    } else {
-        //投資投影
-        projectionMatrix_ = MakePerspectiveFovMatrix(0.45f, width_ / height_, nearZ_, farZ_);
-        projectionMatrix_.m[3][0] += offset_.x;
-        projectionMatrix_.m[3][1] -= offset_.y;
+        projectionMat_ = MakeOrthographicMatrix(halfWidth, halfHeight, -halfWidth, -halfHeight, nearZ_, farZ_);
     }
-
 }
 
-Matrix4x4 Camera::GetViewProjectionMatrix() {
-
-    return Multiply(viewMatrix_, projectionMatrix_);
+Matrix4x4& Camera::GetViewProjectionMatrix() {
+    return viewProjectionMat_;
 }

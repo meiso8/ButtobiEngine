@@ -4,7 +4,7 @@
 #pragma comment(lib,"dxguid.lib")
 
 #include"Camera/Camera.h"
-#include"math/Normalize.h"
+#include<cmath>
 
 Input* Input::instance_ = nullptr;
 BYTE Input::key_[256];
@@ -14,12 +14,9 @@ DIJOYSTATE Input::joyState_;
 float Input::deadZone_ = 0.1f;
 BYTE Input::preJoyButtons_[32];
 DIMOUSESTATE Input::mouseState_;
-float Input::mouseWheelVol_ = 0;
+DIMOUSESTATE Input::preMouseState_;
+
 bool Input::isDragging_ = false;
-Vector2 Input::offset_ = { 0.0f,0.0f };
-Vector2 Input::currentPos_ = { 0.0f };
-Vector3 Input::pos_ = { 0.0f };
-ShericalCoordinate Input::shericalCoordinate_ = { 0.0f,0.0f,0.0f };
 
 Input* Input::GetInstance() {
 
@@ -161,6 +158,16 @@ bool Input::IsReleaseKey(const uint8_t& keyNum) {
 
 }
 
+bool Input::IsAnyKeyPressed() {
+
+    for (int i = 0; i < 256; ++i) {
+        if (key_[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void Input::Update() {
 
     //キーの状態をコピーする
@@ -171,7 +178,7 @@ void Input::Update() {
     keyboard_->GetDeviceState(sizeof(key_), key_);
 
     //マウスの状態をコピーする
-    memcpy(&mouseState_bak_, &mouseState_, sizeof(mouseState_bak_));
+    memcpy(&preMouseState_, &mouseState_, sizeof(mouseState_));
     // 入力制御開始
     mouse_->Acquire();
     //マウスの状態を取得する
@@ -265,7 +272,7 @@ bool Input::GetJoyStickDPadButton(float* x, float* y)
     if (joyState_.rgdwPOV[0] == 31500) {
         //左上
         //*x = -1.0f / std::sqrtf(2.0f);
-        *x =-0.707107f;
+        *x = -0.707107f;
         *y = 0.707107f;
     }
 
@@ -310,27 +317,20 @@ bool Input::NormalizeButtonCount(float* x, float* y, LONG& buttonLX, LONG& butto
 
 
 bool Input::IsJoyStickPressButton(uint32_t index) {
+
     if (foundJoystick_) {
-
-        if (index > 31) {
-            return false;
-        }
-
+        assert(index < 32);
         if (joyState_.rgbButtons[index] & 0x80) {
             return true;
         }
-
-
     }
     return false;
 }
 bool Input::IsJoyStickTrigger(uint32_t index)
 {
     if (foundJoystick_) {
+        assert(index < 32);
 
-        if (index > 31) {
-            return false;
-        }
         if (joyState_.rgbButtons[index] & 0x80 && !(preJoyButtons_[index] & 0x80)) {
             return true;
         }
@@ -340,7 +340,18 @@ bool Input::IsJoyStickTrigger(uint32_t index)
 ;
 
 bool Input::IsPressMouse(uint32_t index) {
+    assert(index < 4);
     return (mouseState_.rgbButtons[index] & 0x80) ? true : false;
+}
+
+bool Input::IsTriggerMouse(uint32_t index) {
+    assert(index < 4);
+
+    if (mouseState_.rgbButtons[index] & 0x80 && !(preMouseState_.rgbButtons[index] & 0x80)) {
+        return true;
+    }
+
+    return false;
 }
 
 Vector2& Input::GetMousePos() {
@@ -351,43 +362,10 @@ Vector2& Input::GetMousePos() {
 }
 
 float Input::GetMouseWheel() {
-    mouseWheelVol_ += static_cast<float>(mouseState_.lZ) / FPS;
-    return mouseWheelVol_;
+    return  static_cast<float>(mouseState_.lZ) / FPS;
 };
 
-void Input::EyeOperation(Camera& camera) {
 
-    if (IsPressMouse(2) && IsPushKey(DIK_LSHIFT)) {
-        //視点の移動 offset をずらす
-        //後でoffsetをくわえる
-        offset_ += GetMousePos();
-        camera.SetOffset({ offset_.x / FPS,offset_.y / FPS * 2.0f });
-    } else if (IsPressMouse(2)) {
-        //視点の回転
-        //中ボタン押し込み&&ドラッグ
-        isDragging_ = true;
-    }
-
-    //マウススクロールする //初期位置-10
-    shericalCoordinate_.radius = -30 + GetMouseWheel();
-
-    if (!IsPressMouse(2)) {
-        isDragging_ = false;
-    }
-
-    if (isDragging_) {
-        currentPos_ = GetMousePos();
-        shericalCoordinate_.polar += currentPos_.x / FPS;
-        shericalCoordinate_.azimuthal += currentPos_.y / FPS;
-        camera.SetRotateY(shericalCoordinate_.polar);
-        camera.SetRotateZ(shericalCoordinate_.azimuthal);
-    }
-
-    pos_ = TransformCoordinate(shericalCoordinate_);
-
-    camera.SetTranslate(pos_);
-
-}
 
 Input::~Input() {
 
@@ -395,4 +373,5 @@ Input::~Input() {
     mouse_->Release();
     mouse_ = nullptr;
 
+    //delete instance_;
 }

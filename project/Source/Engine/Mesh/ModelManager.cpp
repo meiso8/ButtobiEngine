@@ -8,15 +8,54 @@
 #include<assimp/scene.h>
 #include<assimp/postprocess.h>
 #include"DirectXCommon.h"
+#include"Texture.h"
+#include"TextureManager.h"
 
-std::vector<ModelData> ModelManager::modelDatas;
-std::vector<uint32_t> ModelManager::modelHandle_;
+std::vector<ModelData> ModelManager::modelDatas_;
+std::vector<uint32_t> ModelManager::handle_;
 
+ModelData& ModelManager::GetModelData(const uint32_t& handle)
+{
+    assert(handle < modelDatas_.size());
+    return modelDatas_[handle];
+}
 
 void ModelManager::LoadAllModel()
 {
-    modelHandle_.resize(MODELS);
-    modelHandle_[PLAYER] = Load("resources/player", "player.obj");
+    handle_.resize(MODELS);
+
+    handle_[PLAYER] = Load("Resources/Models/player", "player.obj");
+
+    handle_[HEAD] = Load("Resources/Models/player", "head.obj");
+    handle_[BODY] = Load("Resources/Models/player", "body.obj");
+    handle_[LEFTARM] = Load("Resources/Models/player/", "armL.obj");
+    handle_[RIGHTARM] = Load("Resources/Models/player", "armR.obj");
+    handle_[LEFTLEG] = Load("Resources/Models/player", "legL.obj");
+    handle_[RIGHTLEG] = Load("Resources/Models/player", "legR.obj");
+   
+    handle_[WORLD] = Load("Resources/Models/world", "world.obj");
+    
+    handle_[PARTICLE] = Load("Resources/Models/particle", "particle.obj");
+
+    handle_[STAGE] = Load("Resources/Models/stage", "stage.obj");
+
+    std::string resourceString = "Resources/";
+    std::string titleString = "titleString";
+    std::string titleStrings[8] = { "bu", "tt", "to", "bi", "mi", "kk", "ku", "su" };
+    std::string objString = ".obj";
+
+    for (int i = 0; i < 8; i++) {
+        std::string fileName = titleString + titleStrings[i];
+        std::string directoryPath = resourceString + fileName;
+        std::string modelname = fileName + objString;
+        handle_[TITLE_BU+i] = Load(directoryPath, modelname);
+    }
+
+    handle_[JUICE_CUP] = Load("Resources/juiceCup", "juiceCup.obj");
+
+    handle_[FRUIT_APPLE] = Load("Resources/apple", "apple.obj");
+
+    handle_[TABLE] = Load("Resources/Models/cube", "cube.obj");
 }
 
 // ========================================================================================================
@@ -24,33 +63,34 @@ void ModelManager::LoadAllModel()
 uint32_t ModelManager::Load(const std::string& directoryPath, const std::string& filename)
 {
     LoadModel(directoryPath, filename);
-    return GetTextureIndexByFileName(filename);
+    std::string filePath = directoryPath + "/" + filename;
+    return GetTextureIndexByFileName(filePath);
 }
 
 void ModelManager::LoadModel(const std::string& directoryPath, const std::string& filename)
 {
     //読み込み済みテクスチャを検索
     auto it = std::find_if(
-        modelDatas.begin(),
-        modelDatas.end(),
-        [&](ModelData& soundData) {return soundData.filename == filename; }
+        modelDatas_.begin(),
+        modelDatas_.end(),
+        [&](ModelData& modelData) {return modelData.filePath == filename; }
     );
 
     //テクスチャ枚数上限チェック
-    assert(modelDatas.size() < DirectXCommon::kMaxModelCount);
+    assert(modelDatas_.size() < DirectXCommon::kMaxModelCount);
 
-    if (it != modelDatas.end()) {
+    if (it != modelDatas_.end()) {
         return;
     }
 
     //テクスチャデータを追加
-    modelDatas.resize(modelDatas.size() + 1);
+    modelDatas_.resize(modelDatas_.size() + 1);
     //追加したテクスチャデータの参照を取得する
-    ModelData& modelData = modelDatas.back();
+    ModelData& modelData = modelDatas_.back();
 
     Assimp::Importer importer;
     std::string filePath = directoryPath + "/" + filename;
-    modelData.filename = filename;
+    modelData.filePath = filePath;
 
     const aiScene* scene = importer.ReadFile(filePath.c_str(),
         aiProcess_Triangulate |
@@ -100,19 +140,23 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
         }
 
     }
+
+    //モデルのテクスチャを読む
+    modelData.textureHandle = Texture::AddTextureHandle(modelData.material.textureFilePath);
+
 }
 
 uint32_t ModelManager::GetTextureIndexByFileName(const std::string& filePath)
 {
     //読み込み済みデータを検索
     auto it = std::find_if(
-        modelDatas.begin(),
-        modelDatas.end(),
-        [&](ModelData& modelData) {return modelData.filename == filePath; }
+        modelDatas_.begin(),
+        modelDatas_.end(),
+        [&](ModelData& modelData) {return modelData.filePath == filePath; }
     );
 
-    if (it != modelDatas.end()) {
-        uint32_t modelIndex = static_cast<uint32_t>(std::distance(modelDatas.begin(), it));
+    if (it != modelDatas_.end()) {
+        uint32_t modelIndex = static_cast<uint32_t>(std::distance(modelDatas_.begin(), it));
         return modelIndex;
     }
 

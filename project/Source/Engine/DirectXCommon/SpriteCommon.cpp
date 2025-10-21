@@ -1,25 +1,17 @@
 #include "SpriteCommon.h"
 #include"DirectXCommon.h"
+#include"PSO.h"
 
-SpriteCommon* SpriteCommon::instance_ = nullptr;
+RootSignature* SpriteCommon::rootSignature_ = nullptr;
 
-SpriteCommon* SpriteCommon::GetInstance()
-{
-    if (instance_ == nullptr) {
-        instance_ = new SpriteCommon();
-    }
-
-    return instance_;
-}
-
+D3D12_INDEX_BUFFER_VIEW SpriteCommon::indexBufferView_;
+Microsoft::WRL::ComPtr <ID3D12Resource> SpriteCommon::indexResource_ = nullptr;
+uint32_t* SpriteCommon::indexData_ = nullptr;
 
 void SpriteCommon::Initialize()
 {
-
-    modelConfig_ = ModelConfig::GetInstance();
-
+    rootSignature_ = PSO::GetRootSignature();
     CreateIndexResource();
-
 }
 
 void SpriteCommon::SetIndexBuffer(ID3D12GraphicsCommandList* commandList)
@@ -29,15 +21,9 @@ void SpriteCommon::SetIndexBuffer(ID3D12GraphicsCommandList* commandList)
 
 }
 
-void SpriteCommon::LightDraw(ID3D12GraphicsCommandList* commandList)
-{
-    //LightのCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
-}
-
 void SpriteCommon::PreDraw(ID3D12GraphicsCommandList* commandList)
 {
-    commandList->SetGraphicsRootSignature(modelConfig_->rootSignature->GetRootSignature(0));
+    commandList->SetGraphicsRootSignature(rootSignature_->GetRootSignature(RootSignature::SPRITE));
 }
 
 void SpriteCommon::DrawCall(ID3D12GraphicsCommandList* commandList)
@@ -45,11 +31,6 @@ void SpriteCommon::DrawCall(ID3D12GraphicsCommandList* commandList)
     //描画!（DrawCall/ドローコール）6個のインデックスを使用し1つのインスタンスを描画。その他は当面0で良い。
     commandList->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
-
-
-
-
-
 
 void SpriteCommon::CreateIndexResource() {
 
@@ -77,6 +58,9 @@ void SpriteCommon::CreateIndexResource() {
     indexData_[3] = 1;
     indexData_[4] = 3;
     indexData_[5] = 2;
+
+    indexResource_->Unmap(0, nullptr);
+
 
 #pragma endregion
 }

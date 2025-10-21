@@ -1,10 +1,12 @@
 #pragma once
-#include"Vector3.h"
-#include"Matrix4x4.h"
+#include "Vector3.h"
+#include <array>
+#include <memory>
+#include <string>
+#include <numbers>
 
+/// @brief 球
 struct Sphere {
-    Vector3 center;
-    float radius;
+	Vector3 center;	// 中心座標
+	float radius;	// 半径
 };
-
-//void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color);

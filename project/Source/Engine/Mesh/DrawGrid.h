@@ -5,9 +5,9 @@
 
 class DrawGrid {
 public:
-    DrawGrid(uint32_t textureHanddle);
-    void Draw(Camera& camera);
+    static void Initialize();
+    static void Draw(Camera& camera, bool isDraw = true);
 private:
-    LineMesh line_[102];
-    Cube cube_[2];
+    static LineMesh line_[102];
+    static Cube cube_[2];
 };

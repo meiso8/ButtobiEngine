@@ -1,36 +1,43 @@
 #include "DebugCamera.h"
-#include"Inverse.h"
-#include"MakeAffineMatrix.h"
-#include"MakeRotateMatrix.h"
-#include"MakeIdentity4x4.h"
-#include"MakeTranslateMatrix.h"
-#include"MakePerspectiveFovMatrix.h"
-#include"MakeOrthographicMatrix.h"
+#include"MakeMatrix.h"
 #include"CoordinateTransform.h"
-#include"Multiply.h"
+#include"Lerp.h"
 #include<numbers>
 #include<cmath>
+#include"Input.h"
 
-void DebugCamera::Initialize(Input* input, const float& width, const float& height) {
-
-    input_ = input;
-
+void DebugCamera::Initialize(const float& width, const float& height, const PROJECTION_TYPE& type)
+{
     width_ = width;
     height_ = height;
+    projectionType_ = type;
+    farZ_ = 1000.0f;
+    nearZ_ = 0.1f;
+    offset_ = { 0.0f };
 
     rotateSpeed_ = std::numbers::pi_v<float> / 20.0f / FPS;
     speed_ = 1.0f;
 
-    viewMatrix_ = Inverse(MakeAffineMatrix({ 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f }, translation_));
-    projectionMatrix_ = MakePerspectiveFovMatrix(0.45f, width_ / height_, 0.1f, 100.0f);
+    scale_ = { 1.0f,1.0f,1.0f };
+    rotate_ = { 0.0f,0.0f,0.0f };
+    translate_ = { 0.0f,0.0f,-30.0f };
+    worldMat_ = MakeIdentity4x4();
+
+    viewMat_ = Inverse(MakeAffineMatrix(scale_, rotate_, translate_));
+    projectionMat_ = MakePerspectiveFovMatrix(0.45f, width_ / height_, nearZ_, farZ_);
 
     matRot_ = MakeIdentity4x4();
-};
 
-void DebugCamera::Update() {
+    sphericalCoordinate_.radius = -30.0f;
+    sphericalCoordinate_.azimuthal = 0.0f;
+    sphericalCoordinate_.polar = 0.0f;
+}
 
-    InputRotate();
-    InputTranslate();
+void DebugCamera::UpdateMatrix() {
+
+    //InputRotate();
+    //InputTranslate();
+    MouseInputMove();
 
     Matrix4x4 matRotDelta = MakeIdentity4x4();
     matRotDelta = Multiply(matRotDelta, MakeRotateXMatrix(deltaRotate_.x));
@@ -41,84 +48,123 @@ void DebugCamera::Update() {
 
     //累積の回転行列を合成
     matRot_ = Multiply(matRot_, matRotDelta);
-    viewMatrix_ = Inverse(Multiply(matRot_, MakeTranslateMatrix(translation_)));
+    worldMat_ = MakeAffineMatrix(scale_, rotate_, translate_);
+    viewMat_ = Inverse(Multiply(matRot_, worldMat_));
 
-    if (isOrthographic_) {
-        //平行投影
-        projectionMatrix_ = MakeOrthographicMatrix(0.0f, 0.0f, width_, height_, 0.0f, 100.0f);
+    UpdateProjectionMatrix();
+    viewProjectionMat_ = Multiply(viewMat_, projectionMat_);
+}
 
-    } else {
+void DebugCamera::UpdateProjectionMatrix()
+{
+    if (projectionType_ == PERSPECTIVE) {
         //投資投影
-        projectionMatrix_ = MakePerspectiveFovMatrix(0.45f, width_ / height_, 0.1f, 100.0f);
+        projectionMat_ = MakePerspectiveFovMatrix(0.45f, width_ / height_, nearZ_, farZ_);
+    } else if (projectionType_ == PARALLEL) {
+        //平行投影
+        float halfWidth = width_ * 0.5f;
+        float halfHeight = height_ * 0.5f;
+        scale_ = { 0.01f,0.01f,0.01f };
+        projectionMat_ = MakeOrthographicMatrix(halfWidth, halfHeight, -halfWidth, -halfHeight, nearZ_, farZ_);
     }
+
+    projectionMat_.m[3][0] += offset_.x;
+    projectionMat_.m[3][1] -= offset_.y;
 }
 
 void DebugCamera::InputTranslate() {
 
-
-    if (input_->IsPushKey(DIK_A)) {
+    if (Input::IsPushKey(DIK_A)) {
         MoveX(-speed_);
     }
 
-    if (input_->IsPushKey(DIK_D)) {
+    if (Input::IsPushKey(DIK_D)) {
         MoveX(speed_);
     }
 
-    if (input_->IsPushKey(DIK_W)) {
+    if (Input::IsPushKey(DIK_W)) {
         MoveY(speed_);
     }
 
-    if (input_->IsPushKey(DIK_S)) {
+    if (Input::IsPushKey(DIK_S)) {
         MoveY(-speed_);
     }
 
-    if (input_->IsPushKey(DIK_Q)) {
+    if (Input::IsPushKey(DIK_Q)) {
         MoveZ(-speed_);
     }
 
-    if (input_->IsPushKey(DIK_E)) {
+    if (Input::IsPushKey(DIK_E)) {
         MoveZ(speed_);
     }
+
 };
 
 void DebugCamera::InputRotate() {
 
-    if (input_->IsPushKey(DIK_R)) {
+    if (Input::IsPushKey(DIK_R)) {
 
-        if (input_->IsTriggerKey(DIK_UP)) {
+        if (Input::IsTriggerKey(DIK_UP)) {
             rotateSpeed_ *= -1.0f;
         }
 
-        if (input_->IsPushKey(DIK_X)) {
+        if (Input::IsPushKey(DIK_X)) {
             deltaRotate_.x = rotateSpeed_;
         }
 
-        if (input_->IsPushKey(DIK_Y)) {
+        if (Input::IsPushKey(DIK_Y)) {
             deltaRotate_.y = rotateSpeed_;
         }
 
-        if (input_->IsPushKey(DIK_Z)) {
+        if (Input::IsPushKey(DIK_Z)) {
             deltaRotate_.z = rotateSpeed_;
         }
-
     }
 
 };
 
 void DebugCamera::MoveZ(const float& speed) {
     //カメラ移動ベクトル
-    Vector3 move = { 0.0f,0.0f,speed };
-    translation_ += CoordinateTransform(move, matRot_);
+    translate_ += CoordinateTransform({ 0.0f,0.0f,speed }, matRot_);
 }
 
 void DebugCamera::MoveX(const float& speed) {
-    translation_ += CoordinateTransform({ speed, 0.0f, 0.0f }, matRot_);
+    translate_ += CoordinateTransform({ speed, 0.0f, 0.0f }, matRot_);
 };
 
 void DebugCamera::MoveY(const float& speed) {
-    translation_ += CoordinateTransform({ 0.0f, speed, 0.0f }, matRot_);
+    translate_ += CoordinateTransform({ 0.0f, speed, 0.0f }, matRot_);
 };
 
-Matrix4x4 DebugCamera::GetViewProjectionMatrix() {
-    return Multiply(viewMatrix_, projectionMatrix_);
-};
+void DebugCamera::MouseInputMove() {
+
+    if (Input::IsPressMouse(2) && Input::IsPushKey(DIK_LSHIFT)) {
+        //視点の移動 offset をずらす
+        //後でoffsetをくわえる
+        Vector2 deltaOffset = { 0.0f,0.0f };
+        deltaOffset += Input::GetMousePos();
+        offset_ += { deltaOffset.x / FPS,deltaOffset.y / FPS * 2.0f };
+    } else if (Input::IsPressMouse(2)) {
+        //視点の回転
+        //中ボタン押し込み&&ドラッグ
+        Input::isDragging_ = true;
+    }
+
+    //マウススクロールする //初期位置-30
+    sphericalCoordinate_.radius += Input::GetMouseWheel();
+
+    if (!Input::IsPressMouse(2)) {
+        Input::isDragging_ = false;
+    }
+
+    if (Input::isDragging_) {
+        Vector2 currentPos = Input::GetMousePos();
+        sphericalCoordinate_.polar += currentPos.x / FPS;
+        sphericalCoordinate_.azimuthal += currentPos.y / FPS;
+        rotate_.y = sphericalCoordinate_.polar;
+        rotate_.z = sphericalCoordinate_.azimuthal;
+    }
+
+    translate_ = TransformCoordinate(sphericalCoordinate_);
+
+}

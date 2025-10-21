@@ -5,7 +5,7 @@
 #include<cstdint>
 #include"Vector2.h"
 #include"Window.h"
-#include"SphericalCoordinate.h"
+
 #include"Window.h"
 #include<memory>
 #define FPS 60.0f
@@ -16,6 +16,7 @@ class Input {
 public:
     static bool foundJoystick_;
     GUID joystickGUID = GUID_NULL;
+    static bool isDragging_;
 public:
 
     enum ButtonType {
@@ -24,8 +25,10 @@ public:
     };
 
     static Input* GetInstance();
+
     Input() = default;
     Input(Input&) = delete;
+    Input& operator=(Input&) = delete;
 
     HRESULT Initialize(Window& window);
     /// @brief キーを押した状態 
@@ -36,12 +39,17 @@ public:
     static bool IsReleaseStateKey(const uint8_t& key);
     /// @briefキーを離した瞬間
     static bool IsReleaseKey(const uint8_t& key);
-
+    static bool IsAnyKeyPressed();
     /// @brief キーの情報を取得する
     void Update();
-
+    /// @brief マウスが押されている状態かどうかを取得する
+    /// @param index マウスボタンの番号　0 =左 1 = 右　2 = 中　3 = XButton2
+    /// @return 押されているかどうか
     static bool IsPressMouse(uint32_t index);
-
+    /// @brief マウスがトリガーされた状態かどうかを取得する
+    /// @param index マウスボタンの番号　0 =左 1 = 右　2 = 中　3 = XButton2
+    /// @return トリガーされたかどうか
+    static bool IsTriggerMouse(uint32_t index);
     static bool IsJoyStickPressButton(uint32_t index);
     static bool IsJoyStickTrigger(uint32_t index);
 
@@ -53,12 +61,6 @@ public:
     static Vector2& GetMousePos();
     static float GetMouseWheel();
 
-    static void EyeOperation(Camera& camera);
-
-    static Vector2& GetOffset() { return offset_; }
-    static Vector2& GetCurrentPos() { return currentPos_; }
-    static Vector3& GetPos() { return pos_; }
-    ShericalCoordinate& GetSc() { return shericalCoordinate_; }
 private:
     static Input* instance_;
     Window* window_ = nullptr;
@@ -70,14 +72,9 @@ private:
     //マウス
     IDirectInputDevice8* mouse_ = nullptr;
     static DIMOUSESTATE mouseState_;
-    DIMOUSESTATE mouseState_bak_ = {};	// マウス情報(変化検知用)
-    static float mouseWheelVol_;
-    static bool isDragging_;
+    static DIMOUSESTATE preMouseState_;	// マウス情報(変化検知用)
 
-    static Vector2 offset_;
-    static Vector2 currentPos_;
-    static Vector3 pos_;
-    static ShericalCoordinate shericalCoordinate_;
+
 
     //ゲームパッド
     IDirectInputDevice8* gamePad_ = nullptr;
@@ -87,6 +84,5 @@ private:
 
 private:
     static bool NormalizeButtonCount(float* x, float* y, LONG& buttonLX, LONG& buttonLY);
-    Input& operator=(Input&) = delete;
     ~Input();
 };

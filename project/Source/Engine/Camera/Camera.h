@@ -2,61 +2,58 @@
 #include"Matrix4x4.h"
 #include"Transform.h"
 #include"Vector2.h"
+#include"SphericalCoordinate.h"
+#include <string>
 
 class Camera {
-private:
+public:
     Vector3 scale_ = { 1.0f,1.0f,1.0f };
-    //XYZ軸回りのローカル回転角
-    Vector3 rotation_ = { 0.0f,0.0f,0.0f };
-    //ローカル座標
+    Vector3 rotate_ = { 0.0f,0.0f,0.0f };
     Vector3 translate_ = { 0.0f,0.0f,0.0f };
-    //ビュー行列
-    Matrix4x4 viewMatrix_ = {};
-    //射影行列
-    Matrix4x4 projectionMatrix_ = {};
-    float farZ_ = 100.0f;
+    // 垂直方向視野角
+    float fovAngleY_ = 45.0f * 3.141592654f / 180.0f;
+    float farZ_ = 1000.0f;
     float nearZ_ = 0.1f;
-    float width_{};
-    float height_{};
-    bool isOrthographic_ = false;
+
     Vector2 offset_ = { 0.0f };
+
+    enum PROJECTION_TYPE {
+        PERSPECTIVE,
+        PARALLEL,
+    };
+
+    PROJECTION_TYPE projectionType_ = PERSPECTIVE;
+    Matrix4x4 worldMat_;
+    //ビュー行列
+    Matrix4x4 viewMat_;
+    //射影行列
+    Matrix4x4 projectionMat_ = {0.0f};
+    Matrix4x4 viewProjectionMat_ = { 0.0f };
+
+    //球面座標系
+    SphericalCoordinate sphericalCoordinate_;
+
+protected:
+    static float width_;
+    static float height_;
 public:
     /// @brief 初期化
-    void Initialize(const float& width, const float& height, const bool& isOrthographic);
-    void InitializeTransform();
+    virtual void Initialize(const float& width, const float& height, const PROJECTION_TYPE& type = PROJECTION_TYPE::PERSPECTIVE);
     /// @brief 更新
-    void Update();
-
-    void SetViewMatrix(const Matrix4x4& matrix) { viewMatrix_ = matrix; };
-    void SetProjectionMatrix(const Matrix4x4& matrix) { projectionMatrix_ = matrix; };
-    Matrix4x4 GetViewMatrix() { return viewMatrix_; };
-    Matrix4x4 GetProjectionMatrix() { return projectionMatrix_; };
-    Matrix4x4 GetViewProjectionMatrix();
-
+    virtual void UpdateMatrix();
+    virtual void UpdateProjectionMatrix();
+    Matrix4x4& GetViewProjectionMatrix();
     void SetTransform(const Transform& transform) {
         scale_ = transform.scale;
-        rotation_ = transform.rotate;
+        rotate_ = transform.rotate;
         translate_ = transform.translate;
     };
-    Vector3& GetTranslate() { return translate_; };
-    Vector3& GetRotate() { return rotation_; };
-    Vector3& GetScale() { return scale_; };
-    Vector2& GetOffset() { return offset_; };
-    float& GetFarZ() { return farZ_; };
-    float& GetNearZ() { return nearZ_; };
-    bool GetIsOrthographic() {return isOrthographic_;}
 
-    void SetRotate(const Vector3& rotate) { rotation_ = rotate; };
-    void SetRotateY(const float& rotateY) { rotation_.y = rotateY; };
-    void SetRotateZ(const float& rotateZ) { rotation_.z = rotateZ; };
-    void SetOffset(const Vector2& offset) { offset_ = offset; };
-    void SetOrthographic(bool isOrthographic) { isOrthographic_ = isOrthographic; }
+#ifdef _DEBUG
+	/// @brief ワールド変換データの編集
+	/// @param label ラベル
+    void EditTransform(const std::string &label);
+#endif // _DEBUG
 
-    void SetFarZ(const float& farZ) { farZ_ = farZ; };
-    void SetTranslate(const Vector3& translate) { translate_ = translate; };
-    void SetTranslateXY(const Vector2& translate) { translate_.x = translate.x; translate_.y = translate.y; };
-
-    void SetTranslateX(const float& translateX) { translate_.x = translateX; };
-    void SetTranslateY(const float& translateY) { translate_.y = translateY; };
-    void SetTranslateZ(const float& translateZ) { translate_.z = translateZ; };
+    void InitializeTransform();
 };

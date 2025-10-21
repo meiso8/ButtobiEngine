@@ -1,31 +1,26 @@
 #pragma once
 #include<d3d12.h>
 #include"DirectXCommon.h"
-#include"ModelConfig.h"
+#include"commandList.h"
+#include"RootSignature.h"
 #include"VertexData.h"
 class PSO;
 
 class SpriteCommon
 {
 private:
-    static SpriteCommon* instance_;
-    DirectXCommon* directXCommon_;
-    ModelConfig* modelConfig_ = nullptr;
+    static RootSignature* rootSignature_;
 
-    D3D12_INDEX_BUFFER_VIEW  indexBufferView_{};
-    Microsoft::WRL::ComPtr <ID3D12Resource> indexResource_{};
-    uint32_t* indexData_ = nullptr;
+    static D3D12_INDEX_BUFFER_VIEW  indexBufferView_;
+    static Microsoft::WRL::ComPtr <ID3D12Resource> indexResource_;
+    static uint32_t* indexData_;
 
 public:
-
-    static SpriteCommon* GetInstance();
-     void Initialize();
-     void SetIndexBuffer(ID3D12GraphicsCommandList* commandList);
-     void LightDraw(ID3D12GraphicsCommandList* commandList);
-     void PreDraw(ID3D12GraphicsCommandList* commandList);
-     void DrawCall(ID3D12GraphicsCommandList* commandList);
+     static void Initialize();
+     static void SetIndexBuffer(ID3D12GraphicsCommandList* commandList);
+     static void PreDraw(ID3D12GraphicsCommandList* commandList);
+     static void DrawCall(ID3D12GraphicsCommandList* commandList);
 private:
-
-    void CreateIndexResource();
+    static void CreateIndexResource();
 };
 
