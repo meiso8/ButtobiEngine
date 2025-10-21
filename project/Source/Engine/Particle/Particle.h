@@ -10,6 +10,7 @@
 #include<memory>
 #include<cstdint>
 #include"AccelerationField.h"
+#include"SphericalCoordinate.h"
 
 class Camera;
 class ShaderResourceView;
@@ -38,13 +39,16 @@ struct ParticleForGPU {
     Vector4 color;
 };
 
-std::list<Particle> Emit(const Emitter& emitter);
+std::list<Particle> Emit(const Emitter& emitter, const Vector4& color);
+std::list<SphericalCoordinate> EmitCoordinate(const Emitter& emitter);
+
 
 class ParticleManager
 {
 public:
     const uint32_t kNumMaxInstance = 100;//インスタンス数
     std::list<Particle>particles;
+    std::list<SphericalCoordinate>sphericalCoordinates;
     bool useBillboard_ = false;
     Emitter emitter_{};
     AccelerationField accelerationField;
@@ -52,6 +56,8 @@ private:
 
     const float kDeltaTime = 1.0f / 60.0f;
 
+
+    uint32_t numInstance_ = 0;
     ParticleForGPU* instancingData = nullptr;
     std::unique_ptr<ModelData> modelData_ = nullptr;
     MaterialResource materialResource_{};
@@ -74,15 +80,24 @@ private:
 
 public:
     void Initialize(uint32_t textureHandle, int modelHandle = -1);
-    static Particle MakeNewParticle(const Vector3& translate);
+
     void InitEmitter();
     void InitAccelerationField();
-    void Draw(Camera& camera, uint32_t blendMode = BlendMode::kBlendModeAdd);
-    void Update();
 
+    void Draw(uint32_t blendMode = BlendMode::kBlendModeAdd);
+    void EmitterTimerUpdate(const Vector4 color);
+
+    void Update(Camera& camera);
+
+    void EmitParticle(const Vector4& color);
+    static Particle MakeNewParticle(const Vector3& translate, const Vector4& color);
+    static SphericalCoordinate MakeNewSphericalCoordinate();
 private:
     void CreateModelData(const uint32_t& textureHandle,const int& modelHandle);
     void CreateVertexBufferResource();
     void CreateTransformationMatrix();
+
+ 
+
 };
 

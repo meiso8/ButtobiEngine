@@ -8,6 +8,7 @@
 #include"MakeMatrix.h"
 #include"Sprite.h"
 #include"SphereMesh.h"
+#include"Random.h"
 #include <functional>
 
 SampleScene::SampleScene()
@@ -118,7 +119,9 @@ void SampleScene::Update()
     WorldTransformUpdate(worldTransformChild_);
     quad_.UpdateUV();
 
-    particle_.Update();
+    Random::SetMinMax(0.0f,1.0f);
+    particle_.EmitterTimerUpdate({ Random::Get(),Random::Get(),Random::Get() });
+    particle_.Update(*currentCamera_);
 
     prePos_ = sphereMesh_->GetBalloonData().expansion;
 
@@ -153,7 +156,7 @@ void SampleScene::Draw()
         sprite->Draw();
     }
 
-    particle_.Draw(*currentCamera_, blendMode_);
+    particle_.Draw(blendMode_);
 }
 
 void SampleScene::Debug()

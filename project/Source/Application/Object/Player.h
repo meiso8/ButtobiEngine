@@ -114,6 +114,7 @@ public:
 	void OnCollision(const Enemy *enemy);
 
 	bool IsAttack()const;
+	bool IsCharge()const;
 
 	void InitializeLife(int SetMaxLife) { life_ = SetMaxLife; };
 

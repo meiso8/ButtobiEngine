@@ -8,7 +8,7 @@
 
 #include"Window.h"
 #include<memory>
-#define FPS 60.0f
+#define InverseFPS 1.0f/60.0f
 
 class Camera;
 
