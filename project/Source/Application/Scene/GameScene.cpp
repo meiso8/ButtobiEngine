@@ -167,10 +167,12 @@ void GameScene::Update() {
 	}
 
 
+
+
     // 敵が死亡している場合は削除
     enemies_.remove_if([](Enemy* enemy) {
         if (enemy->IsDead()) {
-
+			Sound::PlaySE(Sound::CRACKER);
             delete enemy; // メモリ解放
             return true;   // 削除する
         }

@@ -1,7 +1,6 @@
 #include "CollisionManager.h"
 #include "Collider.h"
 #include "Collision.h"
-#include"Sound.h"
 
 void CollisionManager::CheckAllCollisions() {
     // リスト内のペアを総当たり
@@ -39,9 +38,6 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
         if (colliderA->IsKicked() || colliderB->IsKicked()) {
             *combo_ += 1;//コンポを加算
             *score_ += static_cast<uint32_t>((Length(colliderA->GetVelocity()) + Length(colliderB->GetVelocity())) / 2.0f);
-            Sound::PlaySE(Sound::CRACKER);
-        } else {
-            Sound::PlaySE(Sound::PICO);
         }
     }
 }

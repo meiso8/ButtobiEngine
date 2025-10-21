@@ -717,8 +717,38 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Resources\particle.png">
+    <Image Include="Resources\Textures\numbers.png">
       <Filter>リソース ファイル</Filter>
     </Image>
+    <Image Include="Resources\Textures\particle.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resources\Textures\player.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resources\Textures\uvChecker.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resources\Textures\white1x1.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resources\numbers.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resources\player.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resources\uvChecker.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resources\white1x1.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Resources\Sounds\externals\attack.mp3" />
+    <Media Include="Resources\Sounds\externals\cheers!.mp3" />
+    <Media Include="Resources\Sounds\externals\playerHit.mp3" />
+    <Media Include="Resources\Sounds\externals\pour_drink.mp3" />
   </ItemGroup>
 </Project>
