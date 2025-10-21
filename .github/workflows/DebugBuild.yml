@@ -5,7 +5,7 @@ on:
       - master
 env:
   #リポジトリのルートディレクトリを起点としたソリューションファイルのパス
-  SOLUTION_FILE_PATH: project/CG2.sln
+  SOLUTION_FILE_PATH: project/2102_ぶっとびミックス.sln
   #Visual Studioの構成（Debug/Release）
   CONFIGURATION: Debug
 jobs:
