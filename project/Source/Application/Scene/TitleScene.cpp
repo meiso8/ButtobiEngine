@@ -20,6 +20,7 @@ TitleScene::TitleScene()
     juiceCupModel = new Model();
     juiceCupModel->Create(ModelManager::JUICE_CUP);
 
+
     tableModel = new Model();
     tableModel->Create(ModelManager::TABLE);
 
