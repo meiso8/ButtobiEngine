@@ -5,6 +5,7 @@
 #include<memory>
 #include"ModelManager.h"
 #include"Lerp.h"
+#include <algorithm>
 
 TitleScene::TitleScene()
 {
@@ -18,6 +19,7 @@ TitleScene::TitleScene()
 
     juiceCupModel = new Model();
     juiceCupModel->Create(ModelManager::JUICE_CUP);
+
 
     tableModel = new Model();
     tableModel->Create(ModelManager::TABLE);
@@ -56,12 +58,14 @@ void TitleScene::Initialize() {
     WorldTransformUpdate(tableWorldTransform);
     
     appleWorldTransform.Initialize();
-    //appleWorldTransform.scale_ = { 100.0f, 1.0f, 100.0f };
-    //appleWorldTransform.translate_ = { 0, -5.0f, 0 };
+    appleWorldTransform.scale_ = { 3.0f, 3.0f, 3.0f };
+    appleWorldTransform.translate_ = { 23, -1.5f, -5 };
+	appleWorldTransform.rotate_ = {-1.4f, 0.0f, 0.0f};
     WorldTransformUpdate(appleWorldTransform);
 
     jInOutPhase_ = JuiceInOutPhase::InJuice;
     IsAnimationEnd = false;
+	iscameraTranslateEnd = false;
     selectGameoption_ = GameOption::GameStart;
     gameOption_ = GameOption::None;
     animationPhase_ = AnimationPhase::JInOutP;
@@ -78,6 +82,9 @@ void TitleScene::Update() {
         switch (animationPhase_) {
         case TitleScene::AnimationPhase::JInOutP:
             StringInOutJuiceAnimation();
+			
+			WorldTransformUpdate(appleWorldTransform);
+
             break;
         case TitleScene::AnimationPhase::Korokoro:
             KorokoroAnimation();
@@ -85,11 +92,20 @@ void TitleScene::Update() {
         default:
             break;
         }
-
+		
+		appleWorldTransform.rotate_.z += 0.1f;
 
     } else {
-
+		if (iscameraTranslateEnd) {
+		LoopAnimation();
         Move();
+		} else {
+			camera_->translate_ = Lerp(camera_->translate_, {camera_->translate_.x, -4,-20},stringAnimationTimer);
+			camera_->UpdateMatrix();
+            if (camera_->translate_.z >= -20) {
+            iscameraTranslateEnd = true;
+            }
+		}
     }
     for (int i = 0; i < 8; i++) {
         WorldTransformUpdate(titleStringWorldTransform[i]);
@@ -278,6 +294,7 @@ void TitleScene::StringInOutJuiceAnimation() {
             jInOutPhase_ = JuiceInOutPhase::RotateJuice;
             break;
         }
+		appleWorldTransform.translate_.x -= 0.2f;
         break;
     case TitleScene::JuiceInOutPhase::RotateJuice: {
 
@@ -323,14 +340,29 @@ void TitleScene::StringInOutJuiceAnimation() {
             titleStringWorldTransform[i].translate_.y = std::max(-2.0f, titleStringWorldTransform[i].translate_.y);
         }
 
-        if (juiceCupWorldTransform.rotate_.z >= 1.55f) {
-            jInOutPhase_ = JuiceInOutPhase::OutJuice;
-            stringAnimationTimer = 0.0f;
-            break;
+        if (juiceCupWorldTransform.rotate_.z >= 0.8f) {
+			stringAnimationTimer = 0.0f;
+			for (int i = 0; i < 8; i++) {
+
+				titleStringWorldTransform[i].translate_ = Lerp(titleStringWorldTransform[i].translate_, stringOutEndPosition[i], stringAnimationTimer);
+				titleStringWorldTransform[i].rotate_.z += 0.05f;
+			}
         }
 
+        if (juiceCupWorldTransform.rotate_.z >= 1.55f) {
+            jInOutPhase_ = JuiceInOutPhase::OutJuice;
+           
+            break;
+        }
+		appleWorldTransform.translate_.x -= 0.2f;
     }break;
     case TitleScene::JuiceInOutPhase::OutJuice:
+
+        for (int i = 0; i < 8; i++) {
+
+			titleStringWorldTransform[i].translate_ = Lerp(titleStringWorldTransform[i].translate_, stringOutEndPosition[i], stringAnimationTimer);
+			titleStringWorldTransform[i].rotate_.z += 0.05f;
+		}
 
         camera_->translate_ = Lerp(cameraPositionStart, cameraPositionEnd, stringAnimationTimer);
 
@@ -340,7 +372,7 @@ void TitleScene::StringInOutJuiceAnimation() {
             animationPhase_ = AnimationPhase::Korokoro;
             break;
         }
-
+		appleWorldTransform.translate_.x -= 0.3f;
         break;
     default:
         break;
@@ -353,23 +385,40 @@ void TitleScene::StringInOutJuiceAnimation() {
 
 void TitleScene::KorokoroAnimation() {
 
-    for (int i = 0; i < 8; i++) {
-
-        titleStringWorldTransform[i].translate_ = Lerp(titleStringWorldTransform[i].translate_, stringOutEndPosition[i], stringAnimationTimer);
-        titleStringWorldTransform[i].rotate_.z += 0.05f;
-    }
+    
 
     camera_->translate_ = Lerp(camera_->translate_, { -15, -3, -15 }, stringAnimationTimer);
     camera_->UpdateMatrix();
-    if (stringAnimationTimer >= 1.0f) {
+	if (stringAnimationTimer >= 0.75f && (titleStringWorldTransform[0].rotate_.z - static_cast<int>(titleStringWorldTransform[0].rotate_.z) <= 0.05f &&
+	                                      titleStringWorldTransform[0].rotate_.z - static_cast<int>(titleStringWorldTransform[0].rotate_.z) >= -0.05f)) {
+		for (int i = 0; i < 8; i++) {
+        titleStringWorldTransform[i].rotate_.z = 0.0f;
+        }
         IsAnimationEnd = true;
         stringAnimationTimer = 0.0f;
+	} else {
+		for (int i = 0; i < 8; i++) {
+
+			titleStringWorldTransform[i].translate_ = Lerp(titleStringWorldTransform[i].translate_, stringOutEndPosition[i], stringAnimationTimer);
+			titleStringWorldTransform[i].rotate_.z += 0.05f;
+		}
     }
 }
 void TitleScene::LoopAnimation() {
 
+    prerandum = randum;
+	randum = rand() % 8;
 
+    while(randum==prerandum){
 
+        randum = rand() % 8;
+
+    }
+
+    titleStringWorldTransform[randum].translate_ = easeInOutQuart(
+	    {titleStringWorldTransform[randum].translate_.x, 0.0f, titleStringWorldTransform[randum].translate_.z},
+	    {titleStringWorldTransform[randum].translate_.x, 0.0f, titleStringWorldTransform[randum].translate_.z}, stringAnimationTimer);
+	WorldTransformUpdate(titleStringWorldTransform[randum]);
 }
 
 void TitleScene::Draw() {
@@ -380,5 +429,12 @@ void TitleScene::Draw() {
         titleStringModel[i]->Draw(*camera_, titleStringWorldTransform[i].matWorld_);
     }
     juiceCupModel->Draw(*camera_, juiceCupWorldTransform.matWorld_);
+	appleModel->Draw(*camera_,appleWorldTransform.matWorld_);
 }
 bool TitleScene::GetIsEndScene() { return isEndScene_; }
+
+Vector3 TitleScene
+::easeInOutQuart(const Vector3& start, const Vector3& end, float t) {
+	float e = easeInOutQuart(std::clamp(t, 0.0f, 1.0f));
+	return {start.x + (end.x - start.x) * e, start.y + (end.y - start.y) * e, start.z + (end.z - start.z) * e};
+}
