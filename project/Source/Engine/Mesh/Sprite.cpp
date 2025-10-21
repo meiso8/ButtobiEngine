@@ -41,8 +41,6 @@ void Sprite::Update()
         bottom = -bottom;
     }
 
-
-
     vertexData_[0].position = { left,bottom,0.0f,1.0f };//左下
     vertexData_[1].position = { left,top,0.0f,1.0f };//左上
     vertexData_[2].position = { right,bottom,0.0f,1.0f };//右下

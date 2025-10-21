@@ -63,7 +63,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     int sceneIndex = kGameScene;
 #ifdef _DEBUG
     //シーンのインデックス
-    sceneIndex = kSampleScene;
+    sceneIndex = kGameScene;
 #endif // _DEBUG
 
     //現在のシーン
@@ -95,24 +95,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #endif // _DEBUG
 
-        if (scenes[kTitleScene]->GetIsEndScene() || scenes[kGameScene]->GetIsEndScene()) {
+        //if (scenes[kTitleScene]->GetIsEndScene() || scenes[kGameScene]->GetIsEndScene()) {
 
-            GameScene* gameScene = dynamic_cast<GameScene*>(scenes[kGameScene].get());
+        //    GameScene* gameScene = dynamic_cast<GameScene*>(scenes[kGameScene].get());
 
-            if (scenes[kTitleScene]->GetIsEndScene()) {
-                // 現在のシーンに代入
-                currentScene = scenes[kGameScene].get();
-            } else if (gameScene->GetIsGameClear()) {
-                currentScene = scenes[kGameClearScene].get();
-            } else if (gameScene->GetIsGameOver()) {
-                currentScene = scenes[kGameOverScene].get();
-            } else if (scenes[kGameClearScene]->GetIsEndScene() || scenes[kGameOverScene]->GetIsEndScene()) {
-                currentScene = scenes[kTitleScene].get();
-            }
+        //    if (scenes[kTitleScene]->GetIsEndScene()) {
+        //        // 現在のシーンに代入
+        //        currentScene = scenes[kGameScene].get();
+        //    } else if (gameScene->GetIsGameClear()) {
+        //        currentScene = scenes[kGameClearScene].get();
+        //    } else if (gameScene->GetIsGameOver()) {
+        //        currentScene = scenes[kGameOverScene].get();
+        //    } else if (scenes[kGameClearScene]->GetIsEndScene() || scenes[kGameOverScene]->GetIsEndScene()) {
+        //        currentScene = scenes[kTitleScene].get();
+        //    }
 
-            // 現在のシーンの初期化
-            currentScene->Initialize();
-        }
+        //    // 現在のシーンの初期化
+        //    currentScene->Initialize();
+        //}
 
 
         //エンジンの更新処理

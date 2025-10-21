@@ -61,13 +61,13 @@ private:
 
     // 天球
     std::unique_ptr <Skydome> skyDome_ = nullptr;
-    DeathParticles* deathParticles_ = nullptr;
+    std::unique_ptr <DeathParticles>deathParticles_ = nullptr;
 
     // 地形
     std::unique_ptr <Stage> stage_ = nullptr;
 
     // UIマネージャー
-    UIManager* uiManager_ = nullptr;
+    std::unique_ptr <UIManager> uiManager_ = nullptr;
 
 	// 平面
 	std::array<std::unique_ptr<Plane>, 2> planes_;

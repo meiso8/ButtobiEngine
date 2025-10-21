@@ -83,24 +83,30 @@ void UIManager::Draw() {
 void UIManager::Debug()
 {
    
-    DebugUI::CheckSprite(*JuiceSprite, "JuiceSprite");
-    DebugUI::CheckSprite(*scoreSprite, "scoreSprite");
-    DebugUI::CheckSprite(*comboSprite, "comboSprite");
-    DebugUI::CheckSprite(*speedBonusSprite, "speedBonusSprite");
-    DebugUI::CheckSprite(*WASDSprite, "WASDSprite");
-    DebugUI::CheckSprite(*SpaceSprite, "SpaceSprite");
-    DebugUI::CheckSprite(*TimerSprite, "TimerSprite");
+
+    //DebugUI::CheckSprite(*JuiceSprite, "JuiceSprite");
+    //DebugUI::CheckSprite(*scoreSprite, "scoreSprite");
+    //DebugUI::CheckSprite(*comboSprite, "comboSprite");
+    //DebugUI::CheckSprite(*speedBonusSprite, "speedBonusSprite");
+    //DebugUI::CheckSprite(*WASDSprite, "WASDSprite");
+    //DebugUI::CheckSprite(*SpaceSprite, "SpaceSprite");
+    //DebugUI::CheckSprite(*TimerSprite, "TimerSprite");
  
-    for (int i = 0; i < Life_; i++) {
-        DebugUI::CheckSprite(lifeSprites[i], "lifeSprites");
-    }
+    //for (int i = 0; i < Life_; i++) {
+    //    DebugUI::CheckSprite(lifeSprites[i], "lifeSprites");
+    //}
+
+    ImGui::Begin("UI");
+    ImGui::SliderInt("Combo", &Combo_, 0, MaxCombo_);
+
+    ImGui::End();
 
 
 }
 
-void UIManager::ComboUpdate()
+void UIManager::AddCombo()
 {
-
+    Combo_++;
 }
 
 void UIManager::SetFruitSpeed(const float& speedA, const float& speedB)

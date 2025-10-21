@@ -30,12 +30,12 @@ GameScene::GameScene() {
     // 天球の生成
     skyDome_ = std::make_unique <Skydome>();
     // パーティクル
-    deathParticles_ = new DeathParticles();
+    deathParticles_ = std::make_unique < DeathParticles>();
     // カメラ操作
     cameraController_ = std::make_unique <CameraController>();
 
     //UI操作
-    uiManager_ = new UIManager();
+    uiManager_ = std::make_unique < UIManager>();
 
     stage_ = std::make_unique <Stage>();
 
@@ -340,13 +340,6 @@ void GameScene::Debug() {
 ;
 
 GameScene::~GameScene() {
-
-	// パーティクルモデルの解放
-
-	// パーティクルの解放
-	if (deathParticles_) {
-		delete deathParticles_;
-	}
 
 	// 敵delete
 	for (Enemy *newEnemy : enemies_) {

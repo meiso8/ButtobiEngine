@@ -111,7 +111,7 @@ public:
     void Draw();
     void Debug();
 
-    void ComboUpdate();
+    void AddCombo();
 
     //フルーツのスピードを取得する
     void SetFruitSpeed(const float& speedA, const float& speedB);
