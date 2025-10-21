@@ -39,18 +39,22 @@ GameScene::GameScene() {
 
     stage_ = std::make_unique <Stage>();
 
-    // 平面のデバッグ描画の生成
-    for (auto& planeRenderer : planeRenderers_) {
-        planeRenderer = std::make_unique<PlaneRenderer>();
-    }
+#ifdef _DEBUG
+	// 平面のデバッグ描画の生成
+	for (auto &planeRenderer : planeRenderers_) {
+		planeRenderer = std::make_unique<PlaneRenderer>();
+	}
 
     // OBBのデバッグ描画の生成
     for (auto& obbRenderer : obbRenderers_) {
         obbRenderer = std::make_unique<OBBRenderer>();
     }
+#endif // _DEBUG
 };
 
 void GameScene::Initialize() {
+
+	isEndScene_ = false;
 
     // カメラの初期化
     camera_->Initialize(winWidth, winHeight, Camera::PERSPECTIVE);
@@ -60,6 +64,9 @@ void GameScene::Initialize() {
 #endif
 
     currentCamera_ = camera_.get();
+
+	// 衝突マネージャにスコアポインタを設定
+	collisionManager_->SetScorePointer(&score_);
 
     Vector3 playerPosition = { 0.0f, 1.0f, 0.0f };
     // 自キャラの初期化 //ここはmainCamera
@@ -88,18 +95,16 @@ void GameScene::Initialize() {
 	for (auto &planeRenderer : planeRenderers_) {
 		planeRenderer->Initialize();
 	}
-#endif // _DEBUG
 
-	// 平面の初期化
-	planes_[0] = std::make_unique<Plane>(Plane{ .normal{ 0.0f, 1.0f, 0.0f }, .distance = 50.0f });	// 上
-	planes_[1] = std::make_unique<Plane>(Plane{ .normal{ 0.0f, -1.0f, 0.0f }, .distance = 0.0f });	// 下
-
-#ifdef _DEBUG
 	// OBBのデバッグ描画の生成と初期化
 	for (auto &obbRenderer : obbRenderers_) {
 		obbRenderer->Initialize();
 	}
 #endif // _DEBUG
+
+	// 平面の初期化
+	planes_[0] = std::make_unique<Plane>(Plane{ .normal{ 0.0f, 1.0f, 0.0f }, .distance = 50.0f });	// 上
+	planes_[1] = std::make_unique<Plane>(Plane{ .normal{ 0.0f, -1.0f, 0.0f }, .distance = 0.0f });	// 下
 
 	// OBBの初期化
 	obbs_[0] = std::make_unique<OBB>(OBB{ .center{-80.0f, 20.0f, 0.0f}, .axis{}, .halfSizes{1.0f, 40.0f, 80.0f} });
@@ -115,11 +120,11 @@ void GameScene::Initialize() {
 	SetAxis({ std::numbers::pi_v<float> / 4.0f, 0.0f, 0.0f }, *obbs_[3]);
 
     //シーン切り替え時にエネミーを削除
-    for (Enemy* newEnemy : enemies_) {
+    /*for (Enemy* newEnemy : enemies_) {
         delete newEnemy;
     }
 
-    enemies_.clear();
+    enemies_.clear();*/
 };
 
 void GameScene::Update() {
@@ -130,6 +135,7 @@ void GameScene::Update() {
 #ifdef _DEBUG
     ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
     currentCamera_->EditTransform("CurrentCamera");
+	ImGui::Text("Score: %u", score_);
 
 	// 平面の編集
 	uint32_t planeCount = 0;
@@ -154,9 +160,6 @@ void GameScene::Update() {
 	// 自キャラの更新処理
 	player_->Update();
 
-    // 敵キャラの更新処理
-    PopEnemy();
-
     // 敵が死亡している場合は削除
     enemies_.remove_if([](Enemy* enemy) {
         if (enemy->IsDead()) {
@@ -166,6 +169,9 @@ void GameScene::Update() {
         }
         return false; // 削除しない
         });
+
+	// 敵キャラの更新処理
+	PopEnemy();
 
 	uint32_t enemyCount = 0;
 	for (Enemy *newEnemy : enemies_) {

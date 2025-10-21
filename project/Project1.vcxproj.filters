@@ -685,6 +685,9 @@
     <ClInclude Include="Source\Application\Physics\OBB.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Engine\Particle\AccelerationField.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Application\System\Collider.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -692,9 +695,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\System\CollisionManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Particle\AccelerationField.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

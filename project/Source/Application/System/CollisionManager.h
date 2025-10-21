@@ -16,11 +16,17 @@ public:
 	/// @brief 衝突判定と応答
 	void CheckAllCollisions();
 
+	/// @brief スコアポインタを設定する
+	/// @param score スコアポインタ
+	void SetScorePointer(uint32_t *score) { score_ = score; }
+
 private:
 	std::list<Collider*> colliders_; // コライダーのリスト
+	uint32_t *score_ = nullptr;      // スコアポインタ
 
 	/// @brief コライダー2つの衝突判定と応答
 	/// @param colliderA コライダーA
 	/// @param colliderB コライダーB
+	/// @param score スコアポインタ
 	void CheckCollisionPair(Collider* colliderA, Collider* colliderB);
 };
