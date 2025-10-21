@@ -31,7 +31,7 @@ private:
     std::vector<Sprite*>sprites_;
 
     //パーティクル
-    ParticleMesh particle_;
+    ParticleManager particle_;
     bool useBillboard_ = false;
     int createNum = 10;
     //立方体
