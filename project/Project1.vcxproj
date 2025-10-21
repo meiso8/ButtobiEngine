@@ -159,6 +159,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <ClCompile Include="Source\Application\Physics\OBB.cpp" />
     <ClCompile Include="Source\Application\System\CollisionManager.cpp" />
+    <ClCompile Include="Source\Engine\Math\Matrix3x3.cpp" />
     <ClCompile Include="Source\Engine\Particle\Emitter.cpp" />
     <ClCompile Include="Source\Application\Physics\RigidBody.cpp" />
     <ClCompile Include="Source\Engine\Math\Perpendicular.cpp" />

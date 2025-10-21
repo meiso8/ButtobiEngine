@@ -25,6 +25,10 @@ class PlaneRenderer {
 public:
 	/// @brief コンストラクタを追加しました・yoshida
 	PlaneRenderer();
+
+	/// @brief デフォルトデストラクタ
+	~PlaneRenderer();
+
 	/// @brief 初期化
 	void Initialize();
 	

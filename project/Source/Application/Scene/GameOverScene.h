@@ -1,13 +1,30 @@
 #pragma once
-#include"SceneManager.h"
-class GameOverScene :public SceneManager {
+#include "SceneManager.h"
 
-	private:
-	public:
-		void Initialize()override;
-		void Update()override;
-		void Draw()override;
-		bool GetIsEndScene()override;
+class Enemy;
+class Stage;
 
+/// @brief ゲームオーバーシーン
+class GameOverScene : public SceneManager {
+private:
+	std::unique_ptr<Enemy> enemy_;	// 敵キャラ
+	std::unique_ptr<Stage> stage_;	// ステージ
+	uint32_t score_ = 0;			// スコア
 
+	/// @brief 全ての当たり判定を行う
+	void CheckAllCollisions();
+
+public:
+	/// @brief 初期化
+	void Initialize() override;
+
+	/// @brief 更新
+	void Update() override;
+	
+	/// @brief 描画
+	void Draw() override;
+
+	/// @brief シーンの切り替えフラグを取得
+	/// @return シーンの切り替えフラグ
+	bool GetIsEndScene() override;
 };
