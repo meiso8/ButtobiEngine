@@ -16,6 +16,7 @@ UIManager::UIManager()
     SpaceTextureHandle_ = Texture::GetHandle(Texture::SPACE);
     TimerTextureHandle_ = Texture::GetHandle(Texture::TIMER);
     JuiceTextureHandle_ = Texture::GetHandle(Texture::JUICE);
+    timerNumbersTexturHandle = Texture::GetHandle(Texture::TIMERNUMBERS);
     NumbersTextureHandle_ = Texture::GetHandle(Texture::NUMBERS);
 
     scoreSprite = std::make_unique<Sprite>();
@@ -32,12 +33,44 @@ UIManager::UIManager()
     TimerSprite->Create(TimerTextureHandle_, TimerPosition_, TimerSize_, { 1, 1, 1, 1 });
     JuiceSprite = std::make_unique<Sprite>();
     JuiceSprite->Create(JuiceTextureHandle_, JuicePosition_, JuiceSize_, { 1, 1, 1, 1 });
-    numbersSprite = std::make_unique<Sprite>();
-    numbersSprite->Create(NumbersTextureHandle_, { 0, 0 }, { 256, 32 }, { 1, 1, 1, 1 });
+    
+    for (int i = 0; i < 7; i++) {
+        NumbersSprite[i].Create(NumbersTextureHandle_, ScoreNumbersPosition_, NumberSize_, { 1, 1, 1, 1 });
+        HighScoreNumbersSprite[i].Create(NumbersTextureHandle_, HighScoreNumbersPosition_, NumberSize_, { 1, 1, 1, 1 });
+    }
+    for (int i = 0; i < 4; i++) {
+        timerNumbersSprites[i].Create(timerNumbersTexturHandle, timerNumbersFirstPos, TimerNumbersSize, { 1, 1, 1, 1 });
+    }
+    
 
     for (int i = 0; i < MaxLife_; i++) {
         lifeSprites[i].Create(LifeTextureHandle_, LifeFirstPosition_, LifeSize_, { 1.0f, 1.0f, 1.0f, 1.0f });
     }
+
+    for (int i = 0; i < 4; i++) {
+
+        timerNumbersSprites[i].SetPosition({ timerNumbersFirstPos.x + i * timerNumbersPosInterval, timerNumbersFirstPos.y });
+        timerNumbersSprites[i].SetTextureLeftTop({ 0, 0 });
+        timerNumbersSprites[i].SetTextureSize({ 100.0f, 100.0f });
+        timerNumbersSprites[i].Update();
+    }
+    for (int i = 0; i < 7; i++) {
+
+        NumbersSprite[i].SetPosition({ ScoreNumbersPosition_.x + i * scorePosInterval, ScoreNumbersPosition_.y });
+        NumbersSprite[i].SetTextureLeftTop({ 0, 0 });
+        NumbersSprite[i].SetTextureSize({ 80.0f, 80.0f });
+        NumbersSprite[i].Update();
+
+        HighScoreNumbersSprite[i].SetPosition({ ScoreNumbersPosition_.x + i * scorePosInterval * 0.8f, ScoreNumbersPosition_.y - 40.0f });
+        HighScoreNumbersSprite[i].SetTextureLeftTop({ 0, 0 });
+        HighScoreNumbersSprite[i].SetSize({ 40.0f, 40.0f });
+        HighScoreNumbersSprite[i].SetTextureSize({ 80.0f, 80.0f });
+        HighScoreNumbersSprite[i].Update();
+    }
+
+    scoreSprite->SetAnchorPoint({ 0.5f, 0.5f });
+    scoreSprite->SetRotate(-0.1f);
+    GameTime_ = MaxGameTime_;
 
 }
 
@@ -51,6 +84,12 @@ void UIManager::Initialize() {
 
 void UIManager::Update() {
 
+
+    GameTime_ -= 1 / 60.0f;
+    int totalSeconds = static_cast<int>(GameTime_);
+    int minutes = totalSeconds / 60;
+    int seconds = totalSeconds % 60;
+
     UpdateCombo();
     // =============================== Score==========================================
     AddFinalScore_ += static_cast<int>(AddBaseScore_ * speedBonus_);
@@ -63,6 +102,52 @@ void UIManager::Update() {
     if (Score_ > HighScore_) {
         HighScore_ = Score_;
     }
+    if (GameTime_ <= 0.0f) {
+        GameTime_ = 0.0f;
+
+    }
+    // 桁ごとに分割
+    int minTens = minutes / 10;
+    int minOnes = minutes % 10;
+    int secTens = seconds / 10;
+    int secOnes = seconds % 10;
+
+    // 数字1文字の幅（1桁ぶんのテクスチャサイズ）
+    const float digitWidth = 100.0f;
+
+    // 各桁を更新
+    timerNumbersSprites[0].SetTextureLeftTop({ minTens * digitWidth, 0 });
+    timerNumbersSprites[1].SetTextureLeftTop({ minOnes * digitWidth, 0 });
+    timerNumbersSprites[2].SetTextureLeftTop({ secTens * digitWidth, 0 });
+    timerNumbersSprites[3].SetTextureLeftTop({ secOnes * digitWidth, 0 });
+
+
+    for (int i = 0; i < 4; i++) {
+        timerNumbersSprites[i].Update();
+    }
+
+    // スコア表示の更新
+    NumbersSprite[0].SetTextureLeftTop({ 80.0f * (Score_ / 1000000 % 10), 0 });
+    NumbersSprite[1].SetTextureLeftTop({ 80.0f * (Score_ / 100000 % 10), 0 });
+    NumbersSprite[2].SetTextureLeftTop({ 80.0f * (Score_ / 10000 % 10), 0 });
+    NumbersSprite[3].SetTextureLeftTop({ 80.0f * (Score_ / 1000 % 10), 0 });
+    NumbersSprite[4].SetTextureLeftTop({ 80.0f * (Score_ / 100 % 10), 0 });
+    NumbersSprite[5].SetTextureLeftTop({ 80.0f * (Score_ / 10 % 10), 0 });
+    NumbersSprite[6].SetTextureLeftTop({ 80.0f * (Score_ % 10), 0 });
+
+    HighScoreNumbersSprite[0].SetTextureLeftTop({ 80.0f * (HighScore_ / 1000000 % 10), 0 });
+    HighScoreNumbersSprite[1].SetTextureLeftTop({ 80.0f * (HighScore_ / 100000 % 10), 0 });
+    HighScoreNumbersSprite[2].SetTextureLeftTop({ 80.0f * (HighScore_ / 10000 % 10), 0 });
+    HighScoreNumbersSprite[3].SetTextureLeftTop({ 80.0f * (HighScore_ / 1000 % 10), 0 });
+    HighScoreNumbersSprite[4].SetTextureLeftTop({ 80.0f * (HighScore_ / 100 % 10), 0 });
+    HighScoreNumbersSprite[5].SetTextureLeftTop({ 80.0f * (HighScore_ / 10 % 10), 0 });
+    HighScoreNumbersSprite[6].SetTextureLeftTop({ 80.0f * (HighScore_ % 10), 0 });
+
+    for (int i = 0; i < 7; i++) {
+        NumbersSprite[i].Update();
+        HighScoreNumbersSprite[i].Update();
+
+    }
 }
 
 void UIManager::Draw() {
@@ -74,12 +159,20 @@ void UIManager::Draw() {
     }
 
     JuiceSprite->Draw();
+    for (int i = 0; i < 7; i++) {
+        NumbersSprite[i].Draw();
+        HighScoreNumbersSprite[i].Draw();
+    }
     scoreSprite->Draw();
     comboSprite->Draw();
     speedBonusSprite->Draw();
     WASDSprite->Draw();
     SpaceSprite->Draw();
     TimerSprite->Draw();
+    for (int i = 0; i < 4; i++) {
+        timerNumbersSprites[i].Draw();
+    }
+
 
 }
 

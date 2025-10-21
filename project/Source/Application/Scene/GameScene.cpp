@@ -10,6 +10,7 @@
 #include "DebugUI.h"
 #include "DrawGrid.h"
 #include"Sound.h"
+#include"Texture.h"
 
 const int winWidth = 1280;
 const int winHeight = 720;
@@ -77,6 +78,8 @@ void GameScene::Initialize() {
     skyDome_->Initialize();
 
     deathParticles_->Initialize(playerPosition);
+
+	particle_.Initialize(Texture::GetHandle(Texture::PARTICLE));
 
     // カメラ操作の初期化
     cameraController_->Initialize(camera_.get());
@@ -200,6 +203,8 @@ void GameScene::Update() {
 	if (deathParticles_) {
 		deathParticles_->Update();
 	}
+
+	particle_.Update();
 
 	// 天球の更新処理
 	skyDome_->Update();
@@ -340,6 +345,9 @@ void GameScene::Draw() {
 	if (deathParticles_) {
 		deathParticles_->Draw(*currentCamera_);
 	}
+
+	particle_.Draw(*currentCamera_);
+
 	uiManager_->Draw();
 }
 void GameScene::Debug() {
