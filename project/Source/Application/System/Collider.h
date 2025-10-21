@@ -12,6 +12,14 @@ public:
 	/// @return ワールド座標
 	virtual Vector3 GetWorldPosition() const = 0;
 
+	/// @brief 速度を取得する
+	/// @return 速度
+	virtual Vector3 GetVelocity() const = 0;
+
+	/// @brief キックされているか取得する
+	/// @return キックされているならtrue
+	virtual bool IsKicked() const = 0;
+
 	/// @brief 衝突半径を取得する
 	/// @return 衝突半径
 	float GetRadius() const { return radius_; }

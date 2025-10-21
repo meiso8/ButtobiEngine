@@ -25,17 +25,17 @@ public:
 
 	/// @brief デストラクタ
 	~Enemy();
-	
+
 	/// @brief 初期化
 	/// @param position 位置
-	void Initialize(Vector3& position);
+	void Initialize(Vector3 &position);
 
 	/// @brief 更新
 	void Update();
 
 	/// @brief 描画
 	/// @param camera カメラ
-	void Draw(Camera& camera);
+	void Draw(Camera &camera);
 
 	/// @brief AABBの取得
 	/// @return AABB
@@ -51,7 +51,7 @@ public:
 
 	/// @brief プレイヤーとの当たり判定
 	/// @param player プレイヤー
-	void OnCollision(Player* player);
+	void OnCollision(Player *player);
 
 	/// @brief 平面との当たり判定
 	/// @param plane 平面
@@ -72,9 +72,17 @@ public:
 	/// @return 剛体
 	RigidBody *GetRigidBody() { return rigidBody_.get(); };
 
+	/// @brief 速度の取得
+	/// @return 速度
+	Vector3 GetVelocity() const override;
+
 	/// @brief 死亡しているか
 	/// @return　死亡しているならtrue
 	bool IsDead() const { return isDead_; };
+
+	/// @brief キックされているか取得
+	/// @return キックされているならtrue
+	bool IsKicked() const override { return isKicked_; };
 
 #ifdef _DEBUG
 	/// @brief 編集
@@ -86,13 +94,11 @@ private:
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
 	// モデル
-	Model* model_ = nullptr;
+	Model *model_ = nullptr;
 	// カメラ
-	Camera* camera_ = nullptr;
+	Camera *camera_ = nullptr;
 	//歩行の速さ
 	static inline const float kWalkSpeed = 0.01f;
-	//速度
-	Vector3 velocity_ = {};
 	//最初の角度
 	static inline const float kWalkMotionStart = 0.0f;
 	//最後の角度
@@ -117,4 +123,6 @@ private:
 	bool isExistSphere_ = false;
 	// 死亡フラグ
 	bool isDead_ = false;
+	// キックされたかどうかのフラグ
+	bool isKicked_ = false;
 };

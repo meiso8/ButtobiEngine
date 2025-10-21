@@ -4,9 +4,9 @@
 
 void CollisionManager::CheckAllCollisions() {
 	// リスト内のペアを総当たり
-	std::list<Collider*>::iterator itrA = colliders_.begin();
+	std::list<Collider *>::iterator itrA = colliders_.begin();
 	for (; itrA != colliders_.end(); ++itrA) {
-		std::list<Collider*>::iterator itrB = itrA;
+		std::list<Collider *>::iterator itrB = itrA;
 		for (++itrB; itrB != colliders_.end(); ++itrB) {
 			// 衝突フィルタリング
 			if (((*itrA)->GetCollisionAttribute() & (*itrB)->GetCollisionMask()) == 0 ||
@@ -20,7 +20,7 @@ void CollisionManager::CheckAllCollisions() {
 	}
 }
 
-void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* colliderB) {
+void CollisionManager::CheckCollisionPair(Collider *colliderA, Collider *colliderB) {
 	Sphere sphereA = {
 		.center = colliderA->GetWorldPosition(),
 		.radius = colliderA->GetRadius()
@@ -35,5 +35,8 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 	if (IsCollision(sphereA, sphereB)) {
 		colliderA->OnCollision();
 		colliderB->OnCollision();
+		if (colliderA->IsKicked() || colliderB->IsKicked()) {
+			*score_ += static_cast<uint32_t>((Length(colliderA->GetVelocity()) + Length(colliderB->GetVelocity())) / 2.0f);
+		}
 	}
 }

@@ -66,6 +66,9 @@ private:
     // 地形
     std::unique_ptr <Stage> stage_ = nullptr;
 
+	// スコア
+	uint32_t score_ = 0;
+
     // UIマネージャー
     UIManager* uiManager_ = nullptr;
 

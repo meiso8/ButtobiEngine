@@ -32,8 +32,6 @@ void Enemy::Initialize(Vector3 &position) {
 	worldTransform_.translate_ = position; // 初期位置をオリジンにしておく
 	worldTransform_.rotate_.y = std::numbers::pi_v<float> *3.0f / 2.0f;
 
-	// 速度を設定する
-	velocity_ = { -kWalkSpeed, 0, 0 };
 	walkTimer_ = 0.0f;
 
 	// 剛体の生成
@@ -42,13 +40,17 @@ void Enemy::Initialize(Vector3 &position) {
 #ifdef _DEBUG
 	// AABBのデバッグ描画の生成と初期化
 	isExistAABB_ = false;
-	aabbRenderer_ = std::make_unique<AABBRenderer>();
-	aabbRenderer_->Initialize();
+	if (isExistAABB_) {
+		aabbRenderer_ = std::make_unique<AABBRenderer>();
+		aabbRenderer_->Initialize();
+	}
 
 	// 球のデバッグ描画の生成と初期化
 	isExistSphere_ = false;
-	sphereRenderer_ = std::make_unique<SphereRenderer>();
-	sphereRenderer_->Initialize();
+	if (isExistSphere_) {
+		sphereRenderer_ = std::make_unique<SphereRenderer>();
+		sphereRenderer_->Initialize();
+	}
 #endif // _DEBUG
 }
 
@@ -122,6 +124,7 @@ Vector3 Enemy::GetWorldPosition() const { return { worldTransform_.matWorld_.m[3
 void Enemy::OnCollision(Player *player) {
 	if (player->IsAttack()) {
 		rigidBody_->ApplyForce(player->GetKickForce());
+		isKicked_ = true;
 	}
 }
 
@@ -162,6 +165,8 @@ void Enemy::OnCollision(const OBB &obb) {
 void Enemy::OnCollision() {
 	isDead_ = true;
 }
+
+Vector3 Enemy::GetVelocity() const { return rigidBody_->GetVelocity(); }
 
 #ifdef _DEBUG
 void Enemy::Edit(const std::string &label) {
