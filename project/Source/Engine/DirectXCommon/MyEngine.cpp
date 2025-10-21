@@ -102,7 +102,6 @@ void MyEngine::Finalize() {
     Sound::Finalize();
     directXCommon->EndFrame();
     wc->Finalize();
-    //delete instance_;
 }
 
 

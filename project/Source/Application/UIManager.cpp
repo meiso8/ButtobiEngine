@@ -98,6 +98,11 @@ void UIManager::Debug()
 
 }
 
+void UIManager::ComboUpdate()
+{
+
+}
+
 void UIManager::SetFruitSpeed(const float& speedA, const float& speedB)
 {
 
