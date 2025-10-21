@@ -187,6 +187,8 @@ private:
 	float attackTimerMax_ = 0.5f;
 
 	bool isEndAninationEnd_ = false;
+	float endAninationTimer_ = 0;
+	float endAninationTimerMax_ = 0.2f;
 
 	bool isAttack_ = false;
 
