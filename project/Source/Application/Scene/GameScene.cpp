@@ -40,7 +40,9 @@ GameScene::GameScene() {
     uiManager_ = std::make_unique < UIManager>();
 
 	stage_ = std::make_unique <Stage>();
-};
+}
+
+GameScene::~GameScene() = default;
 
 void GameScene::Initialize() {
 
@@ -276,17 +278,6 @@ void GameScene::Debug() {
 	uint32_t lightType = 0;
 	DebugUI::CheckDirectionalLight(lightType);
 
-}
-;
-
-GameScene::~GameScene() {
-
-	// パーティクルモデルの解放
-
-	// パーティクルの解放
-	if (deathParticles_) {
-		delete deathParticles_;
-	}
 }
 
 bool GameScene::GetIsEndScene() { return isEndScene_; }

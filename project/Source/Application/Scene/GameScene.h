@@ -25,6 +25,9 @@ public:
     /// @brief コンストラクタ
     GameScene();
 
+	/// @brief デフォルトデストラクタ
+    ~GameScene();
+
     // 初期化
     void Initialize()override;
 
@@ -39,9 +42,6 @@ public:
     bool GetIsGameClear();
 
     void Debug()override;
-
-    // デストラクタ
-    ~GameScene();
 
 private:
     // カメラ操作
