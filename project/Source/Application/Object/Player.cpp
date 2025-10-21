@@ -289,6 +289,12 @@ void Player::InputMove() {
 
 };
 
+
+inline bool NearlyEqual(const Vector3& a, const Vector3& b, float epsilon = 0.001f) {
+	return fabs(a.x - b.x) < epsilon && fabs(a.y - b.y) < epsilon && fabs(a.z - b.z) < epsilon;
+}
+
+
 void Player::InputAttack() {
 
 	if (Input::IsTriggerKey(DIK_1)) {
@@ -304,58 +310,67 @@ void Player::InputAttack() {
 	if (Input::IsTriggerKey(DIK_4)) {
 		attackPhase_ = kEnd;
 	}
+
+	bool allMatched = true;
 	switch (attackPhase_) {
-		case Player::kNone:
-			if (Input::IsPushKey(DIK_SPACE)) {
-				attackPhase_ = Player::kCharge;
-				Sound::PlayLoopSE(Sound::CHARGE, 0.0f);
+	case Player::kNone:
+
+		if (Input::GetInstance()->IsPushKey(DIK_SPACE)) {
+
+			attackPhase_ = Player::kCharge;
+			Sound::PlayLoopSE(Sound::CHARGE, 0.0f);
+		}
+
+		break;
+	case Player::kCharge:
+
+		if (!Input::GetInstance()->IsPushKey(DIK_SPACE)) {
+
+			attackPhase_ = Player::kFire;
+			Sound::Stop(Sound::CHARGE);
+			Sound::PlaySE(Sound::ATTACK, 0.0f);
+			isAttack_ = true;
+		}
+
+
+		break;
+	case Player::kFire:
+
+		isAttack_ = true;
+
+		for (int i = 0; i < Parts::kNumParts; i++) {
+			if (!(NearlyEqual(PartsWorldTransform_[i].scale_, targetPartsScale_[AttackPhase::kFire][i]) && NearlyEqual(PartsWorldTransform_[i].rotate_, targetPartsRotate_[AttackPhase::kFire][i]) &&
+				NearlyEqual(PartsWorldTransform_[i].translate_, targetPartsTranslate_[AttackPhase::kFire][i]))) {
+				allMatched = false;
+				break;
 			}
-			break;
-		case Player::kCharge:
-			if (!Input::IsPushKey(DIK_SPACE)) {
-				attackPhase_ = Player::kFire;
-				Sound::Stop(Sound::CHARGE);
-				Sound::PlaySE(Sound::CRACKER, 0.0f);
-				isAttack_ = true;
+		}
+		if (allMatched) {
+			attackPhase_ = Player::kEnd;
+		}
+
+
+		break;
+	case Player::kEnd:
+
+		isAttack_ = false;
+		if (isEndAninationEnd_) {
+			isEndAninationEnd_ = false;
+			endAninationTimer_ = 0;
+			attackPhase_ = Player::kNone;
+		} else {
+			endAninationTimer_++;
+			if (endAninationTimer_ >= endAninationTimerMax_ * 60) {
+				endAninationTimer_ = 0;
+				isEndAninationEnd_ = true;
 			}
-			chargeTimer_++;
-			chargeTimer_ = std::clamp(chargeTimer_, 1000.0f, kMaxChargeTime);
-			kickForce_ = GetForward() * chargeTimer_;
-			break;
-		case Player::kFire:
-			if (PartsWorldTransform_[0].scale_ == targetPartsScale_[AttackPhase::kFire][0] && PartsWorldTransform_[0].rotate_ == targetPartsRotate_[AttackPhase::kFire][0]) {
-				if (PartsWorldTransform_[1].scale_ == targetPartsScale_[AttackPhase::kFire][1] && PartsWorldTransform_[1].rotate_ == targetPartsRotate_[AttackPhase::kFire][1]) {
-					if (PartsWorldTransform_[2].scale_ == targetPartsScale_[AttackPhase::kFire][2] && PartsWorldTransform_[2].rotate_ == targetPartsRotate_[AttackPhase::kFire][2]) {
-						if (PartsWorldTransform_[3].scale_ == targetPartsScale_[AttackPhase::kFire][3] && PartsWorldTransform_[3].rotate_ == targetPartsRotate_[AttackPhase::kFire][3]) {
-							if (PartsWorldTransform_[4].scale_ == targetPartsScale_[AttackPhase::kFire][4] && PartsWorldTransform_[4].rotate_ == targetPartsRotate_[AttackPhase::kFire][4]) {
-								if (PartsWorldTransform_[5].scale_ == targetPartsScale_[AttackPhase::kFire][5] && PartsWorldTransform_[5].rotate_ == targetPartsRotate_[AttackPhase::kFire][5]) {
-									attackPhase_ = Player::kEnd;
-								}
-							}
-						}
-					}
-				}
-			}
-			break;
-		case Player::kEnd:
-			if (PartsWorldTransform_[0].scale_ == targetPartsScale_[AttackPhase::kEnd][0] && PartsWorldTransform_[0].rotate_ == targetPartsRotate_[AttackPhase::kEnd][0]) {
-				if (PartsWorldTransform_[1].scale_ == targetPartsScale_[AttackPhase::kEnd][1] && PartsWorldTransform_[1].rotate_ == targetPartsRotate_[AttackPhase::kEnd][1]) {
-					if (PartsWorldTransform_[2].scale_ == targetPartsScale_[AttackPhase::kEnd][2] && PartsWorldTransform_[2].rotate_ == targetPartsRotate_[AttackPhase::kEnd][2]) {
-						if (PartsWorldTransform_[3].scale_ == targetPartsScale_[AttackPhase::kEnd][3] && PartsWorldTransform_[3].rotate_ == targetPartsRotate_[AttackPhase::kEnd][3]) {
-							if (PartsWorldTransform_[4].scale_ == targetPartsScale_[AttackPhase::kEnd][4] && PartsWorldTransform_[4].rotate_ == targetPartsRotate_[AttackPhase::kEnd][4]) {
-								if (PartsWorldTransform_[5].scale_ == targetPartsScale_[AttackPhase::kEnd][5] && PartsWorldTransform_[5].rotate_ == targetPartsRotate_[AttackPhase::kEnd][5]) {
-									attackPhase_ = Player::kNone;
-									ResetAttack();
-								}
-							}
-						}
-					}
-				}
-			}
-			break;
-		default:
-			break;
+		}
+
+		break;
+	default:
+		break;
 	}
+
 }
 
 
@@ -709,6 +724,7 @@ void Player::OnCollision(const Enemy *enemy) {
 
 			life_--;
 			isInvincible_ = true;
+			Sound::PlaySE(Sound::PLAYER_HIT);
 		}
 
 	} else {

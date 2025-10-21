@@ -29,13 +29,15 @@ private:
 
     //--コンボ
     // 現在のコンボ数
-    int Combo_ = 0;
+    uint32_t Combo_ = 0;
     // 最大コンボ数
     int MaxCombo_ = 15;
     //　コンボボーナス倍率
     float ComboBonus_ = 1.0f;
     // コンボタイマー
     float ComboTimer_ = 0.0f;
+    //コンボタイマーのカウント
+    bool isUpdateComboTimer_ = false;
 
     //--スピードボーナス
     // スピードボーナス倍率
@@ -45,7 +47,7 @@ private:
     // 現在のゲーム時間
     float GameTime_ = 0.0f;
     // 最大ゲーム時間
-    float MaxGameTime_ = 60.0f * 60;
+    float MaxGameTime_ = 60.0f;
 
 
 
@@ -53,29 +55,35 @@ private:
 
     Vector2 LifeSize_ = { 90, 90 };
     Vector2 ScoreSize_ = { 256, 64 };
+    Vector2 NumberSize_ = { 50, 50 };
     Vector2 ComboSize_ = { 256, 64 };
     Vector2 SpeedBonusSize_ = { 256, 64 };
     Vector2 WASDSize_ = { 128, 128 };
     Vector2 SpaceSize_ = { 128, 128 };
-    Vector2 TimerSize_ = { 64, 64 };
+    Vector2 TimerSize_ = { 160, 160 };
     Vector2 JuiceSize_ = { 255, 340 };
+    Vector2 TimerNumbersSize = { 30, 40 };
 
     //<位置系>
 
-    Vector2 LifeFirstPosition_ = { 0, 0 };
+    Vector2 LifeFirstPosition_ = { 10, 0 };
     float LifePositionInterval_ = 20.0f + LifeSize_.x;
 
-    Vector2 ScorePosition_ = { 1000, 20 };
+    Vector2 ScorePosition_ = { 700, 20 };
+    Vector2 ScoreNumbersPosition_{ 900,80 };
+    Vector2 HighScoreNumbersPosition_{ 1000, 60 };
+    float scorePosInterval = 50;
+    
+    Vector2 ComboPosition_ = { 1000, 140 };
 
-    Vector2 ComboPosition_ = { 1000, 80 };
-
-    Vector2 speedBonusPosition_ = { 1000, 140 };
-
+    Vector2 speedBonusPosition_ = { 1000, 200 };
     Vector2 WASDPosition_ = { 20, 600 };
 
     Vector2 SpacePosition_ = { WASDPosition_.x + WASDSize_.x + 20, WASDPosition_.y };
 
-    Vector2 TimerPosition_ = { 50, 20 };
+    Vector2 TimerPosition_ = { 20, 80 };
+    Vector2 timerNumbersFirstPos = { 40, 135 };
+    float timerNumbersPosInterval = 30.0f + timerNumbersPosInterval;
     Vector2 JuicePosition_ = { 1000, 360 };
 
     //<テクスチャ系>
@@ -88,6 +96,7 @@ private:
     uint32_t TimerTextureHandle_ = 0;
     uint32_t JuiceTextureHandle_ = 0;
 	uint32_t NumbersTextureHandle_ = 0;
+    uint32_t timerNumbersTexturHandle = 0;
 
     //<スプライト系>
     std::array<Sprite,3> lifeSprites;
@@ -98,7 +107,10 @@ private:
     std::unique_ptr<Sprite> SpaceSprite;
     std::unique_ptr<Sprite> TimerSprite;
     std::unique_ptr<Sprite> JuiceSprite;
-	std::unique_ptr<Sprite> numbersSprite;
+
+    std::array<Sprite, 4> timerNumbersSprites;
+    std::array<Sprite, 7> NumbersSprite;
+    std::array<Sprite, 7> HighScoreNumbersSprite;
 
 
 public:
@@ -111,10 +123,7 @@ public:
     void Draw();
     void Debug();
 
-    void ComboUpdate();
-
-    //フルーツのスピードを取得する
-    void SetFruitSpeed(const float& speedA, const float& speedB);
+    void UpdateCombo();
 
     void SetLife(int life) {
         Life_ = life;
@@ -127,5 +136,8 @@ public:
     };
 
     int GetMaxLife() { return MaxLife_; };
-
+    uint32_t* GetComboPointer() { return &Combo_; }
+    void SetIsUpdateComboTimer(const bool& isUpdateComboTimer) {
+        isUpdateComboTimer_ = isUpdateComboTimer;
+    };
 };

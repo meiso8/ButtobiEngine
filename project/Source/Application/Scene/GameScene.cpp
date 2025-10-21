@@ -10,6 +10,7 @@
 #include "DebugUI.h"
 #include "DrawGrid.h"
 #include"Sound.h"
+#include"Texture.h"
 
 constexpr int winWidth = 1280;
 constexpr int winHeight = 720;
@@ -27,15 +28,16 @@ GameScene::GameScene() {
 	// 自キャラの生成
 	player_ = std::make_unique<Player>();
 
-	// 天球の生成
-	skyDome_ = std::make_unique <Skydome>();
-	// パーティクル
-	deathParticles_ = new DeathParticles();
-	// カメラ操作
-	cameraController_ = std::make_unique <CameraController>();
 
-	//UI操作
-	uiManager_ = new UIManager();
+    // 天球の生成
+    skyDome_ = std::make_unique <Skydome>();
+    // パーティクル
+    deathParticles_ = std::make_unique < DeathParticles>();
+    // カメラ操作
+    cameraController_ = std::make_unique <CameraController>();
+
+    //UI操作
+    uiManager_ = std::make_unique < UIManager>();
 
 	stage_ = std::make_unique <Stage>();
 };
@@ -55,6 +57,8 @@ void GameScene::Initialize() {
 
 	// 衝突マネージャにスコアポインタを設定
 	collisionManager_->SetScorePointer(&score_);
+	collisionManager_->SetComboPointer(uiManager_->GetComboPointer());
+
 
 	Vector3 playerPosition = { 0.0f, 1.0f, 0.0f };
 	// 自キャラの初期化 //ここはmainCamera
@@ -64,11 +68,13 @@ void GameScene::Initialize() {
 
 	deathParticles_->Initialize(playerPosition);
 
-	// カメラ操作の初期化
-	cameraController_->Initialize(camera_.get());
-	cameraController_->SetTarget(player_.get());
-	cameraController_->Reset();
-	cameraController_->SetMovableArea({ 0.0f, 100.0f, 0.0f, 100.0f });
+	particle_.Initialize(Texture::GetHandle(Texture::PARTICLE));
+
+    // カメラ操作の初期化
+    cameraController_->Initialize(camera_.get());
+    cameraController_->SetTarget(player_.get());
+    cameraController_->Reset();
+    cameraController_->SetMovableArea({ 0.0f, 100.0f, 0.0f, 100.0f });
 
 	//UI系
 	uiManager_->Initialize();
@@ -95,6 +101,10 @@ void GameScene::Update() {
 
 	// 自キャラの更新処理
 	player_->Update();
+	if (player_->IsAttack()) {
+		//アタックしているときコンボタイマーをカウントダウンする
+		uiManager_->SetIsUpdateComboTimer(true);
+	}
 
 	// 敵が死亡している場合は削除
 	enemies_.remove_if([](const std::unique_ptr<Enemy> &enemy) { return enemy->IsDead(); });
@@ -120,6 +130,8 @@ void GameScene::Update() {
 	if (deathParticles_) {
 		deathParticles_->Update();
 	}
+
+	particle_.Update();
 
 	// 天球の更新処理
 	skyDome_->Update();
@@ -250,6 +262,9 @@ void GameScene::Draw() {
 	if (deathParticles_) {
 		deathParticles_->Draw(*currentCamera_);
 	}
+
+	particle_.Draw(*currentCamera_);
+
 	uiManager_->Draw();
 }
 void GameScene::Debug() {

@@ -401,7 +401,21 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <None Include="externals\assimp\lib\Debug\assimp-vc143-mtd.pdb" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Resources\particle.png" />
+    <Image Include="Resources\numbers.png" />
+    <Image Include="Resources\player.png" />
+    <Image Include="Resources\Textures\numbers.png" />
+    <Image Include="Resources\Textures\particle.png" />
+    <Image Include="Resources\Textures\player.png" />
+    <Image Include="Resources\Textures\uvChecker.png" />
+    <Image Include="Resources\Textures\white1x1.png" />
+    <Image Include="Resources\uvChecker.png" />
+    <Image Include="Resources\white1x1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Resources\Sounds\externals\attack.mp3" />
+    <Media Include="Resources\Sounds\externals\cheers!.mp3" />
+    <Media Include="Resources\Sounds\externals\playerHit.mp3" />
+    <Media Include="Resources\Sounds\externals\pour_drink.mp3" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
