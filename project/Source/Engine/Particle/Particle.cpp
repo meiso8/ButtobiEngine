@@ -9,41 +9,28 @@
 #include<numbers>
 using namespace  Microsoft::WRL;
 
-void ParticleMesh::Initialize(uint32_t textureHandle)
+ID3D12GraphicsCommandList* ParticleManager::commandList_ = nullptr;
+void ParticleManager::Initialize(uint32_t textureHandle, int modelHandle)
 {
+
     rootSignature_ = PSO::GetRootSignature();
-    textureHandle_ = textureHandle;
+    commandList_ = DirectXCommon::GetCommandList();
 
-    CreateModelData();
+    //モデルデータの作成後にInstancingを作成
+    CreateModelData(textureHandle, modelHandle);
+   //Instancingを作成
     CreateTransformationMatrix();
-
     //マテリアルリソースを作成 //ライトなし
     materialResource_.CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, MaterialResource::LIGHTTYPE::NONE);
 
-    vertexBufferResource_ = DirectXCommon::CreateBufferResource(sizeof(VertexData) * modelData_.vertices.size());
-    vertexBufferResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexBufferData_));
-    std::copy(modelData_.vertices.begin(), modelData_.vertices.end(), vertexBufferData_);
+    CreateVertexBufferResource();
 
-    vertexBufferView_.BufferLocation = vertexBufferResource_->GetGPUVirtualAddress();
-    vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData) * modelData_.vertices.size());
-    vertexBufferView_.StrideInBytes = sizeof(VertexData);
-
-    vertexBufferResource_->Unmap(0, nullptr);
-
-    emitter_.cont = 3;
-    emitter_.frequency = 0.5f;
-    emitter_.frequencyTime = 0.0f;
-    emitter_.transform.rotate = { 0.0f,0.0f,0.0f };
-    emitter_.transform.scale = { 1.0f,1.0f,1.0f };
-    emitter_.transform.translate = { 1.0f,1.0f,1.0f };
-
-    accelerationField.acceleration = { 15.0f,0.0f,0.0f };
-    accelerationField.area.min = { -1.0f,-1.0f,-1.0f };
-    accelerationField.area.max = { 1.0f,1.0f,1.0f };
+    InitEmitter();
+    InitAccelerationField();
 
 }
 
-Particle ParticleMesh::MakeNewParticle(const Vector3& translate)
+Particle ParticleManager::MakeNewParticle(const Vector3& translate)
 {
     Random::SetMinMax(-1.0f, 1.0f);
     Particle particle;
@@ -63,20 +50,57 @@ Particle ParticleMesh::MakeNewParticle(const Vector3& translate)
     return particle;
 }
 
-
-void ParticleMesh::CreateModelData()
+void ParticleManager::InitEmitter()
 {
-    modelData_.vertices.push_back({ .position = {1.0f,1.0f,0.0f,1.0f},.texcoord = {0.0f,0.0f},.normal = {0.0f,0.0f,1.0f} });//左上
-    modelData_.vertices.push_back({ .position = {-1.0f,1.0f,0.0f,1.0f}, .texcoord = {1.0f,0.0f}, .normal = {0.0f,0.0f,1.0f} });//右上
-    modelData_.vertices.push_back({ .position = {1.0f,-1.0f,0.0f,1.0f}, .texcoord = {0.0f,1.0f}, .normal = {0.0f,0.0f,1.0f} });//左下
-    modelData_.vertices.push_back({ .position = {1.0f,-1.0f,0.0f,1.0f}, .texcoord = {0.0f,1.0f}, .normal = {0.0f,0.0f,1.0f} });//左下
-    modelData_.vertices.push_back({ .position = {-1.0f,1.0f,0.0f,1.0f}, .texcoord = {1.0f,0.0f}, .normal = {0.0f,0.0f,1.0f} });//右上
-    modelData_.vertices.push_back({ .position = {-1.0f,-1.0f,0.0f,1.0f}, .texcoord = {1.0f,1.0f}, .normal = {0.0f,0.0f,1.0f} });//右下
-    modelData_.material.textureFilePath = "./resources/uvChecker.png";
+    emitter_.cont = 3;
+    emitter_.frequency = 0.5f;
+    emitter_.frequencyTime = 0.0f;
+    emitter_.transform.rotate = { 0.0f,0.0f,0.0f };
+    emitter_.transform.scale = { 1.0f,1.0f,1.0f };
+    emitter_.transform.translate = { 1.0f,1.0f,1.0f };
+}
+
+void ParticleManager::InitAccelerationField()
+{
+    accelerationField.acceleration = { 15.0f,0.0f,0.0f };
+    accelerationField.area.min = { -1.0f,-1.0f,-1.0f };
+    accelerationField.area.max = { 1.0f,1.0f,1.0f };
+}
+
+void ParticleManager::CreateModelData(const uint32_t& textureHandle, const int& modelHandle)
+{
+    if (modelHandle == -1) {
+        modelData_ = std::make_unique<ModelData>();
+        modelData_->vertices.push_back({ .position = {1.0f,1.0f,0.0f,1.0f},.texcoord = {0.0f,0.0f},.normal = {0.0f,0.0f,1.0f} });//左上
+        modelData_->vertices.push_back({ .position = {-1.0f,1.0f,0.0f,1.0f}, .texcoord = {1.0f,0.0f}, .normal = {0.0f,0.0f,1.0f} });//右上
+        modelData_->vertices.push_back({ .position = {1.0f,-1.0f,0.0f,1.0f}, .texcoord = {0.0f,1.0f}, .normal = {0.0f,0.0f,1.0f} });//左下
+        modelData_->vertices.push_back({ .position = {1.0f,-1.0f,0.0f,1.0f}, .texcoord = {0.0f,1.0f}, .normal = {0.0f,0.0f,1.0f} });//左下
+        modelData_->vertices.push_back({ .position = {-1.0f,1.0f,0.0f,1.0f}, .texcoord = {1.0f,0.0f}, .normal = {0.0f,0.0f,1.0f} });//右上
+        modelData_->vertices.push_back({ .position = {-1.0f,-1.0f,0.0f,1.0f}, .texcoord = {1.0f,1.0f}, .normal = {0.0f,0.0f,1.0f} });//右下
+        modelData_->material.textureFilePath = "./resources/uvChecker.png";
+        textureHandle_ = textureHandle;
+    } else {
+        *modelData_ = ModelManager::GetModelData(modelHandle);
+        textureHandle_ = modelData_->textureHandle;
+    }
 
 }
 
-void ParticleMesh::CreateTransformationMatrix()
+void ParticleManager::CreateVertexBufferResource()
+{
+    vertexBufferResource_ = DirectXCommon::CreateBufferResource(sizeof(VertexData) * modelData_->vertices.size());
+    vertexBufferResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexBufferData_));
+    std::copy(modelData_->vertices.begin(), modelData_->vertices.end(), vertexBufferData_);
+
+    vertexBufferView_.BufferLocation = vertexBufferResource_->GetGPUVirtualAddress();
+    vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData) * modelData_->vertices.size());
+    vertexBufferView_.StrideInBytes = sizeof(VertexData);
+
+    vertexBufferResource_->Unmap(0, nullptr);
+
+}
+
+void ParticleManager::CreateTransformationMatrix()
 {
     //Instancing用のTransformationMatrixリソースを作成
     instancingResource = DirectXCommon::CreateBufferResource(sizeof(ParticleForGPU) * kNumMaxInstance);
@@ -102,18 +126,18 @@ void ParticleMesh::CreateTransformationMatrix()
     instancingSrvDesc.Buffer.NumElements = kNumMaxInstance;
     instancingSrvDesc.Buffer.StructureByteStride = sizeof(ParticleForGPU);
 
-    uint32_t srvIndex = static_cast<UINT>(Texture::GetVectorHandleSize() + 3);
+    //一旦応急処置でtextureHandleに入れる textureのサイス+2分が入る
+    uint32_t srvIndex = Texture::AddHandleForSRV(textureHandle_);
     instancingSrvHandleCPU = DirectXCommon::GetSRVCPUDescriptorHandle(srvIndex);//この書き方はダメですね
     instancingSrvHandleGPU = DirectXCommon::GetSRVGPUDescriptorHandle(srvIndex);
     DirectXCommon::GetDevice()->CreateShaderResourceView(instancingResource.Get(), &instancingSrvDesc, instancingSrvHandleCPU);
 }
 
 
-void ParticleMesh::Draw(Camera& camera, uint32_t blendMode)
+void ParticleManager::Draw(Camera& camera, uint32_t blendMode)
 {
     if (useBillboard_) {
         backToFrontMatrix = MakeRotateYMatrix(std::numbers::pi_v<float>);
-
         billboardMatrix = Multiply(backToFrontMatrix, camera.worldMat_);
         billboardMatrix.m[3][0] = 0.0f;
         billboardMatrix.m[3][1] = 0.0f;
@@ -160,32 +184,26 @@ void ParticleMesh::Draw(Camera& camera, uint32_t blendMode)
         ++particleIterator;
     }
 
-
     if (numInstance > 0) {
 
-        ID3D12GraphicsCommandList* commandList = DirectXCommon::GetCommandList();
-        PSO* pso = MyEngine::GetPSO();
-
         //rootSignatureの設定
-        commandList->SetGraphicsRootSignature(rootSignature_->GetRootSignature(RootSignature::PARTICLE));
-        commandList->SetPipelineState(pso->GetGraphicsPipelineStateParticle(blendMode).Get());
+        commandList_->SetGraphicsRootSignature(rootSignature_->GetRootSignature(RootSignature::PARTICLE));
+        commandList_->SetPipelineState(MyEngine::GetPSO()->GetGraphicsPipelineStateParticle(blendMode).Get());
         //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
-        commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
+        commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);
         //マテリアルの設定
-        commandList->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
+        commandList_->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
         //粒ごとのトランスフォーム
-        commandList->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU);
+        commandList_->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU);
         //テスクチャ
-        commandList->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureHandle_));
-
-
+        commandList_->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureHandle_));
         //描画!（DrawCall/ドローコール）6個のインデックスを使用しインスタンスを描画。
-        commandList->DrawInstanced(UINT(modelData_.vertices.size()), numInstance, 0, 0);
+        commandList_->DrawInstanced(UINT(modelData_->vertices.size()), numInstance, 0, 0);
     }
 }
 
-void ParticleMesh::Update()
+void ParticleManager::Update()
 {
     emitter_.frequencyTime += kDeltaTime;
 
@@ -199,7 +217,7 @@ std::list<Particle> Emit(const Emitter& emitter)
 {
     std::list<Particle>particles;
     for (uint32_t count = 0; count < emitter.cont; ++count) {
-        particles.push_back(ParticleMesh::MakeNewParticle(emitter.transform.translate));
+        particles.push_back(ParticleManager::MakeNewParticle(emitter.transform.translate));
     }
     return particles;
 

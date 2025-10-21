@@ -176,7 +176,7 @@ void DebugUI::CheckWaveData(Wave& wave, const char* label)
         ImGui::TreePop();
     }
 }
-void DebugUI::CheckParticle(ParticleMesh& particle, const char* label)
+void DebugUI::CheckParticle(ParticleManager& particle, const char* label)
 {
 
     ImGui::Begin(label);

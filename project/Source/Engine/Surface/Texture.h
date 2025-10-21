@@ -37,6 +37,7 @@ public:
     }
 
     static uint32_t AddTextureHandle(const std::string& filePath);
+    static uint32_t AddHandleForSRV(const uint32_t& textureHandle);
 
 private:
     static std::vector<uint32_t>handle_;

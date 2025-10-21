@@ -71,6 +71,8 @@ void GameScene::Initialize() {
 	deathParticles_->Initialize(playerPosition);
 
 	particle_.Initialize(Texture::GetHandle(Texture::PARTICLE));
+	particle_.useBillboard_ = true;
+	particle_.emitter_.cont = 3;
 
     // カメラ操作の初期化
     cameraController_->Initialize(camera_.get());
@@ -134,6 +136,7 @@ void GameScene::Update() {
 	}
 
 	particle_.Update();
+	particle_.emitter_.transform.translate = player_->GetWorldPosition();
 
 	// 天球の更新処理
 	skyDome_->Update();
