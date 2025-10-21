@@ -4,6 +4,8 @@
 
 #include"DebugUI.h"
 
+#define InversFPS 1.0f/60.0f;
+
 UIManager::UIManager()
 {
     LifeTextureHandle_ = Texture::GetHandle(Texture::LIFE);
@@ -49,17 +51,18 @@ void UIManager::Initialize() {
 
 void UIManager::Update() {
 
-
+    UpdateCombo();
+    // =============================== Score==========================================
     AddFinalScore_ += static_cast<int>(AddBaseScore_ * speedBonus_);
     AddFinalScore_ += static_cast<int>(AddBaseScore_ * ComboBonus_);
 
-    Score_ += AddFinalScore_; 
- 
+    Score_ += AddFinalScore_;
+
     AddFinalScore_ = 0;
 
-    if (Score_> HighScore_) {
+    if (Score_ > HighScore_) {
         HighScore_ = Score_;
-	}
+    }
 }
 
 void UIManager::Draw() {
@@ -69,7 +72,7 @@ void UIManager::Draw() {
     for (int i = 0; i < Life_; i++) {
         lifeSprites[i].Draw();
     }
-    
+
     JuiceSprite->Draw();
     scoreSprite->Draw();
     comboSprite->Draw();
@@ -82,7 +85,7 @@ void UIManager::Draw() {
 
 void UIManager::Debug()
 {
-   
+
 
     //DebugUI::CheckSprite(*JuiceSprite, "JuiceSprite");
     //DebugUI::CheckSprite(*scoreSprite, "scoreSprite");
@@ -91,25 +94,42 @@ void UIManager::Debug()
     //DebugUI::CheckSprite(*WASDSprite, "WASDSprite");
     //DebugUI::CheckSprite(*SpaceSprite, "SpaceSprite");
     //DebugUI::CheckSprite(*TimerSprite, "TimerSprite");
- 
+
     //for (int i = 0; i < Life_; i++) {
     //    DebugUI::CheckSprite(lifeSprites[i], "lifeSprites");
     //}
 
     ImGui::Begin("UI");
-    ImGui::SliderInt("Combo", &Combo_, 0, MaxCombo_);
+    ImGui::SliderFloat("ComboTimer", &ComboTimer_, 0.0f, 100.0f);
+    ImGui::Checkbox("UpdateTimer", &isUpdateComboTimer_);
+    ImGui::Text("Combo : %d MaxCombo : %d ", Combo_, MaxCombo_);
 
     ImGui::End();
 
 
 }
 
-void UIManager::AddCombo()
-{
-    Combo_++;
-}
-
-void UIManager::SetFruitSpeed(const float& speedA, const float& speedB)
+void UIManager::UpdateCombo()
 {
 
+    if (!isUpdateComboTimer_) {
+        return;
+    }
+
+    if (Combo_ < 1) {
+        return;
+    }
+
+    ComboTimer_ += InversFPS;
+
+    if (ComboTimer_ < 19.0f) {
+        return;
+    }
+
+    ComboTimer_ = 0.0f;
+    Combo_ = 0;
+    isUpdateComboTimer_ = false;
+
+
 }
+

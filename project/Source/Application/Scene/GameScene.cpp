@@ -67,6 +67,8 @@ void GameScene::Initialize() {
 
 	// 衝突マネージャにスコアポインタを設定
 	collisionManager_->SetScorePointer(&score_);
+	collisionManager_->SetComboPointer(uiManager_->GetComboPointer());
+
 
     Vector3 playerPosition = { 0.0f, 1.0f, 0.0f };
     // 自キャラの初期化 //ここはmainCamera
@@ -159,6 +161,11 @@ void GameScene::Update() {
 
 	// 自キャラの更新処理
 	player_->Update();
+	if (player_->IsAttack()) {
+		//アタックしているときコンボタイマーをカウントダウンする
+		uiManager_->SetIsUpdateComboTimer(true);
+	}
+
 
     // 敵が死亡している場合は削除
     enemies_.remove_if([](Enemy* enemy) {

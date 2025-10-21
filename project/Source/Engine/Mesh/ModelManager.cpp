@@ -39,7 +39,7 @@ void ModelManager::LoadAllModel()
 
     handle_[STAGE] = Load("Resources/Models/stage", "stage.obj");
 
-    std::string resourceString = "Resources/";
+    std::string resourceString = "Resources/Models/";
     std::string titleString = "titleString";
     std::string titleStrings[8] = { "bu", "tt", "to", "bi", "mi", "kk", "ku", "su" };
     std::string objString = ".obj";
@@ -51,9 +51,9 @@ void ModelManager::LoadAllModel()
         handle_[TITLE_BU+i] = Load(directoryPath, modelname);
     }
 
-    handle_[JUICE_CUP] = Load("Resources/juiceCup", "juiceCup.obj");
+    handle_[JUICE_CUP] = Load("Resources/Models/juiceCup", "juiceCup.obj");
 
-    handle_[FRUIT_APPLE] = Load("Resources/apple", "apple.obj");
+    handle_[FRUIT_APPLE] = Load("Resources/Models/apple", "apple.obj");
 
     handle_[TABLE] = Load("Resources/Models/cube", "cube.obj");
 }
