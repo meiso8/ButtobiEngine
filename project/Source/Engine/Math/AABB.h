@@ -10,6 +10,13 @@ struct AABB {
     Vector3 max;
 };
 
+#ifdef _DEBUG
+/// @brief AABBの編集
+/// @param label ラベル
+/// @param aabb AABB
+void EditAABB(const std::string &label, AABB &aabb);
+#endif // _DEBUG
+
 class LineMesh;
 class Camera;
 
@@ -26,28 +33,14 @@ public:
 	void Initialize();
 	
 	/// @brief 更新
-	void Update();
+	/// @param aabb AABB
+	void Update(const AABB &aabb);
 	
 	/// @brief 描画
 	/// @param camera カメラ
 	void Draw(Camera &camera);
 	
-	/// @brief AABBの設定
-	/// @param aabb AABB
-	void SetAABB(const AABB &aabb) { aabb_ = aabb; }
-	
-	/// @brief AABBの取得
-	/// @return AABB
-	AABB &GetAABB() { return aabb_; }
-
-#ifdef _DEBUG
-	/// @brief 編集
-	/// @param label ラベル
-	void Edit(const std::string &label);
-#endif // _DEBUG
-
 private:
 	using LineMeshes = std::array<std::unique_ptr<LineMesh>, 12>;
-	AABB aabb_;			// AABB
 	LineMeshes lines_;	// 線分メッシュ
 };

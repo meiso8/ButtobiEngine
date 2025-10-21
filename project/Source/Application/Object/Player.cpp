@@ -190,8 +190,11 @@ void Player::Initialize(Camera &camera, const Vector3 &position) {
 
 	objectColor_ = { 1.0f,1.0f,1.0f,1.0f };
 
-
+#ifdef _DEBUG
+	// AABBのデバッグ描画の生成と初期化
+	aabbRenderer_ = std::make_unique<AABBRenderer>();
 	aabbRenderer_->Initialize();
+#endif // _DEBUG
 }
 
 void Player::InputMove() {
@@ -654,14 +657,17 @@ void Player::Update() {
 
 	AttackAnimation();
 
-	// AABB描画の更新
-	aabbRenderer_->SetAABB(GetAABB());
-	aabbRenderer_->Update();
+#ifdef _DEBUG
+	// AABBのデバッグ描画の更新
+	aabbRenderer_->Update(GetAABB());
+#endif // _DEBUG
 }
 
 void Player::Draw(Camera &camera) {
-	// AABBの描画
+#ifdef _DEBUG
+	// AABBのデバッグ描画の描画
 	aabbRenderer_->Draw(camera);
+#endif // _DEBUG
 
 	// 3Dモデル描画前処理
 	model_[0]->PreDraw(BlendMode::kBlendModeNormal);
