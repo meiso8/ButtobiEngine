@@ -52,19 +52,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // タイトルシーンの生成
     scenes.push_back(new TitleScene());
     // ゲームシーンのインスタンスの取得
-    //scenes.push_back(std::make_unique<GameScene>());
+    scenes.push_back(new GameScene());
     // ゲームクリアシーンの生成
-    //scenes.push_back(std::make_unique<GameClearScene>());
+    scenes.push_back(new GameClearScene());
     // ゲームオーバーシーンの生成
     //scenes.push_back(std::make_unique<GameOverScene>());
     //サンプルシーンの生成
     //scenes.push_back(std::make_unique<SampleScene>());
 
     //シーンのインデックス
-    int sceneIndex = kTitleScene;
+    int sceneIndex = kGameScene;
 #ifdef _DEBUG
     //シーンのインデックス
-    sceneIndex = kTitleScene;
+    sceneIndex = kGameScene;
 #endif // _DEBUG
 
     //現在のシーン
@@ -122,10 +122,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #ifdef _DEBUG
         //デバック用
 
-        DebugUI::CheckColor(screenColor, "screenColor");
-        ImGui::Text("%s", sceneName[sceneIndex]);
-        DebugUI::CheckFPS();
-        currentScene->Debug();
+        //DebugUI::CheckColor(screenColor, "screenColor");
+        //ImGui::Text("%s", sceneName[sceneIndex]);
+        //DebugUI::CheckFPS();
+        //currentScene->Debug();
 
 #endif // _DEBUG
 

@@ -43,7 +43,9 @@ GameScene::GameScene() {
     stage_ = std::make_unique <Stage>();
 }
 
-GameScene::~GameScene() = default;
+GameScene::~GameScene() {
+    DrawGrid::Finalize();
+};
 void GameScene::Initialize() {
 
     isEndScene_ = false;

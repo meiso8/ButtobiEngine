@@ -60,7 +60,7 @@ private:
     uint32_t numInstance_ = 0;
     ParticleForGPU* instancingData = nullptr;
     std::unique_ptr<ModelData> modelData_ = nullptr;
-    MaterialResource materialResource_{};
+    MaterialResource* materialResource_{};
     RootSignature* rootSignature_ = nullptr;
     static ID3D12GraphicsCommandList* commandList_;
 

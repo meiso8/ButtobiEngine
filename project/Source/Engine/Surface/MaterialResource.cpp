@@ -5,7 +5,6 @@
 MaterialResource::~MaterialResource()
 {
 
-    materialResource_.Reset();
 }
 
 void MaterialResource::UnMap()
@@ -14,6 +13,8 @@ void MaterialResource::UnMap()
         materialResource_->Unmap(0, nullptr);
         materialResource_ = nullptr;
     }
+
+    materialResource_.Reset();
 }
 
 void MaterialResource::CreateMaterial(const Vector4& color, uint32_t lightType) {
