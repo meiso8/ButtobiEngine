@@ -326,34 +326,34 @@ void Player::InputAttack() {
 void Player::AttackAnimation() {
 
     //色の具合を調整しました。ヨシダ
-    switch (attackPhase_) {
-    case Player::kNone:
-        /*objectColor_.SetColor({1, 1, 1, 1});*/
+    //switch (attackPhase_) {
+    //case Player::kNone:
+    //    /*objectColor_.SetColor({1, 1, 1, 1});*/
 
 
 
-        break;
-    case Player::kCharge:
+    //    break;
+    //case Player::kCharge:
 
-        objectColor_ = { 0.25f,1.0f,0.25f,1.0f };
-
-
-
-        break;
-    case Player::kFire:
-
-        objectColor_ = { 1.0f,0.25f,0.25f,1.0f };
+    //    objectColor_ = { 0.25f,1.0f,0.25f,1.0f };
 
 
-        break;
-    case Player::kEnd:
 
-        objectColor_ = { 0.25f,0.25f,1.0f,1.0f };
+    //    break;
+    //case Player::kFire:
 
-        break;
-    default:
-        break;
-    }
+    //    objectColor_ = { 1.0f,0.25f,0.25f,1.0f };
+
+
+    //    break;
+    //case Player::kEnd:
+
+    //    objectColor_ = { 0.25f,0.25f,1.0f,1.0f };
+
+    //    break;
+    //default:
+    //    break;
+    //}
 
 
 
