@@ -14,6 +14,11 @@ ID3D12GraphicsCommandList* ParticleManager::commandList_ = nullptr;
 ParticleManager::~ParticleManager()
 {
 
+    materialResource_->UnMap();
+
+    delete materialResource_;
+
+
     if (instancingResource) {
         instancingResource->Unmap(0, nullptr);
     }
@@ -30,7 +35,8 @@ void ParticleManager::Initialize(uint32_t textureHandle, int modelHandle)
     //Instancingを作成
     CreateTransformationMatrix();
     //マテリアルリソースを作成 //ライトなし
-    materialResource_.CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, MaterialResource::LIGHTTYPE::NONE);
+    materialResource_ = new MaterialResource();
+    materialResource_->CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, MaterialResource::LIGHTTYPE::NONE);
 
     CreateVertexBufferResource();
 
@@ -202,7 +208,7 @@ void ParticleManager::Draw(uint32_t blendMode)
         commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);
         //マテリアルの設定
-        commandList_->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
+        commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
         //粒ごとのトランスフォーム
         commandList_->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU);
         //テスクチャ

@@ -193,5 +193,7 @@ SampleScene::~SampleScene()
     }
 
     sprites_.clear();
+
+    DrawGrid::Finalize();
 }
 
