@@ -4,13 +4,14 @@
 #include"Texture.h"
 
 std::array<LineMesh*, 102> DrawGrid::line_;
- std::array < Cube*, 2> DrawGrid::cube_;
+std::array < Cube*, 2> DrawGrid::cube_;
 
 void DrawGrid::Finalize()
 {
-    for (auto& line: line_) {
+
+    for (auto& line : line_) {
         delete line;
-   }
+    }
 
     for (auto& cube : cube_) {
         delete cube;
