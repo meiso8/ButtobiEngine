@@ -83,9 +83,7 @@ void Sprite::Draw(uint32_t lightType
     worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
     worldViewProjectionMatrix_ = Multiply(worldMatrix_, SpriteCamera::GetViewProjectionMatrix());
 
-    transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
     *transformationMatrixData_ = { worldViewProjectionMatrix_,worldMatrix_ };
-    transformationMatrixResource_->Unmap(0, nullptr);
 
 
     //頂点バッファビューを設定
@@ -169,7 +167,6 @@ void Sprite::CreateTransformationMatrix() {
     transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f} ,{ position_.x,position_.y,0.0f } };
     worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 
-    transformationMatrixResource_->Unmap(0, nullptr);
 
 }
 

@@ -231,7 +231,7 @@ void GameScene::PopEnemy() {
     }
 
     // 敵の出現処理
-    Enemy* newEnemy = new Enemy();
+    auto newEnemy = std::make_unique<Enemy>();
     Random::SetMinMax(-40.0f, 40.0f);
     std::array<Vector3, 4> enemyPositions = {
         Vector3{ -80.0f, 40.0f, Random::Get() },
@@ -241,7 +241,7 @@ void GameScene::PopEnemy() {
     };
     Random::SetMinMax(0.0f, 4.0f);
     newEnemy->Initialize(enemyPositions[static_cast<uint32_t>(Random::Get())]);
-    enemies_.emplace_back(newEnemy);
+    enemies_.emplace_back(std::move(newEnemy));
     isWaitingToPop_ = true;
     waitToPopTimer_ = 60;
 }

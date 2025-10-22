@@ -159,13 +159,13 @@ void ParticleManager::Update(Camera& camera)
 
             Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
 
-            instancingResource->Map(0, nullptr, reinterpret_cast<void**>(&instancingData));
+     
             instancingData[numInstance_].WVP = worldViewProjectionMatrix;
             instancingData[numInstance_].World = worldMatrix;
             instancingData[numInstance_].color = (*particleIterator).color;
             float alpha = 1.0f - ((*particleIterator).currentTime / (*particleIterator).lifeTime);
             instancingData[numInstance_].color.w = alpha;
-            instancingResource->Unmap(0, nullptr);
+
 
 
 
@@ -259,8 +259,6 @@ void ParticleManager::CreateTransformationMatrix()
         instancingData[index].World = MakeIdentity4x4();
         instancingData[index].color = Vector4{ 1.0f,1.0f,1.0f,1.0f };
     }
-    instancingResource->Unmap(0, nullptr);
-
 
     D3D12_SHADER_RESOURCE_VIEW_DESC instancingSrvDesc{};
     instancingSrvDesc.Format = DXGI_FORMAT_UNKNOWN;

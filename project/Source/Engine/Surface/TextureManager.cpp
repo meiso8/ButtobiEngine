@@ -10,9 +10,7 @@ std::vector<TextureManager::TextureData> TextureManager::textureDatas;
 
 void TextureManager::Finalize()
 {
-    //for (int i = 0; i < textureDatas.size(); ++i) {
-    //    Unload(&textureDatas[i]);
-    //}
+    textureDatas.clear();
 }
 
 void TextureManager::Initialize()
