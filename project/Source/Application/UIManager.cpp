@@ -112,14 +112,15 @@ void UIManager::Update() {
     }
 
     
+    speedBonus_ = speed_ / 50.0f+1.0f;
 
     // =============================== Score==========================================
     
-    AddFinalScore_ += static_cast<int>(AddBaseScore_ * ComboBonus_*speedBonus_);
+    if (isScoreUP_) {
+    Score_ += static_cast<int>(AddBaseScore_ * ComboBonus_*speedBonus_);
+		isScoreUP_ = false;
+    }
 
-    Score_ += AddFinalScore_;
-
-    AddFinalScore_ = 0;
 
     if (Score_ > HighScore_) {
         HighScore_ = Score_;
