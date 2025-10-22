@@ -3,7 +3,7 @@
 
 ModelConfig* ModelConfig::instance_ = nullptr;
 RootSignature* ModelConfig::rootSignature = nullptr;
-Microsoft::WRL::ComPtr<ID3D12Resource> ModelConfig::directionalLightResource = nullptr;//共通のライトリソース
+ID3D12Resource* ModelConfig::directionalLightResource = nullptr;//共通のライトリソース
 ModelConfig* ModelConfig::GetInstance()
 {
     if (instance_ == nullptr) {
@@ -15,12 +15,7 @@ ModelConfig* ModelConfig::GetInstance()
 void ModelConfig::Initialize(RootSignature* rootSignature, const Microsoft::WRL::ComPtr <ID3D12Resource> directionalLightResource)
 {
     this->rootSignature =rootSignature;
-    this->directionalLightResource =directionalLightResource;
+    this->directionalLightResource =directionalLightResource.Get();
 
 }
-
-//ModelConfig::~ModelConfig()
-//{
-//    delete instance_;
-//}
 

@@ -10,7 +10,7 @@ public:
     void Create();
     static Microsoft::WRL::ComPtr <ID3D12GraphicsCommandList>& GetCommandList() { return commandList_; };
     void PrepareCommand();
-
+    ~CommandList();
 private:
     static Microsoft::WRL::ComPtr <ID3D12GraphicsCommandList> commandList_;
     //コマンドアロケータを生成する(Allocate 割り当てる)

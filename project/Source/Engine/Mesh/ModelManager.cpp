@@ -58,6 +58,11 @@ void ModelManager::LoadAllModel()
     handle_[TABLE] = Load("Resources/Models/cube", "cube.obj");
 }
 
+void ModelManager::Finalize()
+{
+    modelDatas_.clear();
+}
+
 // ========================================================================================================
 
 uint32_t ModelManager::Load(const std::string& directoryPath, const std::string& filename)

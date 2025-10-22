@@ -15,12 +15,13 @@
 class MeshCommon
 {
 public:
+    void Finalize();
     virtual void PreDraw(const BlendMode& blendMode = BlendMode::kBlendModeNormal);
     virtual void Draw(Camera& camera, const Matrix4x4& worldMatrix, const uint32_t lightType = MaterialResource::LIGHTTYPE::NONE) = 0;
 
     void SetColor(const Vector4& color);
-    Material* GetMaterial() { return materialResource_.GetMaterial(); };
-    Vector4& GetColor() { return materialResource_.GetMaterial()->color; };
+    Material* GetMaterial() { return materialResource_->GetMaterial(); };
+    Vector4& GetColor() { return materialResource_->GetMaterial()->color; };
     VertexData& GetVertexData(const uint32_t& index) {
         return vertexData_[index];
     }
@@ -28,15 +29,16 @@ public:
         return *balloonData_;
     }
     Wave& GetWaveData(size_t index) { return waveData_[index]; };
-
+    
     void InitWaveData();
     void InitBalloonData();
 protected:
     uint32_t textureHandle_ = 0;
-    MaterialResource materialResource_{};
-    static ModelConfig* modelConfig_;
+    MaterialResource* materialResource_ = nullptr;
 
-    static  Microsoft::WRL::ComPtr <ID3D12GraphicsCommandList> commandList_;
+    static ModelConfig* modelConfig_;
+    static  ID3D12GraphicsCommandList* commandList_;
+
     Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
     VertexData* vertexData_ = nullptr;
@@ -55,7 +57,7 @@ protected:
     Matrix4x4 worldViewProjectionMatrix_{};
     TransformationMatrix* transformationMatrixData_ = nullptr;
 protected:
-   virtual void CreateVertex() = 0;
+    virtual void CreateVertex() = 0;
     virtual void CreateIndexResource();
     void CreateTransformationMatrix();
     void CreateMaterial(const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, uint32_t lightType = 0);

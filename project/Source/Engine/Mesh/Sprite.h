@@ -15,7 +15,8 @@
 class Sprite
 {
 public:
-    void Create(uint32_t textureHandle, const Vector2& position, const Vector2& size,const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
+    ~Sprite();
+    void Create(uint32_t textureHandle, const Vector2& position, const Vector2& size, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
 
     void Update();
 
@@ -67,7 +68,7 @@ private:
     bool isFlipY_ = false;
     Vector2 textureLeftTop = { 0.0f,0.0f };
     Vector2 textureSize = { 100.0f,100.0f };
-    static  Microsoft::WRL::ComPtr < ID3D12GraphicsCommandList> commandList;
+    static ID3D12GraphicsCommandList* commandList;
 
     Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};

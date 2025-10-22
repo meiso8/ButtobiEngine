@@ -10,6 +10,8 @@ class MaterialResource {
 
 public:
 
+    ~MaterialResource();
+
     enum LIGHTTYPE {
         NONE,
         L_REFLECTANCE,

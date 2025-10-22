@@ -8,6 +8,11 @@ D3D12_INDEX_BUFFER_VIEW SpriteCommon::indexBufferView_;
 Microsoft::WRL::ComPtr <ID3D12Resource> SpriteCommon::indexResource_ = nullptr;
 uint32_t* SpriteCommon::indexData_ = nullptr;
 
+void SpriteCommon::Finalize()
+{
+    indexResource_.Reset();
+}
+
 void SpriteCommon::Initialize()
 {
     rootSignature_ = PSO::GetRootSignature();

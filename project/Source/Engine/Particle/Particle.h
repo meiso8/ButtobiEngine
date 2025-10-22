@@ -62,7 +62,7 @@ private:
     std::unique_ptr<ModelData> modelData_ = nullptr;
     MaterialResource materialResource_{};
     RootSignature* rootSignature_ = nullptr;
-    static  Microsoft::WRL::ComPtr < ID3D12GraphicsCommandList> commandList_;
+    static ID3D12GraphicsCommandList* commandList_;
 
     D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU;
     D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU;

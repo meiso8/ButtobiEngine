@@ -7,7 +7,20 @@
 #include"Camera/SpriteCamera.h"  
 #include"ImGuiClass.h"
 
-Microsoft::WRL::ComPtr < ID3D12GraphicsCommandList> Sprite::commandList = nullptr;
+ID3D12GraphicsCommandList* Sprite::commandList = nullptr;
+
+Sprite::~Sprite()
+{
+    if (vertexResource_) {
+        vertexResource_->Unmap(0, nullptr);
+        vertexResource_.Reset();
+    }
+
+    if (transformationMatrixResource_) {
+        transformationMatrixResource_->Unmap(0, nullptr);
+        transformationMatrixResource_.Reset();
+    }
+}
 
 void Sprite::Create(uint32_t textureHandle, const Vector2& position, const Vector2& size, const Vector4& color)
 {
@@ -41,6 +54,7 @@ void Sprite::Update()
         bottom = -bottom;
     }
 
+
     vertexData_[0].position = { left,bottom,0.0f,1.0f };//左下
     vertexData_[1].position = { left,top,0.0f,1.0f };//左上
     vertexData_[2].position = { right,bottom,0.0f,1.0f };//右下
@@ -52,10 +66,11 @@ void Sprite::Update()
     float tex_top = textureLeftTop.y / metadata.height;
     float tex_bottom = (textureLeftTop.y + textureSize.y) / metadata.height;
 
-    vertexData_[0].texcoord = {tex_left,tex_bottom};
-    vertexData_[1].texcoord = {tex_left,tex_top };
-    vertexData_[2].texcoord = {tex_right,tex_bottom};
-    vertexData_[3].texcoord = {tex_right,tex_top };
+    vertexData_[0].texcoord = { tex_left,tex_bottom };
+    vertexData_[1].texcoord = { tex_left,tex_top };
+    vertexData_[2].texcoord = { tex_right,tex_bottom };
+    vertexData_[3].texcoord = { tex_right,tex_top };
+
 
     UpdateUV();
 }
@@ -66,7 +81,7 @@ void Sprite::SetColor(const Vector4& color) {
 
 
 void Sprite::PreDraw(uint32_t blendMode) {
-    SpriteCommon::PreDraw(commandList.Get());
+    SpriteCommon::PreDraw(commandList);
     commandList->SetPipelineState(MyEngine::GetPSO()->GetGraphicsPipelineStateSprite(blendMode).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -88,7 +103,7 @@ void Sprite::Draw(uint32_t lightType
 
     //頂点バッファビューを設定
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
-    SpriteCommon::SetIndexBuffer(commandList.Get());
+    SpriteCommon::SetIndexBuffer(commandList);
     //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
     commandList->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
     //TransformationMatrixCBufferの場所を設定
@@ -96,7 +111,7 @@ void Sprite::Draw(uint32_t lightType
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
     commandList->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureIndex));
 
-    SpriteCommon::DrawCall(commandList.Get());
+    SpriteCommon::DrawCall(commandList);
 
 };
 
@@ -139,7 +154,7 @@ void Sprite::CreateVertex()
     vertexData_[3].texcoord = { 1.0f,0.0f };
     vertexData_[3].normal = { 0.0f,0.0f,-1.0f };
 
-    vertexResource_->Unmap(0, nullptr);
+
 
 #pragma endregion
 
