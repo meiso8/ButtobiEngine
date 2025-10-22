@@ -67,7 +67,7 @@ private:
     bool isFlipY_ = false;
     Vector2 textureLeftTop = { 0.0f,0.0f };
     Vector2 textureSize = { 100.0f,100.0f };
-    static ID3D12GraphicsCommandList* commandList;
+    static  Microsoft::WRL::ComPtr < ID3D12GraphicsCommandList> commandList;
 
     Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};

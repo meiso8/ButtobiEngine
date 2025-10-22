@@ -72,7 +72,9 @@ void Model::Draw(Camera& camera, const Matrix4x4& worldMatrix, const uint32_t li
 
     worldViewProjectionMatrix_ = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
     //データを書き込む
+    transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
     *transformationMatrixData_ = { worldViewProjectionMatrix_,worldMatrix };
+    transformationMatrixResource_->Unmap(0, nullptr);
 
     commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
     //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/

@@ -63,7 +63,7 @@ private:
     std::unique_ptr <DeathParticles>deathParticles_ = nullptr;
 
     //パーティクル
-    ParticleManager particle_;
+    std::unique_ptr <ParticleManager> particle_ = nullptr;
 
     // 地形
     std::unique_ptr <Stage> stage_ = nullptr;

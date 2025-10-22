@@ -62,7 +62,7 @@ private:
     std::unique_ptr<ModelData> modelData_ = nullptr;
     MaterialResource materialResource_{};
     RootSignature* rootSignature_ = nullptr;
-    static ID3D12GraphicsCommandList* commandList_;
+    static  Microsoft::WRL::ComPtr < ID3D12GraphicsCommandList> commandList_;
 
     D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU;
     D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU;
@@ -94,11 +94,11 @@ public:
     static Particle MakeNewParticle(const Vector3& translate, const Vector4& color);
     static SphericalCoordinate MakeNewSphericalCoordinate();
 private:
-    void CreateModelData(const uint32_t& textureHandle,const int& modelHandle);
+    void CreateModelData(const uint32_t& textureHandle, const int& modelHandle);
     void CreateVertexBufferResource();
     void CreateTransformationMatrix();
 
- 
+
 
 };
 

@@ -10,7 +10,7 @@
 
 using namespace  Microsoft::WRL;
 
-ID3D12GraphicsCommandList* ParticleManager::commandList_ = nullptr;
+ComPtr<ID3D12GraphicsCommandList> ParticleManager::commandList_ = nullptr;
 ParticleManager::~ParticleManager()
 {
 
@@ -74,7 +74,7 @@ SphericalCoordinate ParticleManager::MakeNewSphericalCoordinate()
     Random::SetMinMax(0.0f, 6.28f);
     sphericalCoordinate.azimuthal = 0.0f;
     sphericalCoordinate.polar = Random::Get();
-    sphericalCoordinate.radius = 5.0f;
+    sphericalCoordinate.radius = 3.0f;
     return sphericalCoordinate;
 }
 
@@ -272,7 +272,7 @@ void ParticleManager::CreateTransformationMatrix()
     instancingSrvDesc.Buffer.StructureByteStride = sizeof(ParticleForGPU);
 
     //一旦応急処置でtextureHandleに入れる textureのサイス+2分が入る
-    uint32_t srvIndex = Texture::AddHandleForSRV(textureHandle_);
+    uint32_t srvIndex = Texture::AddHandleForSRV(textureHandle_) + 3;
     instancingSrvHandleCPU = DirectXCommon::GetSRVCPUDescriptorHandle(srvIndex);//この書き方はダメですね
     instancingSrvHandleGPU = DirectXCommon::GetSRVGPUDescriptorHandle(srvIndex);
     DirectXCommon::GetDevice()->CreateShaderResourceView(instancingResource.Get(), &instancingSrvDesc, instancingSrvHandleCPU);

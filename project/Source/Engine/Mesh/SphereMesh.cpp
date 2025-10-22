@@ -119,7 +119,10 @@ void SphereMesh::Draw(Camera& camera, const Matrix4x4& worldMatrix, const uint32
     materialResource_.SetLightType(lightType);
 
     worldViewProjectionMatrix_ = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
+
+    transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
     *transformationMatrixData_ = { worldViewProjectionMatrix_,worldMatrix };
+    transformationMatrixResource_->Unmap(0, nullptr);
 
     //頂点バッファビューを設定
     commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
