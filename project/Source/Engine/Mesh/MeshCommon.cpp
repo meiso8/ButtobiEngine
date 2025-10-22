@@ -9,6 +9,7 @@ ID3D12GraphicsCommandList* MeshCommon::commandList_ = nullptr;
 void MeshCommon::Finalize() {
 
     if (materialResource_) {
+        materialResource_->UnMap();
         delete materialResource_;
     }
 

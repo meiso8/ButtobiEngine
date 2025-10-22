@@ -9,9 +9,9 @@
 class MaterialResource {
 
 public:
-
+    MaterialResource() = default;
     ~MaterialResource();
-
+    void UnMap();
     enum LIGHTTYPE {
         NONE,
         L_REFLECTANCE,
@@ -27,8 +27,10 @@ public:
             ;
     };
 
+    MaterialResource(const MaterialResource&) = delete;
+    MaterialResource& operator=(const MaterialResource&) = delete;
+
     void SetColor(const Vector4& color);
-    void SetMaterial(Material* material);
     void SetUV(const Matrix4x4& transform);
     void SetLightType(uint32_t lightType);
 private:

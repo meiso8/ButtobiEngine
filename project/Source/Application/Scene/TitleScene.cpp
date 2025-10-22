@@ -69,7 +69,7 @@ void TitleScene::Initialize() {
     selectGameoption_ = GameOption::GameStart;
     gameOption_ = GameOption::None;
     animationPhase_ = AnimationPhase::JInOutP;
-
+    stringAnimationTimer = 0.0f;
 
 }
 
