@@ -59,9 +59,12 @@ void GameScene::Initialize() {
 
     // 衝突マネージャにスコアポインタを設定
     collisionManager_->SetScorePointer(&score_);
+
+
     collisionManager_->SetComboPointer(uiManager_->GetComboPointer());
     collisionManager_->SetComboTimerPtr(uiManager_->GetComboTimerPtr());
-
+	collisionManager_->SetScorePointer(uiManager_->GetSpeedPointer());
+	collisionManager_->SetIsScoreUp(uiManager_->GetIsScorePointer());
 
     Vector3 playerPosition = { 0.0f, 1.0f, 0.0f };
     // 自キャラの初期化 //ここはmainCamera

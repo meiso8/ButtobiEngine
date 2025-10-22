@@ -38,7 +38,12 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
         if (colliderA->IsKicked() || colliderB->IsKicked()) {
             *combo_ += 1;//コンポを加算
             *comboTimer_ = 0.0f;//コンボ継続時間を初期化
-            *score_ += static_cast<uint32_t>((Length(colliderA->GetVelocity()) + Length(colliderB->GetVelocity())) / 2.0f);
+            *score_ = static_cast<uint32_t>((Length(colliderA->GetVelocity()) + Length(colliderB->GetVelocity())) / 2.0f);
+			*isScoreUp_ = true;
+		} else {
+		
+            *isScoreUp_ = false;
+        
         }
     }
 }

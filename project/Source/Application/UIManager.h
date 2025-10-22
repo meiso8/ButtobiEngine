@@ -42,14 +42,14 @@ private:
     //--スピードボーナス
     // スピードボーナス倍率
     float speedBonus_ = 1.0f;
-
+    uint32_t speed_ = 0;
     //--ゲーム時間
     // 現在のゲーム時間
     float GameTime_ = 0.0f;
     // 最大ゲーム時間
     float MaxGameTime_ = 60.0f;
 
-
+    bool isScoreUP_ = false;
 
     //<サイズ系>
 
@@ -145,10 +145,11 @@ public:
             Life_ = MaxLife_;
         }
     };
-
+	uint32_t* GetSpeedPointer() { return &speed_; };
     int GetMaxLife() { return MaxLife_; };
     uint32_t* GetComboPointer() { return &Combo_; }
     float* GetComboTimerPtr() { return &ComboTimer_; }
+	bool* GetIsScorePointer() { return &isScoreUP_; }
     void SetIsUpdateComboTimer(const bool& isUpdateComboTimer) {
         isUpdateComboTimer_ = isUpdateComboTimer;
     };
