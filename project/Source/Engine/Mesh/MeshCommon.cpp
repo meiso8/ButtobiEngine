@@ -50,7 +50,6 @@ void MeshCommon::CreateTransformationMatrix() {
     //データを書き込む
     //書き込むためのアドレスを取得
     transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
-    transformationMatrixResource_->Unmap(0, nullptr);
 
 
 }
