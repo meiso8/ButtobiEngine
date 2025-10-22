@@ -264,7 +264,7 @@ void Player::InputAttack() {
     switch (attackPhase_) {
     case Player::kNone:
 
-        if (Input::GetInstance()->IsPushKey(DIK_SPACE)) {
+        if (Input::IsPushKey(DIK_SPACE)) {
 
             attackPhase_ = Player::kCharge;
             Sound::PlayLoopSE(Sound::CHARGE, 0.0f);
@@ -273,7 +273,7 @@ void Player::InputAttack() {
         break;
     case Player::kCharge:
 
-        if (!Input::GetInstance()->IsPushKey(DIK_SPACE)) {
+        if (!Input::IsPushKey(DIK_SPACE)) {
 
             attackPhase_ = Player::kFire;
             Sound::Stop(Sound::CHARGE);

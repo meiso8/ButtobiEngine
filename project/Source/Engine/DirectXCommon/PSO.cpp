@@ -10,7 +10,7 @@ std::unique_ptr<RootSignature>PSO::rootSignature = nullptr;
 std::array<std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfCullMode>, kCountOfBlendMode>PSO::graphicsPipelineStates_;
 std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode>PSO::graphicsPipelineStatesParticle_;
 Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::graphicsPipelineStatesLine_;
- std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> PSO::graphicsPipelineStateSprite_;
+std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> PSO::graphicsPipelineStateSprite_;
 
 Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
     RootSignature& rootSignature,
@@ -150,6 +150,39 @@ void PSO::CreateALLPSO()
             depthStencils[kAll], kSprite, kTriangle
         );
     }
+
+}
+
+PSO::~PSO()
+{
+    for (auto& pso : PSO::graphicsPipelineStateSprite_) {
+        if (pso) {
+            pso.Reset();
+        }
+    }
+
+    if (PSO::graphicsPipelineStatesLine_) {
+        PSO::graphicsPipelineStatesLine_.Reset();
+    }
+
+
+    for (auto& pso : PSO::graphicsPipelineStatesParticle_) {
+        if (pso) {
+            pso.Reset();
+        }
+    }
+
+
+    for (auto& blendModes : PSO::graphicsPipelineStates_) {
+        for (auto& pso : blendModes) {
+            if (pso) {
+                pso.Reset(); // Release() と同じ効果
+            }
+        }
+    }
+
+    rootSignature.reset();
+
 
 }
 

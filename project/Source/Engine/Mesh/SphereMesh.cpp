@@ -6,6 +6,11 @@
 #include<numbers>
 #include"TextureManager.h"
 
+SphereMesh::~SphereMesh()
+{
+    Finalize();
+}
+
 void SphereMesh::Create(uint32_t& textureHandle)
 {
     commandList_ = DirectXCommon::GetCommandList();
@@ -39,7 +44,7 @@ void SphereMesh::CreateUV()
 void SphereMesh::UpdateUV() {
 
     uvTransformMatrix_ = MakeAffineMatrix(uvTransform_.scale, uvTransform_.rotate, uvTransform_.translate);
-    materialResource_.SetUV(uvTransformMatrix_);
+    materialResource_->SetUV(uvTransformMatrix_);
 }
 
 void SphereMesh::SetVertex(const float& radius)
@@ -116,7 +121,7 @@ void SphereMesh::SetVertex(const float& radius)
 void SphereMesh::Draw(Camera& camera, const Matrix4x4& worldMatrix, const uint32_t lightType
 ) {
 
-    materialResource_.SetLightType(lightType);
+    materialResource_->SetLightType(lightType);
 
     worldViewProjectionMatrix_ = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
 
@@ -128,7 +133,7 @@ void SphereMesh::Draw(Camera& camera, const Matrix4x4& worldMatrix, const uint32
     commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
 
     //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
+    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
     //TransformationMatrixCBufferの場所を設定
     commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。

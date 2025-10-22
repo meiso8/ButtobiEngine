@@ -4,6 +4,7 @@
 class Cube :public MeshCommon
 {
 public:
+    ~Cube();
     void SetMinMax(const Vector3& min, const Vector3& max);
 
     void Create(uint32_t& textureHandle);

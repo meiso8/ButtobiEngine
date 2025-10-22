@@ -48,6 +48,7 @@ public:
     }
     void CreateALLPSO();
     static RootSignature* GetRootSignature() { return rootSignature.get(); }
+    ~PSO();
 private:
     Microsoft::WRL::ComPtr <ID3D12PipelineState> Create(
         RootSignature& rootSignature,

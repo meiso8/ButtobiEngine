@@ -3,7 +3,34 @@
 #include"MyEngine.h"
 
 ModelConfig* MeshCommon::modelConfig_ = nullptr;
-Microsoft::WRL::ComPtr <ID3D12GraphicsCommandList> MeshCommon::commandList_ = nullptr;
+ID3D12GraphicsCommandList* MeshCommon::commandList_ = nullptr;
+
+
+void MeshCommon::Finalize() {
+
+    if (materialResource_) {
+        delete materialResource_;
+    }
+
+
+    if (waveResource_) {
+        waveResource_->Unmap(0, nullptr);
+    }
+
+    if (expansionResource_) {
+        expansionResource_->Unmap(0, nullptr);
+    }
+
+    vertexResource_.Reset();
+    indexResource_.Reset();
+    waveResource_.Reset();
+    expansionResource_.Reset();
+    if (transformationMatrixResource_) {
+        transformationMatrixResource_->Unmap(0, nullptr);
+    }
+    transformationMatrixResource_.Reset();
+}
+
 
 void MeshCommon::PreDraw(const BlendMode& blendMode) {
     commandList_->SetGraphicsRootSignature(modelConfig_->rootSignature->GetRootSignature(0));
@@ -13,7 +40,7 @@ void MeshCommon::PreDraw(const BlendMode& blendMode) {
 }
 
 void MeshCommon::SetColor(const Vector4& color) {
-    materialResource_.SetColor(color);
+    materialResource_->SetColor(color);
 }
 
 void MeshCommon::InitWaveData()
@@ -56,7 +83,8 @@ void MeshCommon::CreateTransformationMatrix() {
 
 void MeshCommon::CreateMaterial(const Vector4& color, uint32_t lightType) {
     //マテリアルリソースを作成
-    materialResource_.CreateMaterial(color, lightType);
+    materialResource_ = new MaterialResource();
+    materialResource_->CreateMaterial(color, lightType);
 }
 
 void MeshCommon::CreateWaveData()
@@ -70,7 +98,7 @@ void MeshCommon::CreateWaveData()
 
     InitWaveData();
 
-    waveResource_->Unmap(0, nullptr);
+
 
 }
 
@@ -82,5 +110,5 @@ void MeshCommon::CreateBalloonData()
     expansionResource_->Map(0, nullptr, reinterpret_cast<void**>(&balloonData_));
     //データを初期化する
     InitBalloonData();
-    expansionResource_->Unmap(0, nullptr);
+
 }

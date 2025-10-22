@@ -15,7 +15,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     D3DResourceLeakChecker leakCheck = {};
     // ==============================================//↓基本いじらない↓//============================================
     //エンジンの生成
-    MyEngine* myEngine = MyEngine::GetInstance();
+    std::unique_ptr<MyEngine> myEngine = std::make_unique<MyEngine>();
     myEngine->Create(L"2102_ぶっとびミックス", WIN_WIDTH, WIN_HEIGHT);
     //音声の読み込み
     Sound::LoadAllSound();
@@ -61,7 +61,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     scenes.push_back(std::make_unique<SampleScene>());
 
     //シーンのインデックス
-    int sceneIndex = kGameScene;
+    int sceneIndex = kTitleScene;
 #ifdef _DEBUG
     //シーンのインデックス
     sceneIndex = kTitleScene;
@@ -141,6 +141,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         myEngine->PostCommandSet();
 
     }
+
+    ModelManager::Finalize();
 
     //エンジンの終了
     myEngine->Finalize();

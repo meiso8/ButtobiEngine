@@ -10,7 +10,7 @@
 
 using namespace  Microsoft::WRL;
 
-ComPtr<ID3D12GraphicsCommandList> ParticleManager::commandList_ = nullptr;
+ID3D12GraphicsCommandList* ParticleManager::commandList_ = nullptr;
 ParticleManager::~ParticleManager()
 {
 

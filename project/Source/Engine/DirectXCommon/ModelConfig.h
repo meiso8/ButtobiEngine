@@ -8,10 +8,10 @@ private:
     static ModelConfig* instance_;
 public:
     static RootSignature* rootSignature;
-    static Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource;//共通のライトリソース
+    static ID3D12Resource* directionalLightResource;//共通のライトリソース
 private:
 public:
     static ModelConfig* GetInstance();
-    void Initialize(RootSignature* rootSignature,const Microsoft::WRL::ComPtr <ID3D12Resource> directionalLightResource);
+    void Initialize(RootSignature* rootSignature, const Microsoft::WRL::ComPtr <ID3D12Resource> directionalLightResource);;
     //~ModelConfig();
 };
