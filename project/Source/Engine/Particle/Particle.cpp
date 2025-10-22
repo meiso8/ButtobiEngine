@@ -10,7 +10,15 @@
 
 using namespace  Microsoft::WRL;
 
-ID3D12GraphicsCommandList* ParticleManager::commandList_ = nullptr;
+ComPtr<ID3D12GraphicsCommandList> ParticleManager::commandList_ = nullptr;
+ParticleManager::~ParticleManager()
+{
+
+    if (instancingResource) {
+        instancingResource->Unmap(0, nullptr);
+    }
+
+}
 void ParticleManager::Initialize(uint32_t textureHandle, int modelHandle)
 {
 
@@ -66,7 +74,7 @@ SphericalCoordinate ParticleManager::MakeNewSphericalCoordinate()
     Random::SetMinMax(0.0f, 6.28f);
     sphericalCoordinate.azimuthal = 0.0f;
     sphericalCoordinate.polar = Random::Get();
-    sphericalCoordinate.radius = 5.0f;
+    sphericalCoordinate.radius = 3.0f;
     return sphericalCoordinate;
 }
 
@@ -151,11 +159,14 @@ void ParticleManager::Update(Camera& camera)
 
             Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
 
+            instancingResource->Map(0, nullptr, reinterpret_cast<void**>(&instancingData));
             instancingData[numInstance_].WVP = worldViewProjectionMatrix;
             instancingData[numInstance_].World = worldMatrix;
             instancingData[numInstance_].color = (*particleIterator).color;
             float alpha = 1.0f - ((*particleIterator).currentTime / (*particleIterator).lifeTime);
             instancingData[numInstance_].color.w = alpha;
+            instancingResource->Unmap(0, nullptr);
+
 
 
             ++numInstance_;
@@ -168,9 +179,16 @@ void ParticleManager::Update(Camera& camera)
 
 void ParticleManager::EmitParticle(const Vector4& color)
 {
-    particles.splice(particles.end(), Emit(emitter_, color));
-    sphericalCoordinates.splice(sphericalCoordinates.end(), EmitCoordinate(emitter_));
+    for (uint32_t count = 0; count < emitter_.cont; ++count) {
+        particles.push_back(MakeNewParticle(emitter_.transform.translate, color));
+        sphericalCoordinates.push_back(MakeNewSphericalCoordinate());
+    }
+
+    //particles.splice(particles.end(), Emit(emitter_, color));
+    //sphericalCoordinates.splice(sphericalCoordinates.end(), EmitCoordinate(emitter_));
 }
+
+
 
 
 void ParticleManager::Draw(uint32_t blendMode)
@@ -254,7 +272,7 @@ void ParticleManager::CreateTransformationMatrix()
     instancingSrvDesc.Buffer.StructureByteStride = sizeof(ParticleForGPU);
 
     //一旦応急処置でtextureHandleに入れる textureのサイス+2分が入る
-    uint32_t srvIndex = Texture::AddHandleForSRV(textureHandle_);
+    uint32_t srvIndex = Texture::AddHandleForSRV(textureHandle_) + 3;
     instancingSrvHandleCPU = DirectXCommon::GetSRVCPUDescriptorHandle(srvIndex);//この書き方はダメですね
     instancingSrvHandleGPU = DirectXCommon::GetSRVGPUDescriptorHandle(srvIndex);
     DirectXCommon::GetDevice()->CreateShaderResourceView(instancingResource.Get(), &instancingSrvDesc, instancingSrvHandleCPU);

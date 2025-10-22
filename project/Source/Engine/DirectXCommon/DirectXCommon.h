@@ -63,13 +63,14 @@ private:
     ImGuiClass imGuiClass = {};
 #endif // _DEBUG
 public:
+
     void Initialize(Window& window);
     void Update();
     void PreDraw(Vector4& color);
     void PostDraw();
     void EndFrame();
 
-   static Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(
+    static Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(
         size_t sizeInBytes);
 
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(
