@@ -20,6 +20,7 @@ public:
     virtual void Draw();
     virtual void Debug();
     virtual bool GetIsEndScene() = 0;
+    void SetIsEndScene(bool isEndScene) { isEndScene_ = isEndScene; };
     void SwitchCamera();
 
 };

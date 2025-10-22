@@ -7,7 +7,7 @@
 #include"Camera/SpriteCamera.h"  
 #include"ImGuiClass.h"
 
-ID3D12GraphicsCommandList* Sprite::commandList = nullptr;
+Microsoft::WRL::ComPtr < ID3D12GraphicsCommandList> Sprite::commandList = nullptr;
 
 void Sprite::Create(uint32_t textureHandle, const Vector2& position, const Vector2& size, const Vector4& color)
 {
@@ -66,7 +66,7 @@ void Sprite::SetColor(const Vector4& color) {
 
 
 void Sprite::PreDraw(uint32_t blendMode) {
-    SpriteCommon::PreDraw(commandList);
+    SpriteCommon::PreDraw(commandList.Get());
     commandList->SetPipelineState(MyEngine::GetPSO()->GetGraphicsPipelineStateSprite(blendMode).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -82,11 +82,15 @@ void Sprite::Draw(uint32_t lightType
 
     worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
     worldViewProjectionMatrix_ = Multiply(worldMatrix_, SpriteCamera::GetViewProjectionMatrix());
+
+    transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
     *transformationMatrixData_ = { worldViewProjectionMatrix_,worldMatrix_ };
+    transformationMatrixResource_->Unmap(0, nullptr);
+
 
     //頂点バッファビューを設定
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
-    SpriteCommon::SetIndexBuffer(commandList);
+    SpriteCommon::SetIndexBuffer(commandList.Get());
     //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
     commandList->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
     //TransformationMatrixCBufferの場所を設定
@@ -94,7 +98,7 @@ void Sprite::Draw(uint32_t lightType
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
     commandList->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureIndex));
 
-    SpriteCommon::DrawCall(commandList);
+    SpriteCommon::DrawCall(commandList.Get());
 
 };
 

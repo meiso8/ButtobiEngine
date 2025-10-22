@@ -1,3 +1,4 @@
+#define NOMINMAX
 #include "UIManager.h"
 #include"Texture.h"
 #include"Sprite.h"
@@ -274,6 +275,9 @@ void UIManager::UpdateCombo()
     if (Combo_ < 1) {
         return;
     }
+
+    //コンボ数補正
+    Combo_ = std::min(Combo_, MaxCombo_);
 
     ComboTimer_ += InversFPS;
 

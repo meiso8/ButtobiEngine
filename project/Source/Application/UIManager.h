@@ -31,7 +31,7 @@ private:
     // 現在のコンボ数
     uint32_t Combo_ = 0;
     // 最大コンボ数
-    int MaxCombo_ = 15;
+    uint32_t MaxCombo_ = 15;
     //　コンボボーナス倍率
     float ComboBonus_ = 1.0f;
     // コンボタイマー
@@ -148,6 +148,7 @@ public:
 
     int GetMaxLife() { return MaxLife_; };
     uint32_t* GetComboPointer() { return &Combo_; }
+    float* GetComboTimerPtr() { return &ComboTimer_; }
     void SetIsUpdateComboTimer(const bool& isUpdateComboTimer) {
         isUpdateComboTimer_ = isUpdateComboTimer;
     };

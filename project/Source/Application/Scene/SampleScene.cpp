@@ -8,6 +8,7 @@
 #include"MakeMatrix.h"
 #include"Sprite.h"
 #include"SphereMesh.h"
+#include"Random.h"
 #include <functional>
 
 SampleScene::SampleScene()
@@ -32,10 +33,7 @@ SampleScene::SampleScene()
                 sprite->Update();
             sprites_.push_back(sprite);
         }
-
-  
     }
-
 
     samplePlayer_ = std::make_unique<SamplePlayer>();
 
@@ -79,8 +77,6 @@ void SampleScene::Initialize() {
     worldTransformChild_.rotate_.y = (std::numbers::pi_v<float> / 4.0f);
     WorldTransformUpdate(worldTransformChild_);
 
-    particle_.Initialize(Texture::GetHandle(Texture::PARTICLE));
-
     sphereMesh_->SetVertex({ 4.0f });
 
 
@@ -118,7 +114,7 @@ void SampleScene::Update()
     WorldTransformUpdate(worldTransformChild_);
     quad_.UpdateUV();
 
-    particle_.Update();
+    Random::SetMinMax(0.0f,1.0f);
 
     prePos_ = sphereMesh_->GetBalloonData().expansion;
 
@@ -153,7 +149,6 @@ void SampleScene::Draw()
         sprite->Draw();
     }
 
-    particle_.Draw(*currentCamera_, blendMode_);
 }
 
 void SampleScene::Debug()
@@ -179,7 +174,6 @@ void SampleScene::Debug()
 
     ImGui::Begin("Quad");
 
-    DebugUI::CheckParticle(particle_, "particle");
     DebugUI::CheckTransforms(quad_.GetUVScale(), quad_.GetUVRotate(), quad_.GetUVTranslate(), "uvTransform");
 
     ImGui::End();

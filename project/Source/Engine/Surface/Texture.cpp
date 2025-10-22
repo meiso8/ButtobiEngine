@@ -45,3 +45,11 @@ uint32_t Texture::AddTextureHandle(const std::string& filePath)
     return static_cast<uint32_t>(Texture::handle_.size() - 1);;
 
 }
+
+uint32_t Texture::AddHandleForSRV(const uint32_t& textureHandle)
+{
+    //タミーハンドルを追加
+    handle_.push_back(textureHandle);
+    return static_cast<uint32_t>(Texture::handle_.size() - 1);;
+
+}

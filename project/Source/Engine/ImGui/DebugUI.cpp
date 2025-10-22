@@ -176,7 +176,7 @@ void DebugUI::CheckWaveData(Wave& wave, const char* label)
         ImGui::TreePop();
     }
 }
-void DebugUI::CheckParticle(ParticleMesh& particle, const char* label)
+void DebugUI::CheckParticle(ParticleManager& particle, const char* label)
 {
 
     ImGui::Begin(label);
@@ -194,7 +194,8 @@ void DebugUI::CheckParticle(ParticleMesh& particle, const char* label)
     ImGui::Text("frequencyTime : %f", emitter.frequencyTime);
 
     if (ImGui::Button("Add　Particle")) {
-        particle.particles.splice(particle.particles.end(), Emit(emitter));
+        Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
+        particle.particles.splice(particle.particles.end(), Emit(emitter, color));
     }
 
     int index = 0;

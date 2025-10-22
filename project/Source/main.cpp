@@ -64,7 +64,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     int sceneIndex = kGameScene;
 #ifdef _DEBUG
     //シーンのインデックス
-    sceneIndex = kGameScene;
+    sceneIndex = kTitleScene;
 #endif // _DEBUG
 
     //現在のシーン
@@ -102,6 +102,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
             if (scenes[kTitleScene]->GetIsEndScene()) {
                 // 現在のシーンに代入
+                currentScene->SetIsEndScene(false);
                 currentScene = scenes[kGameScene].get();
             } else if (gameScene->GetIsGameClear()) {
                 currentScene = scenes[kGameClearScene].get();

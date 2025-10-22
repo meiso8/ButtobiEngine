@@ -362,7 +362,7 @@ Vector2& Input::GetMousePos() {
 }
 
 float Input::GetMouseWheel() {
-    return  static_cast<float>(mouseState_.lZ) / FPS;
+    return  static_cast<float>(mouseState_.lZ) *InverseFPS;
 };
 
 

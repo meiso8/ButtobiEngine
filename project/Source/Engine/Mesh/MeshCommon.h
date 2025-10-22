@@ -36,7 +36,7 @@ protected:
     MaterialResource materialResource_{};
     static ModelConfig* modelConfig_;
 
-    static ID3D12GraphicsCommandList* commandList_;
+    static  Microsoft::WRL::ComPtr <ID3D12GraphicsCommandList> commandList_;
     Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
     VertexData* vertexData_ = nullptr;

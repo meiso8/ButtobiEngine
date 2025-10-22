@@ -3,7 +3,7 @@
 #include"MyEngine.h"
 
 ModelConfig* MeshCommon::modelConfig_ = nullptr;
-ID3D12GraphicsCommandList* MeshCommon::commandList_ = nullptr;
+Microsoft::WRL::ComPtr <ID3D12GraphicsCommandList> MeshCommon::commandList_ = nullptr;
 
 void MeshCommon::PreDraw(const BlendMode& blendMode) {
     commandList_->SetGraphicsRootSignature(modelConfig_->rootSignature->GetRootSignature(0));
