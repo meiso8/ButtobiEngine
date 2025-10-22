@@ -79,6 +79,7 @@ private:
     Matrix4x4 worldMatrix;
 
 public:
+    ~ParticleManager();
     void Initialize(uint32_t textureHandle, int modelHandle = -1);
 
     void InitEmitter();

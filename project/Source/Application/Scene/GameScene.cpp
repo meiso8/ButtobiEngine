@@ -43,7 +43,6 @@ GameScene::GameScene() {
 }
 
 GameScene::~GameScene() = default;
-
 void GameScene::Initialize() {
 
     isEndScene_ = false;
@@ -137,12 +136,12 @@ void GameScene::Update() {
     }
 
     //プレイヤーがチャージしているときだけ更新
-    if (player_->IsCharge()) {
-        particle_.EmitterTimerUpdate({ 1.0f,1.0f,0.0f,1.0f });
-        particle_.emitter_.transform.translate = player_->GetWorldPosition();
-    }
+    //if (player_->IsCharge()) {
+    //    particle_.EmitterTimerUpdate({ 1.0f,1.0f,0.0f,1.0f });
+    //    particle_.emitter_.transform.translate = player_->GetWorldPosition();
+    //}
 
-    particle_.Update(*currentCamera_);
+    //particle_.Update(*currentCamera_);
 
     // 天球の更新処理
     skyDome_->Update();
