@@ -33,6 +33,7 @@ GameScene::GameScene() {
     skyDome_ = std::make_unique <Skydome>();
     // パーティクル
     deathParticles_ = std::make_unique < DeathParticles>();
+    particle_ = std::make_unique<ParticleManager>();
     // カメラ操作
     cameraController_ = std::make_unique <CameraController>();
 
@@ -43,7 +44,6 @@ GameScene::GameScene() {
 }
 
 GameScene::~GameScene() = default;
-
 void GameScene::Initialize() {
 
     isEndScene_ = false;
@@ -59,9 +59,12 @@ void GameScene::Initialize() {
 
     // 衝突マネージャにスコアポインタを設定
     collisionManager_->SetScorePointer(&score_);
+
+
     collisionManager_->SetComboPointer(uiManager_->GetComboPointer());
     collisionManager_->SetComboTimerPtr(uiManager_->GetComboTimerPtr());
-
+	collisionManager_->SetScorePointer(uiManager_->GetSpeedPointer());
+	collisionManager_->SetIsScoreUp(uiManager_->GetIsScorePointer());
 
     Vector3 playerPosition = { 0.0f, 1.0f, 0.0f };
     // 自キャラの初期化 //ここはmainCamera
@@ -71,9 +74,9 @@ void GameScene::Initialize() {
 
     deathParticles_->Initialize(playerPosition);
 
-    particle_.Initialize(Texture::GetHandle(Texture::PARTICLE));
-    particle_.useBillboard_ = true;
-    particle_.emitter_.cont = 1;
+    particle_->Initialize(Texture::GetHandle(Texture::PARTICLE));
+    particle_->useBillboard_ = true;
+    particle_->emitter_.cont = 3;
 
     // カメラ操作の初期化
     cameraController_->Initialize(camera_.get());
@@ -138,11 +141,11 @@ void GameScene::Update() {
 
     //プレイヤーがチャージしているときだけ更新
     if (player_->IsCharge()) {
-        particle_.EmitterTimerUpdate({ 1.0f,1.0f,0.0f,1.0f });
-        particle_.emitter_.transform.translate = player_->GetWorldPosition();
+        particle_->EmitterTimerUpdate({ 1.0f,1.0f,0.0f,1.0f });
+        particle_->emitter_.transform.translate = player_->GetWorldPosition();
     }
 
-    particle_.Update(*currentCamera_);
+    particle_->Update(*currentCamera_);
 
     // 天球の更新処理
     skyDome_->Update();
@@ -231,7 +234,7 @@ void GameScene::PopEnemy() {
     }
 
     // 敵の出現処理
-    Enemy* newEnemy = new Enemy();
+    auto newEnemy = std::make_unique<Enemy>();
     Random::SetMinMax(-40.0f, 40.0f);
     std::array<Vector3, 4> enemyPositions = {
         Vector3{ -80.0f, 40.0f, Random::Get() },
@@ -241,7 +244,7 @@ void GameScene::PopEnemy() {
     };
     Random::SetMinMax(0.0f, 4.0f);
     newEnemy->Initialize(enemyPositions[static_cast<uint32_t>(Random::Get())]);
-    enemies_.emplace_back(newEnemy);
+    enemies_.emplace_back(std::move(newEnemy));
     isWaitingToPop_ = true;
     waitToPopTimer_ = 60;
 }
@@ -276,7 +279,7 @@ void GameScene::Draw() {
 
     //プレイヤーがチャージしているときにパーティクルを描画
     if (player_->IsCharge()) {
-        particle_.Draw(kBlendModeAdd);
+        particle_->Draw(kBlendModeAdd);
 
     }
 
@@ -291,7 +294,7 @@ void GameScene::Debug() {
     DebugUI::Button("ChangeCamera", func);
     uint32_t lightType = 0;
     DebugUI::CheckDirectionalLight(lightType);
-    DebugUI::CheckParticle(particle_, "chargeParticles");
+    DebugUI::CheckParticle(*particle_, "chargeParticles");
 }
 
 bool GameScene::GetIsEndScene() { return isEndScene_; }

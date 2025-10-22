@@ -6,7 +6,6 @@
 #include"Camera/Camera.h"
 #include<cmath>
 
-Input* Input::instance_ = nullptr;
 BYTE Input::key_[256];
 BYTE Input::preKey_[256];
 bool Input::foundJoystick_ = false;
@@ -17,14 +16,6 @@ DIMOUSESTATE Input::mouseState_;
 DIMOUSESTATE Input::preMouseState_;
 
 bool Input::isDragging_ = false;
-
-Input* Input::GetInstance() {
-
-    if (instance_ == nullptr) {
-        instance_ = new Input();
-    }
-    return instance_;
-}
 
 BOOL CALLBACK EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance, VOID* pContext) {
     auto* self = static_cast<Input*>(pContext);

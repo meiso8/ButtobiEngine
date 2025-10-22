@@ -33,10 +33,7 @@ SampleScene::SampleScene()
                 sprite->Update();
             sprites_.push_back(sprite);
         }
-
-  
     }
-
 
     samplePlayer_ = std::make_unique<SamplePlayer>();
 
@@ -80,8 +77,6 @@ void SampleScene::Initialize() {
     worldTransformChild_.rotate_.y = (std::numbers::pi_v<float> / 4.0f);
     WorldTransformUpdate(worldTransformChild_);
 
-    particle_.Initialize(Texture::GetHandle(Texture::PARTICLE));
-
     sphereMesh_->SetVertex({ 4.0f });
 
 
@@ -120,8 +115,6 @@ void SampleScene::Update()
     quad_.UpdateUV();
 
     Random::SetMinMax(0.0f,1.0f);
-    particle_.EmitterTimerUpdate({ Random::Get(),Random::Get(),Random::Get() });
-    particle_.Update(*currentCamera_);
 
     prePos_ = sphereMesh_->GetBalloonData().expansion;
 
@@ -156,7 +149,6 @@ void SampleScene::Draw()
         sprite->Draw();
     }
 
-    particle_.Draw(blendMode_);
 }
 
 void SampleScene::Debug()
@@ -182,7 +174,6 @@ void SampleScene::Debug()
 
     ImGui::Begin("Quad");
 
-    DebugUI::CheckParticle(particle_, "particle");
     DebugUI::CheckTransforms(quad_.GetUVScale(), quad_.GetUVRotate(), quad_.GetUVTranslate(), "uvTransform");
 
     ImGui::End();

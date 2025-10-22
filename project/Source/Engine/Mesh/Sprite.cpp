@@ -9,6 +9,19 @@
 
 ID3D12GraphicsCommandList* Sprite::commandList = nullptr;
 
+Sprite::~Sprite()
+{
+    if (vertexResource_) {
+        vertexResource_->Unmap(0, nullptr);
+        vertexResource_.Reset();
+    }
+
+    if (transformationMatrixResource_) {
+        transformationMatrixResource_->Unmap(0, nullptr);
+        transformationMatrixResource_.Reset();
+    }
+}
+
 void Sprite::Create(uint32_t textureHandle, const Vector2& position, const Vector2& size, const Vector4& color)
 {
     commandList = DirectXCommon::GetCommandList();
@@ -41,6 +54,7 @@ void Sprite::Update()
         bottom = -bottom;
     }
 
+
     vertexData_[0].position = { left,bottom,0.0f,1.0f };//左下
     vertexData_[1].position = { left,top,0.0f,1.0f };//左上
     vertexData_[2].position = { right,bottom,0.0f,1.0f };//右下
@@ -52,10 +66,11 @@ void Sprite::Update()
     float tex_top = textureLeftTop.y / metadata.height;
     float tex_bottom = (textureLeftTop.y + textureSize.y) / metadata.height;
 
-    vertexData_[0].texcoord = {tex_left,tex_bottom};
-    vertexData_[1].texcoord = {tex_left,tex_top };
-    vertexData_[2].texcoord = {tex_right,tex_bottom};
-    vertexData_[3].texcoord = {tex_right,tex_top };
+    vertexData_[0].texcoord = { tex_left,tex_bottom };
+    vertexData_[1].texcoord = { tex_left,tex_top };
+    vertexData_[2].texcoord = { tex_right,tex_bottom };
+    vertexData_[3].texcoord = { tex_right,tex_top };
+
 
     UpdateUV();
 }
@@ -82,7 +97,9 @@ void Sprite::Draw(uint32_t lightType
 
     worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
     worldViewProjectionMatrix_ = Multiply(worldMatrix_, SpriteCamera::GetViewProjectionMatrix());
+
     *transformationMatrixData_ = { worldViewProjectionMatrix_,worldMatrix_ };
+
 
     //頂点バッファビューを設定
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
@@ -137,7 +154,7 @@ void Sprite::CreateVertex()
     vertexData_[3].texcoord = { 1.0f,0.0f };
     vertexData_[3].normal = { 0.0f,0.0f,-1.0f };
 
-    vertexResource_->Unmap(0, nullptr);
+
 
 #pragma endregion
 
@@ -165,7 +182,6 @@ void Sprite::CreateTransformationMatrix() {
     transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f} ,{ position_.x,position_.y,0.0f } };
     worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 
-    transformationMatrixResource_->Unmap(0, nullptr);
 
 }
 

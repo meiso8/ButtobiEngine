@@ -79,6 +79,7 @@ private:
     Matrix4x4 worldMatrix;
 
 public:
+    ~ParticleManager();
     void Initialize(uint32_t textureHandle, int modelHandle = -1);
 
     void InitEmitter();
@@ -93,11 +94,11 @@ public:
     static Particle MakeNewParticle(const Vector3& translate, const Vector4& color);
     static SphericalCoordinate MakeNewSphericalCoordinate();
 private:
-    void CreateModelData(const uint32_t& textureHandle,const int& modelHandle);
+    void CreateModelData(const uint32_t& textureHandle, const int& modelHandle);
     void CreateVertexBufferResource();
     void CreateTransformationMatrix();
 
- 
+
 
 };
 

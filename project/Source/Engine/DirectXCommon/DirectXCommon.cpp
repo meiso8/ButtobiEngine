@@ -23,6 +23,27 @@ std::unique_ptr< DxcCompiler> DirectXCommon::dxcCompiler = nullptr;
 std::unique_ptr<CommandList> DirectXCommon::commandList = nullptr;
 
 
+DirectXCommon::~DirectXCommon()
+{
+
+    if (depthStencilResource) {
+        depthStencilResource.Reset();
+    }
+ 
+    dxcCompiler.reset();
+    dsvDescriptorHeap.Reset();
+    srvDescriptorHeap.Reset();
+    rtvDescriptorHeap.Reset();
+
+    for (auto& resource : swapChainResources) {
+        resource.Reset();
+    }
+
+    commandList.reset();
+    device.Reset();
+
+}
+
 void DirectXCommon::Initialize(Window& window)
 {
     assert(&window);
@@ -117,9 +138,9 @@ void DirectXCommon::PostDraw()
     //4.コマンドリストの内容を確定させる。全てのコマンドを詰んでから　Closesすること。
     HRESULT hr = commandList->GetCommandList()->Close();
     assert(SUCCEEDED(hr));
-  /*  LogFile::Log("CloseCommandList");*/
+    /*  LogFile::Log("CloseCommandList");*/
 
-    //5.GPUにコマンドリストの実行を行わせる
+      //5.GPUにコマンドリストの実行を行わせる
     ID3D12CommandList* commandLists[] = { commandList->GetCommandList().Get() };
     commandQueue.GetCommandQueue()->ExecuteCommandLists(1, commandLists);
     //6.GPUとOSに画面の交換を行うよう通知する

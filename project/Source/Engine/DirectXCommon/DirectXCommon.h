@@ -36,6 +36,7 @@ public:
 private:
     Window* window_ = nullptr;
     DXGIFactory dxgiFactory = {};
+
     static Microsoft::WRL::ComPtr<ID3D12Device> device;
     static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvDescriptorHeap;
     //ゲームに一つだけ
@@ -43,8 +44,9 @@ private:
     static Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> dsvDescriptorHeap;
 
     static std::unique_ptr< DxcCompiler> dxcCompiler;
-    CommandQueue commandQueue = {};
     static std::unique_ptr<CommandList> commandList;
+
+    CommandQueue commandQueue = {};
     SwapChain swapChainClass;
     GPU gpu = {};
     DebugError debugError = {};
@@ -63,13 +65,16 @@ private:
     ImGuiClass imGuiClass = {};
 #endif // _DEBUG
 public:
+
+    ~DirectXCommon();
+
     void Initialize(Window& window);
     void Update();
     void PreDraw(Vector4& color);
     void PostDraw();
     void EndFrame();
 
-   static Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(
+    static Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(
         size_t sizeInBytes);
 
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(

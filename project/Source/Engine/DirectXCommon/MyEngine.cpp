@@ -4,20 +4,22 @@
 #include<algorithm>
 #include"Camera/SpriteCamera.h"
 
-PSO MyEngine::pso = {};
-MyEngine* MyEngine::instance_ = nullptr;
 
+ std::unique_ptr<PSO> MyEngine::pso = nullptr;
+
+std::unique_ptr <Input> MyEngine::input = nullptr;
 DirectionalLight* MyEngine::directionalLightData = nullptr;
-ModelConfig MyEngine::modelConfig_ = {};
+std::unique_ptr<ModelConfig> MyEngine::modelConfig_ = nullptr;
 std::unique_ptr<Window> MyEngine::wc = nullptr;
 
-MyEngine* MyEngine::GetInstance()
-{
-    if (instance_ == nullptr) {
-        instance_ = new MyEngine();
-    }
-    return instance_;
-}
+
+std::unique_ptr<DirectXCommon> MyEngine::directXCommon = nullptr;
+std::unique_ptr<LogFile> MyEngine::logFile = nullptr;
+
+std::unique_ptr<ModelConfig> modelConfig_ = nullptr;
+
+
+Microsoft::WRL::ComPtr <ID3D12Resource> MyEngine::directionalLightResource = nullptr;
 
 void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight) {
 
@@ -36,14 +38,15 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     LogFile::Log("CreateWindowClass");
 
     //InputClassの生成
-    input = Input::GetInstance();
+    input = std::make_unique<Input>();
     //入力
     input->Initialize(*wc);
 
     directXCommon = std::make_unique<DirectXCommon>();
-    directXCommon.get()->Initialize(*wc);
+    directXCommon->Initialize(*wc);
 
-    pso.CreateALLPSO();
+    pso = std::make_unique<PSO>();
+    pso->CreateALLPSO();
 
     LogFile::Log("CreatePSO");
 
@@ -59,9 +62,14 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     //書き込み終了！
     directionalLightResource->Unmap(0, nullptr);
 
-    modelConfig_.Initialize(PSO::rootSignature.get(), directionalLightResource.Get());
+    modelConfig_ = std::make_unique<ModelConfig>();
+    modelConfig_->Initialize(PSO::rootSignature.get(), directionalLightResource.Get());
 
-    //共通のスプライト
+
+
+
+
+    ////共通のスプライト
     SpriteCommon::Initialize();
     //スプライト用カメラ
     SpriteCamera::Initialize(static_cast<float>(wc->GetClientWidth()), static_cast<float>(wc->GetClientHeight()));
@@ -69,10 +77,6 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     Sound::Initialize();
     //テクスチャ管理
     TextureManager::Initialize();
-
-    ////ランダム関数の初期化
-    //srand(static_cast<unsigned int>(time(nullptr)));
-
 
 
     //ファイルへのログ出力
@@ -98,16 +102,36 @@ void MyEngine::PostCommandSet() {
 
 void MyEngine::Finalize() {
 
+
     TextureManager::Finalize();
     Sound::Finalize();
+
+    SpriteCommon::Finalize();
+
+    modelConfig_.reset();
+
+    if (directionalLightResource) {
+        directionalLightResource.Reset();
+    }
+
+    pso.reset();
+
     directXCommon->EndFrame();
+    directXCommon.reset();
+
+    input.reset();
+
     wc->Finalize();
+    wc.reset();
+
+    logFile.reset();
+
 }
 
 
 //ここでBlenModeを変更する
 void MyEngine::SetBlendMode(uint32_t blendMode,uint32_t cullMode) {
 
-    DirectXCommon::GetCommandList()->SetPipelineState(pso.GetGraphicsPipelineState(blendMode, cullMode).Get());//PSOを設定
+    DirectXCommon::GetCommandList()->SetPipelineState(pso->GetGraphicsPipelineState(blendMode, cullMode).Get());//PSOを設定
 
 }

@@ -2,6 +2,20 @@
 #include"MakeMatrix.h"
 #include"DirectXCommon.h"
 
+MaterialResource::~MaterialResource()
+{
+
+    materialResource_.Reset();
+}
+
+void MaterialResource::UnMap()
+{
+    if (materialResource_) {
+        materialResource_->Unmap(0, nullptr);
+        materialResource_ = nullptr;
+    }
+}
+
 void MaterialResource::CreateMaterial(const Vector4& color, uint32_t lightType) {
 
     //マテリアル用のリソースを作る。
@@ -14,7 +28,7 @@ void MaterialResource::CreateMaterial(const Vector4& color, uint32_t lightType) 
     SetLightType(lightType);
     material_->uvTransform = MakeIdentity4x4();
 
-    materialResource_->Unmap(0, nullptr);
+
 };
 
 void MaterialResource::SetColor(const Vector4& color) {
@@ -22,9 +36,6 @@ void MaterialResource::SetColor(const Vector4& color) {
 }
 
 
-void MaterialResource::SetMaterial(Material* material) {
-    material_ = material;
-}
 
 void MaterialResource::SetUV(const Matrix4x4& transform) {
     material_->uvTransform = transform

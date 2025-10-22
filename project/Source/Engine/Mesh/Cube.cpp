@@ -3,6 +3,10 @@
 #include"TextureManager.h"
 #include"MyEngine.h"
 
+Cube::~Cube() {
+    Finalize();
+}
+
 void Cube::Create(uint32_t& textureHandle) {
 
     commandList_ = DirectXCommon::GetCommandList();
@@ -117,9 +121,10 @@ void Cube::SetMinMax(const Vector3& min, const Vector3& max) {
 void Cube::Draw(Camera& camera, const Matrix4x4& worldMatrix, const uint32_t lightType)
 {
 
-    materialResource_.SetLightType(lightType);
+    materialResource_->SetLightType(lightType);
 
     worldViewProjectionMatrix_ = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
+
     *transformationMatrixData_ = { worldViewProjectionMatrix_,worldMatrix };
 
     //頂点バッファビューを設定
@@ -127,7 +132,7 @@ void Cube::Draw(Camera& camera, const Matrix4x4& worldMatrix, const uint32_t lig
     //IBVを設定new
     commandList_->IASetIndexBuffer(&indexBufferView_);//IBVを設定
     //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
+    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
     //TransformationMatrixCBufferの場所を設定
     commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。

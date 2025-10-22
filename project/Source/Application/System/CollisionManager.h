@@ -24,11 +24,17 @@ public:
 /// @param score スコアポインタ
     void SetComboPointer(uint32_t* combo) { combo_ = combo; }
     void SetComboTimerPtr(float* comBoTimer) { comboTimer_ = comBoTimer ;}
+
+    /// @brief スコア加算するかのポインタ
+    /// @param flag フラグ
+	void SetIsScoreUp(bool* flag) { isScoreUp_ = flag; };
+
 private:
     std::list<Collider*> colliders_; // コライダーのリスト
     uint32_t* score_ = nullptr;      // スコアポインタ
     uint32_t* combo_ = nullptr;//コンポのポインタ
     float* comboTimer_ = nullptr;//コンボタイマーのポインタ
+	bool* isScoreUp_ = nullptr;//スコア加算するかのポインタ
     /// @brief コライダー2つの衝突判定と応答
     /// @param colliderA コライダーA
     /// @param colliderB コライダーB

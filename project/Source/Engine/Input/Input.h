@@ -24,11 +24,10 @@ public:
         BUTTON_RIGHT,
     };
 
-    static Input* GetInstance();
-
     Input() = default;
     Input(Input&) = delete;
     Input& operator=(Input&) = delete;
+    ~Input();
 
     HRESULT Initialize(Window& window);
     /// @brief キーを押した状態 
@@ -62,9 +61,7 @@ public:
     static float GetMouseWheel();
 
 private:
-    static Input* instance_;
     Window* window_ = nullptr;
-
     IDirectInputDevice8* keyboard_ = nullptr;
     //全キー入力状態を取得する
     static BYTE key_[256];
@@ -74,8 +71,6 @@ private:
     static DIMOUSESTATE mouseState_;
     static DIMOUSESTATE preMouseState_;	// マウス情報(変化検知用)
 
-
-
     //ゲームパッド
     IDirectInputDevice8* gamePad_ = nullptr;
     static DIJOYSTATE joyState_;
@@ -84,5 +79,5 @@ private:
 
 private:
     static bool NormalizeButtonCount(float* x, float* y, LONG& buttonLX, LONG& buttonLY);
-    ~Input();
+
 };

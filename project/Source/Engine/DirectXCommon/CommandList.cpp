@@ -30,4 +30,10 @@ void CommandList::PrepareCommand() {
     result = commandList_->Reset(commandAllocator_.Get(), nullptr);
     assert(SUCCEEDED(result));
 
+}
+CommandList::~CommandList()
+{
+    commandAllocator_.Reset();
+    commandList_.Reset();
+
 };

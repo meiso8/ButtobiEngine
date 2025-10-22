@@ -41,7 +41,7 @@ public:
 
     static ModelData& GetModelData(const uint32_t& handle);
     static void LoadAllModel();
-
+    static void Finalize();
 private:
 
     static void LoadModel(const std::string& directoryPath, const std::string& filename);

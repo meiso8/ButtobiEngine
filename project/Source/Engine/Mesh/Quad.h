@@ -14,7 +14,7 @@ public:
     Vector3& GetUVScale() { return uvTransform_.scale; };
     Vector3& GetUVRotate() { return uvTransform_.rotate; };
     Vector3& GetUVTranslate() { return uvTransform_.translate; };
-
+    ~QuadMesh();
 private:
     void CreateVertex()override;
     void CreateIndexResource()override;

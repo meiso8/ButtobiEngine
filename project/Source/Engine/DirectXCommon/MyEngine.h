@@ -25,10 +25,9 @@
 class MyEngine {
 public:
     MyEngine() = default;
-    ~MyEngine() = default;
     MyEngine(MyEngine&) = delete;
     MyEngine& operator=(MyEngine&) = delete;
-    static MyEngine* GetInstance();
+
     void Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight);
     void Update();
     void PreCommandSet(Vector4& screenColor);
@@ -36,27 +35,23 @@ public:
     void Finalize();
 
     static Window& GetWC() { return *wc; };
-    static PSO* GetPSO() { return &pso; }
+    static PSO* GetPSO() { return pso.get(); }
     static DirectionalLight* GetDirectionalLightData() { return directionalLightData; }
     static void SetBlendMode(uint32_t blendMode = kBlendModeNormal, uint32_t cullMode = kCullModeBack);
-public:
 
 private:
 
-    static MyEngine* instance_;
-
-    std::unique_ptr<DirectXCommon> directXCommon = nullptr;
-    std::unique_ptr<LogFile> logFile = nullptr;
+    static std::unique_ptr<DirectXCommon> directXCommon;
+    static std::unique_ptr<LogFile> logFile;
     static std::unique_ptr<Window> wc;
-    static ModelConfig modelConfig_;
+    static std::unique_ptr<ModelConfig> modelConfig_;
 
-    Input* input = nullptr;
-    //音声クラスの作成
+   static std::unique_ptr <Input> input;
 
-    Microsoft::WRL::ComPtr <ID3D12Resource> directionalLightResource = nullptr;
+    static Microsoft::WRL::ComPtr <ID3D12Resource> directionalLightResource;
     static DirectionalLight* directionalLightData;
 
-    static PSO pso;
+    static std::unique_ptr<PSO> pso;
 
 };
 

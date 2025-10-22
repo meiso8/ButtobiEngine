@@ -198,96 +198,45 @@ void Player::Initialize(Camera& camera, const Vector3& position) {
 }
 
 void Player::InputMove() {
-
-    if (Input::IsPushKey(DIK_RIGHT) || Input::IsPushKey(DIK_LEFT) || Input::IsPushKey(DIK_D) || Input::IsPushKey(DIK_A)) {
-
-        // 左右加速
-        Vector3 acceleration = {};
-
-        if (Input::IsPushKey(DIK_RIGHT) || Input::IsPushKey(DIK_D)) {
-            // 右入力時
-
-            if (velocity_.x < 0.0f) {
-                // 左方向に行っていたとき ブレーキをかける
-                velocity_.x *= (1.0f - kAttenuation);
-            }
-
-            worldTransform_.rotate_.y += 0.05f;
-
-
-
-        } else if (Input::IsPushKey(DIK_LEFT) || Input::IsPushKey(DIK_A)) {
-            // 左入力時
-
-            if (velocity_.x > 0.0f) {
-                // 右方向に行っていたときブレーキかける
-                velocity_.x *= (1.0f - kAttenuation);
-            }
-
-
-
-            worldTransform_.rotate_.y -= 0.05f; // ←数値は回転速度、調整可
-
-        }
-
-        // 加速or減速
-        velocity_ += acceleration;
-
-        // 最大速度制限 std::clampは加減上限の間に収める
-        velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed);
-
-    } else {
-        // キーを押していないとき 減衰する
-        velocity_.x *= (1.0f - kAttenuation);
+    // 左右キーは見た目だけを回転させる（移動には影響しない）
+    if (Input::IsPushKey(DIK_RIGHT) || Input::IsPushKey(DIK_D)) {
+        worldTransform_.rotate_.y += 0.05f; 
+    } 
+    else if (Input::IsPushKey(DIK_LEFT) || Input::IsPushKey(DIK_A)) {
+        worldTransform_.rotate_.y -= 0.05f;
     }
 
-    if (Input::IsPushKey(DIK_UP) || Input::IsPushKey(DIK_DOWN) || Input::IsPushKey(DIK_W) || Input::IsPushKey(DIK_S)) {
+    // 前後移動（常にカメラ基準）
+    Vector3 acceleration = {};
+    if (Input::IsPushKey(DIK_UP) || Input::IsPushKey(DIK_W) ||
+        Input::IsPushKey(DIK_DOWN) || Input::IsPushKey(DIK_S)) {
 
-        Vector3 acceleration = {};
-        Vector3 forward = { std::sin(camera_->rotate_.y), 0.0f, std::cos(camera_->rotate_.y) };
+        // カメラの向きを基準に前方ベクトルを計算
+        Vector3 forward = { std::sin(worldTransform_.rotate_.y), 0.0f, std::cos(worldTransform_.rotate_.y) };
         forward = Normalize(forward);
 
         if (Input::IsPushKey(DIK_UP) || Input::IsPushKey(DIK_W)) {
-
-
-            if (velocity_.z < 0.0f) {
-                // 左方向に行っていたとき ブレーキをかける
-                velocity_.z *= (1.0f - kAttenuation);
-            }
-
             acceleration += forward * kAcceleration;
-
-        } else if (Input::IsPushKey(DIK_DOWN) || Input::IsPushKey(DIK_S)) {
-
-            if (velocity_.x > 0.0f) {
-                // 右方向に行っていたときブレーキかける
-                velocity_.x *= (1.0f - kAttenuation);
-            }
-
-            acceleration.x -= forward.x * kAcceleration;
-            acceleration.y -= forward.y * kAcceleration;
-            acceleration.z -= forward.z * kAcceleration;
-
-
-
-
-        } // 加速or減速
-        velocity_ += acceleration;
-
-        // 最大速度制限 std::clampは加減上限の間に収める
-        velocity_.z = std::clamp(velocity_.z, -kLimitRunSpeed, kLimitRunSpeed);
-
-
-
-    } else {
-
-        // キーを押していないとき 減衰する
-        velocity_.z *= (1.0f - kAttenuation);
+        }
+        if (Input::IsPushKey(DIK_DOWN) || Input::IsPushKey(DIK_S)) {
+            acceleration -= forward * kAcceleration;
+        }
+		velocity_ = acceleration;
     }
 
+    // 加速・速度制御
+    
+    velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed);
+    velocity_.z = std::clamp(velocity_.z, -kLimitRunSpeed, kLimitRunSpeed);
 
+    // 減衰処理（キーを離したら徐々に止まる）
+    if (!(Input::IsPushKey(DIK_UP) || Input::IsPushKey(DIK_W) ||
+          Input::IsPushKey(DIK_DOWN) || Input::IsPushKey(DIK_S))) {
+        velocity_.x *= (1.0f - kAttenuation);
+        velocity_.z *= (1.0f - kAttenuation);
+    }
+}
 
-};
 
 
 inline bool NearlyEqual(const Vector3& a, const Vector3& b, float epsilon = 0.001f) {
@@ -315,7 +264,7 @@ void Player::InputAttack() {
     switch (attackPhase_) {
     case Player::kNone:
 
-        if (Input::GetInstance()->IsPushKey(DIK_SPACE)) {
+        if (Input::IsPushKey(DIK_SPACE)) {
 
             attackPhase_ = Player::kCharge;
             Sound::PlayLoopSE(Sound::CHARGE, 0.0f);
@@ -324,7 +273,7 @@ void Player::InputAttack() {
         break;
     case Player::kCharge:
 
-        if (!Input::GetInstance()->IsPushKey(DIK_SPACE)) {
+        if (!Input::IsPushKey(DIK_SPACE)) {
 
             attackPhase_ = Player::kFire;
             Sound::Stop(Sound::CHARGE);
