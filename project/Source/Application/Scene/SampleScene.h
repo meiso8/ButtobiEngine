@@ -18,7 +18,7 @@ public:
     void Draw()override;
     void Debug()override;
     bool GetIsEndScene()override;
-    ~SampleScene();
+    ~SampleScene() override;
 private:
     //ライトタイプ
     uint32_t lightType_ = 0;
