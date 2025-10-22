@@ -57,7 +57,9 @@ private:
     Vector2 ScoreSize_ = { 256, 64 };
     Vector2 NumberSize_ = { 50, 50 };
     Vector2 ComboSize_ = { 256, 64 };
+	Vector2 ComboNumberSize_ = {50, 50};
     Vector2 SpeedBonusSize_ = { 256, 64 };
+	Vector2 SpeedBonusNumberSize_ = {50, 50};
     Vector2 WASDSize_ = { 128, 128 };
     Vector2 SpaceSize_ = { 128, 128 };
     Vector2 TimerSize_ = { 160, 160 };
@@ -75,8 +77,13 @@ private:
     float scorePosInterval = 50;
     
     Vector2 ComboPosition_ = { 1000, 140 };
+	Vector2 ComboNumberPosition = {1000, 140};
+	float ComboNumberPositionInteval = 50.0f;
 
     Vector2 speedBonusPosition_ = { 1000, 200 };
+	Vector2 speedBonusNumberPosition = {1000, 200};
+	float speedBonusNumberInterval = 50.0f;
+
     Vector2 WASDPosition_ = { 20, 600 };
 
     Vector2 SpacePosition_ = { WASDPosition_.x + WASDSize_.x + 20, WASDPosition_.y };
@@ -97,6 +104,8 @@ private:
     uint32_t JuiceTextureHandle_ = 0;
 	uint32_t NumbersTextureHandle_ = 0;
     uint32_t timerNumbersTexturHandle = 0;
+	uint32_t ComboNumberTextureHandle = 0;
+	uint32_t SpeedNumberTextureHandle = 0;
 
     //<スプライト系>
     std::array<Sprite,3> lifeSprites;
@@ -111,6 +120,8 @@ private:
     std::array<Sprite, 4> timerNumbersSprites;
     std::array<Sprite, 7> NumbersSprite;
     std::array<Sprite, 7> HighScoreNumbersSprite;
+	std::array<Sprite, 3> ComboNumberSprites;
+	std::array<Sprite, 3> SpeedNumberSprites;
 
 
 public:

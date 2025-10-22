@@ -11,7 +11,9 @@ UIManager::UIManager()
     LifeTextureHandle_ = Texture::GetHandle(Texture::LIFE);
     scoreTextureHandle_ = Texture::GetHandle(Texture::SCORE);
     comboTextureHandle_ = Texture::GetHandle(Texture::COMBO);
+	ComboNumberTextureHandle = Texture::GetHandle(Texture::COMBONUMBERS);
     speedBonusTextureHandle_ = Texture::GetHandle(Texture::SPEED_BONUS);
+	SpeedNumberTextureHandle = Texture::GetHandle(Texture::SPEED_BONUSNUMBERS);
     WASDTextureHandle_ = Texture::GetHandle(Texture::WASD);
     SpaceTextureHandle_ = Texture::GetHandle(Texture::SPACE);
     TimerTextureHandle_ = Texture::GetHandle(Texture::TIMER);
@@ -47,30 +49,10 @@ UIManager::UIManager()
         lifeSprites[i].Create(LifeTextureHandle_, LifeFirstPosition_, LifeSize_, { 1.0f, 1.0f, 1.0f, 1.0f });
     }
 
-    for (int i = 0; i < 4; i++) {
-
-        timerNumbersSprites[i].SetPosition({ timerNumbersFirstPos.x + i * timerNumbersPosInterval, timerNumbersFirstPos.y });
-        timerNumbersSprites[i].SetTextureLeftTop({ 0, 0 });
-        timerNumbersSprites[i].SetTextureSize({ 100.0f, 100.0f });
-        timerNumbersSprites[i].Update();
+    for (int i = 0; i < 3; i++) {
+		ComboNumberSprites[i].Create(ComboNumberTextureHandle, ComboNumberPosition, ComboNumberSize_, {1, 1, 1, 1});
+		SpeedNumberSprites[i].Create(SpeedNumberTextureHandle, speedBonusNumberPosition, SpeedBonusNumberSize_, {1, 1, 1, 1});
     }
-    for (int i = 0; i < 7; i++) {
-
-        NumbersSprite[i].SetPosition({ ScoreNumbersPosition_.x + i * scorePosInterval, ScoreNumbersPosition_.y });
-        NumbersSprite[i].SetTextureLeftTop({ 0, 0 });
-        NumbersSprite[i].SetTextureSize({ 80.0f, 80.0f });
-        NumbersSprite[i].Update();
-
-        HighScoreNumbersSprite[i].SetPosition({ ScoreNumbersPosition_.x + i * scorePosInterval * 0.8f, ScoreNumbersPosition_.y - 40.0f });
-        HighScoreNumbersSprite[i].SetTextureLeftTop({ 0, 0 });
-        HighScoreNumbersSprite[i].SetSize({ 40.0f, 40.0f });
-        HighScoreNumbersSprite[i].SetTextureSize({ 80.0f, 80.0f });
-        HighScoreNumbersSprite[i].Update();
-    }
-
-    scoreSprite->SetAnchorPoint({ 0.5f, 0.5f });
-    scoreSprite->SetRotate(-0.1f);
-    GameTime_ = MaxGameTime_;
 
 }
 
@@ -79,7 +61,38 @@ void UIManager::Initialize() {
     for (int i = 0; i < lifeSprites.size(); i++) {
         lifeSprites[i].SetPosition({ LifeFirstPosition_.x + LifePositionInterval_ * i, LifeFirstPosition_.y });
     }
+	for (int i = 0; i < 4; i++) {
 
+		timerNumbersSprites[i].SetPosition({timerNumbersFirstPos.x + i * timerNumbersPosInterval, timerNumbersFirstPos.y});
+		timerNumbersSprites[i].SetTextureLeftTop({0, 0});
+		timerNumbersSprites[i].SetTextureSize({100.0f, 100.0f});
+		timerNumbersSprites[i].Update();
+	}
+	for (int i = 0; i < 7; i++) {
+
+		NumbersSprite[i].SetPosition({ScoreNumbersPosition_.x + i * scorePosInterval, ScoreNumbersPosition_.y});
+		NumbersSprite[i].SetTextureLeftTop({0, 0});
+		NumbersSprite[i].SetTextureSize({80.0f, 80.0f});
+		NumbersSprite[i].Update();
+
+		HighScoreNumbersSprite[i].SetPosition({ScoreNumbersPosition_.x + i * scorePosInterval * 0.8f, ScoreNumbersPosition_.y - 40.0f});
+		HighScoreNumbersSprite[i].SetTextureLeftTop({0, 0});
+		HighScoreNumbersSprite[i].SetSize({40.0f, 40.0f});
+		HighScoreNumbersSprite[i].SetTextureSize({80.0f, 80.0f});
+		HighScoreNumbersSprite[i].Update();
+	}
+	for (int i = 0; i < 3; i++) {
+		ComboNumberSprites[i].SetPosition({ComboNumberPosition.x + ComboNumberPositionInteval * i, ComboNumberPosition.y});
+		ComboNumberSprites[i].SetTextureSize({124.0f, 124.0f});
+		ComboNumberSprites[i].Update();
+		SpeedNumberSprites[i].SetPosition({speedBonusNumberPosition.x + speedBonusNumberInterval * i, speedBonusNumberPosition.y});
+		SpeedNumberSprites[i].SetTextureSize({124.0f, 124.0f});
+		SpeedNumberSprites[i].SetTextureLeftTop({0, 0});
+		SpeedNumberSprites[i].Update();
+    }
+	scoreSprite->SetAnchorPoint({0.5f, 0.5f});
+	scoreSprite->SetRotate(-0.1f);
+	GameTime_ = MaxGameTime_;
 }
 
 void UIManager::Update() {
@@ -91,9 +104,17 @@ void UIManager::Update() {
     int seconds = totalSeconds % 60;
 
     UpdateCombo();
+	if (Combo_ == 0) {
+		ComboBonus_ = 1.0f;
+	} else {
+		ComboBonus_ = static_cast<int>(Combo_ / 5.0f/10.0f) + 1.1f;
+    }
+
+    
+
     // =============================== Score==========================================
-    AddFinalScore_ += static_cast<int>(AddBaseScore_ * speedBonus_);
-    AddFinalScore_ += static_cast<int>(AddBaseScore_ * ComboBonus_);
+    
+    AddFinalScore_ += static_cast<int>(AddBaseScore_ * ComboBonus_*speedBonus_);
 
     Score_ += AddFinalScore_;
 
@@ -148,6 +169,43 @@ void UIManager::Update() {
         HighScoreNumbersSprite[i].Update();
 
     }
+	// ================= ComboBonus 表示 =================
+	{
+		int integerPart = static_cast<int>(ComboBonus_);
+		int decimalPart = static_cast<int>((ComboBonus_ * 10)) % 10;
+
+		// 整数部分
+		ComboNumberSprites[0].SetTextureLeftTop({124.0f * integerPart, 0});
+
+		// 小数点（固定でインデックス10）
+		ComboNumberSprites[1].SetTextureLeftTop({124.0f * 10, 0});
+
+		// 小数部分
+		ComboNumberSprites[2].SetTextureLeftTop({124.0f * decimalPart, 0});
+
+		for (int i = 0; i < 3; i++) {
+			ComboNumberSprites[i].Update();
+		}
+	}
+
+	// ================= SpeedBonus 表示 =================
+	{
+		int integerPart = static_cast<int>(speedBonus_);
+		int decimalPart = static_cast<int>((speedBonus_ * 10)) % 10;
+
+		// 整数部分
+		SpeedNumberSprites[0].SetTextureLeftTop({124.0f * integerPart, 0});
+
+		// 小数点（固定でインデックス10）
+		SpeedNumberSprites[1].SetTextureLeftTop({124.0f * 10, 0});
+
+		// 小数部分
+		SpeedNumberSprites[2].SetTextureLeftTop({124.0f * decimalPart, 0});
+
+		for (int i = 0; i < 3; i++) {
+			SpeedNumberSprites[i].Update();
+		}
+	}
 }
 
 void UIManager::Draw() {
@@ -166,6 +224,10 @@ void UIManager::Draw() {
     scoreSprite->Draw();
     comboSprite->Draw();
     speedBonusSprite->Draw();
+	for (int i = 0; i < 3; i++) {
+		ComboNumberSprites[i].Draw();
+		SpeedNumberSprites[i].Draw();
+    }
     WASDSprite->Draw();
     SpaceSprite->Draw();
     TimerSprite->Draw();
