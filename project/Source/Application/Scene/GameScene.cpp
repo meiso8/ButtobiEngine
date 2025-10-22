@@ -19,7 +19,7 @@ GameScene::GameScene() {
 
     camera_ = std::make_unique<Camera>();
 #ifdef _DEBUG
-    DrawGrid::Initialize();
+
     debugCamera_ = std::make_unique<DebugCamera>();
 #endif
     // 衝突マネージャの生成
@@ -44,7 +44,7 @@ GameScene::GameScene() {
 }
 
 GameScene::~GameScene() {
-    DrawGrid::Finalize();
+
 };
 void GameScene::Initialize() {
 

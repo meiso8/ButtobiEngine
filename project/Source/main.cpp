@@ -17,12 +17,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     //エンジンの生成
     std::unique_ptr<MyEngine> myEngine = std::make_unique<MyEngine>();
     myEngine->Create(L"2102_ぶっとびミックス", WIN_WIDTH, WIN_HEIGHT);
-    //音声の読み込み
-    Sound::LoadAllSound();
-    //テスクチャ読み込み
-    Texture::LoadAllTexture();
-    //モデル読み込み
-    ModelManager::LoadAllModel();
+
     // ==============================================//↑基本いじらない↑//============================================
 
     //画面の色
@@ -48,17 +43,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
        "SampleScene"
     };
 
-    std::vector<SceneManager*> scenes;
+    std::vector<std::unique_ptr<SceneManager>> scenes;
     // タイトルシーンの生成
-    scenes.push_back(new TitleScene());
+    scenes.push_back(std::make_unique < TitleScene>());
     // ゲームシーンのインスタンスの取得
-    scenes.push_back(new GameScene());
+    scenes.push_back(std::make_unique < GameScene>());
     // ゲームクリアシーンの生成
-    scenes.push_back(new GameClearScene());
+    scenes.push_back(std::make_unique < GameClearScene>());
     // ゲームオーバーシーンの生成
-    //scenes.push_back(std::make_unique<GameOverScene>());
+    scenes.push_back(std::make_unique<GameOverScene>());
     //サンプルシーンの生成
-    //scenes.push_back(std::make_unique<SampleScene>());
+    scenes.push_back(std::make_unique<SampleScene>());
 
     //シーンのインデックス
     int sceneIndex = kGameScene;
@@ -70,7 +65,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     //現在のシーン
     SceneManager* currentScene = nullptr;
     // 現在のシーンに代入
-    currentScene = scenes[sceneIndex];
+    currentScene = scenes[sceneIndex].get();
     //現在のシーンの初期化
     currentScene->Initialize();
 
@@ -89,7 +84,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
         if (Input::IsTriggerKey(DIK_RETURN)) {
             sceneIndex = (sceneIndex + 1) % scenes.size(); // 次のシーンへ
-            currentScene = scenes[sceneIndex];
+            currentScene = scenes[sceneIndex].get();
             // 現在のシーンの初期化
             currentScene->Initialize();
         }
@@ -98,17 +93,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
         if (scenes[kTitleScene]->GetIsEndScene()) {
 
-            GameScene* gameScene = dynamic_cast<GameScene*>(scenes[kGameScene]);
+            GameScene* gameScene = dynamic_cast<GameScene*>(scenes[kGameScene].get());
 
             if (scenes[kTitleScene]->GetIsEndScene()) {
                 currentScene->SetIsEndScene(false);
-                currentScene = scenes[kGameScene];
+                currentScene = scenes[kGameScene].get();
             } else if (gameScene->GetIsGameClear()) {
-                currentScene = scenes[kGameClearScene];
+                currentScene = scenes[kGameClearScene].get();
             } else if (gameScene->GetIsGameOver()) {
-                currentScene = scenes[kGameOverScene];
+                currentScene = scenes[kGameOverScene].get();
             } else if (scenes[kGameClearScene]->GetIsEndScene() || scenes[kGameOverScene]->GetIsEndScene()) {
-                currentScene = scenes[kTitleScene];
+                currentScene = scenes[kTitleScene].get();
             }
 
             // 現在のシーンの初期化
@@ -122,10 +117,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #ifdef _DEBUG
         //デバック用
 
-        //DebugUI::CheckColor(screenColor, "screenColor");
-        //ImGui::Text("%s", sceneName[sceneIndex]);
-        //DebugUI::CheckFPS();
-        //currentScene->Debug();
+        DebugUI::CheckColor(screenColor, "screenColor");
+        ImGui::Text("%s", sceneName[sceneIndex]);
+        DebugUI::CheckFPS();
+        currentScene->Debug();
 
 #endif // _DEBUG
 
@@ -140,12 +135,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         myEngine->PostCommandSet();
 
     }
-  
-    for (SceneManager *scene : scenes) {
-        delete scene;
-    }
-  
-    ModelManager::Finalize();
+    
+
 
     //エンジンの終了
     myEngine->Finalize();
