@@ -93,3 +93,5 @@ void GameOverScene::CheckAllCollisions() {
 	}
 #pragma endregion
 }
+
+GameOverScene::~GameOverScene() = default;

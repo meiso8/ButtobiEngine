@@ -27,7 +27,7 @@ public:
 	GameClearScene();
 
 	/// @brief デフォルトデストラクタ
-	~GameClearScene();
+	~GameClearScene() override;
 
 	/// @brief 初期化
 	void Initialize() override;

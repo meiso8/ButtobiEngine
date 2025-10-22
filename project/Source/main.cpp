@@ -48,29 +48,29 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
        "SampleScene"
     };
 
-    std::vector<std::unique_ptr<SceneManager>> scenes;
+    std::vector<SceneManager*> scenes;
     // タイトルシーンの生成
-    scenes.push_back(std::make_unique<TitleScene>());
+    scenes.push_back(new TitleScene());
     // ゲームシーンのインスタンスの取得
-    scenes.push_back(std::make_unique<GameScene>());
+    //scenes.push_back(std::make_unique<GameScene>());
     // ゲームクリアシーンの生成
-    scenes.push_back(std::make_unique<GameClearScene>());
+    //scenes.push_back(std::make_unique<GameClearScene>());
     // ゲームオーバーシーンの生成
-    scenes.push_back(std::make_unique<GameOverScene>());
+    //scenes.push_back(std::make_unique<GameOverScene>());
     //サンプルシーンの生成
-    scenes.push_back(std::make_unique<SampleScene>());
+    //scenes.push_back(std::make_unique<SampleScene>());
 
     //シーンのインデックス
     int sceneIndex = kGameScene;
 #ifdef _DEBUG
     //シーンのインデックス
-    sceneIndex = kGameScene;
+    sceneIndex = kTitleScene;
 #endif // _DEBUG
 
     //現在のシーン
     SceneManager* currentScene = nullptr;
     // 現在のシーンに代入
-    currentScene = scenes[sceneIndex].get();
+    currentScene = scenes[sceneIndex];
     //現在のシーンの初期化
     currentScene->Initialize();
 
@@ -89,26 +89,26 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
         if (Input::IsTriggerKey(DIK_RETURN)) {
             sceneIndex = (sceneIndex + 1) % scenes.size(); // 次のシーンへ
-            currentScene = scenes[sceneIndex].get();
+            currentScene = scenes[sceneIndex];
             // 現在のシーンの初期化
             currentScene->Initialize();
         }
 
 #endif // _DEBUG
 
-        if (scenes[kTitleScene]->GetIsEndScene() || scenes[kGameScene]->GetIsEndScene()) {
+        if (scenes[kTitleScene]->GetIsEndScene()) {
 
-            GameScene* gameScene = dynamic_cast<GameScene*>(scenes[kGameScene].get());
+            GameScene* gameScene = dynamic_cast<GameScene*>(scenes[kGameScene]);
 
             if (scenes[kTitleScene]->GetIsEndScene()) {
                 // 現在のシーンに代入
-                currentScene = scenes[kGameScene].get();
+                currentScene = scenes[kGameScene];
             } else if (gameScene->GetIsGameClear()) {
-                currentScene = scenes[kGameClearScene].get();
+                currentScene = scenes[kGameClearScene];
             } else if (gameScene->GetIsGameOver()) {
-                currentScene = scenes[kGameOverScene].get();
+                currentScene = scenes[kGameOverScene];
             } else if (scenes[kGameClearScene]->GetIsEndScene() || scenes[kGameOverScene]->GetIsEndScene()) {
-                currentScene = scenes[kTitleScene].get();
+                currentScene = scenes[kTitleScene];
             }
 
             // 現在のシーンの初期化
@@ -139,6 +139,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         //エンジンの描画後処理
         myEngine->PostCommandSet();
 
+    }
+
+    for (SceneManager *scene : scenes) {
+        delete scene;
     }
 
     //エンジンの終了

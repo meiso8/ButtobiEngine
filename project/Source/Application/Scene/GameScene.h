@@ -26,7 +26,7 @@ public:
     GameScene();
 
 	/// @brief デフォルトデストラクタ
-    ~GameScene();
+    ~GameScene() override;
 
     // 初期化
     void Initialize()override;
