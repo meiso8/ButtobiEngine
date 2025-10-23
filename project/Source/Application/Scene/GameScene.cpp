@@ -67,6 +67,7 @@ void GameScene::Initialize() {
     collisionManager_->SetComboTimerPtr(uiManager_->GetComboTimerPtr());
 	collisionManager_->SetScorePointer(uiManager_->GetSpeedPointer());
 	collisionManager_->SetIsScoreUp(uiManager_->GetIsScorePointer());
+	collisionManager_->SetJuiceMeter(uiManager_->GetJuiceMeter());
 
     Vector3 playerPosition = { 0.0f, 1.0f, 0.0f };
     // 自キャラの初期化 //ここはmainCamera

@@ -29,12 +29,17 @@ public:
     /// @param flag フラグ
 	void SetIsScoreUp(bool* flag) { isScoreUp_ = flag; };
 
+    /// @brief ジュースポイントを設定する
+    /// @param jMeter メーター
+	void SetJuiceMeter(uint32_t* meter) { juiceMeter_ = meter; };
+
 private:
     std::list<Collider*> colliders_; // コライダーのリスト
     uint32_t* score_ = nullptr;      // スコアポインタ
     uint32_t* combo_ = nullptr;//コンポのポインタ
     float* comboTimer_ = nullptr;//コンボタイマーのポインタ
 	bool* isScoreUp_ = nullptr;//スコア加算するかのポインタ
+	uint32_t* juiceMeter_ = nullptr;//ジュースメーターのポインタ
     /// @brief コライダー2つの衝突判定と応答
     /// @param colliderA コライダーA
     /// @param colliderB コライダーB
