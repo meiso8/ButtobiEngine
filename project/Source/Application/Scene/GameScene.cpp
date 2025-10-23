@@ -12,6 +12,7 @@
 #include"Sound.h"
 #include"Texture.h"
 
+
 constexpr int winWidth = 1280;
 constexpr int winHeight = 720;
 
@@ -36,6 +37,12 @@ GameScene::GameScene() {
     particle_ = std::make_unique<ChargeParticle>();
     particle_->Create(Texture::GetHandle(Texture::PARTICLE));
     particle_->useBillboard_ = true;
+
+
+    flashParticle_ = std::make_unique<FlashParticle>();
+    flashParticle_->Create(Texture::GetHandle(Texture::FLASH_PARTICLE));
+    flashParticle_->useBillboard_ = true;
+
 
     // カメラ操作
     cameraController_ = std::make_unique <CameraController>();
@@ -71,9 +78,9 @@ void GameScene::Initialize() {
 
     collisionManager_->SetComboPointer(uiManager_->GetComboPointer());
     collisionManager_->SetComboTimerPtr(uiManager_->GetComboTimerPtr());
-	collisionManager_->SetScorePointer(uiManager_->GetSpeedPointer());
-	collisionManager_->SetIsScoreUp(uiManager_->GetIsScorePointer());
-	collisionManager_->SetJuiceMeter(uiManager_->GetJuiceMeter());
+    collisionManager_->SetScorePointer(uiManager_->GetSpeedPointer());
+    collisionManager_->SetIsScoreUp(uiManager_->GetIsScorePointer());
+    collisionManager_->SetJuiceMeter(uiManager_->GetJuiceMeter());
 
     Vector3 playerPosition = { 0.0f, 10.0f, 0.0f };
     // 自キャラの初期化 //ここはmainCamera
@@ -85,6 +92,7 @@ void GameScene::Initialize() {
 
 
     particle_->emitter_.cont = 3;
+    flashParticle_->emitter_.cont = 1;
 
     // カメラ操作の初期化
     cameraController_->Initialize(camera_.get());
@@ -104,7 +112,7 @@ void GameScene::Initialize() {
     player_->InitializeLife(uiManager_->GetMaxLife());
 
     isGameClear = false;
-	isGameOver = false;
+    isGameOver = false;
 };
 
 void GameScene::Update() {
@@ -149,7 +157,7 @@ void GameScene::Update() {
     uiManager_->SetLife(player_->GetLife());
 
     //力の矢印
-    forceArrow_->Update(player_->GetWorldPosition(),player_->GetChargeTimer(),player_->GetWorldTransform().rotate_.y);
+    forceArrow_->Update(player_->GetWorldPosition(), player_->GetChargeTimer(), player_->GetWorldTransform().rotate_.y);
 
     // デスパーティクルの更新処理
     if (deathParticles_) {
@@ -162,7 +170,8 @@ void GameScene::Update() {
         particle_->emitter_.transform.translate = player_->GetWorldPosition();
     }
 
-    particle_->Update(*currentCamera_);
+    flashParticle_->TimerUpdate({ 1.0f,1.0f,0.0f,1.0f });
+    flashParticle_->Update(*currentCamera_);
 
     // 天球の更新処理
     skyDome_->Update();
@@ -180,14 +189,13 @@ void GameScene::Update() {
 
     uiManager_->Update();
 
-	if (uiManager_->GetTimer() <= 0.0f) {
-		isEndScene_ = true;
-		isGameClear = true;
-        Sound::Stop(Sound::YEAH);
-    }
-	if (player_->GetLife() <= 0) {
+    if (uiManager_->GetTimer() <= 0.0f) {
         isEndScene_ = true;
-		isGameOver = true;
+        isGameClear = true;
+    }
+    if (player_->GetLife() <= 0) {
+        isEndScene_ = true;
+        isGameOver = true;
 
     }
 
@@ -218,6 +226,8 @@ void GameScene::CheckAllCollisions() {
             enemy->OnCollision(player_.get());
             // 自キャラ衝突時コールバックを呼び出す
             player_->OnCollision(enemy.get());
+            flashParticle_->emitter_.transform.translate = enemy->GetWorldPosition();
+            flashParticle_->EmitParticle({ 1.0f,1.0f,1.0f,1.0f });
         }
     }
 
@@ -226,16 +236,16 @@ void GameScene::CheckAllCollisions() {
 #pragma region // 自キャラと平面の当たり判定
     Sphere playerSphere = player_->GetSphere();
     for (uint32_t i = 0; i < Stage::kMaxPlane; i++) {
-		Plane stagePlane = stage_->GetPlane(i);
+        Plane stagePlane = stage_->GetPlane(i);
         if (IsCollision(playerSphere, stagePlane)) {
             player_->OnCollision(stagePlane);
         }
     }
 #pragma endregion
-    
+
 #pragma region // 自キャラとOBBの当たり判定
     for (uint32_t i = 0; i < Stage::kMaxOBB; i++) {
-		OBB stageOBB = stage_->GetOBB(i);
+        OBB stageOBB = stage_->GetOBB(i);
         if (IsCollision(stageOBB, playerSphere)) {
             player_->OnCollision(stageOBB);
         }
@@ -248,7 +258,7 @@ void GameScene::CheckAllCollisions() {
             continue;
         Sphere enemySphere = enemy->GetSphere();
         for (uint32_t i = 0; i < Stage::kMaxPlane; i++) {
-			Plane stagePlane = stage_->GetPlane(i);
+            Plane stagePlane = stage_->GetPlane(i);
             if (IsCollision(enemySphere, stagePlane)) {
                 enemy->OnCollision(stagePlane);
             }
@@ -262,7 +272,7 @@ void GameScene::CheckAllCollisions() {
             continue;
         Sphere enemySphere = enemy->GetSphere();
         for (uint32_t i = 0; i < Stage::kMaxOBB; i++) {
-			OBB stageOBB = stage_->GetOBB(i);
+            OBB stageOBB = stage_->GetOBB(i);
             if (IsCollision(stageOBB, enemySphere)) {
                 enemy->OnCollision(stageOBB);
             }
@@ -306,11 +316,11 @@ void GameScene::Draw() {
     // 天球の描画
     skyDome_->Draw(*currentCamera_);
 
-    forceArrow_->Draw(*currentCamera_);
+
     // 自キャラの描画
     player_->Draw(*currentCamera_);
 
-     //敵キャラの描画
+    //敵キャラの描画
     for (auto& newEnemy : enemies_) {
         if (!newEnemy)
             // ガード節と呼ぶ。
@@ -318,24 +328,29 @@ void GameScene::Draw() {
         newEnemy->Draw(*currentCamera_);
     }
 
+    flashParticle_->Draw();
+
     //デスパーティクルの描画処理
     if (deathParticles_) {
         deathParticles_->Draw(*currentCamera_);
     }
 
+    if (player_->IsCharge()) {
+        //力を描画
+        forceArrow_->Draw(*currentCamera_);
+    }
 
     // 地形の描画
     stage_->Draw(*currentCamera_);
 
-
     //プレイヤーがチャージしているときにパーティクルを描画
     if (player_->IsCharge()) {
         particle_->Draw(kBlendModeAdd);
-
     }
 
+
     uiManager_->Draw();
-  
+
 
 }
 void GameScene::Debug() {
@@ -347,6 +362,7 @@ void GameScene::Debug() {
     uint32_t lightType = 0;
     DebugUI::CheckDirectionalLight(lightType);
     DebugUI::CheckParticle(*particle_, "chargeParticles");
+    DebugUI::CheckParticle(*flashParticle_, "flashParticle");
 }
 
 bool GameScene::GetIsEndScene() { return isEndScene_; }

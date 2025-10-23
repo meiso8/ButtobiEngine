@@ -744,6 +744,9 @@
     <Image Include="Resources\white1x1.png">
       <Filter>リソース ファイル</Filter>
     </Image>
+    <Image Include="Resources\Textures\gameOver.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\Sounds\externals\attack.mp3" />

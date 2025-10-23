@@ -26,6 +26,10 @@ void Arrow::Initialize() {
 
     // OBBのデバッグ描画の初期化
     obbRenderer_->Initialize();
+    kickObb_->center = { 0.0f,0.0f,0.0f };
+    kickObb_->axis[0] = {0.0f,0.0f,0.0f};
+    kickObb_->axis[1] = { 0.0f,0.0f,0.0f };
+    kickObb_->axis[2] = { 0.0f,0.0f,0.0f };
     kickObb_->halfSizes = { 2.5f,2.5f,2.5f };
 }
 

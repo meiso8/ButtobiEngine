@@ -3,6 +3,7 @@
 
 class Enemy;
 class Stage;
+class Sprite;
 
 /// @brief ゲームオーバーシーン
 class GameOverScene : public SceneManager {
@@ -10,6 +11,8 @@ private:
 	std::unique_ptr<Enemy> enemy_;	// 敵キャラ
 	std::unique_ptr<Stage> stage_;	// ステージ
 	uint32_t score_ = 0;			// スコア
+	uint32_t sceneChangeTimer_ = 60*10;//シーン遷移タイマー
+	std::unique_ptr<Sprite> gameOverSprite_ = nullptr;
 
 	/// @brief 全ての当たり判定を行う
 	void CheckAllCollisions();

@@ -7,9 +7,12 @@
 #include "Random.h"
 #include <array>
 #include"Input.h"
+#include"Sprite.h"
+#include"Texture.h"
 #ifdef _DEBUG
 #include "../externals/imgui/imgui.h"
 #endif // _DEBUG
+#include"Sound.h"
 
 constexpr int winWidth = 1280;
 constexpr int winHeight = 720;
@@ -35,6 +38,16 @@ void GameClearScene::Initialize() {
 	stage_->Initialize();
 
 	collisionManager_ = std::make_unique<CollisionManager>();
+
+	clearSprite_ = std::make_unique<Sprite>();
+	clearSprite_->Create(Texture::GetHandle(Texture::GAME_OVER),{640.0f-480.0f,360.0f- 96.0f },{960.0f,192.0f});
+
+	isRenderSprite_ = false;
+	subtractWaitToPopTimer_ = 60;
+
+	//エネミーをクリアする
+	enemies_.clear();
+
 }
 void GameClearScene::Update() {
 
@@ -70,7 +83,11 @@ void GameClearScene::Update() {
 
 	CheckAllCollisions();
 
-
+	//減少時間が1になったら
+	if (subtractWaitToPopTimer_ == 1) {
+		isRenderSprite_ = true;
+		Sound::PlayOriginSE(Sound::YEAH);
+	}
 }
 
 void GameClearScene::Draw() {
@@ -78,6 +95,11 @@ void GameClearScene::Draw() {
 		enemy->Draw(*currentCamera_);
 	}
 	stage_->Draw(*currentCamera_);
+	
+	if (isRenderSprite_) {
+		clearSprite_->PreDraw();
+		clearSprite_->Draw();
+	}
 }
 
 bool GameClearScene::GetIsEndScene() {
@@ -122,27 +144,33 @@ void GameClearScene::CheckAllCollisions() {
 void GameClearScene::PopEnemy() {
 	// 待機処理
 	if (isWaitingToPop_) {
-		waitToPopTimer_--;
+		waitToPopTimer_-= subtractWaitToPopTimer_;
 		if (waitToPopTimer_ <= 0) {
 			isWaitingToPop_ = false;	// 待機完了
+			//音を鳴らす
+			Sound::PlaySE(Sound::CRACKER);
 		}
 		return;
 	}
 
 	// 敵の出現処理
-	std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
-	Random::SetMinMax(-40.0f, 40.0f);
-	std::array<Vector3, 4> enemyPositions = {
-		Vector3{ -80.0f, 40.0f, Random::Get() },
-		Vector3{ 80.0f, 40.0f, Random::Get() },
-		Vector3{ Random::Get(), 40.0f, -80.0f },
-		Vector3{ Random::Get(), 40.0f, 80.0f }
-	};
-	Random::SetMinMax(0.0f, 4.0f);
-	newEnemy->Initialize(enemyPositions[static_cast<uint32_t>(Random::Get())]);
-	enemies_.emplace_back(std::move(newEnemy));
-	isWaitingToPop_ = true;
-	waitToPopTimer_ = 60;
+	if (subtractWaitToPopTimer_ > 0) {
+		subtractWaitToPopTimer_-=1;
+		std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
+		Random::SetMinMax(-40.0f, 40.0f);
+		std::array<Vector3, 4> enemyPositions = {
+			Vector3{ -80.0f, 40.0f, Random::Get() },
+			Vector3{ 80.0f, 40.0f, Random::Get() },
+			Vector3{ Random::Get(), 40.0f, -80.0f },
+			Vector3{ Random::Get(), 40.0f, 80.0f }
+		};
+		Random::SetMinMax(0.0f, 4.0f);
+		newEnemy->Initialize(enemyPositions[static_cast<uint32_t>(Random::Get())]);
+		enemies_.emplace_back(std::move(newEnemy));
+		isWaitingToPop_ = true;
+		waitToPopTimer_ = 60;
+	}
+
 }
 
 GameClearScene::GameClearScene() = default;

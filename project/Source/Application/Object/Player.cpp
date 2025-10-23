@@ -285,11 +285,13 @@ void Player::InputAttack() {
         //チャージを加算する
         if (chargeTimer_ < kMaxChargeTime) {
             chargeTimer_ += 100;
+        } else {
+            Sound::PlayOriginSE(Sound::FULL_CHARGE, 0.0f);
         }
 
         break;
     case Player::kFire:
-
+        Sound::Stop(Sound::FULL_CHARGE);
         isAttack_ = true;
 
         for (int i = 0; i < Parts::kNumParts; i++) {
