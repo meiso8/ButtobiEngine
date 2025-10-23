@@ -9,8 +9,6 @@ public:
 		WHITE_1X1,
 		UV_CHECKER,
 		NUMBERS,
-		PLAYER,
-
 		LIFE,
 		SCORE,
 		COMBO,

@@ -255,9 +255,6 @@
     <ClCompile Include="Source\Engine\Particle\Particle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Object\SamplePlayer.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\DirectXCommon\DirectXCommon.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -277,9 +274,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Mesh\ModelManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\Scene\SampleScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\Scene\SceneManager.cpp">
@@ -568,9 +562,6 @@
     <ClInclude Include="Source\Engine\Particle\Particle.h">
       <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Object\SamplePlayer.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Engine\DirectXCommon\PSO.h">
       <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
     </ClInclude>
@@ -617,9 +608,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Mesh\ModelManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\Scene\SampleScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\Scene\SceneManager.h">
@@ -730,9 +718,6 @@
       <Filter>リソース ファイル</Filter>
     </Image>
     <Image Include="Resources\Textures\particle.png">
-      <Filter>リソース ファイル</Filter>
-    </Image>
-    <Image Include="Resources\Textures\player.png">
       <Filter>リソース ファイル</Filter>
     </Image>
     <Image Include="Resources\Textures\uvChecker.png">

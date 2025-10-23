@@ -7,11 +7,9 @@ std::vector<uint32_t> Texture::handle_;
 void Texture::LoadAllTexture() {
 	handle_.resize(TEXTURES);
 
-	handle_[WHITE_1X1] = TextureManager::Load("Resources/Textures/white1x1.png");
-	handle_[UV_CHECKER] = TextureManager::Load("Resources/Textures/uvChecker.png");
-	handle_[NUMBERS] = TextureManager::Load("Resources/Textures/numbers.png");
-	handle_[PLAYER] = TextureManager::Load("Resources/Textures/player.png");
-
+    handle_[WHITE_1X1] = TextureManager::Load("Resources/Textures/white1x1.png");
+    handle_[UV_CHECKER] = TextureManager::Load("Resources/Textures/uvChecker.png");
+    handle_[NUMBERS] = TextureManager::Load("Resources/Textures/numbers.png");
 	handle_[LIFE] = TextureManager::Load("Resources/Textures/UI/life.png");
 	handle_[SCORE] = TextureManager::Load("Resources/Textures/UI/score.png");
 	handle_[COMBO] = TextureManager::Load("Resources/Textures/UI/combo.png");

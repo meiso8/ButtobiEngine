@@ -24,8 +24,6 @@ void ModelManager::LoadAllModel()
 {
     handle_.resize(MODELS);
 
-    handle_[PLAYER] = Load("Resources/Models/player", "player.obj");
-
     handle_[HEAD] = Load("Resources/Models/player", "head.obj");
     handle_[BODY] = Load("Resources/Models/player", "body.obj");
     handle_[LEFTARM] = Load("Resources/Models/player/", "armL.obj");
