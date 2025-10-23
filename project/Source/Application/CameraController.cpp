@@ -28,7 +28,7 @@ void CameraController::Update() {
 	float height = 5.0f;
 	behindPos.y += height;
 
-	camera_->translate_ = behindPos;
+	camera_->translate_ = Lerp(camera_->translate_, behindPos,0.9f);
 	camera_->rotate_.x = 0.30f;
 	camera_->rotate_.y = targetWorldTransform.rotate_.y;
 }

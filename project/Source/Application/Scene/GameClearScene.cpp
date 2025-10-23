@@ -6,6 +6,7 @@
 #include "CollisionManager.h"
 #include "Random.h"
 #include <array>
+#include"Input.h"
 
 #ifdef _DEBUG
 #include "../externals/imgui/imgui.h"
@@ -37,7 +38,11 @@ void GameClearScene::Initialize() {
 	collisionManager_ = std::make_unique<CollisionManager>();
 }
 void GameClearScene::Update() {
-	isEndScene_ = true;
+
+
+	if (Input::IsTriggerKey(DIK_SPACE)) {
+		isEndScene_ = true;
+	}
 
 #ifdef _DEBUG
 	ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
@@ -65,6 +70,8 @@ void GameClearScene::Update() {
 	stage_->Update();
 
 	CheckAllCollisions();
+
+
 }
 
 void GameClearScene::Draw() {

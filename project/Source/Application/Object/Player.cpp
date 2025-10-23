@@ -212,9 +212,9 @@ void Player::Initialize(Camera &camera, const Vector3 &position) {
 void Player::InputMove() {
 	// 左右キーは見た目だけを回転させる（移動には影響しない）
 	if (Input::IsPushKey(DIK_RIGHT) || Input::IsPushKey(DIK_D)) {
-		worldTransform_.rotate_.y += 0.05f;
+		worldTransform_.rotate_.y += 0.03f;
 	} else if (Input::IsPushKey(DIK_LEFT) || Input::IsPushKey(DIK_A)) {
-		worldTransform_.rotate_.y -= 0.05f;
+		worldTransform_.rotate_.y -= 0.03f;
 	}
 
 	// 前後移動（常にカメラ基準）
@@ -278,7 +278,7 @@ void Player::InputAttack() {
 
         //チャージを加算する
         if (chargeTimer_ < kMaxChargeTime) {
-            chargeTimer_ += 50;
+            chargeTimer_ += 100;
         }
 
         break;

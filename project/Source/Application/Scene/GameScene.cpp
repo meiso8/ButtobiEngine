@@ -172,10 +172,12 @@ void GameScene::Update() {
 	if (uiManager_->GetTimer() <= 0) {
 		isEndScene_ = true;
 		isGameClear = true;
+        Sound::Stop(Sound::CHARGE);
     }
 	if (player_->GetLife() <= 0) {
 		isGameOver = true;
 		isEndScene_ = true;
+        Sound::Stop(Sound::CHARGE);
     }
 };
 
