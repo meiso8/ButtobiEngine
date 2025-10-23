@@ -7,12 +7,12 @@
 #include"WorldTransform.h"
 
 struct AABB;
-
+struct Sphere;
 class Enemy;
 class Camera;
 class Model;
 class AABBRenderer;
-
+class SphereRenderer;
 /// @brief 自キャラ
 class Player {
 
@@ -110,8 +110,9 @@ public:
 
 	//AABBを取得する関数
 	AABB GetAABB();
-
-	void OnCollision(const Enemy *enemy);
+	//Sphereを取得する関数
+	Sphere GetSphere();
+	void OnCollision(Enemy *enemy);
 
 	bool IsAttack()const;
 	bool IsCharge()const;
@@ -172,7 +173,7 @@ private:
 	static inline const float kBlank = 0.2f;
 
 	// チャージ最大時間
-	static inline constexpr float kMaxChargeTime = 10000.0f;
+	static inline constexpr float kMaxChargeTime = 100000.0f;
 
 	AttackPhase attackPhase_ = AttackPhase::kNone;
 
@@ -209,6 +210,7 @@ private:
 
 	// AABB描画
 	std::unique_ptr<AABBRenderer> aabbRenderer_ = nullptr;
+	std::unique_ptr<SphereRenderer> sphereRenderer_ = nullptr;
 
 	void ResetAttack();
 };
