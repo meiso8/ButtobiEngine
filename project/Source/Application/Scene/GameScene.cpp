@@ -68,7 +68,7 @@ void GameScene::Initialize() {
 	collisionManager_->SetScorePointer(uiManager_->GetSpeedPointer());
 	collisionManager_->SetIsScoreUp(uiManager_->GetIsScorePointer());
 
-    Vector3 playerPosition = { 0.0f, 1.0f, 0.0f };
+    Vector3 playerPosition = { 0.0f, 10.0f, 0.0f };
     // 自キャラの初期化 //ここはmainCamera
     player_->Initialize(*camera_, playerPosition);
 
@@ -198,14 +198,34 @@ void GameScene::CheckAllCollisions() {
 
 #pragma endregion
 
+#pragma region // 自キャラと平面の当たり判定
+    Sphere playerSphere = player_->GetSphere();
+    for (uint32_t i = 0; i < Stage::kMaxPlane; i++) {
+		Plane stagePlane = stage_->GetPlane(i);
+        if (IsCollision(playerSphere, stagePlane)) {
+            player_->OnCollision(stagePlane);
+        }
+    }
+#pragma endregion
+    
+#pragma region // 自キャラとOBBの当たり判定
+    for (uint32_t i = 0; i < Stage::kMaxOBB; i++) {
+		OBB stageOBB = stage_->GetOBB(i);
+        if (IsCollision(stageOBB, playerSphere)) {
+            player_->OnCollision(stageOBB);
+        }
+    }
+#pragma endregion
+
 #pragma region // 敵キャラと平面の当たり判定
     for (auto& enemy : enemies_) {
         if (!enemy)
             continue;
-        Sphere sphere = enemy->GetSphere();
+        Sphere enemySphere = enemy->GetSphere();
         for (uint32_t i = 0; i < Stage::kMaxPlane; i++) {
-            if (IsCollision(sphere, stage_->GetPlane(i))) {
-                enemy->OnCollision(stage_->GetPlane(i));
+			Plane stagePlane = stage_->GetPlane(i);
+            if (IsCollision(enemySphere, stagePlane)) {
+                enemy->OnCollision(stagePlane);
             }
         }
     }
@@ -215,10 +235,11 @@ void GameScene::CheckAllCollisions() {
     for (auto& enemy : enemies_) {
         if (!enemy)
             continue;
-        Sphere sphere = enemy->GetSphere();
+        Sphere enemySphere = enemy->GetSphere();
         for (uint32_t i = 0; i < Stage::kMaxOBB; i++) {
-            if (IsCollision(stage_->GetOBB(i), sphere)) {
-                enemy->OnCollision(stage_->GetOBB(i));
+			OBB stageOBB = stage_->GetOBB(i);
+            if (IsCollision(stageOBB, enemySphere)) {
+                enemy->OnCollision(stageOBB);
             }
         }
     }

@@ -63,6 +63,24 @@ float Distance(const Vector3 &point, const AABB &aabb);
 /// @return 距離
 float Distance(const Vector3 &point, const OBB &obb);
 
+/// @brief 球と平面の貫入量を求める
+/// @param sphere 球
+/// @param plane 平面
+/// @return 貫入量
+float PenetrationDepth(const Sphere &sphere, const Plane &plane);
+
+/// @brief 球とAABBの貫入量を求める
+/// @param sphere 球
+/// @param aabb AABB
+/// @return 貫入量
+float PenetrationDepth(const Sphere &sphere, const AABB &aabb);
+
+/// @brief 球とOBBの貫入量を求める
+/// @param sphere 球
+/// @param obb OBB
+/// @return 貫入量
+float PenetrationDepth(const Sphere &sphere, const OBB &obb);
+
 /// @brief 球と球の衝突判定
 /// @param s1 球1
 /// @param s2 球2
