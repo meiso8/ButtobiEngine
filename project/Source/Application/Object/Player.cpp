@@ -211,7 +211,7 @@ void Player::InputMove() {
     if (Input::IsPushKey(DIK_UP) || Input::IsPushKey(DIK_W) ||
         Input::IsPushKey(DIK_DOWN) || Input::IsPushKey(DIK_S)) {
 
-        // カメラの向きを基準に前方ベクトルを計算
+        
         Vector3 forward = { std::sin(worldTransform_.rotate_.y), 0.0f, std::cos(worldTransform_.rotate_.y) };
         forward = Normalize(forward);
 
