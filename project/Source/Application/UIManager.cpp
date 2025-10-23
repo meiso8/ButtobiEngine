@@ -11,6 +11,7 @@ UIManager::UIManager()
 {
     LifeTextureHandle_ = Texture::GetHandle(Texture::LIFE);
     scoreTextureHandle_ = Texture::GetHandle(Texture::SCORE);
+	highScoreTextureHandle_ = Texture::GetHandle(Texture::HIGHSCORE);
     comboTextureHandle_ = Texture::GetHandle(Texture::COMBO);
 	ComboNumberTextureHandle = Texture::GetHandle(Texture::COMBONUMBERS);
     speedBonusTextureHandle_ = Texture::GetHandle(Texture::SPEED_BONUS);
@@ -27,6 +28,8 @@ UIManager::UIManager()
 
     scoreSprite = std::make_unique<Sprite>();
     scoreSprite->Create(scoreTextureHandle_, ScorePosition_, ScoreSize_, { 1, 1, 1, 1 });
+	highScoreSprite = std::make_unique<Sprite>();
+	highScoreSprite->Create(highScoreTextureHandle_, HighScorePosition_, HighScoreSize_, {1, 1, 1, 1});
     comboSprite = std::make_unique<Sprite>();
     comboSprite->Create(comboTextureHandle_, ComboPosition_, ComboSize_, { 1, 1, 1, 1 });
     speedBonusSprite = std::make_unique<Sprite>();
@@ -77,7 +80,7 @@ void UIManager::Initialize() {
 		NumbersSprite[i].SetTextureSize({80.0f, 80.0f});
 		NumbersSprite[i].Update();
 
-		HighScoreNumbersSprite[i].SetPosition({ScoreNumbersPosition_.x + i * scorePosInterval * 0.8f, ScoreNumbersPosition_.y - 40.0f});
+		HighScoreNumbersSprite[i].SetPosition({HighScoreNumbersPosition_.x + i * scorePosInterval * 0.8f, HighScoreNumbersPosition_.y});
 		HighScoreNumbersSprite[i].SetTextureLeftTop({0, 0});
 		HighScoreNumbersSprite[i].SetSize({40.0f, 40.0f});
 		HighScoreNumbersSprite[i].SetTextureSize({80.0f, 80.0f});
@@ -94,7 +97,7 @@ void UIManager::Initialize() {
 		JuiceNumberSprite[i].SetPosition({JuiceNumberPosition_.x + JuiceNummerIntervalPosition_*i, JuiceNumberPosition_.y});
     }
 
-	JuiceNumberSprite[3].SetPosition({1080.0f, 360.0f});
+	JuiceNumberSprite[3].SetPosition({1080.0f, 375.0f});
 
 	for (int i = 0; i < 4; i++) {
 		JuiceNumberSprite[i].SetTextureSize({124.0f, 124.0f});
@@ -108,9 +111,7 @@ void UIManager::Initialize() {
 	JuiceSprite->SetTextureSize({768.0f, 1024.0f});
 	JuiceSprite->SetTextureLeftTop({0.0f, 0.0f});
 	JuiceSprite->Update();
-	scoreSprite->SetAnchorPoint({0.5f, 0.5f});
-	scoreSprite->SetRotate(-0.1f);
-	scoreSprite->Update();
+	
 	GameTime_ = MaxGameTime_;
 }
 
@@ -129,15 +130,31 @@ void UIManager::Update() {
 		ComboBonus_ = static_cast<int>(Combo_ / 5.0f/10.0f) + 1.1f;
     }
 
+    if (ComboBonus_ > 10) {
+		ComboBonus_ = 9.9f;
+    }
     
     speedBonus_ = speed_ / 50.0f+1.0f;
+	if (speedBonus_ > 10) {
+		speedBonus_ = 9.9f;
+    }
 
+    if (JuiceCount >= 10) {
+		JuiceCount = 9;
+    }
+
+
+
+    if (JuiceCount > 1) {
     JuiceBonus_ = JuiceCount * 0.1f + 1.0f;
+	} else {
+		JuiceBonus_ = 1.0f;
+    }
 
     // =============================== Score==========================================
     
     if (isScoreUP_) {
-    Score_ += static_cast<int>(AddBaseScore_ * ComboBonus_*speedBonus_);
+    Score_ += static_cast<int>(AddBaseScore_ * ComboBonus_*speedBonus_*JuiceBonus_);
 		isScoreUP_ = false;
     }
 
@@ -259,6 +276,8 @@ void UIManager::Update() {
 			JuiceNumberSprite[i].Update();
 		}
     }
+	
+    
 
 }
 
@@ -266,7 +285,7 @@ void UIManager::Draw() {
 
     Sprite::PreDraw(kBlendModeNormal);
 
-    for (int i = 0; i < Life_; i++) {
+    for (int i = 0; i < MaxLife_; i++) {
         lifeSprites[i].Draw();
     }
 
@@ -275,9 +294,9 @@ void UIManager::Draw() {
 	for (int i = 0; i < 4; i++) {
 		JuiceNumberSprite[i].Draw();
     }
-	if (JuiceCount >= 2) {
+	/*if (JuiceCount >= 2) {*/
 		JuiceStringSprite->Draw();
-    }
+    /*}*/
 	
     
     for (int i = 0; i < 7; i++) {
@@ -285,6 +304,7 @@ void UIManager::Draw() {
         HighScoreNumbersSprite[i].Draw();
     }
     scoreSprite->Draw();
+	highScoreSprite->Draw();
     comboSprite->Draw();
     speedBonusSprite->Draw();
 	for (int i = 0; i < 3; i++) {
@@ -354,3 +374,15 @@ void UIManager::UpdateCombo()
 
 }
 
+void UIManager::SetLife(int life) {
+	if (life == Life_&&Life_!= MaxLife_) {
+		lifeSprites[Life_].SetColor({0, 0, 0, 1});
+    }
+	Life_ = life;
+	if (Life_ < 0) {
+		Life_ = 0;
+	}
+	if (Life_ > MaxLife_) {
+		Life_ = MaxLife_;
+	}
+};

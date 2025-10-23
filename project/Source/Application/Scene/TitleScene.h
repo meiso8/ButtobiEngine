@@ -1,6 +1,7 @@
 #pragma once
 #include"SceneManager.h"
 #include"WorldTransform.h"
+#include "Sprite.h"
 class Model;
 class TitleScene :public SceneManager {
 
@@ -126,6 +127,9 @@ class TitleScene :public SceneManager {
 
     Model* appleModel = nullptr;
     WorldTransform appleWorldTransform;
+
+    std::unique_ptr<Sprite> spaceSprite_ = nullptr;
+	uint32_t spaceTExtureHandle_ = 0;
 
     Vector3 EaseIn(float t, const Vector3& start, const Vector3& end) {
         // イージング関数（加速）

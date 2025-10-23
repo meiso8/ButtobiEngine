@@ -6,7 +6,9 @@
 #include"ModelManager.h"
 #include"Lerp.h"
 #include <algorithm>
-
+#include"Texture.h"
+#include"TextureManager.h"
+#include"Sprite.h"
 TitleScene::TitleScene()
 {
     camera_ = std::make_unique<Camera>();
@@ -26,6 +28,10 @@ TitleScene::TitleScene()
 
     appleModel = new Model();
     appleModel->Create(ModelManager::FRUIT_APPLE);
+
+    spaceTExtureHandle_ = Texture::GetHandle(Texture::SPACE);
+    spaceSprite_ = std::make_unique<Sprite>();
+	spaceSprite_->Create(spaceTExtureHandle_, {500, 300}, {300, 300});
 }
 
 void TitleScene::Initialize() {
@@ -74,10 +80,13 @@ void TitleScene::Initialize() {
 }
 
 void TitleScene::Update() {
+//#ifdef  _DEBUG
+//	if (Input::IsTriggerKey(DIK_SPACE)) {
+//		isEndScene_ = true;
+//	}
+//#endif //  _DEBUG
 
-    if (Input::IsTriggerKey(DIK_SPACE)) {
-        isEndScene_ = true;
-    }
+    
     if (!IsAnimationEnd) {
         switch (animationPhase_) {
         case TitleScene::AnimationPhase::JInOutP:
@@ -124,10 +133,12 @@ void TitleScene::Move() {
     switch (gameOption_) {
     case TitleScene::GameOption::GameStart:
 
-        if (Input::IsTriggerKey(DIK_SPACE)) {
+        //if (Input::IsTriggerKey(DIK_SPACE)) {
 
-            isEndScene_ = true;
-        }
+        //    isEndScene_ = true;
+        //}
+
+        isEndScene_ = true;
 
         break;
     case TitleScene::GameOption::Option:
@@ -213,7 +224,7 @@ void TitleScene::Move() {
         }
         break;
     case TitleScene::GameOption::None:
-        if (Input::IsTriggerKey(DIK_W) || Input::IsTriggerKey(DIK_UP) || Input::IsTriggerKey(DIK_S) || Input::IsTriggerKey(DIK_DOWN)) {
+        /*if (Input::IsTriggerKey(DIK_W) || Input::IsTriggerKey(DIK_UP) || Input::IsTriggerKey(DIK_S) || Input::IsTriggerKey(DIK_DOWN)) {
             if (selectGameoption_ == GameOption::GameStart) {
                 if (Input::IsTriggerKey(DIK_W) || Input::IsTriggerKey(DIK_UP)) {
 
@@ -245,7 +256,7 @@ void TitleScene::Move() {
                 }
                 break;
             }
-        }
+        }*/
 
         if (Input::IsTriggerKey(DIK_SPACE)) {
 
@@ -430,6 +441,10 @@ void TitleScene::Draw() {
     }
     juiceCupModel->Draw(*camera_, juiceCupWorldTransform.matWorld_);
 	appleModel->Draw(*camera_,appleWorldTransform.matWorld_);
+	if (iscameraTranslateEnd) {
+        spaceSprite_->PreDraw();
+    	spaceSprite_->Draw();
+    }
 }
 bool TitleScene::GetIsEndScene() { return isEndScene_; }
 

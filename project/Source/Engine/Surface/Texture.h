@@ -13,6 +13,7 @@ public:
 
 		LIFE,
 		SCORE,
+		HIGHSCORE,
 		COMBO,
 		COMBONUMBERS,
 		SPEED_BONUS,
