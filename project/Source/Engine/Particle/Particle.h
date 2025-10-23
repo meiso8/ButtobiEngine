@@ -59,7 +59,7 @@ protected:
     uint32_t numInstance_ = 0;
     ParticleForGPU* instancingData = nullptr;
     std::unique_ptr<ModelData> modelData_ = nullptr;
-    MaterialResource* materialResource_{};
+    std::unique_ptr < MaterialResource> materialResource_ = nullptr;
     RootSignature* rootSignature_ = nullptr;
     static ID3D12GraphicsCommandList* commandList_;
 
@@ -84,7 +84,7 @@ public:
     virtual void EmitParticle(const Vector4& color);
     void Draw(uint32_t blendMode = BlendMode::kBlendModeAdd);
     void Finalize();
-    void Initialize(uint32_t textureHandle, int modelHandle = -1);
+    void Create(uint32_t textureHandle, int modelHandle = -1);
     void InitEmitter();
     void InitAccelerationField();
     void TimerUpdate(const Vector4 color);

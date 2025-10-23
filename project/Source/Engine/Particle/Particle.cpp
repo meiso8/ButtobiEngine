@@ -26,7 +26,7 @@ ParticleManager::~ParticleManager()
     Finalize();
 }
 
-void ParticleManager::Initialize(uint32_t textureHandle, int modelHandle)
+void ParticleManager::Create(uint32_t textureHandle, int modelHandle)
 {
 
     rootSignature_ = PSO::GetRootSignature();
@@ -37,7 +37,7 @@ void ParticleManager::Initialize(uint32_t textureHandle, int modelHandle)
     //Instancingを作成
     CreateTransformationMatrix();
     //マテリアルリソースを作成 //ライトなし
-    materialResource_ = new MaterialResource();
+    materialResource_ = std::make_unique<MaterialResource>();
     materialResource_->CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, MaterialResource::LIGHTTYPE::NONE);
 
     CreateVertexBufferResource();
@@ -153,12 +153,14 @@ void ParticleManager::Draw(uint32_t blendMode)
 void ParticleManager::Finalize()
 {
 
-    materialResource_->UnMap();
-
-    delete materialResource_;
+    if (materialResource_ != nullptr) {
+        materialResource_->UnMap();
+        materialResource_ = nullptr;
+    }
 
     if (instancingResource) {
         instancingResource->Unmap(0, nullptr);
+
     }
 }
 
