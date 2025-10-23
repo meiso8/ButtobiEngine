@@ -38,17 +38,21 @@ void Stage::Initialize() {
 	planes_[1] = std::make_unique<Plane>(Plane{ .normal{0.0f, -1.0f, 0.0f}, .distance = -50.0f });	// 天井
 
 	// OBBの初期化
-	obbs_[0] = std::make_unique<OBB>(OBB{ .center{-80.0f, 20.0f, 0.0f}, .axis{}, .halfSizes{1.0f, 40.0f, 80.0f} });
-	SetAxis({ 0.0f, 0.0f, std::numbers::pi_v<float> / 4.0f }, *obbs_[0]);
+	obbs_[0] = std::make_unique<OBB>(OBB{ .center{-80.0f, 20.0f, 0.0f}, .axis{}, .halfSizes{1.0f, 40.0f, 120.0f} });
+	obbRotates_[0] = { 0.0f, 0.0f, std::numbers::pi_v<float> / 4.0f };
 
-	obbs_[1] = std::make_unique<OBB>(OBB{ .center{80.0f, 20.0f, 0.0f}, .axis{}, .halfSizes{1.0f, 40.0f, 80.0f} });
-	SetAxis({ 0.0f, 0.0f, -std::numbers::pi_v<float> / 4.0f }, *obbs_[1]);
+	obbs_[1] = std::make_unique<OBB>(OBB{ .center{80.0f, 20.0f, 0.0f}, .axis{}, .halfSizes{1.0f, 40.0f, 120.0f} });
+	obbRotates_[1] = { 0.0f, 0.0f, -std::numbers::pi_v<float> / 4.0f };
 
-	obbs_[2] = std::make_unique<OBB>(OBB{ .center{0.0f, 20.0f, -80.0f}, .axis{}, .halfSizes{80.0f, 40.0f, 1.0f} });
-	SetAxis({ -std::numbers::pi_v<float> / 4.0f, 0.0f, 0.0f }, *obbs_[2]);
+	obbs_[2] = std::make_unique<OBB>(OBB{ .center{0.0f, 20.0f, -80.0f}, .axis{}, .halfSizes{120.0f, 40.0f, 1.0f} });
+	obbRotates_[2] = { -std::numbers::pi_v<float> / 4.0f, 0.0f, 0.0f };
 
-	obbs_[3] = std::make_unique<OBB>(OBB{ .center{0.0f, 20.0f, 80.0f}, .axis{}, .halfSizes{80.0f, 40.0f, 1.0f} });
-	SetAxis({ std::numbers::pi_v<float> / 4.0f, 0.0f, 0.0f }, *obbs_[3]);
+	obbs_[3] = std::make_unique<OBB>(OBB{ .center{0.0f, 20.0f, 80.0f}, .axis{}, .halfSizes{120.0f, 40.0f, 1.0f} });
+	obbRotates_[3] = { std::numbers::pi_v<float> / 4.0f, 0.0f, 0.0f };
+
+	for (size_t i = 0; i < obbs_.size(); i++) {
+		SetAxis(obbRotates_[i], *obbs_[i]);
+	}
 }
 void Stage::Update() {
 	//// ワールド変換の更新
@@ -79,7 +83,7 @@ void Stage::Draw(Camera &camera) {
 	 model_->PreDraw(BlendMode::kBlendModeNormal);
 	
 	// 3Dモデルを描画
-	 model_->Draw(camera, worldTransform_.matWorld_);
+	model_->Draw(camera, worldTransform_.matWorld_);
 
 #ifdef _DEBUG
 	// 平面のデバッグ描画
