@@ -16,6 +16,7 @@ void Stage::Initialize() {
 
 	// ワールド変換の初期化
 	worldTransform_.Initialize();
+	worldTransform_.translate_.y = 1.25f;
 	WorldTransformUpdate(worldTransform_);
 
 #ifdef _DEBUG
