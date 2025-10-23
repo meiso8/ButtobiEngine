@@ -33,7 +33,10 @@ GameScene::GameScene() {
     skyDome_ = std::make_unique <Skydome>();
     // パーティクル
     deathParticles_ = std::make_unique < DeathParticles>();
-    particle_ = std::make_unique<ParticleManager>();
+    particle_ = std::make_unique<ChargeParticle>();
+    particle_->Create(Texture::GetHandle(Texture::PARTICLE));
+    particle_->useBillboard_ = true;
+
     // カメラ操作
     cameraController_ = std::make_unique <CameraController>();
 
@@ -77,8 +80,7 @@ void GameScene::Initialize() {
 
     deathParticles_->Initialize(playerPosition);
 
-    particle_->Initialize(Texture::GetHandle(Texture::PARTICLE));
-    particle_->useBillboard_ = true;
+
     particle_->emitter_.cont = 3;
 
     // カメラ操作の初期化

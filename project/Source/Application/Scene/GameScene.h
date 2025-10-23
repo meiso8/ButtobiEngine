@@ -2,7 +2,7 @@
 #include"SceneManager.h"
 #include "../CameraController.h"
 #include "DeathParticles.h"
-#include"Particle/Particle.h"
+#include"Particle/ChargeParticle.h"
 #include "Enemy.h"
 #include "../UIManager.h"
 #include "Player.h"
@@ -63,7 +63,7 @@ private:
     std::unique_ptr <DeathParticles>deathParticles_ = nullptr;
 
     //パーティクル
-    std::unique_ptr <ParticleManager> particle_ = nullptr;
+    std::unique_ptr <ChargeParticle> particle_ = nullptr;
 
     // 地形
     std::unique_ptr <Stage> stage_ = nullptr;
