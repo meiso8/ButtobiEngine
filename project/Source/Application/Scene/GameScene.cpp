@@ -19,7 +19,7 @@ GameScene::GameScene() {
 
     camera_ = std::make_unique<Camera>();
 #ifdef _DEBUG
-    DrawGrid::Initialize();
+
     debugCamera_ = std::make_unique<DebugCamera>();
 #endif
     // 衝突マネージャの生成
@@ -43,7 +43,9 @@ GameScene::GameScene() {
     stage_ = std::make_unique <Stage>();
 }
 
-GameScene::~GameScene() = default;
+GameScene::~GameScene() {
+
+};
 void GameScene::Initialize() {
 
     isEndScene_ = false;
@@ -142,7 +144,7 @@ void GameScene::Update() {
 
     //プレイヤーがチャージしているときだけ更新
     if (player_->IsCharge()) {
-        particle_->EmitterTimerUpdate({ 1.0f,1.0f,0.0f,1.0f });
+        particle_->TimerUpdate({ 1.0f,1.0f,0.0f,1.0f });
         particle_->emitter_.transform.translate = player_->GetWorldPosition();
     }
 

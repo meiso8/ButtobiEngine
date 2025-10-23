@@ -15,6 +15,8 @@ private:
 	void CheckAllCollisions();
 
 public:
+	~GameOverScene() override;
+
 	/// @brief 初期化
 	void Initialize() override;
 

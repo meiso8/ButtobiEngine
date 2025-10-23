@@ -3,7 +3,7 @@
 #include"TextureManager.h"
 #include<algorithm>
 #include"Camera/SpriteCamera.h"
-
+#include"DrawGrid.h"
 
  std::unique_ptr<PSO> MyEngine::pso = nullptr;
 
@@ -57,17 +57,13 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     //デフォルト値はとりあえず以下のようにしておく   
     directionalLightData->color = { 1.0f,1.0f,1.0f,1.0f };
 
-    directionalLightData->direction = { 0.0f,0.0f,1.0f };//向きは正規化する
+    directionalLightData->direction = { 0.0f,-1.0f,0.0f };//向きは正規化する
     directionalLightData->intensity = 1.0f;
     //書き込み終了！
     directionalLightResource->Unmap(0, nullptr);
 
     modelConfig_ = std::make_unique<ModelConfig>();
     modelConfig_->Initialize(PSO::rootSignature.get(), directionalLightResource.Get());
-
-
-
-
 
     ////共通のスプライト
     SpriteCommon::Initialize();
@@ -79,6 +75,17 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     TextureManager::Initialize();
 
 
+    //音声の読み込み
+    Sound::LoadAllSound();
+    //テスクチャ読み込み
+    Texture::LoadAllTexture();
+    //モデル読み込み
+    ModelManager::LoadAllModel();
+
+#ifdef _DEBUG
+    //グリット描画
+    DrawGrid::Initialize();
+#endif
     //ファイルへのログ出力
     LogFile::Log("LoopStart");
 
@@ -102,6 +109,13 @@ void MyEngine::PostCommandSet() {
 
 void MyEngine::Finalize() {
 
+    ModelManager::Finalize();
+
+#ifdef _DEBUG
+    //グリットを解放
+    DrawGrid::Finalize();
+
+#endif
 
     TextureManager::Finalize();
     Sound::Finalize();

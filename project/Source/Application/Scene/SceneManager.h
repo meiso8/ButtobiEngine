@@ -14,7 +14,7 @@ protected:
 
 public:
     SceneManager() = default;
-    ~SceneManager() = default;
+    virtual ~SceneManager() = default;
     virtual void Initialize();
     virtual void Update();
     virtual void Draw();

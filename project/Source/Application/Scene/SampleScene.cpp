@@ -15,8 +15,6 @@ SampleScene::SampleScene()
 {
     camera_ = std::make_unique<Camera>();
 #ifdef _DEBUG
-    DrawGrid::Initialize();
-
     debugCamera_ = std::make_unique<DebugCamera>();
 #endif // _DEBUG
 
@@ -193,5 +191,6 @@ SampleScene::~SampleScene()
     }
 
     sprites_.clear();
+
 }
 

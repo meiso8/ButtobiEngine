@@ -2,7 +2,7 @@
 
 #include "Player.h"
 #include "AABB.h"
-
+#include"Enemy.h"
 #include "Lerp.h"
 #include "WorldTransform.h"
 #include "MakeMatrix.h"
@@ -16,6 +16,7 @@
 #include"Model.h"
 #include"CoordinateTransform.h"
 #include"Sound.h"
+#include"Collision.h"
 
 Player::Player()
 {
@@ -31,7 +32,7 @@ Player::Player()
     model_[Parts::kRightLeg]->Create(ModelManager::RIGHTLEG);
 
     aabbRenderer_ = std::make_unique<AABBRenderer>();
-
+    sphereRenderer_ = std::make_unique<SphereRenderer>();
 }
 
 Player::~Player() {
@@ -190,19 +191,21 @@ void Player::Initialize(Camera& camera, const Vector3& position) {
 
     objectColor_ = { 1.0f,1.0f,1.0f,1.0f };
 
+    chargeTimer_ = 1.0f;
+
 #ifdef _DEBUG
     // AABBのデバッグ描画の生成と初期化
     aabbRenderer_ = std::make_unique<AABBRenderer>();
     aabbRenderer_->Initialize();
+    sphereRenderer_->Initialize();
 #endif // _DEBUG
 }
 
 void Player::InputMove() {
     // 左右キーは見た目だけを回転させる（移動には影響しない）
     if (Input::IsPushKey(DIK_RIGHT) || Input::IsPushKey(DIK_D)) {
-        worldTransform_.rotate_.y += 0.05f; 
-    } 
-    else if (Input::IsPushKey(DIK_LEFT) || Input::IsPushKey(DIK_A)) {
+        worldTransform_.rotate_.y += 0.05f;
+    } else if (Input::IsPushKey(DIK_LEFT) || Input::IsPushKey(DIK_A)) {
         worldTransform_.rotate_.y -= 0.05f;
     }
 
@@ -221,17 +224,17 @@ void Player::InputMove() {
         if (Input::IsPushKey(DIK_DOWN) || Input::IsPushKey(DIK_S)) {
             acceleration -= forward * kAcceleration;
         }
-		velocity_ = acceleration;
+        velocity_ = acceleration;
     }
 
     // 加速・速度制御
-    
+
     velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed);
     velocity_.z = std::clamp(velocity_.z, -kLimitRunSpeed, kLimitRunSpeed);
 
     // 減衰処理（キーを離したら徐々に止まる）
     if (!(Input::IsPushKey(DIK_UP) || Input::IsPushKey(DIK_W) ||
-          Input::IsPushKey(DIK_DOWN) || Input::IsPushKey(DIK_S))) {
+        Input::IsPushKey(DIK_DOWN) || Input::IsPushKey(DIK_S))) {
         velocity_.x *= (1.0f - kAttenuation);
         velocity_.z *= (1.0f - kAttenuation);
     }
@@ -264,23 +267,28 @@ void Player::InputAttack() {
     switch (attackPhase_) {
     case Player::kNone:
 
+
         if (Input::IsPushKey(DIK_SPACE)) {
 
             attackPhase_ = Player::kCharge;
             Sound::PlayLoopSE(Sound::CHARGE, 0.0f);
         }
 
+
         break;
     case Player::kCharge:
 
         if (!Input::IsPushKey(DIK_SPACE)) {
-
             attackPhase_ = Player::kFire;
             Sound::Stop(Sound::CHARGE);
             Sound::PlaySE(Sound::ATTACK, 0.0f);
             isAttack_ = true;
         }
 
+        //チャージを加算する
+        if (chargeTimer_ < kMaxChargeTime) {
+            chargeTimer_ += 10;
+        }
 
         break;
     case Player::kFire:
@@ -302,11 +310,14 @@ void Player::InputAttack() {
         break;
     case Player::kEnd:
 
-        isAttack_ = false;
+        //isAttack_ = false;
+
+
         if (isEndAninationEnd_) {
             isEndAninationEnd_ = false;
             endAninationTimer_ = 0;
             attackPhase_ = Player::kNone;
+            ResetAttack();
         } else {
             endAninationTimer_++;
             if (endAninationTimer_ >= endAninationTimerMax_ * 60) {
@@ -324,40 +335,6 @@ void Player::InputAttack() {
 
 
 void Player::AttackAnimation() {
-
-    //色の具合を調整しました。ヨシダ
-    switch (attackPhase_) {
-    case Player::kNone:
-        /*objectColor_.SetColor({1, 1, 1, 1});*/
-
-
-
-        break;
-    case Player::kCharge:
-
-        objectColor_ = { 0.25f,1.0f,0.25f,1.0f };
-
-
-
-        break;
-    case Player::kFire:
-
-        objectColor_ = { 1.0f,0.25f,0.25f,1.0f };
-
-
-        break;
-    case Player::kEnd:
-
-        objectColor_ = { 0.25f,0.25f,1.0f,1.0f };
-
-        break;
-    default:
-        break;
-    }
-
-
-
-
 
     for (int i = 0; i < Parts::kNumParts; i++) {
         PartsWorldTransform_[i].scale_ = Lerp(PartsWorldTransform_[i].scale_, targetPartsScale_[attackPhase_][i], kInterVal_);
@@ -624,6 +601,8 @@ void Player::Update() {
 #ifdef _DEBUG
     // AABBのデバッグ描画の更新
     aabbRenderer_->Update(GetAABB());
+    sphereRenderer_->Update(GetSphere());
+
 #endif // _DEBUG
 }
 
@@ -631,6 +610,10 @@ void Player::Draw(Camera& camera) {
 #ifdef _DEBUG
     // AABBのデバッグ描画の描画
     aabbRenderer_->Draw(camera);
+    sphereRenderer_->Draw(camera);
+
+
+
 #endif // _DEBUG
 
     // 3Dモデル描画前処理
@@ -659,25 +642,32 @@ AABB Player::GetAABB() {
     return aabb;
 }
 
+Sphere Player::GetSphere() {
+    Sphere sphere;
+    sphere.center = GetWorldPosition();
+    sphere.center.y += 0.5f;
+    sphere.radius = kWidth * 0.25f;
+    return sphere;
+}
+
 // 衝突応答
-void Player::OnCollision(const Enemy* enemy) {
+void Player::OnCollision(Enemy* enemy) {
 
-    (void)enemy;
-
-
-    if (!isAttack_) {
-        if (!isInvincible_) {
-
-            // 色変え(仮処理)
-            objectColor_ = { 0.0f,0.0f,0.0f,1.0f };
-
-            life_--;
-            isInvincible_ = true;
-            Sound::PlaySE(Sound::PLAYER_HIT);
-        }
-
-    } else {
+    if (isAttack_) {
         ResetAttack();
+    } else {
+        if (IsCollision(GetSphere(), enemy->GetSphere())) {
+
+            if (!isInvincible_) {
+                // 色変え(仮処理)
+                objectColor_ = { 0.0f,0.0f,0.0f,1.0f };
+
+                life_--;
+                isInvincible_ = true;
+                Sound::PlaySE(Sound::PLAYER_HIT);
+            }
+
+        }
     }
 
 };
@@ -785,6 +775,9 @@ void Player::Debug() {
     ImGui::Separator();
     ImGui::DragFloat3("kickForce", &kickForce_.x);
     ImGui::Checkbox("isAttack", &isAttack_);
+    ImGui::DragFloat("chargeTimer_", &chargeTimer_);
+
+
 
     switch (attackPhase_) {
     case Player::kNone:
@@ -811,6 +804,6 @@ void Player::Debug() {
 
 void Player::ResetAttack() {
     isAttack_ = false;
-    chargeTimer_ = 1000.0f;
     kickForce_ = GetForward() * chargeTimer_;
+    chargeTimer_ = 1.0f;
 }

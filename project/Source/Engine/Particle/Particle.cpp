@@ -6,19 +6,26 @@
 #include"MyEngine.h"
 #include"Random.h"
 #include"Collision.h"
-#include<numbers>
 
 using namespace  Microsoft::WRL;
 
 ID3D12GraphicsCommandList* ParticleManager::commandList_ = nullptr;
-ParticleManager::~ParticleManager()
-{
 
-    if (instancingResource) {
-        instancingResource->Unmap(0, nullptr);
+std::list<Particle> Emit(const Emitter& emitter, const Vector4& color)
+{
+    std::list<Particle>particles;
+    for (uint32_t count = 0; count < emitter.cont; ++count) {
+        particles.push_back(ParticleManager::MakeNewParticle(emitter.transform.translate, color));
     }
+    return particles;
 
 }
+
+ParticleManager::~ParticleManager()
+{
+    Finalize();
+}
+
 void ParticleManager::Initialize(uint32_t textureHandle, int modelHandle)
 {
 
@@ -30,7 +37,8 @@ void ParticleManager::Initialize(uint32_t textureHandle, int modelHandle)
     //Instancingを作成
     CreateTransformationMatrix();
     //マテリアルリソースを作成 //ライトなし
-    materialResource_.CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, MaterialResource::LIGHTTYPE::NONE);
+    materialResource_ = new MaterialResource();
+    materialResource_->CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, MaterialResource::LIGHTTYPE::NONE);
 
     CreateVertexBufferResource();
 
@@ -43,7 +51,7 @@ Particle ParticleManager::MakeNewParticle(const Vector3& translate, const Vector
 {
     Random::SetMinMax(-1.0f, 1.0f);
     Particle particle;
-    particle.transform.scale = { 0.25f,0.25f,0.25f };
+    particle.transform.scale = { 0.125f,0.125f,0.125f };
     particle.transform.rotate = { 0.0f,0.0f,0.0f };
     Vector3 randomTranslate{ Random::Get(), Random::Get(), Random::Get() };
     particle.transform.translate = randomTranslate + translate;
@@ -58,38 +66,7 @@ Particle ParticleManager::MakeNewParticle(const Vector3& translate, const Vector
     return particle;
 }
 
-std::list<Particle> Emit(const Emitter& emitter, const Vector4& color)
-{
-    std::list<Particle>particles;
-    for (uint32_t count = 0; count < emitter.cont; ++count) {
-        particles.push_back(ParticleManager::MakeNewParticle(emitter.transform.translate, color));
-    }
-    return particles;
-
-}
-
-SphericalCoordinate ParticleManager::MakeNewSphericalCoordinate()
-{
-    SphericalCoordinate sphericalCoordinate;
-    Random::SetMinMax(0.0f, 6.28f);
-    sphericalCoordinate.azimuthal = 0.0f;
-    sphericalCoordinate.polar = Random::Get();
-    sphericalCoordinate.radius = 3.0f;
-    return sphericalCoordinate;
-}
-
-std::list<SphericalCoordinate> EmitCoordinate(const Emitter& emitter)
-{
-    std::list<SphericalCoordinate>sphericalCoordinates;
-    for (uint32_t count = 0; count < emitter.cont; ++count) {
-        sphericalCoordinates.push_back(ParticleManager::MakeNewSphericalCoordinate());
-    }
-    return sphericalCoordinates;
-
-}
-
-
-void ParticleManager::EmitterTimerUpdate(const Vector4 color)
+void ParticleManager::TimerUpdate(const Vector4 color)
 {
     emitter_.frequencyTime += kDeltaTime;
 
@@ -97,37 +74,12 @@ void ParticleManager::EmitterTimerUpdate(const Vector4 color)
         emitter_.frequencyTime -= emitter_.frequency;
         EmitParticle(color);
     }
-
 }
 
 void ParticleManager::Update(Camera& camera)
 {
 
-    auto particleIterator = particles.begin();
-    auto coordIterator = sphericalCoordinates.begin();
-
-    while (particleIterator != particles.end() && coordIterator != sphericalCoordinates.end()) {
-        coordIterator->polar += std::numbers::pi_v<float> *kDeltaTime * 4.0f;
-
-        if (coordIterator->radius > 0.0f) {
-            coordIterator->radius -= kDeltaTime * 4.0f;
-        } else {
-            coordIterator->radius = 5.0f;
-        }
-
-        particleIterator->transform.translate = emitter_.transform.translate + TransformCoordinate(*coordIterator);
-
-        ++particleIterator;
-        ++coordIterator;
-    }
-
-    if (useBillboard_) {
-        backToFrontMatrix = MakeRotateYMatrix(std::numbers::pi_v<float>);
-        billboardMatrix = Multiply(backToFrontMatrix, camera.worldMat_);
-        billboardMatrix.m[3][0] = 0.0f;
-        billboardMatrix.m[3][1] = 0.0f;
-        billboardMatrix.m[3][2] = 0.0f;
-    }
+    UpdateBillBordMatrix(camera);
 
     numInstance_ = 0;
 
@@ -139,22 +91,16 @@ void ParticleManager::Update(Camera& camera)
                 continue;
             }
 
-            if (IsCollision(accelerationField.area, (*particleIterator).transform.translate)) {
-                (*particleIterator).velocity += accelerationField.acceleration * kDeltaTime;
-            }
+            IsCollisionFieldArea(*particleIterator);
 
             (*particleIterator).transform.translate += (*particleIterator).velocity * kDeltaTime;
-
 
             (*particleIterator).currentTime += kDeltaTime;
 
             if (useBillboard_) {
-                Matrix4x4 scaleMatrix = MakeScaleMatrix((*particleIterator).transform.scale);
-                Matrix4x4 translateMatrix = MakeTranslateMatrix((*particleIterator).transform.translate);
-                Matrix4x4 rotateMatrix = MakeRotateXYZMatrix((*particleIterator).transform.rotate) * billboardMatrix;
-                worldMatrix = scaleMatrix * rotateMatrix * translateMatrix;
+                UpdateWorldMatrixForBillBord(*particleIterator);
             } else {
-                worldMatrix = MakeAffineMatrix((*particleIterator).transform.scale, (*particleIterator).transform.rotate, (*particleIterator).transform.translate);
+                UpdateWorldMatrix(*particleIterator);
             }
 
             Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
@@ -179,17 +125,9 @@ void ParticleManager::Update(Camera& camera)
 
 void ParticleManager::EmitParticle(const Vector4& color)
 {
-    for (uint32_t count = 0; count < emitter_.cont; ++count) {
-        particles.push_back(MakeNewParticle(emitter_.transform.translate, color));
-        sphericalCoordinates.push_back(MakeNewSphericalCoordinate());
-    }
+    particles.splice(particles.end(), Emit(emitter_, color));
 
-    //particles.splice(particles.end(), Emit(emitter_, color));
-    //sphericalCoordinates.splice(sphericalCoordinates.end(), EmitCoordinate(emitter_));
 }
-
-
-
 
 void ParticleManager::Draw(uint32_t blendMode)
 {
@@ -202,13 +140,25 @@ void ParticleManager::Draw(uint32_t blendMode)
         commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);
         //マテリアルの設定
-        commandList_->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
+        commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
         //粒ごとのトランスフォーム
         commandList_->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU);
         //テスクチャ
         commandList_->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureHandle_));
         //描画!（DrawCall/ドローコール）6個のインデックスを使用しインスタンスを描画。
         commandList_->DrawInstanced(UINT(modelData_->vertices.size()), numInstance_, 0, 0);
+    }
+}
+
+void ParticleManager::Finalize()
+{
+
+    materialResource_->UnMap();
+
+    delete materialResource_;
+
+    if (instancingResource) {
+        instancingResource->Unmap(0, nullptr);
     }
 }
 
@@ -274,6 +224,37 @@ void ParticleManager::CreateTransformationMatrix()
     instancingSrvHandleCPU = DirectXCommon::GetSRVCPUDescriptorHandle(srvIndex);//この書き方はダメですね
     instancingSrvHandleGPU = DirectXCommon::GetSRVGPUDescriptorHandle(srvIndex);
     DirectXCommon::GetDevice()->CreateShaderResourceView(instancingResource.Get(), &instancingSrvDesc, instancingSrvHandleCPU);
+}
+
+void ParticleManager::UpdateBillBordMatrix(Camera& camera)
+{
+    if (useBillboard_) {
+        backToFrontMatrix = MakeRotateYMatrix(std::numbers::pi_v<float>);
+        billboardMatrix = Multiply(backToFrontMatrix, camera.worldMat_);
+        billboardMatrix.m[3][0] = 0.0f;
+        billboardMatrix.m[3][1] = 0.0f;
+        billboardMatrix.m[3][2] = 0.0f;
+    }
+}
+
+void ParticleManager::UpdateWorldMatrixForBillBord(Particle& particleItr)
+{
+    Matrix4x4 scaleMatrix = MakeScaleMatrix(particleItr.transform.scale);
+    Matrix4x4 translateMatrix = MakeTranslateMatrix(particleItr.transform.translate);
+    Matrix4x4 rotateMatrix = MakeRotateXYZMatrix(particleItr.transform.rotate) * billboardMatrix;
+    worldMatrix = scaleMatrix * rotateMatrix * translateMatrix;
+}
+
+void ParticleManager::UpdateWorldMatrix(Particle& particleItr)
+{
+    worldMatrix = MakeAffineMatrix(particleItr.transform.scale, particleItr.transform.rotate, particleItr.transform.translate);
+}
+
+void ParticleManager::IsCollisionFieldArea(Particle& particleItr)
+{
+    if (IsCollision(accelerationField.area, particleItr.transform.translate)) {
+        particleItr.velocity += accelerationField.acceleration * kDeltaTime;
+    }
 }
 
 void ParticleManager::CreateModelData(const uint32_t& textureHandle, const int& modelHandle)
