@@ -9,6 +9,8 @@
 #include"Texture.h"
 #include"TextureManager.h"
 #include"Sprite.h"
+#include"Sound.h"
+
 TitleScene::TitleScene()
 {
     camera_ = std::make_unique<Camera>();
@@ -86,7 +88,9 @@ void TitleScene::Update() {
 //	}
 //#endif //  _DEBUG
 
-    
+         //BGMを鳴らす
+    Sound::PlayBGM(Sound::BGM1);
+
     if (!IsAnimationEnd) {
         switch (animationPhase_) {
         case TitleScene::AnimationPhase::JInOutP:

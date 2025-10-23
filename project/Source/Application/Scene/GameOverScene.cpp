@@ -5,6 +5,7 @@
 #include "Collision.h"
 #include "Random.h"
 #include <array>
+#include"Input.h"
 
 #ifdef _DEBUG
 #include "../externals/imgui/imgui.h"
@@ -45,8 +46,9 @@ void GameOverScene::Initialize() {
 }
 
 void GameOverScene::Update() {
-	isEndScene_ = true;
-
+	if (Input::IsTriggerKey(DIK_SPACE)) {
+		isEndScene_ = true;
+	}
 #ifdef _DEBUG
 	ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
 	currentCamera_->EditTransform("CurrentCamera");
