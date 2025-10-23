@@ -59,17 +59,18 @@ private:
 
 	Vector2 LifeSize_ = {90, 90};
 	Vector2 ScoreSize_ = {256, 64};
+	Vector2 HighScoreSize_ = {256.0f * 0.9f, 64 * 0.9f};
 	Vector2 NumberSize_ = {50, 50};
-	Vector2 ComboSize_ = {256, 64};
+	Vector2 ComboSize_ = {256*0.8f, 64*0.8f};
 	Vector2 ComboNumberSize_ = {50, 50};
-	Vector2 SpeedBonusSize_ = {256, 64};
+	Vector2 SpeedBonusSize_ = {256*0.85f, 64*0.85f};
 	Vector2 SpeedBonusNumberSize_ = {50, 50};
 	Vector2 WASDSize_ = {128, 128};
 	Vector2 SpaceSize_ = {128, 128};
 	Vector2 TimerSize_ = {160, 160};
 	Vector2 JuiceSize_ = {255, 340};
-	Vector2 JuiceNumberSize = {64 ,64};
-	Vector2 JuiceStringSize = {300, 300};
+	Vector2 JuiceNumberSize = {50 ,50};
+	Vector2 JuiceStringSize = {96*2.5f, 31*2.5f};
 	Vector2 JuiceCountSize = {140, 60};
 	Vector2 TimerNumbersSize = {30, 40};
 
@@ -78,17 +79,18 @@ private:
 	Vector2 LifeFirstPosition_ = {10, 0};
 	float LifePositionInterval_ = 20.0f + LifeSize_.x;
 
-	Vector2 ScorePosition_ = {900, 20};
-	Vector2 ScoreNumbersPosition_{900, 80};
-	Vector2 HighScoreNumbersPosition_{1000, 60};
+	Vector2 ScorePosition_ = {900, 70};
+	Vector2 ScoreNumbersPosition_{900, 120};
+	Vector2 HighScorePosition_ = {900, 0};
+	Vector2 HighScoreNumbersPosition_{950, 40};
 	float scorePosInterval = 50;
 
-	Vector2 ComboPosition_ = {1000, 140};
-	Vector2 ComboNumberPosition = {1000, 140};
+	Vector2 ComboPosition_ = {900, 180};
+	Vector2 ComboNumberPosition = {1080, 180};
 	float ComboNumberPositionInteval = 50.0f;
 
-	Vector2 speedBonusPosition_ = {1000, 200};
-	Vector2 speedBonusNumberPosition = {1000, 200};
+	Vector2 speedBonusPosition_ = {900, 240};
+	Vector2 speedBonusNumberPosition = {1080, 240};
 	float speedBonusNumberInterval = 50.0f;
 
 	Vector2 WASDPosition_ = {20, 600};
@@ -99,14 +101,15 @@ private:
 	Vector2 timerNumbersFirstPos = {40, 135};
 	float timerNumbersPosInterval = 30.0f;
 	Vector2 JuicePosition_ = {1000, 360};
-	Vector2 JuiceNumberPosition_ = {1000, 300};
+	Vector2 JuiceNumberPosition_ = {1080, 300};
 	float JuiceNummerIntervalPosition_ = 50.0f;
-	Vector2 JuiceStringPosition_ = {1000, 360};
+	Vector2 JuiceStringPosition_ = {900, 300};
 	Vector2 JuiceCountPosition_ = {1120, 370};
 
 	//<テクスチャ系>
 	uint32_t LifeTextureHandle_ = 0;
 	uint32_t scoreTextureHandle_ = 0;
+	uint32_t highScoreTextureHandle_ = 0;
 	uint32_t comboTextureHandle_ = 0;
 	uint32_t speedBonusTextureHandle_ = 0;
 	uint32_t WASDTextureHandle_ = 0;
@@ -124,6 +127,7 @@ private:
 	//<スプライト系>
 	std::array<Sprite, 3> lifeSprites;
 	std::unique_ptr<Sprite> scoreSprite;
+	std::unique_ptr<Sprite> highScoreSprite;
 	std::unique_ptr<Sprite> comboSprite;
 	std::unique_ptr<Sprite> speedBonusSprite;
 	std::unique_ptr<Sprite> WASDSprite;
@@ -152,20 +156,13 @@ public:
 
 	void UpdateCombo();
 
-	void SetLife(int life) {
-		Life_ = life;
-		if (Life_ < 0) {
-			Life_ = 0;
-		}
-		if (Life_ > MaxLife_) {
-			Life_ = MaxLife_;
-		}
-	};
+	void SetLife(int life);
 	uint32_t* GetJuiceMeter() { return &JuiceMeter; };
 	uint32_t* GetSpeedPointer() { return &speed_; };
 	int GetMaxLife() { return MaxLife_; };
 	uint32_t* GetComboPointer() { return &Combo_; }
 	float* GetComboTimerPtr() { return &ComboTimer_; }
 	bool* GetIsScorePointer() { return &isScoreUP_; }
+	bool GetTimer() { return GameTime_; };
 	void SetIsUpdateComboTimer(const bool& isUpdateComboTimer) { isUpdateComboTimer_ = isUpdateComboTimer; };
 };

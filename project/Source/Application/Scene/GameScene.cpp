@@ -96,6 +96,9 @@ void GameScene::Initialize() {
     stage_->Initialize();
 
     player_->InitializeLife(uiManager_->GetMaxLife());
+
+    isGameClear = false;
+	isGameOver = false;
 };
 
 void GameScene::Update() {
@@ -166,6 +169,14 @@ void GameScene::Update() {
     // 全ての当たり判定を行う
     CheckAllCollisions();
     uiManager_->Update();
+	if (uiManager_->GetTimer() <= 0) {
+		isEndScene_ = true;
+		isGameClear = true;
+    }
+	if (player_->GetLife() <= 0) {
+		isGameOver = true;
+		isEndScene_ = true;
+    }
 };
 
 void GameScene::CheckAllCollisions() {

@@ -12,6 +12,7 @@ void Texture::LoadAllTexture() {
     handle_[NUMBERS] = TextureManager::Load("Resources/Textures/numbers.png");
 	handle_[LIFE] = TextureManager::Load("Resources/Textures/UI/life.png");
 	handle_[SCORE] = TextureManager::Load("Resources/Textures/UI/score.png");
+	handle_[HIGHSCORE] = TextureManager::Load("Resources/Textures/UI/highScore.png");
 	handle_[COMBO] = TextureManager::Load("Resources/Textures/UI/combo.png");
 	handle_[COMBONUMBERS] = TextureManager::Load("Resources/Textures/UI/ComboNumber.png");
 	handle_[SPEED_BONUS] = TextureManager::Load("Resources/Textures/UI/speedBonus.png");
