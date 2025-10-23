@@ -67,6 +67,7 @@ void GameScene::Initialize() {
     collisionManager_->SetComboTimerPtr(uiManager_->GetComboTimerPtr());
 	collisionManager_->SetScorePointer(uiManager_->GetSpeedPointer());
 	collisionManager_->SetIsScoreUp(uiManager_->GetIsScorePointer());
+	collisionManager_->SetJuiceMeter(uiManager_->GetJuiceMeter());
 
     Vector3 playerPosition = { 0.0f, 10.0f, 0.0f };
     // 自キャラの初期化 //ここはmainCamera
@@ -143,7 +144,7 @@ void GameScene::Update() {
 
     //プレイヤーがチャージしているときだけ更新
     if (player_->IsCharge()) {
-        particle_->EmitterTimerUpdate({ 1.0f,1.0f,0.0f,1.0f });
+        particle_->TimerUpdate({ 1.0f,1.0f,0.0f,1.0f });
         particle_->emitter_.transform.translate = player_->GetWorldPosition();
     }
 

@@ -5,6 +5,7 @@
 #include "Sphere.h"
 
 #include "Collision.h"
+#include "Enemy.h"
 #include "Lerp.h"
 #include "WorldTransform.h"
 #include "MakeMatrix.h"
@@ -18,6 +19,7 @@
 #include"Model.h"
 #include"CoordinateTransform.h"
 #include"Sound.h"
+#include"Collision.h"
 
 Player::Player() {
 	for (size_t i = 0; i < model_.size(); ++i) {
@@ -196,6 +198,8 @@ void Player::Initialize(Camera &camera, const Vector3 &position) {
 
 	objectColor_ = { 1.0f,1.0f,1.0f,1.0f };
 
+    chargeTimer_ = 1.0f;
+
 #ifdef _DEBUG
 	// AABBのデバッグ描画の初期化
 	aabbRenderer_->Initialize();
@@ -236,136 +240,109 @@ inline bool NearlyEqual(const Vector3 &a, const Vector3 &b, float epsilon = 0.00
 
 void Player::InputAttack() {
 
-	if (Input::IsTriggerKey(DIK_1)) {
-		attackPhase_ = kNone;
-		ResetAttack();
-	}
-	if (Input::IsTriggerKey(DIK_2)) {
-		attackPhase_ = kCharge;
-	}
-	if (Input::IsTriggerKey(DIK_3)) {
-		attackPhase_ = kFire;
-	}
-	if (Input::IsTriggerKey(DIK_4)) {
-		attackPhase_ = kEnd;
-	}
+    if (Input::IsTriggerKey(DIK_1)) {
+        attackPhase_ = kNone;
+        ResetAttack();
+    }
+    if (Input::IsTriggerKey(DIK_2)) {
+        attackPhase_ = kCharge;
+    }
+    if (Input::IsTriggerKey(DIK_3)) {
+        attackPhase_ = kFire;
+    }
+    if (Input::IsTriggerKey(DIK_4)) {
+        attackPhase_ = kEnd;
+    }
 
-	bool allMatched = true;
-	switch (attackPhase_) {
-		case Player::kNone:
-
-			if (Input::IsPushKey(DIK_SPACE)) {
-
-				attackPhase_ = Player::kCharge;
-				Sound::PlayLoopSE(Sound::CHARGE, 0.0f);
-			}
-
-			break;
-		case Player::kCharge:
-
-			if (!Input::IsPushKey(DIK_SPACE)) {
-
-				attackPhase_ = Player::kFire;
-				Sound::Stop(Sound::CHARGE);
-				Sound::PlaySE(Sound::ATTACK, 0.0f);
-				isAttack_ = true;
-			}
+    bool allMatched = true;
+    switch (attackPhase_) {
+    case Player::kNone:
 
 
-			break;
-		case Player::kFire:
+        if (Input::IsPushKey(DIK_SPACE)) {
 
-			isAttack_ = true;
-
-			for (int i = 0; i < Parts::kNumParts; i++) {
-				if (!(NearlyEqual(PartsWorldTransform_[i].scale_, targetPartsScale_[AttackPhase::kFire][i]) && NearlyEqual(PartsWorldTransform_[i].rotate_, targetPartsRotate_[AttackPhase::kFire][i]) &&
-					NearlyEqual(PartsWorldTransform_[i].translate_, targetPartsTranslate_[AttackPhase::kFire][i]))) {
-					allMatched = false;
-					break;
-				}
-			}
-			if (allMatched) {
-				attackPhase_ = Player::kEnd;
-			}
+            attackPhase_ = Player::kCharge;
+            Sound::PlayLoopSE(Sound::CHARGE, 0.0f);
+        }
 
 
-			break;
-		case Player::kEnd:
+        break;
+    case Player::kCharge:
 
-			isAttack_ = false;
-			if (isEndAninationEnd_) {
-				isEndAninationEnd_ = false;
-				endAninationTimer_ = 0;
-				attackPhase_ = Player::kNone;
-			} else {
-				endAninationTimer_++;
-				if (endAninationTimer_ >= endAninationTimerMax_ * 60) {
-					endAninationTimer_ = 0;
-					isEndAninationEnd_ = true;
-				}
-			}
+        if (!Input::IsPushKey(DIK_SPACE)) {
+            attackPhase_ = Player::kFire;
+            Sound::Stop(Sound::CHARGE);
+            Sound::PlaySE(Sound::ATTACK, 0.0f);
+            isAttack_ = true;
+        }
 
-			break;
-		default:
-			break;
-	}
+        //チャージを加算する
+        if (chargeTimer_ < kMaxChargeTime) {
+            chargeTimer_ += 10;
+        }
+
+        break;
+    case Player::kFire:
+
+        isAttack_ = true;
+
+        for (int i = 0; i < Parts::kNumParts; i++) {
+            if (!(NearlyEqual(PartsWorldTransform_[i].scale_, targetPartsScale_[AttackPhase::kFire][i]) && NearlyEqual(PartsWorldTransform_[i].rotate_, targetPartsRotate_[AttackPhase::kFire][i]) &&
+                NearlyEqual(PartsWorldTransform_[i].translate_, targetPartsTranslate_[AttackPhase::kFire][i]))) {
+                allMatched = false;
+                break;
+            }
+        }
+        if (allMatched) {
+            attackPhase_ = Player::kEnd;
+        }
+
+
+        break;
+    case Player::kEnd:
+
+        //isAttack_ = false;
+
+
+        if (isEndAninationEnd_) {
+            isEndAninationEnd_ = false;
+            endAninationTimer_ = 0;
+            attackPhase_ = Player::kNone;
+            ResetAttack();
+        } else {
+            endAninationTimer_++;
+            if (endAninationTimer_ >= endAninationTimerMax_ * 60) {
+                endAninationTimer_ = 0;
+                isEndAninationEnd_ = true;
+            }
+        }
+
+        break;
+    default:
+        break;
+    }
 
 }
 
 
 void Player::AttackAnimation() {
+    for (int i = 0; i < Parts::kNumParts; i++) {
+        PartsWorldTransform_[i].scale_ = Lerp(PartsWorldTransform_[i].scale_, targetPartsScale_[attackPhase_][i], kInterVal_);
+        PartsWorldTransform_[i].rotate_ = Lerp(PartsWorldTransform_[i].rotate_, targetPartsRotate_[attackPhase_][i], kInterVal_);
+        PartsWorldTransform_[i].translate_ = Lerp(PartsWorldTransform_[i].translate_, targetPartsTranslate_[attackPhase_][i], kInterVal_);
 
-	//色の具合を調整しました。ヨシダ
-	//switch (attackPhase_) {
-	//case Player::kNone:
-	//    /*objectColor_.SetColor({1, 1, 1, 1});*/
+        // ローカル行列を作成（補間済み）
+        Matrix4x4 localMat = MakeAffineMatrix(PartsWorldTransform_[i].scale_, PartsWorldTransform_[i].rotate_, PartsWorldTransform_[i].translate_ + defaultPartsOffset_[i]);
 
+        // 親（プレイヤー本体）のワールド行列
+        Matrix4x4 parentMat = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotate_, worldTransform_.translate_);
 
+        // 合成結果
+        PartsWorldTransform_[i].parent_ = &worldTransform_;
 
-	//    break;
-	//case Player::kCharge:
-
-	//    objectColor_ = { 0.25f,1.0f,0.25f,1.0f };
-
-
-
-	//    break;
-	//case Player::kFire:
-
-	//    objectColor_ = { 1.0f,0.25f,0.25f,1.0f };
-
-
-	//    break;
-	//case Player::kEnd:
-
-	//    objectColor_ = { 0.25f,0.25f,1.0f,1.0f };
-
-	//    break;
-	//default:
-	//    break;
-	//}
-
-
-
-
-
-	for (int i = 0; i < Parts::kNumParts; i++) {
-		PartsWorldTransform_[i].scale_ = Lerp(PartsWorldTransform_[i].scale_, targetPartsScale_[attackPhase_][i], kInterVal_);
-		PartsWorldTransform_[i].rotate_ = Lerp(PartsWorldTransform_[i].rotate_, targetPartsRotate_[attackPhase_][i], kInterVal_);
-		PartsWorldTransform_[i].translate_ = Lerp(PartsWorldTransform_[i].translate_, targetPartsTranslate_[attackPhase_][i], kInterVal_);
-
-		// ローカル行列を作成（補間済み）
-		Matrix4x4 localMat = MakeAffineMatrix(PartsWorldTransform_[i].scale_, PartsWorldTransform_[i].rotate_, PartsWorldTransform_[i].translate_ + defaultPartsOffset_[i]);
-
-		// 親（プレイヤー本体）のワールド行列
-		Matrix4x4 parentMat = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotate_, worldTransform_.translate_);
-
-		// 合成結果
-		PartsWorldTransform_[i].parent_ = &worldTransform_;
-
-		WorldTransformUpdate(PartsWorldTransform_[i]);
-	}
-	WorldTransformUpdate(worldTransform_);
+        WorldTransformUpdate(PartsWorldTransform_[i]);
+    }
+    WorldTransformUpdate(worldTransform_);
 
 }
 
@@ -465,19 +442,21 @@ Sphere Player::GetSphere() { return Sphere{ .center = GetWorldPosition(), .radiu
 
 // 衝突応答
 void Player::OnCollision(const Enemy *enemy) {
-	(void)enemy;
-	if (!isAttack_) {
-		if (!isInvincible_) {
-			// 色変え(仮処理)
-			objectColor_ = { 0.0f,0.0f,0.0f,1.0f };
+    if (isAttack_) {
+        ResetAttack();
+    } else {
+        if (IsCollision(GetSphere(), enemy->GetSphere())) {
 
-			life_--;
-			isInvincible_ = true;
-			Sound::PlaySE(Sound::PLAYER_HIT);
-		}
-	} else {
-		ResetAttack();
-	}
+            if (!isInvincible_) {
+                // 色変え(仮処理)
+                objectColor_ = { 0.0f,0.0f,0.0f,1.0f };
+
+                life_--;
+                isInvincible_ = true;
+                Sound::PlaySE(Sound::PLAYER_HIT);
+            }
+
+        }
 };
 
 void Player::OnCollision(const Plane &plane) {
@@ -521,112 +500,115 @@ bool Player::IsCharge() const {
 }
 
 void Player::Debug() {
-	ImGui::Begin("Parts");
+    ImGui::Begin("Parts");
 
-	ImGui::Text("Head");
-	ImGui::DragFloat3("HeadScale", &targetPartsScale_[attackPhase_][Parts::kHead].x, 0.1f);
-	ImGui::DragFloat3("HeadRotate", &targetPartsRotate_[attackPhase_][Parts::kHead].x, 0.1f);
-	ImGui::DragFloat3("HeadTranslate", &targetPartsTranslate_[attackPhase_][Parts::kHead].x, 0.1f);
-	if (ImGui::Button("HeadReset")) {
-		targetPartsScale_[attackPhase_][Parts::kHead] = { 1.0f, 1.0f, 1.0f };
-		targetPartsRotate_[attackPhase_][Parts::kHead] = { 0.0f, 0.0f, 0.0f };
-		targetPartsTranslate_[attackPhase_][Parts::kHead] = { 0.0f, 0.0f, 0.0f };
-	}
-	ImGui::Text("Body");
-	ImGui::DragFloat3("BodyScale", &targetPartsScale_[attackPhase_][Parts::kBody].x, 0.1f);
-	ImGui::DragFloat3("BodyRotate", &targetPartsRotate_[attackPhase_][Parts::kBody].x, 0.1f);
-	ImGui::DragFloat3("BodyTranslate", &PartsWorldTransform_[Parts::kBody].translate_.x, 0.1f);
-	if (ImGui::Button("BodyReset")) {
-		targetPartsScale_[attackPhase_][Parts::kBody] = { 1.0f, 1.0f, 1.0f };
-		targetPartsRotate_[attackPhase_][Parts::kBody] = { 0.0f, 0.0f, 0.0f };
-		targetPartsTranslate_[attackPhase_][Parts::kBody] = { 0.0f, 0.0f, 0.0f };
-	}
+    ImGui::Text("Head");
+    ImGui::DragFloat3("HeadScale", &targetPartsScale_[attackPhase_][Parts::kHead].x, 0.1f);
+    ImGui::DragFloat3("HeadRotate", &targetPartsRotate_[attackPhase_][Parts::kHead].x, 0.1f);
+    ImGui::DragFloat3("HeadTranslate", &targetPartsTranslate_[attackPhase_][Parts::kHead].x, 0.1f);
+    if (ImGui::Button("HeadReset")) {
+        targetPartsScale_[attackPhase_][Parts::kHead] = { 1.0f, 1.0f, 1.0f };
+        targetPartsRotate_[attackPhase_][Parts::kHead] = { 0.0f, 0.0f, 0.0f };
+        targetPartsTranslate_[attackPhase_][Parts::kHead] = { 0.0f, 0.0f, 0.0f };
+    }
+    ImGui::Text("Body");
+    ImGui::DragFloat3("BodyScale", &targetPartsScale_[attackPhase_][Parts::kBody].x, 0.1f);
+    ImGui::DragFloat3("BodyRotate", &targetPartsRotate_[attackPhase_][Parts::kBody].x, 0.1f);
+    ImGui::DragFloat3("BodyTranslate", &PartsWorldTransform_[Parts::kBody].translate_.x, 0.1f);
+    if (ImGui::Button("BodyReset")) {
+        targetPartsScale_[attackPhase_][Parts::kBody] = { 1.0f, 1.0f, 1.0f };
+        targetPartsRotate_[attackPhase_][Parts::kBody] = { 0.0f, 0.0f, 0.0f };
+        targetPartsTranslate_[attackPhase_][Parts::kBody] = { 0.0f, 0.0f, 0.0f };
+    }
 
-	ImGui::Separator();
-	ImGui::Text("LeftArm");
-	ImGui::DragFloat3("LeftArmScale", &targetPartsScale_[attackPhase_][Parts::kLeftArm].x, 0.1f);
-	ImGui::DragFloat3("LeftArmRotate", &targetPartsRotate_[attackPhase_][Parts::kLeftArm].x, 0.1f);
-	ImGui::DragFloat3("LeftArmTranslate", &targetPartsTranslate_[attackPhase_][Parts::kLeftArm].x, 0.1f);
+    ImGui::Separator();
+    ImGui::Text("LeftArm");
+    ImGui::DragFloat3("LeftArmScale", &targetPartsScale_[attackPhase_][Parts::kLeftArm].x, 0.1f);
+    ImGui::DragFloat3("LeftArmRotate", &targetPartsRotate_[attackPhase_][Parts::kLeftArm].x, 0.1f);
+    ImGui::DragFloat3("LeftArmTranslate", &targetPartsTranslate_[attackPhase_][Parts::kLeftArm].x, 0.1f);
 
-	if (ImGui::Button("LeftArmReset")) {
-		targetPartsScale_[attackPhase_][Parts::kLeftArm] = { 1.0f, 1.0f, 1.0f };
-		targetPartsRotate_[attackPhase_][Parts::kLeftArm] = { 0.0f, 0.0f, 0.0f };
-		targetPartsTranslate_[attackPhase_][Parts::kLeftArm] = { 0.0f, 0.0f, 0.0f };
-	}
+    if (ImGui::Button("LeftArmReset")) {
+        targetPartsScale_[attackPhase_][Parts::kLeftArm] = { 1.0f, 1.0f, 1.0f };
+        targetPartsRotate_[attackPhase_][Parts::kLeftArm] = { 0.0f, 0.0f, 0.0f };
+        targetPartsTranslate_[attackPhase_][Parts::kLeftArm] = { 0.0f, 0.0f, 0.0f };
+    }
 
-	ImGui::Text("RightArm");
-	ImGui::DragFloat3("RightArmScale", &targetPartsScale_[attackPhase_][Parts::kRightArm].x, 0.1f);
-	ImGui::DragFloat3("RightArmRotate", &targetPartsRotate_[attackPhase_][Parts::kRightArm].x, 0.1f);
-	ImGui::DragFloat3("RightArmTranslate", &targetPartsTranslate_[attackPhase_][Parts::kRightArm].x, 0.1f);
+    ImGui::Text("RightArm");
+    ImGui::DragFloat3("RightArmScale", &targetPartsScale_[attackPhase_][Parts::kRightArm].x, 0.1f);
+    ImGui::DragFloat3("RightArmRotate", &targetPartsRotate_[attackPhase_][Parts::kRightArm].x, 0.1f);
+    ImGui::DragFloat3("RightArmTranslate", &targetPartsTranslate_[attackPhase_][Parts::kRightArm].x, 0.1f);
 
-	if (ImGui::Button("RightArmReset")) {
-		targetPartsScale_[attackPhase_][Parts::kRightArm] = { 1.0f, 1.0f, 1.0f };
-		targetPartsRotate_[attackPhase_][Parts::kRightArm] = { 0.0f, 0.0f, 0.0f };
-		targetPartsTranslate_[attackPhase_][Parts::kRightArm] = { 0.0f, 0.0f, 0.0f };
-	}
+    if (ImGui::Button("RightArmReset")) {
+        targetPartsScale_[attackPhase_][Parts::kRightArm] = { 1.0f, 1.0f, 1.0f };
+        targetPartsRotate_[attackPhase_][Parts::kRightArm] = { 0.0f, 0.0f, 0.0f };
+        targetPartsTranslate_[attackPhase_][Parts::kRightArm] = { 0.0f, 0.0f, 0.0f };
+    }
 
-	ImGui::Separator();
-	ImGui::Text("LeftLeg");
-	ImGui::DragFloat3("LeftLegScale", &targetPartsScale_[attackPhase_][Parts::kLeftLeg].x, 0.1f);
-	ImGui::DragFloat3("LeftLegRotate", &targetPartsRotate_[attackPhase_][Parts::kLeftLeg].x, 0.1f);
-	ImGui::DragFloat3("LeftLegTranslate", &targetPartsTranslate_[attackPhase_][Parts::kLeftLeg].x, 0.1f);
-	if (ImGui::Button("LeftLegReset")) {
-		targetPartsScale_[attackPhase_][Parts::kLeftLeg] = { 1.0f, 1.0f, 1.0f };
-		targetPartsRotate_[attackPhase_][Parts::kLeftLeg] = { 0.0f, 0.0f, 0.0f };
-		targetPartsTranslate_[attackPhase_][Parts::kLeftLeg] = { 0.0f, 0.0f, 0.0f };
-	}
+    ImGui::Separator();
+    ImGui::Text("LeftLeg");
+    ImGui::DragFloat3("LeftLegScale", &targetPartsScale_[attackPhase_][Parts::kLeftLeg].x, 0.1f);
+    ImGui::DragFloat3("LeftLegRotate", &targetPartsRotate_[attackPhase_][Parts::kLeftLeg].x, 0.1f);
+    ImGui::DragFloat3("LeftLegTranslate", &targetPartsTranslate_[attackPhase_][Parts::kLeftLeg].x, 0.1f);
+    if (ImGui::Button("LeftLegReset")) {
+        targetPartsScale_[attackPhase_][Parts::kLeftLeg] = { 1.0f, 1.0f, 1.0f };
+        targetPartsRotate_[attackPhase_][Parts::kLeftLeg] = { 0.0f, 0.0f, 0.0f };
+        targetPartsTranslate_[attackPhase_][Parts::kLeftLeg] = { 0.0f, 0.0f, 0.0f };
+    }
 
-	ImGui::Text("RightLeg");
-	ImGui::DragFloat3("RightLegScale", &targetPartsScale_[attackPhase_][Parts::kRightLeg].x, 0.1f);
-	ImGui::DragFloat3("RightLegRotate", &targetPartsRotate_[attackPhase_][Parts::kRightLeg].x, 0.1f);
-	ImGui::DragFloat3("RightLegTranslate", &targetPartsTranslate_[attackPhase_][Parts::kRightLeg].x, 0.1f);
-	if (ImGui::Button("RightLegReset")) {
-		targetPartsScale_[attackPhase_][Parts::kRightLeg] = { 1.0f, 1.0f, 1.0f };
-		targetPartsRotate_[attackPhase_][Parts::kRightLeg] = { 0.0f, 0.0f, 0.0f };
-		targetPartsTranslate_[attackPhase_][Parts::kRightLeg] = { 0.0f, 0.0f, 0.0f };
-	}
-	ImGui::End();
+    ImGui::Text("RightLeg");
+    ImGui::DragFloat3("RightLegScale", &targetPartsScale_[attackPhase_][Parts::kRightLeg].x, 0.1f);
+    ImGui::DragFloat3("RightLegRotate", &targetPartsRotate_[attackPhase_][Parts::kRightLeg].x, 0.1f);
+    ImGui::DragFloat3("RightLegTranslate", &targetPartsTranslate_[attackPhase_][Parts::kRightLeg].x, 0.1f);
+    if (ImGui::Button("RightLegReset")) {
+        targetPartsScale_[attackPhase_][Parts::kRightLeg] = { 1.0f, 1.0f, 1.0f };
+        targetPartsRotate_[attackPhase_][Parts::kRightLeg] = { 0.0f, 0.0f, 0.0f };
+        targetPartsTranslate_[attackPhase_][Parts::kRightLeg] = { 0.0f, 0.0f, 0.0f };
+    }
+    ImGui::End();
 
-	ImGui::Begin("Player");
-	ImGui::DragFloat3("scale", &worldTransform_.scale_.x);
-	ImGui::DragFloat3("rotate_", &worldTransform_.rotate_.x);
-	ImGui::DragFloat3("translate_", &worldTransform_.translate_.x);
-	ImGui::DragFloat3("velocity", &velocity_.x);
+    ImGui::Begin("Player");
+    ImGui::DragFloat3("scale", &worldTransform_.scale_.x);
+    ImGui::DragFloat3("rotate_", &worldTransform_.rotate_.x);
+    ImGui::DragFloat3("translate_", &worldTransform_.translate_.x);
+    ImGui::DragFloat3("velocity", &velocity_.x);
 
-	ImGui::Separator();
-	Vector3 worldPosition = GetWorldPosition();
-	ImGui::DragFloat3("WorldPosition", &worldPosition.x);
-	Vector3 forward = GetForward();
-	ImGui::DragFloat3("Forward", &forward.x);
-	ImGui::Separator();
-	ImGui::DragFloat3("kickForce", &kickForce_.x);
-	ImGui::Checkbox("isAttack", &isAttack_);
+    ImGui::Separator();
+    Vector3 worldPosition = GetWorldPosition();
+    ImGui::DragFloat3("WorldPosition", &worldPosition.x);
+    Vector3 forward = GetForward();
+    ImGui::DragFloat3("Forward", &forward.x);
+    ImGui::Separator();
+    ImGui::DragFloat3("kickForce", &kickForce_.x);
+    ImGui::Checkbox("isAttack", &isAttack_);
+    ImGui::DragFloat("chargeTimer_", &chargeTimer_);
 
-	switch (attackPhase_) {
-		case Player::kNone:
-			ImGui::Text("kNone");
-			break;
-		case Player::kCharge:
-			ImGui::Text("kCharge");
-			break;
-		case Player::kFire:
-			ImGui::Text("kFire");
-			break;
-		case Player::kEnd:
-			ImGui::Text("kEnd");
-			break;
-		default:
-			break;
-	}
 
-	//ImGui::Text("isWallHit : %d ", collisionMapInfo.isWallHit);
-	//ImGui::DragFloat3("moveVol", &collisionMapInfo.moveVol.x);
 
-	ImGui::End();
+    switch (attackPhase_) {
+    case Player::kNone:
+        ImGui::Text("kNone");
+        break;
+    case Player::kCharge:
+        ImGui::Text("kCharge");
+        break;
+    case Player::kFire:
+        ImGui::Text("kFire");
+        break;
+    case Player::kEnd:
+        ImGui::Text("kEnd");
+        break;
+    default:
+        break;
+    }
+
+    //ImGui::Text("isWallHit : %d ", collisionMapInfo.isWallHit);
+    //ImGui::DragFloat3("moveVol", &collisionMapInfo.moveVol.x);
+
+    ImGui::End();
 }
 
 void Player::ResetAttack() {
-	isAttack_ = false;
-	chargeTimer_ = 1000.0f;
-	kickForce_ = GetForward() * chargeTimer_;
+    isAttack_ = false;
+    kickForce_ = GetForward() * chargeTimer_;
+    chargeTimer_ = 1.0f;
 }
