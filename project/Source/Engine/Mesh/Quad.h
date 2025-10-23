@@ -5,7 +5,7 @@
 class QuadMesh :public MeshCommon
 {
 public:
-    void Create(uint32_t& textureHandle);
+    void Create(uint32_t textureHandle);
     void PreDraw(const BlendMode& blendMode = BlendMode::kBlendModeNormal)override;
     void Draw(Camera& camera, const Matrix4x4& worldMatrix, const uint32_t lightType = MaterialResource::LIGHTTYPE::NONE)override;
 

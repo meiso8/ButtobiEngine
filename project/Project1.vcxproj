@@ -157,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\Object\Arrow.cpp" />
     <ClCompile Include="Source\Engine\Particle\ChargeParticle.cpp" />
     <ClCompile Include="Source\Engine\Particle\Flashparticle.cpp" />
     <ClCompile Include="Source\Application\Physics\OBB.cpp" />
@@ -271,6 +272,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\Object\Arrow.h" />
     <ClInclude Include="Source\Engine\Particle\ChargeParticle.h" />
     <ClInclude Include="Source\Engine\Particle\FlashParticle.h" />
     <ClInclude Include="Source\Application\Physics\OBB.h" />
