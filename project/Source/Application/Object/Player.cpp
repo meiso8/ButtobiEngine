@@ -429,7 +429,7 @@ void Player::Draw(Camera &camera) {
 	}
 }
 
-AABB Player::GetAABB() {
+AABB Player::GetAABB() const {
 	Vector3 worldPos = GetWorldPosition();
 	AABB aabb = {
 		.min = { worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kWidth / 2.0f },
@@ -438,26 +438,28 @@ AABB Player::GetAABB() {
 	return aabb;
 }
 
-Sphere Player::GetSphere() { return Sphere{ .center = GetWorldPosition(), .radius = kRadius }; }
+Sphere Player::GetSphere() const { return Sphere{ .center = GetWorldPosition(), .radius = kRadius }; }
 
 // 衝突応答
 void Player::OnCollision(const Enemy *enemy) {
     if (isAttack_) {
         ResetAttack();
-    } else {
-        if (IsCollision(GetSphere(), enemy->GetSphere())) {
+	} else {
+		if (IsCollision(GetSphere(), enemy->GetSphere())) {
 
-            if (!isInvincible_) {
-                // 色変え(仮処理)
-                objectColor_ = { 0.0f,0.0f,0.0f,1.0f };
+			if (!isInvincible_) {
+				// 色変え(仮処理)
+				objectColor_ = { 0.0f,0.0f,0.0f,1.0f };
 
-                life_--;
-                isInvincible_ = true;
-                Sound::PlaySE(Sound::PLAYER_HIT);
-            }
+				life_--;
+				isInvincible_ = true;
+				Sound::PlaySE(Sound::PLAYER_HIT);
+			}
 
-        }
+		}
+	}
 };
+
 
 void Player::OnCollision(const Plane &plane) {
 	float penetration = PenetrationDepth(GetSphere(), plane);	// 貫入量

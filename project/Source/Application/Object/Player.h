@@ -83,11 +83,11 @@ public:
 
 	/// @brief AABBの取得
 	/// @return AABB
-	AABB GetAABB();
+	AABB GetAABB() const;
 
 	/// @brief 球の取得
 	/// @return 球
-	Sphere GetSphere();
+	Sphere GetSphere() const;
 
 	/// @brief 敵との当たり判定
 	/// @param enemy 敵
