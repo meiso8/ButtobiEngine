@@ -68,7 +68,7 @@ void TitleScene::Initialize() {
     WorldTransformUpdate(tableWorldTransform);
     
     appleWorldTransform.Initialize();
-    appleWorldTransform.scale_ = { 3.0f, 3.0f, 3.0f };
+    appleWorldTransform.scale_ = { 1.5f, 1.5f, 1.5f };
     appleWorldTransform.translate_ = { 23, -1.5f, -5 };
 	appleWorldTransform.rotate_ = {-1.4f, 0.0f, 0.0f};
     WorldTransformUpdate(appleWorldTransform);
