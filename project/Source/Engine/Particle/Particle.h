@@ -10,7 +10,7 @@
 #include<memory>
 #include<cstdint>
 #include"AccelerationField.h"
-#include"SphericalCoordinate.h"
+
 
 class Camera;
 class ShaderResourceView;
@@ -40,7 +40,7 @@ struct ParticleForGPU {
 };
 
 std::list<Particle> Emit(const Emitter& emitter, const Vector4& color);
-std::list<SphericalCoordinate> EmitCoordinate(const Emitter& emitter);
+
 
 
 class ParticleManager
@@ -48,11 +48,10 @@ class ParticleManager
 public:
     const uint32_t kNumMaxInstance = 100;//インスタンス数
     std::list<Particle>particles;
-    std::list<SphericalCoordinate>sphericalCoordinates;
-    bool useBillboard_ = false;
     Emitter emitter_{};
     AccelerationField accelerationField;
-private:
+    bool useBillboard_ = false;
+protected:
 
     const float kDeltaTime = 1.0f / 60.0f;
 
@@ -73,32 +72,30 @@ private:
     VertexData* vertexBufferData_ = nullptr;
     uint32_t textureHandle_ = 0;
 
-    Matrix4x4 backToFrontMatrix;
 
+    Matrix4x4 backToFrontMatrix;
     Matrix4x4 billboardMatrix;
     Matrix4x4 worldMatrix;
 
 public:
-    ~ParticleManager();
+    static Particle MakeNewParticle(const Vector3& translate, const Vector4& color);
+    virtual ~ParticleManager();
+    virtual void Update(Camera& camera);
+    virtual void EmitParticle(const Vector4& color);
+    void Draw(uint32_t blendMode = BlendMode::kBlendModeAdd);
+    void Finalize();
     void Initialize(uint32_t textureHandle, int modelHandle = -1);
-
     void InitEmitter();
     void InitAccelerationField();
+    void TimerUpdate(const Vector4 color);
 
-    void Draw(uint32_t blendMode = BlendMode::kBlendModeAdd);
-    void EmitterTimerUpdate(const Vector4 color);
-
-    void Update(Camera& camera);
-
-    void EmitParticle(const Vector4& color);
-    static Particle MakeNewParticle(const Vector3& translate, const Vector4& color);
-    static SphericalCoordinate MakeNewSphericalCoordinate();
-private:
+protected:
     void CreateModelData(const uint32_t& textureHandle, const int& modelHandle);
     void CreateVertexBufferResource();
     void CreateTransformationMatrix();
-
-
-
+    void UpdateBillBordMatrix(Camera& camera);
+    void UpdateWorldMatrixForBillBord(Particle& particleItr);
+    void UpdateWorldMatrix(Particle& particleItr);
+    void IsCollisionFieldArea(Particle& particleItr);
 };
 
