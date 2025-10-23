@@ -149,7 +149,7 @@ void GameScene::Update() {
     uiManager_->SetLife(player_->GetLife());
 
     //力の矢印
-    forceArrow_->Update(player_->KickArea(),player_->GetChargeTimer(),player_->GetWorldTransform().rotate_.y);
+    forceArrow_->Update(player_->GetWorldPosition(),player_->GetChargeTimer(),player_->GetWorldTransform().rotate_.y);
 
     // デスパーティクルの更新処理
     if (deathParticles_) {
@@ -177,15 +177,21 @@ void GameScene::Update() {
 
     // 全ての当たり判定を行う
     CheckAllCollisions();
+
     uiManager_->Update();
-	if (uiManager_->GetTimer() <= 0) {
+
+	if (uiManager_->GetTimer() <= 0.0f) {
 		isEndScene_ = true;
 		isGameClear = true;
-        Sound::Stop(Sound::CHARGE);
+        Sound::Stop(Sound::YEAH);
     }
 	if (player_->GetLife() <= 0) {
+        isEndScene_ = true;
 		isGameOver = true;
-		isEndScene_ = true;
+
+    }
+
+    if (isEndScene_) {
         Sound::Stop(Sound::CHARGE);
     }
 };
@@ -202,18 +208,12 @@ void GameScene::CheckAllCollisions() {
     // 衝突判定と応答
     collisionManager_->CheckAllCollisions();
 
-#pragma region // 自キャラと敵キャラの当たり判定
-    // 自キャラと敵キャラの当たり判定
-
-    AABB aabb1, aabb2;
-
-    aabb1 = player_->GetKickAreaAABB();
+#pragma region // 矢印と敵キャラの当たり判定
+    // 矢印キャラと敵キャラの当たり判定
 
     for (auto& enemy : enemies_) {
-        aabb2 = enemy->GetAABB();
-
-        // AABB同士の交差判定
-        if (IsCollision(aabb1, aabb2)) {
+        // OBBとSphereの当たり判定
+        if (IsCollision(forceArrow_->GetKickAreaOBB(), enemy->GetSphere())) {
             // 敵弾の衝突時コールバックを呼び出す
             enemy->OnCollision(player_.get());
             // 自キャラ衝突時コールバックを呼び出す
@@ -306,12 +306,11 @@ void GameScene::Draw() {
     // 天球の描画
     skyDome_->Draw(*currentCamera_);
 
-
-
+    forceArrow_->Draw(*currentCamera_);
     // 自キャラの描画
     player_->Draw(*currentCamera_);
 
-    // 敵キャラの描画
+     //敵キャラの描画
     for (auto& newEnemy : enemies_) {
         if (!newEnemy)
             // ガード節と呼ぶ。
@@ -324,7 +323,7 @@ void GameScene::Draw() {
         deathParticles_->Draw(*currentCamera_);
     }
 
-    forceArrow_->Draw(*currentCamera_);
+
     // 地形の描画
     stage_->Draw(*currentCamera_);
 
@@ -336,6 +335,7 @@ void GameScene::Draw() {
     }
 
     uiManager_->Draw();
+  
 
 }
 void GameScene::Debug() {

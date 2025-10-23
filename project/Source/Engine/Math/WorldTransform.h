@@ -12,6 +12,7 @@ public://一旦public
     const WorldTransform* parent_ = nullptr;
 public:
     void Initialize();
+    Vector3 GetWorldPosition()const;
 };
 
 void WorldTransformUpdate(WorldTransform& worldTransform);

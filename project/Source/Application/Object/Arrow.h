@@ -1,11 +1,21 @@
 #include"WorldTransform.h"
 #include"Quad.h"
 #include<memory>
-
+struct OBB;
+class OBBRenderer;
 class Camera;
 
-
 class Arrow {
+private:
+    // ワールド変換データ
+    WorldTransform worldTransform_;
+    WorldTransform worldTransformParent_;
+    std::unique_ptr< QuadMesh> quad_;
+
+    //OBBのデバック描画
+    std::unique_ptr<OBBRenderer> obbRenderer_ = nullptr;
+    //キックOBB
+    std::unique_ptr < OBB >kickObb_;
 public:
     Arrow();
     /// @brief 初期化
@@ -15,11 +25,11 @@ public:
     /// @brief 描画
     void Draw(Camera& camera);
     ~Arrow();
-private:
-    WorldTransform worldTransformParent_;
-    // ワールド変換データ
-    WorldTransform worldTransform_;
-    // モデル
+    Vector3 GetWorldPosition()const;
+    /// @brief 蹴る場所のOBBの取得
+/// @return OBB
+    OBB GetKickAreaOBB();
 
-    std::unique_ptr< QuadMesh> quad_;
+
+    float GetScaleZ() { return worldTransform_.scale_.z; }
 };
