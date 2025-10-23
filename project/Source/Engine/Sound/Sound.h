@@ -37,9 +37,12 @@ public:
         PLAYER_HIT,//敵に当たった時の音
         POUR_DRINK,//飲み物を注ぐ
         YEAH,//イエーイ
+        GAME_OVER,//ゲームオーバー
+        BOUND,//バウンドする
+        FULL_CHARGE,//フルチャージ
         SOUNDS
     };
- 
+
     static void Initialize();
     static void Finalize();
 

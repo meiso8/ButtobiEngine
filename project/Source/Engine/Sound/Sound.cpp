@@ -46,7 +46,9 @@ void Sound::LoadAllSound()
     handles_[PLAYER_HIT] = Load("Resources/Sounds/externals/playerHit.mp3");
     handles_[POUR_DRINK] = Load("Resources/Sounds/externals/pour_drink.mp3");
     handles_[YEAH] = Load("Resources/Sounds/yeah.mp3");
-
+    handles_[GAME_OVER] = Load("Resources/Sounds/gameOver.mp3");
+    handles_[BOUND] = Load("Resources/Sounds/externals/biyon.mp3");
+    handles_[FULL_CHARGE] = Load("Resources/Sounds/externals/up.mp3");
 }
 
 void Sound::PlayBGM(const uint32_t index, const float& volumeOffset, const bool& loop)

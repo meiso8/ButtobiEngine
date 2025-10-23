@@ -26,7 +26,11 @@ public:
 		JUICECOUNT,
 
 		PARTICLE,
+		FLASH_PARTICLE,
 		ARROW,
+
+		CLEAR,
+		GAME_OVER,
 
 		TEXTURES
 	};

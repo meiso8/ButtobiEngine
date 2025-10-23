@@ -3,6 +3,7 @@
 #include "../CameraController.h"
 #include "DeathParticles.h"
 #include"Particle/ChargeParticle.h"
+#include"Particle/FlashParticle.h"
 #include "Enemy.h"
 #include "../UIManager.h"
 #include "Player.h"
@@ -65,6 +66,9 @@ private:
 
     //パーティクル
     std::unique_ptr <ChargeParticle> particle_ = nullptr;
+
+    std::unique_ptr <FlashParticle> flashParticle_ = nullptr;
+
 
     // 地形
     std::unique_ptr <Stage> stage_ = nullptr;

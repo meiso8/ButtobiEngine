@@ -403,6 +403,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <Image Include="Resources\numbers.png" />
     <Image Include="Resources\player.png" />
+    <Image Include="Resources\Textures\gameOver.png" />
     <Image Include="Resources\Textures\numbers.png" />
     <Image Include="Resources\Textures\particle.png" />
     <Image Include="Resources\Textures\uvChecker.png" />
