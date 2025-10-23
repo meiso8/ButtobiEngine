@@ -14,6 +14,7 @@ class Enemy;
 class Camera;
 class Model;
 class AABBRenderer;
+
 class SphereRenderer;
 
 /// @brief 自キャラ
@@ -81,9 +82,6 @@ public:
 	/// @return ワールド座標
 	Vector3 GetWorldPosition() const;
 
-	/// @brief 蹴る場所のAABBの取得
-	/// @return AABB
-	AABB GetKickAreaAABB();
 
 	/// @brief 球の取得
 	/// @return 球
@@ -111,8 +109,8 @@ public:
 	/// @brief キック力を取得
 	/// @return キック力
 	Vector3 GetKickForce() const { return kickForce_; };
-	//キックする場所
-	Vector3 KickArea();
+	void InitKickForce() { kickForce_ = { 0.0f }; }
+	Vector3 GetAttackArea();
 	float GetChargeTimer()const { return chargeTimer_; }
 	//ImGUi用
 	void Debug();
@@ -175,7 +173,8 @@ private:
 	Vector4 objectColor_ = { 1.0f,1.0f,1.0f,1.0f };
 
 	// AABBのデバッグ描画
-	std::unique_ptr<AABBRenderer> aabbRenderer_ = nullptr;
+	//std::unique_ptr<AABBRenderer> aabbRenderer_ = nullptr;
+
 
 	// 球のデバッグ描画
 	std::unique_ptr<SphereRenderer> sphereRenderer_ = nullptr;

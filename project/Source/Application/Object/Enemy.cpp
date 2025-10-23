@@ -10,6 +10,7 @@
 #include <cmath>
 #include <numbers>
 #include <cassert>
+#include"Sound.h"
 
 #ifdef _DEBUG
 #include "../externals/imgui/imgui.h"
@@ -76,6 +77,9 @@ void Enemy::Update() {
 		sphereRenderer_->Update(GetSphere());
 	}
 #endif // _DEBUG
+
+	//色を初期化
+	color_ = { 1.0f,1.0f,1.0f,1.0f };
 }
 
 void Enemy::Draw(Camera &camera) {
@@ -112,9 +116,15 @@ Sphere Enemy::GetSphere() const { return Sphere{ .center = GetWorldPosition(), .
 Vector3 Enemy::GetWorldPosition() const { return { worldTransform_.matWorld_.m[3][0],worldTransform_.matWorld_.m[3][1],worldTransform_.matWorld_.m[3][2] }; }
 
 void Enemy::OnCollision(Player *player) {
+
+	color_ = { 0.0f,1.0f,0.0f,1.0f };
+
 	if (player->IsAttack()) {
 		rigidBody_->ApplyForce(player->GetKickForce());
 		isKicked_ = true;
+		//キック力を初期化
+		player->InitKickForce();
+		Sound::PlayOriginSE(Sound::FRUIT_FALL);
 	}
 }
 

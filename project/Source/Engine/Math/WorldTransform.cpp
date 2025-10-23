@@ -9,6 +9,11 @@ void WorldTransform::Initialize() {
     matWorld_ = MakeIdentity4x4();
 }
 
+Vector3 WorldTransform::GetWorldPosition() const
+{
+    return { matWorld_.m[3][0], matWorld_.m[3][1], matWorld_.m[3][2] };
+}
+
 
 void WorldTransformUpdate(WorldTransform& worldTransform) {
 

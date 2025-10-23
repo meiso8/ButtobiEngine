@@ -33,12 +33,13 @@ public:
         CHARGE,//チャージ
         FRUIT_FALL,//フルーツを落とす
         ATTACK,//アタック
-        CHREERS,//完売
+        CHREERS,//乾杯
         PLAYER_HIT,//敵に当たった時の音
         POUR_DRINK,//飲み物を注ぐ
+        YEAH,//イエーイ
         SOUNDS
     };
-
+ 
     static void Initialize();
     static void Finalize();
 
@@ -46,6 +47,7 @@ public:
     static void PlayBGM(const uint32_t handleIndex, const float& volumeOffset = 0.0f, const bool& loop = true);
     static void PlaySE(const uint32_t handleIndex, const float& volumeOffset = 0.0f, const bool& loop = false);
     static void PlayLoopSE(const uint32_t handleIndex, const float& volumeOffset = 0.0f);
+    static void PlayOriginSE(const uint32_t handleIndex, const float& volumeOffset = 0.0f);
 
     static void Pause(const uint32_t handleIndex);  // 一時停止
     static void Resume(const uint32_t handleIndex); // 再開

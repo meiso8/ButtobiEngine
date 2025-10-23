@@ -2,7 +2,7 @@
 #include "UIManager.h"
 #include"Texture.h"
 #include"Sprite.h"
-
+#include"Sound.h"
 #include"DebugUI.h"
 
 #define InversFPS 1.0f/60.0f;
@@ -276,6 +276,7 @@ void UIManager::Update() {
 		if (JuiceMeter >5) {
 			JuiceMeter = 0;
 			JuiceCount += 1;
+            Sound::PlaySE(Sound::CHREERS);
         }
 
 		JuiceSprite->SetTextureLeftTop({768.0f * JuiceMeter, 0.0f});

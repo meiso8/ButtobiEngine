@@ -2,6 +2,7 @@
 
 #include "Player.h"
 #include "AABB.h"
+
 #include "Sphere.h"
 
 #include "Collision.h"
@@ -19,7 +20,6 @@
 #include"Model.h"
 #include"CoordinateTransform.h"
 #include"Sound.h"
-#include"Collision.h"
 
 Player::Player() {
     for (size_t i = 0; i < model_.size(); ++i) {
@@ -35,11 +35,13 @@ Player::Player() {
 
 #ifdef _DEBUG
     // AABBのデバッグ描画の生成
-    aabbRenderer_ = std::make_unique<AABBRenderer>();
+    //aabbRenderer_ = std::make_unique<AABBRenderer>();
+
 
     // 球のデバッグ描画の生成
     sphereRenderer_ = std::make_unique<SphereRenderer>();
 #endif // _DEBUG
+
 }
 
 Player::~Player() {
@@ -205,11 +207,12 @@ void Player::Initialize(Camera& camera, const Vector3& position) {
 
 #ifdef _DEBUG
     // AABBのデバッグ描画の初期化
-    aabbRenderer_->Initialize();
+    //aabbRenderer_->Initialize();
 
     // 球のデバッグ描画の初期化
     sphereRenderer_->Initialize();
 #endif // _DEBUG
+
 }
 
 void Player::InputMove() {
@@ -351,7 +354,7 @@ Vector3 Player::GetForward() const {
     return Normalize({ worldTransform_.matWorld_.m[2][0], worldTransform_.matWorld_.m[2][1], worldTransform_.matWorld_.m[2][2] });
 }
 
-Vector3 Player::GetWorldPosition() const { return { worldTransform_.matWorld_.m[3][0], worldTransform_.matWorld_.m[3][1], worldTransform_.matWorld_.m[3][2] }; }
+Vector3 Player::GetWorldPosition() const { return worldTransform_.GetWorldPosition(); }
 
 void Player::Update() {
     // ==============================
@@ -402,7 +405,8 @@ void Player::Update() {
 
 #ifdef _DEBUG
     // AABBのデバッグ描画の更新
-    aabbRenderer_->Update(GetKickAreaAABB());
+    //aabbRenderer_->Update(GetKickAreaAABB());
+
 
     // 球のデバッグ描画の更新
     sphereRenderer_->Update(GetSphere());
@@ -412,10 +416,11 @@ void Player::Update() {
 void Player::Draw(Camera& camera) {
 #ifdef _DEBUG
     // AABBのデバッグ描画の描画
-    aabbRenderer_->Draw(camera);
+    //aabbRenderer_->Draw(camera);
 
     // 球のデバッグ描画の描画
     sphereRenderer_->Draw(camera);
+
 #endif // _DEBUG
 
     // 3Dモデル描画前処理
@@ -430,16 +435,7 @@ void Player::Draw(Camera& camera) {
     }
 }
 
-AABB Player::GetKickAreaAABB() {
-    Vector3 worldPos = KickArea();
-    float halfWidth = kWidth * 0.5f;
-    float halfHeight = kHeight * 0.5f;
-    AABB aabb = {
-        .min = { worldPos.x - halfWidth, worldPos.y - halfHeight, worldPos.z - halfWidth },
-        .max = { worldPos.x + halfWidth, worldPos.y + halfHeight, worldPos.z + halfWidth }
-    };
-    return aabb;
-}
+
 
 Sphere Player::GetSphere() const { return Sphere{ .center = GetWorldPosition(), .radius = kRadius }; }
 
@@ -504,7 +500,7 @@ bool Player::IsCharge() const {
     return false;
 }
 
-Vector3 Player::KickArea()
+Vector3 Player::GetAttackArea()
 {
     return GetWorldPosition() + GetForward() * 5.0f;
 }

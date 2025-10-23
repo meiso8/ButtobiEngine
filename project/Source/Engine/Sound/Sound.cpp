@@ -45,6 +45,7 @@ void Sound::LoadAllSound()
     handles_[CHREERS] = Load("Resources/Sounds/externals/cheers!.mp3");
     handles_[PLAYER_HIT] = Load("Resources/Sounds/externals/playerHit.mp3");
     handles_[POUR_DRINK] = Load("Resources/Sounds/externals/pour_drink.mp3");
+    handles_[YEAH] = Load("Resources/Sounds/yeah.mp3");
 
 }
 
@@ -64,6 +65,13 @@ void Sound::PlayLoopSE(const uint32_t index, const float& volumeOffset)
 {
     if (!IsPlaying(handles_[index])) {
         Play(handles_[index], seVolume_ + volumeOffset, true);
+    }
+}
+
+void Sound::PlayOriginSE(const uint32_t handleIndex, const float& volumeOffset)
+{
+    if (!IsPlaying(handles_[handleIndex])) {
+        Play(handles_[handleIndex], seVolume_ + volumeOffset, false);
     }
 }
 

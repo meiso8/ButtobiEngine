@@ -40,6 +40,8 @@ void TitleScene::Initialize() {
 
     isEndScene_ = false;
 
+
+
     camera_->Initialize(1280.0f, 720.0f);
     camera_->translate_ = cameraPositionStart;
     camera_->UpdateMatrix();
@@ -302,8 +304,13 @@ void TitleScene::StringInOutJuiceAnimation() {
     float pivotOffsetY = juiceCupWorldTransform.translate_.y + 2.0f;
     switch (jInOutPhase_) {
     case TitleScene::JuiceInOutPhase::InJuice:
+  
         for (int i = 0; i < 8; i++) {
             titleStringWorldTransform[i].translate_ = EaseIn(stringAnimationTimer, stringInStartPosition[i], stringInEndPosition[i]);
+        }
+
+        if (stringAnimationTimer >0.5f) {
+            Sound::PlayOriginSE(Sound::POUR_DRINK);
         }
         if (stringAnimationTimer >= 1.0f) {
             jInOutPhase_ = JuiceInOutPhase::RotateJuice;

@@ -7,7 +7,6 @@
 #include "Random.h"
 #include <array>
 #include"Input.h"
-
 #ifdef _DEBUG
 #include "../externals/imgui/imgui.h"
 #endif // _DEBUG

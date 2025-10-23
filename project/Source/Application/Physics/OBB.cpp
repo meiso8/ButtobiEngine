@@ -90,6 +90,7 @@ void OBBRenderer::Update(const OBB &obb) {
 
 void OBBRenderer::Draw(Camera &camera) {
 	// 線分メッシュの描画
+	lines_[0]->PreDraw();
 	for (auto &line : lines_) {
 		line->Draw(camera, MakeIdentity4x4());
 	}
