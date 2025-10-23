@@ -39,11 +39,11 @@ public:
 
 	/// @brief AABBの取得
 	/// @return AABB
-	AABB GetAABB();
+	AABB GetAABB() const;
 
 	/// @brief 球の取得
 	/// @return 球
-	Sphere GetSphere();
+	Sphere GetSphere() const;
 
 	/// @brief ワールド座標を取得
 	/// @return ワールド座標
@@ -110,6 +110,7 @@ private:
 	// キャラクターの当たり判定サイズ
 	static inline const float kWidth = 2.0f;
 	static inline const float kHeight = 2.0f;
+	static inline const float kRadius = 1.0f;
 	Vector4 color_;
 	// 剛体
 	std::unique_ptr<RigidBody> rigidBody_ = nullptr;

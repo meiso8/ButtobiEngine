@@ -29,7 +29,7 @@ void CameraController::Update() {
 	behindPos.y += height;
 
 	camera_->translate_ = behindPos;
-	camera_->rotate_.x = 0.15f;
+	camera_->rotate_.x = 0.30f;
 	camera_->rotate_.y = targetWorldTransform.rotate_.y;
 }
 

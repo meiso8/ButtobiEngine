@@ -176,7 +176,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\Scene\GameOverScene.cpp" />
     <ClCompile Include="Source\Application\Scene\GameScene.cpp" />
     <ClCompile Include="Source\Application\Scene\SceneManager.cpp" />
-    <ClCompile Include="Source\Application\Scene\SampleScene.cpp" />
     <ClCompile Include="Source\Application\Object\Skydome.cpp" />
     <ClCompile Include="Source\Application\Scene\TitleScene.cpp" />
     <ClCompile Include="Source\Application\Stage.cpp" />
@@ -184,7 +183,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Mesh\ModelManager.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Quad.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\DirectXCommon.cpp" />
-    <ClCompile Include="Source\Application\Object\SamplePlayer.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\ModelConfig.cpp" />
     <ClCompile Include="Source\Engine\Particle\Particle.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\MyEngine.cpp" />
@@ -292,7 +290,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\Scene\GameOverScene.h" />
     <ClInclude Include="Source\Application\Scene\GameScene.h" />
     <ClInclude Include="Source\Application\Scene\SceneManager.h" />
-    <ClInclude Include="Source\Application\Scene\SampleScene.h" />
     <ClInclude Include="Source\Application\Object\Skydome.h" />
     <ClInclude Include="Source\Application\Scene\TitleScene.h" />
     <ClInclude Include="Source\Application\Stage.h" />
@@ -308,7 +305,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
-    <ClInclude Include="Source\Application\Object\SamplePlayer.h" />
     <ClInclude Include="Source\Engine\hlslTypeToCpp.h" />
     <ClInclude Include="Source\Engine\Particle\Particle.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\MyEngine.h" />
@@ -407,7 +403,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <Image Include="Resources\player.png" />
     <Image Include="Resources\Textures\numbers.png" />
     <Image Include="Resources\Textures\particle.png" />
-    <Image Include="Resources\Textures\player.png" />
     <Image Include="Resources\Textures\uvChecker.png" />
     <Image Include="Resources\Textures\white1x1.png" />
     <Image Include="Resources\uvChecker.png" />

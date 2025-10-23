@@ -2,39 +2,24 @@
 #include<array>
 #include<memory>
 
-#include"Vector3.h"
 #include"Vector4.h"
 #include"WorldTransform.h"
 
 struct AABB;
 struct Sphere;
+struct Plane;
+struct OBB;
+
 class Enemy;
 class Camera;
 class Model;
 class AABBRenderer;
 class SphereRenderer;
+
 /// @brief 自キャラ
 class Player {
 
 public:
-	enum class LRDirection { kRight, kLeft };
-
-	struct CollisionMapInfo {
-		bool isCeilingHit = false; // 天井
-		bool isLanding = false;    // 着地
-		bool isWallHit = false;    // 壁
-		Vector3 moveVol;
-	};
-
-	// 角
-	enum Corner {
-		kRightBottom,
-		kLeftBottom,
-		kRightTop,
-		kLeftTop,
-		kNumCorner // 要素
-	};
-
 	enum AttackPhase {
 		kNone,
 		kCharge,
@@ -53,11 +38,15 @@ public:
 	};
 
 public:
+	/// @brief コンストラクタ
 	Player();
+	
+	/// @brief デストラクタ
 	~Player();
+
 	/// @brief 初期化
-	/// @param model モデル
-	/// @param textureHandle テクスチャハンドル
+	/// @param camera カメラ
+	/// @param position 位置
 	void Initialize(Camera &camera, const Vector3 &position);
 
 	/// @brief 更新
@@ -66,53 +55,51 @@ public:
 	/// @brief 移動入力
 	void InputMove();
 
-	/// @brief マップ衝突判定
-	/// @param info 衝突情報
-	void CheckCollisionMap(CollisionMapInfo &info);
-
 	// @brief 攻撃入力
 	void InputAttack();
 
 	// @brief 攻撃アニメーション
 	void AttackAnimation();
 
-	void CheckCollisionTop(CollisionMapInfo &info);
-	void CheckCollisionBottom(CollisionMapInfo &info);
-	void CheckCollisionRight(CollisionMapInfo &info);
-	void CheckCollisionLeft(CollisionMapInfo &info);
-
-	Vector3 CornerPosition(const Vector3 &center, Corner corner);
-
-	// 判定結果を反映して移動させる
-	void ApplyResultAndMove(const CollisionMapInfo &info);
-	/// @brief 天井に接触している場合の処理
-	/// @param info
-	void CeilingHit(const CollisionMapInfo &info);
-
-	// 設置状態切り替え処理
-	void SwitchOnGround(const CollisionMapInfo &info);
-
-	/// @brief 壁に接触している場合の処理
-	void WallHit(const CollisionMapInfo &info);
-
 	/// @brief 描画
+	/// @param camera カメラ
 	void Draw(Camera &camera);
 
+	/// @brief ワールド変換データを取得
+	/// @return ワールド変換データ
 	const WorldTransform &GetWorldTransform() const { return worldTransform_; };
+
+	/// @brief 速度を取得
+	/// @return 速度
 	const Vector3 &GetVelocity() const { return velocity_; };
 
 	/// @brief 前方向を取得
 	/// @return 前方向
 	Vector3 GetForward() const;
 
-	//ワールド座標を取得
+	/// @brief ワールド座標を取得
+	/// @return ワールド座標
 	Vector3 GetWorldPosition() const;
 
-	//AABBを取得する関数
-	AABB GetAABB();
-	//Sphereを取得する関数
-	Sphere GetSphere();
-	void OnCollision(Enemy *enemy);
+	/// @brief AABBの取得
+	/// @return AABB
+	AABB GetAABB() const;
+
+	/// @brief 球の取得
+	/// @return 球
+	Sphere GetSphere() const;
+
+	/// @brief 敵との当たり判定
+	/// @param enemy 敵
+	void OnCollision(const Enemy *enemy);
+
+	/// @brief 平面との当たり判定
+	/// @param plane 平面
+	void OnCollision(const Plane &plane);
+
+	/// @brief OBBとの当たり判定
+	/// @param obb OBB
+	void OnCollision(const OBB &obb);
 
 	bool IsAttack()const;
 	bool IsCharge()const;
@@ -140,37 +127,13 @@ private:
 	// 速度
 	Vector3 velocity_ = {};
 	// 加速度
-	static inline const float kAcceleration = 0.8f;
-	// 速度減衰率
-	static inline const float kAttenuation = 0.1f;
-	// 着地時の速度減衰率
-	static inline const float kAttenuationLanding = 0.125f;
-	// 壁接触時の速度減衰率
-	static inline const float kAttenuationWall = 0.25f;
-	// 最大速度制限
-	static inline const float kLimitRunSpeed = 1.0f;
-	// 方向
-	LRDirection lrDirection_ = LRDirection::kRight;
-	// 旋回開始時の角度
-	float turnFirstRotationY_ = 0.0f;
-	// 旋回タイマー 角度の補間するため
-	float turnTimer_ = 0.0f;
-	// 旋回時間<秒>
-	static inline const float kTimeTurn = 0.3f;
-	// 接地状態フラグ
-	bool onGround_ = true;
+	static inline const float kMoveAmount = 0.8f;
 	// 重力加速度（下方向）
-	static inline const float kGravityAcceleration = 9.8f / 120.0f;
-	// 最大落下速度
-	static inline const float kLimitFallSpeed = 2.0f;
-	// ジャンプ初速（上方向）
-	static inline const float kJumpAcceleration = 1.0f;
-
+	static inline const float kGravityAcceleration = 9.8f;
 	// キャラクターの当たり判定サイズ
 	static inline const float kWidth = 2.0f;
-	static inline const float kHeight = 2.0f;
-
-	static inline const float kBlank = 0.2f;
+	static inline const float kHeight = 4.0f;
+	static inline const float kRadius = 2.0f;
 
 	// チャージ最大時間
 	static inline constexpr float kMaxChargeTime = 100000.0f;
@@ -208,8 +171,10 @@ private:
 	//色　変更しましたyoshida
 	Vector4 objectColor_ = { 1.0f,1.0f,1.0f,1.0f };
 
-	// AABB描画
+	// AABBのデバッグ描画
 	std::unique_ptr<AABBRenderer> aabbRenderer_ = nullptr;
+
+	// 球のデバッグ描画
 	std::unique_ptr<SphereRenderer> sphereRenderer_ = nullptr;
 
 	void ResetAttack();

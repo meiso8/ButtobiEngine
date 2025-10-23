@@ -1,56 +1,57 @@
-#include "GameClearScene.h"
-#include "GameOverScene.h"
-#include "GameScene.h"
-#include "MyEngine.h"
-#include "SampleScene.h"
-#include "TitleScene.h"
+#include"MyEngine.h"
+#include"GameScene.h"
+#include"TitleScene.h"
+#include"GameClearScene.h"
+#include"GameOverScene.h"
 
-#define WIN_WIDTH  1280
+#define WIN_WIDTH 1280
 #define WIN_HEIGHT 720
 
 // Windowsアプリでのエントリーポイント(main関数)
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
-	D3DResourceLeakChecker leakCheck = {};
-	// ==============================================//↓基本いじらない↓//============================================
-	// エンジンの生成
-	std::unique_ptr<MyEngine> myEngine = std::make_unique<MyEngine>();
-	myEngine->Create(L"2102_ぶっとびミックス", WIN_WIDTH, WIN_HEIGHT);
+    D3DResourceLeakChecker leakCheck = {};
+    // ==============================================//↓基本いじらない↓//============================================
+    //エンジンの生成
+    std::unique_ptr<MyEngine> myEngine = std::make_unique<MyEngine>();
+    myEngine->Create(L"2102_ぶっとびミックス", WIN_WIDTH, WIN_HEIGHT);
 
-	// ==============================================//↑基本いじらない↑//============================================
+    // ==============================================//↑基本いじらない↑//============================================
 
-	// 画面の色
-	Vector4 screenColor = {0.6f, 0.6f, 0.6f, 1.0f};
+    //画面の色
+    Vector4 screenColor = { 0.6f,0.6f,0.6f,1.0f };
 
-	// =============================================
-	// シーンの生成
-	// =============================================
+    // =============================================
+    // シーンの生成
+    // =============================================
 
-	enum Scene {
-		kTitleScene,
-		kGameScene,
-		kGameClearScene,
-		kGameOverScene,
-		kSampleScene,
-	};
+    enum Scene {
+        kTitleScene,
+        kGameScene,
+        kGameClearScene,
+        kGameOverScene,
+    };
 
-	const char* sceneName[] = {"TitleScene", "GameScene", "GameClearScene", "GameOverScene", "SampleScene"};
+    const char* sceneName[] = {
+       "TitleScene",
+       "GameScene",
+       "GameClearScene",
+       "GameOverScene",
+    };
 
-	std::vector<std::unique_ptr<SceneManager>> scenes;
-	// タイトルシーンの生成
-	scenes.push_back(std::make_unique<TitleScene>());
-	// ゲームシーンのインスタンスの取得
-	scenes.push_back(std::make_unique<GameScene>());
-	// ゲームクリアシーンの生成
-	scenes.push_back(std::make_unique<GameClearScene>());
-	// ゲームオーバーシーンの生成
-	scenes.push_back(std::make_unique<GameOverScene>());
-	// サンプルシーンの生成
-	scenes.push_back(std::make_unique<SampleScene>());
+    std::vector<std::unique_ptr<SceneManager>> scenes;
+    // タイトルシーンの生成
+    scenes.push_back(std::make_unique < TitleScene>());
+    // ゲームシーンのインスタンスの取得
+    scenes.push_back(std::make_unique < GameScene>());
+    // ゲームクリアシーンの生成
+    scenes.push_back(std::make_unique < GameClearScene>());
+    // ゲームオーバーシーンの生成
+    scenes.push_back(std::make_unique<GameOverScene>());
 
-	// シーンのインデックス
-	int sceneIndex = kGameScene;
+    //シーンのインデックス
+    int sceneIndex = kTitleScene;
 #ifdef _DEBUG
 	// シーンのインデックス
 	sceneIndex = kGameScene;

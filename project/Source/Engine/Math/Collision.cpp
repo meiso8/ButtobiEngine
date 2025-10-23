@@ -62,6 +62,21 @@ float Distance(const Vector3 &point, const OBB &obb) {
 	return Length(closestPoint - point);
 }
 
+float PenetrationDepth(const Sphere &sphere, const Plane &plane) {
+	float distance = Distance(sphere.center, plane);
+	return sphere.radius - distance;
+}
+
+float PenetrationDepth(const Sphere &sphere, const AABB &aabb) {
+	float distance = Distance(sphere.center, aabb);
+	return sphere.radius - distance;
+}
+
+float PenetrationDepth(const Sphere &sphere, const OBB &obb) {
+	float distance = Distance(sphere.center, obb);
+	return sphere.radius - distance;
+}
+
 bool IsCollision(const Sphere &s1, const Sphere &s2) {
 
 	//2つの急の中心点間距離を求める 

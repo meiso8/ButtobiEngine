@@ -42,44 +42,34 @@ void ChargeParticle::EmitParticle(const Vector4& color)
 
 void ChargeParticle::Update(Camera& camera)
 {
+    UpdateBillBordMatrix(camera);
 
+    numInstance_ = 0;
     auto particleIterator = particles.begin();
     auto coordIterator = sphericalCoordinates.begin();
 
     while (particleIterator != particles.end() && coordIterator != sphericalCoordinates.end()) {
-        coordIterator->polar += std::numbers::pi_v<float> *kDeltaTime * 4.0f;
-
-        if (coordIterator->radius > 0.0f) {
-            coordIterator->radius -= kDeltaTime * 4.0f;
-        } else {
-            coordIterator->radius = 5.0f;
-        }
-
-        particleIterator->transform.translate = emitter_.transform.translate + TransformCoordinate(*coordIterator);
-
-        ++particleIterator;
-        ++coordIterator;
-    }
-
-    UpdateBillBordMatrix(camera);
-
-    numInstance_ = 0;
-
-    for (std::list <Particle>::iterator particleIterator = particles.begin(); particleIterator != particles.end();) {
 
         if (numInstance_ < kNumMaxInstance) {
+
             if ((*particleIterator).lifeTime <= (*particleIterator).currentTime) {
                 particleIterator = particles.erase(particleIterator);
                 continue;
             }
+            (*particleIterator).currentTime += kDeltaTime;
 
+            coordIterator->polar += std::numbers::pi_v<float> *kDeltaTime * 4.0f;
+
+            if (coordIterator->radius > 0.0f) {
+                coordIterator->radius -= kDeltaTime * 4.0f;
+            } else {
+                coordIterator->radius = 5.0f;
+            }
+
+     
             IsCollisionFieldArea(*particleIterator);
 
-
-            (*particleIterator).transform.translate += (*particleIterator).velocity * kDeltaTime;
-
-
-            (*particleIterator).currentTime += kDeltaTime;
+            particleIterator->transform.translate = emitter_.transform.translate + TransformCoordinate(*coordIterator);
 
             if (useBillboard_) {
                 UpdateWorldMatrixForBillBord(*particleIterator);
@@ -100,7 +90,9 @@ void ChargeParticle::Update(Camera& camera)
 
             ++numInstance_;
         }
+
         ++particleIterator;
+        ++coordIterator;
     }
 
 

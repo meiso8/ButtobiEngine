@@ -33,7 +33,10 @@ GameScene::GameScene() {
     skyDome_ = std::make_unique <Skydome>();
     // パーティクル
     deathParticles_ = std::make_unique < DeathParticles>();
-    particle_ = std::make_unique<ParticleManager>();
+    particle_ = std::make_unique<ChargeParticle>();
+    particle_->Create(Texture::GetHandle(Texture::PARTICLE));
+    particle_->useBillboard_ = true;
+
     // カメラ操作
     cameraController_ = std::make_unique <CameraController>();
 
@@ -69,7 +72,7 @@ void GameScene::Initialize() {
 	collisionManager_->SetIsScoreUp(uiManager_->GetIsScorePointer());
 	collisionManager_->SetJuiceMeter(uiManager_->GetJuiceMeter());
 
-    Vector3 playerPosition = { 0.0f, 1.0f, 0.0f };
+    Vector3 playerPosition = { 0.0f, 10.0f, 0.0f };
     // 自キャラの初期化 //ここはmainCamera
     player_->Initialize(*camera_, playerPosition);
 
@@ -77,8 +80,7 @@ void GameScene::Initialize() {
 
     deathParticles_->Initialize(playerPosition);
 
-    particle_->Initialize(Texture::GetHandle(Texture::PARTICLE));
-    particle_->useBillboard_ = true;
+
     particle_->emitter_.cont = 3;
 
     // カメラ操作の初期化
@@ -210,14 +212,34 @@ void GameScene::CheckAllCollisions() {
 
 #pragma endregion
 
+#pragma region // 自キャラと平面の当たり判定
+    Sphere playerSphere = player_->GetSphere();
+    for (uint32_t i = 0; i < Stage::kMaxPlane; i++) {
+		Plane stagePlane = stage_->GetPlane(i);
+        if (IsCollision(playerSphere, stagePlane)) {
+            player_->OnCollision(stagePlane);
+        }
+    }
+#pragma endregion
+    
+#pragma region // 自キャラとOBBの当たり判定
+    for (uint32_t i = 0; i < Stage::kMaxOBB; i++) {
+		OBB stageOBB = stage_->GetOBB(i);
+        if (IsCollision(stageOBB, playerSphere)) {
+            player_->OnCollision(stageOBB);
+        }
+    }
+#pragma endregion
+
 #pragma region // 敵キャラと平面の当たり判定
     for (auto& enemy : enemies_) {
         if (!enemy)
             continue;
-        Sphere sphere = enemy->GetSphere();
+        Sphere enemySphere = enemy->GetSphere();
         for (uint32_t i = 0; i < Stage::kMaxPlane; i++) {
-            if (IsCollision(sphere, stage_->GetPlane(i))) {
-                enemy->OnCollision(stage_->GetPlane(i));
+			Plane stagePlane = stage_->GetPlane(i);
+            if (IsCollision(enemySphere, stagePlane)) {
+                enemy->OnCollision(stagePlane);
             }
         }
     }
@@ -227,10 +249,11 @@ void GameScene::CheckAllCollisions() {
     for (auto& enemy : enemies_) {
         if (!enemy)
             continue;
-        Sphere sphere = enemy->GetSphere();
+        Sphere enemySphere = enemy->GetSphere();
         for (uint32_t i = 0; i < Stage::kMaxOBB; i++) {
-            if (IsCollision(stage_->GetOBB(i), sphere)) {
-                enemy->OnCollision(stage_->GetOBB(i));
+			OBB stageOBB = stage_->GetOBB(i);
+            if (IsCollision(stageOBB, enemySphere)) {
+                enemy->OnCollision(stageOBB);
             }
         }
     }
@@ -272,8 +295,7 @@ void GameScene::Draw() {
     // 天球の描画
     skyDome_->Draw(*currentCamera_);
 
-    // 地形の描画
-    stage_->Draw(*currentCamera_);
+
 
     // 自キャラの描画
     player_->Draw(*currentCamera_);
@@ -291,12 +313,16 @@ void GameScene::Draw() {
         deathParticles_->Draw(*currentCamera_);
     }
 
+
+    // 地形の描画
+    stage_->Draw(*currentCamera_);
+
+
     //プレイヤーがチャージしているときにパーティクルを描画
     if (player_->IsCharge()) {
         particle_->Draw(kBlendModeAdd);
 
     }
-
 
     uiManager_->Draw();
 }
