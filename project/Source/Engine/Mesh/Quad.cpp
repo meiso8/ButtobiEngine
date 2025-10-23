@@ -9,7 +9,7 @@ QuadMesh::~QuadMesh() {
     Finalize();
 }
 
-void QuadMesh::Create(uint32_t& textureHandle)
+void QuadMesh::Create(uint32_t textureHandle)
 {
     commandList_ = DirectXCommon::GetCommandList();
     modelConfig_ = ModelConfig::GetInstance();

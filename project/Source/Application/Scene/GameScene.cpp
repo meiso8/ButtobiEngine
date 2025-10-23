@@ -44,6 +44,9 @@ GameScene::GameScene() {
     uiManager_ = std::make_unique < UIManager>();
 
     stage_ = std::make_unique <Stage>();
+
+    //力の矢印
+    forceArrow_ = std::make_unique<Arrow>();
 }
 
 GameScene::~GameScene() {
@@ -95,6 +98,9 @@ void GameScene::Initialize() {
     // 地形
     stage_->Initialize();
 
+    //力の矢印
+    forceArrow_->Initialize();
+
     player_->InitializeLife(uiManager_->GetMaxLife());
 
     isGameClear = false;
@@ -141,6 +147,9 @@ void GameScene::Update() {
     }
 
     uiManager_->SetLife(player_->GetLife());
+
+    //力の矢印
+    forceArrow_->Update(player_->KickArea(),player_->GetChargeTimer(),player_->GetWorldTransform().rotate_.y);
 
     // デスパーティクルの更新処理
     if (deathParticles_) {
@@ -315,7 +324,7 @@ void GameScene::Draw() {
         deathParticles_->Draw(*currentCamera_);
     }
 
-
+    forceArrow_->Draw(*currentCamera_);
     // 地形の描画
     stage_->Draw(*currentCamera_);
 
@@ -327,6 +336,7 @@ void GameScene::Draw() {
     }
 
     uiManager_->Draw();
+
 }
 void GameScene::Debug() {
     player_->Debug();

@@ -113,7 +113,7 @@ public:
 	Vector3 GetKickForce() const { return kickForce_; };
 	//キックする場所
 	Vector3 KickArea();
-
+	float GetChargeTimer()const { return chargeTimer_; }
 	//ImGUi用
 	void Debug();
 private:

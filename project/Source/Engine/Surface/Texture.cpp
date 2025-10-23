@@ -26,6 +26,7 @@ void Texture::LoadAllTexture() {
 	handle_[JUICENUMBER] = TextureManager::Load("Resources/Textures/UI/JuiceNumber.png");
 	handle_[JUICECOUNT] = TextureManager::Load("Resources/Textures/UI/JuiceCount.png");
 	handle_[PARTICLE] = TextureManager::Load("Resources/Textures/particle.png");
+	handle_[ARROW] = TextureManager::Load("Resources/Textures/arrow.png");
 }
 
 uint32_t Texture::AddTextureHandle(const std::string& filePath) {

@@ -10,6 +10,7 @@
 #include "../Stage.h"
 #include <vector>
 #include<list>
+#include"Arrow.h"
 
 struct Plane;
 struct OBB;
@@ -25,7 +26,7 @@ public:
     /// @brief コンストラクタ
     GameScene();
 
-	/// @brief デフォルトデストラクタ
+    /// @brief デフォルトデストラクタ
     ~GameScene() override;
 
     // 初期化
@@ -51,7 +52,7 @@ private:
     // 敵キャラリスト
     std::list<std::unique_ptr<Enemy>> enemies_;
 
-	// 敵出現待機フラグとタイマー
+    // 敵出現待機フラグとタイマー
     bool isWaitingToPop_ = false;
     int32_t waitToPopTimer_ = 0;
 
@@ -67,9 +68,10 @@ private:
 
     // 地形
     std::unique_ptr <Stage> stage_ = nullptr;
+    std::unique_ptr <Arrow> forceArrow_ = nullptr;
 
-	// スコア
-	uint32_t score_ = 0;
+    // スコア
+    uint32_t score_ = 0;
 
     // UIマネージャー
     std::unique_ptr <UIManager> uiManager_ = nullptr;

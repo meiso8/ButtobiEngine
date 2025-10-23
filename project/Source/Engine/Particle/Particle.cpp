@@ -158,9 +158,9 @@ void ParticleManager::Finalize()
         materialResource_ = nullptr;
     }
 
-    if (instancingResource) {
+    if (instancingResource != nullptr ) {
         instancingResource->Unmap(0, nullptr);
-
+        instancingResource = nullptr;
     }
 }
 
