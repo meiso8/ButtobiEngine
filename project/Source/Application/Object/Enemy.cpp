@@ -98,7 +98,7 @@ void Enemy::Draw(Camera &camera) {
 	model_->Draw(camera, worldTransform_.matWorld_, MaterialResource::LIGHTTYPE::HALF_L);
 }
 
-AABB Enemy::GetAABB() {
+AABB Enemy::GetAABB() const {
 	Vector3 worldPos = GetWorldPosition();
 	AABB aabb = {
 		.min = { worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kWidth / 2.0f },
@@ -107,7 +107,7 @@ AABB Enemy::GetAABB() {
 	return aabb;
 }
 
-Sphere Enemy::GetSphere() { return Sphere{ .center = GetWorldPosition(), .radius = kRadius }; }
+Sphere Enemy::GetSphere() const { return Sphere{ .center = GetWorldPosition(), .radius = kRadius }; }
 
 Vector3 Enemy::GetWorldPosition() const { return { worldTransform_.matWorld_.m[3][0],worldTransform_.matWorld_.m[3][1],worldTransform_.matWorld_.m[3][2] }; }
 
