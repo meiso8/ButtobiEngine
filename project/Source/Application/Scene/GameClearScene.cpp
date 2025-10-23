@@ -40,7 +40,7 @@ void GameClearScene::Initialize() {
 	collisionManager_ = std::make_unique<CollisionManager>();
 
 	clearSprite_ = std::make_unique<Sprite>();
-	clearSprite_->Create(Texture::GetHandle(Texture::GAME_OVER),{640.0f-480.0f,360.0f- 96.0f },{960.0f,192.0f});
+	clearSprite_->Create(Texture::GetHandle(Texture::CLEAR),{640.0f-480.0f,96.0f },{960.0f,192.0f});
 
 	isRenderSprite_ = false;
 	subtractWaitToPopTimer_ = 60;
