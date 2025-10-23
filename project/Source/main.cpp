@@ -1,5 +1,4 @@
 #include"MyEngine.h"
-#include"SampleScene.h"
 #include"GameScene.h"
 #include"TitleScene.h"
 #include"GameClearScene.h"
@@ -32,7 +31,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         kGameScene,
         kGameClearScene,
         kGameOverScene,
-        kSampleScene,
     };
 
     const char* sceneName[] = {
@@ -40,7 +38,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
        "GameScene",
        "GameClearScene",
        "GameOverScene",
-       "SampleScene"
     };
 
     std::vector<std::unique_ptr<SceneManager>> scenes;
@@ -52,11 +49,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     scenes.push_back(std::make_unique < GameClearScene>());
     // ゲームオーバーシーンの生成
     scenes.push_back(std::make_unique<GameOverScene>());
-    //サンプルシーンの生成
-    scenes.push_back(std::make_unique<SampleScene>());
 
     //シーンのインデックス
-    int sceneIndex = kGameScene;
+    int sceneIndex = kTitleScene;
 #ifdef _DEBUG
     //シーンのインデックス
     sceneIndex = kGameScene;

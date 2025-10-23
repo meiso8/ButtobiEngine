@@ -260,8 +260,7 @@ void GameScene::Draw() {
     // 天球の描画
     skyDome_->Draw(*currentCamera_);
 
-    // 地形の描画
-    stage_->Draw(*currentCamera_);
+
 
     // 自キャラの描画
     player_->Draw(*currentCamera_);
@@ -279,12 +278,16 @@ void GameScene::Draw() {
         deathParticles_->Draw(*currentCamera_);
     }
 
+
+    // 地形の描画
+    stage_->Draw(*currentCamera_);
+
+
     //プレイヤーがチャージしているときにパーティクルを描画
     if (player_->IsCharge()) {
         particle_->Draw(kBlendModeAdd);
 
     }
-
 
     uiManager_->Draw();
 }

@@ -191,7 +191,7 @@ void Player::Initialize(Camera& camera, const Vector3& position) {
 
     objectColor_ = { 1.0f,1.0f,1.0f,1.0f };
 
-    chargeTimer_ = 1.0f;
+    chargeTimer_ = 100.0f;
 
 #ifdef _DEBUG
     // AABBのデバッグ描画の生成と初期化
@@ -287,7 +287,7 @@ void Player::InputAttack() {
 
         //チャージを加算する
         if (chargeTimer_ < kMaxChargeTime) {
-            chargeTimer_ += 10;
+            chargeTimer_ += 50;
         }
 
         break;
@@ -805,5 +805,5 @@ void Player::Debug() {
 void Player::ResetAttack() {
     isAttack_ = false;
     kickForce_ = GetForward() * chargeTimer_;
-    chargeTimer_ = 1.0f;
+    chargeTimer_ = 100.0f;
 }

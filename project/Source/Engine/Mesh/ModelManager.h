@@ -6,8 +6,8 @@ class ModelManager
 private:
 public:
     enum MODEL_HANDLE {
-        PLAYER,
 
+        //プレイヤー
         HEAD,
         BODY,
         LEFTARM,

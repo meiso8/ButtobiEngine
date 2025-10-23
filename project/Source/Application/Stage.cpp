@@ -16,11 +16,6 @@ void Stage::Initialize() {
 
 	// ワールド変換の初期化
 	worldTransform_.Initialize();
-	worldTransform_.scale_ = { 100.0f, 100.0f, 100.0f };
-	worldTransform_.rotate_ = {};
-	worldTransform_.translate_ = { 0.0f,30.0f,0.0f };
-	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotate_, worldTransform_.translate_);
-
 	WorldTransformUpdate(worldTransform_);
 
 #ifdef _DEBUG
@@ -55,7 +50,7 @@ void Stage::Initialize() {
 	SetAxis({ std::numbers::pi_v<float> / 4.0f, 0.0f, 0.0f }, *obbs_[3]);
 }
 void Stage::Update() {
-	// ワールド変換の更新
+	//// ワールド変換の更新
 	// worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotate_, worldTransform_.translate_);
 	// WorldTransformUpdate(worldTransform_);
 
@@ -80,10 +75,10 @@ void Stage::Update() {
 
 void Stage::Draw(Camera &camera) {
 	// 3Dモデル描画前処理
-	// model_->PreDraw(BlendMode::kBlendModeNone);
+	 model_->PreDraw(BlendMode::kBlendModeNormal);
 	
 	// 3Dモデルを描画
-	// model_->Draw(camera, worldTransform_.matWorld_);
+	 model_->Draw(camera, worldTransform_.matWorld_);
 
 #ifdef _DEBUG
 	// 平面のデバッグ描画
