@@ -81,9 +81,9 @@ public:
 	/// @return ワールド座標
 	Vector3 GetWorldPosition() const;
 
-	/// @brief AABBの取得
+	/// @brief 蹴る場所のAABBの取得
 	/// @return AABB
-	AABB GetAABB() const;
+	AABB GetKickAreaAABB();
 
 	/// @brief 球の取得
 	/// @return 球
@@ -111,6 +111,8 @@ public:
 	/// @brief キック力を取得
 	/// @return キック力
 	Vector3 GetKickForce() const { return kickForce_; };
+	//キックする場所
+	Vector3 KickArea();
 
 	//ImGUi用
 	void Debug();
@@ -130,13 +132,14 @@ private:
 	static inline const float kMoveAmount = 0.8f;
 	// 重力加速度（下方向）
 	static inline const float kGravityAcceleration = 9.8f;
-	// キャラクターの当たり判定サイズ
-	static inline const float kWidth = 2.0f;
+	// キャラクターキックｄの当たり判定サイズ
+	static inline const float kWidth = 4.0f;
 	static inline const float kHeight = 4.0f;
+	// キャラクターHPの当たり判定サイズ
 	static inline const float kRadius = 2.0f;
 
 	// チャージ最大時間
-	static inline constexpr float kMaxChargeTime = 10000.0f;
+	static inline constexpr float kMaxChargeTime = 5000.0f;
 
 	AttackPhase attackPhase_ = AttackPhase::kNone;
 

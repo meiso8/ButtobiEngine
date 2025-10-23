@@ -198,7 +198,7 @@ void GameScene::CheckAllCollisions() {
 
     AABB aabb1, aabb2;
 
-    aabb1 = player_->GetAABB();
+    aabb1 = player_->GetKickAreaAABB();
 
     for (auto& enemy : enemies_) {
         aabb2 = enemy->GetAABB();
