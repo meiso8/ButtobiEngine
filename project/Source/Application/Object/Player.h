@@ -132,8 +132,8 @@ private:
 	static inline const float kGravityAcceleration = 9.8f;
 	// キャラクターの当たり判定サイズ
 	static inline const float kWidth = 2.0f;
-	static inline const float kHeight = 2.0f;
-	static inline const float kRadius = 1.0f;
+	static inline const float kHeight = 4.0f;
+	static inline const float kRadius = 2.0f;
 
 	// チャージ最大時間
 	static inline constexpr float kMaxChargeTime = 100000.0f;
