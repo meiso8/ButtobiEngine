@@ -163,6 +163,6 @@ public:
 	uint32_t* GetComboPointer() { return &Combo_; }
 	float* GetComboTimerPtr() { return &ComboTimer_; }
 	bool* GetIsScorePointer() { return &isScoreUP_; }
-	bool GetTimer() { return GameTime_; };
+	float GetTimer() { return GameTime_; };
 	void SetIsUpdateComboTimer(const bool& isUpdateComboTimer) { isUpdateComboTimer_ = isUpdateComboTimer; };
 };

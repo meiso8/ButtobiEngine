@@ -113,6 +113,17 @@ void UIManager::Initialize() {
 	JuiceSprite->Update();
 	
 	GameTime_ = MaxGameTime_;
+	Life_ = MaxLife_;
+	Score_ = 0;
+	Combo_ = 0;
+	ComboBonus_ = 1.0f;
+	speed_ = 0;
+	speedBonus_ = 1.0f;
+    JuiceCount = 0;
+	JuiceBonus_ = 0.0f;
+	for (int i = 0; i < MaxLife_; i++) {
+		lifeSprites[i].SetColor({1, 1, 1, 1});
+    }
 }
 
 void UIManager::Update() {
