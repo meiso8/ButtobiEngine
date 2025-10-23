@@ -33,7 +33,7 @@ void Enemy::Initialize(const Vector3 &position) {
 
 	// 剛体の生成
 	rigidBody_ = std::make_unique<RigidBody>();
-	rigidBody_->Initialize(1.0f, kWidth / 2.0f);
+	rigidBody_->Initialize(1.0f, kRadius);
 
 #ifdef _DEBUG
 	// AABBのデバッグ描画の生成と初期化
@@ -100,18 +100,14 @@ void Enemy::Draw(Camera &camera) {
 
 AABB Enemy::GetAABB() {
 	Vector3 worldPos = GetWorldPosition();
-	AABB aabb;
-	aabb.min = { worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kWidth / 2.0f };
-	aabb.max = { worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kWidth / 2.0f };
+	AABB aabb = {
+		.min = { worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kWidth / 2.0f },
+		.max = { worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kWidth / 2.0f }
+	};
 	return aabb;
 }
 
-Sphere Enemy::GetSphere() {
-	Sphere sphere;
-	sphere.center = GetWorldPosition();
-	sphere.radius = kWidth / 2.0f;
-	return sphere;
-}
+Sphere Enemy::GetSphere() { return Sphere{ .center = GetWorldPosition(), .radius = kRadius }; }
 
 Vector3 Enemy::GetWorldPosition() const { return { worldTransform_.matWorld_.m[3][0],worldTransform_.matWorld_.m[3][1],worldTransform_.matWorld_.m[3][2] }; }
 
@@ -163,7 +159,7 @@ void Enemy::OnCollision(const OBB &obb) {
 	Vector3 contactPoint = ClosestPoint(GetSphere().center, obb);		// 球の中心から最も近い点を取得
 	Vector3 normal = Normalize(GetSphere().center - contactPoint);		// 法線ベクトルの計算
 	float reflected = Dot(rigidBody_->GetVelocity() * 60.0f, normal);	// 反射ベクトルの計算
-	
+
 	// 貫入していない場合は処理を抜ける
 	if (reflected > 0.0f) {
 		return;

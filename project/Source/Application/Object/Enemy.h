@@ -110,6 +110,7 @@ private:
 	// キャラクターの当たり判定サイズ
 	static inline const float kWidth = 2.0f;
 	static inline const float kHeight = 2.0f;
+	static inline const float kRadius = 1.0f;
 	Vector4 color_;
 	// 剛体
 	std::unique_ptr<RigidBody> rigidBody_ = nullptr;
