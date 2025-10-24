@@ -133,7 +133,7 @@ Sphere Enemy::GetSphere() const { return Sphere{ .center = GetWorldPosition(), .
 
 Vector3 Enemy::GetWorldPosition() const { return { worldTransform_.matWorld_.m[3][0],worldTransform_.matWorld_.m[3][1],worldTransform_.matWorld_.m[3][2] }; }
 
-void Enemy::OnCollision(Player* player, FlashParticle* particle) {
+void Enemy::OnCollision(Player* player) {
 
     color_ = { 0.5f, 0.5f, 0.0f, 1.0f };
 
@@ -149,8 +149,6 @@ void Enemy::OnCollision(Player* player, FlashParticle* particle) {
         //キック力を初期化
         player->InitKickForce();
         Sound::PlaySE(Sound::FRUIT_FALL);
-        particle->emitter_.transform.translate = GetWorldPosition();
-        particle->EmitParticle(false, { 2.0f,2.0f,2.0f }, { 1.0f, 1.0f, 1.0f, 1.0f });
 
     }
 

@@ -33,7 +33,7 @@ SphericalCoordinate ChargeParticle::MakeNewSphericalCoordinate()
 void ChargeParticle::EmitParticle(const bool& isRandom, const Vector3& scale, const Vector4& color)
 {
     for (uint32_t count = 0; count < emitter_.cont; ++count) {
-        particles.push_back(MakeNewParticle(isRandom,emitter_.transform.translate, scale, color));
+        particles.push_back(MakeNewParticle(isRandom, emitter_.transform.translate, scale, color));
         sphericalCoordinates.push_back(MakeNewSphericalCoordinate());
     }
 
@@ -66,10 +66,16 @@ void ChargeParticle::Update(Camera& camera)
                 coordIterator->radius = 5.0f;
             }
 
-     
+
             IsCollisionFieldArea(*particleIterator);
 
             particleIterator->transform.translate = emitter_.transform.translate + TransformCoordinate(*coordIterator);
+
+            float time = ((*particleIterator).currentTime / (*particleIterator).lifeTime);
+
+            particleIterator->transform.scale.x = time;
+            particleIterator->transform.scale.y = time;
+            particleIterator->transform.scale.z = time;
 
             if (useBillboard_) {
                 UpdateWorldMatrixForBillBord(*particleIterator);
@@ -84,7 +90,7 @@ void ChargeParticle::Update(Camera& camera)
             instancingData[numInstance_].World = worldMatrix;
             instancingData[numInstance_].color = (*particleIterator).color;
 
-            float alpha = 1.0f - ((*particleIterator).currentTime / (*particleIterator).lifeTime);
+            float alpha = 1.0f - time;
 
             instancingData[numInstance_].color.w = alpha;
 
