@@ -45,6 +45,18 @@ Vector3 ClosestPoint(const Vector3 &point, const AABB &aabb);
 /// @return 最近接点
 Vector3 ClosestPoint(const Vector3 &point, const OBB &obb);
 
+/// @brief 点とAABBの衝突面法線を求める
+/// @param point 点
+/// @param aabb AABB
+/// @return 衝突面法線
+Vector3 Normal(const Vector3 &point, const AABB &aabb);
+
+/// @brief 点とOBBの衝突面法線を求める
+/// @param point 点
+/// @param obb OBB
+/// @return 衝突面法線
+Vector3 Normal(const Vector3 &point, const OBB &obb);
+
 /// @brief 点と平面の距離を求める
 /// @param point 点
 /// @param plane 平面

@@ -51,7 +51,11 @@ Vector3 Normalize(const Vector3& v) {
         return { 0.0f, 0.0f, 0.0f };
     }
 
-};
+}
+
+bool IsZero(const Vector3 &v) {
+	return (v.x == 0.0f) && (v.y == 0.0f) && (v.z == 0.0f);
+}
 
 Vector3 operator+(const Vector3& v1, const Vector3& v2) { return Add(v1, v2); }
 Vector3 operator-(const Vector3& v1, const Vector3& v2) { return Subtract(v1, v2); }

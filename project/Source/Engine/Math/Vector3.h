@@ -28,6 +28,11 @@ float Length(const Vector3& v);
 
 Vector3 Normalize(const Vector3& v);
 
+/// @brief ベクトルがゼロベクトルかどうかを判定する関数
+/// @param v ベクトル
+/// @return ゼロベクトルであればtrue、そうでなければfalse
+bool IsZero(const Vector3 &v);
+
 //二項演算子 Binary Operator
 Vector3 operator+(const Vector3& v1, const Vector3& v2);
 Vector3 operator-(const Vector3& v1, const Vector3& v2);
