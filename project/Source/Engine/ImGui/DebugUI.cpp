@@ -195,7 +195,7 @@ void DebugUI::CheckParticle(ParticleManager& particle, const char* label)
 
     if (ImGui::Button("Add　Particle")) {
         Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
-        particle.particles.splice(particle.particles.end(), Emit(emitter, color));
+        particle.particles.splice(particle.particles.end(), Emit(true, emitter, {1.0f,1.0f,1.0f}, color));
     }
 
     int index = 0;

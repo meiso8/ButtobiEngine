@@ -137,7 +137,7 @@ private:
 	static inline const float kRadius = 2.0f;
 
 	// チャージ最大時間
-	static inline constexpr float kMaxChargeTime = 5000.0f;
+	static inline constexpr float kMaxChargeTime = 7500.0f;
 
 	AttackPhase attackPhase_ = AttackPhase::kNone;
 

@@ -15,6 +15,6 @@ public:
     ~ChargeParticle()override;
 
     static SphericalCoordinate MakeNewSphericalCoordinate();
-    void EmitParticle(const Vector4& color)override;
+    void EmitParticle(const bool& isRandom, const Vector3& scale, const Vector4& color)override;
     void Update(Camera& camera)override;
 };

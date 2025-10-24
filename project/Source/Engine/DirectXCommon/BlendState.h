@@ -3,23 +3,7 @@
 #include<d3d12.h>
 #include<stdint.h>
 
-enum BlendMode {
-    //ブレンドなし
-    kBlendModeNone,
-    //通常ブレンド
-    kBlendModeNormal,
-    //加算
-    kBlendModeAdd,
-    //減算
-    kBlendModeSubtract,
-    //乗算
-    kBlendModeMultiply,
-    //スクリーン
-    kBlendModeScreen,
-    //カウント用　利用禁止
-    kCountOfBlendMode,
-};
-
+#include"BlendMode.h"
 
 class BlendState {
 public:

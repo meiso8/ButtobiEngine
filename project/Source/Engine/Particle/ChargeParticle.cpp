@@ -30,10 +30,10 @@ SphericalCoordinate ChargeParticle::MakeNewSphericalCoordinate()
     return sphericalCoordinate;
 }
 
-void ChargeParticle::EmitParticle(const Vector4& color)
+void ChargeParticle::EmitParticle(const bool& isRandom, const Vector3& scale, const Vector4& color)
 {
     for (uint32_t count = 0; count < emitter_.cont; ++count) {
-        particles.push_back(MakeNewParticle(emitter_.transform.translate, color));
+        particles.push_back(MakeNewParticle(isRandom,emitter_.transform.translate, scale, color));
         sphericalCoordinates.push_back(MakeNewSphericalCoordinate());
     }
 

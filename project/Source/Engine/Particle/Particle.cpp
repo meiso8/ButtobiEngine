@@ -11,15 +11,40 @@ using namespace  Microsoft::WRL;
 
 ID3D12GraphicsCommandList* ParticleManager::commandList_ = nullptr;
 
-std::list<Particle> Emit(const Emitter& emitter, const Vector4& color)
+std::list<Particle> Emit(const bool& isRandom, const Emitter& emitter, const Vector3& scale, const Vector4& color)
 {
     std::list<Particle>particles;
     for (uint32_t count = 0; count < emitter.cont; ++count) {
-        particles.push_back(ParticleManager::MakeNewParticle(emitter.transform.translate, color));
+        particles.push_back(MakeNewParticle(isRandom, emitter.transform.translate, scale, color));
     }
     return particles;
 
 }
+
+Particle MakeNewParticle(const bool& isRandom, const Vector3& translate, const Vector3& scale, const Vector4& color)
+{
+    Random::SetMinMax(-1.0f, 1.0f);
+    Particle particle;
+    particle.transform.scale = scale;
+    particle.transform.rotate = { 0.0f,0.0f,0.0f };
+    if (isRandom) {
+        Vector3 randomTranslate{ Random::Get(), Random::Get(), Random::Get() };
+        particle.transform.translate = randomTranslate + translate;
+    } else {
+        particle.transform.translate = translate;
+    }
+
+    particle.velocity = { Random::Get(), Random::Get(), Random::Get() };
+
+    particle.color = color;
+    Random::SetMinMax(1.0f, 3.0f);
+    particle.lifeTime = Random::Get();
+    particle.currentTime = 0;
+
+    return particle;
+}
+
+
 
 ParticleManager::~ParticleManager()
 {
@@ -47,32 +72,15 @@ void ParticleManager::Create(uint32_t textureHandle, int modelHandle)
 
 }
 
-Particle ParticleManager::MakeNewParticle(const Vector3& translate, const Vector4& color)
-{
-    Random::SetMinMax(-1.0f, 1.0f);
-    Particle particle;
-    particle.transform.scale = { 0.125f,0.125f,0.125f };
-    particle.transform.rotate = { 0.0f,0.0f,0.0f };
-    Vector3 randomTranslate{ Random::Get(), Random::Get(), Random::Get() };
-    particle.transform.translate = randomTranslate + translate;
-    particle.velocity = { Random::Get(), Random::Get(), Random::Get() };
-
-    particle.color = color;
-    Random::SetMinMax(1.0f, 3.0f);
-    particle.lifeTime = Random::Get();
-    particle.currentTime = 0;
 
 
-    return particle;
-}
-
-void ParticleManager::TimerUpdate(const Vector4 color)
+void ParticleManager::TimerUpdate(const bool& isRandom, const Vector3& scale, const Vector4& color)
 {
     emitter_.frequencyTime += kDeltaTime;
 
     if (emitter_.frequency <= emitter_.frequencyTime) {
         emitter_.frequencyTime -= emitter_.frequency;
-        EmitParticle(color);
+        EmitParticle(isRandom, scale, color);
     }
 }
 
@@ -105,7 +113,7 @@ void ParticleManager::Update(Camera& camera)
 
             Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
 
-     
+
             instancingData[numInstance_].WVP = worldViewProjectionMatrix;
             instancingData[numInstance_].World = worldMatrix;
             instancingData[numInstance_].color = (*particleIterator).color;
@@ -123,10 +131,11 @@ void ParticleManager::Update(Camera& camera)
 
 }
 
-void ParticleManager::EmitParticle(const Vector4& color)
-{
-    particles.splice(particles.end(), Emit(emitter_, color));
 
+
+void ParticleManager::EmitParticle(const bool& isRandom, const Vector3& scale, const Vector4& color)
+{
+    particles.splice(particles.end(), Emit(isRandom, emitter_, scale, color));
 }
 
 void ParticleManager::Draw(uint32_t blendMode)
@@ -158,7 +167,7 @@ void ParticleManager::Finalize()
         materialResource_ = nullptr;
     }
 
-    if (instancingResource != nullptr ) {
+    if (instancingResource != nullptr) {
         instancingResource->Unmap(0, nullptr);
         instancingResource = nullptr;
     }

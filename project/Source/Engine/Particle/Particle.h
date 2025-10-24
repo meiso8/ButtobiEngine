@@ -39,9 +39,8 @@ struct ParticleForGPU {
     Vector4 color;
 };
 
-std::list<Particle> Emit(const Emitter& emitter, const Vector4& color);
-
-
+std::list<Particle> Emit(const bool& isRandom, const Emitter& emitter, const Vector3& scale = { 1.0f,1.0f,1.0f }, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
+Particle MakeNewParticle(const bool& isRandom, const Vector3& translate, const Vector3& scale = { 1.0f,1.0f,1.0f }, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
 
 class ParticleManager
 {
@@ -78,16 +77,19 @@ protected:
     Matrix4x4 worldMatrix;
 
 public:
-    static Particle MakeNewParticle(const Vector3& translate, const Vector4& color);
     virtual ~ParticleManager();
+    void Create(uint32_t textureHandle, int modelHandle = -1);
+
     virtual void Update(Camera& camera);
-    virtual void EmitParticle(const Vector4& color);
+    virtual void EmitParticle(const bool& isRandom, const Vector3& scale, const Vector4& color);
+    void TimerUpdate(const bool& isRandom, const Vector3& scale, const Vector4& color);
+
     void Draw(uint32_t blendMode = BlendMode::kBlendModeAdd);
     void Finalize();
-    void Create(uint32_t textureHandle, int modelHandle = -1);
+
+
     void InitEmitter();
     void InitAccelerationField();
-    void TimerUpdate(const Vector4 color);
 
 protected:
     void CreateModelData(const uint32_t& textureHandle, const int& modelHandle);
