@@ -86,7 +86,7 @@ private:
 
     bool isGameOver = false;
     bool isGameClear = false;
-
+    uint32_t sceneChangeTimer_ = 0;
 
 
 
@@ -99,4 +99,5 @@ private:
     void UpdateCamera();
     void CreateParticleMesh();
     void UpdateParticle();
+    void UpdateSceneChangeTimer();
 };

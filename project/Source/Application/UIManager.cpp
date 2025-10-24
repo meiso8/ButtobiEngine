@@ -352,6 +352,7 @@ void UIManager::Debug()
     ImGui::Begin("UI");
     ImGui::SliderFloat("ComboTimer", &ComboTimer_, 0.0f, 100.0f);
     ImGui::Checkbox("UpdateTimer", &isUpdateComboTimer_);
+    ImGui::SliderFloat("GameTimer", &GameTime_,0.0f,120.0f);
     ImGui::Text("Combo : %d MaxCombo : %d ", Combo_, MaxCombo_);
 
     ImGui::End();

@@ -34,10 +34,10 @@ GameScene::GameScene() {
 
     // 天球の生成
     skyDome_ = std::make_unique <Skydome>();
-   
+
     // パーティクル
     CreateParticleMesh();
- 
+
     // カメラ操作
     cameraController_ = std::make_unique <CameraController>();
 
@@ -108,6 +108,7 @@ void GameScene::Initialize() {
 
     isGameClear = false;
     isGameOver = false;
+    sceneChangeTimer_ = 0;
 };
 
 void GameScene::CreateParticleMesh() {
@@ -144,6 +145,14 @@ void GameScene::UpdateParticle()
     particle_->Update(*currentCamera_);
     flashParticle_->Update(*currentCamera_);
     crashParticle_->Update(*currentCamera_);
+}
+
+void GameScene::UpdateSceneChangeTimer()
+{
+    sceneChangeTimer_++;
+    if (sceneChangeTimer_ > 120) {
+        isEndScene_ = true;
+    }
 }
 
 void GameScene::Update() {
@@ -204,13 +213,18 @@ void GameScene::Update() {
     uiManager_->Update();
 
     if (uiManager_->GetTimer() <= 0.0f) {
-        isEndScene_ = true;
-        isGameClear = true;
-    }
-    if (player_->GetLife() <= 0) {
-        isEndScene_ = true;
-        isGameOver = true;
+        if (!isGameClear) {
+            Sound::PlayOriginSE(Sound::ALARM);
+            isGameClear = true;
+        }
+        UpdateSceneChangeTimer();
+    } 
 
+    if (player_->GetLife() <= 0) {
+        if (!isGameOver) {
+            isGameOver = true;
+        }
+        UpdateSceneChangeTimer();
     }
 
     if (isEndScene_) {
@@ -428,6 +442,7 @@ void GameScene::Debug() {
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
     std::function<void()> func = [this]() { SwitchCamera(); };
     DebugUI::Button("ChangeCamera", func);
+
     uint32_t lightType = 0;
     DebugUI::CheckDirectionalLight(lightType);
     DebugUI::CheckParticle(*particle_, "chargeParticles");
