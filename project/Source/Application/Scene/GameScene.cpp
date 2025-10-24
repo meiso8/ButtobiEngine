@@ -166,11 +166,11 @@ void GameScene::Update() {
 
     //プレイヤーがチャージしているときだけ更新
     if (player_->IsCharge()) {
-        particle_->TimerUpdate(true,{0.125f,0.125f,0.125f}, { 1.0f, 1.0f, 0.0f, 1.0f });
+        particle_->TimerUpdate(true, { 0.1f,0.1f,0.1f }, { 1.0f, 1.0f, 0.0f, 1.0f });
         particle_->emitter_.transform.translate = player_->GetWorldPosition();
-        particle_->Update(*currentCamera_);
     }
 
+    particle_->Update(*currentCamera_);
     flashParticle_->Update(*currentCamera_);
 
     // 天球の更新処理
@@ -216,6 +216,24 @@ void GameScene::CheckAllCollisions() {
     // 衝突判定と応答
     collisionManager_->CheckAllCollisions();
 
+#pragma region // 自機HP　と敵キャラの当たり判定
+    for (auto& enemy : enemies_) {
+        // OBBとSphereの当たり判定
+        if (IsCollision(player_->GetHPSphere(), enemy->GetSphere())) {
+    
+            //パーティクルを出現させる
+            if (!player_->GetIsInvincible()) {
+                //無敵時間じゃないときパーティクルを出現する
+                flashParticle_->emitter_.transform.translate = player_->GetWorldPosition();
+                flashParticle_->EmitParticle(false, { 2.0f,2.0f,2.0f }, { 1.0f, 1.0f, 1.0f, 1.0f });
+            }
+
+            // 自キャラ衝突時コールバックを呼び出す
+            player_->OnCollisionHP(enemy.get());
+        }
+    }
+
+
 #pragma region // 矢印と敵キャラの当たり判定
     // 矢印キャラと敵キャラの当たり判定
 
@@ -223,7 +241,13 @@ void GameScene::CheckAllCollisions() {
         // OBBとSphereの当たり判定
         if (IsCollision(forceArrow_->GetKickAreaOBB(), enemy->GetSphere())) {
             // 敵弾の衝突時コールバックを呼び出す
-            enemy->OnCollision(player_.get(),flashParticle_.get());
+            enemy->OnCollision(player_.get());
+
+            //もしプレイヤーがアタックしていたら
+            if (player_->IsAttack()) {
+                flashParticle_->emitter_.transform.translate = enemy->GetWorldPosition();
+                flashParticle_->EmitParticle(false, { 2.0f,2.0f,2.0f }, { 1.0f, 1.0f, 1.0f, 1.0f });
+            }
             // 自キャラ衝突時コールバックを呼び出す
             player_->OnCollision(enemy.get());
 
@@ -337,19 +361,16 @@ void GameScene::Draw() {
     if (player_->IsCharge()) {
         //力を描画
         forceArrow_->Draw(*currentCamera_);
+        //パーティクルを描画
+        particle_->Draw(kBlendModeAdd);
     }
 
     // 地形の描画
     stage_->Draw(*currentCamera_);
 
-    //プレイヤーがチャージしているときにパーティクルを描画
-    if (player_->IsCharge()) {
-        particle_->Draw(kBlendModeAdd);
-    }
 
 
     uiManager_->Draw();
-
 
 }
 void GameScene::Debug() {

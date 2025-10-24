@@ -441,25 +441,36 @@ void Player::Draw(Camera& camera) {
 
 Sphere Player::GetSphere() const { return Sphere{ .center = GetWorldPosition(), .radius = kRadius }; }
 
+Sphere Player::GetHPSphere() const
+{
+    return Sphere{ .center = GetWorldPosition(), .radius = 1.0f };
+}
+
 // 衝突応答
 void Player::OnCollision(const Enemy* enemy) {
+
+    (void)enemy;
+
     if (isAttack_) {
         ResetAttack();
-    } else {
-        if (IsCollision(GetSphere(), enemy->GetSphere())) {
+    } 
+}
+void Player::OnCollisionHP(const Enemy* enemy)
+{
+    (void)enemy;
 
-            if (!isInvincible_) {
-                // 色変え(仮処理)
-                objectColor_ = { 0.0f,0.0f,0.0f,1.0f };
+    //アタックしていないとき
+    if (!isAttack_) {
+        if (!isInvincible_) {
+            // 色変え(仮処理)
+            objectColor_ = { 0.0f,0.0f,0.0f,1.0f };
 
-                life_--;
-                isInvincible_ = true;
-                Sound::PlaySE(Sound::PLAYER_HIT);
-            }
-
+            life_--;
+            isInvincible_ = true;
+            Sound::PlaySE(Sound::PLAYER_HIT);
         }
     }
-};
+}
 
 
 void Player::OnCollision(const Plane& plane) {

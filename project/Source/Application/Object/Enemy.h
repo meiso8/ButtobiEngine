@@ -50,9 +50,9 @@ public:
     /// @return ワールド座標
     Vector3 GetWorldPosition() const override;
 
-    /// @brief プレイヤーとの当たり判定 衝突時にパーティクルを生成する
+    /// @brief プレイヤーとの当たり判定
     /// @param player プレイヤー
-    void OnCollision(Player* player, FlashParticle* particle);
+    void OnCollision(Player* player);
 
     /// @brief 平面との当たり判定
     /// @param plane 平面
