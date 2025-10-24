@@ -49,6 +49,7 @@ void Sound::LoadAllSound()
     handles_[GAME_OVER] = Load("Resources/Sounds/gameOver.mp3");
     handles_[BOUND] = Load("Resources/Sounds/externals/biyon.mp3");
     handles_[FULL_CHARGE] = Load("Resources/Sounds/externals/up.mp3");
+    handles_[ALARM] = Load("Resources/Sounds/externals/alarm.mp3");
 }
 
 void Sound::PlayBGM(const uint32_t index, const float& volumeOffset, const bool& loop)

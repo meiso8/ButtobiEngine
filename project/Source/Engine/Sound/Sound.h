@@ -40,6 +40,7 @@ public:
         GAME_OVER,//ゲームオーバー
         BOUND,//バウンドする
         FULL_CHARGE,//フルチャージ
+        ALARM,//アラーム
         SOUNDS
     };
 
