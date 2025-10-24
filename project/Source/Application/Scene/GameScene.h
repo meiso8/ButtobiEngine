@@ -4,6 +4,7 @@
 #include "DeathParticles.h"
 #include"Particle/ChargeParticle.h"
 #include"Particle/FlashParticle.h"
+#include"Particle/AppleCrashParticle.h"
 #include "Enemy.h"
 #include "../UIManager.h"
 #include "Player.h"
@@ -69,9 +70,8 @@ private:
 
     //パーティクル
     std::unique_ptr <ChargeParticle> particle_ = nullptr;
-
     std::unique_ptr <FlashParticle> flashParticle_ = nullptr;
-
+    std::unique_ptr <AppleCrashParticle> crashParticle_ = nullptr;
 
     // 地形
     std::unique_ptr <Stage> stage_ = nullptr;
@@ -96,4 +96,6 @@ private:
     void PopEnemy();
 
     void UpdateCamera();
+    void CreateParticleMesh();
+    void UpdateParticle();
 };

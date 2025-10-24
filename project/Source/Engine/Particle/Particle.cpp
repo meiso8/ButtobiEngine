@@ -37,7 +37,7 @@ Particle MakeNewParticle(const bool& isRandom, const Vector3& translate, const V
     particle.velocity = { Random::Get(), Random::Get(), Random::Get() };
 
     particle.color = color;
-    Random::SetMinMax(1.0f, 3.0f);
+
     particle.lifeTime = Random::Get();
     particle.currentTime = 0;
 

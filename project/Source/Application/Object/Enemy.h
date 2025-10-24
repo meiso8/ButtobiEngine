@@ -16,7 +16,7 @@ class Camera;
 class RigidBody;
 class AABBRenderer;
 class SphereRenderer;
-class FlashParticle;
+class AppleCrashParticle;
 
 /// @brief 敵
 class Enemy : public Collider {
@@ -85,6 +85,10 @@ public:
     /// @return キックされているならtrue
     bool IsKicked() const override { return isKicked_; };
 
+    /// @brief Particleのポインタをセットする
+    /// @param ptr 
+    void SetParticlePtr(AppleCrashParticle* ptr) { crashParticle_ = ptr; }
+
 #ifdef _DEBUG
     /// @brief 編集
     /// @param label ラベル
@@ -129,4 +133,7 @@ private:
     bool isKicked_ = false;
     //キック継続時間
     uint32_t kickDurationTimer_ = 0;
+    //パーティクルのポインタを取得する
+     AppleCrashParticle* crashParticle_ = nullptr;
+
 };

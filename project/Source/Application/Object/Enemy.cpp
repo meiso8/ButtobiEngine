@@ -11,7 +11,7 @@
 #include <numbers>
 #include <cassert>
 #include"Sound.h"
-#include"Particle/FlashParticle.h"
+#include"Particle/AppleCrashParticle.h"
 
 #ifdef _DEBUG
 #include "../externals/imgui/imgui.h"
@@ -135,7 +135,7 @@ Vector3 Enemy::GetWorldPosition() const { return { worldTransform_.matWorld_.m[3
 
 void Enemy::OnCollision(Player* player) {
 
-    color_ = { 0.5f, 0.5f, 0.0f, 1.0f };
+    color_ = { 1.0f, 1.0f, 0.0f, 1.0f };
 
     if (isKicked_) {
         return;
@@ -210,7 +210,13 @@ void Enemy::OnCollision(const OBB& obb) {
 }
 
 void Enemy::OnCollision() {
+
     isDead_ = true;
+
+    if (crashParticle_ != nullptr) {
+        crashParticle_->emitter_.transform.translate = GetWorldPosition();
+        crashParticle_->EmitParticle(true, { 0.5f,0.5f,0.5f }, { 1.0f, 1.0f, 1.0f, 1.0f });
+    }
 }
 
 Vector3 Enemy::GetVelocity() const { return rigidBody_->GetVelocity(); }
