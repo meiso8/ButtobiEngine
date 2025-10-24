@@ -1,5 +1,6 @@
 #include"FlashParticle.h"
 #include"Camera/Camera.h"
+#include"Camera/SpriteCamera.h"
 
 FlashParticle::~FlashParticle()
 {
@@ -8,8 +9,12 @@ FlashParticle::~FlashParticle()
 
 void FlashParticle::Update(Camera& camera)
 {
-
-    UpdateBillBordMatrix(camera);
+    if (useSpriteCamera_) {
+        useBillboard_ = false;
+        //ビルボードをしない
+    } else {
+        UpdateBillBordMatrix(camera);
+    }
 
     numInstance_ = 0;
 
@@ -32,18 +37,17 @@ void FlashParticle::Update(Camera& camera)
             } else {
                 UpdateWorldMatrix(*particleIterator);
             }
-
-            Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
-
+            if (useSpriteCamera_) {
+                worldViewProjectionMatrix = Multiply(worldMatrix, SpriteCamera::GetViewProjectionMatrix());
+            } else {
+                worldViewProjectionMatrix = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
+            }
 
             instancingData[numInstance_].WVP = worldViewProjectionMatrix;
             instancingData[numInstance_].World = worldMatrix;
             instancingData[numInstance_].color = (*particleIterator).color;
-            float alpha = 1.0f - ((*particleIterator).currentTime / (*particleIterator).lifeTime)*2.0f;
+            float alpha = 1.0f - ((*particleIterator).currentTime / (*particleIterator).lifeTime) * 2.0f;
             instancingData[numInstance_].color.w = alpha;
-
-
-
 
             ++numInstance_;
         }

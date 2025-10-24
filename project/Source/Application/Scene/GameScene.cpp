@@ -65,6 +65,9 @@ void GameScene::Initialize() {
 
     // カメラの初期化
     camera_->Initialize(winWidth, winHeight, Camera::PERSPECTIVE);
+    cameraShakeTimer_ = 30;
+    isShakeCamera_ = false;
+
 #ifdef _DEBUG
     // デバッグカメラ
     debugCamera_->Initialize(winWidth, winHeight);
@@ -175,14 +178,8 @@ void GameScene::Update() {
 
     // 天球の更新処理
     skyDome_->Update();
-
-    // カメラの処理
-    if (!isDebugCameraActive_) {
-        // 行列更新
-        cameraController_->Update();
-    }
-
-    currentCamera_->UpdateMatrix();
+    //カメラの更新処理
+    UpdateCamera();
 
     // 全ての当たり判定を行う
     CheckAllCollisions();
@@ -220,12 +217,14 @@ void GameScene::CheckAllCollisions() {
     for (auto& enemy : enemies_) {
         // OBBとSphereの当たり判定
         if (IsCollision(player_->GetHPSphere(), enemy->GetSphere())) {
-    
+
             //パーティクルを出現させる
             if (!player_->GetIsInvincible()) {
                 //無敵時間じゃないときパーティクルを出現する
                 flashParticle_->emitter_.transform.translate = player_->GetWorldPosition();
                 flashParticle_->EmitParticle(false, { 2.0f,2.0f,2.0f }, { 1.0f, 1.0f, 1.0f, 1.0f });
+                isShakeCamera_ = true;
+                cameraShakeTimer_ = 0;
             }
 
             // 自キャラ衝突時コールバックを呼び出す
@@ -328,6 +327,33 @@ void GameScene::PopEnemy() {
     enemies_.emplace_back(std::move(newEnemy));
     isWaitingToPop_ = true;
     waitToPopTimer_ = 60;
+}
+
+void GameScene::UpdateCamera()
+{
+    if (isShakeCamera_) {
+
+        cameraShakeTimer_++;
+
+        if (cameraShakeTimer_ % 2 == 0) {
+            Random::SetMinMax(-0.25f, 0.25f);
+            camera_->offset_ = { Random::Get() ,Random::Get() };
+        }
+
+        if (cameraShakeTimer_ > 30) {
+            isShakeCamera_ = false;
+        }
+    } else {
+        camera_->offset_ = { 0.0f,0.0f };
+    }
+
+    // カメラの処理
+    if (!isDebugCameraActive_) {
+        // 行列更新
+        cameraController_->Update();
+    }
+
+    currentCamera_->UpdateMatrix();
 }
 
 void GameScene::Draw() {

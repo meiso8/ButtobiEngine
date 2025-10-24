@@ -75,7 +75,7 @@ protected:
     Matrix4x4 backToFrontMatrix;
     Matrix4x4 billboardMatrix;
     Matrix4x4 worldMatrix;
-
+    Matrix4x4 worldViewProjectionMatrix;
 public:
     virtual ~ParticleManager();
     void Create(uint32_t textureHandle, int modelHandle = -1);

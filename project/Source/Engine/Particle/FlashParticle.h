@@ -5,4 +5,5 @@ class FlashParticle :public ParticleManager {
 public:
     ~FlashParticle()override;
     void Update(Camera& camera)override;
+    bool useSpriteCamera_ = false;
 };

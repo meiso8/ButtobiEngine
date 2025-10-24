@@ -84,7 +84,7 @@ void ChargeParticle::Update(Camera& camera)
                 UpdateWorldMatrix(*particleIterator);
             }
 
-            Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
+            worldViewProjectionMatrix = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
 
             instancingData[numInstance_].WVP = worldViewProjectionMatrix;
             instancingData[numInstance_].World = worldMatrix;
