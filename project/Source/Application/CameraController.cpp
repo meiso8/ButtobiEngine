@@ -28,9 +28,9 @@ void CameraController::Update() {
 	float height = 5.0f;
 	behindPos.y += height;
 
-	camera_->translate_ = Easing::EaseOutQuad(camera_->translate_, behindPos, 0.25f);
+	camera_->translate_ = Easing::EaseOutQuad(camera_->translate_, behindPos, 0.5f);
 	camera_->rotate_.x = 0.30f;
-	camera_->rotate_.y = Easing::EaseInQuad(camera_->rotate_.y, targetWorldTransform.rotate_.y, 0.25f);
+	camera_->rotate_.y = Easing::EaseInQuad(camera_->rotate_.y, targetWorldTransform.rotate_.y, 0.75f);
 }
 
 
