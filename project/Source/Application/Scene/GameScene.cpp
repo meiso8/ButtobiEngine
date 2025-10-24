@@ -16,6 +16,8 @@
 constexpr int winWidth = 1280;
 constexpr int winHeight = 720;
 
+
+
 GameScene::GameScene() {
 
     camera_ = std::make_unique<Camera>();
@@ -32,18 +34,10 @@ GameScene::GameScene() {
 
     // 天球の生成
     skyDome_ = std::make_unique <Skydome>();
+   
     // パーティクル
-    deathParticles_ = std::make_unique < DeathParticles>();
-    particle_ = std::make_unique<ChargeParticle>();
-    particle_->Create(Texture::GetHandle(Texture::PARTICLE));
-    particle_->useBillboard_ = true;
-
-
-    flashParticle_ = std::make_unique<FlashParticle>();
-    flashParticle_->Create(Texture::GetHandle(Texture::FLASH_PARTICLE));
-    flashParticle_->useBillboard_ = true;
-
-
+    CreateParticleMesh();
+ 
     // カメラ操作
     cameraController_ = std::make_unique <CameraController>();
 
@@ -94,8 +88,6 @@ void GameScene::Initialize() {
     deathParticles_->Initialize(playerPosition);
 
 
-    particle_->emitter_.cont = 3;
-    flashParticle_->emitter_.cont = 1;
 
     // カメラ操作の初期化
     cameraController_->Initialize(camera_.get());
@@ -117,6 +109,42 @@ void GameScene::Initialize() {
     isGameClear = false;
     isGameOver = false;
 };
+
+void GameScene::CreateParticleMesh() {
+    deathParticles_ = std::make_unique < DeathParticles>();
+    particle_ = std::make_unique<ChargeParticle>();
+    particle_->Create(Texture::GetHandle(Texture::PARTICLE));
+    particle_->useBillboard_ = true;
+    particle_->emitter_.cont = 3;
+
+    flashParticle_ = std::make_unique<FlashParticle>();
+    flashParticle_->Create(Texture::GetHandle(Texture::FLASH_PARTICLE));
+    flashParticle_->useBillboard_ = true;
+    flashParticle_->emitter_.cont = 1;
+
+    crashParticle_ = std::make_unique<AppleCrashParticle>();
+    crashParticle_->Create(Texture::GetHandle(Texture::FLASH_PARTICLE));
+    crashParticle_->useBillboard_ = true;
+    crashParticle_->emitter_.cont = 10;
+}
+
+void GameScene::UpdateParticle()
+{
+    // デスパーティクルの更新処理
+    if (deathParticles_) {
+        deathParticles_->Update();
+    }
+
+    //プレイヤーがチャージしているときだけ更新
+    if (player_->IsCharge()) {
+        particle_->TimerUpdate(true, { 0.1f,0.1f,0.1f }, { 1.0f, 1.0f, 0.0f, 1.0f });
+        particle_->emitter_.transform.translate = player_->GetWorldPosition();
+    }
+
+    particle_->Update(*currentCamera_);
+    flashParticle_->Update(*currentCamera_);
+    crashParticle_->Update(*currentCamera_);
+}
 
 void GameScene::Update() {
     // ここにインゲームの更新処理を書く
@@ -162,19 +190,8 @@ void GameScene::Update() {
     //力の矢印
     forceArrow_->Update(player_->GetWorldPosition(), player_->GetChargeTimer(), player_->GetWorldTransform().rotate_.y);
 
-    // デスパーティクルの更新処理
-    if (deathParticles_) {
-        deathParticles_->Update();
-    }
-
-    //プレイヤーがチャージしているときだけ更新
-    if (player_->IsCharge()) {
-        particle_->TimerUpdate(true, { 0.1f,0.1f,0.1f }, { 1.0f, 1.0f, 0.0f, 1.0f });
-        particle_->emitter_.transform.translate = player_->GetWorldPosition();
-    }
-
-    particle_->Update(*currentCamera_);
-    flashParticle_->Update(*currentCamera_);
+    //パーティクルの更新処理
+    UpdateParticle();
 
     // 天球の更新処理
     skyDome_->Update();
@@ -324,6 +341,7 @@ void GameScene::PopEnemy() {
     };
     Random::SetMinMax(0.0f, 4.0f);
     newEnemy->Initialize(enemyPositions[static_cast<uint32_t>(Random::Get())]);
+    newEnemy->SetParticlePtr(crashParticle_.get());
     enemies_.emplace_back(std::move(newEnemy));
     isWaitingToPop_ = true;
     waitToPopTimer_ = 60;
@@ -356,6 +374,8 @@ void GameScene::UpdateCamera()
     currentCamera_->UpdateMatrix();
 }
 
+
+
 void GameScene::Draw() {
 #ifdef _DEBUG
     // グリッドの描画
@@ -364,7 +384,6 @@ void GameScene::Draw() {
 
     // 天球の描画
     skyDome_->Draw(*currentCamera_);
-
 
     // 自キャラの描画
     player_->Draw(*currentCamera_);
@@ -391,11 +410,12 @@ void GameScene::Draw() {
         particle_->Draw(kBlendModeAdd);
     }
 
+    crashParticle_->Draw(kBlendModeNormal);
+
     // 地形の描画
     stage_->Draw(*currentCamera_);
 
-
-
+    //UI
     uiManager_->Draw();
 
 }

@@ -1,7 +1,7 @@
 #define NOMINMAX // std::maxの置き換えが行われないため
 
 #include "CameraController.h"
-#include "Lerp.h"
+#include "Easing.h"
 #include "Player.h"
 #include <algorithm> // std::max, std::min を使用するために必要
 #include"Camera/Camera.h"
@@ -28,9 +28,9 @@ void CameraController::Update() {
 	float height = 5.0f;
 	behindPos.y += height;
 
-	camera_->translate_ = Lerp(camera_->translate_, behindPos,0.9f);
+	camera_->translate_ = Easing::EaseOutQuad(camera_->translate_, behindPos, 0.25f);
 	camera_->rotate_.x = 0.30f;
-	camera_->rotate_.y = targetWorldTransform.rotate_.y;
+	camera_->rotate_.y = Easing::EaseInQuad(camera_->rotate_.y, targetWorldTransform.rotate_.y, 0.25f);
 }
 
 
