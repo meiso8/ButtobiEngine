@@ -252,10 +252,13 @@ void GameScene::CheckAllCollisions() {
 
 #pragma region // 矢印と敵キャラの当たり判定
     // 矢印キャラと敵キャラの当たり判定
-
+	OBB arrowOBB = forceArrow_->GetKickAreaOBB();
     for (auto& enemy : enemies_) {
+        if(!enemy)
+			continue;
         // OBBとSphereの当たり判定
-        if (IsCollision(forceArrow_->GetKickAreaOBB(), enemy->GetSphere())) {
+        Sphere enemySphere = enemy->GetSphere();
+        if (IsCollision(arrowOBB, enemySphere)) {
             // 敵弾の衝突時コールバックを呼び出す
             enemy->OnCollision(player_.get());
 

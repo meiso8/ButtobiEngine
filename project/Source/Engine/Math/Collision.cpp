@@ -34,7 +34,6 @@ Vector3 ClosestPoint(const Vector3 &point, const AABB &aabb) {
 }
 
 Vector3 ClosestPoint(const Vector3 &point, const OBB &obb) {
-	Vector3 result;
 	Matrix4x4 obbWorldMatrix = {
 		obb.axis[0].x, obb.axis[0].y, obb.axis[0].z, 0.0f,
 		obb.axis[1].x, obb.axis[1].y, obb.axis[1].z, 0.0f,
@@ -43,9 +42,48 @@ Vector3 ClosestPoint(const Vector3 &point, const OBB &obb) {
 	};
 	AABB aabbInOBBLocalSpace{ .min = -obb.halfSizes, .max = obb.halfSizes };
 	Vector3 centerInOBBLocalSpace = CoordinateTransform(point, Inverse(obbWorldMatrix));
-	result = ClosestPoint(centerInOBBLocalSpace, aabbInOBBLocalSpace);
+	Vector3 result = ClosestPoint(centerInOBBLocalSpace, aabbInOBBLocalSpace);
 	result = CoordinateTransform(result, obbWorldMatrix);
 	return result;
+}
+
+Vector3 Normal(const Vector3 &point, const AABB &aabb) {
+	Vector3 closestPoint = ClosestPoint(point, aabb);
+	Vector3 normal = Normalize(closestPoint);
+	if (IsZero(normal)) {
+		Vector3 center = (aabb.min + aabb.max) * 0.5f;
+		Vector3 toMin = point - aabb.min;
+		Vector3 toMax = aabb.max - point;
+		float minDist = std::min({ toMin.x, toMin.y, toMin.z, toMax.x, toMax.y, toMax.z });
+		if (minDist == toMin.x) {
+			normal = { -1.0f, 0.0f, 0.0f };
+		} else if (minDist == toMin.y) {
+			normal = { 0.0f, -1.0f, 0.0f };
+		} else if (minDist == toMin.z) {
+			normal = { 0.0f, 0.0f, -1.0f };
+		} else if (minDist == toMax.x) {
+			normal = { 1.0f, 0.0f, 0.0f };
+		} else if (minDist == toMax.y) {
+			normal = { 0.0f, 1.0f, 0.0f };
+		} else if (minDist == toMax.z) {
+			normal = { 0.0f, 0.0f, 1.0f };
+		}
+	}
+	return normal;
+}
+
+Vector3 Normal(const Vector3 &point, const OBB &obb) {
+	Matrix4x4 obbWorldMatrix = {
+		obb.axis[0].x, obb.axis[0].y, obb.axis[0].z, 0.0f,
+		obb.axis[1].x, obb.axis[1].y, obb.axis[1].z, 0.0f,
+		obb.axis[2].x, obb.axis[2].y, obb.axis[2].z, 0.0f,
+		obb.center.x, obb.center.y, obb.center.z, 1.0f
+	};
+	AABB aabbInOBBLocalSpace{ .min = -obb.halfSizes, .max = obb.halfSizes };
+	Vector3 pointInOBBLocalSpace = CoordinateTransform(point, Inverse(obbWorldMatrix));
+	Vector3 normal = Normal(pointInOBBLocalSpace, aabbInOBBLocalSpace);
+	normal = CoordinateTransform(normal, obbWorldMatrix);
+	return Normalize(normal);
 }
 
 float Distance(const Vector3 &point, const Plane &plane) {

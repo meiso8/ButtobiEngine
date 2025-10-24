@@ -280,6 +280,7 @@ void Player::InputAttack() {
             Sound::Stop(Sound::CHARGE);
             Sound::PlaySE(Sound::ATTACK, 0.0f);
             isAttack_ = true;
+            kickForce_ = GetForward() * chargeTimer_;
         }
 
         //チャージを加算する
