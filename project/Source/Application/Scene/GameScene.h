@@ -48,6 +48,9 @@ public:
 private:
     // カメラ操作
     std::unique_ptr <CameraController> cameraController_ = nullptr;
+    bool isShakeCamera_ = false;
+    uint32_t cameraShakeTimer_ = 0;
+
     // 自キャラ
     std::unique_ptr<Player> player_ = nullptr;
     // 敵キャラリスト
@@ -83,9 +86,14 @@ private:
     bool isGameOver = false;
     bool isGameClear = false;
 
+
+
+
     // 全ての当たり判定を行う
     void CheckAllCollisions();
 
     /// @brief 敵の出現
     void PopEnemy();
+
+    void UpdateCamera();
 };

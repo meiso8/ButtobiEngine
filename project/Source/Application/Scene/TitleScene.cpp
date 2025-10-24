@@ -10,6 +10,8 @@
 #include"TextureManager.h"
 #include"Sprite.h"
 #include"Sound.h"
+#include"Particle/FlashParticle.h"
+#include"Random.h"
 
 TitleScene::TitleScene()
 {
@@ -34,13 +36,22 @@ TitleScene::TitleScene()
 
     spaceTExtureHandle_ = Texture::GetHandle(Texture::SPACE);
     spaceSprite_ = std::make_unique<Sprite>();
-	spaceSprite_->Create(spaceTExtureHandle_, {500, 300}, {300, 300});
+    spaceSprite_->Create(spaceTExtureHandle_, { 500, 300 }, { 300, 300 });
+
+    flashParticle_ = std::make_unique<FlashParticle>();
+    flashParticle_->Create(Texture::GetHandle(Texture::FLASH_PARTICLE));
+
+    flashParticle_->useSpriteCamera_ = true;
+    flashParticle_->emitter_.transform.translate = { 640.0f, 360.0f,0.0f };
+    flashParticle_->emitter_.frequency = 0.01f;
+    flashParticle_->emitter_.cont = 5;
 }
 
 void TitleScene::Initialize() {
 
     isEndScene_ = false;
 
+    sceneChangeTimer_ = 0;
 
 
     camera_->Initialize(1280.0f, 720.0f);
@@ -48,7 +59,7 @@ void TitleScene::Initialize() {
     camera_->UpdateMatrix();
 
     for (uint32_t i = 0; i < 8; i++) {
-    //ぶっ飛びミックスのぶの文字から始める
+        //ぶっ飛びミックスのぶの文字から始める
 
         titleStringWorldTransform[i].Initialize();
         titleStringWorldTransform[i].scale_ = { 1.0f, 1.0f, 1.0f };
@@ -67,39 +78,37 @@ void TitleScene::Initialize() {
     tableWorldTransform.scale_ = { 100.0f, 1.0f, 100.0f };
     tableWorldTransform.translate_ = { 0, -5.0f, 0 };
     WorldTransformUpdate(tableWorldTransform);
-    
+
     appleWorldTransform.Initialize();
     appleWorldTransform.scale_ = { 1.5f, 1.5f, 1.5f };
     appleWorldTransform.translate_ = { 23, -1.5f, -5 };
-	appleWorldTransform.rotate_ = {-1.4f, 0.0f, 0.0f};
+    appleWorldTransform.rotate_ = { -1.4f, 0.0f, 0.0f };
     WorldTransformUpdate(appleWorldTransform);
 
     jInOutPhase_ = JuiceInOutPhase::InJuice;
     IsAnimationEnd = false;
-	iscameraTranslateEnd = false;
+    iscameraTranslateEnd = false;
     selectGameoption_ = GameOption::GameStart;
     gameOption_ = GameOption::None;
     animationPhase_ = AnimationPhase::JInOutP;
     stringAnimationTimer = 0.0f;
 
+    //パーティクルをすべて削除する
+    flashParticle_->particles.clear();
+
 }
 
 void TitleScene::Update() {
-//#ifdef  _DEBUG
-//	if (Input::IsTriggerKey(DIK_SPACE)) {
-//		isEndScene_ = true;
-//	}
-//#endif //  _DEBUG
 
-         //BGMを鳴らす
+    //BGMを鳴らす
     Sound::PlayBGM(Sound::BGM1);
 
     if (!IsAnimationEnd) {
         switch (animationPhase_) {
         case TitleScene::AnimationPhase::JInOutP:
             StringInOutJuiceAnimation();
-			
-			WorldTransformUpdate(appleWorldTransform);
+
+            WorldTransformUpdate(appleWorldTransform);
 
             break;
         case TitleScene::AnimationPhase::Korokoro:
@@ -108,20 +117,20 @@ void TitleScene::Update() {
         default:
             break;
         }
-		
-		appleWorldTransform.rotate_.z += 0.1f;
+
+        appleWorldTransform.rotate_.z += 0.1f;
 
     } else {
-		if (iscameraTranslateEnd) {
-		LoopAnimation();
-        Move();
-		} else {
-			camera_->translate_ = Lerp(camera_->translate_, {camera_->translate_.x, -4,-20},stringAnimationTimer);
-			camera_->UpdateMatrix();
+        if (iscameraTranslateEnd) {
+            LoopAnimation();
+            Move();
+        } else {
+            camera_->translate_ = Lerp(camera_->translate_, { camera_->translate_.x, -4,-20 }, stringAnimationTimer);
+            camera_->UpdateMatrix();
             if (camera_->translate_.z >= -20) {
-            iscameraTranslateEnd = true;
+                iscameraTranslateEnd = true;
             }
-		}
+        }
     }
     for (int i = 0; i < 8; i++) {
         WorldTransformUpdate(titleStringWorldTransform[i]);
@@ -129,23 +138,27 @@ void TitleScene::Update() {
     WorldTransformUpdate(juiceCupWorldTransform);
     stringAnimationTimer += 0.01f;
 
-
-
-
+    //パーティクルの更新
+    flashParticle_->Update(*camera_);
 }
 
 
 void TitleScene::Move() {
 
+
+
     switch (gameOption_) {
     case TitleScene::GameOption::GameStart:
 
-        //if (Input::IsTriggerKey(DIK_SPACE)) {
-
-        //    isEndScene_ = true;
-        //}
-
-        isEndScene_ = true;
+        if (sceneChangeTimer_ < 60) {
+            sceneChangeTimer_++;
+            FlashParticlePop();
+            if (sceneChangeTimer_ % 5 == 0) {
+                Sound::PlaySE(Sound::CRACKER);
+            }
+        } else {
+            isEndScene_ = true;
+        }
 
         break;
     case TitleScene::GameOption::Option:
@@ -296,7 +309,7 @@ TitleScene::~TitleScene()
     appleModel = nullptr;
 
     camera_ = nullptr;
-  
+
 }
 
 
@@ -305,19 +318,19 @@ void TitleScene::StringInOutJuiceAnimation() {
     float pivotOffsetY = juiceCupWorldTransform.translate_.y + 2.0f;
     switch (jInOutPhase_) {
     case TitleScene::JuiceInOutPhase::InJuice:
-  
+
         for (int i = 0; i < 8; i++) {
             titleStringWorldTransform[i].translate_ = EaseIn(stringAnimationTimer, stringInStartPosition[i], stringInEndPosition[i]);
         }
 
-        if (stringAnimationTimer >0.5f) {
+        if (stringAnimationTimer > 0.5f) {
             Sound::PlayOriginSE(Sound::POUR_DRINK);
         }
         if (stringAnimationTimer >= 1.0f) {
             jInOutPhase_ = JuiceInOutPhase::RotateJuice;
             break;
         }
-		appleWorldTransform.translate_.x -= 0.2f;
+        appleWorldTransform.translate_.x -= 0.2f;
         break;
     case TitleScene::JuiceInOutPhase::RotateJuice: {
 
@@ -364,28 +377,28 @@ void TitleScene::StringInOutJuiceAnimation() {
         }
 
         if (juiceCupWorldTransform.rotate_.z >= 0.8f) {
-			stringAnimationTimer = 0.0f;
-			for (int i = 0; i < 8; i++) {
+            stringAnimationTimer = 0.0f;
+            for (int i = 0; i < 8; i++) {
 
-				titleStringWorldTransform[i].translate_ = Lerp(titleStringWorldTransform[i].translate_, stringOutEndPosition[i], stringAnimationTimer);
-				titleStringWorldTransform[i].rotate_.z += 0.05f;
-			}
+                titleStringWorldTransform[i].translate_ = Lerp(titleStringWorldTransform[i].translate_, stringOutEndPosition[i], stringAnimationTimer);
+                titleStringWorldTransform[i].rotate_.z += 0.05f;
+            }
         }
 
         if (juiceCupWorldTransform.rotate_.z >= 1.55f) {
             jInOutPhase_ = JuiceInOutPhase::OutJuice;
-           
+
             break;
         }
-		appleWorldTransform.translate_.x -= 0.2f;
+        appleWorldTransform.translate_.x -= 0.2f;
     }break;
     case TitleScene::JuiceInOutPhase::OutJuice:
 
         for (int i = 0; i < 8; i++) {
 
-			titleStringWorldTransform[i].translate_ = Lerp(titleStringWorldTransform[i].translate_, stringOutEndPosition[i], stringAnimationTimer);
-			titleStringWorldTransform[i].rotate_.z += 0.05f;
-		}
+            titleStringWorldTransform[i].translate_ = Lerp(titleStringWorldTransform[i].translate_, stringOutEndPosition[i], stringAnimationTimer);
+            titleStringWorldTransform[i].rotate_.z += 0.05f;
+        }
 
         camera_->translate_ = Lerp(cameraPositionStart, cameraPositionEnd, stringAnimationTimer);
 
@@ -395,7 +408,7 @@ void TitleScene::StringInOutJuiceAnimation() {
             animationPhase_ = AnimationPhase::Korokoro;
             break;
         }
-		appleWorldTransform.translate_.x -= 0.3f;
+        appleWorldTransform.translate_.x -= 0.3f;
         break;
     default:
         break;
@@ -408,40 +421,55 @@ void TitleScene::StringInOutJuiceAnimation() {
 
 void TitleScene::KorokoroAnimation() {
 
-    
+
 
     camera_->translate_ = Lerp(camera_->translate_, { -15, -3, -15 }, stringAnimationTimer);
     camera_->UpdateMatrix();
-	if (stringAnimationTimer >= 0.75f && (titleStringWorldTransform[0].rotate_.z - static_cast<int>(titleStringWorldTransform[0].rotate_.z) <= 0.05f &&
-	                                      titleStringWorldTransform[0].rotate_.z - static_cast<int>(titleStringWorldTransform[0].rotate_.z) >= -0.05f)) {
-		for (int i = 0; i < 8; i++) {
-        titleStringWorldTransform[i].rotate_.z = 0.0f;
+    if (stringAnimationTimer >= 0.75f && (titleStringWorldTransform[0].rotate_.z - static_cast<int>(titleStringWorldTransform[0].rotate_.z) <= 0.05f &&
+        titleStringWorldTransform[0].rotate_.z - static_cast<int>(titleStringWorldTransform[0].rotate_.z) >= -0.05f)) {
+        for (int i = 0; i < 8; i++) {
+            titleStringWorldTransform[i].rotate_.z = 0.0f;
         }
         IsAnimationEnd = true;
         stringAnimationTimer = 0.0f;
-	} else {
-		for (int i = 0; i < 8; i++) {
+    } else {
+        for (int i = 0; i < 8; i++) {
 
-			titleStringWorldTransform[i].translate_ = Lerp(titleStringWorldTransform[i].translate_, stringOutEndPosition[i], stringAnimationTimer);
-			titleStringWorldTransform[i].rotate_.z += 0.05f;
-		}
+            titleStringWorldTransform[i].translate_ = Lerp(titleStringWorldTransform[i].translate_, stringOutEndPosition[i], stringAnimationTimer);
+            titleStringWorldTransform[i].rotate_.z += 0.05f;
+        }
     }
 }
 void TitleScene::LoopAnimation() {
 
     prerandum = randum;
-	randum = rand() % 8;
+    randum = rand() % 8;
 
-    while(randum==prerandum){
+    while (randum == prerandum) {
 
         randum = rand() % 8;
 
     }
 
     titleStringWorldTransform[randum].translate_ = easeInOutQuart(
-	    {titleStringWorldTransform[randum].translate_.x, 0.0f, titleStringWorldTransform[randum].translate_.z},
-	    {titleStringWorldTransform[randum].translate_.x, 0.0f, titleStringWorldTransform[randum].translate_.z}, stringAnimationTimer);
-	WorldTransformUpdate(titleStringWorldTransform[randum]);
+        { titleStringWorldTransform[randum].translate_.x, 0.0f, titleStringWorldTransform[randum].translate_.z },
+        { titleStringWorldTransform[randum].translate_.x, 0.0f, titleStringWorldTransform[randum].translate_.z }, stringAnimationTimer);
+    WorldTransformUpdate(titleStringWorldTransform[randum]);
+}
+
+void TitleScene::FlashParticlePop()
+{
+
+    Random::SetMinMax(0.0f, 1280.0f);
+    float emitterRandomX = Random::Get();
+    Random::SetMinMax(0.0f, 720.0f);
+    float emitterRandomY = Random::Get();
+    flashParticle_->emitter_.transform.translate = { emitterRandomX, emitterRandomY,-10.0f };
+    Random::SetMinMax(128.0f, 640.0f);
+    float random = Random::Get();
+
+    flashParticle_->TimerUpdate(true, { random,random,1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f });
+
 }
 
 void TitleScene::Draw() {
@@ -452,16 +480,18 @@ void TitleScene::Draw() {
         titleStringModel[i]->Draw(*camera_, titleStringWorldTransform[i].matWorld_);
     }
     juiceCupModel->Draw(*camera_, juiceCupWorldTransform.matWorld_);
-	appleModel->Draw(*camera_,appleWorldTransform.matWorld_);
-	if (iscameraTranslateEnd) {
+    appleModel->Draw(*camera_, appleWorldTransform.matWorld_);
+    if (iscameraTranslateEnd) {
         spaceSprite_->PreDraw();
-    	spaceSprite_->Draw();
+        spaceSprite_->Draw();
     }
+
+    flashParticle_->Draw(BlendMode::kBlendModeNormal);
 }
 bool TitleScene::GetIsEndScene() { return isEndScene_; }
 
 Vector3 TitleScene
 ::easeInOutQuart(const Vector3& start, const Vector3& end, float t) {
-	float e = easeInOutQuart(std::clamp(t, 0.0f, 1.0f));
-	return {start.x + (end.x - start.x) * e, start.y + (end.y - start.y) * e, start.z + (end.z - start.z) * e};
+    float e = easeInOutQuart(std::clamp(t, 0.0f, 1.0f));
+    return { start.x + (end.x - start.x) * e, start.y + (end.y - start.y) * e, start.z + (end.z - start.z) * e };
 }

@@ -111,17 +111,13 @@ void ParticleManager::Update(Camera& camera)
                 UpdateWorldMatrix(*particleIterator);
             }
 
-            Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
-
+            worldViewProjectionMatrix = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
 
             instancingData[numInstance_].WVP = worldViewProjectionMatrix;
             instancingData[numInstance_].World = worldMatrix;
             instancingData[numInstance_].color = (*particleIterator).color;
             float alpha = 1.0f - ((*particleIterator).currentTime / (*particleIterator).lifeTime);
             instancingData[numInstance_].color.w = alpha;
-
-
-
 
             ++numInstance_;
         }
