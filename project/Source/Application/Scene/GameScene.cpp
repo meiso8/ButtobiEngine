@@ -115,7 +115,7 @@ void GameScene::CreateParticleMesh() {
     particle_ = std::make_unique<ChargeParticle>();
     particle_->Create(Texture::GetHandle(Texture::PARTICLE));
     particle_->useBillboard_ = true;
-    particle_->emitter_.cont = 3;
+    particle_->emitter_.cont = 10;
 
     flashParticle_ = std::make_unique<FlashParticle>();
     flashParticle_->Create(Texture::GetHandle(Texture::FLASH_PARTICLE));
@@ -407,7 +407,7 @@ void GameScene::Draw() {
         //力を描画
         forceArrow_->Draw(*currentCamera_);
         //パーティクルを描画
-        particle_->Draw(kBlendModeAdd);
+        particle_->Draw(kBlendModeNormal);
     }
 
     crashParticle_->Draw(kBlendModeNormal);

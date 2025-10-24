@@ -70,6 +70,7 @@ private:
 
     //パーティクル
     std::unique_ptr <ChargeParticle> particle_ = nullptr;
+    Vector4 chargeParticleColor_;
     std::unique_ptr <FlashParticle> flashParticle_ = nullptr;
     std::unique_ptr <AppleCrashParticle> crashParticle_ = nullptr;
 
