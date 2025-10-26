@@ -108,4 +108,5 @@ private:
     void CreateParticleMesh();
     void UpdateParticle();
     void UpdateSceneChange();
+    void InitializeCamera();
 };

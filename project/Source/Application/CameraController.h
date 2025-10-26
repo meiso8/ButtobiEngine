@@ -1,6 +1,6 @@
 #pragma once
 #include"WorldTransform.h"
-
+#include<cstdint>
 class Player;
 class Camera;
 
@@ -21,6 +21,7 @@ public:
 
 	/// @brief 更新
 	void Update();
+	void ZoomIn();
 
 	void Reset();
 
@@ -29,24 +30,16 @@ public:
 	/// @brief 	対処の設定
 	/// @param target 対象
 	void SetTarget(Player* target) { target_ = target; };
-	/// @brief 移動範囲のセッター
-	/// @param area 範囲
-	void SetMovableArea(Rect area) { movableArea_ = area; };
 
+	bool zoomEnd_ = false;
 private:
-	// 座標補間割合
-	static inline const float kInterpolationRate = 0.5f;
-	// 速度掛け率
-	static inline const float kVelocityBias = 2.0f;
-	//追従対象の各方向へのカメラ移動範囲
-	static inline const Rect margin = {-10.0f, 10.0f, -5.0f, 5.0f};
 	// カメラ
 	Camera* camera_ = nullptr;
 	Player* target_ = nullptr;
 	// 追従対象とカメラの座標の差（オフセット）
 	Vector3 targetOffset_ = {0.0f, 12.5f, 10.0f};
-	// カメラの移動範囲
-	Rect movableArea_ = {0.0f, 100.0f, 0.0f, 100.0f};
 	// カメラの目標座標
 	Vector3 targetPos_;
+	uint32_t zoomInTimer_ = 0;
+
 };
