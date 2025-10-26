@@ -49,10 +49,7 @@ TitleScene::TitleScene()
 
 void TitleScene::Initialize() {
 
-    isEndScene_ = false;
-
-    sceneChangeTimer_ = 0;
-
+    sceneChange_.Initialize();
 
     camera_->Initialize(1280.0f, 720.0f);
     camera_->translate_ = cameraPositionStart;
@@ -150,14 +147,14 @@ void TitleScene::Move() {
     switch (gameOption_) {
     case TitleScene::GameOption::GameStart:
 
-        if (sceneChangeTimer_ < 60) {
-            sceneChangeTimer_++;
+        if (sceneChange_.timer_ < 60) {
+            sceneChange_.timer_++;
             FlashParticlePop();
-            if (sceneChangeTimer_ % 5 == 0) {
+            if (sceneChange_.timer_ % 5 == 0) {
                 Sound::PlaySE(Sound::CRACKER);
             }
         } else {
-            isEndScene_ = true;
+            sceneChange_.isEndScene_ = true;
         }
 
         break;
@@ -488,7 +485,6 @@ void TitleScene::Draw() {
 
     flashParticle_->Draw(BlendMode::kBlendModeNormal);
 }
-bool TitleScene::GetIsEndScene() { return isEndScene_; }
 
 Vector3 TitleScene
 ::easeInOutQuart(const Vector3& start, const Vector3& end, float t) {

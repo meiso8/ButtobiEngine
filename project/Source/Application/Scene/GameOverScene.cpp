@@ -18,8 +18,8 @@ constexpr int winWidth = 1280;
 constexpr int winHeight = 720;
 
 void GameOverScene::Initialize() {
-    isEndScene_ = false;
-    sceneChangeTimer_ = 60 * 10;//シーン遷移タイマー
+
+    sceneChange_.Initialize();//シーン遷移
     // カメラの初期化
     camera_ = std::make_unique<Camera>();
     camera_->Initialize(winWidth, winHeight, Camera::PERSPECTIVE);
@@ -57,15 +57,12 @@ void GameOverScene::Initialize() {
 }
 
 void GameOverScene::Update() {
+
     if (Input::IsTriggerKey(DIK_SPACE)) {
-        isEndScene_ = true;
+        sceneChange_.isEndScene_ = true;
     }
 
-    if (sceneChangeTimer_ > 0) {
-        sceneChangeTimer_--;
-    } else {
-        isEndScene_ = true;
-    }
+    sceneChange_.Update(600);
 
 #ifdef _DEBUG
     ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
@@ -91,10 +88,6 @@ void GameOverScene::Draw() {
 
     gameOverSprite_->PreDraw();
     gameOverSprite_->Draw();
-}
-
-bool GameOverScene::GetIsEndScene() {
-    return isEndScene_;
 }
 
 void GameOverScene::CheckAllCollisions() {

@@ -31,6 +31,8 @@ void Texture::LoadAllTexture() {
 	handle_[ARROW] = TextureManager::Load("Resources/Textures/arrow.png");
 	handle_[CLEAR] = TextureManager::Load("Resources/Textures/clear.png");
 	handle_[GAME_OVER] = TextureManager::Load("Resources/Textures/gameOver.png");
+	handle_[SHUTTER] = TextureManager::Load("Resources/Textures/shutter.png");
+	handle_[CLOSED] = TextureManager::Load("Resources/Textures/closed.png");
 }
 
 uint32_t Texture::AddTextureHandle(const std::string& filePath) {

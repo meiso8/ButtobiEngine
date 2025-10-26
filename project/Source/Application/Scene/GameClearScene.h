@@ -40,8 +40,4 @@ public:
 
     /// @brief 描画
     void Draw() override;
-
-    /// @brief シーンの切り替えフラグを取得
-    /// @return シーンの切り替えフラグ
-    bool GetIsEndScene() override;
 };

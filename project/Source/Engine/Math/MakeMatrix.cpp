@@ -52,11 +52,31 @@ Matrix4x4 MakeScaleMatrix(const Vector3 &scale) {
 	result.m[3][3] = 1.0f;
 
 	return result;
-};
+}
+Matrix3x3 MakeScaleMatrix(const Vector2& scale)
+{
+
+	Matrix3x3 result = {};
+
+	result.m[0][0] = scale.x;
+	result.m[1][0] = 0.0f;
+	result.m[2][0] = 0.0f;
+
+	result.m[0][1] = 0.0f;
+	result.m[1][1] = scale.y;
+	result.m[2][1] = 0.0f;
+
+	result.m[0][2] = 0.0f;
+	result.m[1][2] = 0.0f;
+	result.m[2][2] = 1.0f;
+
+	return (result);
+}
+;
 
 
 //1.X軸回転行列
-Matrix4x4 MakeRotateXMatrix(float radian) {
+Matrix4x4 MakeRotateXMatrix(const float& radian) {
 
 
 	Matrix4x4 result;
@@ -85,7 +105,7 @@ Matrix4x4 MakeRotateXMatrix(float radian) {
 };
 
 //1.Y軸回転行列
-Matrix4x4 MakeRotateYMatrix(float radian) {
+Matrix4x4 MakeRotateYMatrix(const float& radian) {
 
 	Matrix4x4 result;
 
@@ -113,7 +133,7 @@ Matrix4x4 MakeRotateYMatrix(float radian) {
 };
 
 //1.Z軸回転行列
-Matrix4x4 MakeRotateZMatrix(float radian) {
+Matrix4x4 MakeRotateZMatrix(const float& radian) {
 
 	Matrix4x4 result;
 
@@ -141,9 +161,28 @@ Matrix4x4 MakeRotateZMatrix(float radian) {
 };
 
 //XYZ回転
-Matrix4x4 MakeRotateXYZMatrix(Vector3 radian) {
+Matrix4x4 MakeRotateXYZMatrix(const Vector3& radian) {
 	Matrix4x4 result = Multiply(Multiply(MakeRotateXMatrix(radian.x), MakeRotateYMatrix(radian.y)), MakeRotateZMatrix(radian.z));
 	return result;
+}
+
+Matrix3x3 MakeRotateMatrix(const float& theta)
+{
+	Matrix3x3 result = {};
+
+	result.m[0][0] = cosf(theta);
+	result.m[1][0] = -sinf(theta);
+	result.m[2][0] = 0.0f;
+
+	result.m[0][1] = sinf(theta);
+	result.m[1][1] = cosf(theta);
+	result.m[2][1] = 0.0f;
+
+	result.m[0][2] = 0.0f;
+	result.m[1][2] = 0.0f;
+	result.m[2][2] = 1.0f;
+
+	return (result);
 }
 
 //平行移動行列
@@ -171,6 +210,25 @@ Matrix4x4 MakeTranslateMatrix(const Vector3 &translate) {
 	result.m[3][3] = 1.0f;
 
 	return result;
+}
+
+Matrix3x3 MakeTranslateMatrix(const Vector2& rectCenter)
+{
+	Matrix3x3 result = {};
+
+	result.m[0][0] = 1.0f;
+	result.m[1][0] = 0.0f;
+	result.m[2][0] = rectCenter.x;
+
+	result.m[0][1] = 0.0f;
+	result.m[1][1] = 1.0f;
+	result.m[2][1] = rectCenter.y;
+
+	result.m[0][2] = 0.0f;
+	result.m[1][2] = 0.0f;
+	result.m[2][2] = 1.0f;
+
+	return (result);
 }
 
 //3次元アフィン変換行列の生成
@@ -212,8 +270,26 @@ Matrix4x4 MakeAffineMatrix(const Vector3 &scale, const Vector3 &rotate, const Ve
 	result.m[3][3] = 1.0f;
 
 	return result;
-};
+}
+Matrix3x3 MakeAffineMatrix(const Vector2& scale, const float& theta, const Vector2& translate)
+{
+	Matrix3x3 result = {};
 
+	result.m[0][0] = scale.x * cosf(theta);
+	result.m[1][0] = scale.y * -sinf(theta);
+	result.m[2][0] = translate.x;
+
+	result.m[0][1] = scale.x * sinf(theta);
+	result.m[1][1] = scale.y * cosf(theta);
+	result.m[2][1] = translate.y;
+
+	result.m[0][2] = 0.0f;
+	result.m[1][2] = 0.0f;
+	result.m[2][2] = 1.0f;
+
+	return (result);
+}
+;
 
 //3.ビューポート変換行列　正規化デバイス座標系->スクリーン座標
 Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth) {
@@ -243,7 +319,28 @@ Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, f
 
 	return result;
 
-};
+}
+Matrix3x3 MakeViewportMatrix(float left, float top, float width, float height)
+{
+	//引数はスクリーン空間上でNDCがどこにどこの大きさで見えるかというのを指定する。
+
+	//ビューポート変換
+	Matrix3x3 result = {};
+	result.m[0][0] = width / 2.0f;
+	result.m[1][0] = 0.0f;
+	result.m[2][0] = left + (width / 2.0f);
+
+	result.m[0][1] = 0.0f;
+	result.m[1][1] = -height / 2.0f;
+	result.m[2][1] = top + (height / 2.0f);
+
+	result.m[0][2] = 0.0f;
+	result.m[1][2] = 0.0f;
+	result.m[2][2] = 1.0f;
+
+	return result;
+}
+;
 
 //2.正射影行列
 Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float bottom, float nearClip, float farClip) {
@@ -272,7 +369,29 @@ Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float botto
 
 	return result;
 
-};
+}
+Matrix3x3 MakeOrthographicMatrix(float left, float top, float right, float bottom)
+{
+	//正規かデバイス座標系
+	//NDC
+
+	//引数は左上と右下の座標でカメラ空間上での座標である
+	Matrix3x3 result = {};
+	result.m[0][0] = 2.0f / (right - left);
+	result.m[1][0] = 0.0f;
+	result.m[2][0] = (left + right) / (left - right);
+
+	result.m[0][1] = 0.0f;
+	result.m[1][1] = 2.0f / (top - bottom);
+	result.m[2][1] = (top + bottom) / (bottom - top);
+
+	result.m[0][2] = 0.0f;
+	result.m[1][2] = 0.0f;
+	result.m[2][2] = 1.0f;
+
+	return result;
+}
+;
 
 //1.透視投影行列
 Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip) {

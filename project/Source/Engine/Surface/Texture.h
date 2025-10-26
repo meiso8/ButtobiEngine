@@ -31,7 +31,9 @@ public:
 
 		CLEAR,
 		GAME_OVER,
-
+		
+		SHUTTER,//シャッター
+		CLOSED,//営業終了
 		TEXTURES
 	};
 	static void LoadAllTexture();

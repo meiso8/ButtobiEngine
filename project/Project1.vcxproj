@@ -157,6 +157,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\Object\Shutter.cpp" />
+    <ClCompile Include="Source\Application\Scene\SceneChange.cpp" />
     <ClCompile Include="Source\Engine\Particle\AppleCrashParticle.cpp" />
     <ClCompile Include="Source\Application\Object\Arrow.cpp" />
     <ClCompile Include="Source\Engine\Particle\ChargeParticle.cpp" />
@@ -171,7 +173,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Math\Random.cpp" />
     <ClCompile Include="Source\Engine\Mesh\MeshCommon.cpp" />
     <ClCompile Include="Source\Application\CameraController.cpp" />
-    <ClCompile Include="Source\Application\Object\DeathParticles.cpp" />
     <ClCompile Include="Source\Application\Object\Enemy.cpp" />
     <ClCompile Include="Source\Application\Object\Player.cpp" />
     <ClCompile Include="Source\Application\Scene\GameClearScene.cpp" />
@@ -273,6 +274,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\Object\Shutter.h" />
+    <ClInclude Include="Source\Application\Scene\SceneChange.h" />
     <ClInclude Include="Source\Engine\Particle\AppleCrashParticle.h" />
     <ClInclude Include="Source\Application\Object\Arrow.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\BlendMode.h" />
@@ -288,7 +291,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Math\Random.h" />
     <ClInclude Include="Source\Engine\Mesh\MeshCommon.h" />
     <ClInclude Include="Source\Application\CameraController.h" />
-    <ClInclude Include="Source\Application\Object\DeathParticles.h" />
     <ClInclude Include="Source\Application\Object\Enemy.h" />
     <ClInclude Include="Source\Application\Object\Player.h" />
     <ClInclude Include="Source\Application\Scene\GameClearScene.h" />
@@ -415,6 +417,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <Image Include="Resources\white1x1.png" />
   </ItemGroup>
   <ItemGroup>
+    <Media Include="..\..\..\Downloads\alarm.mp3" />
     <Media Include="Resources\Sounds\externals\attack.mp3" />
     <Media Include="Resources\Sounds\externals\cheers!.mp3" />
     <Media Include="Resources\Sounds\externals\playerHit.mp3" />

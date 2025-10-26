@@ -18,7 +18,8 @@ constexpr int winWidth = 1280;
 constexpr int winHeight = 720;
 
 void GameClearScene::Initialize() {
-	isEndScene_ = false;
+
+	sceneChange_.Initialize();
 
 	// カメラの初期化
 	camera_ = std::make_unique<Camera>();
@@ -53,7 +54,7 @@ void GameClearScene::Update() {
 
 
 	if (Input::IsTriggerKey(DIK_SPACE)) {
-		isEndScene_ = true;
+		sceneChange_.isEndScene_ = true;
 	}
 
 #ifdef _DEBUG
@@ -100,10 +101,6 @@ void GameClearScene::Draw() {
 		clearSprite_->PreDraw();
 		clearSprite_->Draw();
 	}
-}
-
-bool GameClearScene::GetIsEndScene() {
-	return isEndScene_;
 }
 
 void GameClearScene::CheckAllCollisions() {
