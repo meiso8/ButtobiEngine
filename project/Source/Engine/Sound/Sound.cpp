@@ -49,7 +49,12 @@ void Sound::LoadAllSound()
     handles_[GAME_OVER] = Load("Resources/Sounds/gameOver.mp3");
     handles_[BOUND] = Load("Resources/Sounds/externals/biyon.mp3");
     handles_[FULL_CHARGE] = Load("Resources/Sounds/externals/up.mp3");
-    handles_[ALARM] = Load("Resources/Sounds/externals/alarm.mp3");
+    handles_[ALARM] = Load("Resources/Sounds/alarm.mp3");
+
+    handles_[ANNOUNCE] = Load("Resources/Sounds/externals/announce.mp3");
+    handles_[ANNOUNCE_CLOSE] = Load("Resources/Sounds/externals/announce_close.mp3");
+    handles_[ANNOUNCE_FRUIT] = Load("Resources/Sounds/externals/announce_fruit.mp3");
+
 }
 
 void Sound::PlayBGM(const uint32_t index, const float& volumeOffset, const bool& loop)
@@ -105,6 +110,21 @@ void Sound::Stop(const uint32_t index)
     }
 
 }
+
+bool Sound::IsPlaying(const uint32_t& index) {
+
+    auto it = voices_.find(handles_[index]);
+    if (it != voices_.end() && it->second != nullptr) {
+        XAUDIO2_VOICE_STATE state{};
+        it->second->GetState(&state);
+        if (state.BuffersQueued > 0) {
+            return true; // 少なくとも1つの音声が再生中
+        }
+    }
+
+    return false; // 音声が停止している
+}
+
 
 void Sound::StopAllSound()
 {
@@ -198,19 +218,6 @@ bool Sound::IsPlayingAll() {
 }
 
 
-bool Sound::IsPlaying(const uint32_t& index) {
-
-    auto it = voices_.find(handles_[index]);
-    if (it != voices_.end() && it->second != nullptr) {
-        XAUDIO2_VOICE_STATE state{};
-        it->second->GetState(&state);
-        if (state.BuffersQueued > 0) {
-            return true; // 少なくとも1つの音声が再生中
-        }
-    }
-
-    return false; // 音声が停止している
-}
 
 void Sound::LoadFile(const std::string& path) {
 

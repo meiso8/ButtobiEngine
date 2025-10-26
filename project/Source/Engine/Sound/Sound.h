@@ -41,6 +41,11 @@ public:
         BOUND,//バウンドする
         FULL_CHARGE,//フルチャージ
         ALARM,//アラーム
+
+        ANNOUNCE,
+        ANNOUNCE_CLOSE,
+        ANNOUNCE_FRUIT,
+
         SOUNDS
     };
 
@@ -56,6 +61,7 @@ public:
     static void Pause(const uint32_t handleIndex);  // 一時停止
     static void Resume(const uint32_t handleIndex); // 再開
     static void Stop(const uint32_t handleIndex);
+    static bool IsPlaying(const uint32_t& tag);
 
     static void StopAllSound();
     /// @brief 音声データの解放関数  
@@ -77,7 +83,7 @@ private:
     static void LoadFile(const std::string& path);
     static uint32_t Load(const std::string& path);
     static bool IsPlayingAll();
-    static bool IsPlaying(const uint32_t& tag);
+
     static uint32_t GetSoundByIndex(const std::string& filePath);
 private:
 

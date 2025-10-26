@@ -1,7 +1,7 @@
 #pragma once
 #include"SceneManager.h"
 #include "../CameraController.h"
-#include "DeathParticles.h"
+
 #include"Particle/ChargeParticle.h"
 #include"Particle/FlashParticle.h"
 #include"Particle/AppleCrashParticle.h"
@@ -20,6 +20,7 @@ struct OBB;
 class CollisionManager;
 class PlaneRenderer;
 class OBBRenderer;
+class Shutter;
 
 // ゲームシーン
 class GameScene :public SceneManager {
@@ -39,8 +40,6 @@ public:
 
     // 描画
     void Draw()override;
-    bool GetIsEndScene()override;
-
     bool GetIsGameOver();
     bool GetIsGameClear();
 
@@ -66,7 +65,6 @@ private:
 
     // 天球
     std::unique_ptr <Skydome> skyDome_ = nullptr;
-    std::unique_ptr <DeathParticles>deathParticles_ = nullptr;
 
     //パーティクル
     std::unique_ptr <ChargeParticle> particle_ = nullptr;
@@ -86,9 +84,11 @@ private:
 
     bool isGameOver = false;
     bool isGameClear = false;
-    uint32_t sceneChangeTimer_ = 0;
 
-
+    //シャッター
+    std::unique_ptr< Shutter> shutter_ = nullptr;
+    //アナウンスしたかどうかのフラグ
+    bool isAnnounce_ = false;
 
     // 全ての当たり判定を行う
     void CheckAllCollisions();
@@ -99,5 +99,5 @@ private:
     void UpdateCamera();
     void CreateParticleMesh();
     void UpdateParticle();
-    void UpdateSceneChangeTimer();
+    void UpdateSceneChange();
 };

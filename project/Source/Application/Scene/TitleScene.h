@@ -150,14 +150,13 @@ class TitleScene :public SceneManager {
     JuiceInOutPhase jInOutPhase_;
     //パーティクル
     std::unique_ptr <FlashParticle> flashParticle_ = nullptr;
-    uint32_t sceneChangeTimer_ = 0;
+
 public:
     TitleScene();
     ~TitleScene() override;
     void Initialize()override;
     void Update()override;
     void Draw()override;
-    bool GetIsEndScene()override;
     void Move();
     void StringInOutJuiceAnimation();
     void KorokoroAnimation();

@@ -3,6 +3,7 @@
 #include "Matrix3x3.h"
 #include "Matrix4x4.h"
 #include "Vector3.h"
+#include "Vector2.h"
 
 /// @brief 3×3単位行列の作成
 /// @return 3x3単位行列
@@ -13,30 +14,41 @@ Matrix4x4 MakeIdentity4x4();
 
 //拡大縮小行列
 Matrix4x4 MakeScaleMatrix(const Vector3& scale);
+//2次元拡大縮小行列
+Matrix3x3 MakeScaleMatrix(const Vector2& scale);
 
 //1.X軸回転行列
-Matrix4x4 MakeRotateXMatrix(float radian);
+Matrix4x4 MakeRotateXMatrix(const float& radian);
 
 //1.Y軸回転行列
-Matrix4x4 MakeRotateYMatrix(float radian);
+Matrix4x4 MakeRotateYMatrix(const float& radian);
 
 //1.Z軸回転行列
-Matrix4x4 MakeRotateZMatrix(float radian);
+Matrix4x4 MakeRotateZMatrix(const float& radian);
 
 /// @brief XYZ回転/// @param radian /// @return 
-Matrix4x4 MakeRotateXYZMatrix(Vector3 radian);
+Matrix4x4 MakeRotateXYZMatrix(const Vector3& radian);
+//2次元回転行列
+Matrix3x3 MakeRotateMatrix(const float& theta);
 
-//平行移動行列
+//3次元平行移動行列
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate);
-
+//2次元平行移動行列作成関数
+Matrix3x3 MakeTranslateMatrix(const Vector2& rectCenter);
 //3次元アフィン変換行列の生成
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
 
+//2次元アフィン行列作成関数
+Matrix3x3 MakeAffineMatrix(const Vector2& scale,const float& theta, const Vector2& translate);
+
 //3.ビューポート変換行列　正規化デバイス座標系->スクリーン座標
 Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth);
-
+//3.ビューポート変換行列　
+Matrix3x3 MakeViewportMatrix(float left, float top, float width, float height);
 //2.正射影行列
 Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float bottom, float nearClip, float farClip);
+//2次元正射影行列
+Matrix3x3 MakeOrthographicMatrix(float left, float top, float right, float bottom);
 
 //1.透視投影行列
 Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip);

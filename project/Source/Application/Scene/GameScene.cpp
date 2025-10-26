@@ -11,12 +11,10 @@
 #include "DrawGrid.h"
 #include"Sound.h"
 #include"Texture.h"
-
+#include"Shutter.h"
 
 constexpr int winWidth = 1280;
 constexpr int winHeight = 720;
-
-
 
 GameScene::GameScene() {
 
@@ -30,7 +28,6 @@ GameScene::GameScene() {
 
     // 自キャラの生成
     player_ = std::make_unique<Player>();
-
 
     // 天球の生成
     skyDome_ = std::make_unique <Skydome>();
@@ -48,6 +45,9 @@ GameScene::GameScene() {
 
     //力の矢印
     forceArrow_ = std::make_unique<Arrow>();
+    //シャッターを作成
+    shutter_ = std::make_unique<Shutter>();
+    shutter_->Create();
 }
 
 GameScene::~GameScene() {
@@ -55,7 +55,13 @@ GameScene::~GameScene() {
 };
 void GameScene::Initialize() {
 
-    isEndScene_ = false;
+    Sound::PlaySE(Sound::ANNOUNCE);
+    isAnnounce_ = false;
+
+    sceneChange_.Initialize();
+
+    //シャッターの初期化
+    shutter_->Initialize();
 
     // カメラの初期化
     camera_->Initialize(winWidth, winHeight, Camera::PERSPECTIVE);
@@ -85,10 +91,6 @@ void GameScene::Initialize() {
 
     skyDome_->Initialize();
 
-    deathParticles_->Initialize(playerPosition);
-
-
-
     // カメラ操作の初期化
     cameraController_->Initialize(camera_.get());
     cameraController_->SetTarget(player_.get());
@@ -108,11 +110,12 @@ void GameScene::Initialize() {
 
     isGameClear = false;
     isGameOver = false;
-    sceneChangeTimer_ = 0;
+
+
 };
 
 void GameScene::CreateParticleMesh() {
-    deathParticles_ = std::make_unique < DeathParticles>();
+
     particle_ = std::make_unique<ChargeParticle>();
     particle_->Create(Texture::GetHandle(Texture::PARTICLE));
     particle_->useBillboard_ = true;
@@ -131,10 +134,6 @@ void GameScene::CreateParticleMesh() {
 
 void GameScene::UpdateParticle()
 {
-    // デスパーティクルの更新処理
-    if (deathParticles_) {
-        deathParticles_->Update();
-    }
 
     //プレイヤーがチャージしているときだけ更新
     if (player_->IsCharge()) {
@@ -147,11 +146,17 @@ void GameScene::UpdateParticle()
     crashParticle_->Update(*currentCamera_);
 }
 
-void GameScene::UpdateSceneChangeTimer()
+void GameScene::UpdateSceneChange()
 {
-    sceneChangeTimer_++;
-    if (sceneChangeTimer_ > 120) {
-        isEndScene_ = true;
+    if (sceneChange_.isEndScene_) {
+        Sound::Stop(Sound::CHARGE);
+        Sound::Stop(Sound::ANNOUNCE_FRUIT);
+    }
+
+    if (isGameClear || isGameOver) {
+        sceneChange_.Update(120);
+        //シャッターを閉める
+        shutter_->Close(sceneChange_.timer_ * InverseFPS);
     }
 }
 
@@ -159,6 +164,14 @@ void GameScene::Update() {
     // ここにインゲームの更新処理を書く
      //BGMを鳴らす
     Sound::PlayBGM(Sound::BGM1);
+
+    if (!isAnnounce_) {
+        if (!Sound::IsPlaying(Sound::ANNOUNCE)) {
+            Sound::PlaySE(Sound::ANNOUNCE_FRUIT);
+            isAnnounce_ = true;
+        }
+
+    }
 
 #ifdef _DEBUG
     ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
@@ -217,19 +230,16 @@ void GameScene::Update() {
             Sound::PlayOriginSE(Sound::ALARM);
             isGameClear = true;
         }
-        UpdateSceneChangeTimer();
-    } 
+    }
 
     if (player_->GetLife() <= 0) {
         if (!isGameOver) {
             isGameOver = true;
         }
-        UpdateSceneChangeTimer();
     }
 
-    if (isEndScene_) {
-        Sound::Stop(Sound::CHARGE);
-    }
+    UpdateSceneChange();
+
 };
 
 void GameScene::CheckAllCollisions() {
@@ -266,10 +276,10 @@ void GameScene::CheckAllCollisions() {
 
 #pragma region // 矢印と敵キャラの当たり判定
     // 矢印キャラと敵キャラの当たり判定
-	OBB arrowOBB = forceArrow_->GetKickAreaOBB();
+    OBB arrowOBB = forceArrow_->GetKickAreaOBB();
     for (auto& enemy : enemies_) {
-        if(!enemy)
-			continue;
+        if (!enemy)
+            continue;
         // OBBとSphereの当たり判定
         Sphere enemySphere = enemy->GetSphere();
         if (IsCollision(arrowOBB, enemySphere)) {
@@ -415,11 +425,6 @@ void GameScene::Draw() {
 
     flashParticle_->Draw(kBlendModeNormal);
 
-    //デスパーティクルの描画処理
-    if (deathParticles_) {
-        deathParticles_->Draw(*currentCamera_);
-    }
-
     if (player_->IsCharge()) {
         //力を描画
         forceArrow_->Draw(*currentCamera_);
@@ -435,6 +440,11 @@ void GameScene::Draw() {
     //UI
     uiManager_->Draw();
 
+    //シャッターの描画処理
+    if (isGameClear || isGameOver) {
+        shutter_->Draw();
+    }
+
 }
 void GameScene::Debug() {
     player_->Debug();
@@ -448,8 +458,6 @@ void GameScene::Debug() {
     DebugUI::CheckParticle(*particle_, "chargeParticles");
     DebugUI::CheckParticle(*flashParticle_, "flashParticle");
 }
-
-bool GameScene::GetIsEndScene() { return isEndScene_; }
 
 bool GameScene::GetIsGameOver() { return isGameOver; }
 bool GameScene::GetIsGameClear() { return isGameClear; }

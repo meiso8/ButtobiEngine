@@ -2,6 +2,8 @@
 #include"Camera/Camera.h"
 #include"Camera/DebugCamera.h"
 #include<memory>
+
+#include"SceneChange.h"
 class SceneManager
 {
 protected:
@@ -10,7 +12,8 @@ protected:
     std::unique_ptr<Camera> camera_ = nullptr;
     std::unique_ptr<DebugCamera> debugCamera_ = nullptr;
     Camera* currentCamera_ = nullptr;
-    bool isEndScene_ = false;
+
+    SceneChange sceneChange_;
 
 public:
     SceneManager() = default;
@@ -19,8 +22,11 @@ public:
     virtual void Update();
     virtual void Draw();
     virtual void Debug();
-    virtual bool GetIsEndScene() = 0;
-    void SetIsEndScene(bool isEndScene) { isEndScene_ = isEndScene; };
+    virtual bool GetIsEndScene() {
+        return sceneChange_.isEndScene_
+            ;
+    };
+    void SetIsEndScene(bool isEndScene) { sceneChange_.isEndScene_ = isEndScene; };
     void SwitchCamera();
 
 };

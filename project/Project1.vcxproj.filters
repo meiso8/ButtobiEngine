@@ -288,9 +288,6 @@
     <ClCompile Include="Source\Application\Object\Enemy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Object\DeathParticles.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Application\Object\Player.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -355,6 +352,12 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Particle\AppleCrashParticle.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\Scene\SceneChange.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\Object\Shutter.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -637,9 +640,6 @@
     <ClInclude Include="Source\Application\Object\Enemy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Object\DeathParticles.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Application\Object\Player.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -709,6 +709,12 @@
     <ClInclude Include="Source\Engine\Particle\AppleCrashParticle.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Application\Scene\SceneChange.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\Object\Shutter.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
@@ -762,5 +768,6 @@
     <Media Include="Resources\Sounds\externals\cheers!.mp3" />
     <Media Include="Resources\Sounds\externals\playerHit.mp3" />
     <Media Include="Resources\Sounds\externals\pour_drink.mp3" />
+    <Media Include="..\..\..\Downloads\alarm.mp3" />
   </ItemGroup>
 </Project>
