@@ -12,6 +12,8 @@
 #include"Sound.h"
 #include"Texture.h"
 #include"Shutter.h"
+#include"Score.h"
+
 
 constexpr int winWidth = 1280;
 constexpr int winHeight = 720;
@@ -31,6 +33,10 @@ GameScene::GameScene() {
 
     // 天球の生成
     skyDome_ = std::make_unique <Skydome>();
+
+    //背景
+    backGround_ = std::make_unique <BackGround>();
+    backGround_->Initialize();
 
     // パーティクル
     CreateParticleMesh();
@@ -82,7 +88,7 @@ void GameScene::Initialize() {
     collisionManager_->SetComboPointer(uiManager_->GetComboPointer());
     collisionManager_->SetComboTimerPtr(uiManager_->GetComboTimerPtr());
     collisionManager_->SetScorePointer(uiManager_->GetSpeedPointer());
-    collisionManager_->SetIsScoreUp(uiManager_->GetIsScorePointer());
+    collisionManager_->SetIsScoreUp(uiManager_->GetScorePtr()->GetIsScoreUPPtr());
     collisionManager_->SetJuiceMeter(uiManager_->GetJuiceMeter());
 
     Vector3 playerPosition = { 0.0f, 10.0f, 0.0f };
@@ -137,7 +143,7 @@ void GameScene::UpdateParticle()
 
     //プレイヤーがチャージしているときだけ更新
     if (player_->IsCharge()) {
-        particle_->TimerUpdate(true, { 0.1f,0.1f,0.1f }, { 1.0f, 1.0f, 0.0f, 1.0f });
+        particle_->TimerUpdate(true, { 0.1f,0.1f,0.1f }, { 1.0f, 0.5f, 0.5f, 1.0f });
         particle_->emitter_.transform.translate = player_->GetWorldPosition();
     }
 
@@ -154,9 +160,9 @@ void GameScene::UpdateSceneChange()
     }
 
     if (isGameClear || isGameOver) {
-        sceneChange_.Update(120);
+        sceneChange_.UpdateEnd(120);
         //シャッターを閉める
-        shutter_->Close(sceneChange_.timer_ * InverseFPS);
+        shutter_->Close(sceneChange_.endTimer_ * InverseFPS);
     }
 }
 
@@ -425,14 +431,16 @@ void GameScene::Draw() {
 
     flashParticle_->Draw(kBlendModeNormal);
 
-    if (player_->IsCharge()) {
+    if (player_->IsCharge()||player_->IsAttack()) {
         //力を描画
         forceArrow_->Draw(*currentCamera_);
         //パーティクルを描画
-        particle_->Draw(kBlendModeNormal);
+        particle_->Draw(kBlendModeAdd);
     }
 
     crashParticle_->Draw(kBlendModeNormal);
+
+    backGround_->Draw(*currentCamera_);
 
     // 地形の描画
     stage_->Draw(*currentCamera_);

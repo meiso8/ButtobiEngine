@@ -73,9 +73,9 @@ void ChargeParticle::Update(Camera& camera)
 
             float time = ((*particleIterator).currentTime / (*particleIterator).lifeTime);
 
-            particleIterator->transform.scale.x = time;
-            particleIterator->transform.scale.y = time;
-            particleIterator->transform.scale.z = time;
+            particleIterator->transform.scale.x = time*0.5f;
+            particleIterator->transform.scale.y = time*0.5f;
+            particleIterator->transform.scale.z = time*0.5f;
 
             if (useBillboard_) {
                 UpdateWorldMatrixForBillBord(*particleIterator);

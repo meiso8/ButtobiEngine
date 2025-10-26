@@ -35,6 +35,7 @@ public:
         FRUIT_APPLE,//リンゴ
 
         TABLE,
+        BACK_GROUND,//背景
 
         MODELS,
     };

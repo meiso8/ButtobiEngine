@@ -9,7 +9,9 @@
 #include "../UIManager.h"
 #include "Player.h"
 #include "Skydome.h"
+#include"BackGround.h"
 #include "../Stage.h"
+
 #include <vector>
 #include<list>
 #include"Arrow.h"
@@ -21,6 +23,7 @@ class CollisionManager;
 class PlaneRenderer;
 class OBBRenderer;
 class Shutter;
+class BackGround;
 
 // ゲームシーン
 class GameScene :public SceneManager {
@@ -44,7 +47,8 @@ public:
     bool GetIsGameClear();
 
     void Debug()override;
-
+    Score* GetScoreClass() { return uiManager_->GetScorePtr(); };
+    Shutter* GetShutter() { return shutter_.get(); };
 private:
     // カメラ操作
     std::unique_ptr <CameraController> cameraController_ = nullptr;
@@ -74,6 +78,10 @@ private:
 
     // 地形
     std::unique_ptr <Stage> stage_ = nullptr;
+
+    //背景
+    std::unique_ptr <BackGround> backGround_ = nullptr;
+    //矢印
     std::unique_ptr <Arrow> forceArrow_ = nullptr;
 
     // スコア

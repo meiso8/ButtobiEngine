@@ -15,6 +15,7 @@
 
 TitleScene::TitleScene()
 {
+
     camera_ = std::make_unique<Camera>();
 
     for (uint32_t i = 0; i < 8; i++) {
@@ -97,6 +98,17 @@ void TitleScene::Initialize() {
 
 void TitleScene::Update() {
 
+    if (!sceneChange_.isSceneStart_) {
+        sceneChange_.UpdateStart(10);
+    }
+
+    //パーティクルの更新
+    flashParticle_->Update(*camera_);
+
+    if (!sceneChange_.isSceneStart_) {
+        return;
+    }
+
     //BGMを鳴らす
     Sound::PlayBGM(Sound::BGM1);
 
@@ -134,9 +146,7 @@ void TitleScene::Update() {
     }
     WorldTransformUpdate(juiceCupWorldTransform);
     stringAnimationTimer += 0.01f;
-
-    //パーティクルの更新
-    flashParticle_->Update(*camera_);
+ 
 }
 
 
@@ -147,15 +157,8 @@ void TitleScene::Move() {
     switch (gameOption_) {
     case TitleScene::GameOption::GameStart:
 
-        if (sceneChange_.timer_ < 60) {
-            sceneChange_.timer_++;
-            FlashParticlePop();
-            if (sceneChange_.timer_ % 5 == 0) {
-                Sound::PlaySE(Sound::CRACKER);
-            }
-        } else {
-            sceneChange_.isEndScene_ = true;
-        }
+        sceneChange_.UpdateEnd(60);
+        FlashParticlePop();
 
         break;
     case TitleScene::GameOption::Option:
@@ -467,6 +470,9 @@ void TitleScene::FlashParticlePop()
 
     flashParticle_->TimerUpdate(true, { random,random,1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f });
 
+    if (sceneChange_.endTimer_ % 5 == 0) {
+        Sound::PlaySE(Sound::CRACKER, -0.1f);
+    }
 }
 
 void TitleScene::Draw() {

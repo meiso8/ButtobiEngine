@@ -54,6 +54,10 @@ void ModelManager::LoadAllModel()
     handle_[FRUIT_APPLE] = Load("Resources/Models/apple", "apple.obj");
 
     handle_[TABLE] = Load("Resources/Models/cube", "cube.obj");
+
+    handle_[BACK_GROUND] = Load("Resources/Models/stage", "backGround.obj");
+
+
 }
 
 void ModelManager::Finalize()

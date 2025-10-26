@@ -4,13 +4,17 @@
 #include<numbers>
 #include"Player.h"
 #include"OBB.h"
+#include"Easing.h"
 
 Arrow::Arrow()
 {
     quad_ = std::make_unique<QuadMesh>();
     quad_->Create(Texture::GetHandle(Texture::ARROW));
+    quad_->SetColor({ 1.0f, 1.0f, 1.0f, 0.5f });
     //OBBのデバック描画の生成
+#ifdef _DEBUG
     obbRenderer_ = std::make_unique<OBBRenderer>();
+#endif // _DEBUG
     kickObb_ = std::make_unique<OBB>();
 }
 
@@ -22,12 +26,12 @@ void Arrow::Initialize() {
     worldTransform_.scale_ = { 5.0f,5.0f,5.0f };
     worldTransform_.rotate_.x = std::numbers::pi_v<float> / 2.0f;
     worldTransform_.translate_.z = 2.5f;
-    worldTransform_.translate_.y -= 1.5f;
+    worldTransform_.translate_.y -= 1.0f;
 
     // OBBのデバッグ描画の初期化
     obbRenderer_->Initialize();
     kickObb_->center = { 0.0f,0.0f,0.0f };
-    kickObb_->axis[0] = {0.0f,0.0f,0.0f};
+    kickObb_->axis[0] = { 0.0f,0.0f,0.0f };
     kickObb_->axis[1] = { 0.0f,0.0f,0.0f };
     kickObb_->axis[2] = { 0.0f,0.0f,0.0f };
     kickObb_->halfSizes = { 2.5f,2.5f,2.5f };
@@ -37,7 +41,10 @@ void Arrow::Update(const Vector3& position, const float& scaleZ, const float& ro
 
     worldTransformParent_.translate_ = position;
     worldTransformParent_.rotate_.y = rotateY;
-    worldTransformParent_.scale_.z = scaleZ * 0.002f;
+    worldTransformParent_.scale_.z =
+        Easing::EaseInOut(worldTransformParent_.scale_.z, scaleZ * 0.002f, 0.5f);
+
+
     WorldTransformUpdate(worldTransformParent_);
 
     WorldTransformUpdate(worldTransform_);
@@ -53,8 +60,6 @@ void Arrow::Update(const Vector3& position, const float& scaleZ, const float& ro
 }
 
 void Arrow::Draw(Camera& camera) {
-
-
 
     // 3Dモデル描画前処理
     quad_->PreDraw();
