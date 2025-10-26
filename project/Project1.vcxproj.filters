@@ -360,6 +360,12 @@
     <ClCompile Include="Source\Application\Object\Shutter.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Application\System\Score.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\Object\BackGround.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Object3d.PS.hlsl">
@@ -715,6 +721,12 @@
     <ClInclude Include="Source\Application\Object\Shutter.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Application\System\Score.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\Object\BackGround.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
@@ -768,6 +780,5 @@
     <Media Include="Resources\Sounds\externals\cheers!.mp3" />
     <Media Include="Resources\Sounds\externals\playerHit.mp3" />
     <Media Include="Resources\Sounds\externals\pour_drink.mp3" />
-    <Media Include="..\..\..\Downloads\alarm.mp3" />
   </ItemGroup>
 </Project>

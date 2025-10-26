@@ -104,9 +104,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			GameScene* gameScene = dynamic_cast<GameScene*>(scenes[kGameScene].get());
 
 			if (gameScene->GetIsGameClear()) {
-				currentScene = scenes[kGameClearScene].get();
+				GameClearScene* gameClearScene = dynamic_cast<GameClearScene*>(scenes[kGameClearScene].get());
+				gameClearScene->SetScore(gameScene->GetScoreClass());
+				gameClearScene->SetShutter(gameScene->GetShutter());
+				currentScene = gameClearScene;
+
 			} else if (gameScene->GetIsGameOver()) {
-				currentScene = scenes[kGameOverScene].get();
+				GameOverScene* gameOverScene = dynamic_cast<GameOverScene*>(scenes[kGameOverScene].get());
+				gameOverScene->SetScore(gameScene->GetScoreClass());
+				gameOverScene->SetShutter(gameScene->GetShutter());
+				currentScene = gameOverScene;
 			}
 			// 現在のシーンの初期化
 			currentScene->Initialize();

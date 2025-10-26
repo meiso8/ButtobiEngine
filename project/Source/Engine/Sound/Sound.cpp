@@ -3,6 +3,7 @@
 #include <fstream>
 #include<assert.h>
 #include"StringUtility.h"
+#include<algorithm>
 
 #pragma comment(lib, "Mf.lib")  
 #pragma comment(lib, "mfplat.lib")  
@@ -182,7 +183,11 @@ void Sound::Play(const uint32_t& handle, const float& volume, const bool& isLoop
 
     result = xAudio2_->CreateSourceVoice(&newVoice, &soundDatas[handle].pWaveFormat);
     assert(SUCCEEDED(result));
-    newVoice->SetVolume(volume);
+    float newVolume = volume;
+    //最大値と最小値を入れる
+    newVolume = std::clamp(newVolume, 0.0f, 1.0f);
+
+    newVoice->SetVolume(newVolume);
 
     XAUDIO2_BUFFER buf{};
     buf.pAudioData = soundDatas[handle].mediaData.data();

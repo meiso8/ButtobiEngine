@@ -9,6 +9,8 @@
 #include"Sound.h"
 #include"Sprite.h"
 #include"Texture.h"
+#include"Shutter.h"
+
 
 #ifdef _DEBUG
 #include "../externals/imgui/imgui.h"
@@ -49,21 +51,54 @@ void GameOverScene::Initialize() {
 
     gameOverSprite_ = std::make_unique<Sprite>();
     gameOverSprite_->Create(Texture::GetHandle(Texture::GAME_OVER), { 640.0f - 480.0f,96.0f }, { 960.0f,192.0f });
-    gameOverSprite_->SetColor({1.0f,1.0f,1.0f,0.5f});
-
-    //ここで一回だけ呼ばれる
-    Sound::PlaySE(Sound::GAME_OVER);
-
+    gameOverSprite_->SetColor({ 1.0f,1.0f,1.0f,0.5f });
 }
 
 void GameOverScene::Update() {
 
-    if (Input::IsTriggerKey(DIK_SPACE)) {
-        sceneChange_.isEndScene_ = true;
+    if (sceneChange_.isSceneStart_) {
+        if (Input::IsTriggerKey(DIK_SPACE)) {
+            sceneChange_.isEndScene_ = true;
+        }
+
+        sceneChange_.UpdateEnd(600);
+
+    } else {
+        sceneChange_.UpdateStart(60);
+        if (shutter_) {
+            shutter_->Open(sceneChange_.startTimer_ * InverseFPS);
+        }
+        if (sceneChange_.startTimer_ > 0.6f) {
+            //ここで一回だけ呼ばれる
+            Sound::PlayOriginSE(Sound::GAME_OVER);
+        }
+
+
     }
 
-    sceneChange_.Update(600);
+    currentCamera_->UpdateMatrix();
 
+    enemy_->Update();
+
+    CheckAllCollisions();
+
+    stage_->Update();
+
+}
+
+void GameOverScene::Draw() {
+    enemy_->Draw(*currentCamera_);
+    stage_->Draw(*currentCamera_);
+
+    gameOverSprite_->PreDraw();
+    gameOverSprite_->Draw();
+    if (shutter_) {
+        shutter_->Draw();
+    }
+}
+
+void GameOverScene::Debug()
+{
 #ifdef _DEBUG
     ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
     currentCamera_->EditTransform("CurrentCamera");
@@ -74,20 +109,6 @@ void GameOverScene::Update() {
     enemy_->Edit("Enemy");
 #endif // _DEBUG
 
-    currentCamera_->UpdateMatrix();
-
-    enemy_->Update();
-    stage_->Update();
-
-    CheckAllCollisions();
-}
-
-void GameOverScene::Draw() {
-    enemy_->Draw(*currentCamera_);
-    stage_->Draw(*currentCamera_);
-
-    gameOverSprite_->PreDraw();
-    gameOverSprite_->Draw();
 }
 
 void GameOverScene::CheckAllCollisions() {

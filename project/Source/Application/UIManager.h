@@ -3,7 +3,10 @@
 #include "Sprite.h"
 #include <array>
 
+class Score;
+
 class UIManager {
+
 
 private:
 	//<数値系>
@@ -14,16 +17,9 @@ private:
 	// 現在のライフ
 	int Life_ = MaxLife_;
 
-	//--スコア
-	// 現在のスコア
-	int Score_ = 0;
-	// ハイスコア
-	int HighScore_ = 0;
+	//スコアクラス
+	std::unique_ptr<Score> scoreClass_ = nullptr;
 
-	// スコア加算値
-	int AddBaseScore_ = 100;
-	// スコアの最終加算値
-	int AddFinalScore_ = 0;
 
 	//--コンボ
 	// 現在のコンボ数
@@ -53,14 +49,13 @@ private:
 	// 最大ゲーム時間
 	float MaxGameTime_ = 90.0f;
 
-	bool isScoreUP_ = false;
 
 	//<サイズ系>
 
 	Vector2 LifeSize_ = {90, 90};
-	Vector2 ScoreSize_ = {256, 64};
-	Vector2 HighScoreSize_ = {256.0f * 0.9f, 64 * 0.9f};
-	Vector2 NumberSize_ = {50, 50};
+
+
+	//Vector2 NumberSize_ = {50, 50};
 	Vector2 ComboSize_ = {256*0.8f, 64*0.8f};
 	Vector2 ComboNumberSize_ = {50, 50};
 	Vector2 SpeedBonusSize_ = {256*0.85f, 64*0.85f};
@@ -79,11 +74,7 @@ private:
 	Vector2 LifeFirstPosition_ = {10, 0};
 	float LifePositionInterval_ = 20.0f + LifeSize_.x;
 
-	Vector2 ScorePosition_ = {900, 70};
-	Vector2 ScoreNumbersPosition_{900, 120};
-	Vector2 HighScorePosition_ = {900, 0};
-	Vector2 HighScoreNumbersPosition_{950, 40};
-	float scorePosInterval = 50;
+
 
 	Vector2 ComboPosition_ = {900, 180};
 	Vector2 ComboNumberPosition = {1080, 180};
@@ -108,8 +99,8 @@ private:
 
 	//<テクスチャ系>
 	uint32_t LifeTextureHandle_ = 0;
-	uint32_t scoreTextureHandle_ = 0;
-	uint32_t highScoreTextureHandle_ = 0;
+
+
 	uint32_t comboTextureHandle_ = 0;
 	uint32_t speedBonusTextureHandle_ = 0;
 	uint32_t WASDTextureHandle_ = 0;
@@ -119,15 +110,15 @@ private:
 	uint32_t JuiceNumberTextureHandle_ = 0;
 	uint32_t JuiceStringTextureHandle_ = 0;
 	uint32_t JuiceCountTextureHandle_ = 0;
-	uint32_t NumbersTextureHandle_ = 0;
+	/*uint32_t NumbersTextureHandle_ = 0;*/
 	uint32_t timerNumbersTexturHandle = 0;
 	uint32_t ComboNumberTextureHandle = 0;
 	uint32_t SpeedNumberTextureHandle = 0;
 
 	//<スプライト系>
 	std::array<Sprite, 3> lifeSprites;
-	std::unique_ptr<Sprite> scoreSprite;
-	std::unique_ptr<Sprite> highScoreSprite;
+
+
 	std::unique_ptr<Sprite> comboSprite;
 	std::unique_ptr<Sprite> speedBonusSprite;
 	std::unique_ptr<Sprite> WASDSprite;
@@ -139,8 +130,8 @@ private:
 	std::unique_ptr<Sprite> JuiceCountSprite;
 
 	std::array<Sprite, 4> timerNumbersSprites;
-	std::array<Sprite, 7> NumbersSprite;
-	std::array<Sprite, 7> HighScoreNumbersSprite;
+
+
 	std::array<Sprite, 3> ComboNumberSprites;
 	std::array<Sprite, 3> SpeedNumberSprites;
 
@@ -162,7 +153,7 @@ public:
 	int GetMaxLife() { return MaxLife_; };
 	uint32_t* GetComboPointer() { return &Combo_; }
 	float* GetComboTimerPtr() { return &ComboTimer_; }
-	bool* GetIsScorePointer() { return &isScoreUP_; }
+	Score* GetScorePtr() { return scoreClass_.get(); };
 	float GetTimer() { return GameTime_; };
 	void SetIsUpdateComboTimer(const bool& isUpdateComboTimer) { isUpdateComboTimer_ = isUpdateComboTimer; };
 };

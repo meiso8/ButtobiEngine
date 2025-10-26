@@ -5,13 +5,15 @@
 #include"Sound.h"
 #include"DebugUI.h"
 
+#include"Score.h"
+
+
 #define InversFPS 1.0f/60.0f;
 
 UIManager::UIManager()
 {
     LifeTextureHandle_ = Texture::GetHandle(Texture::LIFE);
-    scoreTextureHandle_ = Texture::GetHandle(Texture::SCORE);
-	highScoreTextureHandle_ = Texture::GetHandle(Texture::HIGHSCORE);
+
     comboTextureHandle_ = Texture::GetHandle(Texture::COMBO);
 	ComboNumberTextureHandle = Texture::GetHandle(Texture::COMBONUMBERS);
     speedBonusTextureHandle_ = Texture::GetHandle(Texture::SPEED_BONUS);
@@ -24,12 +26,8 @@ UIManager::UIManager()
 	JuiceNumberTextureHandle_ = Texture::GetHandle(Texture::JUICENUMBER);
 	JuiceStringTextureHandle_ = Texture::GetHandle(Texture::JUICESTRING);
     timerNumbersTexturHandle = Texture::GetHandle(Texture::TIMERNUMBERS);
-    NumbersTextureHandle_ = Texture::GetHandle(Texture::NUMBERS);
 
-    scoreSprite = std::make_unique<Sprite>();
-    scoreSprite->Create(scoreTextureHandle_, ScorePosition_, ScoreSize_, { 1, 1, 1, 1 });
-	highScoreSprite = std::make_unique<Sprite>();
-	highScoreSprite->Create(highScoreTextureHandle_, HighScorePosition_, HighScoreSize_, {1, 1, 1, 1});
+   
     comboSprite = std::make_unique<Sprite>();
     comboSprite->Create(comboTextureHandle_, ComboPosition_, ComboSize_, { 1, 1, 1, 1 });
     speedBonusSprite = std::make_unique<Sprite>();
@@ -47,10 +45,7 @@ UIManager::UIManager()
 	JuiceStringSprite = std::make_unique<Sprite>();
 	JuiceStringSprite->Create(JuiceStringTextureHandle_, JuiceStringPosition_, JuiceStringSize, {1, 1, 1, 1});
     
-    for (int i = 0; i < 7; i++) {
-        NumbersSprite[i].Create(NumbersTextureHandle_, ScoreNumbersPosition_, NumberSize_, { 1, 1, 1, 1 });
-        HighScoreNumbersSprite[i].Create(NumbersTextureHandle_, HighScoreNumbersPosition_, NumberSize_, { 1, 1, 1, 1 });
-    }
+
     for (int i = 0; i < 4; i++) {
         timerNumbersSprites[i].Create(timerNumbersTexturHandle, timerNumbersFirstPos, TimerNumbersSize, { 1, 1, 1, 1 });
 		JuiceNumberSprite[i].Create(JuiceNumberTextureHandle_, JuiceNumberPosition_, JuiceNumberSize, {1, 1, 1, 1});
@@ -66,6 +61,8 @@ UIManager::UIManager()
 		SpeedNumberSprites[i].Create(SpeedNumberTextureHandle, speedBonusNumberPosition, SpeedBonusNumberSize_, {1, 1, 1, 1});
     }
 
+    scoreClass_ = std::make_unique<Score>();
+
 }
 
 void UIManager::Initialize() {
@@ -73,19 +70,9 @@ void UIManager::Initialize() {
     for (int i = 0; i < lifeSprites.size(); i++) {
         lifeSprites[i].SetPosition({ LifeFirstPosition_.x + LifePositionInterval_ * i, LifeFirstPosition_.y });
     }
-	for (int i = 0; i < 7; i++) {
 
-		NumbersSprite[i].SetPosition({ScoreNumbersPosition_.x + i * scorePosInterval, ScoreNumbersPosition_.y});
-		NumbersSprite[i].SetTextureLeftTop({0, 0});
-		NumbersSprite[i].SetTextureSize({80.0f, 80.0f});
-		NumbersSprite[i].Update();
+    scoreClass_->Initialize();
 
-		HighScoreNumbersSprite[i].SetPosition({HighScoreNumbersPosition_.x + i * scorePosInterval * 0.8f, HighScoreNumbersPosition_.y});
-		HighScoreNumbersSprite[i].SetTextureLeftTop({0, 0});
-		HighScoreNumbersSprite[i].SetSize({40.0f, 40.0f});
-		HighScoreNumbersSprite[i].SetTextureSize({80.0f, 80.0f});
-		HighScoreNumbersSprite[i].Update();
-	}
 	for (int i = 0; i < 3; i++) {
 		ComboNumberSprites[i].SetPosition({ComboNumberPosition.x + ComboNumberPositionInteval * i, ComboNumberPosition.y});
 		ComboNumberSprites[i].SetTextureSize({124.0f, 124.0f});
@@ -114,7 +101,7 @@ void UIManager::Initialize() {
 	
 	GameTime_ = MaxGameTime_;
 	Life_ = MaxLife_;
-	Score_ = 0;
+
 	Combo_ = 0;
 	ComboBonus_ = 1.0f;
 	speed_ = 0;
@@ -164,19 +151,12 @@ void UIManager::Update() {
 
     // =============================== Score==========================================
     
-    if (isScoreUP_) {
-    Score_ += static_cast<int>(AddBaseScore_ * ComboBonus_*speedBonus_*JuiceBonus_);
-		isScoreUP_ = false;
-    }
-
-
-    if (Score_ > HighScore_) {
-        HighScore_ = Score_;
-    }
+    scoreClass_->Update(ComboBonus_,speedBonus_,JuiceBonus_);
+   
     if (GameTime_ <= 0.0f) {
         GameTime_ = 0.0f;
-
     }
+
     // 桁ごとに分割
     int minTens = minutes / 10;
     int minOnes = minutes % 10;
@@ -197,28 +177,7 @@ void UIManager::Update() {
         timerNumbersSprites[i].Update();
     }
 
-    // スコア表示の更新
-    NumbersSprite[0].SetTextureLeftTop({ 80.0f * (Score_ / 1000000 % 10), 0 });
-    NumbersSprite[1].SetTextureLeftTop({ 80.0f * (Score_ / 100000 % 10), 0 });
-    NumbersSprite[2].SetTextureLeftTop({ 80.0f * (Score_ / 10000 % 10), 0 });
-    NumbersSprite[3].SetTextureLeftTop({ 80.0f * (Score_ / 1000 % 10), 0 });
-    NumbersSprite[4].SetTextureLeftTop({ 80.0f * (Score_ / 100 % 10), 0 });
-    NumbersSprite[5].SetTextureLeftTop({ 80.0f * (Score_ / 10 % 10), 0 });
-    NumbersSprite[6].SetTextureLeftTop({ 80.0f * (Score_ % 10), 0 });
 
-    HighScoreNumbersSprite[0].SetTextureLeftTop({ 80.0f * (HighScore_ / 1000000 % 10), 0 });
-    HighScoreNumbersSprite[1].SetTextureLeftTop({ 80.0f * (HighScore_ / 100000 % 10), 0 });
-    HighScoreNumbersSprite[2].SetTextureLeftTop({ 80.0f * (HighScore_ / 10000 % 10), 0 });
-    HighScoreNumbersSprite[3].SetTextureLeftTop({ 80.0f * (HighScore_ / 1000 % 10), 0 });
-    HighScoreNumbersSprite[4].SetTextureLeftTop({ 80.0f * (HighScore_ / 100 % 10), 0 });
-    HighScoreNumbersSprite[5].SetTextureLeftTop({ 80.0f * (HighScore_ / 10 % 10), 0 });
-    HighScoreNumbersSprite[6].SetTextureLeftTop({ 80.0f * (HighScore_ % 10), 0 });
-
-    for (int i = 0; i < 7; i++) {
-        NumbersSprite[i].Update();
-        HighScoreNumbersSprite[i].Update();
-
-    }
 	// ================= ComboBonus 表示 =================
 	{
 		int integerPart = static_cast<int>(ComboBonus_);
@@ -310,13 +269,9 @@ void UIManager::Draw() {
 		JuiceStringSprite->Draw();
     /*}*/
 	
+        scoreClass_->Draw();
     
-    for (int i = 0; i < 7; i++) {
-        NumbersSprite[i].Draw();
-        HighScoreNumbersSprite[i].Draw();
-    }
-    scoreSprite->Draw();
-	highScoreSprite->Draw();
+
     comboSprite->Draw();
     speedBonusSprite->Draw();
 	for (int i = 0; i < 3; i++) {

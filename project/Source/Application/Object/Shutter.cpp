@@ -9,6 +9,7 @@ void Shutter::Initialize()
     shutterWorldTransform_.Initialize();
     shutterWorldTransform_.scale_ = { 1280.0f,720.0f };
     closeWordWorldTransform_.Initialize();
+    closeWordWorldTransform_.parent_ = &shutterWorldTransform_;
     closeWordWorldTransform_.scale_ = { 640.0f,256.0f };
     closeWordWorldTransform_.translate_ = { 320.0f,232.0f };
     isAnnounce_ = false;
@@ -38,7 +39,10 @@ void Shutter::Draw()
 {
     shutterSprite_->PreDraw();
     shutterSprite_->Draw();
-    closeWordSprite_->Draw();
+    if (isAnnounce_) {
+        closeWordSprite_->Draw();
+    }
+
 }
 
 void Shutter::Close(const float& timer)
@@ -57,6 +61,11 @@ void Shutter::Close(const float& timer)
 void Shutter::Open(const float& timer)
 {
     EasingTransformY(0.0f, -720.0f, timer);
+    if (isAnnounce_) {
+        if (timer > 0.5f) {
+            isAnnounce_ = false;
+        }
+    }
 }
 
 void Shutter::EasingTransformY(const float& start, const float& end, const float& timer)

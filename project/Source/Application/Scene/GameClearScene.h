@@ -6,13 +6,21 @@ class Enemy;
 class Stage;
 class CollisionManager;
 class Sprite;
+class Shutter;
+
+#include"Score.h"
 
 /// @brief ゲームクリアシーン
 class GameClearScene : public SceneManager {
 private:
     std::list<std::unique_ptr<Enemy>> enemies_;						// 敵キャラリスト
     std::unique_ptr<Stage> stage_;									// ステージ
-    uint32_t score_ = 0;											// スコア
+    //シャッター
+    Shutter* shutter_ = nullptr;
+    // スコア
+    Score* score_ = nullptr;									// ステージ
+
+
     bool isWaitingToPop_ = false;									// 敵出現待機フラグ
     int32_t waitToPopTimer_ = 0;									// 敵出現待機タイマー
     int32_t subtractWaitToPopTimer_ = 60;                           //現待機時間の減少数
@@ -37,7 +45,11 @@ public:
 
     /// @brief 更新
     void Update() override;
-
+    void EnemyUpdate();
     /// @brief 描画
     void Draw() override;
+    void Debug()override;
+    
+    void SetScore(Score* score) { score_ = score; };
+    void SetShutter(Shutter* shutter) { shutter_ = shutter; };
 };

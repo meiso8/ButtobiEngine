@@ -4,14 +4,25 @@
 void SceneChange::Initialize()
 {
     isEndScene_ = false;
-    timer_ = 0;
-
+    isSceneStart_ = false;
+    endTimer_ = 0;
+    startTimer_ = 0;
 }
 
-void SceneChange::Update(uint32_t endTime)
+
+void SceneChange::UpdateStart(uint32_t endTime)
 {
-    timer_++;
-    if (timer_ > endTime) {
+    startTimer_++;
+    if (startTimer_ > endTime) {
+        //シーンが始まるよ！
+        isSceneStart_ = true;
+    }
+}
+
+void SceneChange::UpdateEnd(uint32_t endTime)
+{
+    endTimer_++;
+    if (endTimer_ > endTime) {
         isEndScene_ = true;
     }
 }
