@@ -69,21 +69,11 @@ void GameScene::Initialize() {
     //シャッターの初期化
     shutter_->Initialize();
 
-    // カメラの初期化
-    camera_->Initialize(winWidth, winHeight, Camera::PERSPECTIVE);
-    cameraShakeTimer_ = 30;
-    isShakeCamera_ = false;
-
-#ifdef _DEBUG
-    // デバッグカメラ
-    debugCamera_->Initialize(winWidth, winHeight);
-#endif
-
-    currentCamera_ = camera_.get();
+    //カメラの初期化
+    InitializeCamera();
 
     // 衝突マネージャにスコアポインタを設定
     collisionManager_->SetScorePointer(&score_);
-
 
     collisionManager_->SetComboPointer(uiManager_->GetComboPointer());
     collisionManager_->SetComboTimerPtr(uiManager_->GetComboTimerPtr());
@@ -96,12 +86,6 @@ void GameScene::Initialize() {
     player_->Initialize(*camera_, playerPosition);
 
     skyDome_->Initialize();
-
-    // カメラ操作の初期化
-    cameraController_->Initialize(camera_.get());
-    cameraController_->SetTarget(player_.get());
-    cameraController_->Reset();
-    cameraController_->SetMovableArea({ 0.0f, 100.0f, 0.0f, 100.0f });
 
     //UI系
     uiManager_->Initialize();
@@ -117,6 +101,7 @@ void GameScene::Initialize() {
     isGameClear = false;
     isGameOver = false;
 
+    chargeParticleColor_ = { 1.0f,0.0f,0.0f,1.0f };
 
 };
 
@@ -143,8 +128,17 @@ void GameScene::UpdateParticle()
 
     //プレイヤーがチャージしているときだけ更新
     if (player_->IsCharge()) {
-        particle_->TimerUpdate(true, { 0.1f,0.1f,0.1f }, { 1.0f, 0.5f, 0.5f, 1.0f });
+
+        if (player_->GetChargeTimer() == player_->kMaxChargeTime) {
+            chargeParticleColor_ = { 1.0f,0.0f,0.0f,1.0f };
+        } else {
+            chargeParticleColor_ = { 1.0f,1.0f,.0f,1.0f };
+        }
+        particle_->TimerUpdate(true, { 0.1f,0.1f,0.1f }, chargeParticleColor_);
+
         particle_->emitter_.transform.translate = player_->GetWorldPosition();
+
+
     }
 
     particle_->Update(*currentCamera_);
@@ -159,11 +153,33 @@ void GameScene::UpdateSceneChange()
         Sound::Stop(Sound::ANNOUNCE_FRUIT);
     }
 
-    if (isGameClear || isGameOver) {
+    if (cameraController_->zoomEnd_) {
         sceneChange_.UpdateEnd(120);
         //シャッターを閉める
         shutter_->Close(sceneChange_.endTimer_ * InverseFPS);
     }
+}
+
+void GameScene::InitializeCamera()
+{
+    // カメラの初期化
+    camera_->Initialize(winWidth, winHeight, Camera::PERSPECTIVE);
+    cameraShakeTimer_ = 30;
+    isShakeCamera_ = false;
+
+#ifdef _DEBUG
+    // デバッグカメラ
+    debugCamera_->Initialize(winWidth, winHeight);
+#endif
+
+    currentCamera_ = camera_.get();
+
+    // カメラ操作の初期化
+    cameraController_->Initialize(camera_.get());
+    cameraController_->SetTarget(player_.get());
+    cameraController_->Reset();
+  /*  cameraController_->SetMovableArea({ 0.0f, 100.0f, 0.0f, 100.0f });*/
+
 }
 
 void GameScene::Update() {
@@ -400,8 +416,14 @@ void GameScene::UpdateCamera()
 
     // カメラの処理
     if (!isDebugCameraActive_) {
-        // 行列更新
-        cameraController_->Update();
+   
+        if (isGameClear || isGameOver) {
+            cameraController_->ZoomIn();
+        } else {
+            // 行列更新
+            cameraController_->Update();
+
+        }
     }
 
     currentCamera_->UpdateMatrix();
@@ -431,7 +453,7 @@ void GameScene::Draw() {
 
     flashParticle_->Draw(kBlendModeNormal);
 
-    if (player_->IsCharge()||player_->IsAttack()) {
+    if (player_->IsCharge() || player_->IsAttack()) {
         //力を描画
         forceArrow_->Draw(*currentCamera_);
         //パーティクルを描画
@@ -449,7 +471,7 @@ void GameScene::Draw() {
     uiManager_->Draw();
 
     //シャッターの描画処理
-    if (isGameClear || isGameOver) {
+    if (cameraController_->zoomEnd_) {
         shutter_->Draw();
     }
 
