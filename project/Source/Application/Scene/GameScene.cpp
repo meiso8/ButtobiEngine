@@ -96,6 +96,9 @@ void GameScene::Initialize() {
     //力の矢印
     forceArrow_->Initialize();
 
+    //敵を削除
+    enemies_.clear();
+
     player_->InitializeLife(uiManager_->GetMaxLife());
 
     isGameClear = false;
@@ -148,6 +151,18 @@ void GameScene::UpdateParticle()
 
 void GameScene::UpdateSceneChange()
 {
+
+    if (!sceneChange_.isSceneStart_) {
+        sceneChange_.UpdateStart(60);
+    }
+
+    if (!isAnnounce_) {
+        if (!Sound::IsPlaying(Sound::ANNOUNCE)) {
+            Sound::PlaySE(Sound::ANNOUNCE_FRUIT);
+            isAnnounce_ = true;
+        }
+    }
+
     if (sceneChange_.isEndScene_) {
         Sound::Stop(Sound::CHARGE);
         Sound::Stop(Sound::ANNOUNCE_FRUIT);
@@ -178,7 +193,7 @@ void GameScene::InitializeCamera()
     cameraController_->Initialize(camera_.get());
     cameraController_->SetTarget(player_.get());
     cameraController_->Reset();
-  /*  cameraController_->SetMovableArea({ 0.0f, 100.0f, 0.0f, 100.0f });*/
+    /*  cameraController_->SetMovableArea({ 0.0f, 100.0f, 0.0f, 100.0f });*/
 
 }
 
@@ -187,13 +202,9 @@ void GameScene::Update() {
      //BGMを鳴らす
     Sound::PlayBGM(Sound::BGM1);
 
-    if (!isAnnounce_) {
-        if (!Sound::IsPlaying(Sound::ANNOUNCE)) {
-            Sound::PlaySE(Sound::ANNOUNCE_FRUIT);
-            isAnnounce_ = true;
-        }
+    UpdateSceneChange();
 
-    }
+
 
 #ifdef _DEBUG
     ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
@@ -204,8 +215,18 @@ void GameScene::Update() {
     // 地形の更新処理
     stage_->Update();
 
+    //プレイヤーの操作 シーン切り替え時や判定完了時はしない
+    if (sceneChange_.isSceneStart_) {
+        if (!isGameClear && !isGameOver) {
+            player_->InputMove();
+            player_->InputAttack();
+        }
+   
+    }
+
     // 自キャラの更新処理
     player_->Update();
+
     if (player_->IsAttack()) {
         //アタックしているときコンボタイマーをカウントダウンする
         uiManager_->SetIsUpdateComboTimer(true);
@@ -260,7 +281,7 @@ void GameScene::Update() {
         }
     }
 
-    UpdateSceneChange();
+
 
 };
 
@@ -416,7 +437,7 @@ void GameScene::UpdateCamera()
 
     // カメラの処理
     if (!isDebugCameraActive_) {
-   
+
         if (isGameClear || isGameOver) {
             cameraController_->ZoomIn();
         } else {
