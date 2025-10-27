@@ -51,15 +51,21 @@ void Camera::InitializeTransform()
 
 void Camera::UpdateMatrix() {
 
+    UpdateWorldMatrix();
+
+
+
+    UpdateViewProjectionMatrix();
+}
+
+void Camera::UpdateWorldMatrix()
+{
     worldMat_ = MakeAffineMatrix(scale_, rotate_, translate_);
+}
+
+void Camera::UpdateViewMatrix()
+{
     viewMat_ = Inverse(worldMat_);
-
-    UpdateProjectionMatrix();
-
-    projectionMat_.m[3][0] += offset_.x;
-    projectionMat_.m[3][1] -= offset_.y;
-
-    viewProjectionMat_ = Multiply(viewMat_, projectionMat_);
 }
 
 void Camera::UpdateProjectionMatrix()
@@ -76,6 +82,19 @@ void Camera::UpdateProjectionMatrix()
 
         projectionMat_ = MakeOrthographicMatrix(halfWidth, halfHeight, -halfWidth, -halfHeight, nearZ_, farZ_);
     }
+
+    projectionMat_.m[3][0] += offset_.x;
+    projectionMat_.m[3][1] -= offset_.y;
+
+}
+
+void Camera::UpdateViewProjectionMatrix()
+{
+    UpdateViewMatrix();
+
+    UpdateProjectionMatrix();
+
+    viewProjectionMat_ = Multiply(viewMat_, projectionMat_);
 }
 
 Matrix4x4& Camera::GetViewProjectionMatrix() {

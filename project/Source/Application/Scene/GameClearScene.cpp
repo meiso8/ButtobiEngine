@@ -49,16 +49,25 @@ void GameClearScene::Initialize() {
     //エネミーをクリアする
     enemies_.clear();
     subtractWaitToPopTimer_ = 60;
+
+    score_->SetScorePos();
 }
 void GameClearScene::Update() {
 
     if (sceneChange_.isSceneStart_) {
 
+        //カウントアップする
+        sceneChange_.UpdateEnd(120);
+
         if (Input::IsTriggerKey(DIK_SPACE)) {
-            sceneChange_.isEndScene_ = true;
+            isRenderSprite_ = true;
+            if (sceneChange_.endTimer_ < 60) {
+                sceneChange_.endTimer_ = 60;
+            }
         }
 
         EnemyUpdate();
+
         //減少時間が1になったら
         if (subtractWaitToPopTimer_ == 1) {
             isRenderSprite_ = true;
@@ -102,11 +111,10 @@ void GameClearScene::Draw() {
     clearSprite_->PreDraw();
 
     if (isRenderSprite_) {
-
         clearSprite_->Draw();
+        score_->Draw();
     }
 
-    score_->Draw();
     if (shutter_) {
         shutter_->Draw();
     }

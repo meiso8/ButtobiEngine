@@ -424,9 +424,11 @@ void GameScene::UpdateCamera()
             cameraController_->Update();
 
         }
+    } else {
+
+        currentCamera_->UpdateMatrix();
     }
 
-    currentCamera_->UpdateMatrix();
 }
 
 
