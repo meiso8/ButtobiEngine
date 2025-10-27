@@ -36,12 +36,18 @@ public:
 protected:
     static float width_;
     static float height_;
+
+    virtual void UpdateViewMatrix();
+    virtual void UpdateProjectionMatrix();
+
 public:
     /// @brief 初期化
     virtual void Initialize(const float& width, const float& height, const PROJECTION_TYPE& type = PROJECTION_TYPE::PERSPECTIVE);
     /// @brief 更新
     virtual void UpdateMatrix();
-    virtual void UpdateProjectionMatrix();
+    virtual void UpdateWorldMatrix();
+
+    virtual void UpdateViewProjectionMatrix();
     Matrix4x4& GetViewProjectionMatrix();
     void SetTransform(const Transform& transform) {
         scale_ = transform.scale;
