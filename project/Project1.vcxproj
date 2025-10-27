@@ -157,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\System\AppleSceneChange.cpp" />
     <ClCompile Include="Source\Application\Object\BackGround.cpp" />
     <ClCompile Include="Source\Application\System\Score.cpp" />
     <ClCompile Include="Source\Application\Object\Shutter.cpp" />
@@ -276,6 +277,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\System\AppleSceneChange.h" />
     <ClInclude Include="Source\Application\Object\BackGround.h" />
     <ClInclude Include="Source\Application\System\Score.h" />
     <ClInclude Include="Source\Application\Object\Shutter.h" />
