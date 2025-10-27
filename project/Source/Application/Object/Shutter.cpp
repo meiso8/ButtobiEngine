@@ -10,8 +10,8 @@ void Shutter::Initialize()
     shutterWorldTransform_.scale_ = { 1280.0f,720.0f };
     closeWordWorldTransform_.Initialize();
     closeWordWorldTransform_.parent_ = &shutterWorldTransform_;
-    closeWordWorldTransform_.scale_ = { 640.0f,256.0f };
-    closeWordWorldTransform_.translate_ = { 320.0f,232.0f };
+    closeWordWorldTransform_.scale_ = { 1.0f,1.0f };
+    closeWordWorldTransform_.translate_ = { 640,360.0f };
     isAnnounce_ = false;
 }
 
@@ -33,6 +33,9 @@ void Shutter::Create()
         closeWordWorldTransform_.translate_,
         closeWordWorldTransform_.scale_
     );
+
+    closeWordSprite_->SetAnchorPoint({ 0.5f,0.5f });
+    closeWordSprite_->Update();
 }
 
 void Shutter::Draw()
@@ -48,7 +51,12 @@ void Shutter::Draw()
 void Shutter::Close(const float& timer)
 {
     EasingTransformY(-720.0f, 0.0f, timer);
-
+    if (timer <= 1.0f) {
+        closeWordWorldTransform_.scale_ =
+            Easing::EaseInBack(Vector2{1.0f,1.0f}, {1.5f,1.5f}, timer);
+        closeWordSprite_->SetSize(wordSize_ * closeWordWorldTransform_.scale_);
+        closeWordSprite_->Update();
+    }
     if (!isAnnounce_) {
         if (timer > 0.5f) {
             Sound::PlayOriginSE(Sound::ANNOUNCE_CLOSE);
@@ -62,7 +70,7 @@ void Shutter::Open(const float& timer)
 {
     EasingTransformY(0.0f, -720.0f, timer);
     if (isAnnounce_) {
-        if (timer > 0.5f) {
+        if (timer > 0.2f) {
             isAnnounce_ = false;
         }
     }
