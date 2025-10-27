@@ -162,6 +162,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\System\Score.cpp" />
     <ClCompile Include="Source\Application\Object\Shutter.cpp" />
     <ClCompile Include="Source\Application\Scene\SceneChange.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\OBBCube.cpp" />
     <ClCompile Include="Source\Engine\Particle\AppleCrashParticle.cpp" />
     <ClCompile Include="Source\Application\Object\Arrow.cpp" />
     <ClCompile Include="Source\Engine\Particle\ChargeParticle.cpp" />
@@ -282,6 +283,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\System\Score.h" />
     <ClInclude Include="Source\Application\Object\Shutter.h" />
     <ClInclude Include="Source\Application\Scene\SceneChange.h" />
+    <ClInclude Include="Source\Engine\Mesh\OBBCube.h" />
     <ClInclude Include="Source\Engine\Particle\AppleCrashParticle.h" />
     <ClInclude Include="Source\Application\Object\Arrow.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\BlendMode.h" />
