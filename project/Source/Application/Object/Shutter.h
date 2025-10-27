@@ -18,6 +18,7 @@ private:
     WorldTransform2D shutterWorldTransform_;
     std::unique_ptr<Sprite> closeWordSprite_ = nullptr;
     WorldTransform2D closeWordWorldTransform_;
+    Vector2 wordSize_ = { 640.0f,256.0f };
     bool isAnnounce_ = false;
 };
 

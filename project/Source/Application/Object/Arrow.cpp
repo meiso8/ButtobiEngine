@@ -29,7 +29,9 @@ void Arrow::Initialize() {
     worldTransform_.translate_.y -= 1.0f;
 
     // OBBのデバッグ描画の初期化
+#ifdef _DEBUG
     obbRenderer_->Initialize();
+#endif
     kickObb_->center = { 0.0f,0.0f,0.0f };
     kickObb_->axis[0] = { 0.0f,0.0f,0.0f };
     kickObb_->axis[1] = { 0.0f,0.0f,0.0f };

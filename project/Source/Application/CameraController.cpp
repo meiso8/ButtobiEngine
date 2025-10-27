@@ -42,7 +42,7 @@ void CameraController::Update() {
 
 void CameraController::ZoomIn()
 {
-    if (zoomInTimer_ < 60) {
+    if (zoomInTimer_ < 120) {
         zoomInTimer_++;
         const WorldTransform& targetWorldTransform = target_->GetWorldTransform();
 
@@ -68,12 +68,13 @@ void CameraController::ZoomIn()
         Matrix4x4 scaleMatrix = MakeScaleMatrix(camera_->scale_);
         Matrix4x4 translateMatrix = MakeTranslateMatrix(camera_->translate_);
         Matrix4x4 rotateMatrix = billboardMatrix;
+        Matrix4x4 worldMatrix = scaleMatrix * rotateMatrix * translateMatrix;
 
-        camera_->worldMat_ = scaleMatrix * rotateMatrix * translateMatrix;
+        camera_->worldMat_ = Lerp(camera_->worldMat_, worldMatrix, 0.5f);
         camera_->UpdateViewProjectionMatrix();
 
     } else {
-        zoomInTimer_ = 60;
+        zoomInTimer_ = 120;
         zoomEnd_ = true;
     }
 

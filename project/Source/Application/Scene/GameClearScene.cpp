@@ -21,7 +21,7 @@ constexpr int winHeight = 720;
 void GameClearScene::Initialize() {
 
     sceneChange_.Initialize();
-
+    isStartSceneChange_ = false;
     // カメラの初期化
     camera_ = std::make_unique<Camera>();
     camera_->Initialize(winWidth, winHeight, Camera::PERSPECTIVE);
@@ -56,11 +56,16 @@ void GameClearScene::Update() {
 
     if (sceneChange_.isSceneStart_) {
 
-        //カウントアップする
-        sceneChange_.UpdateEnd(120);
+        if (isStartSceneChange_) {
+            //カウントアップする
+            sceneChange_.UpdateEnd(120);
+        }
 
         if (Input::IsTriggerKey(DIK_SPACE)) {
+            //省略する
             isRenderSprite_ = true;
+            isStartSceneChange_ = true;
+
             if (sceneChange_.endTimer_ < 60) {
                 sceneChange_.endTimer_ = 60;
             }
@@ -72,6 +77,7 @@ void GameClearScene::Update() {
         if (subtractWaitToPopTimer_ == 1) {
             isRenderSprite_ = true;
             Sound::PlayOriginSE(Sound::YEAH);
+            isStartSceneChange_ = true;
         }
 
     } else {
