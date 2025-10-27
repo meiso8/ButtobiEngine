@@ -12,6 +12,7 @@
 #include"Sound.h"
 #include"Particle/FlashParticle.h"
 #include"Random.h"
+#include"AppleSceneChange.h"
 
 TitleScene::TitleScene()
 {
@@ -46,11 +47,14 @@ TitleScene::TitleScene()
     flashParticle_->emitter_.transform.translate = { 640.0f, 360.0f,0.0f };
     flashParticle_->emitter_.frequency = 0.01f;
     flashParticle_->emitter_.cont = 5;
+
+    appleSceneChange_ = std::make_unique<AppleSceneChange>();
 }
 
 void TitleScene::Initialize() {
 
     sceneChange_.Initialize();
+    appleSceneChange_->Initialize();
 
     camera_->Initialize(1280.0f, 720.0f);
     camera_->translate_ = cameraPositionStart;
@@ -99,7 +103,9 @@ void TitleScene::Initialize() {
 void TitleScene::Update() {
 
     if (!sceneChange_.isSceneStart_) {
-        sceneChange_.UpdateStart(10);
+        sceneChange_.UpdateStart(60);
+        appleSceneChange_->Update(
+            static_cast<float>(sceneChange_.startTimer_ *InverseFPS));
     }
 
     //パーティクルの更新
@@ -146,7 +152,7 @@ void TitleScene::Update() {
     }
     WorldTransformUpdate(juiceCupWorldTransform);
     stringAnimationTimer += 0.01f;
- 
+
 }
 
 
@@ -489,7 +495,12 @@ void TitleScene::Draw() {
         spaceSprite_->Draw();
     }
 
+    if (!sceneChange_.isSceneStart_) {
+        appleSceneChange_->Draw();
+    }
+
     flashParticle_->Draw(BlendMode::kBlendModeNormal);
+  
 }
 
 Vector3 TitleScene
