@@ -48,8 +48,8 @@ public:
     void Draw(Camera& camera);
 
 private:
-    //using LineMeshes = std::array<std::unique_ptr<LineMesh>, 12>;
-    //LineMeshes lines_;	// 線分メッシュ
+    using LineMeshes = std::array<std::unique_ptr<LineMesh>, 12>;
+    LineMeshes lines_;	// 線分メッシュ
 
     std::unique_ptr<OBBCube> cube_;	// 立方体メッシュ
 };

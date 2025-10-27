@@ -364,9 +364,10 @@ void Player::Update() {
     // 1.移動入力
     // ==============================
 
-    InputMove();
+    //これをGameSceneに移植
+    //InputMove();
 
-    InputAttack();
+    //InputAttack();
 
     // ==============================
     // 2.移動処理

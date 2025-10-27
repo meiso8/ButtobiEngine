@@ -47,22 +47,21 @@ OBBRenderer::OBBRenderer() = default;
 OBBRenderer::~OBBRenderer() = default;
 
 void OBBRenderer::Initialize() {
-	/*uint32_t textureHandle = Texture::GetHandle(Texture::WHITE_1X1);
-	*/
+	uint32_t textureHandle = Texture::GetHandle(Texture::WHITE_1X1);
+	
 	uint32_t textureHandle2 = Texture::GetHandle(Texture::UV_CHECKER);
-	//for (auto &line : lines_) {
-	//	line = std::make_unique<LineMesh>();
-	//	line->Create(textureHandle);
-	//}
-	//Vector4 color = { 1.0f, 0.0f, 0.0f, 1.0f };
-	//for (auto &line : lines_) {
-	//	line->SetColor(color);
-	//}
+	for (auto &line : lines_) {
+		line = std::make_unique<LineMesh>();
+		line->Create(textureHandle);
+	}
+	Vector4 color = { 1.0f, 0.0f, 0.0f, 1.0f };
+	for (auto &line : lines_) {
+		line->SetColor(color);
+	}
 
 	cube_ = std::make_unique<OBBCube>();
 	cube_->Create(textureHandle2);
-	Vector4 color = { 1.0f, 1.0f, 1.0f, 0.5f };
-	cube_->SetColor(color);
+	cube_->SetColor({ 1.0f, 1.0f, 1.0f, 0.5f });
 }
 
 void OBBRenderer::Update(const OBB &obb) {
@@ -81,29 +80,29 @@ void OBBRenderer::Update(const OBB &obb) {
 	vertices[6] = obb.center + axisX - axisY - axisZ;	// 6: +X, -Y, -Z
 	vertices[7] = obb.center - axisX - axisY - axisZ;	// 7: -X, -Y, -Z
 
-	//// 線分メッシュの頂点を設定
-	//lines_[0]->SetVertexData(vertices[0], vertices[1]);		// 上面前辺
-	//lines_[1]->SetVertexData(vertices[1], vertices[3]);		// 上面左辺
-	//lines_[2]->SetVertexData(vertices[3], vertices[2]);		// 上面奥辺
-	//lines_[3]->SetVertexData(vertices[2], vertices[0]);		// 上面右辺
-	//lines_[4]->SetVertexData(vertices[4], vertices[5]);		// 底面前辺
-	//lines_[5]->SetVertexData(vertices[5], vertices[7]);		// 底面左辺
-	//lines_[6]->SetVertexData(vertices[7], vertices[6]);		// 底面奥辺
-	//lines_[7]->SetVertexData(vertices[6], vertices[4]);		// 底面右辺
-	//lines_[8]->SetVertexData(vertices[0], vertices[4]);		// 前面左辺
-	//lines_[9]->SetVertexData(vertices[1], vertices[5]);		// 前面右辺
-	//lines_[10]->SetVertexData(vertices[3], vertices[7]);	// 奥面左辺
-	//lines_[11]->SetVertexData(vertices[2], vertices[6]);	// 奥面右辺
+	// 線分メッシュの頂点を設定
+	lines_[0]->SetVertexData(vertices[0], vertices[1]);		// 上面前辺
+	lines_[1]->SetVertexData(vertices[1], vertices[3]);		// 上面左辺
+	lines_[2]->SetVertexData(vertices[3], vertices[2]);		// 上面奥辺
+	lines_[3]->SetVertexData(vertices[2], vertices[0]);		// 上面右辺
+	lines_[4]->SetVertexData(vertices[4], vertices[5]);		// 底面前辺
+	lines_[5]->SetVertexData(vertices[5], vertices[7]);		// 底面左辺
+	lines_[6]->SetVertexData(vertices[7], vertices[6]);		// 底面奥辺
+	lines_[7]->SetVertexData(vertices[6], vertices[4]);		// 底面右辺
+	lines_[8]->SetVertexData(vertices[0], vertices[4]);		// 前面左辺
+	lines_[9]->SetVertexData(vertices[1], vertices[5]);		// 前面右辺
+	lines_[10]->SetVertexData(vertices[3], vertices[7]);	// 奥面左辺
+	lines_[11]->SetVertexData(vertices[2], vertices[6]);	// 奥面右辺
 
 	cube_->SetVertex(vertices);
 }
 
 void OBBRenderer::Draw(Camera &camera) {
 	// 線分メッシュの描画
-	//lines_[0]->PreDraw();
-	//for (auto &line : lines_) {
-	//	line->Draw(camera, MakeIdentity4x4());
-	//}
+	lines_[0]->PreDraw();
+	for (auto &line : lines_) {
+		line->Draw(camera, MakeIdentity4x4());
+	}
 	cube_->PreDraw();
 	cube_->Draw(camera, MakeIdentity4x4());
 }
