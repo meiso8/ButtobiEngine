@@ -39,6 +39,7 @@ public:
 		CLOSED,//営業終了
 		APPLE_SCENE_CHANGE,
 		CUTTING_BOARD,
+		SHADOW,
 		TEXTURES
 	};
 	static void LoadAllTexture();
