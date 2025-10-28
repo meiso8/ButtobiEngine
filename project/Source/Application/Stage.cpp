@@ -5,14 +5,14 @@
 #include "Plane.h"
 #include "OBB.h"
 #include <numbers>
+#include"OBBCube.h"
+#include"Texture.h"
+
 
 Stage::Stage() = default;
 Stage::~Stage() = default;
 
 void Stage::Initialize() {
-    // モデルの生成 OBJからの生成
-    //model_ = std::make_unique<Model>();
-    //model_->Create(ModelManager::STAGE);
 
     // ワールド変換の初期化
     worldTransform_.Initialize();
@@ -53,6 +53,20 @@ void Stage::Initialize() {
     for (size_t i = 0; i < obbs_.size(); i++) {
         SetAxis(obbRotates_[i], *obbs_[i]);
     }
+
+    uint32_t textureHandle2 = Texture::GetHandle(Texture::CUTTING_BOARD);
+
+    isAlpha_ = true;
+
+    for (size_t i = 0; i < obbCubes_.size(); i++) {
+        obbCubes_[i] = std::make_unique<OBBCube>();
+        obbCubes_[i]->Create(textureHandle2);
+
+        obbCubes_[i]->SetVertex(*obbs_[i]);
+        obbCubes_[i]->SetColor(color_);
+    }
+
+
 }
 void Stage::Update() {
     //// ワールド変換の更新
@@ -76,6 +90,20 @@ void Stage::Update() {
         obbCount++;
     }
 #endif // _DEBUG
+    
+    if (isAlpha_) {
+        color_ = { 1.0f, 1.0f, 1.0f, 0.5f };
+    } else {
+        color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
+    }
+
+    isAlpha_ = true;
+
+    
+    for (size_t i = 0; i < obbCubes_.size(); i++) {
+        obbCubes_[i]->SetColor(color_);
+    }
+
 }
 
 void Stage::Draw(Camera& camera) {
@@ -96,8 +124,18 @@ void Stage::Draw(Camera& camera) {
         obbRenderer->Draw(camera);
     }
 #endif // _DEBUG
+
+    obbCubes_[0]->PreDraw();
+    for (size_t i = 0; i < obbCubes_.size(); i++) {
+        obbCubes_[i]->Draw(camera, MakeIdentity4x4());
+    }
 }
 
 Plane Stage::GetPlane(uint32_t index) { return *planes_[index]; }
 
 OBB Stage::GetOBB(uint32_t index) { return *obbs_[index]; }
+
+void Stage::IsSetAlphaFalse()
+{
+    isAlpha_ = false;
+}

@@ -3,6 +3,7 @@
 #include <array>
 #include <memory>
 #include <string>
+#include"Vector4.h"
 
 struct OBB {
     Vector3 center;		// 中心点
@@ -24,7 +25,7 @@ void EditOBB(const std::string& label, Vector3& rotate, OBB& obb);
 #endif // _DEBUG
 
 class LineMesh;
-class OBBCube;
+
 class Camera;
 
 /// @brief OBBのデバッグ描画
@@ -51,5 +52,4 @@ private:
     using LineMeshes = std::array<std::unique_ptr<LineMesh>, 12>;
     LineMeshes lines_;	// 線分メッシュ
 
-    std::unique_ptr<OBBCube> cube_;	// 立方体メッシュ
 };

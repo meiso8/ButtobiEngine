@@ -59,17 +59,15 @@ void Score::Update(const float& ComboBonus, const float& speedBonus, const float
     if (isScoreUP_) {
         Score_ += static_cast<int>(AddBaseScore_ * ComboBonus * speedBonus * JuiceBonus);
         isScoreUP_ = false;
-    }
 
-
-    if (Score_ > HighScore_) {
-        isHighScoreUpdate_ = true;
-        HighScore_ = Score_;
-    }
-
-    if (isScoreUP_ || isHighScoreUpdate_) {
-        Calculation();
         isHighScoreUpdate_ = false;
+
+        if (Score_ > HighScore_) {
+            isHighScoreUpdate_ = true;
+            HighScore_ = Score_;
+        }
+
+        Calculation();
     }
 
 }

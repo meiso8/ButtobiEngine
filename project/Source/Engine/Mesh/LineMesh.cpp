@@ -8,7 +8,7 @@ LineMesh::~LineMesh() {
     Finalize();
 }
 
-void LineMesh::Create(uint32_t& textureHandle)
+void LineMesh::Create(uint32_t textureHandle)
 {
     commandList_ = DirectXCommon::GetCommandList();
     modelConfig_ = ModelConfig::GetInstance();
