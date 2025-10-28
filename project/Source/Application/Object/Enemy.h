@@ -13,6 +13,7 @@ struct Plane;
 class Player;
 class Model;
 class Camera;
+class QuadMesh;
 class RigidBody;
 class AABBRenderer;
 class SphereRenderer;
@@ -104,6 +105,10 @@ private:
     WorldTransform worldTransform_;
     // モデル
     std::unique_ptr<Model> model_ = nullptr;
+    //影
+    std::unique_ptr<QuadMesh> shadow_ = nullptr;
+    // ワールドトランスフォーム
+    WorldTransform shadowWorldTransform_;
     // カメラ
     Camera* camera_ = nullptr;
     //歩行の速さ
@@ -138,7 +143,7 @@ private:
     //キック継続時間
     uint32_t kickDurationTimer_ = 0;
     //パーティクルのポインタを取得する
-     AppleCrashParticle* crashParticle_ = nullptr;
-     FlashParticle* flashParticle_ = nullptr;
+    AppleCrashParticle* crashParticle_ = nullptr;
+    FlashParticle* flashParticle_ = nullptr;
 
 };

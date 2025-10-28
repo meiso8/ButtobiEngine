@@ -26,7 +26,6 @@ Score::Score()
 
 void Score::Initialize()
 {
-
     ScorePosition_ = { 900, 70 };
     ScoreNumbersPosition_ = { 900, 120 };
     HighScorePosition_ = { 900, 0 };
@@ -52,6 +51,8 @@ void Score::Initialize()
 	isHighScoreUpdate_ = false;
 	isScoreUP_ = false;
     Score_ = 0;
+
+    Calculation();
 }
 
 void Score::Update(const float& ComboBonus, const float& speedBonus, const float& JuiceBonus)
@@ -59,17 +60,14 @@ void Score::Update(const float& ComboBonus, const float& speedBonus, const float
     if (isScoreUP_) {
         Score_ += static_cast<int>(AddBaseScore_ * ComboBonus * speedBonus * JuiceBonus);
         isScoreUP_ = false;
-    }
-
-
-    if (Score_ > HighScore_) {
-        isHighScoreUpdate_ = true;
-        HighScore_ = Score_;
-    }
-
-    if (isScoreUP_ || isHighScoreUpdate_) {
-        Calculation();
         isHighScoreUpdate_ = false;
+
+        if (Score_ > HighScore_) {
+            isHighScoreUpdate_ = true;
+            HighScore_ = Score_;
+        }
+
+        Calculation();
     }
 
 }

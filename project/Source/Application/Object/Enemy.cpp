@@ -14,6 +14,8 @@
 #include"Particle/AppleCrashParticle.h"
 #include"Particle/FlashParticle.h"
 #include"Input.h"
+#include"Quad.h"
+#include"Texture.h"
 
 #ifdef _DEBUG
 #include "../externals/imgui/imgui.h"
@@ -23,6 +25,9 @@
 Enemy::Enemy() {
     model_ = std::make_unique<Model>();
     model_->Create(ModelManager::FRUIT_APPLE);
+    shadow_ = std::make_unique<QuadMesh>();
+    shadow_->Create(Texture::GetHandle(Texture::SHADOW));
+    shadow_->SetColor({1.0f,1.0f,1.0f,0.5f});
 }
 
 Enemy::~Enemy() = default;
@@ -33,6 +38,9 @@ void Enemy::Initialize(const Vector3& position) {
     worldTransform_.Initialize();
     worldTransform_.translate_ = position; // 初期位置をオリジンにしておく
     worldTransform_.rotate_.y = std::numbers::pi_v<float> *3.0f / 2.0f;
+
+    shadowWorldTransform_.Initialize();
+    shadowWorldTransform_.rotate_.x = std::numbers::pi_v<float>*0.5f;
 
     walkTimer_ = 0.0f;
 
@@ -57,6 +65,8 @@ void Enemy::Initialize(const Vector3& position) {
         sphereRenderer_->Initialize();
     }
 #endif // _DEBUG
+
+
 }
 
 void Enemy::Update() {
@@ -65,6 +75,15 @@ void Enemy::Update() {
     rigidBody_->Update(1.0f / 60.0f);
     worldTransform_.rotate_ = rigidBody_->GetAngle();
     worldTransform_.translate_ += rigidBody_->GetVelocity() / 60.0f;
+
+    shadowWorldTransform_.translate_ = {
+         worldTransform_.translate_.x,
+         0.1f,
+          worldTransform_.translate_.z
+    };
+
+    float scale = 4.0f-worldTransform_.translate_.y / 5.0f;
+    shadowWorldTransform_.scale_ = { scale, scale ,1.0f };
 
     if (isKicked_) {
         color_ = { 0.0f, 1.0f, 0.0f, 1.0f };
@@ -85,6 +104,7 @@ void Enemy::Update() {
     // ==============================
 
     WorldTransformUpdate(worldTransform_);
+    WorldTransformUpdate(shadowWorldTransform_);
 
 #ifdef _DEBUG
     // AABBのデバッグ描画の更新
@@ -119,7 +139,13 @@ void Enemy::Draw(Camera& camera) {
     model_->PreDraw(kBlendModeNormal);
     model_->SetColor(color_);
     // 3Dモデルを描画
+
     model_->Draw(camera, worldTransform_.matWorld_, MaterialResource::LIGHTTYPE::HALF_L);
+
+    //影を描画
+    shadow_->PreDraw(kBlendModeNormal);
+    shadow_->Draw(camera, shadowWorldTransform_.matWorld_);
+
 }
 
 AABB Enemy::GetAABB() const {

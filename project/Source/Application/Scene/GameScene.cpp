@@ -15,6 +15,7 @@
 #include"Score.h"
 #include"Effect.h"
 
+#include"MakeMatrix.h"
 
 constexpr int winWidth = 1280;
 constexpr int winHeight = 720;
@@ -25,6 +26,8 @@ GameScene::GameScene() {
 #ifdef _DEBUG
 
     debugCamera_ = std::make_unique<DebugCamera>();
+    lineMesh_ = std::make_unique<LineMesh>();
+    lineMesh_->Create(Texture::GetHandle(Texture::WHITE_1X1));
 #endif
     // 衝突マネージャの生成
     collisionManager_ = std::make_unique<CollisionManager>();
@@ -82,7 +85,7 @@ void GameScene::Initialize() {
     collisionManager_->SetScorePointer(uiManager_->GetSpeedPointer());
     collisionManager_->SetIsScoreUp(uiManager_->GetScorePtr()->GetIsScoreUPPtr());
     collisionManager_->SetJuiceMeter(uiManager_->GetJuiceMeter());
-	collisionManager_->SetIsComboSparkle(uiManager_->GetSparkleIsAlive(1));
+    collisionManager_->SetIsComboSparkle(uiManager_->GetSparkleIsAlive(1));
 
     Vector3 playerPosition = { 0.0f, 10.0f, 0.0f };
     // 自キャラの初期化 //ここはmainCamera
@@ -110,6 +113,7 @@ void GameScene::Initialize() {
     isGameOver = false;
 
     chargeParticleColor_ = { 1.0f,0.0f,0.0f,1.0f };
+
 
 };
 
@@ -147,7 +151,7 @@ void GameScene::UpdateParticle()
         if (player_->GetChargeTimer() == player_->kMaxChargeTime) {
             chargeParticleColor_ = { 1.0f,1.0f,0.0f,1.0f };
         } else {
-            chargeParticleColor_ = { 1.0f,0.0f,0.0f,1.0f };
+            chargeParticleColor_ = { 0.0f,1.0f,1.0f,1.0f };
         }
         particle_->TimerUpdate(true, { 0.1f,0.1f,0.1f }, chargeParticleColor_);
 
@@ -173,6 +177,9 @@ void GameScene::UpdateSceneChange()
         if (!Sound::IsPlaying(Sound::ANNOUNCE)) {
             Sound::PlaySE(Sound::ANNOUNCE_FRUIT);
             isAnnounce_ = true;
+            for (int i = 0; i < 10; ++i) {
+                PopEnemy();
+            }
         }
     }
 
@@ -223,10 +230,17 @@ void GameScene::Update() {
     ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
     currentCamera_->EditTransform("CurrentCamera");
     ImGui::Text("Score: %u", score_);
+
+
+    lineMesh_->SetVertexData(player_->GetWorldPosition(), forceArrow_->GetWorldPosition());
 #endif // _DEBUG
 
     // 地形の更新処理
     stage_->Update();
+
+    if (player_->IsCharge()) {
+        stage_->IsSetAlphaFalse();
+    }
 
     //プレイヤーの操作 シーン切り替え時や判定完了時はしない
     if (sceneChange_.isSceneStart_) {
@@ -249,7 +263,7 @@ void GameScene::Update() {
     enemies_.remove_if([](const std::unique_ptr<Enemy>& enemy) { return enemy->IsDead(); });
 
     // 敵キャラの更新処理
-    PopEnemy();
+    PopEnemyWait();
 
     uint32_t enemyCount = 0;
     for (auto& newEnemy : enemies_) {
@@ -340,6 +354,7 @@ void GameScene::CheckAllCollisions() {
         }
     }
 
+
 #pragma endregion
 
 #pragma region // 自キャラと平面の当たり判定
@@ -391,7 +406,28 @@ void GameScene::CheckAllCollisions() {
 }
 
 void GameScene::PopEnemy() {
-    // 待機処理
+
+    // 敵の出現処理
+    auto newEnemy = std::make_unique<Enemy>();
+    Random::SetMinMax(-20.0f, 20.0f);
+    std::array<Vector3, 4> enemyPositions = {
+        Vector3{ -40.0f, 20.0f, Random::Get() },
+        Vector3{ 40.0f, 20.0f, Random::Get() },
+        Vector3{ Random::Get(), 20.0f, -40.0f },
+        Vector3{ Random::Get(), 20.0f, 40.0f }
+    };
+    Random::SetMinMax(0.0f, 4.0f);
+    newEnemy->Initialize(enemyPositions[static_cast<uint32_t>(Random::Get())]);
+    newEnemy->SetCrashParticlePtr(crashParticle_.get());
+    newEnemy->SetFlashParticlePtr(flashParticle_.get());
+
+    enemies_.emplace_back(std::move(newEnemy));
+
+}
+
+void GameScene::PopEnemyWait()
+
+{    // 待機処理
     if (isWaitingToPop_) {
         waitToPopTimer_--;
         if (waitToPopTimer_ <= 0) {
@@ -400,21 +436,7 @@ void GameScene::PopEnemy() {
         return;
     }
 
-    // 敵の出現処理
-    auto newEnemy = std::make_unique<Enemy>();
-    Random::SetMinMax(-40.0f, 40.0f);
-    std::array<Vector3, 4> enemyPositions = {
-        Vector3{ -80.0f, 40.0f, Random::Get() },
-        Vector3{ 80.0f, 40.0f, Random::Get() },
-        Vector3{ Random::Get(), 40.0f, -80.0f },
-        Vector3{ Random::Get(), 40.0f, 80.0f }
-    };
-    Random::SetMinMax(0.0f, 4.0f);
-    newEnemy->Initialize(enemyPositions[static_cast<uint32_t>(Random::Get())]);
-    newEnemy->SetCrashParticlePtr(crashParticle_.get());
-    newEnemy->SetFlashParticlePtr(flashParticle_.get());
-
-    enemies_.emplace_back(std::move(newEnemy));
+    PopEnemy();
     isWaitingToPop_ = true;
     waitToPopTimer_ = 60;
 }
@@ -462,12 +484,21 @@ void GameScene::Draw() {
 #ifdef _DEBUG
     // グリッドの描画
     DrawGrid::Draw(*currentCamera_, false);
+
+
+    lineMesh_->PreDraw();
+    lineMesh_->Draw(*currentCamera_, MakeIdentity4x4());
 #endif // _DEBUG
 
     // 天球の描画
     skyDome_->Draw(*currentCamera_);
 
+    backGround_->Draw(*currentCamera_);
+
+    // 地形の描画
+    stage_->Draw(*currentCamera_);
     // 自キャラの描画
+
     player_->Draw(*currentCamera_);
 
     //敵キャラの描画
@@ -486,10 +517,7 @@ void GameScene::Draw() {
         effect_->Draw(*currentCamera_);
     }
 
-    backGround_->Draw(*currentCamera_);
 
-    // 地形の描画
-    stage_->Draw(*currentCamera_);
 
     crashParticle_->Draw(kBlendModeNormal);
 
@@ -502,6 +530,8 @@ void GameScene::Draw() {
     if (cameraController_->zoomEnd_) {
         shutter_->Draw();
     }
+
+
 
 }
 void GameScene::Debug() {

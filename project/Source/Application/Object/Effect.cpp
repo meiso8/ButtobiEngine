@@ -13,7 +13,7 @@ Effect::Effect(const WorldTransform& parent)
     worldTransform_.Initialize();
     worldTransform_.parent_ = &parent;
     worldTransform_.scale_ = { 2.0f,2.0f,2.0f };
-    worldTransform_.translate_.y -= 1.5f;
+    worldTransform_.translate_.y -= 1.0f;
 }
 
 void Effect::Initialize() {
