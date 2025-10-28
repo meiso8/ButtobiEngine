@@ -24,6 +24,7 @@ class PlaneRenderer;
 class OBBRenderer;
 class Shutter;
 class BackGround;
+class Effect;
 
 // ゲームシーン
 class GameScene :public SceneManager {
@@ -75,6 +76,9 @@ private:
     Vector4 chargeParticleColor_;
     std::unique_ptr <FlashParticle> flashParticle_ = nullptr;
     std::unique_ptr <AppleCrashParticle> crashParticle_ = nullptr;
+    //エフェクト
+    std::unique_ptr <Effect> effect_ = nullptr;
+
 
     // 地形
     std::unique_ptr <Stage> stage_ = nullptr;

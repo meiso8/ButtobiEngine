@@ -37,6 +37,7 @@ public:
         TABLE,
         BACK_GROUND,//背景
 
+        EFFECT,
         MODELS,
     };
 
