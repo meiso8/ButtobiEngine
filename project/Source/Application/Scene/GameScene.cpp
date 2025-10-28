@@ -124,6 +124,9 @@ void GameScene::CreateParticleMesh() {
     crashParticle_->Create(Texture::GetHandle(Texture::FLASH_PARTICLE));
     crashParticle_->useBillboard_ = true;
     crashParticle_->emitter_.cont = 10;
+
+    //パーティクルをセットする
+    player_->SetParticle(flashParticle_.get());
 }
 
 void GameScene::UpdateParticle()
@@ -164,7 +167,7 @@ void GameScene::UpdateSceneChange()
     }
 
     if (sceneChange_.isEndScene_) {
-        Sound::Stop(Sound::CHARGE);
+
         Sound::Stop(Sound::ANNOUNCE_FRUIT);
     }
 
@@ -219,9 +222,9 @@ void GameScene::Update() {
     if (sceneChange_.isSceneStart_) {
         if (!isGameClear && !isGameOver) {
             player_->InputMove();
-            player_->InputAttack();
+
         }
-   
+
     }
 
     // 自キャラの更新処理
@@ -280,9 +283,6 @@ void GameScene::Update() {
             isGameOver = true;
         }
     }
-
-
-
 };
 
 void GameScene::CheckAllCollisions() {
@@ -302,11 +302,8 @@ void GameScene::CheckAllCollisions() {
         // OBBとSphereの当たり判定
         if (IsCollision(player_->GetHPSphere(), enemy->GetSphere())) {
 
-            //パーティクルを出現させる
-            if (!player_->GetIsInvincible()) {
-                //無敵時間じゃないときパーティクルを出現する
-                flashParticle_->emitter_.transform.translate = player_->GetWorldPosition();
-                flashParticle_->EmitParticle(false, { 2.0f,2.0f,2.0f }, { 1.0f, 1.0f, 1.0f, 1.0f });
+            //カメラを動かす
+            if (!isShakeCamera_) {
                 isShakeCamera_ = true;
                 cameraShakeTimer_ = 0;
             }
@@ -328,15 +325,8 @@ void GameScene::CheckAllCollisions() {
         if (IsCollision(arrowOBB, enemySphere)) {
             // 敵弾の衝突時コールバックを呼び出す
             enemy->OnCollision(player_.get());
-
-            //もしプレイヤーがアタックしていたら
-            if (player_->IsAttack()) {
-                flashParticle_->emitter_.transform.translate = enemy->GetWorldPosition();
-                flashParticle_->EmitParticle(false, { 2.0f,2.0f,2.0f }, { 1.0f, 1.0f, 1.0f, 1.0f });
-            }
             // 自キャラ衝突時コールバックを呼び出す
             player_->OnCollision(enemy.get());
-
         }
     }
 
@@ -411,7 +401,9 @@ void GameScene::PopEnemy() {
     };
     Random::SetMinMax(0.0f, 4.0f);
     newEnemy->Initialize(enemyPositions[static_cast<uint32_t>(Random::Get())]);
-    newEnemy->SetParticlePtr(crashParticle_.get());
+    newEnemy->SetCrashParticlePtr(crashParticle_.get());
+    newEnemy->SetFlashParticlePtr(flashParticle_.get());
+
     enemies_.emplace_back(std::move(newEnemy));
     isWaitingToPop_ = true;
     waitToPopTimer_ = 60;
@@ -440,6 +432,8 @@ void GameScene::UpdateCamera()
 
         if (isGameClear || isGameOver) {
             cameraController_->ZoomIn();
+            //ちょっとここで音を止める
+            Sound::Stop(Sound::CHARGE);
         } else {
             // 行列更新
             cameraController_->Update();
@@ -474,8 +468,6 @@ void GameScene::Draw() {
         newEnemy->Draw(*currentCamera_);
     }
 
-    flashParticle_->Draw(kBlendModeNormal);
-
     if (player_->IsCharge() || player_->IsAttack()) {
         //力を描画
         forceArrow_->Draw(*currentCamera_);
@@ -483,12 +475,14 @@ void GameScene::Draw() {
         particle_->Draw(kBlendModeAdd);
     }
 
-    crashParticle_->Draw(kBlendModeNormal);
-
     backGround_->Draw(*currentCamera_);
 
     // 地形の描画
     stage_->Draw(*currentCamera_);
+
+    crashParticle_->Draw(kBlendModeNormal);
+
+    flashParticle_->Draw(kBlendModeNormal);
 
     //UI
     uiManager_->Draw();

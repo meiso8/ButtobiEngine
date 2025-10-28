@@ -21,7 +21,7 @@ void FlashParticle::Update(Camera& camera)
     for (std::list <Particle>::iterator particleIterator = particles.begin(); particleIterator != particles.end();) {
 
         if (numInstance_ < kNumMaxInstance) {
-            if ((*particleIterator).lifeTime <= (*particleIterator).currentTime) {
+            if (0.5f <= (*particleIterator).currentTime) {
                 particleIterator = particles.erase(particleIterator);
                 continue;
             }
