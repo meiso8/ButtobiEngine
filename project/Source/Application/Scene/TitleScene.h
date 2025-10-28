@@ -131,6 +131,9 @@ class TitleScene :public SceneManager {
     Model* appleModel = nullptr;
     WorldTransform appleWorldTransform;
 
+    Model* backGroundModel = nullptr;
+	WorldTransform backGroundWorldTransform;
+
     std::unique_ptr<Sprite> spaceSprite_ = nullptr;
     uint32_t spaceTExtureHandle_ = 0;
 
