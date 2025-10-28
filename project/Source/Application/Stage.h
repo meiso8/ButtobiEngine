@@ -7,7 +7,7 @@ struct Plane;
 struct OBB;
 class OBBCube;
 class Camera;
-
+class QuadMesh;
 class PlaneRenderer;
 class OBBRenderer;
 
@@ -23,6 +23,9 @@ private:
     // 平面
     std::array<std::unique_ptr<Plane>, kMaxPlane> planes_;
     std::array<std::unique_ptr<PlaneRenderer>, kMaxPlane> planeRenderers_;
+
+    //QUad
+    std::unique_ptr<QuadMesh> quad_ = nullptr;
 
     // OBB
     std::array<Vector3, kMaxOBB> obbRotates_;
