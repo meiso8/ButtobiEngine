@@ -112,6 +112,7 @@ private:
 
     /// @brief 敵の出現
     void PopEnemy();
+    void PopEnemyWait();
 
     void UpdateCamera();
     void CreateParticleMesh();

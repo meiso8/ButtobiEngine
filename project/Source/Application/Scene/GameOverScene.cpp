@@ -54,6 +54,7 @@ void GameOverScene::Initialize() {
     gameOverSprite_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 
     score_->SetScorePos();
+    score_->Calculation();
 }
 
 void GameOverScene::Update() {
