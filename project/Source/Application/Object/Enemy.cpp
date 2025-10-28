@@ -12,6 +12,7 @@
 #include <cassert>
 #include"Sound.h"
 #include"Particle/AppleCrashParticle.h"
+#include"Input.h"
 
 #ifdef _DEBUG
 #include "../externals/imgui/imgui.h"
@@ -142,7 +143,7 @@ void Enemy::OnCollision(Player* player) {
     }
 
     if (player->IsAttack()) {
-		Vector3 kickForce = player->GetKickForce();
+        Vector3 kickForce = player->GetKickForce();
         rigidBody_->ApplyForce(kickForce);
         isKicked_ = true;
         //キック継続時間の初期化
@@ -150,7 +151,7 @@ void Enemy::OnCollision(Player* player) {
         //キック力を初期化
         player->InitKickForce();
         Sound::PlaySE(Sound::FRUIT_FALL);
-
+        return;
     }
 
 }
@@ -185,7 +186,7 @@ void Enemy::OnCollision(const Plane& plane) {
 void Enemy::OnCollision(const OBB& obb) {
     constexpr float exz = 1.0f;							// XZ軸の反発係数
     constexpr float ey = 0.8f;							// Y軸の反発係数
-	float penetration = PenetrationDepth(GetSphere(), obb); // 貫入量の計算
+    float penetration = PenetrationDepth(GetSphere(), obb); // 貫入量の計算
 
     // 貫入量が0以下なら衝突していないので処理を抜ける
     if (penetration <= 0.0f) {

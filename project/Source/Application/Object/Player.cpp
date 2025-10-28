@@ -1,5 +1,5 @@
 #define NOMINMAX // std::maxの置き換えが行われないため
-
+#include"DebugUI.h"
 #include "Player.h"
 #include "AABB.h"
 
@@ -403,6 +403,9 @@ void Player::Update() {
 
     AttackAnimation();
 
+    model_[Parts::kBody]->GetWaveData(1).time+=InverseFPS;
+    model_[Parts::kBody]->GetWaveData(1).amplitude = 0.01f;
+
     // ==============================
     // 6.デバッグ描画の更新
     // ==============================
@@ -521,6 +524,9 @@ Vector3 Player::GetAttackArea()
 }
 
 void Player::Debug() {
+
+
+
     ImGui::Begin("Parts");
 
     ImGui::Text("Head");
@@ -603,6 +609,7 @@ void Player::Debug() {
     ImGui::Checkbox("isAttack", &isAttack_);
     ImGui::DragFloat("chargeTimer_", &chargeTimer_);
 
+    DebugUI::CheckModel(*model_[Parts::kBody], "body");
 
 
     switch (attackPhase_) {

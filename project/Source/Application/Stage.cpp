@@ -11,8 +11,8 @@ Stage::~Stage() = default;
 
 void Stage::Initialize() {
     // モデルの生成 OBJからの生成
-    model_ = std::make_unique<Model>();
-    model_->Create(ModelManager::STAGE);
+    //model_ = std::make_unique<Model>();
+    //model_->Create(ModelManager::STAGE);
 
     // ワールド変換の初期化
     worldTransform_.Initialize();
@@ -80,10 +80,10 @@ void Stage::Update() {
 
 void Stage::Draw(Camera& camera) {
     // 3Dモデル描画前処理
-    model_->PreDraw(BlendMode::kBlendModeNormal);
+    //model_->PreDraw(BlendMode::kBlendModeNormal);
 
-    // 3Dモデルを描画
-    model_->Draw(camera, worldTransform_.matWorld_);
+    //// 3Dモデルを描画
+    //model_->Draw(camera, worldTransform_.matWorld_);
 
 #ifdef _DEBUG
     // 平面のデバッグ描画
