@@ -14,9 +14,9 @@ inline bool NearlyEqual(const Vector3& a, const Vector3& b, float epsilon = 0.00
 
 UIManager::UIManager()
 {
-	sparklesPosirion[0] = {900,70};
-	sparklesPosirion[1] = {ComboCountPosition_.x+50,ComboCountPosition_.y};
-	sparklesPosirion[2] = JuiceCountPosition_;
+	sparklesPosirion[0] = {1200,70};
+	sparklesPosirion[1] = {ComboCountPosition_.x+50,ComboCountPosition_.y+20};
+	sparklesPosirion[2] = { JuiceCountPosition_.x - 20, JuiceCountPosition_.y + 30};
 
     LifeTextureHandle_ = Texture::GetHandle(Texture::LIFE);
 
@@ -221,6 +221,10 @@ void UIManager::Update() {
     // =============================== Score==========================================
     
     scoreClass_->Update(ComboBonus_,speedBonus_,JuiceBonus_);
+	
+	if (scoreClass_->GetIsHighScoreUpdate()) {
+		isSparkleAlive[0] = true;
+	}
    
     if (GameTime_ <= 0.0f) {
         GameTime_ = 0.0f;
@@ -437,7 +441,7 @@ void UIManager::Debug()
     ImGui::Checkbox("UpdateTimer", &isUpdateComboTimer_);
     ImGui::SliderFloat("GameTimer", &GameTime_,0.0f,120.0f);
     ImGui::Text("Combo : %d MaxCombo : %d ", Combo_, MaxCombo_);
-
+	ImGui::InputScalar("juiceMeter", ImGuiDataType_U32, &JuiceMeter);
     ImGui::End();
 
 
