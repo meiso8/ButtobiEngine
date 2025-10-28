@@ -8,6 +8,7 @@
 #include<cmath>
 #include"Window.h"
 #include<numbers>
+#include"MakeMatrix.h"
 
 void CameraController::Initialize(Camera* camera) {
     camera_ = camera;
@@ -34,11 +35,14 @@ void CameraController::Update() {
     camera_->translate_ = Easing::EaseOutQuad(camera_->translate_, behindPos, 0.5f);
     camera_->rotate_.x = 0.30f;
     camera_->rotate_.y = Easing::EaseInQuad(camera_->rotate_.y, targetWorldTransform.rotate_.y, 0.75f);
+
+    camera_->UpdateMatrix();
+
 }
 
 void CameraController::ZoomIn()
 {
-    if (zoomInTimer_ < 60) {
+    if (zoomInTimer_ < 120) {
         zoomInTimer_++;
         const WorldTransform& targetWorldTransform = target_->GetWorldTransform();
 
@@ -49,18 +53,28 @@ void CameraController::ZoomIn()
         // forward の逆方向に一定距離離した位置にカメラを置く
         float distance = 5.0f; // 背後距離
         Vector3 forwardPos = playerPos + forward * distance;
-        // 見下ろし高さ
-        float height = 1.0f;
-        forwardPos.y += height;
 
         camera_->translate_ = Easing::EaseOutQuad(camera_->translate_, forwardPos, 0.5f);
         camera_->rotate_.x = 0.30f;
         float rotate = std::atan2f(forward.z, forward.x);
         rotate += std::numbers::pi_v<float> / 2.0f;
-        camera_->rotate_.y = Easing::EaseInQuad(camera_->rotate_.y, rotate, 0.75f);
+
+        Matrix4x4 backToFrontMatrix = MakeRotateYMatrix(std::numbers::pi_v<float>);
+        Matrix4x4 billboardMatrix = Multiply(backToFrontMatrix, target_->GetWorldTransform().matWorld_);
+        billboardMatrix.m[3][0] = 0.0f;
+        billboardMatrix.m[3][1] = 0.0f;
+        billboardMatrix.m[3][2] = 0.0f;
+
+        Matrix4x4 scaleMatrix = MakeScaleMatrix(camera_->scale_);
+        Matrix4x4 translateMatrix = MakeTranslateMatrix(camera_->translate_);
+        Matrix4x4 rotateMatrix = billboardMatrix;
+        Matrix4x4 worldMatrix = scaleMatrix * rotateMatrix * translateMatrix;
+
+        camera_->worldMat_ = Lerp(camera_->worldMat_, worldMatrix, 0.5f);
+        camera_->UpdateViewProjectionMatrix();
 
     } else {
-        zoomInTimer_ = 60;
+        zoomInTimer_ = 120;
         zoomEnd_ = true;
     }
 

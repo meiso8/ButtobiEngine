@@ -50,108 +50,103 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // ゲームオーバーシーンの生成
     scenes.push_back(std::make_unique<GameOverScene>());
 
+    GameScene* gameScene = dynamic_cast<GameScene*>(scenes[kGameScene].get());
+    GameClearScene* gameClearScene = dynamic_cast<GameClearScene*>(scenes[kGameClearScene].get());
+    gameClearScene->SetScore(gameScene->GetScoreClass());
+    gameClearScene->SetShutter(gameScene->GetShutter());
+    GameOverScene* gameOverScene = dynamic_cast<GameOverScene*>(scenes[kGameOverScene].get());
+    gameOverScene->SetScore(gameScene->GetScoreClass());
+    gameOverScene->SetShutter(gameScene->GetShutter());
+
     //シーンのインデックス
     int sceneIndex = kTitleScene;
 #ifdef _DEBUG
-	// シーンのインデックス
-	sceneIndex = kGameScene;
+    // シーンのインデックス
+    sceneIndex = kGameScene;
 #endif // _DEBUG
 
-	// 現在のシーン
-	SceneManager* currentScene = nullptr;
-	// 現在のシーンに代入
-	currentScene = scenes[sceneIndex].get();
-	// 現在のシーンの初期化
-	currentScene->Initialize();
-	for (int i = 0; i < scenes.size(); i++) {
-		scenes[i]->SetIsEndScene(false);
-	}
+    // 現在のシーン
+    SceneManager* currentScene = nullptr;
+    // 現在のシーンに代入
+    currentScene = scenes[sceneIndex].get();
+    // 現在のシーンの初期化
+    currentScene->Initialize();
+    for (int i = 0; i < scenes.size(); i++) {
+        scenes[i]->SetIsEndScene(false);
+    }
 
-	// =============================================
-	// ウィンドウのxボタンが押されるまでループ メインループ
-	// =============================================
-	while (true) {
+    // =============================================
+    // ウィンドウのxボタンが押されるまでループ メインループ
+    // =============================================
+    while (true) {
 
-		// メッセージが来たらループを抜ける
-		if (myEngine->GetWC().ProcessMassage()) {
-			break;
-		}
+        // メッセージが来たらループを抜ける
+        if (myEngine->GetWC().ProcessMassage()) {
+            break;
+        }
 
 #ifdef _DEBUG
 
-		if (Input::IsTriggerKey(DIK_RETURN)) {
-			sceneIndex = (sceneIndex + 1) % scenes.size(); // 次のシーンへ
-			currentScene = scenes[sceneIndex].get();
-			// 現在のシーンの初期化
-			currentScene->Initialize();
-		}
+        if (Input::IsTriggerKey(DIK_RETURN)) {
+            sceneIndex = (sceneIndex + 1) % scenes.size(); // 次のシーンへ
+            currentScene = scenes[sceneIndex].get();
+            // 現在のシーンの初期化
+            currentScene->Initialize();
+        }
 
 #endif // _DEBUG
 
-		if (scenes[kTitleScene]->GetIsEndScene()) {
+        if (scenes[kTitleScene]->GetIsEndScene()) {
+            currentScene->SetIsEndScene(false);
+            currentScene = scenes[kGameScene].get();
+            // 現在のシーンの初期化
+            currentScene->Initialize();
+        }
 
-			currentScene->SetIsEndScene(false);
-	
-			currentScene = scenes[kGameScene].get();
-			// 現在のシーンの初期化
-			currentScene->Initialize();
-		}
+        if (scenes[kGameScene]->GetIsEndScene()) {
+            currentScene->SetIsEndScene(false);
+            if (gameScene->GetIsGameClear()) {
+                currentScene = scenes[kGameClearScene].get();
+            } else if (gameScene->GetIsGameOver()) {
+                currentScene = scenes[kGameOverScene].get();
+            }
+            // 現在のシーンの初期化
+            currentScene->Initialize();
+        }
 
-		if (scenes[kGameScene]->GetIsEndScene()) {
+        if (scenes[kGameClearScene]->GetIsEndScene() || scenes[kGameOverScene]->GetIsEndScene()) {
+            currentScene->SetIsEndScene(false);
+            currentScene = scenes[kTitleScene].get();
+            // 現在のシーンの初期化
+            currentScene->Initialize();
+        }
 
-			currentScene->SetIsEndScene(false);
-
-			GameScene* gameScene = dynamic_cast<GameScene*>(scenes[kGameScene].get());
-
-			if (gameScene->GetIsGameClear()) {
-				GameClearScene* gameClearScene = dynamic_cast<GameClearScene*>(scenes[kGameClearScene].get());
-				gameClearScene->SetScore(gameScene->GetScoreClass());
-				gameClearScene->SetShutter(gameScene->GetShutter());
-				currentScene = gameClearScene;
-
-			} else if (gameScene->GetIsGameOver()) {
-				GameOverScene* gameOverScene = dynamic_cast<GameOverScene*>(scenes[kGameOverScene].get());
-				gameOverScene->SetScore(gameScene->GetScoreClass());
-				gameOverScene->SetShutter(gameScene->GetShutter());
-				currentScene = gameOverScene;
-			}
-			// 現在のシーンの初期化
-			currentScene->Initialize();
-		}
-
-		if (scenes[kGameClearScene]->GetIsEndScene() || scenes[kGameOverScene]->GetIsEndScene()) {
-			currentScene->SetIsEndScene(false);
-			currentScene = scenes[kTitleScene].get();
-			// 現在のシーンの初期化
-			currentScene->Initialize();
-		}
-
-		// エンジンの更新処理
-		myEngine->Update();
+        // エンジンの更新処理
+        myEngine->Update();
 
 #ifdef _DEBUG
-		// デバック用
+        // デバック用
 
-		DebugUI::CheckColor(screenColor, "screenColor");
-		ImGui::Text("%s", sceneName[sceneIndex]);
-		DebugUI::CheckFPS();
-		currentScene->Debug();
+        DebugUI::CheckColor(screenColor, "screenColor");
+        ImGui::Text("%s", sceneName[sceneIndex]);
+        DebugUI::CheckFPS();
+        currentScene->Debug();
 
 #endif // _DEBUG
 
-		// シーンの更新処理
-		currentScene->Update();
+        // シーンの更新処理
+        currentScene->Update();
 
-		// エンジンの描画前処理
-		myEngine->PreCommandSet(screenColor);
-		// シーンの描画
-		currentScene->Draw();
-		// エンジンの描画後処理
-		myEngine->PostCommandSet();
-	}
+        // エンジンの描画前処理
+        myEngine->PreCommandSet(screenColor);
+        // シーンの描画
+        currentScene->Draw();
+        // エンジンの描画後処理
+        myEngine->PostCommandSet();
+    }
 
-	// エンジンの終了
-	myEngine->Finalize();
+    // エンジンの終了
+    myEngine->Finalize();
 
-	return 0;
+    return 0;
 }

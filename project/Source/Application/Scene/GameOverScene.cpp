@@ -51,7 +51,9 @@ void GameOverScene::Initialize() {
 
     gameOverSprite_ = std::make_unique<Sprite>();
     gameOverSprite_->Create(Texture::GetHandle(Texture::GAME_OVER), { 640.0f - 480.0f,96.0f }, { 960.0f,192.0f });
-    gameOverSprite_->SetColor({ 1.0f,1.0f,1.0f,0.5f });
+    gameOverSprite_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+
+    score_->SetScorePos();
 }
 
 void GameOverScene::Update() {
@@ -92,9 +94,13 @@ void GameOverScene::Draw() {
 
     gameOverSprite_->PreDraw();
     gameOverSprite_->Draw();
+
+    score_->Draw();
+
     if (shutter_) {
         shutter_->Draw();
     }
+
 }
 
 void GameOverScene::Debug()

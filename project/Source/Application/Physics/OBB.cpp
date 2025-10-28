@@ -1,7 +1,9 @@
 #include "OBB.h"
 #include"Texture.h"
 #include"LineMesh.h"
+#include"OBBCube.h"
 #include"MakeMatrix.h"
+
 
 #ifdef _DEBUG
 #include "../externals/imgui/imgui.h"
@@ -46,15 +48,20 @@ OBBRenderer::~OBBRenderer() = default;
 
 void OBBRenderer::Initialize() {
 	uint32_t textureHandle = Texture::GetHandle(Texture::WHITE_1X1);
+	
+	uint32_t textureHandle2 = Texture::GetHandle(Texture::UV_CHECKER);
 	for (auto &line : lines_) {
 		line = std::make_unique<LineMesh>();
 		line->Create(textureHandle);
 	}
-	Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	Vector4 color = { 1.0f, 0.0f, 0.0f, 1.0f };
 	for (auto &line : lines_) {
-
 		line->SetColor(color);
 	}
+
+	cube_ = std::make_unique<OBBCube>();
+	cube_->Create(textureHandle2);
+	cube_->SetColor({ 1.0f, 1.0f, 1.0f, 0.5f });
 }
 
 void OBBRenderer::Update(const OBB &obb) {
@@ -86,6 +93,8 @@ void OBBRenderer::Update(const OBB &obb) {
 	lines_[9]->SetVertexData(vertices[1], vertices[5]);		// 前面右辺
 	lines_[10]->SetVertexData(vertices[3], vertices[7]);	// 奥面左辺
 	lines_[11]->SetVertexData(vertices[2], vertices[6]);	// 奥面右辺
+
+	cube_->SetVertex(vertices);
 }
 
 void OBBRenderer::Draw(Camera &camera) {
@@ -94,4 +103,6 @@ void OBBRenderer::Draw(Camera &camera) {
 	for (auto &line : lines_) {
 		line->Draw(camera, MakeIdentity4x4());
 	}
+	cube_->PreDraw();
+	cube_->Draw(camera, MakeIdentity4x4());
 }

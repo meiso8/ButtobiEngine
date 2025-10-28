@@ -58,16 +58,20 @@ void DebugUI::CheckModel(Model& model, const char* label) {
 
     ImGui::Begin("Model");
 
-    CheckWaveData(model.GetWaveData(0), "wave0");
-    CheckWaveData(model.GetWaveData(1), "wave1");
+    if (ImGui::TreeNode(label)) {
 
-    CheckBalloonData(model.GetBalloonData());
+        CheckWaveData(model.GetWaveData(0), "wave0");
+        CheckWaveData(model.GetWaveData(1), "wave1");
 
-    CheckTransform(model.GetUVTransform(), "UVTransform");
-    CheckColor(model.GetColor(), "modelColor");
+        CheckBalloonData(model.GetBalloonData());
+
+        CheckTransform(model.GetUVTransform(), "UVTransform");
+        CheckColor(model.GetColor(), "modelColor");
+
+        ImGui::TreePop();
+    }
 
     ImGui::End();
-
 }
 
 void DebugUI::CheckInput(Input& input) {

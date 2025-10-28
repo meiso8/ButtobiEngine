@@ -4,6 +4,7 @@
 #include "Sprite.h"
 #include<memory>
 class FlashParticle;
+class AppleSceneChange;
 
 class Model;
 class TitleScene :public SceneManager {
@@ -153,6 +154,9 @@ class TitleScene :public SceneManager {
     JuiceInOutPhase jInOutPhase_;
     //パーティクル
     std::unique_ptr <FlashParticle> flashParticle_ = nullptr;
+
+    std::unique_ptr <AppleSceneChange> appleSceneChange_ = nullptr;
+
 
 public:
     TitleScene();

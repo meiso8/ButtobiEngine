@@ -1,8 +1,8 @@
 #define NOMINMAX // std::maxの置き換えが行われないため
-
+#include"DebugUI.h"
 #include "Player.h"
 #include "AABB.h"
-
+#include"Particle/FlashParticle.h"
 #include "Sphere.h"
 
 #include "Collision.h"
@@ -246,6 +246,7 @@ inline bool NearlyEqual(const Vector3& a, const Vector3& b, float epsilon = 0.00
 
 void Player::InputAttack() {
 
+#ifdef _DEBUG
     if (Input::IsTriggerKey(DIK_1)) {
         attackPhase_ = kNone;
         ResetAttack();
@@ -260,13 +261,13 @@ void Player::InputAttack() {
         attackPhase_ = kEnd;
     }
 
+#endif
+
     bool allMatched = true;
     switch (attackPhase_) {
     case Player::kNone:
 
-
         if (Input::IsPushKey(DIK_SPACE)) {
-
             attackPhase_ = Player::kCharge;
             Sound::PlayLoopSE(Sound::CHARGE, 0.0f);
         }
@@ -364,7 +365,8 @@ void Player::Update() {
     // 1.移動入力
     // ==============================
 
-    InputMove();
+    //これをGameSceneに移植
+    //InputMove();
 
     InputAttack();
 
@@ -450,11 +452,10 @@ Sphere Player::GetHPSphere() const
 // 衝突応答
 void Player::OnCollision(const Enemy* enemy) {
 
-    (void)enemy;
-
     if (isAttack_) {
         ResetAttack();
-    } 
+    }
+
 }
 void Player::OnCollisionHP(const Enemy* enemy)
 {
@@ -469,6 +470,9 @@ void Player::OnCollisionHP(const Enemy* enemy)
             life_--;
             isInvincible_ = true;
             Sound::PlaySE(Sound::PLAYER_HIT);
+            flashParticle_->emitter_.transform.translate = GetWorldPosition();
+            flashParticle_->EmitParticle(false, { 2.0f,2.0f,2.0f }, { 1.0f, 1.0f, 1.0f, 1.0f });
+
         }
     }
 }
@@ -520,6 +524,9 @@ Vector3 Player::GetAttackArea()
 }
 
 void Player::Debug() {
+
+
+
     ImGui::Begin("Parts");
 
     ImGui::Text("Head");
@@ -602,6 +609,7 @@ void Player::Debug() {
     ImGui::Checkbox("isAttack", &isAttack_);
     ImGui::DragFloat("chargeTimer_", &chargeTimer_);
 
+    DebugUI::CheckModel(*model_[Parts::kBody], "body");
 
 
     switch (attackPhase_) {

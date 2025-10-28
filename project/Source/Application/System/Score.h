@@ -50,5 +50,6 @@ public:
 	void Update(const float& ComboBonus, const float& speedBonus, const float& JuiceBonus);
 	void Calculation();
 	void Draw();
+	void SetScorePos();
 };
 

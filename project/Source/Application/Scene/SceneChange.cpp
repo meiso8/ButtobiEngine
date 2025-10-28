@@ -1,6 +1,5 @@
 #include "SceneChange.h"
 
-
 void SceneChange::Initialize()
 {
     isEndScene_ = false;

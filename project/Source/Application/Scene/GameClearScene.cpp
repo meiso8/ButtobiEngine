@@ -21,7 +21,7 @@ constexpr int winHeight = 720;
 void GameClearScene::Initialize() {
 
     sceneChange_.Initialize();
-
+    isStartSceneChange_ = false;
     // カメラの初期化
     camera_ = std::make_unique<Camera>();
     camera_->Initialize(winWidth, winHeight, Camera::PERSPECTIVE);
@@ -49,20 +49,35 @@ void GameClearScene::Initialize() {
     //エネミーをクリアする
     enemies_.clear();
     subtractWaitToPopTimer_ = 60;
+
+    score_->SetScorePos();
 }
 void GameClearScene::Update() {
 
     if (sceneChange_.isSceneStart_) {
 
+        if (isStartSceneChange_) {
+            //カウントアップする
+            sceneChange_.UpdateEnd(120);
+        }
+
         if (Input::IsTriggerKey(DIK_SPACE)) {
-            sceneChange_.isEndScene_ = true;
+            //省略する
+            isRenderSprite_ = true;
+            isStartSceneChange_ = true;
+
+            if (sceneChange_.endTimer_ < 60) {
+                sceneChange_.endTimer_ = 60;
+            }
         }
 
         EnemyUpdate();
+
         //減少時間が1になったら
         if (subtractWaitToPopTimer_ == 1) {
             isRenderSprite_ = true;
             Sound::PlayOriginSE(Sound::YEAH);
+            isStartSceneChange_ = true;
         }
 
     } else {
@@ -102,11 +117,10 @@ void GameClearScene::Draw() {
     clearSprite_->PreDraw();
 
     if (isRenderSprite_) {
-
         clearSprite_->Draw();
+        score_->Draw();
     }
 
-    score_->Draw();
     if (shutter_) {
         shutter_->Draw();
     }

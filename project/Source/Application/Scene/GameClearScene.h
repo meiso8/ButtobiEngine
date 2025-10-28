@@ -19,7 +19,7 @@ private:
     Shutter* shutter_ = nullptr;
     // スコア
     Score* score_ = nullptr;									// ステージ
-
+    bool isStartSceneChange_ = false;
 
     bool isWaitingToPop_ = false;									// 敵出現待機フラグ
     int32_t waitToPopTimer_ = 0;									// 敵出現待機タイマー

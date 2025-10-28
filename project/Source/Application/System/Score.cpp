@@ -26,6 +26,16 @@ Score::Score()
 
 void Score::Initialize()
 {
+
+    ScorePosition_ = { 900, 70 };
+    ScoreNumbersPosition_ = { 900, 120 };
+    HighScorePosition_ = { 900, 0 };
+    HighScoreNumbersPosition_ = { 950, 40 };
+
+    scoreSprite->SetPosition(ScorePosition_);
+    highScoreSprite->SetPosition(HighScorePosition_);
+    scorePosInterval = 50;
+
     for (int i = 0; i < 7; i++) {
 
         NumbersSprite[i]->SetPosition({ ScoreNumbersPosition_.x + i * scorePosInterval, ScoreNumbersPosition_.y });
@@ -43,7 +53,7 @@ void Score::Initialize()
     Score_ = 0;
 }
 
-void Score::Update(const float& ComboBonus, const float& speedBonus, const float& JuiceBonus )
+void Score::Update(const float& ComboBonus, const float& speedBonus, const float& JuiceBonus)
 {
     if (isScoreUP_) {
         Score_ += static_cast<int>(AddBaseScore_ * ComboBonus * speedBonus * JuiceBonus);
@@ -74,8 +84,6 @@ void Score::Calculation()
     NumbersSprite[5]->SetTextureLeftTop({ 80.0f * (Score_ / 10 % 10), 0 });
     NumbersSprite[6]->SetTextureLeftTop({ 80.0f * (Score_ % 10), 0 });
 
-
-
     HighScoreNumbersSprite[0]->SetTextureLeftTop({ 80.0f * (HighScore_ / 1000000 % 10), 0 });
     HighScoreNumbersSprite[1]->SetTextureLeftTop({ 80.0f * (HighScore_ / 100000 % 10), 0 });
     HighScoreNumbersSprite[2]->SetTextureLeftTop({ 80.0f * (HighScore_ / 10000 % 10), 0 });
@@ -87,7 +95,6 @@ void Score::Calculation()
     for (int i = 0; i < 7; i++) {
         NumbersSprite[i]->Update();
         HighScoreNumbersSprite[i]->Update();
-
     }
 
 }
@@ -100,4 +107,34 @@ void Score::Draw()
     }
     scoreSprite->Draw();
     highScoreSprite->Draw();
+}
+
+void Score::SetScorePos()
+{
+    ScorePosition_ = { 320, 400 };
+    ScoreNumbersPosition_ = { 640, 420 };
+    HighScorePosition_ = { 320, 360 };
+    HighScoreNumbersPosition_ = { 640, 360 };
+
+    ScoreSize_ = { 256, 64 };
+    HighScoreSize_ = { 256, 64 };
+
+    scoreSprite->SetSize(ScoreSize_);
+    highScoreSprite->SetSize(HighScoreSize_);
+    scoreSprite->SetPosition(ScorePosition_);
+    highScoreSprite->SetPosition(HighScorePosition_);
+
+    scorePosInterval = 40;
+
+    for (int i = 0; i < 7; i++) {
+
+        NumbersSprite[i]->SetPosition({ ScoreNumbersPosition_.x + i * scorePosInterval, ScoreNumbersPosition_.y });
+        NumbersSprite[i]->SetSize(NumberSize_);
+        NumbersSprite[i]->Update();
+
+        HighScoreNumbersSprite[i]->SetPosition({ HighScoreNumbersPosition_.x + i * scorePosInterval, HighScoreNumbersPosition_.y });
+        HighScoreNumbersSprite[i]->SetSize(NumberSize_);
+        HighScoreNumbersSprite[i]->Update();
+    }
+
 }

@@ -17,6 +17,7 @@ class RigidBody;
 class AABBRenderer;
 class SphereRenderer;
 class AppleCrashParticle;
+class FlashParticle;
 
 /// @brief 敵
 class Enemy : public Collider {
@@ -87,7 +88,10 @@ public:
 
     /// @brief Particleのポインタをセットする
     /// @param ptr 
-    void SetParticlePtr(AppleCrashParticle* ptr) { crashParticle_ = ptr; }
+    void SetCrashParticlePtr(AppleCrashParticle* ptr) { crashParticle_ = ptr; }
+    /// @brief Particleのポインタをセットする
+/// @param ptr 
+    void SetFlashParticlePtr(FlashParticle* ptr) { flashParticle_ = ptr; }
 
 #ifdef _DEBUG
     /// @brief 編集
@@ -135,5 +139,6 @@ private:
     uint32_t kickDurationTimer_ = 0;
     //パーティクルのポインタを取得する
      AppleCrashParticle* crashParticle_ = nullptr;
+     FlashParticle* flashParticle_ = nullptr;
 
 };

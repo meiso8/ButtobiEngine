@@ -13,6 +13,7 @@
 #include"Texture.h"
 #include"Shutter.h"
 #include"Score.h"
+#include"Effect.h"
 
 
 constexpr int winWidth = 1280;
@@ -40,6 +41,7 @@ GameScene::GameScene() {
 
     // パーティクル
     CreateParticleMesh();
+
 
     // カメラ操作
     cameraController_ = std::make_unique <CameraController>();
@@ -97,7 +99,12 @@ void GameScene::Initialize() {
     //力の矢印
     forceArrow_->Initialize();
 
+    //敵を削除
+    enemies_.clear();
+
     player_->InitializeLife(uiManager_->GetMaxLife());
+
+    effect_->Initialize();
 
     isGameClear = false;
     isGameOver = false;
@@ -122,6 +129,13 @@ void GameScene::CreateParticleMesh() {
     crashParticle_->Create(Texture::GetHandle(Texture::FLASH_PARTICLE));
     crashParticle_->useBillboard_ = true;
     crashParticle_->emitter_.cont = 10;
+
+    //パーティクルをセットする
+    player_->SetParticle(flashParticle_.get());
+
+    //エフェクト
+    effect_ = std::make_unique <Effect>(player_->GetWorldTransform());
+
 }
 
 void GameScene::UpdateParticle()
@@ -131,17 +145,18 @@ void GameScene::UpdateParticle()
     if (player_->IsCharge()) {
 
         if (player_->GetChargeTimer() == player_->kMaxChargeTime) {
-            chargeParticleColor_ = { 1.0f,0.0f,0.0f,1.0f };
+            chargeParticleColor_ = { 1.0f,1.0f,0.0f,1.0f };
         } else {
-            chargeParticleColor_ = { 1.0f,1.0f,.0f,1.0f };
+            chargeParticleColor_ = { 1.0f,0.0f,0.0f,1.0f };
         }
         particle_->TimerUpdate(true, { 0.1f,0.1f,0.1f }, chargeParticleColor_);
 
         particle_->emitter_.transform.translate = player_->GetWorldPosition();
-
-
     }
 
+    if (player_->IsCharge() || player_->IsAttack()) {
+        effect_->Update(player_->IsCharge(), chargeParticleColor_);
+    }
     particle_->Update(*currentCamera_);
     flashParticle_->Update(*currentCamera_);
     crashParticle_->Update(*currentCamera_);
@@ -149,8 +164,20 @@ void GameScene::UpdateParticle()
 
 void GameScene::UpdateSceneChange()
 {
+
+    if (!sceneChange_.isSceneStart_) {
+        sceneChange_.UpdateStart(60);
+    }
+
+    if (!isAnnounce_) {
+        if (!Sound::IsPlaying(Sound::ANNOUNCE)) {
+            Sound::PlaySE(Sound::ANNOUNCE_FRUIT);
+            isAnnounce_ = true;
+        }
+    }
+
     if (sceneChange_.isEndScene_) {
-        Sound::Stop(Sound::CHARGE);
+
         Sound::Stop(Sound::ANNOUNCE_FRUIT);
     }
 
@@ -179,7 +206,7 @@ void GameScene::InitializeCamera()
     cameraController_->Initialize(camera_.get());
     cameraController_->SetTarget(player_.get());
     cameraController_->Reset();
-  /*  cameraController_->SetMovableArea({ 0.0f, 100.0f, 0.0f, 100.0f });*/
+    /*  cameraController_->SetMovableArea({ 0.0f, 100.0f, 0.0f, 100.0f });*/
 
 }
 
@@ -188,13 +215,9 @@ void GameScene::Update() {
      //BGMを鳴らす
     Sound::PlayBGM(Sound::BGM1);
 
-    if (!isAnnounce_) {
-        if (!Sound::IsPlaying(Sound::ANNOUNCE)) {
-            Sound::PlaySE(Sound::ANNOUNCE_FRUIT);
-            isAnnounce_ = true;
-        }
+    UpdateSceneChange();
 
-    }
+
 
 #ifdef _DEBUG
     ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
@@ -205,8 +228,18 @@ void GameScene::Update() {
     // 地形の更新処理
     stage_->Update();
 
+    //プレイヤーの操作 シーン切り替え時や判定完了時はしない
+    if (sceneChange_.isSceneStart_) {
+        if (!isGameClear && !isGameOver) {
+            player_->InputMove();
+
+        }
+
+    }
+
     // 自キャラの更新処理
     player_->Update();
+
     if (player_->IsAttack()) {
         //アタックしているときコンボタイマーをカウントダウンする
         uiManager_->SetIsUpdateComboTimer(true);
@@ -260,9 +293,6 @@ void GameScene::Update() {
             isGameOver = true;
         }
     }
-
-    UpdateSceneChange();
-
 };
 
 void GameScene::CheckAllCollisions() {
@@ -282,11 +312,8 @@ void GameScene::CheckAllCollisions() {
         // OBBとSphereの当たり判定
         if (IsCollision(player_->GetHPSphere(), enemy->GetSphere())) {
 
-            //パーティクルを出現させる
-            if (!player_->GetIsInvincible()) {
-                //無敵時間じゃないときパーティクルを出現する
-                flashParticle_->emitter_.transform.translate = player_->GetWorldPosition();
-                flashParticle_->EmitParticle(false, { 2.0f,2.0f,2.0f }, { 1.0f, 1.0f, 1.0f, 1.0f });
+            //カメラを動かす
+            if (!isShakeCamera_) {
                 isShakeCamera_ = true;
                 cameraShakeTimer_ = 0;
             }
@@ -308,15 +335,8 @@ void GameScene::CheckAllCollisions() {
         if (IsCollision(arrowOBB, enemySphere)) {
             // 敵弾の衝突時コールバックを呼び出す
             enemy->OnCollision(player_.get());
-
-            //もしプレイヤーがアタックしていたら
-            if (player_->IsAttack()) {
-                flashParticle_->emitter_.transform.translate = enemy->GetWorldPosition();
-                flashParticle_->EmitParticle(false, { 2.0f,2.0f,2.0f }, { 1.0f, 1.0f, 1.0f, 1.0f });
-            }
             // 自キャラ衝突時コールバックを呼び出す
             player_->OnCollision(enemy.get());
-
         }
     }
 
@@ -391,7 +411,9 @@ void GameScene::PopEnemy() {
     };
     Random::SetMinMax(0.0f, 4.0f);
     newEnemy->Initialize(enemyPositions[static_cast<uint32_t>(Random::Get())]);
-    newEnemy->SetParticlePtr(crashParticle_.get());
+    newEnemy->SetCrashParticlePtr(crashParticle_.get());
+    newEnemy->SetFlashParticlePtr(flashParticle_.get());
+
     enemies_.emplace_back(std::move(newEnemy));
     isWaitingToPop_ = true;
     waitToPopTimer_ = 60;
@@ -417,17 +439,21 @@ void GameScene::UpdateCamera()
 
     // カメラの処理
     if (!isDebugCameraActive_) {
-   
+
         if (isGameClear || isGameOver) {
             cameraController_->ZoomIn();
+            //ちょっとここで音を止める
+            Sound::Stop(Sound::CHARGE);
         } else {
             // 行列更新
             cameraController_->Update();
 
         }
+    } else {
+
+        currentCamera_->UpdateMatrix();
     }
 
-    currentCamera_->UpdateMatrix();
 }
 
 
@@ -452,21 +478,22 @@ void GameScene::Draw() {
         newEnemy->Draw(*currentCamera_);
     }
 
-    flashParticle_->Draw(kBlendModeNormal);
-
     if (player_->IsCharge() || player_->IsAttack()) {
         //力を描画
         forceArrow_->Draw(*currentCamera_);
         //パーティクルを描画
         particle_->Draw(kBlendModeAdd);
+        effect_->Draw(*currentCamera_);
     }
-
-    crashParticle_->Draw(kBlendModeNormal);
 
     backGround_->Draw(*currentCamera_);
 
     // 地形の描画
     stage_->Draw(*currentCamera_);
+
+    crashParticle_->Draw(kBlendModeNormal);
+
+    flashParticle_->Draw(kBlendModeNormal);
 
     //UI
     uiManager_->Draw();

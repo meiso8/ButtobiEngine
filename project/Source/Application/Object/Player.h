@@ -10,6 +10,7 @@ struct Sphere;
 struct Plane;
 struct OBB;
 
+class FlashParticle;
 class Enemy;
 class Camera;
 class Model;
@@ -127,6 +128,7 @@ public:
     Vector3 GetAttackArea();
     float GetChargeTimer()const { return chargeTimer_; }
     bool GetIsInvincible() const{ return isInvincible_; }
+    void SetParticle(FlashParticle* particle) { flashParticle_ = particle; }
     //ImGUi用
     void Debug();
 private:
@@ -187,6 +189,7 @@ private:
     // AABBのデバッグ描画
     //std::unique_ptr<AABBRenderer> aabbRenderer_ = nullptr;
 
+    FlashParticle* flashParticle_ = nullptr;
 
     // 球のデバッグ描画
     std::unique_ptr<SphereRenderer> sphereRenderer_ = nullptr;
