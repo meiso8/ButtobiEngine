@@ -85,7 +85,7 @@ void GameScene::Initialize() {
     collisionManager_->SetScorePointer(uiManager_->GetSpeedPointer());
     collisionManager_->SetIsScoreUp(uiManager_->GetScorePtr()->GetIsScoreUPPtr());
     collisionManager_->SetJuiceMeter(uiManager_->GetJuiceMeter());
-	collisionManager_->SetIsComboSparkle(uiManager_->GetSparkleIsAlive(1));
+    collisionManager_->SetIsComboSparkle(uiManager_->GetSparkleIsAlive(1));
 
     Vector3 playerPosition = { 0.0f, 10.0f, 0.0f };
     // 自キャラの初期化 //ここはmainCamera
@@ -113,6 +113,7 @@ void GameScene::Initialize() {
     isGameOver = false;
 
     chargeParticleColor_ = { 1.0f,0.0f,0.0f,1.0f };
+
 
 };
 
@@ -176,6 +177,9 @@ void GameScene::UpdateSceneChange()
         if (!Sound::IsPlaying(Sound::ANNOUNCE)) {
             Sound::PlaySE(Sound::ANNOUNCE_FRUIT);
             isAnnounce_ = true;
+            for (int i = 0; i < 10; ++i) {
+                PopEnemy();
+            }
         }
     }
 
@@ -259,7 +263,7 @@ void GameScene::Update() {
     enemies_.remove_if([](const std::unique_ptr<Enemy>& enemy) { return enemy->IsDead(); });
 
     // 敵キャラの更新処理
-    PopEnemy();
+    PopEnemyWait();
 
     uint32_t enemyCount = 0;
     for (auto& newEnemy : enemies_) {
@@ -402,14 +406,6 @@ void GameScene::CheckAllCollisions() {
 }
 
 void GameScene::PopEnemy() {
-    // 待機処理
-    if (isWaitingToPop_) {
-        waitToPopTimer_--;
-        if (waitToPopTimer_ <= 0) {
-            isWaitingToPop_ = false;	// 待機完了
-        }
-        return;
-    }
 
     // 敵の出現処理
     auto newEnemy = std::make_unique<Enemy>();
@@ -426,6 +422,21 @@ void GameScene::PopEnemy() {
     newEnemy->SetFlashParticlePtr(flashParticle_.get());
 
     enemies_.emplace_back(std::move(newEnemy));
+
+}
+
+void GameScene::PopEnemyWait()
+
+{    // 待機処理
+    if (isWaitingToPop_) {
+        waitToPopTimer_--;
+        if (waitToPopTimer_ <= 0) {
+            isWaitingToPop_ = false;	// 待機完了
+        }
+        return;
+    }
+
+    PopEnemy();
     isWaitingToPop_ = true;
     waitToPopTimer_ = 60;
 }

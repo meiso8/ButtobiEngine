@@ -89,7 +89,7 @@ void UIManager::Initialize() {
         lifeSprites[i].SetPosition({ LifeFirstPosition_.x + LifePositionInterval_ * i, LifeFirstPosition_.y });
     }
 
-    scoreClass_->Initialize();
+
 
     for (int i = 0; i < 2; i++) {
 		ComboCountSprites[i].SetPosition({ComboCountPosition_.x + (i * ComboCountPositionInterval), ComboCountPosition_.y});
@@ -149,12 +149,16 @@ void UIManager::Initialize() {
 	speedBonus_ = 1.0f;
     JuiceCount = 0;
 	JuiceBonus_ = 0.0f;
+
+	scoreClass_->Initialize();
+
 	for (int i = 0; i < MaxLife_; i++) {
 		lifeSprites[i].SetColor({1, 1, 1, 1});
     }
 	for (int i = 0; i < 3; i++) {
 		sparkleTime[i] = 0.0f;
 		spakleAlpha[i] = 1.0f;
+		isSparkleAlive[i] = false;
 	}
 }
 

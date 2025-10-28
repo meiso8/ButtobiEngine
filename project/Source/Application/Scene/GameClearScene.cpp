@@ -51,6 +51,7 @@ void GameClearScene::Initialize() {
     subtractWaitToPopTimer_ = 60;
 
     score_->SetScorePos();
+    score_->Calculation();
 }
 void GameClearScene::Update() {
 
