@@ -42,6 +42,8 @@ private:
 	float JuiceBonus_ = 1.0f;
 	uint32_t JuiceMeter = 0;
 	uint32_t JuiceCount = 0;
+	bool isJuiceWait = false;
+	float juiceWait = 0.0f;
 
 	//--ゲーム時間
 	// 現在のゲーム時間

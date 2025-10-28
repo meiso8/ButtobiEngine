@@ -33,6 +33,7 @@ public:
 		CLEAR,
 		CLEARSCENESTRING,
 		RANK,
+		QUALITY,
 		GAME_OVER,
 		
 		SHUTTER,//シャッター

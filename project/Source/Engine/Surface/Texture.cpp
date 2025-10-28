@@ -33,6 +33,7 @@ void Texture::LoadAllTexture() {
 	handle_[CLEAR] = TextureManager::Load("Resources/Textures/clear.png");
 	handle_[CLEARSCENESTRING] = TextureManager::Load("Resources/Textures/ClearSceneString.png");
 	handle_[RANK] = TextureManager::Load("Resources/Textures/Rank.png");
+	handle_[QUALITY] = TextureManager::Load("Resources/Textures/quality.png");
 	handle_[GAME_OVER] = TextureManager::Load("Resources/Textures/gameOver.png");
 	handle_[SHUTTER] = TextureManager::Load("Resources/Textures/shutter.png");
 	handle_[CLOSED] = TextureManager::Load("Resources/Textures/closed.png");
