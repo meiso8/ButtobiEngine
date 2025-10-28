@@ -61,8 +61,8 @@ void OBBCube::CreateIndexResource() {
     indexData_[3] = 0; indexData_[4] = 3; indexData_[5] = 2;
 
    // tei
-    indexData_[6] = 5; indexData_[7] = 7; indexData_[8] = 4;
-    indexData_[9] = 4; indexData_[10] = 7; indexData_[11] = 6;
+    indexData_[6] = 7; indexData_[7] = 5; indexData_[8] = 6;
+    indexData_[9] = 6; indexData_[10] = 5; indexData_[11] = 4;
 
     // front face
     indexData_[12] = 5; indexData_[13] = 8; indexData_[14] = 4;
