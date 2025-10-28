@@ -13,6 +13,7 @@
 #include"Texture.h"
 #include"Shutter.h"
 #include"Score.h"
+#include"Effect.h"
 
 
 constexpr int winWidth = 1280;
@@ -40,6 +41,7 @@ GameScene::GameScene() {
 
     // パーティクル
     CreateParticleMesh();
+
 
     // カメラ操作
     cameraController_ = std::make_unique <CameraController>();
@@ -101,6 +103,8 @@ void GameScene::Initialize() {
 
     player_->InitializeLife(uiManager_->GetMaxLife());
 
+    effect_->Initialize();
+
     isGameClear = false;
     isGameOver = false;
 
@@ -127,6 +131,10 @@ void GameScene::CreateParticleMesh() {
 
     //パーティクルをセットする
     player_->SetParticle(flashParticle_.get());
+
+    //エフェクト
+    effect_ = std::make_unique <Effect>(player_->GetWorldTransform());
+
 }
 
 void GameScene::UpdateParticle()
@@ -136,17 +144,18 @@ void GameScene::UpdateParticle()
     if (player_->IsCharge()) {
 
         if (player_->GetChargeTimer() == player_->kMaxChargeTime) {
-            chargeParticleColor_ = { 1.0f,0.0f,0.0f,1.0f };
+            chargeParticleColor_ = { 1.0f,1.0f,0.0f,1.0f };
         } else {
-            chargeParticleColor_ = { 1.0f,1.0f,.0f,1.0f };
+            chargeParticleColor_ = { 1.0f,0.0f,0.0f,1.0f };
         }
         particle_->TimerUpdate(true, { 0.1f,0.1f,0.1f }, chargeParticleColor_);
 
         particle_->emitter_.transform.translate = player_->GetWorldPosition();
-
-
     }
 
+    if (player_->IsCharge() || player_->IsAttack()) {
+        effect_->Update(player_->IsCharge(), chargeParticleColor_);
+    }
     particle_->Update(*currentCamera_);
     flashParticle_->Update(*currentCamera_);
     crashParticle_->Update(*currentCamera_);
@@ -473,6 +482,7 @@ void GameScene::Draw() {
         forceArrow_->Draw(*currentCamera_);
         //パーティクルを描画
         particle_->Draw(kBlendModeAdd);
+        effect_->Draw(*currentCamera_);
     }
 
     backGround_->Draw(*currentCamera_);
