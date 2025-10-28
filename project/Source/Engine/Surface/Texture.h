@@ -31,6 +31,8 @@ public:
 		ARROW,
 
 		CLEAR,
+		CLEARSCENESTRING,
+		RANK,
 		GAME_OVER,
 		
 		SHUTTER,//シャッター

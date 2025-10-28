@@ -15,7 +15,7 @@ inline bool NearlyEqual(const Vector3& a, const Vector3& b, float epsilon = 0.00
 UIManager::UIManager()
 {
 	sparklesPosirion[0] = {900,70};
-	sparklesPosirion[1] = ComboCountPosition_;
+	sparklesPosirion[1] = {ComboCountPosition_.x+50,ComboCountPosition_.y};
 	sparklesPosirion[2] = JuiceCountPosition_;
 
     LifeTextureHandle_ = Texture::GetHandle(Texture::LIFE);
@@ -52,10 +52,17 @@ UIManager::UIManager()
 	JuiceStringSprite->Create(JuiceStringTextureHandle_, JuiceStringPosition_, JuiceStringSize, {1, 1, 1, 1});
     
 
+	for (int i = 0; i < 5; i++) {
+		JuiceNumberSprite[i].Create(JuiceNumberTextureHandle_, JuiceNumberPosition_, JuiceNumberSize, {1, 1, 1, 1});
+	}
+
+
     for (int i = 0; i < 4; i++) {
         timerNumbersSprites[i].Create(timerNumbersTexturHandle, timerNumbersFirstPos, TimerNumbersSize, { 1, 1, 1, 1 });
-		JuiceNumberSprite[i].Create(JuiceNumberTextureHandle_, JuiceNumberPosition_, JuiceNumberSize, {1, 1, 1, 1});
+		
 		WASDSprite[i].Create(WASDTextureHandle_, WASDPosition_[i], WASDSize_, {1, 1, 1, 1});
+		ComboNumberSprites[i].Create(ComboNumberTextureHandle, ComboNumberPosition, ComboNumberSize_, {1, 1, 1, 1});
+		SpeedNumberSprites[i].Create(SpeedNumberTextureHandle, speedBonusNumberPosition, SpeedBonusNumberSize_, {1, 1, 1, 1});
     }
     
 
@@ -64,8 +71,7 @@ UIManager::UIManager()
     }
 
     for (int i = 0; i < 3; i++) {
-		ComboNumberSprites[i].Create(ComboNumberTextureHandle, ComboNumberPosition, ComboNumberSize_, {1, 1, 1, 1});
-		SpeedNumberSprites[i].Create(SpeedNumberTextureHandle, speedBonusNumberPosition, SpeedBonusNumberSize_, {1, 1, 1, 1});
+		
 		sparkleSprites[i].Create(sparkleTextureHandle_, sparklesPosirion[i], {0, 0}, {1, 1, 1, 1});
     }
 
@@ -91,7 +97,7 @@ void UIManager::Initialize() {
 		ComboCountSprites[i].Update();
     }
 
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 4; i++) {
 		ComboNumberSprites[i].SetPosition({ComboNumberPosition.x + ComboNumberPositionInteval * i, ComboNumberPosition.y});
 		ComboNumberSprites[i].SetTextureSize({124.0f, 124.0f});
 		ComboNumberSprites[i].Update();
@@ -99,29 +105,33 @@ void UIManager::Initialize() {
 		SpeedNumberSprites[i].SetTextureSize({124.0f, 124.0f});
 		SpeedNumberSprites[i].SetTextureLeftTop({0, 0});
 		SpeedNumberSprites[i].Update();
-		JuiceNumberSprite[i].SetPosition({JuiceNumberPosition_.x + JuiceNummerIntervalPosition_*i, JuiceNumberPosition_.y});
-		sparkleSprites[i].SetSize({0, 0});
-		sparkleSprites[i].Update();
-    }
-
-	JuiceNumberSprite[3].SetPosition({1080.0f, 380.0f});
-
-    WASDSprite[0].SetTextureLeftTop({256, 128});
-	WASDSprite[1].SetTextureLeftTop({0, 384});
-	WASDSprite[2].SetTextureLeftTop({256, 384});
-	WASDSprite[3].SetTextureLeftTop({512, 384});
-
-
-	for (int i = 0; i < 4; i++) {
-		JuiceNumberSprite[i].SetTextureSize({124.0f, 124.0f});
-		JuiceNumberSprite[i].SetTextureLeftTop({0, 0});
-		JuiceNumberSprite[i].Update();
 		timerNumbersSprites[i].SetPosition({timerNumbersFirstPos.x + i * timerNumbersPosInterval, timerNumbersFirstPos.y});
 		timerNumbersSprites[i].SetTextureLeftTop({0, 0});
 		timerNumbersSprites[i].SetTextureSize({100.0f, 100.0f});
 		timerNumbersSprites[i].Update();
 		WASDSprite[i].SetTextureSize({256, 256});
 		WASDSprite[i].Update();
+		JuiceNumberSprite[i].SetPosition({JuiceNumberPosition_.x + JuiceNummerIntervalPosition_*i, JuiceNumberPosition_.y});
+		
+    }
+
+	JuiceNumberSprite[4].SetPosition({1080.0f, 380.0f});
+
+    WASDSprite[0].SetTextureLeftTop({256, 128});
+	WASDSprite[1].SetTextureLeftTop({0, 384});
+	WASDSprite[2].SetTextureLeftTop({256, 384});
+	WASDSprite[3].SetTextureLeftTop({512, 384});
+
+	for (int i = 0; i < 5; i++) {
+		JuiceNumberSprite[i].SetTextureSize({124.0f, 124.0f});
+		JuiceNumberSprite[i].SetTextureLeftTop({0, 0});
+		JuiceNumberSprite[i].Update();
+	
+	}
+	for (int i = 0; i < 3; i++) {
+		sparkleSprites[i].SetSize({0, 0});
+		sparkleSprites[i].SetAnchorPoint({0.5f, 0.5f});
+		sparkleSprites[i].Update();
 	}
 	JuiceSprite->SetTextureSize({768.0f, 1024.0f});
 	JuiceSprite->SetTextureLeftTop({0.0f, 0.0f});
@@ -142,6 +152,10 @@ void UIManager::Initialize() {
 	for (int i = 0; i < MaxLife_; i++) {
 		lifeSprites[i].SetColor({1, 1, 1, 1});
     }
+	for (int i = 0; i < 3; i++) {
+		sparkleTime[i] = 0.0f;
+		spakleAlpha[i] = 1.0f;
+	}
 }
 
 void UIManager::Update() {
@@ -181,16 +195,17 @@ void UIManager::Update() {
     }
 	for (int i = 0; i < 3; i++) {
 		if (isSparkleAlive[i]) {
-			if (sparkleSprites[i].GetColor().w <= 0.0f) {
+			if (spakleAlpha[i]<=0.0f) {
 				spakleAlpha[i] = 0.0f;
 				isSparkleAlive[i] = false;
 			} else {
 				
-				if (NearlyEqual({sparkleSprites[i].GetSize().x,sparkleSprites[i].GetSize().y,0},{SparkleMaxSize.x,SparkleMaxSize.y,0})) {
+				if (sparkleTime[i]>=1.0f) {
+					
 					spakleAlpha[i] -= 0.1f;
 				} else {
-					
-					sparkleSprites[i].SetSize(Lerp({0, 0}, SparkleMaxSize, 0.2f));
+					sparkleTime[i] += 0.01f;
+					sparkleSprites[i].SetSize(Lerp({0, 0}, SparkleMaxSize, sparkleTime[i]));
 					spakleAlpha[i] = 1.0f;
 				}
 			}
@@ -198,6 +213,8 @@ void UIManager::Update() {
 		} else {
 			sparkleSprites[i].SetColor({1, 1, 1, 1});
 			sparkleSprites[i].SetSize({0, 0});
+			spakleAlpha[i] = 1.0f;
+			sparkleTime[i] = 0.0f;
 		}
 	}
 		 
@@ -235,16 +252,18 @@ void UIManager::Update() {
 		int integerPart = static_cast<int>(ComboBonus_);
 		int decimalPart = static_cast<int>((ComboBonus_ * 10)) % 10;
 
+		
+		ComboNumberSprites[0].SetTextureLeftTop({124.0f * 11, 0});
 		// 整数部分
-		ComboNumberSprites[0].SetTextureLeftTop({124.0f * integerPart, 0});
+		ComboNumberSprites[1].SetTextureLeftTop({124.0f * integerPart, 0});
 
 		// 小数点（固定でインデックス10）
-		ComboNumberSprites[1].SetTextureLeftTop({124.0f * 10, 0});
+		ComboNumberSprites[2].SetTextureLeftTop({124.0f * 10, 0});
 
 		// 小数部分
-		ComboNumberSprites[2].SetTextureLeftTop({124.0f * decimalPart, 0});
+		ComboNumberSprites[3].SetTextureLeftTop({124.0f * decimalPart, 0});
 
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 4; i++) {
 			ComboNumberSprites[i].Update();
 		}
 	}
@@ -254,16 +273,18 @@ void UIManager::Update() {
 		int integerPart = static_cast<int>(speedBonus_);
 		int decimalPart = static_cast<int>((speedBonus_ * 10)) % 10;
 
+		SpeedNumberSprites[0].SetTextureLeftTop({124.0f * 11, 0});
+
 		// 整数部分
-		SpeedNumberSprites[0].SetTextureLeftTop({124.0f * integerPart, 0});
+		SpeedNumberSprites[1].SetTextureLeftTop({124.0f * integerPart, 0});
 
 		// 小数点（固定でインデックス10）
-		SpeedNumberSprites[1].SetTextureLeftTop({124.0f * 10, 0});
+		SpeedNumberSprites[2].SetTextureLeftTop({124.0f * 10, 0});
 
 		// 小数部分
-		SpeedNumberSprites[2].SetTextureLeftTop({124.0f * decimalPart, 0});
+		SpeedNumberSprites[3].SetTextureLeftTop({124.0f * decimalPart, 0});
 
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 4; i++) {
 			SpeedNumberSprites[i].Update();
 		}
 	}
@@ -285,14 +306,15 @@ void UIManager::Update() {
 		int integerPart = static_cast<int>(JuiceBonus_);
 		int decimalPart = static_cast<int>((JuiceBonus_ * 10)) % 10;
 
+		 JuiceNumberSprite[0].SetTextureLeftTop({124.0f * 11, 0});
 		// 整数部分
-	    JuiceNumberSprite[0].SetTextureLeftTop({124.0f * integerPart, 0});
+	    JuiceNumberSprite[1].SetTextureLeftTop({124.0f * integerPart, 0});
 
 		// 小数点（固定でインデックス10）
-		JuiceNumberSprite[1].SetTextureLeftTop({124.0f * 10, 0});
+		JuiceNumberSprite[2].SetTextureLeftTop({124.0f * 10, 0});
 
 		// 小数部分
-		JuiceNumberSprite[2].SetTextureLeftTop({124.0f * decimalPart, 0});
+		JuiceNumberSprite[3].SetTextureLeftTop({124.0f * decimalPart, 0});
 
 		
     }
@@ -308,9 +330,9 @@ void UIManager::Update() {
 		JuiceSprite->SetTextureLeftTop({768.0f * JuiceMeter, 0.0f});
 		JuiceSprite->Update();
 
-        JuiceNumberSprite[3].SetTextureLeftTop({124.0f * (JuiceCount), 0.0f});
+        JuiceNumberSprite[4].SetTextureLeftTop({124.0f * (JuiceCount), 0.0f});
 		
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
 			JuiceNumberSprite[i].Update();
 		}
     }
@@ -363,7 +385,7 @@ void UIManager::Draw() {
 		}
     }
 	JuiceCountSprite->Draw();
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 5; i++) {
 		JuiceNumberSprite[i].Draw();
     }
 	/*if (JuiceCount >= 2) {*/
@@ -378,7 +400,7 @@ void UIManager::Draw() {
 	for (int i = 0; i < 2; i++) {
 		ComboCountSprites[i].Draw();
     }
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 4; i++) {
 		ComboNumberSprites[i].Draw();
 		SpeedNumberSprites[i].Draw();
     }

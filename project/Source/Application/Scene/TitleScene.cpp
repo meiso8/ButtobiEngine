@@ -100,7 +100,8 @@ void TitleScene::Initialize() {
 
     //パーティクルをすべて削除する
     flashParticle_->particles.clear();
-
+	spaceSprite_->SetTextureSize({768, 768});
+	spaceSprite_->Update();
 }
 
 void TitleScene::Update() {
@@ -302,7 +303,7 @@ void TitleScene::Move() {
 	} else {
 		spaceSprite_->SetTextureLeftTop({0, 0});
     }
-
+	spaceSprite_->Update();
 }
 
 
