@@ -15,6 +15,7 @@
 #include"Score.h"
 #include"Effect.h"
 
+#include"MakeMatrix.h"
 
 constexpr int winWidth = 1280;
 constexpr int winHeight = 720;
@@ -25,6 +26,8 @@ GameScene::GameScene() {
 #ifdef _DEBUG
 
     debugCamera_ = std::make_unique<DebugCamera>();
+    lineMesh_ = std::make_unique<LineMesh>();
+    lineMesh_->Create(Texture::GetHandle(Texture::WHITE_1X1));
 #endif
     // 衝突マネージャの生成
     collisionManager_ = std::make_unique<CollisionManager>();
@@ -222,10 +225,17 @@ void GameScene::Update() {
     ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
     currentCamera_->EditTransform("CurrentCamera");
     ImGui::Text("Score: %u", score_);
+
+
+    lineMesh_->SetVertexData(player_->GetWorldPosition(), forceArrow_->GetWorldPosition());
 #endif // _DEBUG
 
     // 地形の更新処理
     stage_->Update();
+
+    if (player_->IsCharge()) {
+        stage_->IsSetAlphaFalse();
+    }
 
     //プレイヤーの操作 シーン切り替え時や判定完了時はしない
     if (sceneChange_.isSceneStart_) {
@@ -338,6 +348,7 @@ void GameScene::CheckAllCollisions() {
             player_->OnCollision(enemy.get());
         }
     }
+
 
 #pragma endregion
 
@@ -461,12 +472,21 @@ void GameScene::Draw() {
 #ifdef _DEBUG
     // グリッドの描画
     DrawGrid::Draw(*currentCamera_, false);
+
+
+    lineMesh_->PreDraw();
+    lineMesh_->Draw(*currentCamera_, MakeIdentity4x4());
 #endif // _DEBUG
 
     // 天球の描画
     skyDome_->Draw(*currentCamera_);
 
+    backGround_->Draw(*currentCamera_);
+
+    // 地形の描画
+    stage_->Draw(*currentCamera_);
     // 自キャラの描画
+
     player_->Draw(*currentCamera_);
 
     //敵キャラの描画
@@ -485,10 +505,7 @@ void GameScene::Draw() {
         effect_->Draw(*currentCamera_);
     }
 
-    backGround_->Draw(*currentCamera_);
 
-    // 地形の描画
-    stage_->Draw(*currentCamera_);
 
     crashParticle_->Draw(kBlendModeNormal);
 
@@ -501,6 +518,8 @@ void GameScene::Draw() {
     if (cameraController_->zoomEnd_) {
         shutter_->Draw();
     }
+
+
 
 }
 void GameScene::Debug() {
