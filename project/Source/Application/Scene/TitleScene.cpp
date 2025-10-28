@@ -36,6 +36,9 @@ TitleScene::TitleScene()
     appleModel->Create(ModelManager::FRUIT_APPLE);
     appleModel->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 
+    
+
+
     spaceTExtureHandle_ = Texture::GetHandle(Texture::SPACE);
     spaceSprite_ = std::make_unique<Sprite>();
     spaceSprite_->Create(spaceTExtureHandle_, { 500, 300 }, { 300, 300 });
@@ -97,7 +100,8 @@ void TitleScene::Initialize() {
 
     //パーティクルをすべて削除する
     flashParticle_->particles.clear();
-
+	spaceSprite_->SetTextureSize({768, 768});
+	spaceSprite_->Update();
 }
 
 void TitleScene::Update() {
@@ -294,7 +298,12 @@ void TitleScene::Move() {
         break;
     }
 
-
+    if (Input::IsPushKey(DIK_SPACE)) {
+		spaceSprite_->SetTextureLeftTop({768, 0});
+	} else {
+		spaceSprite_->SetTextureLeftTop({0, 0});
+    }
+	spaceSprite_->Update();
 }
 
 

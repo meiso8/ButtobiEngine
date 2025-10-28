@@ -46,7 +46,7 @@ private:
 public:
 	Score();
 	bool* GetIsScoreUPPtr() { return &isScoreUP_; }
-
+	bool* GetIsHighScoreUpdate() { return &isHighScoreUpdate_; }
 	void Initialize();
 	void Update(const float& ComboBonus, const float& speedBonus, const float& JuiceBonus);
 	void Calculation();
