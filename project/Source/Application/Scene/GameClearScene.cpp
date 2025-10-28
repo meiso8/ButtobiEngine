@@ -25,7 +25,7 @@ void GameClearScene::Initialize() {
     // カメラの初期化
     camera_ = std::make_unique<Camera>();
     camera_->Initialize(winWidth, winHeight, Camera::PERSPECTIVE);
-    camera_->translate_ = { 0.0f, 10.0f, -100.0f };
+    camera_->translate_ = { 0.0f, 10.0f, -40.0f };
 
 #ifdef _DEBUG
     // デバッグカメラの初期化
@@ -38,6 +38,7 @@ void GameClearScene::Initialize() {
 
     stage_ = std::make_unique<Stage>();
     stage_->Initialize();
+
 
     isRenderSprite_ = false;
     clearSprite_ = std::make_unique<Sprite>();
@@ -91,7 +92,7 @@ void GameClearScene::Update() {
 
     currentCamera_->UpdateMatrix();
     stage_->Update();
-
+    stage_->IsSetAlphaFalse();
 }
 
 void GameClearScene::EnemyUpdate()
@@ -195,17 +196,20 @@ void GameClearScene::PopEnemy() {
     // 敵の出現処理
     if (subtractWaitToPopTimer_ > 0) {
         subtractWaitToPopTimer_ -= 1;
-        std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
-        Random::SetMinMax(-40.0f, 40.0f);
+   
+        // 敵の出現処理
+        auto newEnemy = std::make_unique<Enemy>();
+        Random::SetMinMax(-20.0f, 20.0f);
         std::array<Vector3, 4> enemyPositions = {
-            Vector3{ -80.0f, 40.0f, Random::Get() },
-            Vector3{ 80.0f, 40.0f, Random::Get() },
-            Vector3{ Random::Get(), 40.0f, -80.0f },
-            Vector3{ Random::Get(), 40.0f, 80.0f }
+            Vector3{ -40.0f, 20.0f, Random::Get() },
+            Vector3{ 40.0f, 20.0f, Random::Get() },
+            Vector3{ Random::Get(), 20.0f, -40.0f },
+            Vector3{ Random::Get(), 20.0f, 40.0f }
         };
         Random::SetMinMax(0.0f, 4.0f);
         newEnemy->Initialize(enemyPositions[static_cast<uint32_t>(Random::Get())]);
         enemies_.emplace_back(std::move(newEnemy));
+
         isWaitingToPop_ = true;
         waitToPopTimer_ = 60;
     }

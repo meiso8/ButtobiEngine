@@ -151,7 +151,7 @@ void GameScene::UpdateParticle()
         if (player_->GetChargeTimer() == player_->kMaxChargeTime) {
             chargeParticleColor_ = { 1.0f,1.0f,0.0f,1.0f };
         } else {
-            chargeParticleColor_ = { 1.0f,0.0f,0.0f,1.0f };
+            chargeParticleColor_ = { 0.0f,1.0f,1.0f,1.0f };
         }
         particle_->TimerUpdate(true, { 0.1f,0.1f,0.1f }, chargeParticleColor_);
 
@@ -409,12 +409,12 @@ void GameScene::PopEnemy() {
 
     // 敵の出現処理
     auto newEnemy = std::make_unique<Enemy>();
-    Random::SetMinMax(-40.0f, 40.0f);
+    Random::SetMinMax(-20.0f, 20.0f);
     std::array<Vector3, 4> enemyPositions = {
-        Vector3{ -80.0f, 40.0f, Random::Get() },
-        Vector3{ 80.0f, 40.0f, Random::Get() },
-        Vector3{ Random::Get(), 40.0f, -80.0f },
-        Vector3{ Random::Get(), 40.0f, 80.0f }
+        Vector3{ -40.0f, 20.0f, Random::Get() },
+        Vector3{ 40.0f, 20.0f, Random::Get() },
+        Vector3{ Random::Get(), 20.0f, -40.0f },
+        Vector3{ Random::Get(), 20.0f, 40.0f }
     };
     Random::SetMinMax(0.0f, 4.0f);
     newEnemy->Initialize(enemyPositions[static_cast<uint32_t>(Random::Get())]);
