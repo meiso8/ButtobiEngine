@@ -26,6 +26,11 @@ private:
     int32_t subtractWaitToPopTimer_ = 60;                           //現待機時間の減少数
     std::unique_ptr<CollisionManager> collisionManager_ = nullptr;	// 衝突マネージャ
     std::unique_ptr<Sprite> clearSprite_ = nullptr;	                // クリアスプライト
+	std::unique_ptr<Sprite> stringSprite = nullptr;
+	std::unique_ptr<Sprite> rankSprite_ = nullptr;
+	std::unique_ptr<Sprite> scoreQuality = nullptr;
+	std::unique_ptr<Sprite> juiceQuality = nullptr;
+
     bool isRenderSprite_ = false;
     /// @brief 全ての当たり判定を行う
     void CheckAllCollisions();

@@ -149,6 +149,8 @@ void UIManager::Initialize() {
 	speedBonus_ = 1.0f;
     JuiceCount = 0;
 	JuiceBonus_ = 0.0f;
+	juiceWait = 0.0f;
+	isJuiceWait = false;
 	for (int i = 0; i < MaxLife_; i++) {
 		lifeSprites[i].SetColor({1, 1, 1, 1});
     }
@@ -170,7 +172,7 @@ void UIManager::Update() {
 	if (Combo_ == 0) {
 		ComboBonus_ = 1.0f;
 	} else {
-		ComboBonus_ = static_cast<int>(Combo_ /5.0f) + 1.1f;
+		ComboBonus_ = static_cast<int>(Combo_ /6.0f) + 1.1f;
     }
 
     if (ComboBonus_ > 10) {
@@ -323,12 +325,27 @@ void UIManager::Update() {
 		
     }
     {
-		if (JuiceMeter >5) {
-			JuiceMeter = 0;
+		
+		if (JuiceMeter >=5) {
+			if (!isJuiceWait) {
 			JuiceCount += 1;
 			isSparkleAlive[2] = true;
 			sparkleSprites[2].SetColor({1, 1, 1, 1});
-            Sound::PlaySE(Sound::CHREERS);
+			Sound::PlaySE(Sound::CHREERS);
+			isJuiceWait = true;
+			} else {
+				if (juiceWait >= 1.0f) {
+					if (JuiceMeter<0) {
+						JuiceMeter = 0;
+					} else {
+						JuiceMeter -= 5;
+					}
+				isJuiceWait = false;
+				juiceWait = 0.0f;
+				} else {
+					juiceWait += 1.0f / 60.0f;
+				}
+			}
         }
 
 		JuiceSprite->SetTextureLeftTop({768.0f * JuiceMeter, 0.0f});
