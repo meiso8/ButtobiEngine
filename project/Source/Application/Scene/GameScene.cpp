@@ -175,7 +175,7 @@ void GameScene::UpdateSceneChange()
 
     if (!isAnnounce_) {
         if (!Sound::IsPlaying(Sound::ANNOUNCE)) {
-            Sound::PlaySE(Sound::ANNOUNCE_FRUIT);
+            Sound::PlaySE(Sound::ANNOUNCE_FRUIT,0.25f);
             isAnnounce_ = true;
             for (int i = 0; i < 10; ++i) {
                 PopEnemy();

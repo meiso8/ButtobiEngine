@@ -497,7 +497,10 @@ void TitleScene::Draw() {
     for (int i = 0; i < 8; i++) {
         titleStringModel[i]->Draw(*camera_, titleStringWorldTransform[i].matWorld_);
     }
+
+    juiceCupModel->PreDraw(kBlendModeNormal,kCullModeNone);
     juiceCupModel->Draw(*camera_, juiceCupWorldTransform.matWorld_);
+    appleModel->PreDraw();
     appleModel->Draw(*camera_, appleWorldTransform.matWorld_);
     if (iscameraTranslateEnd) {
         spaceSprite_->PreDraw();
