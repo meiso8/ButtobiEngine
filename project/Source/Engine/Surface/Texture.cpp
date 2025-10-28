@@ -38,6 +38,7 @@ void Texture::LoadAllTexture() {
 	handle_[CLOSED] = TextureManager::Load("Resources/Textures/closed.png");
 	handle_[APPLE_SCENE_CHANGE] = TextureManager::Load("Resources/Textures/appleSceneChange.png");
 	handle_[CUTTING_BOARD] = TextureManager::Load("Resources/Textures/cuttingBoard.png");
+	handle_[SHADOW] = TextureManager::Load("Resources/Textures/shadow.png");
 
 }
 
