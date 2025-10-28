@@ -51,6 +51,8 @@ private:
 
 	float spakleAlpha[3]{};
 	bool isSparkleAlive[3] = {false,false,false};
+	
+	float sparkleTime[3];
 
 	//<サイズ系>
 
@@ -137,16 +139,16 @@ private:
 	std::unique_ptr<Sprite> SpaceSprite;
 	std::unique_ptr<Sprite> TimerSprite;
 	std::unique_ptr<Sprite> JuiceSprite;
-	std::array<Sprite, 4> JuiceNumberSprite;
+	std::array<Sprite, 5> JuiceNumberSprite;
 	std::unique_ptr<Sprite> JuiceStringSprite;
 	std::unique_ptr<Sprite> JuiceCountSprite;
 
 	std::array<Sprite, 4> timerNumbersSprites;
 	std::array<Sprite, 3> sparkleSprites;
 
-	std::array<Sprite, 3> ComboNumberSprites;
+	std::array<Sprite, 4> ComboNumberSprites;
 	std::array<Sprite, 2> ComboCountSprites;
-	std::array<Sprite, 3> SpeedNumberSprites;
+	std::array<Sprite, 4> SpeedNumberSprites;
 
 public:
 	UIManager();

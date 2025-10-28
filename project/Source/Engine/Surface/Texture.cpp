@@ -31,6 +31,8 @@ void Texture::LoadAllTexture() {
 	handle_[FLASH_PARTICLE] = TextureManager::Load("Resources/Textures/flashParticle.png");
 	handle_[ARROW] = TextureManager::Load("Resources/Textures/arrow.png");
 	handle_[CLEAR] = TextureManager::Load("Resources/Textures/clear.png");
+	handle_[CLEARSCENESTRING] = TextureManager::Load("Resources/Textures/ClearSceneString.png");
+	handle_[RANK] = TextureManager::Load("Resources/Textures/Rank.png");
 	handle_[GAME_OVER] = TextureManager::Load("Resources/Textures/gameOver.png");
 	handle_[SHUTTER] = TextureManager::Load("Resources/Textures/shutter.png");
 	handle_[CLOSED] = TextureManager::Load("Resources/Textures/closed.png");
