@@ -55,6 +55,12 @@ Vector3 ClosestPoint(const Segment &segment, const AABB &aabb);
 /// @return 最近接点
 Vector3 ClosestPoint(const Segment &segment, const OBB &obb);
 
+/// @brief 線分と線分の最近接点を求める
+/// @param segment1 線分1
+/// @param segment2 線分2
+/// @return 最近接点
+Vector3 ClosestPoint(const Segment &segment1, const Segment &segment2);
+
 /// @brief 点とAABBの衝突面法線を求める
 /// @param point 点
 /// @param aabb AABB
@@ -114,6 +120,12 @@ float Distance(const Segment &segment, const AABB &aabb);
 /// @param obb OBB
 /// @return 距離
 float Distance(const Segment &segment, const OBB &obb);
+
+/// @brief 線分と線分の距離を求める
+/// @param segment1 線分1
+/// @param segment2 線分2
+/// @return 距離
+float Distance(const Segment &segment1, const Segment &segment2);
 
 /// @brief 球と平面の貫入量を求める
 /// @param sphere 球
@@ -240,3 +252,9 @@ bool IsCollision(const Capsule &capsule, const AABB &aabb);
 /// @param obb OBB
 /// @return 判定結果
 bool IsCollision(const Capsule &capsule, const OBB &obb);
+
+/// @brief カプセルとカプセルの衝突判定
+/// @param capsule1 カプセル1
+/// @param capsule2 カプセル2
+/// @return 判定結果
+bool IsCollision(const Capsule &capsule1, const Capsule &capsule2);
