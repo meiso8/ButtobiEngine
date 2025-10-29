@@ -1,25 +1,17 @@
 #pragma once
 #include "Sphere.h"
-#include"Plane.h"
-#include"Line.h"
-#include"Triangle.h"
-#include"AABB.h"
-#include"OBB.h"
+#include "Plane.h"
+#include "Line.h"
+#include "Triangle.h"
+#include "AABB.h"
+#include "OBB.h"
+#include "Capsule.h"
 
 /// @brief 反射ベクトルを求める関数
 /// @param input 入射ベクトル
 /// @param normal 法線
 /// @return 反射ベクトル
 Vector3 Reflect(const Vector3 &input, const Vector3 &normal);
-
-/// @brief 衝突時のインパルスを求める関数
-/// @param relativeVelocity 相対速度
-/// @param normal 法線
-/// @param mass1 質量1
-/// @param mass2 質量2
-/// @param restitution 反発係数
-/// @return インパルスベクトル
-Vector3 Impulse(const Vector3 &relativeVelocity, const Vector3 &normal, float mass1, float mass2, float restitution);
 
 /// @brief 射影関数
 /// @param v1 ベクトル1
@@ -45,6 +37,30 @@ Vector3 ClosestPoint(const Vector3 &point, const AABB &aabb);
 /// @return 最近接点
 Vector3 ClosestPoint(const Vector3 &point, const OBB &obb);
 
+/// @brief 線分と平面の最近接点を求める関数
+/// @param segment 線分
+/// @param plane 平面
+/// @return 最近接点
+Vector3 ClosestPoint(const Segment &segment, const Plane &plane);
+
+/// @brief 線分とAABBの最近接点を求める
+/// @param segment 線分
+/// @param aabb AABB
+/// @return 最近接点
+Vector3 ClosestPoint(const Segment &segment, const AABB &aabb);
+
+/// @brief 線分とOBBの最近接点を求める
+/// @param segment 線分
+/// @param obb OBB
+/// @return 最近接点
+Vector3 ClosestPoint(const Segment &segment, const OBB &obb);
+
+/// @brief 線分と線分の最近接点を求める
+/// @param segment1 線分1
+/// @param segment2 線分2
+/// @return 最近接点
+Vector3 ClosestPoint(const Segment &segment1, const Segment &segment2);
+
 /// @brief 点とAABBの衝突面法線を求める
 /// @param point 点
 /// @param aabb AABB
@@ -56,6 +72,18 @@ Vector3 Normal(const Vector3 &point, const AABB &aabb);
 /// @param obb OBB
 /// @return 衝突面法線
 Vector3 Normal(const Vector3 &point, const OBB &obb);
+
+/// @brief 線分とAABBの衝突面法線を求める
+/// @param segment 線分
+/// @param aabb AABB
+/// @return 衝突面法線
+Vector3 Normal(const Segment &segment, const AABB &aabb);
+
+/// @brief 線分とAABBの衝突面法線を求める
+/// @param segment 線分
+/// @param obb OBB
+/// @return 衝突面法線
+Vector3 Normal(const Segment &segment, const OBB &obb);
 
 /// @brief 点と平面の距離を求める
 /// @param point 点
@@ -75,6 +103,30 @@ float Distance(const Vector3 &point, const AABB &aabb);
 /// @return 距離
 float Distance(const Vector3 &point, const OBB &obb);
 
+/// @brief 線分と平面の距離を求める関数
+/// @param segment 線分
+/// @param plane 平面
+/// @return 距離
+float Distance(const Segment &segment, const Plane &plane);
+
+/// @brief 線分とAABBの距離を求める関数
+/// @param segment 線分
+/// @param aabb AABB
+/// @return 距離
+float Distance(const Segment &segment, const AABB &aabb);
+
+/// @brief 線分とOBBの距離を求める関数
+/// @param segment 線分
+/// @param obb OBB
+/// @return 距離
+float Distance(const Segment &segment, const OBB &obb);
+
+/// @brief 線分と線分の距離を求める
+/// @param segment1 線分1
+/// @param segment2 線分2
+/// @return 距離
+float Distance(const Segment &segment1, const Segment &segment2);
+
 /// @brief 球と平面の貫入量を求める
 /// @param sphere 球
 /// @param plane 平面
@@ -93,17 +145,29 @@ float PenetrationDepth(const Sphere &sphere, const AABB &aabb);
 /// @return 貫入量
 float PenetrationDepth(const Sphere &sphere, const OBB &obb);
 
+/// @brief カプセルと平面の貫入量を求める
+/// @param capsule カプセル
+/// @param plane 平面
+/// @return 貫入量
+float PenetrationDepth(const Capsule &capsule, const Plane &plane);
+
+/// @brief カプセルとAABBの貫入量を求める
+/// @param capsule カプセル
+/// @param aabb AABB
+/// @return 貫入量
+float PenetrationDepth(const Capsule &capsule, const AABB &aabb);
+
+/// @brief カプセルとOBBの貫入量を求める
+/// @param capsule カプセル
+/// @param obb OBB
+/// @return 貫入量
+float PenetrationDepth(const Capsule &capsule, const OBB &obb);
+
 /// @brief 球と球の衝突判定
 /// @param s1 球1
 /// @param s2 球2
 /// @return 当たったかどうか
 bool IsCollision(const Sphere &s1, const Sphere &s2);
-
-/// @brief 球と平面の衝突判定
-/// @param sphere 球
-/// @param plane 平面
-/// @return 当たったかどうか
-bool IsCollision(const Sphere &sphere, const Plane &plane);
 
 /// @brief 線分と平面の衝突判定
 /// @param segment  線分
@@ -153,8 +217,44 @@ bool IsCollision(const AABB& aabb, const Vector3& point);
 /// @return 当たったかどうか
 bool IsCollision(const AABB &aabb, const Segment &segment);
 
-/// @brief OBBと球の衝突判定
-/// @param obb OBB
+/// @brief 球と平面の衝突判定
 /// @param sphere 球
+/// @param plane 平面
 /// @return 当たったかどうか
-bool IsCollision(const OBB &obb, const Sphere &sphere);
+bool IsCollision(const Sphere &sphere, const Plane &plane);
+
+/// @brief 球とAABBの衝突判定
+/// @param sphere 球
+/// @param aabb AABB
+/// @return 判定結果
+bool IsCollision(const Sphere &sphere, const AABB &aabb);
+
+/// @brief 球とOBBの衝突判定
+/// @param sphere 球
+/// @param obb OBB
+/// @return 判定結果
+bool IsCollision(const Sphere &sphere, const OBB &obb);
+
+/// @brief カプセルと平面の衝突判定
+/// @param capsule カプセル
+/// @param plane 平面
+/// @return 判定結果
+bool IsCollision(const Capsule &capsule, const Plane &plane);
+
+/// @brief カプセルとAABBの衝突判定
+/// @param capsule 線分
+/// @param aabb AABB
+/// @return 判定結果
+bool IsCollision(const Capsule &capsule, const AABB &aabb);
+
+/// @brief カプセルとOBBの衝突判定
+/// @param capsule 線分
+/// @param obb OBB
+/// @return 判定結果
+bool IsCollision(const Capsule &capsule, const OBB &obb);
+
+/// @brief カプセルとカプセルの衝突判定
+/// @param capsule1 カプセル1
+/// @param capsule2 カプセル2
+/// @return 判定結果
+bool IsCollision(const Capsule &capsule1, const Capsule &capsule2);

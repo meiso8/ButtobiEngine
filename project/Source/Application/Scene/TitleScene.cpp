@@ -162,6 +162,8 @@ void TitleScene::Update() {
             static_cast<float>(sceneChange_.startTimer_ * InverseFPS));
     }
 
+
+
     //パーティクルの更新
     flashParticle_->Update(*camera_);
 

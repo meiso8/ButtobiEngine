@@ -44,7 +44,9 @@ public:
     };
 
     // チャージ最大時間
-    static inline constexpr float kMaxChargeTime = 7500.0f;
+
+    static inline constexpr float kMaxChargeTime = 100000.0f;
+   bool isHitOBB_ = false;
 
 
 public:
@@ -203,9 +205,12 @@ private:
     //std::unique_ptr<AABBRenderer> aabbRenderer_ = nullptr;
 
     FlashParticle* flashParticle_ = nullptr;
-
+    
+#ifdef _DEBUG
     // 球のデバッグ描画
     std::unique_ptr<SphereRenderer> sphereRenderer_ = nullptr;
+
+#endif // _DEBUG
 
     void ResetAttack();
 };

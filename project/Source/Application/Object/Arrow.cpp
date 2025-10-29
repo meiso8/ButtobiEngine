@@ -10,7 +10,7 @@ Arrow::Arrow()
 {
     quad_ = std::make_unique<QuadMesh>();
     quad_->Create(Texture::GetHandle(Texture::ARROW));
-    quad_->SetColor({ 1.0f, 1.0f, 1.0f, 0.5f });
+    quad_->SetColor({ 1.0f, 1.0f, 1.0f, 1.0f });
     //OBBのデバック描画の生成
 #ifdef _DEBUG
     obbRenderer_ = std::make_unique<OBBRenderer>();
@@ -53,7 +53,7 @@ void Arrow::Update(const Vector3& position, const float& scaleZ, const float& ro
 
     kickObb_->center = worldTransform_.GetWorldPosition();
     kickObb_->halfSizes.z = scaleZ * 0.005f;
-    SetAxis(worldTransformParent_.rotate_, *kickObb_);
+    MakeAxis(worldTransformParent_.rotate_, *kickObb_);
 
 #ifdef _DEBUG
     EditOBB("kickOBB", worldTransformParent_.rotate_, *kickObb_);

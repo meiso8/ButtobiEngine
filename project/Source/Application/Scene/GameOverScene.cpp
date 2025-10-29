@@ -48,7 +48,6 @@ void GameOverScene::Initialize() {
 
     stage_ = std::make_unique<Stage>();
     stage_->Initialize();
-    stage_->IsSetAlphaFalse();
 
     gameOverSprite_ = std::make_unique<Sprite>();
     gameOverSprite_->Create(Texture::GetHandle(Texture::GAME_OVER), { 640.0f - 480.0f,96.0f }, { 960.0f,192.0f });
@@ -87,12 +86,15 @@ void GameOverScene::Update() {
     CheckAllCollisions();
 
     stage_->Update();
-    stage_->IsSetAlphaFalse();
+    for (uint32_t i = 0; i < 4; ++i) {
+        stage_->IsSetAlpha(false, i);
+    }
 }
 
 void GameOverScene::Draw() {
 
-    stage_->Draw(*currentCamera_);
+    stage_->DrawPlane(*currentCamera_);
+    stage_->DrawOBB(*currentCamera_);
     enemy_->Draw(*currentCamera_);
 
     gameOverSprite_->PreDraw();
@@ -122,24 +124,28 @@ void GameOverScene::Debug()
 
 void GameOverScene::CheckAllCollisions() {
 #pragma region // 敵キャラと平面の当たり判定
-    Sphere sphere = enemy_->GetSphere();
+    Capsule capsule = enemy_->GetCapsule();
     for (uint32_t i = 0; i < Stage::kMaxPlane; i++) {
-        if (IsCollision(sphere, stage_->GetPlane(i))) {
-            enemy_->OnCollision(stage_->GetPlane(i));
+		Plane plane = stage_->GetPlane(i);
+        if (IsCollision(capsule, plane)) {
+            enemy_->OnCollision(plane);
             Sound::PlayOriginSE(Sound::BOUND);
         }
     }
 #pragma endregion
 
 #pragma region // 敵キャラとOBBの当たり判定
-    sphere = enemy_->GetSphere();
+    capsule = enemy_->GetCapsule();
     for (uint32_t i = 0; i < Stage::kMaxOBB; i++) {
-        if (IsCollision(stage_->GetOBB(i), sphere)) {
-            enemy_->OnCollision(stage_->GetOBB(i));
+		OBB obb = stage_->GetOBB(i);
+        if (IsCollision(capsule, obb)) {
+            enemy_->OnCollision(obb);
             Sound::PlayOriginSE(Sound::BOUND);
         }
     }
 #pragma endregion
+
+	enemy_->CollisionUpdate();
 }
 
 GameOverScene::~GameOverScene() = default;
