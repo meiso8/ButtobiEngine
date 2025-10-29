@@ -69,9 +69,13 @@ void Score::Update(const float& ComboBonus, const float& speedBonus, const float
 
         Calculation();
     }
+#ifdef _DEBUG
 	ImGui::Begin("score");
-	ImGui::SliderInt("scoree", &Score_,0,10000);
+	ImGui::SliderInt("scoree", &Score_, 0, 10000);
 	ImGui::End();
+#endif // DEBUG
+
+	
 
 }
 
