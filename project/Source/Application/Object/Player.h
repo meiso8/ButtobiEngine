@@ -45,7 +45,7 @@ public:
 
     // チャージ最大時間
 
-    static inline constexpr float kMaxChargeTime = 100000.0f;
+    static inline constexpr float kMaxChargeTime = 10000.0f;
    bool isHitOBB_ = false;
 
 

@@ -55,7 +55,7 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     //書き込むためのアドレスを取得
     directionalLightResource->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData));
     //デフォルト値はとりあえず以下のようにしておく   
-    directionalLightData->color = { 1.0f,1.0f,1.0f,1.0f };
+    directionalLightData->color = { 1.0f,230.0f/255.0f,200.0f / 255.0f,1.0f };
 
     directionalLightData->direction = { 0.0f,-1.0f,0.0f };//向きは正規化する
     directionalLightData->intensity = 1.0f;

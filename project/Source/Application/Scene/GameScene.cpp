@@ -242,10 +242,11 @@ void GameScene::Update() {
 
     for (uint32_t i = 0; i < 4; ++i) {
         if (player_->IsCharge()) {
+			//ALL はっきり描画
             stage_->IsSetAlpha(false, i);
-        } else {
-            stage_->IsSetAlpha(true, i);
-        }
+		} else {
+			stage_->IsSetAlpha(true, i);
+		}
     }
 
     //プレイヤーの操作 シーン切り替え時や判定完了時はしない
@@ -377,7 +378,7 @@ void GameScene::CheckAllCollisions() {
             OBB stageOBB = stage_->GetOBB(i);
             Sphere cameraSphere = { .center = camera_->GetWorldPos(),.radius = 5.0f };
             if (IsCollision(cameraSphere, stageOBB)) {
-                stage_->IsSetAlpha(true, i);
+				stage_->IsSetAlpha(true, i);
             }
         }
     }
@@ -554,8 +555,6 @@ void GameScene::Debug() {
     std::function<void()> func = [this]() { SwitchCamera(); };
     DebugUI::Button("ChangeCamera", func);
 
-    uint32_t lightType = 0;
-    DebugUI::CheckDirectionalLight(lightType);
     DebugUI::CheckParticle(*particle_, "chargeParticles");
     DebugUI::CheckParticle(*flashParticle_, "flashParticle");
 #endif // _DEBUG
