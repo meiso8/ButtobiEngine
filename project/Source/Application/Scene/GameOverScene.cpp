@@ -48,7 +48,6 @@ void GameOverScene::Initialize() {
 
     stage_ = std::make_unique<Stage>();
     stage_->Initialize();
-    stage_->IsSetAlphaFalse();
 
     gameOverSprite_ = std::make_unique<Sprite>();
     gameOverSprite_->Create(Texture::GetHandle(Texture::GAME_OVER), { 640.0f - 480.0f,96.0f }, { 960.0f,192.0f });
@@ -87,12 +86,15 @@ void GameOverScene::Update() {
     CheckAllCollisions();
 
     stage_->Update();
-    stage_->IsSetAlphaFalse();
+    for (uint32_t i = 0; i < 4; ++i) {
+        stage_->IsSetAlpha(false, i);
+    }
 }
 
 void GameOverScene::Draw() {
 
-    stage_->Draw(*currentCamera_);
+    stage_->DrawPlane(*currentCamera_);
+    stage_->DrawOBB(*currentCamera_);
     enemy_->Draw(*currentCamera_);
 
     gameOverSprite_->PreDraw();

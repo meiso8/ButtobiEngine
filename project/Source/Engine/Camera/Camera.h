@@ -55,6 +55,8 @@ public:
         translate_ = transform.translate;
     };
 
+    Vector3 GetWorldPos();
+
 #ifdef _DEBUG
 	/// @brief ワールド変換データの編集
 	/// @param label ラベル
