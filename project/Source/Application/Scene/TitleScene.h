@@ -143,6 +143,8 @@ class TitleScene :public SceneManager {
 
     std::unique_ptr<Sprite> spaceSprite_ = nullptr;
     uint32_t spaceTExtureHandle_ = 0;
+	std::unique_ptr<Sprite> menuSprite_ = nullptr;
+	uint32_t menuTextureHandle_ = 0;
 
     Vector3 EaseIn(float t, const Vector3& start, const Vector3& end) {
         // イージング関数（加速）
