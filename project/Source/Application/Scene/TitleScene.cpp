@@ -58,11 +58,23 @@ TitleScene::TitleScene()
 
     menuTextureHandle_ = Texture::GetHandle(Texture::MENU);
 	menuSprite_ = std::make_unique<Sprite>();
-	menuSprite_->Create(menuTextureHandle_, {320, 360}, {640, 360});
+	menuSprite_->Create(menuTextureHandle_, {320, 260}, {640, 360});
 
     spaceTExtureHandle_ = Texture::GetHandle(Texture::SPACE);
     spaceSprite_ = std::make_unique<Sprite>();
-    spaceSprite_->Create(spaceTExtureHandle_, { 500, 300 }, { 300, 300 });
+    spaceSprite_->Create(spaceTExtureHandle_, { 500, 400 }, { 300, 300 });
+
+    flameTextureHandle_ = Texture::GetHandle(Texture::FLAME);
+	flameSprite_ = std::make_unique<Sprite>();
+	flameSprite_->Create(flameTextureHandle_, {320.0f,300.0f}, {640.0f,120.0f});
+
+    creditTextureHandle_ = Texture::GetHandle(Texture::CREDIT);
+	creditSprite_ = std::make_unique<Sprite>();
+	creditSprite_->Create(creditTextureHandle_, {320.0f, 180.0f}, {640.0f/1.0f, 360.0f/1.0f});
+
+    backTextureHandle_ = Texture::GetHandle(Texture::BACK);
+	backSprite_ = std::make_unique<Sprite>();
+	backSprite_->Create(backTextureHandle_, {640.0f - 640.0f / 4.0f, 520.0f}, {640.0f / 4.0f, 360.0f / 4.0f});
 
     flashParticle_ = std::make_unique<FlashParticle>();
     flashParticle_->Create(Texture::GetHandle(Texture::FLASH_PARTICLE));
@@ -219,10 +231,11 @@ void TitleScene::Move() {
 
         break;
     case TitleScene::GameOption::Option:
-
+		spaceSprite_->SetPosition({640.0f, 370.0f});
+		spaceSprite_->Update();
         switch (option_) {
         case TitleScene::Option::BGM:
-
+			
             // オプション
             if (Input::IsTriggerKey(DIK_W) || Input::IsTriggerKey(DIK_UP) || Input::IsTriggerKey(DIK_S) || Input::IsTriggerKey(DIK_DOWN)) {
 
@@ -232,7 +245,8 @@ void TitleScene::Move() {
 
                 } else if (Input::IsTriggerKey(DIK_S) || Input::IsTriggerKey(DIK_DOWN)) {
 
-                    option_ = Option::SE;
+                    /*option_ = Option::SE;*/
+					option_ = Option::Back;
                 }
             }
             break;
@@ -240,7 +254,8 @@ void TitleScene::Move() {
             if (Input::IsTriggerKey(DIK_W) || Input::IsTriggerKey(DIK_UP) || Input::IsTriggerKey(DIK_S) || Input::IsTriggerKey(DIK_DOWN)) {
                 if (Input::IsTriggerKey(DIK_W) || Input::IsTriggerKey(DIK_UP)) {
 
-                    option_ = Option::BGM;
+                    /*option_ = Option::BGM;*/
+					option_ = Option::Back;
 
                 } else if (Input::IsTriggerKey(DIK_S) || Input::IsTriggerKey(DIK_DOWN)) {
 
@@ -252,15 +267,18 @@ void TitleScene::Move() {
             if (Input::IsTriggerKey(DIK_W) || Input::IsTriggerKey(DIK_UP) || Input::IsTriggerKey(DIK_S) || Input::IsTriggerKey(DIK_DOWN)) {
                 if (Input::IsTriggerKey(DIK_W) || Input::IsTriggerKey(DIK_UP)) {
 
-                    option_ = Option::SE;
+                    /*option_ = Option::SE;*/
+					option_ = Option::Back;
 
                 } else if (Input::IsTriggerKey(DIK_S) || Input::IsTriggerKey(DIK_DOWN)) {
 
-                    option_ = Option::BGM;
+                    /*option_ = Option::BGM;*/
+					option_ = Option::Back;
                 }
             }
             if (Input::IsTriggerKey(DIK_SPACE)) {
-
+				spaceSprite_->SetPosition({500, 400});
+				spaceSprite_->Update();
                 selectGameoption_ = GameOption::GameStart;
                 gameOption_ = GameOption::None;
             }
@@ -301,11 +319,14 @@ void TitleScene::Move() {
         }
         break;
     case TitleScene::GameOption::None:
-        /*if (Input::IsTriggerKey(DIK_W) || Input::IsTriggerKey(DIK_UP) || Input::IsTriggerKey(DIK_S) || Input::IsTriggerKey(DIK_DOWN)) {
+
+        
+        if (Input::IsTriggerKey(DIK_W) || Input::IsTriggerKey(DIK_UP) || Input::IsTriggerKey(DIK_S) || Input::IsTriggerKey(DIK_DOWN)) {
             if (selectGameoption_ == GameOption::GameStart) {
                 if (Input::IsTriggerKey(DIK_W) || Input::IsTriggerKey(DIK_UP)) {
 
-                    selectGameoption_ = GameOption::CloseGame;
+                    /*selectGameoption_ = GameOption::CloseGame;*/
+					selectGameoption_ = GameOption::Option;
 
                 } else if (Input::IsTriggerKey(DIK_S) || Input::IsTriggerKey(DIK_DOWN)) {
 
@@ -319,7 +340,8 @@ void TitleScene::Move() {
 
                 } else if (Input::IsTriggerKey(DIK_S) || Input::IsTriggerKey(DIK_DOWN)) {
 
-                    selectGameoption_ = GameOption::CloseGame;
+                    /*selectGameoption_ = GameOption::CloseGame;*/
+					selectGameoption_ = GameOption::GameStart;
                 }
                 break;
             } else if (selectGameoption_ == GameOption::CloseGame) {
@@ -333,8 +355,17 @@ void TitleScene::Move() {
                 }
                 break;
             }
-        }*/
-
+        }
+		if (selectGameoption_ == GameOption::GameStart) {
+			flameSprite_->SetPosition({320, 300});
+			flameSprite_->Update();
+		} else if (selectGameoption_ == GameOption::Option) {
+			flameSprite_->SetPosition({320, 300+140});
+			flameSprite_->Update();
+		} else {
+			flameSprite_->SetPosition({320, 260+360});
+			flameSprite_->Update();
+		}
         if (Input::IsTriggerKey(DIK_SPACE)) {
 
             gameOption_ = selectGameoption_;
@@ -561,7 +592,18 @@ void TitleScene::Draw() {
     appleModel->Draw(*currentCamera_, appleWorldTransform.matWorld_);
     if (iscameraTranslateEnd) {
         spaceSprite_->PreDraw();
+		menuSprite_->Draw();
+		flameSprite_->PreDraw(BlendMode::kBlendModeAdd);
+		flameSprite_->Draw();
+		if (gameOption_ == GameOption::Option) {
+			creditSprite_->PreDraw(BlendMode::kBlendModeNormal);
+			creditSprite_->Draw();
+			backSprite_->Draw();
+		}
+		spaceSprite_->PreDraw(BlendMode::kBlendModeNormal);
         spaceSprite_->Draw();
+		
+		
     }
 
     if (!sceneChange_.isSceneStart_) {

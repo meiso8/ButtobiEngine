@@ -62,7 +62,7 @@ class TitleScene :public SceneManager {
     GameOption selectGameoption_ = GameOption::GameStart;
     GameOption gameOption_ = GameOption::None;
 
-    Option option_ = Option::BGM;
+    Option option_ = Option::Back;
     CloseGame closeGame_ = CloseGame::NO;
 
     bool IsAnimationEnd = false;
@@ -145,6 +145,12 @@ class TitleScene :public SceneManager {
     uint32_t spaceTExtureHandle_ = 0;
 	std::unique_ptr<Sprite> menuSprite_ = nullptr;
 	uint32_t menuTextureHandle_ = 0;
+	std::unique_ptr<Sprite> flameSprite_ = nullptr;
+	uint32_t flameTextureHandle_ = 0;
+	std::unique_ptr<Sprite> creditSprite_ = nullptr;
+	uint32_t creditTextureHandle_ = 0;
+	std::unique_ptr<Sprite> backSprite_ = nullptr;
+	uint32_t backTextureHandle_ = 0;
 
     Vector3 EaseIn(float t, const Vector3& start, const Vector3& end) {
         // イージング関数（加速）
