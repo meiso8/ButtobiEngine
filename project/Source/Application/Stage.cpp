@@ -66,7 +66,7 @@ void Stage::Initialize() {
     obbRotates_[3] = { std::numbers::pi_v<float> / 4.0f, 0.0f, 0.0f };
 
     for (size_t i = 0; i < obbs_.size(); i++) {
-        SetAxis(obbRotates_[i], *obbs_[i]);
+        MakeAxis(obbRotates_[i], *obbs_[i]);
     }
 
 

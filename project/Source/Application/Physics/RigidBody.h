@@ -26,15 +26,7 @@ public:
 	/// @brief 力を加える
 	/// @param force 加える力
 	void ApplyForce(const Vector3 &force) { force_ += force; }
-
-	/// @brief 重力を設定
-	/// @param gravity 重力
-	void SetGravity(const Vector3 &gravity) { gravity_ = gravity; }
-
-	/// @brief 速度を設定
-	/// @param velocity 速度
-	void SetVelocity(const Vector3 &velocity) { velocity_ = velocity; }
-
+	
 	/// @brief 重心から力の作用点までのベクトルを設定
 	/// @param leverArm 重心から力の作用点までのベクトル
 	void SetLeverArm(const Vector3 &leverArm) { leverArm_ = leverArm; }

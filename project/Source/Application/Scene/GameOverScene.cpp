@@ -122,24 +122,28 @@ void GameOverScene::Debug()
 
 void GameOverScene::CheckAllCollisions() {
 #pragma region // 敵キャラと平面の当たり判定
-    Sphere sphere = enemy_->GetSphere();
+    Capsule capsule = enemy_->GetCapsule();
     for (uint32_t i = 0; i < Stage::kMaxPlane; i++) {
-        if (IsCollision(sphere, stage_->GetPlane(i))) {
-            enemy_->OnCollision(stage_->GetPlane(i));
+		Plane plane = stage_->GetPlane(i);
+        if (IsCollision(capsule, plane)) {
+            enemy_->OnCollision(plane);
             Sound::PlayOriginSE(Sound::BOUND);
         }
     }
 #pragma endregion
 
 #pragma region // 敵キャラとOBBの当たり判定
-    sphere = enemy_->GetSphere();
+    capsule = enemy_->GetCapsule();
     for (uint32_t i = 0; i < Stage::kMaxOBB; i++) {
-        if (IsCollision(stage_->GetOBB(i), sphere)) {
-            enemy_->OnCollision(stage_->GetOBB(i));
+		OBB obb = stage_->GetOBB(i);
+        if (IsCollision(capsule, obb)) {
+            enemy_->OnCollision(obb);
             Sound::PlayOriginSE(Sound::BOUND);
         }
     }
 #pragma endregion
+
+	enemy_->CollisionUpdate();
 }
 
 GameOverScene::~GameOverScene() = default;

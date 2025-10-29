@@ -9,12 +9,6 @@ Vector3 Reflect(const Vector3 &input, const Vector3 &normal) {
 	return input - 2.0f * Dot(input, normal) * normal;
 }
 
-Vector3 Impulse(const Vector3 &relativeVelocity, const Vector3 &normal, float mass1, float mass2, float restitution) {
-	float e = restitution;
-	float j = -(1 + e) * Dot(relativeVelocity, normal) / (1 / mass1 + 1 / mass2);
-	return j * normal;
-}
-
 Vector3 Project(const Vector3 &v1, const Vector3 &v2) {
 	Vector3 v2n = Normalize(v2);
 	float d = Dot(v1, v2n);
@@ -34,22 +28,61 @@ Vector3 ClosestPoint(const Vector3 &point, const AABB &aabb) {
 }
 
 Vector3 ClosestPoint(const Vector3 &point, const OBB &obb) {
-	Matrix4x4 obbWorldMatrix = {
-		obb.axis[0].x, obb.axis[0].y, obb.axis[0].z, 0.0f,
-		obb.axis[1].x, obb.axis[1].y, obb.axis[1].z, 0.0f,
-		obb.axis[2].x, obb.axis[2].y, obb.axis[2].z, 0.0f,
-		obb.center.x, obb.center.y, obb.center.z, 1.0f
-	};
+	Matrix4x4 obbWorldMatrix = MakeOBBMatrix(obb);
+	Matrix4x4 inverseOBBWorldMatrix = Inverse(obbWorldMatrix);
+	Vector3 centerInOBBLocalSpace = CoordinateTransform(point, inverseOBBWorldMatrix);
 	AABB aabbInOBBLocalSpace{ .min = -obb.halfSizes, .max = obb.halfSizes };
-	Vector3 centerInOBBLocalSpace = CoordinateTransform(point, Inverse(obbWorldMatrix));
-	Vector3 result = ClosestPoint(centerInOBBLocalSpace, aabbInOBBLocalSpace);
-	result = CoordinateTransform(result, obbWorldMatrix);
-	return result;
+	Vector3 closestPointLocal = ClosestPoint(centerInOBBLocalSpace, aabbInOBBLocalSpace);
+	Vector3 closestPointWorld = CoordinateTransform(closestPointLocal, obbWorldMatrix);
+	return closestPointWorld;
+}
+
+Vector3 ClosestPoint(const Segment &segment, const Plane &plane) {
+	float dot = Dot(plane.normal, segment.diff);
+	if (dot == 0.0f) {
+		return segment.origin; // 平行
+	}
+	float t = (plane.distance - Dot(plane.normal, segment.origin)) / dot;
+	t = std::clamp(t, 0.0f, 1.0f);
+	return segment.origin + t * segment.diff;
+}
+
+Vector3 ClosestPoint(const Segment &segment, const AABB &aabb) {
+	Vector3 tMin{
+		(aabb.min.x - segment.origin.x) / segment.diff.x,
+		(aabb.min.y - segment.origin.y) / segment.diff.y,
+		(aabb.min.z - segment.origin.z) / segment.diff.z
+	};
+	Vector3 tMax{
+		(aabb.max.x - segment.origin.x) / segment.diff.x,
+		(aabb.max.y - segment.origin.y) / segment.diff.y,
+		(aabb.max.z - segment.origin.z) / segment.diff.z
+	};
+	Vector3 tNear{
+		std::min(tMin.x, tMax.x),
+		std::min(tMin.y, tMax.y),
+		std::min(tMin.z, tMax.z)
+	};
+	float tmin = std::max(std::max(tNear.x, tNear.y), tNear.z);
+	tmin = std::clamp(tmin, 0.0f, 1.0f);
+	return segment.origin + tmin * segment.diff;
+}
+
+Vector3 ClosestPoint(const Segment &segment, const OBB &obb) {
+	Matrix4x4 obbWorldMatrix = MakeOBBMatrix(obb);
+	Matrix4x4 inverseOBBWorldMatrix = Inverse(obbWorldMatrix);
+	Vector3 startInOBBLocalSpace = CoordinateTransform(segment.origin, inverseOBBWorldMatrix);
+	Vector3 endInOBBLocalSpace = CoordinateTransform(segment.origin + segment.diff, inverseOBBWorldMatrix);
+	Segment segmentInOBBLocalSpace{ .origin = startInOBBLocalSpace, .diff = endInOBBLocalSpace - startInOBBLocalSpace };
+	AABB aabbInOBBLocalSpace{ .min = -obb.halfSizes, .max = obb.halfSizes };
+	Vector3 closestPointLocal = ClosestPoint(segmentInOBBLocalSpace, aabbInOBBLocalSpace);
+	Vector3 closestPointWorld = CoordinateTransform(closestPointLocal, obbWorldMatrix);
+	return closestPointWorld;
 }
 
 Vector3 Normal(const Vector3 &point, const AABB &aabb) {
 	Vector3 closestPoint = ClosestPoint(point, aabb);
-	Vector3 normal = Normalize(closestPoint);
+	Vector3 normal = Normalize(closestPoint - point);
 	if (IsZero(normal)) {
 		Vector3 center = (aabb.min + aabb.max) * 0.5f;
 		Vector3 toMin = point - aabb.min;
@@ -73,17 +106,30 @@ Vector3 Normal(const Vector3 &point, const AABB &aabb) {
 }
 
 Vector3 Normal(const Vector3 &point, const OBB &obb) {
-	Matrix4x4 obbWorldMatrix = {
-		obb.axis[0].x, obb.axis[0].y, obb.axis[0].z, 0.0f,
-		obb.axis[1].x, obb.axis[1].y, obb.axis[1].z, 0.0f,
-		obb.axis[2].x, obb.axis[2].y, obb.axis[2].z, 0.0f,
-		obb.center.x, obb.center.y, obb.center.z, 1.0f
-	};
+	Matrix4x4 obbWorldMatrix = MakeOBBMatrix(obb);
+	Matrix4x4 inverseOBBWorldMatrix = Inverse(obbWorldMatrix);
+	Vector3 pointInOBBLocalSpace = CoordinateTransform(point, inverseOBBWorldMatrix);
 	AABB aabbInOBBLocalSpace{ .min = -obb.halfSizes, .max = obb.halfSizes };
-	Vector3 pointInOBBLocalSpace = CoordinateTransform(point, Inverse(obbWorldMatrix));
-	Vector3 normal = Normal(pointInOBBLocalSpace, aabbInOBBLocalSpace);
-	normal = CoordinateTransform(normal, obbWorldMatrix);
-	return Normalize(normal);
+	Vector3 normalLocal = Normal(pointInOBBLocalSpace, aabbInOBBLocalSpace);
+	Vector3 normalWorld = obb.axis[0] * normalLocal.x + obb.axis[1] * normalLocal.y + obb.axis[2] * normalLocal.z;
+	return Normalize(normalWorld);
+}
+
+Vector3 Normal(const Segment &segment, const AABB &aabb) {
+	Vector3 closestPoint = ClosestPoint(segment, aabb);
+	return Normal(ClosestPoint(closestPoint, aabb), aabb);
+}
+
+Vector3 Normal(const Segment &segment, const OBB &obb) {
+	Matrix4x4 obbWorldMatrix = MakeOBBMatrix(obb);
+	Matrix4x4 inverseOBBWorldMatrix = Inverse(obbWorldMatrix);
+	Vector3 startInOBBLocalSpace = CoordinateTransform(segment.origin, inverseOBBWorldMatrix);
+	Vector3 endInOBBLocalSpace = CoordinateTransform(segment.origin + segment.diff, inverseOBBWorldMatrix);
+	Segment segmentInOBBLocalSpace{ .origin = startInOBBLocalSpace, .diff = endInOBBLocalSpace - startInOBBLocalSpace };
+	AABB aabbInOBBLocalSpace{ .min = -obb.halfSizes, .max = obb.halfSizes };
+	Vector3 normalLocal = Normal(segmentInOBBLocalSpace, aabbInOBBLocalSpace);
+	Vector3 normalWorld = obb.axis[0] * normalLocal.x + obb.axis[1] * normalLocal.y + obb.axis[2] * normalLocal.z;
+	return Normalize(normalWorld);
 }
 
 float Distance(const Vector3 &point, const Plane &plane) {
@@ -98,6 +144,21 @@ float Distance(const Vector3 &point, const AABB &aabb) {
 float Distance(const Vector3 &point, const OBB &obb) {
 	Vector3 closestPoint = ClosestPoint(point, obb);
 	return Length(closestPoint - point);
+}
+
+float Distance(const Segment &segment, const Plane &plane) {
+	Vector3 closestPoint = ClosestPoint(segment, plane);
+	return Distance(closestPoint, plane);
+}
+
+float Distance(const Segment &segment, const AABB &aabb) {
+	Vector3 closestPoint = ClosestPoint(segment, aabb);
+	return Distance(closestPoint, aabb);
+}
+
+float Distance(const Segment &segment, const OBB &obb) {
+	Vector3 closestPoint = ClosestPoint(segment, obb);
+	return Distance(closestPoint, obb);
 }
 
 float PenetrationDepth(const Sphere &sphere, const Plane &plane) {
@@ -115,6 +176,21 @@ float PenetrationDepth(const Sphere &sphere, const OBB &obb) {
 	return sphere.radius - distance;
 }
 
+float PenetrationDepth(const Capsule &capsule, const Plane &plane) {
+	float distance = Distance(capsule.segment, plane);
+	return capsule.radius - distance;
+}
+
+float PenetrationDepth(const Capsule &capsule, const AABB &aabb) {
+	float distance = Distance(capsule.segment, aabb);
+	return capsule.radius - distance;
+}
+
+float PenetrationDepth(const Capsule &capsule, const OBB &obb) {
+	float distance = Distance(capsule.segment, obb);
+	return capsule.radius - distance;
+}
+
 bool IsCollision(const Sphere &s1, const Sphere &s2) {
 
 	//2つの急の中心点間距離を求める 
@@ -125,10 +201,6 @@ bool IsCollision(const Sphere &s1, const Sphere &s2) {
 	}
 
 	return false;
-}
-
-bool IsCollision(const Sphere &sphere, const Plane &plane) {
-	return Distance(sphere.center, plane) <= sphere.radius;
 }
 
 //線分　Segment
@@ -349,6 +421,26 @@ bool IsCollision(const AABB &aabb, const Segment &segment) {
 	return false;
 }
 
-bool IsCollision(const OBB &obb, const Sphere &sphere) {
+bool IsCollision(const Sphere &sphere, const Plane &plane) {
+	return Distance(sphere.center, plane) <= sphere.radius;
+}
+
+bool IsCollision(const Sphere &sphere, const AABB &aabb) {
+	return Distance(sphere.center, aabb) <= sphere.radius;
+}
+
+bool IsCollision(const Sphere &sphere, const OBB &obb) {
 	return Distance(sphere.center, obb) <= sphere.radius;
+}
+
+bool IsCollision(const Capsule &capsule, const Plane &plane) {
+	return Distance(capsule.segment, plane) <= capsule.radius;
+}
+
+bool IsCollision(const Capsule &capsule, const AABB &aabb) {
+	return Distance(capsule.segment, aabb) <= capsule.radius;
+}
+
+bool IsCollision(const Capsule &capsule, const OBB &obb) {
+	return Distance(capsule.segment, obb) <= capsule.radius;
 }

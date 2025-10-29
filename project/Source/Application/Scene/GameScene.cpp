@@ -22,43 +22,43 @@ constexpr int winHeight = 720;
 
 GameScene::GameScene() {
 
-    camera_ = std::make_unique<Camera>();
+	camera_ = std::make_unique<Camera>();
 #ifdef _DEBUG
 
     debugCamera_ = std::make_unique<DebugCamera>();
     lineMesh_ = std::make_unique<LineMesh>();
     lineMesh_->Create(Texture::GetHandle(Texture::WHITE_1X1));
 #endif
-    // 衝突マネージャの生成
-    collisionManager_ = std::make_unique<CollisionManager>();
+	// 衝突マネージャの生成
+	collisionManager_ = std::make_unique<CollisionManager>();
 
-    // 自キャラの生成
-    player_ = std::make_unique<Player>();
+	// 自キャラの生成
+	player_ = std::make_unique<Player>();
 
-    // 天球の生成
-    skyDome_ = std::make_unique <Skydome>();
+	// 天球の生成
+	skyDome_ = std::make_unique <Skydome>();
 
-    //背景
-    backGround_ = std::make_unique <BackGround>();
-    backGround_->Initialize();
+	//背景
+	backGround_ = std::make_unique <BackGround>();
+	backGround_->Initialize();
 
-    // パーティクル
-    CreateParticleMesh();
+	// パーティクル
+	CreateParticleMesh();
 
 
-    // カメラ操作
-    cameraController_ = std::make_unique <CameraController>();
+	// カメラ操作
+	cameraController_ = std::make_unique <CameraController>();
 
-    //UI操作
-    uiManager_ = std::make_unique < UIManager>();
+	//UI操作
+	uiManager_ = std::make_unique < UIManager>();
 
-    stage_ = std::make_unique <Stage>();
+	stage_ = std::make_unique <Stage>();
 
-    //力の矢印
-    forceArrow_ = std::make_unique<Arrow>();
-    //シャッターを作成
-    shutter_ = std::make_unique<Shutter>();
-    shutter_->Create();
+	//力の矢印
+	forceArrow_ = std::make_unique<Arrow>();
+	//シャッターを作成
+	shutter_ = std::make_unique<Shutter>();
+	shutter_->Create();
 }
 
 GameScene::~GameScene() {
@@ -66,19 +66,19 @@ GameScene::~GameScene() {
 };
 void GameScene::Initialize() {
 
-    Sound::PlaySE(Sound::ANNOUNCE);
-    isAnnounce_ = false;
+	Sound::PlaySE(Sound::ANNOUNCE);
+	isAnnounce_ = false;
 
-    sceneChange_.Initialize();
+	sceneChange_.Initialize();
 
-    //シャッターの初期化
-    shutter_->Initialize();
+	//シャッターの初期化
+	shutter_->Initialize();
 
-    //カメラの初期化
-    InitializeCamera();
+	//カメラの初期化
+	InitializeCamera();
 
-    // 衝突マネージャにスコアポインタを設定
-    collisionManager_->SetScorePointer(&score_);
+	// 衝突マネージャにスコアポインタを設定
+	collisionManager_->SetScorePointer(&score_);
 
     collisionManager_->SetComboPointer(uiManager_->GetComboPointer());
     collisionManager_->SetComboTimerPtr(uiManager_->GetComboTimerPtr());
@@ -87,66 +87,65 @@ void GameScene::Initialize() {
     collisionManager_->SetJuiceMeter(uiManager_->GetJuiceMeter());
     collisionManager_->SetIsComboSparkle(uiManager_->GetSparkleIsAlive(1));
 
-    Vector3 playerPosition = { 0.0f, 10.0f, 0.0f };
-    // 自キャラの初期化 //ここはmainCamera
-    player_->Initialize(*camera_, playerPosition);
+	Vector3 playerPosition = { 0.0f, 10.0f, 0.0f };
+	// 自キャラの初期化 //ここはmainCamera
+	player_->Initialize(*camera_, playerPosition);
 
-    skyDome_->Initialize();
+	skyDome_->Initialize();
 
-    //UI系
-    uiManager_->Initialize();
+	//UI系
+	uiManager_->Initialize();
 
-    // 地形
-    stage_->Initialize();
+	// 地形
+	stage_->Initialize();
 
-    //力の矢印
-    forceArrow_->Initialize();
+	//力の矢印
+	forceArrow_->Initialize();
 
-    //敵を削除
-    enemies_.clear();
+	//敵を削除
+	enemies_.clear();
 
-    player_->InitializeLife(uiManager_->GetMaxLife());
+	player_->InitializeLife(uiManager_->GetMaxLife());
 
-    effect_->Initialize();
+	effect_->Initialize();
 
-    isGameClear = false;
-    isGameOver = false;
+	isGameClear = false;
+	isGameOver = false;
 
-    chargeParticleColor_ = { 1.0f,0.0f,0.0f,1.0f };
+	chargeParticleColor_ = { 1.0f,0.0f,0.0f,1.0f };
 
 
 };
 
 void GameScene::CreateParticleMesh() {
 
-    particle_ = std::make_unique<ChargeParticle>();
-    particle_->Create(Texture::GetHandle(Texture::PARTICLE));
-    particle_->useBillboard_ = true;
-    particle_->emitter_.cont = 10;
+	particle_ = std::make_unique<ChargeParticle>();
+	particle_->Create(Texture::GetHandle(Texture::PARTICLE));
+	particle_->useBillboard_ = true;
+	particle_->emitter_.cont = 10;
 
-    flashParticle_ = std::make_unique<FlashParticle>();
-    flashParticle_->Create(Texture::GetHandle(Texture::FLASH_PARTICLE));
-    flashParticle_->useBillboard_ = true;
-    flashParticle_->emitter_.cont = 1;
+	flashParticle_ = std::make_unique<FlashParticle>();
+	flashParticle_->Create(Texture::GetHandle(Texture::FLASH_PARTICLE));
+	flashParticle_->useBillboard_ = true;
+	flashParticle_->emitter_.cont = 1;
 
-    crashParticle_ = std::make_unique<AppleCrashParticle>();
-    crashParticle_->Create(Texture::GetHandle(Texture::FLASH_PARTICLE));
-    crashParticle_->useBillboard_ = true;
-    crashParticle_->emitter_.cont = 10;
+	crashParticle_ = std::make_unique<AppleCrashParticle>();
+	crashParticle_->Create(Texture::GetHandle(Texture::FLASH_PARTICLE));
+	crashParticle_->useBillboard_ = true;
+	crashParticle_->emitter_.cont = 10;
 
-    //パーティクルをセットする
-    player_->SetParticle(flashParticle_.get());
+	//パーティクルをセットする
+	player_->SetParticle(flashParticle_.get());
 
-    //エフェクト
-    effect_ = std::make_unique <Effect>(player_->GetWorldTransform());
+	//エフェクト
+	effect_ = std::make_unique <Effect>(player_->GetWorldTransform());
 
 }
 
-void GameScene::UpdateParticle()
-{
+void GameScene::UpdateParticle() {
 
-    //プレイヤーがチャージしているときだけ更新
-    if (player_->IsCharge()) {
+	//プレイヤーがチャージしているときだけ更新
+	if (player_->IsCharge()) {
 
         if (player_->GetChargeTimer() == player_->kMaxChargeTime) {
             chargeParticleColor_ = { 1.0f,1.0f,0.0f,1.0f };
@@ -155,23 +154,22 @@ void GameScene::UpdateParticle()
         }
         particle_->TimerUpdate(true, { 0.1f,0.1f,0.1f }, chargeParticleColor_);
 
-        particle_->emitter_.transform.translate = player_->GetWorldPosition();
-    }
+		particle_->emitter_.transform.translate = player_->GetWorldPosition();
+	}
 
-    if (player_->IsCharge() || player_->IsAttack()) {
-        effect_->Update(player_->IsCharge(), chargeParticleColor_);
-    }
-    particle_->Update(*currentCamera_);
-    flashParticle_->Update(*currentCamera_);
-    crashParticle_->Update(*currentCamera_);
+	if (player_->IsCharge() || player_->IsAttack()) {
+		effect_->Update(player_->IsCharge(), chargeParticleColor_);
+	}
+	particle_->Update(*currentCamera_);
+	flashParticle_->Update(*currentCamera_);
+	crashParticle_->Update(*currentCamera_);
 }
 
-void GameScene::UpdateSceneChange()
-{
+void GameScene::UpdateSceneChange() {
 
-    if (!sceneChange_.isSceneStart_) {
-        sceneChange_.UpdateStart(60);
-    }
+	if (!sceneChange_.isSceneStart_) {
+		sceneChange_.UpdateStart(60);
+	}
 
     if (!isAnnounce_) {
         if (!Sound::IsPlaying(Sound::ANNOUNCE)) {
@@ -211,34 +209,33 @@ void GameScene::UpdateSceneChange()
     }
 }
 
-void GameScene::InitializeCamera()
-{
-    // カメラの初期化
-    camera_->Initialize(winWidth, winHeight, Camera::PERSPECTIVE);
-    cameraShakeTimer_ = 30;
-    isShakeCamera_ = false;
+void GameScene::InitializeCamera() {
+	// カメラの初期化
+	camera_->Initialize(winWidth, winHeight, Camera::PERSPECTIVE);
+	cameraShakeTimer_ = 30;
+	isShakeCamera_ = false;
 
 #ifdef _DEBUG
-    // デバッグカメラ
-    debugCamera_->Initialize(winWidth, winHeight);
+	// デバッグカメラ
+	debugCamera_->Initialize(winWidth, winHeight);
 #endif
 
-    currentCamera_ = camera_.get();
+	currentCamera_ = camera_.get();
 
-    // カメラ操作の初期化
-    cameraController_->Initialize(camera_.get());
-    cameraController_->SetTarget(player_.get());
-    cameraController_->Reset();
-    /*  cameraController_->SetMovableArea({ 0.0f, 100.0f, 0.0f, 100.0f });*/
+	// カメラ操作の初期化
+	cameraController_->Initialize(camera_.get());
+	cameraController_->SetTarget(player_.get());
+	cameraController_->Reset();
+	/*  cameraController_->SetMovableArea({ 0.0f, 100.0f, 0.0f, 100.0f });*/
 
 }
 
 void GameScene::Update() {
-    // ここにインゲームの更新処理を書く
-     //BGMを鳴らす
-    Sound::PlayBGM(Sound::BGM1);
+	// ここにインゲームの更新処理を書く
+	 //BGMを鳴らす
+	Sound::PlayBGM(Sound::BGM1);
 
-    UpdateSceneChange();
+	UpdateSceneChange();
 
     // 地形の更新処理
     stage_->Update();
@@ -256,63 +253,62 @@ void GameScene::Update() {
         player_->ShutterCloseAnimation(sceneChange_.endTimer_ * InverseFPS);
     }
 
-    // 自キャラの更新処理
-    player_->Update();
+	// 自キャラの更新処理
+	player_->Update();
 
-    if (player_->IsAttack()) {
-        //アタックしているときコンボタイマーをカウントダウンする
-        uiManager_->SetIsUpdateComboTimer(true);
-    }
+	if (player_->IsAttack()) {
+		//アタックしているときコンボタイマーをカウントダウンする
+		uiManager_->SetIsUpdateComboTimer(true);
+	}
 
-    // 敵が死亡している場合は削除
-    enemies_.remove_if([](const std::unique_ptr<Enemy>& enemy) { return enemy->IsDead(); });
+	// 敵が死亡している場合は削除
+	enemies_.remove_if([](const std::unique_ptr<Enemy> &enemy) { return enemy->IsDead(); });
 
     // 敵キャラの更新処理
     PopEnemyWait();
 
-    uint32_t enemyCount = 0;
-    for (auto& newEnemy : enemies_) {
-        if (!newEnemy)
-            // ガード節と呼ぶ。
-            continue;
+	uint32_t enemyCount = 0;
+	for (auto &newEnemy : enemies_) {
+		if (!newEnemy)
+			// ガード節と呼ぶ。
+			continue;
 #ifdef _DEBUG
-        newEnemy->Edit("Enemy" + std::to_string(enemyCount));
+		newEnemy->Edit("Enemy" + std::to_string(enemyCount));
 #endif // _DEBUG
-        newEnemy->Update();
-        enemyCount++;
-    }
+		newEnemy->Update();
+		enemyCount++;
+	}
 
-    uiManager_->SetLife(player_->GetLife());
+	uiManager_->SetLife(player_->GetLife());
 
-    //力の矢印
-    forceArrow_->Update(player_->GetWorldPosition(), player_->GetChargeTimer(), player_->GetWorldTransform().rotate_.y);
+	//力の矢印
+	forceArrow_->Update(player_->GetWorldPosition(), player_->GetChargeTimer(), player_->GetWorldTransform().rotate_.y);
 
-    //パーティクルの更新処理
-    UpdateParticle();
+	//パーティクルの更新処理
+	UpdateParticle();
 
-    // 天球の更新処理
-    skyDome_->Update();
-    //カメラの更新処理
-    UpdateCamera();
+	// 天球の更新処理
+	skyDome_->Update();
+	//カメラの更新処理
+	UpdateCamera();
 
-    // 全ての当たり判定を行う
-    CheckAllCollisions();
+	// 全ての当たり判定を行う
+	CheckAllCollisions();
 
-    uiManager_->Update();
-
+	uiManager_->Update();
 };
 
 void GameScene::CheckAllCollisions() {
-    // 衝突マネージャのコライダーをクリア
-    collisionManager_->ClearColliders();
+	// 衝突マネージャのコライダーをクリア
+	collisionManager_->ClearColliders();
 
-    // コライダーをリストに登録
-    for (auto& enemy : enemies_) {
-        collisionManager_->AddCollider(enemy.get());
-    }
+	// コライダーをリストに登録
+	for (auto &enemy : enemies_) {
+		collisionManager_->AddCollider(enemy.get());
+	}
 
-    // 衝突判定と応答
-    collisionManager_->CheckAllCollisions();
+	// 衝突判定と応答
+	collisionManager_->CheckAllCollisions();
 
 #pragma region // 自機HP　と敵キャラの当たり判定
 
@@ -333,80 +329,80 @@ void GameScene::CheckAllCollisions() {
         }
     }
 
-
-
-
-
-
 #pragma region // 矢印と敵キャラの当たり判定
-    // 矢印キャラと敵キャラの当たり判定
-    OBB arrowOBB = forceArrow_->GetKickAreaOBB();
-    for (auto& enemy : enemies_) {
-        if (!enemy)
-            continue;
-        // OBBとSphereの当たり判定
-        Sphere enemySphere = enemy->GetSphere();
-        if (IsCollision(arrowOBB, enemySphere)) {
-            // 敵弾の衝突時コールバックを呼び出す
-            enemy->OnCollision(player_.get());
-            // 自キャラ衝突時コールバックを呼び出す
-            player_->OnCollision(enemy.get());
-        }
-    }
+	// 矢印キャラと敵キャラの当たり判定
+	OBB arrowOBB = forceArrow_->GetKickAreaOBB();
+	for (auto &enemy : enemies_) {
+		if (!enemy)
+			continue;
+		// OBBとSphereの当たり判定
+		Capsule enemyCapsule = enemy->GetCapsule();
+		if (IsCollision(enemyCapsule, arrowOBB)) {
+			// 敵弾の衝突時コールバックを呼び出す
+			enemy->OnCollision(player_.get());
+			// 自キャラ衝突時コールバックを呼び出す
+			player_->OnCollision(enemy.get());
+		}
+	}
 
 
 #pragma endregion
 
 #pragma region // 自キャラと平面の当たり判定
-    Sphere playerSphere = player_->GetSphere();
-    for (uint32_t i = 0; i < Stage::kMaxPlane; i++) {
-        Plane stagePlane = stage_->GetPlane(i);
-        if (IsCollision(playerSphere, stagePlane)) {
-            player_->OnCollision(stagePlane);
-        }
-    }
+	Sphere playerSphere = player_->GetSphere();
+	for (uint32_t i = 0; i < Stage::kMaxPlane; i++) {
+		Plane stagePlane = stage_->GetPlane(i);
+		if (IsCollision(playerSphere, stagePlane)) {
+			player_->OnCollision(stagePlane);
+		}
+	}
 #pragma endregion
 
 #pragma region // 自キャラとOBBの当たり判定
-    for (uint32_t i = 0; i < Stage::kMaxOBB; i++) {
-        OBB stageOBB = stage_->GetOBB(i);
-        if (IsCollision(stageOBB, playerSphere)) {
-            player_->OnCollision(stageOBB);
-        }
-    }
+	for (uint32_t i = 0; i < Stage::kMaxOBB; i++) {
+		OBB stageOBB = stage_->GetOBB(i);
+		if (IsCollision(playerSphere, stageOBB)) {
+			player_->OnCollision(stageOBB);
+		}
+	}
 #pragma endregion
 
 #pragma region // 敵キャラと平面の当たり判定
-    for (auto& enemy : enemies_) {
-        if (!enemy)
-            continue;
-        Sphere enemySphere = enemy->GetSphere();
-        for (uint32_t i = 0; i < Stage::kMaxPlane; i++) {
-            Plane stagePlane = stage_->GetPlane(i);
-            if (IsCollision(enemySphere, stagePlane)) {
-                enemy->OnCollision(stagePlane);
-            }
-        }
-    }
+	for (auto &enemy : enemies_) {
+		if (!enemy)
+			continue;
+		Capsule enemyCapsule = enemy->GetCapsule();
+		for (uint32_t i = 0; i < Stage::kMaxPlane; i++) {
+			Plane stagePlane = stage_->GetPlane(i);
+			if (IsCollision(enemyCapsule, stagePlane)) {
+				enemy->OnCollision(stagePlane);
+			}
+		}
+	}
 #pragma endregion
 
 #pragma region // 敵キャラとOBBの当たり判定
-    for (auto& enemy : enemies_) {
-        if (!enemy)
-            continue;
-        Sphere enemySphere = enemy->GetSphere();
-        for (uint32_t i = 0; i < Stage::kMaxOBB; i++) {
-            OBB stageOBB = stage_->GetOBB(i);
-            if (IsCollision(stageOBB, enemySphere)) {
-                enemy->OnCollision(stageOBB);
-            }
-        }
-    }
+	for (auto &enemy : enemies_) {
+		if (!enemy)
+			continue;
+		Capsule enemyCapsule = enemy->GetCapsule();
+		for (uint32_t i = 0; i < Stage::kMaxOBB; i++) {
+			OBB stageOBB = stage_->GetOBB(i);
+			if (IsCollision(enemyCapsule, stageOBB)) {
+				enemy->OnCollision(stageOBB);
+			}
+		}
+	}
 #pragma endregion
+
+	for (auto &enemy : enemies_) {
+		if (!enemy)
+			continue;
+		enemy->CollisionUpdate();
+	}
 }
 
 void GameScene::PopEnemy() {
-
     // 敵の出現処理
     auto newEnemy = std::make_unique<Enemy>();
     Random::SetMinMax(-20.0f, 20.0f);
@@ -441,27 +437,25 @@ void GameScene::PopEnemyWait()
     waitToPopTimer_ = 60;
 }
 
-void GameScene::UpdateCamera()
-{
-    if (isShakeCamera_) {
+void GameScene::UpdateCamera() {
+	if (isShakeCamera_) {
 
-        cameraShakeTimer_++;
+		cameraShakeTimer_++;
 
-        if (cameraShakeTimer_ % 2 == 0) {
-            Random::SetMinMax(-0.25f, 0.25f);
-            camera_->offset_ = { Random::Get() ,Random::Get() };
-        }
+		if (cameraShakeTimer_ % 2 == 0) {
+			Random::SetMinMax(-0.25f, 0.25f);
+			camera_->offset_ = { Random::Get() ,Random::Get() };
+		}
 
-        if (cameraShakeTimer_ > 30) {
-            isShakeCamera_ = false;
-        }
-    } else {
-        camera_->offset_ = { 0.0f,0.0f };
-    }
+		if (cameraShakeTimer_ > 30) {
+			isShakeCamera_ = false;
+		}
+	} else {
+		camera_->offset_ = { 0.0f,0.0f };
+	}
 
-    // カメラの処理
-    if (!isDebugCameraActive_) {
-
+	// カメラの処理
+	if (!isDebugCameraActive_) {
         if (isGameClear || isGameOver) {
             cameraController_->ZoomIn();
         } else {
@@ -469,9 +463,8 @@ void GameScene::UpdateCamera()
             cameraController_->Update();
         }
     } else {
-
-        currentCamera_->UpdateMatrix();
-    }
+		currentCamera_->UpdateMatrix();
+	}
 
 }
 
@@ -485,8 +478,8 @@ void GameScene::Draw() {
     lineMesh_->Draw(*currentCamera_, MakeIdentity4x4());
 #endif // _DEBUG
 
-    // 天球の描画
-    skyDome_->Draw(*currentCamera_);
+	// 天球の描画
+	skyDome_->Draw(*currentCamera_);
 
     backGround_->Draw(*currentCamera_);
 
@@ -496,44 +489,40 @@ void GameScene::Draw() {
 
     player_->Draw(*currentCamera_);
 
-    //敵キャラの描画
-    for (auto& newEnemy : enemies_) {
-        if (!newEnemy)
-            // ガード節と呼ぶ。
-            continue;
-        newEnemy->Draw(*currentCamera_);
-    }
+	//敵キャラの描画
+	for (auto &newEnemy : enemies_) {
+		if (!newEnemy)
+			// ガード節と呼ぶ。
+			continue;
+		newEnemy->Draw(*currentCamera_);
+	}
 
-    if (player_->IsCharge() || player_->IsAttack()) {
-        //力を描画
-        forceArrow_->Draw(*currentCamera_);
-        //パーティクルを描画
-        particle_->Draw(kBlendModeAdd);
-        effect_->Draw(*currentCamera_);
-    }
+	if (player_->IsCharge() || player_->IsAttack()) {
+		//力を描画
+		forceArrow_->Draw(*currentCamera_);
+		//パーティクルを描画
+		particle_->Draw(kBlendModeAdd);
+		effect_->Draw(*currentCamera_);
+	}
+  
+	crashParticle_->Draw(kBlendModeNormal);
 
+	flashParticle_->Draw(kBlendModeNormal);
 
+	//UI
+	uiManager_->Draw();
 
-    crashParticle_->Draw(kBlendModeNormal);
-
-    flashParticle_->Draw(kBlendModeNormal);
-
-    //UI
-    uiManager_->Draw();
-
-    //シャッターの描画処理
-    if (cameraController_->zoomEnd_) {
-        shutter_->Draw();
-    }
+	//シャッターの描画処理
+	if (cameraController_->zoomEnd_) {
+		shutter_->Draw();
+	}
 
 
 
 }
 
 void GameScene::Debug() {
-
 #ifdef _DEBUG
-
     ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
     ImGui::Text("Score: %u", score_);
 
@@ -548,8 +537,6 @@ void GameScene::Debug() {
     DebugUI::CheckParticle(*particle_, "chargeParticles");
     DebugUI::CheckParticle(*flashParticle_, "flashParticle");
 #endif // _DEBUG
-
-
 }
 
 bool GameScene::GetIsGameOver() { return isGameOver; }
