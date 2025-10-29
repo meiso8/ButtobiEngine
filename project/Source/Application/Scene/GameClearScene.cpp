@@ -111,10 +111,12 @@ void GameClearScene::EnemyUpdate()
 }
 
 void GameClearScene::Draw() {
+   
+    stage_->Draw(*currentCamera_);
+
     for (auto& enemy : enemies_) {
         enemy->Draw(*currentCamera_);
     }
-    stage_->Draw(*currentCamera_);
 
     clearSprite_->PreDraw();
 

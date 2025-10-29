@@ -91,8 +91,9 @@ void GameOverScene::Update() {
 }
 
 void GameOverScene::Draw() {
-    enemy_->Draw(*currentCamera_);
+
     stage_->Draw(*currentCamera_);
+    enemy_->Draw(*currentCamera_);
 
     gameOverSprite_->PreDraw();
     gameOverSprite_->Draw();

@@ -175,7 +175,7 @@ void GameScene::UpdateSceneChange()
 
     if (!isAnnounce_) {
         if (!Sound::IsPlaying(Sound::ANNOUNCE)) {
-            Sound::PlaySE(Sound::ANNOUNCE_FRUIT,0.25f);
+            Sound::PlaySE(Sound::ANNOUNCE_FRUIT, 0.25f);
             isAnnounce_ = true;
             for (int i = 0; i < 10; ++i) {
                 PopEnemy();
@@ -243,12 +243,14 @@ void GameScene::Update() {
     }
 
     //プレイヤーの操作 シーン切り替え時や判定完了時はしない
-    if (sceneChange_.isSceneStart_) {
-        if (!isGameClear && !isGameOver) {
-            player_->InputMove();
+    if (!isGameClear && !isGameOver) {
 
-        }
+        player_->InputMove();
 
+        player_->InputAttack();
+
+    } else {
+        player_->ShutterCloseAnimation(sceneChange_.endTimer_ *InverseFPS);
     }
 
     // 自キャラの更新処理
@@ -322,20 +324,27 @@ void GameScene::CheckAllCollisions() {
     collisionManager_->CheckAllCollisions();
 
 #pragma region // 自機HP　と敵キャラの当たり判定
-    for (auto& enemy : enemies_) {
-        // OBBとSphereの当たり判定
-        if (IsCollision(player_->GetHPSphere(), enemy->GetSphere())) {
 
-            //カメラを動かす
-            if (!isShakeCamera_) {
-                isShakeCamera_ = true;
-                cameraShakeTimer_ = 0;
+    if (!isGameClear && !isGameOver) {
+        for (auto& enemy : enemies_) {
+            // OBBとSphereの当たり判定
+            if (IsCollision(player_->GetHPSphere(), enemy->GetSphere())) {
+
+                //カメラを動かす
+                if (!isShakeCamera_) {
+                    isShakeCamera_ = true;
+                    cameraShakeTimer_ = 0;
+                }
+
+                // 自キャラ衝突時コールバックを呼び出す
+                player_->OnCollisionHP(enemy.get());
             }
-
-            // 自キャラ衝突時コールバックを呼び出す
-            player_->OnCollisionHP(enemy.get());
         }
     }
+
+
+
+
 
 
 #pragma region // 矢印と敵キャラの当たり判定
@@ -464,6 +473,7 @@ void GameScene::UpdateCamera()
 
         if (isGameClear || isGameOver) {
             cameraController_->ZoomIn();
+            player_->SetPhase(Player::kTimeUp);
             //ちょっとここで音を止める
             Sound::Stop(Sound::CHARGE);
         } else {

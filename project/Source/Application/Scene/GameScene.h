@@ -50,6 +50,7 @@ public:
     void Debug()override;
     Score* GetScoreClass() { return uiManager_->GetScorePtr(); };
     Shutter* GetShutter() { return shutter_.get(); };
+
 private:
     // カメラ操作
     std::unique_ptr <CameraController> cameraController_ = nullptr;
