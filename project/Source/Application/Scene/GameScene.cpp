@@ -366,7 +366,7 @@ void GameScene::CheckAllCollisions() {
 #pragma region // 自キャラとOBBの当たり判定
     for (uint32_t i = 0; i < Stage::kMaxOBB; i++) {
         OBB stageOBB = stage_->GetOBB(i);
-        if (IsCollision(stageOBB, playerSphere)) {
+        if (IsCollision(playerSphere, stageOBB)) {
             player_->OnCollision(stageOBB);
         }
     }
@@ -376,7 +376,7 @@ void GameScene::CheckAllCollisions() {
         for (uint32_t i = 0; i < Stage::kMaxOBB; i++) {
             OBB stageOBB = stage_->GetOBB(i);
             Sphere cameraSphere = { .center = camera_->GetWorldPos(),.radius = 5.0f };
-            if (IsCollision(stageOBB, cameraSphere)) {
+            if (IsCollision(cameraSphere, stageOBB)) {
                 stage_->IsSetAlpha(true, i);
             }
         }
