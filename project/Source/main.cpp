@@ -20,7 +20,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // ==============================================//↑基本いじらない↑//============================================
 
     //画面の色
-    Vector4 screenColor = { 0.6f,0.6f,0.6f,1.0f };
+    Vector4 screenColor = { 0.75f,0.75f,0.75f,1.0f };
 
     // =============================================
     // シーンの生成
@@ -62,7 +62,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     int sceneIndex = kTitleScene;
 #ifdef _DEBUG
     // シーンのインデックス
-    sceneIndex = kGameScene;
+    sceneIndex = kTitleScene;
 #endif // _DEBUG
 
     // 現在のシーン
