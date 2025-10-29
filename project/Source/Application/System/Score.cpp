@@ -69,6 +69,9 @@ void Score::Update(const float& ComboBonus, const float& speedBonus, const float
 
         Calculation();
     }
+	ImGui::Begin("score");
+	ImGui::SliderInt("scoree", &Score_,0,10000);
+	ImGui::End();
 
 }
 
@@ -135,5 +138,35 @@ void Score::SetScorePos()
         HighScoreNumbersSprite[i]->SetSize(NumberSize_);
         HighScoreNumbersSprite[i]->Update();
     }
+
+}
+void Score::ClearScorePos(){
+
+     ScorePosition_ = {1300, 400};
+	ScoreNumbersPosition_ = {640, 300};
+	HighScorePosition_ = {1300, 360};
+	HighScoreNumbersPosition_ = {640, 220};
+
+	scoreSprite->SetSize(ScoreSize_);
+	highScoreSprite->SetSize(HighScoreSize_);
+	scoreSprite->SetPosition(ScorePosition_);
+	highScoreSprite->SetPosition(HighScorePosition_);
+
+	scorePosInterval = 40;
+
+	for (int i = 0; i < 7; i++) {
+
+		NumbersSprite[i]->SetPosition({ScoreNumbersPosition_.x + i * scorePosInterval, ScoreNumbersPosition_.y});
+		NumbersSprite[i]->SetSize(NumberSize_);
+		NumbersSprite[i]->Update();
+
+		HighScoreNumbersSprite[i]->SetPosition({HighScoreNumbersPosition_.x + i * scorePosInterval, HighScoreNumbersPosition_.y});
+		HighScoreNumbersSprite[i]->SetSize(NumberSize_);
+		HighScoreNumbersSprite[i]->Update();
+	}
+
+
+
+
 
 }

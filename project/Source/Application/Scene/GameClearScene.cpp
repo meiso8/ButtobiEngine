@@ -42,8 +42,24 @@ void GameClearScene::Initialize() {
 
     isRenderSprite_ = false;
     clearSprite_ = std::make_unique<Sprite>();
-    clearSprite_->Create(Texture::GetHandle(Texture::CLEAR), { 640.0f - 480.0f,96.0f }, { 960.0f,192.0f });
-
+    clearSprite_->Create(Texture::GetHandle(Texture::CLEAR), { 640.0f - 240.0f,48.0f }, { 480.0f,96.0f });
+	stringSprite = std::make_unique<Sprite>();
+	stringSprite->Create(Texture::GetHandle(Texture::CLEARSCENESTRING), {150, 200}, {185*4, 104*4});
+	rankSprite_ = std::make_unique<Sprite>();
+	rankSprite_->Create(Texture::GetHandle(Texture::RANK), {650, 450}, {200,200});
+	rankSprite_->SetTextureSize({384, 384});
+	rankSprite_->Update();
+	scoreQualitySprite = std::make_unique<Sprite>();
+	scoreQualitySprite->Create(Texture::GetHandle(Texture::QUALITY), {1000, 300}, {240, 60});
+	scoreQualitySprite->SetTextureSize({1200, 250});
+	scoreQualitySprite->Update();
+	juiceQualitySprite = std::make_unique<Sprite>();
+	juiceQualitySprite->Create(Texture::GetHandle(Texture::QUALITY), {1000, 380}, {240, 60});
+	juiceQualitySprite->SetTextureSize({1200, 250});
+	juiceQualitySprite->Update();
+	for (int i = 0; i < 2; i++) {
+		juiceCountSprite_[i].Create(Texture::GetHandle(Texture::JUICENUMBER), {680.0f + 80.0f * i, 360}, {100, 100});
+    }
 
     collisionManager_ = std::make_unique<CollisionManager>();
 
@@ -51,16 +67,57 @@ void GameClearScene::Initialize() {
     enemies_.clear();
     subtractWaitToPopTimer_ = 60;
 
-    score_->SetScorePos();
+    score_->ClearScorePos();
     score_->Calculation();
+	juiceCount_ = score_->GetJuiceCount();
 }
 void GameClearScene::Update() {
+	juiceCountSprite_[0].SetTextureLeftTop({124.0f * static_cast<int>(juiceCount_ / 10.0f), 0.0f});
+	juiceCountSprite_[1].SetTextureLeftTop({124.0f * static_cast<int>(juiceCount_ % 10), 0.0f});
+	for (int i = 0; i < 2; i++) {
+	juiceCountSprite_[i].SetTextureSize({124.0f, 124.0f});
+		juiceCountSprite_[i].Update();
+    }
+
+    if (score_->GetScore() >= 7000) {
+		scoreQualitySprite->SetTextureLeftTop({0, 2000.0f / 8.0f * 7.0f-10});
+	} else if (score_->GetScore() >= 4000) {
+		scoreQualitySprite->SetTextureLeftTop({0, 2000.0f / 8.0f * 6.0f -10});
+	} else if (score_->GetScore() >= 2000) {
+		scoreQualitySprite->SetTextureLeftTop({0, 2000.0f / 8.0f * 5.0f - 15});
+	} else {
+		scoreQualitySprite->SetTextureLeftTop({0, 2000.0f / 8.0f * 4.0f -10});
+    }
+
+    if (juiceCount_ >= 5) {
+		juiceQualitySprite->SetTextureLeftTop({0, 2000.0f / 8.0f * 3.0f -10});
+	} else if (juiceCount_ >= 3) {
+		juiceQualitySprite->SetTextureLeftTop({0, 2000.0f / 8.0f * 2.0f - 25});
+	} else if (juiceCount_ >= 1) {
+		juiceQualitySprite->SetTextureLeftTop({0, 2000.0f / 8.0f * 1.0f + 0});
+    } else{
+		juiceQualitySprite->SetTextureLeftTop({0, 2000.0f / 8.0f * 0.0f + 20});
+    }
+
+    if (score_->GetScore() >= 7000 && juiceCount_ >= 5) {
+		rankSprite_->SetTextureLeftTop({384 * 3,0});
+	} else if (score_->GetScore() >= 4000 && juiceCount_ >= 3) {
+		rankSprite_->SetTextureLeftTop({384 * 2, 0});
+	} else if (score_->GetScore() >= 2000 && juiceCount_ >= 1) {
+		rankSprite_->SetTextureLeftTop({384 * 1, 0});
+	} else{
+		rankSprite_->SetTextureLeftTop({384 * 0, 0});
+	}
+
+    scoreQualitySprite->Update();
+	juiceQualitySprite->Update();
+	rankSprite_->Update();
 
     if (sceneChange_.isSceneStart_) {
 
         if (isStartSceneChange_) {
             //カウントアップする
-            sceneChange_.UpdateEnd(120);
+            sceneChange_.UpdateEnd(1200);
         }
 
         if (Input::IsTriggerKey(DIK_SPACE)) {
@@ -120,7 +177,14 @@ void GameClearScene::Draw() {
 
     if (isRenderSprite_) {
         clearSprite_->Draw();
+		rankSprite_->Draw();
+		stringSprite->Draw();
+		scoreQualitySprite->Draw();
+		juiceQualitySprite->Draw();
         score_->Draw();
+		for (int i = 0; i < 2; i++) {
+			juiceCountSprite_[i].Draw();
+        }
     }
 
     if (shutter_) {
