@@ -130,9 +130,10 @@ void Stage::DrawOBB(Camera& camera) {
     }
 #endif // _DEBUG
 
-    obbCubes_[0]->PreDraw();
+
 
     for (size_t i = 0; i < obbCubes_.size(); i++) {
+        obbCubes_[i]->PreDraw();
         obbCubes_[i]->Draw(camera, MakeIdentity4x4());
     }
 

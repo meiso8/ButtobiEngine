@@ -9,12 +9,16 @@
 #include"Window.h"
 #include<numbers>
 #include"MakeMatrix.h"
+#include"MyEngine.h"
+#include"CoordinateTransform.h"
 
 void CameraController::Initialize(Camera* camera) {
     camera_ = camera;
     camera_->Initialize(static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()));
     zoomInTimer_ = 0;
     zoomEnd_ = false;
+
+    MyEngine::GetDirectionalLightData()->direction = { 0.0f,-1.0f,0.0f };//向きは正規化する
 }
 
 void CameraController::Update() {
@@ -42,8 +46,9 @@ void CameraController::Update() {
 
 void CameraController::ZoomIn()
 {
+
     if (zoomInTimer_ < 120) {
-        zoomInTimer_++;
+
         const WorldTransform& targetWorldTransform = target_->GetWorldTransform();
 
         // プレイヤー位置
@@ -70,9 +75,20 @@ void CameraController::ZoomIn()
         Matrix4x4 rotateMatrix = billboardMatrix;
         Matrix4x4 worldMatrix = scaleMatrix * rotateMatrix * translateMatrix;
 
+        if (zoomInTimer_ == 0) {
+
+            MyEngine::GetDirectionalLightData()->direction =
+                Normalize({
+                rotateMatrix.m[2][0],
+                rotateMatrix.m[2][1],
+                rotateMatrix.m[2][2]
+                    });
+        }
+
         camera_->worldMat_ = Lerp(camera_->worldMat_, worldMatrix, 0.5f);
         camera_->UpdateViewProjectionMatrix();
-
+       
+        zoomInTimer_++;
     } else {
         zoomInTimer_ = 120;
         zoomEnd_ = true;

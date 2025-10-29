@@ -72,6 +72,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // 現在のシーンの初期化
     currentScene->Initialize();
   
+    uint32_t lightType = 0;
+
     // =============================================
     // ウィンドウのxボタンが押されるまでループ メインループ
     // =============================================
@@ -126,6 +128,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
         DebugUI::CheckColor(screenColor, "screenColor");
         ImGui::Text("%s", sceneName[sceneIndex]);
+        
+        DebugUI::CheckDirectionalLight(lightType);
         DebugUI::CheckFPS();
         currentScene->Debug();
 
