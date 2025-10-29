@@ -4,7 +4,7 @@
 #include "AABB.h"
 #include"Particle/FlashParticle.h"
 #include "Sphere.h"
-
+#include "Texture.h"
 #include "Collision.h"
 #include "Enemy.h"
 #include "Lerp.h"
@@ -20,6 +20,7 @@
 #include"Model.h"
 #include"CoordinateTransform.h"
 #include"Sound.h"
+#include "Quad.h"
 
 Player::Player() {
     for (size_t i = 0; i < model_.size(); ++i) {
@@ -32,7 +33,8 @@ Player::Player() {
     model_[Parts::kRightArm]->Create(ModelManager::RIGHTARM);
     model_[Parts::kLeftLeg]->Create(ModelManager::LEFTLEG);
     model_[Parts::kRightLeg]->Create(ModelManager::RIGHTLEG);
-
+	shadowModel_ = std::make_unique<QuadMesh>();
+	shadowModel_->Create(Texture::GetHandle(Texture::SHADOW));
 #ifdef _DEBUG
     // AABBのデバッグ描画の生成
     //aabbRenderer_ = std::make_unique<AABBRenderer>();
@@ -64,6 +66,10 @@ void Player::Initialize(Camera& camera, const Vector3& position) {
     worldTransform_.Initialize();
     worldTransform_.translate_ = position;
     worldTransform_.rotate_.y = 0.0f;
+	shadowWorldTransform_.Initialize();
+	shadowWorldTransform_.translate_ = worldTransform_.translate_;
+	shadowWorldTransform_.rotate_.x = 1.5707963267f;
+    
     for (int i = 0; i < Parts::kNumParts; i++) {
         PartsWorldTransform_[i].Initialize();
         PartsWorldTransform_[i].scale_ = worldTransform_.scale_;
@@ -378,7 +384,18 @@ void Player::Update() {
     Vector3 acceleration = { 0.0f, -kGravityAcceleration, 0.0f };
     velocity_ += acceleration / 60.0f;
     worldTransform_.translate_ += velocity_ / 60.0f;
-
+	shadowWorldTransform_.translate_ = worldTransform_.translate_;
+	if (worldTransform_.translate_.y<=2.0f) {
+		shadowWorldTransform_.scale_.x = 2.0f;
+	} else {
+		shadowWorldTransform_.scale_.x = 2.0f - ((worldTransform_.translate_.y+2.0f - shadowWorldTransform_.translate_.y) / 3.5f);
+		if (shadowWorldTransform_.scale_.x < 0.0f) {
+			shadowWorldTransform_.scale_.x = 0.0f;
+        }
+    }
+	shadowWorldTransform_.scale_.y = shadowWorldTransform_.scale_.x;
+	shadowWorldTransform_.translate_.y = 0.1f;
+	shadowModel_->SetColor(shadowObjectColor_);
     // ==============================
     // 3.無敵処理
     // ==============================
@@ -398,6 +415,7 @@ void Player::Update() {
     // ==============================
 
     WorldTransformUpdate(worldTransform_);
+	WorldTransformUpdate(shadowWorldTransform_);
 
     // ==============================
     // 5.攻撃アニメーション処理
@@ -431,7 +449,7 @@ void Player::Draw(Camera& camera) {
 
     // 3Dモデル描画前処理
     model_[0]->PreDraw(BlendMode::kBlendModeNormal);
-
+	shadowModel_->Draw(camera, shadowWorldTransform_.matWorld_);
     // 3Dモデルを描画
     for (int i = 0; i < Parts::kNumParts; i++) {
         //ここに追加しました。

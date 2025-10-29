@@ -141,7 +141,7 @@ private:
 	std::unique_ptr<Sprite> SpaceSprite;
 	std::unique_ptr<Sprite> TimerSprite;
 	std::unique_ptr<Sprite> JuiceSprite;
-	std::array<Sprite, 5> JuiceNumberSprite;
+	std::array<Sprite, 6> JuiceNumberSprite;
 	std::unique_ptr<Sprite> JuiceStringSprite;
 	std::unique_ptr<Sprite> JuiceCountSprite;
 

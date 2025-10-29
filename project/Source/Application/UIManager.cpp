@@ -52,7 +52,7 @@ UIManager::UIManager()
 	JuiceStringSprite->Create(JuiceStringTextureHandle_, JuiceStringPosition_, JuiceStringSize, {1, 1, 1, 1});
     
 
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 6; i++) {
 		JuiceNumberSprite[i].Create(JuiceNumberTextureHandle_, JuiceNumberPosition_, JuiceNumberSize, {1, 1, 1, 1});
 	}
 
@@ -115,14 +115,15 @@ void UIManager::Initialize() {
 		
     }
 
-	JuiceNumberSprite[4].SetPosition({1080.0f, 380.0f});
+	JuiceNumberSprite[4].SetPosition({1060.0f, 380.0f});
+	JuiceNumberSprite[5].SetPosition({1100.0f, 380.0f});
 
     WASDSprite[0].SetTextureLeftTop({256, 128});
 	WASDSprite[1].SetTextureLeftTop({0, 384});
 	WASDSprite[2].SetTextureLeftTop({256, 384});
 	WASDSprite[3].SetTextureLeftTop({512, 384});
 
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 6; i++) {
 		JuiceNumberSprite[i].SetTextureSize({124.0f, 124.0f});
 		JuiceNumberSprite[i].SetTextureLeftTop({0, 0});
 		JuiceNumberSprite[i].Update();
@@ -179,7 +180,7 @@ void UIManager::Update() {
 	if (Combo_ == 0) {
 		ComboBonus_ = 1.0f;
 	} else {
-		ComboBonus_ = static_cast<int>(Combo_ /6.0f) + 1.1f;
+		ComboBonus_ = static_cast<int>(Combo_ /10.0f) + 1.1f;
     }
 
     if (ComboBonus_ > 10) {
@@ -191,8 +192,8 @@ void UIManager::Update() {
 		speedBonus_ = 9.9f;
     }
 
-    if (JuiceCount >= 10) {
-		JuiceCount = 9;
+    if (JuiceCount >= 100) {
+		JuiceCount = 99;
     }
 
 
@@ -358,9 +359,10 @@ void UIManager::Update() {
 		JuiceSprite->SetTextureLeftTop({768.0f * JuiceMeter, 0.0f});
 		JuiceSprite->Update();
 
-        JuiceNumberSprite[4].SetTextureLeftTop({124.0f * (JuiceCount), 0.0f});
+        JuiceNumberSprite[4].SetTextureLeftTop({124.0f * static_cast<int>(JuiceCount/10.0f), 0.0f});
+		JuiceNumberSprite[5].SetTextureLeftTop({124.0f * static_cast<int>(JuiceCount % 10), 0.0f});
 		
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
 			JuiceNumberSprite[i].Update();
 		}
     }
@@ -395,6 +397,7 @@ void UIManager::Update() {
 		SpaceSprite->SetTextureLeftTop({0, 0});
 	}
 	SpaceSprite->Update();
+	scoreClass_->SetJuiceCount(JuiceCount);
 }
 
 void UIManager::Draw() {
@@ -413,7 +416,7 @@ void UIManager::Draw() {
 		}
     }
 	JuiceCountSprite->Draw();
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 6; i++) {
 		JuiceNumberSprite[i].Draw();
     }
 	/*if (JuiceCount >= 2) {*/
