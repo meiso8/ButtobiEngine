@@ -29,6 +29,10 @@ void Camera::Initialize(const float& width, const float& height, const PROJECTIO
 }
 
 #ifdef _DEBUG
+Vector3 Camera::GetWorldPos()
+{
+    return { worldMat_.m[3][0], worldMat_.m[3][1], worldMat_.m[3][2] };
+}
 void Camera::EditTransform(const std::string& label) {
     if (ImGui::TreeNode(label.c_str())) {
         ImGui::DragFloat3("scale", &scale_.x, 0.01f, -std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
