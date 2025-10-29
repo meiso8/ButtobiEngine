@@ -25,7 +25,7 @@ void GameOverScene::Initialize() {
     // カメラの初期化
     camera_ = std::make_unique<Camera>();
     camera_->Initialize(winWidth, winHeight, Camera::PERSPECTIVE);
-    camera_->translate_ = { 0.0f, 10.0f, -100.0f };
+    camera_->translate_ = { 0.0f, 10.0f, -40.0f };
 
 #ifdef _DEBUG
     // デバッグカメラの初期化
@@ -38,22 +38,24 @@ void GameOverScene::Initialize() {
 
     // 敵の初期化
     enemy_ = std::make_unique<Enemy>();
-    Random::SetMinMax(0.0f, 40.0f);
+    Random::SetMinMax(0.0f, 20.0f);
     std::array<Vector3, 2> enemyPositions = {
-        Vector3{ -80.0f, 40.0f, Random::Get() },
-        Vector3{ 80.0f, 40.0f, Random::Get() }
+        Vector3{ -40.0f, 20.0f, Random::Get() },
+        Vector3{ 40.0f, 20.0f, Random::Get() }
     };
     Random::SetMinMax(0.0f, 1.0f);
     enemy_->Initialize(enemyPositions[static_cast<uint32_t>(Random::Get())]);
 
     stage_ = std::make_unique<Stage>();
     stage_->Initialize();
+    stage_->IsSetAlphaFalse();
 
     gameOverSprite_ = std::make_unique<Sprite>();
     gameOverSprite_->Create(Texture::GetHandle(Texture::GAME_OVER), { 640.0f - 480.0f,96.0f }, { 960.0f,192.0f });
     gameOverSprite_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 
     score_->SetScorePos();
+    score_->Calculation();
 }
 
 void GameOverScene::Update() {
@@ -63,7 +65,7 @@ void GameOverScene::Update() {
             sceneChange_.isEndScene_ = true;
         }
 
-        sceneChange_.UpdateEnd(600);
+        sceneChange_.UpdateEnd(120);
 
     } else {
         sceneChange_.UpdateStart(60);
@@ -85,12 +87,13 @@ void GameOverScene::Update() {
     CheckAllCollisions();
 
     stage_->Update();
-
+    stage_->IsSetAlphaFalse();
 }
 
 void GameOverScene::Draw() {
-    enemy_->Draw(*currentCamera_);
+
     stage_->Draw(*currentCamera_);
+    enemy_->Draw(*currentCamera_);
 
     gameOverSprite_->PreDraw();
     gameOverSprite_->Draw();

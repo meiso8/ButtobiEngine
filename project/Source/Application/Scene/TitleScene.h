@@ -3,9 +3,10 @@
 #include"WorldTransform.h"
 #include "Sprite.h"
 #include<memory>
+#include<array>
 class FlashParticle;
 class AppleSceneChange;
-
+class QuadMesh;
 class Model;
 class TitleScene :public SceneManager {
 
@@ -123,17 +124,27 @@ class TitleScene :public SceneManager {
     Model* titleStringModel[8] = { nullptr };
     WorldTransform titleStringWorldTransform[8];
 
+
+
     Model* juiceCupModel = nullptr;
     WorldTransform juiceCupWorldTransform;
 
-    Model* tableModel = nullptr;
-    WorldTransform tableWorldTransform;
+    std::array<std::unique_ptr<Model>, 6> tableModels;
+    std::array < WorldTransform, 6>tableWorldTransforms;
+
+    std::unique_ptr<QuadMesh> quad_ = nullptr;
+    WorldTransform quadWorldTransform_;
 
     Model* appleModel = nullptr;
     WorldTransform appleWorldTransform;
 
+    Model* backGroundModel = nullptr;
+    WorldTransform backGroundWorldTransform;
+
     std::unique_ptr<Sprite> spaceSprite_ = nullptr;
     uint32_t spaceTExtureHandle_ = 0;
+	std::unique_ptr<Sprite> menuSprite_ = nullptr;
+	uint32_t menuTextureHandle_ = 0;
 
     Vector3 EaseIn(float t, const Vector3& start, const Vector3& end) {
         // イージング関数（加速）
@@ -166,6 +177,7 @@ public:
     void KorokoroAnimation();
     void LoopAnimation();
     void FlashParticlePop();
+    void Debug()override;
 };
 
 //class TitleScene :public SceneManager {

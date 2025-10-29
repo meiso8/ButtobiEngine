@@ -16,7 +16,7 @@ class MeshCommon
 {
 public:
     void Finalize();
-    virtual void PreDraw(const BlendMode& blendMode = BlendMode::kBlendModeNormal);
+    virtual void PreDraw(const BlendMode& type = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack);
     virtual void Draw(Camera& camera, const Matrix4x4& worldMatrix, const uint32_t lightType = MaterialResource::LIGHTTYPE::NONE) = 0;
 
     void SetColor(const Vector4& color);

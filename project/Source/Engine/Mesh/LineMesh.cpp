@@ -8,7 +8,7 @@ LineMesh::~LineMesh() {
     Finalize();
 }
 
-void LineMesh::Create(uint32_t& textureHandle)
+void LineMesh::Create(uint32_t textureHandle)
 {
     commandList_ = DirectXCommon::GetCommandList();
     modelConfig_ = ModelConfig::GetInstance();
@@ -58,8 +58,9 @@ void LineMesh::SetVertexData(const Vector3& start, const Vector3& end) {
     vertexData_[1].normal = { vertexData_[1].position.x,  vertexData_[1].position.y,  vertexData_[1].position.z };
 };
 
-void LineMesh::PreDraw(const BlendMode& blendMode) {
-    (void)blendMode;
+void LineMesh::PreDraw(const BlendMode& type, const CullMode& cullMode) {
+    (void)type;
+    (void)cullMode;
     commandList_->SetGraphicsRootSignature(modelConfig_->rootSignature->GetRootSignature(0));
     commandList_->SetPipelineState(MyEngine::GetPSO()->GetGraphicsPipelineStateLine().Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。

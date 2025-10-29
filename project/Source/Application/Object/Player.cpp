@@ -4,7 +4,7 @@
 #include "AABB.h"
 #include"Particle/FlashParticle.h"
 #include "Sphere.h"
-
+#include "Texture.h"
 #include "Collision.h"
 #include "Enemy.h"
 #include "Lerp.h"
@@ -20,6 +20,7 @@
 #include"Model.h"
 #include"CoordinateTransform.h"
 #include"Sound.h"
+#include "Quad.h"
 
 Player::Player() {
     for (size_t i = 0; i < model_.size(); ++i) {
@@ -32,7 +33,8 @@ Player::Player() {
     model_[Parts::kRightArm]->Create(ModelManager::RIGHTARM);
     model_[Parts::kLeftLeg]->Create(ModelManager::LEFTLEG);
     model_[Parts::kRightLeg]->Create(ModelManager::RIGHTLEG);
-
+	shadowModel_ = std::make_unique<QuadMesh>();
+	shadowModel_->Create(Texture::GetHandle(Texture::SHADOW));
 #ifdef _DEBUG
     // AABBのデバッグ描画の生成
     //aabbRenderer_ = std::make_unique<AABBRenderer>();
@@ -58,11 +60,16 @@ void Player::Initialize(Camera& camera, const Vector3& position) {
 
     //アタックフェーズの初期化
     attackPhase_ = AttackPhase::kNone;
+    isAttack_ = false;
 
     // ワールド変換の初期化
     worldTransform_.Initialize();
     worldTransform_.translate_ = position;
     worldTransform_.rotate_.y = 0.0f;
+	shadowWorldTransform_.Initialize();
+	shadowWorldTransform_.translate_ = worldTransform_.translate_;
+	shadowWorldTransform_.rotate_.x = 1.5707963267f;
+    
     for (int i = 0; i < Parts::kNumParts; i++) {
         PartsWorldTransform_[i].Initialize();
         PartsWorldTransform_[i].scale_ = worldTransform_.scale_;
@@ -99,6 +106,17 @@ void Player::Initialize(Camera& camera, const Vector3& position) {
     targetPartsRotate_[AttackPhase::kEnd][Parts::kHead] = { 0.0f, 0.0f, 0.0f };
     targetPartsTranslate_[AttackPhase::kEnd][Parts::kHead] = defaultPartsOffset_[Parts::kHead];
 
+
+    targetPartsScale_[AttackPhase::kTimeUp][Parts::kHead] = { 1.0f, 1.0f, 1.0f };
+    targetPartsRotate_[AttackPhase::kTimeUp][Parts::kHead] = { 0.0f, 0.0f, 0.0f };
+    targetPartsTranslate_[AttackPhase::kTimeUp][Parts::kHead] = defaultPartsOffset_[Parts::kHead];
+
+    targetPartsScale_[AttackPhase::kCloseShutter][Parts::kHead] = { 1.0f, 1.0f, 1.0f };
+    targetPartsRotate_[AttackPhase::kCloseShutter][Parts::kHead] = { 0.0f, 0.0f, 0.0f };
+    targetPartsTranslate_[AttackPhase::kCloseShutter][Parts::kHead] = defaultPartsOffset_[Parts::kHead];
+
+
+
 #pragma endregion
 
 #pragma region Body
@@ -118,6 +136,15 @@ void Player::Initialize(Camera& camera, const Vector3& position) {
     targetPartsScale_[AttackPhase::kEnd][Parts::kBody] = { 1.0f, 1.0f, 1.0f };
     targetPartsRotate_[AttackPhase::kEnd][Parts::kBody] = { 0.0f, 0.0f, 0.0f };
     targetPartsTranslate_[AttackPhase::kEnd][Parts::kBody] = defaultPartsOffset_[Parts::kBody];
+
+    targetPartsScale_[AttackPhase::kTimeUp][Parts::kBody] = { 1.0f, 1.0f, 1.0f };
+    targetPartsRotate_[AttackPhase::kTimeUp][Parts::kBody] = { 0.0f, 0.0f, 0.0f };
+    targetPartsTranslate_[AttackPhase::kTimeUp][Parts::kBody] = defaultPartsOffset_[Parts::kBody];
+
+
+    targetPartsScale_[AttackPhase::kCloseShutter][Parts::kBody] = { 1.0f, 1.0f, 1.0f };
+    targetPartsRotate_[AttackPhase::kCloseShutter][Parts::kBody] = { 0.0f, 0.0f, 0.0f };
+    targetPartsTranslate_[AttackPhase::kCloseShutter][Parts::kBody] = defaultPartsOffset_[Parts::kBody];
 
 #pragma endregion
 
@@ -139,6 +166,16 @@ void Player::Initialize(Camera& camera, const Vector3& position) {
     targetPartsRotate_[AttackPhase::kEnd][Parts::kLeftArm] = { 0.0f, 0.0f, 0.0f };
     targetPartsTranslate_[AttackPhase::kEnd][Parts::kLeftArm] = defaultPartsOffset_[Parts::kLeftArm];
 
+
+    targetPartsScale_[AttackPhase::kTimeUp][Parts::kLeftArm] = { 1.0f, 1.0f, 1.0f };
+    targetPartsRotate_[AttackPhase::kTimeUp][Parts::kLeftArm] = { -1.6f, 0.4f, -1.5f };
+    targetPartsTranslate_[AttackPhase::kTimeUp][Parts::kLeftArm] = defaultPartsOffset_[Parts::kLeftArm] + Vector3{0.5f,0.5f,0.2f};
+
+    targetPartsScale_[AttackPhase::kCloseShutter][Parts::kLeftArm] = { 1.0f, 1.0f, 1.0f };
+    targetPartsRotate_[AttackPhase::kCloseShutter][Parts::kLeftArm] = { -1.6f, 2.7f, -1.6f };
+    targetPartsTranslate_[AttackPhase::kCloseShutter][Parts::kLeftArm] = defaultPartsOffset_[Parts::kLeftArm] + Vector3{ 0.6f,-0.4f,0.3f };
+
+
 #pragma endregion
 
 #pragma region RightArm
@@ -158,6 +195,15 @@ void Player::Initialize(Camera& camera, const Vector3& position) {
     targetPartsScale_[AttackPhase::kEnd][Parts::kRightArm] = { 1.0f, 1.0f, 1.0f };
     targetPartsRotate_[AttackPhase::kEnd][Parts::kRightArm] = { 0.0f, 0.0f, 0.0f };
     targetPartsTranslate_[AttackPhase::kEnd][Parts::kRightArm] = defaultPartsOffset_[Parts::kRightArm];
+
+    targetPartsScale_[AttackPhase::kTimeUp][Parts::kRightArm] = { 1.0f, 1.0f, 1.0f };
+    targetPartsRotate_[AttackPhase::kTimeUp][Parts::kRightArm] = { -1.6f, -0.4f, 1.5f };
+    targetPartsTranslate_[AttackPhase::kTimeUp][Parts::kRightArm] = defaultPartsOffset_[Parts::kRightArm] + Vector3{ -0.5f,0.5f,0.2f };
+
+    targetPartsScale_[AttackPhase::kCloseShutter][Parts::kRightArm] = { 1.0f, 1.0f, 1.0f };
+    targetPartsRotate_[AttackPhase::kCloseShutter][Parts::kRightArm] = { -1.6f, -2.6f, 1.6f };
+    targetPartsTranslate_[AttackPhase::kCloseShutter][Parts::kRightArm] = defaultPartsOffset_[Parts::kRightArm] + Vector3{ -0.6f,-0.4f,0.3f };
+
 
 #pragma endregion
 
@@ -179,6 +225,16 @@ void Player::Initialize(Camera& camera, const Vector3& position) {
     targetPartsRotate_[AttackPhase::kEnd][Parts::kLeftLeg] = { 0.0f, 0.0f, 0.0f };
     targetPartsTranslate_[AttackPhase::kEnd][Parts::kLeftLeg] = defaultPartsOffset_[Parts::kLeftLeg];
 
+
+    targetPartsScale_[AttackPhase::kTimeUp][Parts::kLeftLeg] = { 1.0f, 1.0f, 1.0f };
+    targetPartsRotate_[AttackPhase::kTimeUp][Parts::kLeftLeg] = { 0.0f, 0.0f, 0.0f };
+    targetPartsTranslate_[AttackPhase::kTimeUp][Parts::kLeftLeg] = defaultPartsOffset_[Parts::kLeftLeg];
+
+    targetPartsScale_[AttackPhase::kCloseShutter][Parts::kLeftLeg] = { 1.0f, 1.0f, 1.0f };
+    targetPartsRotate_[AttackPhase::kCloseShutter][Parts::kLeftLeg] = { 0.0f, 0.0f, 0.0f };
+    targetPartsTranslate_[AttackPhase::kCloseShutter][Parts::kLeftLeg] = defaultPartsOffset_[Parts::kLeftLeg];
+
+
 #pragma endregion
 
 #pragma region RightLeg
@@ -198,6 +254,14 @@ void Player::Initialize(Camera& camera, const Vector3& position) {
     targetPartsScale_[AttackPhase::kEnd][Parts::kRightLeg] = { 1.0f, 1.0f, 1.0f };
     targetPartsRotate_[AttackPhase::kEnd][Parts::kRightLeg] = { 0.0f, 0.0f, 0.0f };
     targetPartsTranslate_[AttackPhase::kEnd][Parts::kRightLeg] = defaultPartsOffset_[Parts::kRightLeg];
+
+    targetPartsScale_[AttackPhase::kTimeUp][Parts::kRightLeg] = { 1.0f, 1.0f, 1.0f };
+    targetPartsRotate_[AttackPhase::kTimeUp][Parts::kRightLeg] = { 0.0f, 0.0f, 0.0f };
+    targetPartsTranslate_[AttackPhase::kTimeUp][Parts::kRightLeg] = defaultPartsOffset_[Parts::kRightLeg];
+   
+    targetPartsScale_[AttackPhase::kCloseShutter][Parts::kRightLeg] = { 1.0f, 1.0f, 1.0f };
+    targetPartsRotate_[AttackPhase::kCloseShutter][Parts::kRightLeg] = { 0.0f, 0.0f, 0.0f };
+    targetPartsTranslate_[AttackPhase::kCloseShutter][Parts::kRightLeg] = defaultPartsOffset_[Parts::kRightLeg];
 
 #pragma endregion
 
@@ -261,6 +325,14 @@ void Player::InputAttack() {
         attackPhase_ = kEnd;
     }
 
+    if (Input::IsTriggerKey(DIK_5)) {
+        attackPhase_ = kTimeUp;
+    }
+
+
+    if (Input::IsTriggerKey(DIK_6)) {
+        attackPhase_ = kCloseShutter;
+    }
 #endif
 
     bool allMatched = true;
@@ -313,7 +385,6 @@ void Player::InputAttack() {
 
         //isAttack_ = false;
 
-
         if (isEndAninationEnd_) {
             isEndAninationEnd_ = false;
             endAninationTimer_ = 0;
@@ -354,6 +425,15 @@ void Player::AttackAnimation() {
 
 }
 
+void Player::ShutterCloseAnimation(const float time)
+{
+    if (attackPhase_ == kTimeUp) {
+        if (time > 0.1f) {
+            attackPhase_ = kCloseShutter;
+      }
+    }
+}
+
 Vector3 Player::GetForward() const {
     return Normalize({ worldTransform_.matWorld_.m[2][0], worldTransform_.matWorld_.m[2][1], worldTransform_.matWorld_.m[2][2] });
 }
@@ -365,10 +445,7 @@ void Player::Update() {
     // 1.移動入力
     // ==============================
 
-    //これをGameSceneに移植
-    //InputMove();
 
-    InputAttack();
 
     // ==============================
     // 2.移動処理
@@ -377,7 +454,18 @@ void Player::Update() {
     Vector3 acceleration = { 0.0f, -kGravityAcceleration, 0.0f };
     velocity_ += acceleration / 60.0f;
     worldTransform_.translate_ += velocity_ / 60.0f;
-
+	shadowWorldTransform_.translate_ = worldTransform_.translate_;
+	if (worldTransform_.translate_.y<=2.0f) {
+		shadowWorldTransform_.scale_.x = 2.0f;
+	} else {
+		shadowWorldTransform_.scale_.x = 2.0f - ((worldTransform_.translate_.y+2.0f - shadowWorldTransform_.translate_.y) / 3.5f);
+		if (shadowWorldTransform_.scale_.x < 0.0f) {
+			shadowWorldTransform_.scale_.x = 0.0f;
+        }
+    }
+	shadowWorldTransform_.scale_.y = shadowWorldTransform_.scale_.x;
+	shadowWorldTransform_.translate_.y = 0.1f;
+	shadowModel_->SetColor(shadowObjectColor_);
     // ==============================
     // 3.無敵処理
     // ==============================
@@ -396,7 +484,7 @@ void Player::Update() {
     // 4.ワールド変換の更新
     // ==============================
 
-    WorldTransformUpdate(worldTransform_);
+	WorldTransformUpdate(shadowWorldTransform_);
 
     // ==============================
     // 5.攻撃アニメーション処理
@@ -430,7 +518,7 @@ void Player::Draw(Camera& camera) {
 
     // 3Dモデル描画前処理
     model_[0]->PreDraw(BlendMode::kBlendModeNormal);
-
+	shadowModel_->Draw(camera, shadowWorldTransform_.matWorld_);
     // 3Dモデルを描画
     for (int i = 0; i < Parts::kNumParts; i++) {
         //ここに追加しました。
@@ -624,6 +712,9 @@ void Player::Debug() {
         break;
     case Player::kEnd:
         ImGui::Text("kEnd");
+        break;
+    case Player::kTimeUp:
+        ImGui::Text("kTimeUp");
         break;
     default:
         break;

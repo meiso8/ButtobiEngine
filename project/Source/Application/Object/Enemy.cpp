@@ -14,6 +14,8 @@
 #include"Particle/AppleCrashParticle.h"
 #include"Particle/FlashParticle.h"
 #include"Input.h"
+#include"Quad.h"
+#include"Texture.h"
 
 #ifdef _DEBUG
 #include "../externals/imgui/imgui.h"
@@ -21,8 +23,11 @@
 #endif // _DEBUG
 
 Enemy::Enemy() {
-	model_ = std::make_unique<Model>();
-	model_->Create(ModelManager::FRUIT_APPLE);
+    model_ = std::make_unique<Model>();
+    model_->Create(ModelManager::FRUIT_APPLE);
+    shadow_ = std::make_unique<QuadMesh>();
+    shadow_->Create(Texture::GetHandle(Texture::SHADOW));
+    shadow_->SetColor({1.0f,1.0f,1.0f,0.5f});
 }
 
 Enemy::~Enemy() = default;
@@ -35,7 +40,10 @@ void Enemy::Initialize(const Vector3 &position) {
 	worldTransform_.rotate_.y = std::numbers::pi_v<float> *3.0f / 2.0f;
 	WorldTransformUpdate(worldTransform_);
 
-	walkTimer_ = 0.0f;
+  shadowWorldTransform_.Initialize();
+  shadowWorldTransform_.rotate_.x = std::numbers::pi_v<float>*0.5f;
+
+  walkTimer_ = 0.0f;
 
 	// 剛体の生成
 	rigidBody_ = std::make_unique<RigidBody>();
@@ -58,6 +66,8 @@ void Enemy::Initialize(const Vector3 &position) {
 		sphereRenderer_->Initialize();
 	}
 #endif // _DEBUG
+
+
 }
 
 void Enemy::Update() {
@@ -68,19 +78,34 @@ void Enemy::Update() {
 	worldTransform_.rotate_ = rigidBody_->GetAngle();
 	move_ = rigidBody_->GetVelocity() * deltaTime;
 
-	if (isKicked_) {
-		color_ = { 0.0f, 1.0f, 0.0f, 1.0f };
-		//キックされた継続時間を足す
-		if (kickDurationTimer_ < 600) {
-			//10秒
-			kickDurationTimer_++;
-		} else {
-			isKicked_ = false;
-		}
-	} else {
-		//色を赤に戻す
-		color_ = { 1.0f, 0.0f, 0.0f, 1.0f };
-	}
+    shadowWorldTransform_.translate_ = {
+         worldTransform_.translate_.x,
+         0.1f,
+          worldTransform_.translate_.z
+    };
+
+    float scale = 4.0f-worldTransform_.translate_.y / 5.0f;
+    shadowWorldTransform_.scale_ = { scale, scale ,1.0f };
+
+    if (isKicked_) {
+        color_ = { 0.0f, 1.0f, 0.0f, 1.0f };
+        //キックされた継続時間を足す
+        if (kickDurationTimer_ < 600) {
+            //10秒
+            kickDurationTimer_++;
+        } else {
+            isKicked_ = false;
+        }
+    } else {
+        //色を赤に戻す
+        color_ = { 1.0f, 0.0f, 0.0f, 1.0f };
+    }
+
+    // ==============================
+    // 行列を定数バッファに転送
+    // ==============================
+
+    WorldTransformUpdate(shadowWorldTransform_);
 
 #ifdef _DEBUG
 	// AABBのデバッグ描画の更新
@@ -111,11 +136,16 @@ void Enemy::Draw(Camera &camera) {
 
 #endif // _DEBUG
 
-	// 3Dモデル描画前処理
-	model_->PreDraw(kBlendModeNormal);
-	model_->SetColor(color_);
-	// 3Dモデルを描画
-	model_->Draw(camera, worldTransform_.matWorld_, MaterialResource::LIGHTTYPE::HALF_L);
+    // 3Dモデル描画前処理
+    model_->PreDraw(kBlendModeNormal);
+    model_->SetColor(color_);
+    // 3Dモデルを描画
+
+    model_->Draw(camera, worldTransform_.matWorld_, MaterialResource::LIGHTTYPE::HALF_L);
+
+    //影を描画
+    shadow_->PreDraw(kBlendModeNormal);
+    shadow_->Draw(camera, shadowWorldTransform_.matWorld_);
 }
 
 AABB Enemy::GetAABB() const {

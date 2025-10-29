@@ -2,6 +2,7 @@
 #include"DirectXCommon.h"
 #include"TextureManager.h"
 #include"MyEngine.h"
+#include"OBB.h"
 
 OBBCube::~OBBCube() {
     Finalize();
@@ -85,7 +86,23 @@ void OBBCube::CreateIndexResource() {
 #pragma endregion
 }
 
-void OBBCube::SetVertex(const Vector3 (& vertices)[8]) {
+void OBBCube::SetVertex(const OBB& obb) {
+    
+    Vector3 vertices[8];
+    Vector3 halfSizes = obb.halfSizes;
+    Vector3 axisX = obb.axis[0] * halfSizes.x;
+    Vector3 axisY = obb.axis[1] * halfSizes.y;
+    Vector3 axisZ = obb.axis[2] * halfSizes.z;
+    vertices[0] = obb.center + axisX + axisY + axisZ;	// 0: +X, +Y, +Z
+    vertices[1] = obb.center - axisX + axisY + axisZ;	// 1: -X, +Y, +Z
+    vertices[2] = obb.center + axisX - axisY + axisZ;	// 2: +X, -Y, +Z
+    vertices[3] = obb.center - axisX - axisY + axisZ;	// 3: -X, -Y, +Z
+    vertices[4] = obb.center + axisX + axisY - axisZ;	// 4: +X, +Y, -Z
+    vertices[5] = obb.center - axisX + axisY - axisZ;	// 5: -X, +Y, -Z
+    vertices[6] = obb.center + axisX - axisY - axisZ;	// 6: +X, -Y, -Z
+    vertices[7] = obb.center - axisX - axisY - axisZ;	// 7: -X, -Y, -Z
+
+    
     vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 
     {

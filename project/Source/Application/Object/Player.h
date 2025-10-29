@@ -14,6 +14,7 @@ class FlashParticle;
 class Enemy;
 class Camera;
 class Model;
+class QuadMesh;
 class AABBRenderer;
 
 class SphereRenderer;
@@ -26,7 +27,10 @@ public:
         kNone,
         kCharge,
         kFire,
-        kEnd
+        kEnd,
+        kTimeUp,
+        kCloseShutter,
+        kPhaseMax,
     };
 
     enum Parts {
@@ -66,6 +70,8 @@ public:
 
     // @brief 攻撃アニメーション
     void AttackAnimation();
+    //シャッターを閉めるアニメーション
+    void ShutterCloseAnimation(const float time);
 
     /// @brief 描画
     /// @param camera カメラ
@@ -131,6 +137,8 @@ public:
     void SetParticle(FlashParticle* particle) { flashParticle_ = particle; }
     //ImGUi用
     void Debug();
+
+    void SetPhase(AttackPhase attackPhase) { attackPhase_ = attackPhase;}
 private:
     Camera* camera_ = nullptr;
     // ワールド変換データ
@@ -138,9 +146,13 @@ private:
 
     WorldTransform PartsWorldTransform_[Parts::kNumParts];
     WorldTransform DrawPartsWorldTransform_[Parts::kNumParts];
+	WorldTransform shadowWorldTransform_;
 
     // モデル
     std::array<Model*, Parts::kNumParts> model_ = { nullptr,nullptr,nullptr,nullptr,nullptr,nullptr };
+	std::unique_ptr<QuadMesh> shadowModel_ = {nullptr};
+
+    
     // 速度
     Vector3 velocity_ = {};
     // 加速度
@@ -155,9 +167,9 @@ private:
 
     AttackPhase attackPhase_ = AttackPhase::kNone;
 
-    Vector3 targetPartsScale_[4][Parts::kNumParts];
-    Vector3 targetPartsRotate_[4][Parts::kNumParts];
-    Vector3 targetPartsTranslate_[4][Parts::kNumParts];
+    Vector3 targetPartsScale_[kPhaseMax][Parts::kNumParts];
+    Vector3 targetPartsRotate_[kPhaseMax][Parts::kNumParts];
+    Vector3 targetPartsTranslate_[kPhaseMax][Parts::kNumParts];
 
     Vector3 defaultPartsOffset_[Parts::kNumParts];
 
@@ -185,14 +197,18 @@ private:
 
     //色　変更しましたyoshida
     Vector4 objectColor_ = { 1.0f,1.0f,1.0f,1.0f };
+	Vector4 shadowObjectColor_ = {1.0f, 1.0f, 1.0f, 0.5f};
 
     // AABBのデバッグ描画
     //std::unique_ptr<AABBRenderer> aabbRenderer_ = nullptr;
 
     FlashParticle* flashParticle_ = nullptr;
-
+    
+#ifdef _DEBUG
     // 球のデバッグ描画
     std::unique_ptr<SphereRenderer> sphereRenderer_ = nullptr;
+
+#endif // _DEBUG
 
     void ResetAttack();
 };

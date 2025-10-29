@@ -15,6 +15,7 @@
 #include"Score.h"
 #include"Effect.h"
 
+#include"MakeMatrix.h"
 
 constexpr int winWidth = 1280;
 constexpr int winHeight = 720;
@@ -24,7 +25,9 @@ GameScene::GameScene() {
 	camera_ = std::make_unique<Camera>();
 #ifdef _DEBUG
 
-	debugCamera_ = std::make_unique<DebugCamera>();
+    debugCamera_ = std::make_unique<DebugCamera>();
+    lineMesh_ = std::make_unique<LineMesh>();
+    lineMesh_->Create(Texture::GetHandle(Texture::WHITE_1X1));
 #endif
 	// 衝突マネージャの生成
 	collisionManager_ = std::make_unique<CollisionManager>();
@@ -77,11 +80,12 @@ void GameScene::Initialize() {
 	// 衝突マネージャにスコアポインタを設定
 	collisionManager_->SetScorePointer(&score_);
 
-	collisionManager_->SetComboPointer(uiManager_->GetComboPointer());
-	collisionManager_->SetComboTimerPtr(uiManager_->GetComboTimerPtr());
-	collisionManager_->SetScorePointer(uiManager_->GetSpeedPointer());
-	collisionManager_->SetIsScoreUp(uiManager_->GetScorePtr()->GetIsScoreUPPtr());
-	collisionManager_->SetJuiceMeter(uiManager_->GetJuiceMeter());
+    collisionManager_->SetComboPointer(uiManager_->GetComboPointer());
+    collisionManager_->SetComboTimerPtr(uiManager_->GetComboTimerPtr());
+    collisionManager_->SetScorePointer(uiManager_->GetSpeedPointer());
+    collisionManager_->SetIsScoreUp(uiManager_->GetScorePtr()->GetIsScoreUPPtr());
+    collisionManager_->SetJuiceMeter(uiManager_->GetJuiceMeter());
+    collisionManager_->SetIsComboSparkle(uiManager_->GetSparkleIsAlive(1));
 
 	Vector3 playerPosition = { 0.0f, 10.0f, 0.0f };
 	// 自キャラの初期化 //ここはmainCamera
@@ -109,6 +113,7 @@ void GameScene::Initialize() {
 	isGameOver = false;
 
 	chargeParticleColor_ = { 1.0f,0.0f,0.0f,1.0f };
+
 
 };
 
@@ -142,12 +147,12 @@ void GameScene::UpdateParticle() {
 	//プレイヤーがチャージしているときだけ更新
 	if (player_->IsCharge()) {
 
-		if (player_->GetChargeTimer() == player_->kMaxChargeTime) {
-			chargeParticleColor_ = { 1.0f,1.0f,0.0f,1.0f };
-		} else {
-			chargeParticleColor_ = { 1.0f,0.0f,0.0f,1.0f };
-		}
-		particle_->TimerUpdate(true, { 0.1f,0.1f,0.1f }, chargeParticleColor_);
+        if (player_->GetChargeTimer() == player_->kMaxChargeTime) {
+            chargeParticleColor_ = { 1.0f,1.0f,0.0f,1.0f };
+        } else {
+            chargeParticleColor_ = { 0.0f,1.0f,1.0f,1.0f };
+        }
+        particle_->TimerUpdate(true, { 0.1f,0.1f,0.1f }, chargeParticleColor_);
 
 		particle_->emitter_.transform.translate = player_->GetWorldPosition();
 	}
@@ -166,23 +171,42 @@ void GameScene::UpdateSceneChange() {
 		sceneChange_.UpdateStart(60);
 	}
 
-	if (!isAnnounce_) {
-		if (!Sound::IsPlaying(Sound::ANNOUNCE)) {
-			Sound::PlaySE(Sound::ANNOUNCE_FRUIT);
-			isAnnounce_ = true;
-		}
-	}
+    if (!isAnnounce_) {
+        if (!Sound::IsPlaying(Sound::ANNOUNCE)) {
+            Sound::PlaySE(Sound::ANNOUNCE_FRUIT, 0.25f);
+            isAnnounce_ = true;
+            for (int i = 0; i < 10; ++i) {
+                PopEnemy();
+            }
+        }
+    }
 
-	if (sceneChange_.isEndScene_) {
+    if (uiManager_->GetTimer() <= 0.0f) {
+        if (!isGameClear) {
+            Sound::PlayOriginSE(Sound::ALARM);
+            isGameClear = true;
+        }
+    }
 
-		Sound::Stop(Sound::ANNOUNCE_FRUIT);
-	}
+    if (player_->GetLife() <= 0) {
+        if (!isGameOver) {
+            isGameOver = true;
+        }
+    }
 
-	if (cameraController_->zoomEnd_) {
-		sceneChange_.UpdateEnd(120);
-		//シャッターを閉める
-		shutter_->Close(sceneChange_.endTimer_ * InverseFPS);
-	}
+    if (isGameClear || isGameOver) {
+        player_->SetPhase(Player::kTimeUp);
+        Sound::Stop(Sound::CHARGE);
+        Sound::Stop(Sound::ANNOUNCE_FRUIT);
+        //この時カメラが動く
+    }
+
+    //カメラがズームし終わった時
+    if (cameraController_->zoomEnd_) {
+        sceneChange_.UpdateEnd(120);
+        //シャッターを閉める
+        shutter_->Close(sceneChange_.endTimer_ * InverseFPS);
+    }
 }
 
 void GameScene::InitializeCamera() {
@@ -213,25 +237,21 @@ void GameScene::Update() {
 
 	UpdateSceneChange();
 
+    // 地形の更新処理
+    stage_->Update();
 
+    if (player_->IsCharge()) {
+        stage_->IsSetAlphaFalse();
+    }
 
-#ifdef _DEBUG
-	ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
-	currentCamera_->EditTransform("CurrentCamera");
-	ImGui::Text("Score: %u", score_);
-#endif // _DEBUG
+    //プレイヤーの操作 シーン切り替え時や判定完了時はしない
+    if (!isGameClear && !isGameOver) {
+        player_->InputMove();
+        player_->InputAttack();
 
-	// 地形の更新処理
-	stage_->Update();
-
-	//プレイヤーの操作 シーン切り替え時や判定完了時はしない
-	if (sceneChange_.isSceneStart_) {
-		if (!isGameClear && !isGameOver) {
-			player_->InputMove();
-
-		}
-
-	}
+    } else {
+        player_->ShutterCloseAnimation(sceneChange_.endTimer_ * InverseFPS);
+    }
 
 	// 自キャラの更新処理
 	player_->Update();
@@ -244,8 +264,8 @@ void GameScene::Update() {
 	// 敵が死亡している場合は削除
 	enemies_.remove_if([](const std::unique_ptr<Enemy> &enemy) { return enemy->IsDead(); });
 
-	// 敵キャラの更新処理
-	PopEnemy();
+    // 敵キャラの更新処理
+    PopEnemyWait();
 
 	uint32_t enemyCount = 0;
 	for (auto &newEnemy : enemies_) {
@@ -276,19 +296,6 @@ void GameScene::Update() {
 	CheckAllCollisions();
 
 	uiManager_->Update();
-
-	if (uiManager_->GetTimer() <= 0.0f) {
-		if (!isGameClear) {
-			Sound::PlayOriginSE(Sound::ALARM);
-			isGameClear = true;
-		}
-	}
-
-	if (player_->GetLife() <= 0) {
-		if (!isGameOver) {
-			isGameOver = true;
-		}
-	}
 };
 
 void GameScene::CheckAllCollisions() {
@@ -304,21 +311,23 @@ void GameScene::CheckAllCollisions() {
 	collisionManager_->CheckAllCollisions();
 
 #pragma region // 自機HP　と敵キャラの当たり判定
-	for (auto &enemy : enemies_) {
-		// OBBとSphereの当たり判定
-		if (IsCollision(player_->GetHPSphere(), enemy->GetSphere())) {
 
-			//カメラを動かす
-			if (!isShakeCamera_) {
-				isShakeCamera_ = true;
-				cameraShakeTimer_ = 0;
-			}
+    if (!isGameClear && !isGameOver) {
+        for (auto& enemy : enemies_) {
+            // OBBとSphereの当たり判定
+            if (IsCollision(player_->GetHPSphere(), enemy->GetSphere())) {
 
-			// 自キャラ衝突時コールバックを呼び出す
-			player_->OnCollisionHP(enemy.get());
-		}
-	}
+                //カメラを動かす
+                if (!isShakeCamera_) {
+                    isShakeCamera_ = true;
+                    cameraShakeTimer_ = 0;
+                }
 
+                // 自キャラ衝突時コールバックを呼び出す
+                player_->OnCollisionHP(enemy.get());
+            }
+        }
+    }
 
 #pragma region // 矢印と敵キャラの当たり判定
 	// 矢印キャラと敵キャラの当たり判定
@@ -335,6 +344,7 @@ void GameScene::CheckAllCollisions() {
 			player_->OnCollision(enemy.get());
 		}
 	}
+
 
 #pragma endregion
 
@@ -393,32 +403,38 @@ void GameScene::CheckAllCollisions() {
 }
 
 void GameScene::PopEnemy() {
-	// 待機処理
-	if (isWaitingToPop_) {
-		waitToPopTimer_--;
-		if (waitToPopTimer_ <= 0) {
-			isWaitingToPop_ = false;	// 待機完了
-		}
-		return;
-	}
+    // 敵の出現処理
+    auto newEnemy = std::make_unique<Enemy>();
+    Random::SetMinMax(-20.0f, 20.0f);
+    std::array<Vector3, 4> enemyPositions = {
+        Vector3{ -40.0f, 20.0f, Random::Get() },
+        Vector3{ 40.0f, 20.0f, Random::Get() },
+        Vector3{ Random::Get(), 20.0f, -40.0f },
+        Vector3{ Random::Get(), 20.0f, 40.0f }
+    };
+    Random::SetMinMax(0.0f, 4.0f);
+    newEnemy->Initialize(enemyPositions[static_cast<uint32_t>(Random::Get())]);
+    newEnemy->SetCrashParticlePtr(crashParticle_.get());
+    newEnemy->SetFlashParticlePtr(flashParticle_.get());
 
-	// 敵の出現処理
-	auto newEnemy = std::make_unique<Enemy>();
-	Random::SetMinMax(-40.0f, 40.0f);
-	std::array<Vector3, 4> enemyPositions = {
-		Vector3{ -80.0f, 40.0f, Random::Get() },
-		Vector3{ 80.0f, 40.0f, Random::Get() },
-		Vector3{ Random::Get(), 40.0f, -80.0f },
-		Vector3{ Random::Get(), 40.0f, 80.0f }
-	};
-	Random::SetMinMax(0.0f, 4.0f);
-	newEnemy->Initialize(enemyPositions[static_cast<uint32_t>(Random::Get())]);
-	newEnemy->SetCrashParticlePtr(crashParticle_.get());
-	newEnemy->SetFlashParticlePtr(flashParticle_.get());
+    enemies_.emplace_back(std::move(newEnemy));
 
-	enemies_.emplace_back(std::move(newEnemy));
-	isWaitingToPop_ = true;
-	waitToPopTimer_ = 60;
+}
+
+void GameScene::PopEnemyWait()
+
+{    // 待機処理
+    if (isWaitingToPop_) {
+        waitToPopTimer_--;
+        if (waitToPopTimer_ <= 0) {
+            isWaitingToPop_ = false;	// 待機完了
+        }
+        return;
+    }
+
+    PopEnemy();
+    isWaitingToPop_ = true;
+    waitToPopTimer_ = 60;
 }
 
 void GameScene::UpdateCamera() {
@@ -440,18 +456,13 @@ void GameScene::UpdateCamera() {
 
 	// カメラの処理
 	if (!isDebugCameraActive_) {
-
-		if (isGameClear || isGameOver) {
-			cameraController_->ZoomIn();
-			//ちょっとここで音を止める
-			Sound::Stop(Sound::CHARGE);
-		} else {
-			// 行列更新
-			cameraController_->Update();
-
-		}
-	} else {
-
+        if (isGameClear || isGameOver) {
+            cameraController_->ZoomIn();
+        } else {
+            // 行列更新
+            cameraController_->Update();
+        }
+    } else {
 		currentCamera_->UpdateMatrix();
 	}
 
@@ -461,15 +472,22 @@ void GameScene::UpdateCamera() {
 
 void GameScene::Draw() {
 #ifdef _DEBUG
-	// グリッドの描画
-	DrawGrid::Draw(*currentCamera_, true);
+    // グリッドの描画
+    DrawGrid::Draw(*currentCamera_, false);
+    lineMesh_->PreDraw();
+    lineMesh_->Draw(*currentCamera_, MakeIdentity4x4());
 #endif // _DEBUG
 
 	// 天球の描画
 	skyDome_->Draw(*currentCamera_);
 
-	// 自キャラの描画
-	player_->Draw(*currentCamera_);
+    backGround_->Draw(*currentCamera_);
+
+    // 地形の描画
+    stage_->Draw(*currentCamera_);
+    // 自キャラの描画
+
+    player_->Draw(*currentCamera_);
 
 	//敵キャラの描画
 	for (auto &newEnemy : enemies_) {
@@ -486,12 +504,7 @@ void GameScene::Draw() {
 		particle_->Draw(kBlendModeAdd);
 		effect_->Draw(*currentCamera_);
 	}
-
-	backGround_->Draw(*currentCamera_);
-
-	// 地形の描画
-	stage_->Draw(*currentCamera_);
-
+  
 	crashParticle_->Draw(kBlendModeNormal);
 
 	flashParticle_->Draw(kBlendModeNormal);
@@ -504,18 +517,26 @@ void GameScene::Draw() {
 		shutter_->Draw();
 	}
 
-}
-void GameScene::Debug() {
-	player_->Debug();
-	uiManager_->Debug();
-	DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
-	std::function<void()> func = [this]() { SwitchCamera(); };
-	DebugUI::Button("ChangeCamera", func);
 
-	uint32_t lightType = 0;
-	DebugUI::CheckDirectionalLight(lightType);
-	DebugUI::CheckParticle(*particle_, "chargeParticles");
-	DebugUI::CheckParticle(*flashParticle_, "flashParticle");
+
+}
+
+void GameScene::Debug() {
+#ifdef _DEBUG
+    ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
+    ImGui::Text("Score: %u", score_);
+
+    player_->Debug();
+    uiManager_->Debug();
+    DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
+    std::function<void()> func = [this]() { SwitchCamera(); };
+    DebugUI::Button("ChangeCamera", func);
+
+    uint32_t lightType = 0;
+    DebugUI::CheckDirectionalLight(lightType);
+    DebugUI::CheckParticle(*particle_, "chargeParticles");
+    DebugUI::CheckParticle(*flashParticle_, "flashParticle");
+#endif // _DEBUG
 }
 
 bool GameScene::GetIsGameOver() { return isGameOver; }

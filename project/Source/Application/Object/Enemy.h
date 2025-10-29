@@ -14,6 +14,7 @@ struct Plane;
 class Player;
 class Model;
 class Camera;
+class QuadMesh;
 class RigidBody;
 class AABBRenderer;
 class SphereRenderer;
@@ -104,52 +105,56 @@ public:
 #endif // _DEBUG
 
 private:
-	// ワールドトランスフォーム
-	WorldTransform worldTransform_;
-	// モデル
-	std::unique_ptr<Model> model_ = nullptr;
-	// カメラ
-	Camera *camera_ = nullptr;
-	//歩行の速さ
-	static inline const float kWalkSpeed = 0.01f;
-	//最初の角度
-	static inline const float kWalkMotionStart = 0.0f;
-	//最後の角度
-	static inline const float kWalkMotionAngleEnd = 60.0f;
-	//アニメーションの周期となる時間
-	static inline const float kWalkMotionTime = 1.0f;
-	//経過時間
-	float walkTimer_ = 0.0f;
-	// キャラクターの当たり判定サイズ
-	static inline const float kWidth = 2.0f;
-	static inline const float kHeight = 2.0f;
-	static inline const float kRadius = 2.0f;
-	// デルタタイム
-	static inline constexpr float deltaTime = 1.0f / 60.0f;
-	// 色
-	Vector4 color_;
-	// 剛体
-	std::unique_ptr<RigidBody> rigidBody_ = nullptr;
-	// 移動量
-	Vector3 move_ = {};
-	// 衝突フラグ
-	bool isCollision_ = false;
-	// AABBのデバッグ描画
-	std::unique_ptr<AABBRenderer> aabbRenderer_ = nullptr;
-	// AABBのデバッグ描画の切り替えフラグ
-	bool isExistAABB_ = false;
-	// 球のデバッグ描画
-	std::unique_ptr<SphereRenderer> sphereRenderer_ = nullptr;
-	// 球のデバッグ描画の切り替えフラグ
-	bool isExistSphere_ = false;
-	// 死亡フラグ
-	bool isDead_ = false;
-	// キックされたかどうかのフラグ
-	bool isKicked_ = false;
-	//キック継続時間
-	uint32_t kickDurationTimer_ = 0;
-	//パーティクルのポインタを取得する
-	AppleCrashParticle *crashParticle_ = nullptr;
-	FlashParticle *flashParticle_ = nullptr;
+    // ワールドトランスフォーム
+    WorldTransform worldTransform_;
+    // モデル
+    std::unique_ptr<Model> model_ = nullptr;
+    //影
+    std::unique_ptr<QuadMesh> shadow_ = nullptr;
+    // ワールドトランスフォーム
+    WorldTransform shadowWorldTransform_;
+    // カメラ
+    Camera* camera_ = nullptr;
+    //歩行の速さ
+    static inline const float kWalkSpeed = 0.01f;
+    //最初の角度
+    static inline const float kWalkMotionStart = 0.0f;
+    //最後の角度
+    static inline const float kWalkMotionAngleEnd = 60.0f;
+    //アニメーションの周期となる時間
+    static inline const float kWalkMotionTime = 1.0f;
+    //経過時間
+    float walkTimer_ = 0.0f;
+    // キャラクターの当たり判定サイズ
+    static inline const float kWidth = 2.0f;
+    static inline const float kHeight = 2.0f;
+    static inline const float kRadius = 2.0f;
+	  // デルタタイム
+	  static inline constexpr float deltaTime = 1.0f / 60.0f;
+	  // 色
+	  Vector4 color_;
+    // 剛体
+    std::unique_ptr<RigidBody> rigidBody_ = nullptr;
+	  // 移動量
+	  Vector3 move_ = {};
+	  // 衝突フラグ
+	  bool isCollision_ = false;
+    // AABBのデバッグ描画
+    std::unique_ptr<AABBRenderer> aabbRenderer_ = nullptr;
+    // AABBのデバッグ描画の切り替えフラグ
+    bool isExistAABB_ = false;
+    // 球のデバッグ描画
+    std::unique_ptr<SphereRenderer> sphereRenderer_ = nullptr;
+    // 球のデバッグ描画の切り替えフラグ
+    bool isExistSphere_ = false;
+    // 死亡フラグ
+    bool isDead_ = false;
+    // キックされたかどうかのフラグ
+    bool isKicked_ = false;
+    //キック継続時間
+    uint32_t kickDurationTimer_ = 0;
+    //パーティクルのポインタを取得する
+    AppleCrashParticle* crashParticle_ = nullptr;
+    FlashParticle* flashParticle_ = nullptr;
 
 };

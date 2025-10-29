@@ -50,6 +50,7 @@ public:
     void Debug()override;
     Score* GetScoreClass() { return uiManager_->GetScorePtr(); };
     Shutter* GetShutter() { return shutter_.get(); };
+
 private:
     // カメラ操作
     std::unique_ptr <CameraController> cameraController_ = nullptr;
@@ -88,6 +89,11 @@ private:
     //矢印
     std::unique_ptr <Arrow> forceArrow_ = nullptr;
 
+#ifdef _DEBUG
+    std::unique_ptr < LineMesh >lineMesh_ = nullptr;
+#endif // _DEBUG
+
+
     // スコア
     uint32_t score_ = 0;
 
@@ -107,6 +113,7 @@ private:
 
     /// @brief 敵の出現
     void PopEnemy();
+    void PopEnemyWait();
 
     void UpdateCamera();
     void CreateParticleMesh();

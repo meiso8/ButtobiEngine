@@ -20,7 +20,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // ==============================================//↑基本いじらない↑//============================================
 
     //画面の色
-    Vector4 screenColor = { 0.6f,0.6f,0.6f,1.0f };
+    Vector4 screenColor = { 0.75f,0.75f,0.75f,1.0f };
 
     // =============================================
     // シーンの生成
@@ -71,10 +71,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     currentScene = scenes[sceneIndex].get();
     // 現在のシーンの初期化
     currentScene->Initialize();
-    for (int i = 0; i < scenes.size(); i++) {
-        scenes[i]->SetIsEndScene(false);
-    }
-
+  
     // =============================================
     // ウィンドウのxボタンが押されるまでループ メインループ
     // =============================================

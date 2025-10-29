@@ -26,7 +26,6 @@ Score::Score()
 
 void Score::Initialize()
 {
-
     ScorePosition_ = { 900, 70 };
     ScoreNumbersPosition_ = { 900, 120 };
     HighScorePosition_ = { 900, 0 };
@@ -38,19 +37,22 @@ void Score::Initialize()
 
     for (int i = 0; i < 7; i++) {
 
-        NumbersSprite[i]->SetPosition({ ScoreNumbersPosition_.x + i * scorePosInterval, ScoreNumbersPosition_.y });
-        NumbersSprite[i]->SetTextureLeftTop({ 0, 0 });
-        NumbersSprite[i]->SetTextureSize({ 80.0f, 80.0f });
-        NumbersSprite[i]->Update();
+		NumbersSprite[i]->SetPosition({ScoreNumbersPosition_.x + i * scorePosInterval, ScoreNumbersPosition_.y});
+		NumbersSprite[i]->SetTextureLeftTop({0, 0});
+		NumbersSprite[i]->SetTextureSize({80.0f, 80.0f});
+		NumbersSprite[i]->Update();
 
-        HighScoreNumbersSprite[i]->SetPosition({ HighScoreNumbersPosition_.x + i * scorePosInterval * 0.8f, HighScoreNumbersPosition_.y });
-        HighScoreNumbersSprite[i]->SetTextureLeftTop({ 0, 0 });
-        HighScoreNumbersSprite[i]->SetSize({ 40.0f, 40.0f });
-        HighScoreNumbersSprite[i]->SetTextureSize({ 80.0f, 80.0f });
-        HighScoreNumbersSprite[i]->Update();
-    }
-
+		HighScoreNumbersSprite[i]->SetPosition({HighScoreNumbersPosition_.x + i * scorePosInterval * 0.8f, HighScoreNumbersPosition_.y});
+		HighScoreNumbersSprite[i]->SetTextureLeftTop({0, 0});
+		HighScoreNumbersSprite[i]->SetSize({40.0f, 40.0f});
+		HighScoreNumbersSprite[i]->SetTextureSize({80.0f, 80.0f});
+		HighScoreNumbersSprite[i]->Update();
+	}
+	isHighScoreUpdate_ = false;
+	isScoreUP_ = false;
     Score_ = 0;
+
+    Calculation();
 }
 
 void Score::Update(const float& ComboBonus, const float& speedBonus, const float& JuiceBonus)
@@ -58,18 +60,22 @@ void Score::Update(const float& ComboBonus, const float& speedBonus, const float
     if (isScoreUP_) {
         Score_ += static_cast<int>(AddBaseScore_ * ComboBonus * speedBonus * JuiceBonus);
         isScoreUP_ = false;
-    }
-
-
-    if (Score_ > HighScore_) {
-        isHighScoreUpdate_ = true;
-        HighScore_ = Score_;
-    }
-
-    if (isScoreUP_ || isHighScoreUpdate_) {
-        Calculation();
         isHighScoreUpdate_ = false;
+
+        if (Score_ > HighScore_) {
+            isHighScoreUpdate_ = true;
+            HighScore_ = Score_;
+        }
+
+        Calculation();
     }
+#ifdef _DEBUG
+	ImGui::Begin("score");
+	ImGui::SliderInt("scoree", &Score_, 0, 10000);
+	ImGui::End();
+#endif // DEBUG
+
+	
 
 }
 
@@ -136,5 +142,35 @@ void Score::SetScorePos()
         HighScoreNumbersSprite[i]->SetSize(NumberSize_);
         HighScoreNumbersSprite[i]->Update();
     }
+
+}
+void Score::ClearScorePos(){
+
+     ScorePosition_ = {1300, 400};
+	ScoreNumbersPosition_ = {640, 300};
+	HighScorePosition_ = {1300, 360};
+	HighScoreNumbersPosition_ = {640, 220};
+
+	scoreSprite->SetSize(ScoreSize_);
+	highScoreSprite->SetSize(HighScoreSize_);
+	scoreSprite->SetPosition(ScorePosition_);
+	highScoreSprite->SetPosition(HighScorePosition_);
+
+	scorePosInterval = 40;
+
+	for (int i = 0; i < 7; i++) {
+
+		NumbersSprite[i]->SetPosition({ScoreNumbersPosition_.x + i * scorePosInterval, ScoreNumbersPosition_.y});
+		NumbersSprite[i]->SetSize(NumberSize_);
+		NumbersSprite[i]->Update();
+
+		HighScoreNumbersSprite[i]->SetPosition({HighScoreNumbersPosition_.x + i * scorePosInterval, HighScoreNumbersPosition_.y});
+		HighScoreNumbersSprite[i]->SetSize(NumberSize_);
+		HighScoreNumbersSprite[i]->Update();
+	}
+
+
+
+
 
 }

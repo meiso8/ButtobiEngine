@@ -5,18 +5,19 @@
 #include "Plane.h"
 #include "OBB.h"
 #include <numbers>
+#include"OBBCube.h"
+#include"Texture.h"
+#include"Quad.h"
 
 Stage::Stage() = default;
 Stage::~Stage() = default;
 
 void Stage::Initialize() {
-    // モデルの生成 OBJからの生成
-    //model_ = std::make_unique<Model>();
-    //model_->Create(ModelManager::STAGE);
 
     // ワールド変換の初期化
     worldTransform_.Initialize();
-    worldTransform_.translate_.y = 1.25f;
+    worldTransform_.rotate_.x = std::numbers::pi_v<float>*0.5f;
+    worldTransform_.scale_ = {120.0f,120.0f,120.0f};
     WorldTransformUpdate(worldTransform_);
 
 #ifdef _DEBUG
@@ -33,31 +34,55 @@ void Stage::Initialize() {
     }
 #endif // _DEBUG
 
+    uint32_t textureHandle2 = Texture::GetHandle(Texture::CUTTING_BOARD);
+
+
     // 平面の初期化
     planes_[0] = std::make_unique<Plane>(Plane{ .normal{0.0f, 1.0f, 0.0f}, .distance = 0.0f });		// 床
-    planes_[1] = std::make_unique<Plane>(Plane{ .normal{0.0f, -1.0f, 0.0f}, .distance = -50.0f });	// 天井
+    planes_[1] = std::make_unique<Plane>(Plane{ .normal{0.0f, -1.0f, 0.0f}, .distance = -25.0f });	// 天井
+
+    quad_ = std::make_unique<QuadMesh>();
+    quad_->Create(textureHandle2);
 
     // OBBの初期化
-    obbs_[0] = std::make_unique<OBB>(OBB{ .center{-80.0f, 20.0f, 0.0f}, .axis{}, .halfSizes{1.0f, 40.0f, 120.0f} });
+    obbs_[0] = std::make_unique<OBB>(OBB{ 
+        .center{-40.0f, 10.0f, 0.0f}, .axis{}, 
+        .halfSizes{1.0f, 20.0f, 80.0f} });
     obbRotates_[0] = { 0.0f, 0.0f, std::numbers::pi_v<float> / 4.0f };
 
-    obbs_[1] = std::make_unique<OBB>(OBB{ .center{80.0f, 20.0f, 0.0f}, .axis{}, .halfSizes{1.0f, 40.0f, 120.0f} });
+    obbs_[1] = std::make_unique<OBB>(OBB{ 
+        .center{40.0f, 10.0f, 0.0f}, .axis{},
+        .halfSizes{1.0f, 20.0f, 80.0f} });
     obbRotates_[1] = { 0.0f, 0.0f, -std::numbers::pi_v<float> / 4.0f };
 
-    obbs_[2] = std::make_unique<OBB>(OBB{ .center{0.0f, 20.0f, -80.0f}, .axis{}, .halfSizes{120.0f, 40.0f, 1.0f} });
+    obbs_[2] = std::make_unique<OBB>(OBB{
+        .center{0.0f, 10.0f, -40.0f}, .axis{}, 
+        .halfSizes{80.0f, 20.0f, 1.0f} });
     obbRotates_[2] = { -std::numbers::pi_v<float> / 4.0f, 0.0f, 0.0f };
 
-    obbs_[3] = std::make_unique<OBB>(OBB{ .center{0.0f, 20.0f, 80.0f}, .axis{}, .halfSizes{120.0f, 40.0f, 1.0f} });
+    obbs_[3] = std::make_unique<OBB>(OBB{ 
+        .center{0.0f, 10.0f, 40.0f}, .axis{},
+        .halfSizes{80.0f, 20.0f, 1.0f} });
     obbRotates_[3] = { std::numbers::pi_v<float> / 4.0f, 0.0f, 0.0f };
 
     for (size_t i = 0; i < obbs_.size(); i++) {
         MakeAxis(obbRotates_[i], *obbs_[i]);
     }
+
+
+    isAlpha_ = true;
+
+    for (size_t i = 0; i < obbCubes_.size(); i++) {
+        obbCubes_[i] = std::make_unique<OBBCube>();
+        obbCubes_[i]->Create(textureHandle2);
+
+        obbCubes_[i]->SetVertex(*obbs_[i]);
+        obbCubes_[i]->SetColor(color_);
+    }
+
+
 }
 void Stage::Update() {
-    //// ワールド変換の更新
-    // worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotate_, worldTransform_.translate_);
-    // WorldTransformUpdate(worldTransform_);
 
 #ifdef _DEBUG
     // 平面の編集とデバッグ描画の更新
@@ -76,14 +101,23 @@ void Stage::Update() {
         obbCount++;
     }
 #endif // _DEBUG
+    
+    if (isAlpha_) {
+        color_ = { 1.0f, 1.0f, 1.0f, 0.5f };
+    } else {
+        color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
+    }
+
+    isAlpha_ = true;
+
+    
+    for (size_t i = 0; i < obbCubes_.size(); i++) {
+        obbCubes_[i]->SetColor(color_);
+    }
+
 }
 
 void Stage::Draw(Camera& camera) {
-    // 3Dモデル描画前処理
-    //model_->PreDraw(BlendMode::kBlendModeNormal);
-
-    //// 3Dモデルを描画
-    //model_->Draw(camera, worldTransform_.matWorld_);
 
 #ifdef _DEBUG
     // 平面のデバッグ描画
@@ -96,8 +130,20 @@ void Stage::Draw(Camera& camera) {
         obbRenderer->Draw(camera);
     }
 #endif // _DEBUG
+
+    obbCubes_[0]->PreDraw();
+    for (size_t i = 0; i < obbCubes_.size(); i++) {
+        obbCubes_[i]->Draw(camera, MakeIdentity4x4());
+    }
+
+    quad_->Draw(camera, worldTransform_.matWorld_);
 }
 
 Plane Stage::GetPlane(uint32_t index) { return *planes_[index]; }
 
 OBB Stage::GetOBB(uint32_t index) { return *obbs_[index]; }
+
+void Stage::IsSetAlphaFalse()
+{
+    isAlpha_ = false;
+}

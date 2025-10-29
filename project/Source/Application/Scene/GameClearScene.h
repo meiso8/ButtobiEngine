@@ -1,6 +1,8 @@
 #pragma once
 #include "SceneManager.h"
 #include <list>
+#include <array>
+#include "Sprite.h"
 
 class Enemy;
 class Stage;
@@ -20,12 +22,18 @@ private:
     // スコア
     Score* score_ = nullptr;									// ステージ
     bool isStartSceneChange_ = false;
-
+	uint32_t juiceCount_ = 0;
     bool isWaitingToPop_ = false;									// 敵出現待機フラグ
     int32_t waitToPopTimer_ = 0;									// 敵出現待機タイマー
     int32_t subtractWaitToPopTimer_ = 60;                           //現待機時間の減少数
     std::unique_ptr<CollisionManager> collisionManager_ = nullptr;	// 衝突マネージャ
     std::unique_ptr<Sprite> clearSprite_ = nullptr;	                // クリアスプライト
+	std::unique_ptr<Sprite> stringSprite = nullptr;
+	std::unique_ptr<Sprite> rankSprite_ = nullptr;
+	std::unique_ptr<Sprite> scoreQualitySprite = nullptr;
+	std::unique_ptr<Sprite> juiceQualitySprite = nullptr;
+	std::array<Sprite, 2> juiceCountSprite_;
+
     bool isRenderSprite_ = false;
     /// @brief 全ての当たり判定を行う
     void CheckAllCollisions();

@@ -24,6 +24,7 @@ private:
 	// スコアの最終加算値
 	int AddFinalScore_ = 0;
 
+	uint32_t juiceCount_;
 
 	Vector2 ScoreSize_ = { 256, 64 };	
 	Vector2 HighScoreSize_ = { 256.0f * 0.9f, 64 * 0.9f };
@@ -46,11 +47,15 @@ private:
 public:
 	Score();
 	bool* GetIsScoreUPPtr() { return &isScoreUP_; }
-
+	bool GetIsHighScoreUpdate() { return isHighScoreUpdate_; }
 	void Initialize();
 	void Update(const float& ComboBonus, const float& speedBonus, const float& JuiceBonus);
 	void Calculation();
 	void Draw();
 	void SetScorePos();
+	void ClearScorePos();
+	void SetJuiceCount(uint32_t Count) { juiceCount_ = Count; };
+	uint32_t GetJuiceCount() { return juiceCount_; };
+	int GetScore() { return Score_; };
 };
 
