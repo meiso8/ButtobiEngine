@@ -33,8 +33,8 @@ Player::Player() {
     model_[Parts::kRightArm]->Create(ModelManager::RIGHTARM);
     model_[Parts::kLeftLeg]->Create(ModelManager::LEFTLEG);
     model_[Parts::kRightLeg]->Create(ModelManager::RIGHTLEG);
-	shadowModel_ = std::make_unique<QuadMesh>();
-	shadowModel_->Create(Texture::GetHandle(Texture::SHADOW));
+    shadowModel_ = std::make_unique<QuadMesh>();
+    shadowModel_->Create(Texture::GetHandle(Texture::SHADOW));
 #ifdef _DEBUG
     // AABBのデバッグ描画の生成
     //aabbRenderer_ = std::make_unique<AABBRenderer>();
@@ -66,10 +66,10 @@ void Player::Initialize(Camera& camera, const Vector3& position) {
     worldTransform_.Initialize();
     worldTransform_.translate_ = position;
     worldTransform_.rotate_.y = 0.0f;
-	shadowWorldTransform_.Initialize();
-	shadowWorldTransform_.translate_ = worldTransform_.translate_;
-	shadowWorldTransform_.rotate_.x = 1.5707963267f;
-    
+    shadowWorldTransform_.Initialize();
+    shadowWorldTransform_.translate_ = worldTransform_.translate_;
+    shadowWorldTransform_.rotate_.x = 1.5707963267f;
+
     for (int i = 0; i < Parts::kNumParts; i++) {
         PartsWorldTransform_[i].Initialize();
         PartsWorldTransform_[i].scale_ = worldTransform_.scale_;
@@ -169,7 +169,7 @@ void Player::Initialize(Camera& camera, const Vector3& position) {
 
     targetPartsScale_[AttackPhase::kTimeUp][Parts::kLeftArm] = { 1.0f, 1.0f, 1.0f };
     targetPartsRotate_[AttackPhase::kTimeUp][Parts::kLeftArm] = { -1.6f, 0.4f, -1.5f };
-    targetPartsTranslate_[AttackPhase::kTimeUp][Parts::kLeftArm] = defaultPartsOffset_[Parts::kLeftArm] + Vector3{0.5f,0.5f,0.2f};
+    targetPartsTranslate_[AttackPhase::kTimeUp][Parts::kLeftArm] = defaultPartsOffset_[Parts::kLeftArm] + Vector3{ 0.5f,0.5f,0.2f };
 
     targetPartsScale_[AttackPhase::kCloseShutter][Parts::kLeftArm] = { 1.0f, 1.0f, 1.0f };
     targetPartsRotate_[AttackPhase::kCloseShutter][Parts::kLeftArm] = { -1.6f, 2.7f, -1.6f };
@@ -258,7 +258,7 @@ void Player::Initialize(Camera& camera, const Vector3& position) {
     targetPartsScale_[AttackPhase::kTimeUp][Parts::kRightLeg] = { 1.0f, 1.0f, 1.0f };
     targetPartsRotate_[AttackPhase::kTimeUp][Parts::kRightLeg] = { 0.0f, 0.0f, 0.0f };
     targetPartsTranslate_[AttackPhase::kTimeUp][Parts::kRightLeg] = defaultPartsOffset_[Parts::kRightLeg];
-   
+
     targetPartsScale_[AttackPhase::kCloseShutter][Parts::kRightLeg] = { 1.0f, 1.0f, 1.0f };
     targetPartsRotate_[AttackPhase::kCloseShutter][Parts::kRightLeg] = { 0.0f, 0.0f, 0.0f };
     targetPartsTranslate_[AttackPhase::kCloseShutter][Parts::kRightLeg] = defaultPartsOffset_[Parts::kRightLeg];
@@ -430,7 +430,7 @@ void Player::ShutterCloseAnimation(const float time)
     if (attackPhase_ == kTimeUp) {
         if (time > 0.1f) {
             attackPhase_ = kCloseShutter;
-      }
+        }
     }
 }
 
@@ -447,6 +447,7 @@ void Player::Update() {
 
 
 
+
     // ==============================
     // 2.移動処理
     // ==============================
@@ -454,18 +455,18 @@ void Player::Update() {
     Vector3 acceleration = { 0.0f, -kGravityAcceleration, 0.0f };
     velocity_ += acceleration / 60.0f;
     worldTransform_.translate_ += velocity_ / 60.0f;
-	shadowWorldTransform_.translate_ = worldTransform_.translate_;
-	if (worldTransform_.translate_.y<=2.0f) {
-		shadowWorldTransform_.scale_.x = 2.0f;
-	} else {
-		shadowWorldTransform_.scale_.x = 2.0f - ((worldTransform_.translate_.y+2.0f - shadowWorldTransform_.translate_.y) / 3.5f);
-		if (shadowWorldTransform_.scale_.x < 0.0f) {
-			shadowWorldTransform_.scale_.x = 0.0f;
+    shadowWorldTransform_.translate_ = worldTransform_.translate_;
+    if (worldTransform_.translate_.y <= 2.0f) {
+        shadowWorldTransform_.scale_.x = 2.0f;
+    } else {
+        shadowWorldTransform_.scale_.x = 2.0f - ((worldTransform_.translate_.y + 2.0f - shadowWorldTransform_.translate_.y) / 3.5f);
+        if (shadowWorldTransform_.scale_.x < 0.0f) {
+            shadowWorldTransform_.scale_.x = 0.0f;
         }
     }
-	shadowWorldTransform_.scale_.y = shadowWorldTransform_.scale_.x;
-	shadowWorldTransform_.translate_.y = 0.1f;
-	shadowModel_->SetColor(shadowObjectColor_);
+    shadowWorldTransform_.scale_.y = shadowWorldTransform_.scale_.x;
+    shadowWorldTransform_.translate_.y = 0.1f;
+    shadowModel_->SetColor(shadowObjectColor_);
     // ==============================
     // 3.無敵処理
     // ==============================
@@ -484,7 +485,7 @@ void Player::Update() {
     // 4.ワールド変換の更新
     // ==============================
 
-	WorldTransformUpdate(shadowWorldTransform_);
+    WorldTransformUpdate(shadowWorldTransform_);
 
     // ==============================
     // 5.攻撃アニメーション処理
@@ -504,6 +505,10 @@ void Player::Update() {
     // 球のデバッグ描画の更新
     sphereRenderer_->Update(GetSphere());
 #endif // _DEBUG
+
+    //当たりフラグを偽にする
+    isHitOBB_ = false;
+
 }
 
 void Player::Draw(Camera& camera) {
@@ -518,7 +523,7 @@ void Player::Draw(Camera& camera) {
 
     // 3Dモデル描画前処理
     model_[0]->PreDraw(BlendMode::kBlendModeNormal);
-	shadowModel_->Draw(camera, shadowWorldTransform_.matWorld_);
+    shadowModel_->Draw(camera, shadowWorldTransform_.matWorld_);
     // 3Dモデルを描画
     for (int i = 0; i < Parts::kNumParts; i++) {
         //ここに追加しました。
@@ -581,6 +586,8 @@ void Player::OnCollision(const Plane& plane) {
 }
 
 void Player::OnCollision(const OBB& obb) {
+
+    isHitOBB_ = true;
     // 貫入量
     float penetration = PenetrationDepth(GetSphere(), obb);
 

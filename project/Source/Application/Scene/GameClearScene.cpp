@@ -125,8 +125,8 @@ void GameClearScene::Update() {
             isRenderSprite_ = true;
             isStartSceneChange_ = true;
 
-            if (sceneChange_.endTimer_ < 60) {
-                sceneChange_.endTimer_ = 60;
+            if (sceneChange_.endTimer_ < 1140) {
+                sceneChange_.endTimer_ = 1140;
             }
         }
 
@@ -149,7 +149,9 @@ void GameClearScene::Update() {
 
     currentCamera_->UpdateMatrix();
     stage_->Update();
-    stage_->IsSetAlphaFalse();
+    for (uint32_t i = 0; i < 4; ++i) {
+        stage_->IsSetAlpha(false, i);
+    }
 }
 
 void GameClearScene::EnemyUpdate()
@@ -168,12 +170,12 @@ void GameClearScene::EnemyUpdate()
 }
 
 void GameClearScene::Draw() {
-   
-    stage_->Draw(*currentCamera_);
-
+    stage_->DrawPlane(*currentCamera_);
+    stage_->DrawOBB(*currentCamera_);
     for (auto& enemy : enemies_) {
         enemy->Draw(*currentCamera_);
     }
+
 
     clearSprite_->PreDraw();
 

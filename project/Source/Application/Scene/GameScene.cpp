@@ -243,12 +243,16 @@ void GameScene::Update() {
     // 地形の更新処理
     stage_->Update();
 
-    if (player_->IsCharge()) {
-        stage_->IsSetAlphaFalse();
+    for (uint32_t i = 0; i < 4; ++i) {
+        if (player_->IsCharge()) {
+            stage_->IsSetAlpha(false, i);
+        } else {
+            stage_->IsSetAlpha(true, i);
+        }
     }
 
     //プレイヤーの操作 シーン切り替え時や判定完了時はしない
-    if (!isGameClear && !isGameOver) {
+    if (sceneChange_.isSceneStart_&&!isGameClear && !isGameOver) {
         player_->InputMove();
         player_->InputAttack();
 
@@ -333,11 +337,6 @@ void GameScene::CheckAllCollisions() {
         }
     }
 
-
-
-
-
-
 #pragma region // 矢印と敵キャラの当たり判定
     // 矢印キャラと敵キャラの当たり判定
     OBB arrowOBB = forceArrow_->GetKickAreaOBB();
@@ -354,8 +353,9 @@ void GameScene::CheckAllCollisions() {
         }
     }
 
-
 #pragma endregion
+
+
 
 #pragma region // 自キャラと平面の当たり判定
     Sphere playerSphere = player_->GetSphere();
@@ -374,6 +374,18 @@ void GameScene::CheckAllCollisions() {
             player_->OnCollision(stageOBB);
         }
     }
+
+    if (player_->isHitOBB_) {
+        //CameraとOBBの当たり判定
+        for (uint32_t i = 0; i < Stage::kMaxOBB; i++) {
+            OBB stageOBB = stage_->GetOBB(i);
+            Sphere cameraSphere = { .center = camera_->GetWorldPos(),.radius = 5.0f };
+            if (IsCollision(stageOBB, cameraSphere)) {
+                stage_->IsSetAlpha(true, i);
+            }
+        }
+    }
+
 #pragma endregion
 
 #pragma region // 敵キャラと平面の当たり判定
@@ -491,9 +503,8 @@ void GameScene::Draw() {
     backGround_->Draw(*currentCamera_);
 
     // 地形の描画
-    stage_->Draw(*currentCamera_);
+    stage_->DrawPlane(*currentCamera_);
     // 自キャラの描画
-
     player_->Draw(*currentCamera_);
 
     //敵キャラの描画
@@ -505,14 +516,15 @@ void GameScene::Draw() {
     }
 
     if (player_->IsCharge() || player_->IsAttack()) {
-        //力を描画
-        forceArrow_->Draw(*currentCamera_);
         //パーティクルを描画
         particle_->Draw(kBlendModeAdd);
         effect_->Draw(*currentCamera_);
+        //力を描画
+        forceArrow_->Draw(*currentCamera_);
     }
 
-
+    // 地形の描画
+    stage_->DrawOBB(*currentCamera_);
 
     crashParticle_->Draw(kBlendModeNormal);
 
@@ -525,14 +537,13 @@ void GameScene::Draw() {
     if (cameraController_->zoomEnd_) {
         shutter_->Draw();
     }
-
-
-
 }
 
 void GameScene::Debug() {
 
 #ifdef _DEBUG
+
+    lineMesh_->SetVertexData(player_->GetWorldPosition(), forceArrow_->GetKickAreaOBB().center);
 
     ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
     ImGui::Text("Score: %u", score_);

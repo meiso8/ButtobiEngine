@@ -33,18 +33,19 @@ private:
     std::array<std::unique_ptr<OBBRenderer>, kMaxOBB> obbRenderers_;
 
     std::array < std::unique_ptr<OBBCube>, kMaxOBB> obbCubes_;	// 立方体メッシュ
-    Vector4 color_;
-    bool isAlpha_ = false;
+    std::array < Vector4,4> colors_;
+    std::array < bool,4> isAlphas_;
 public:
     Stage();
     ~Stage();
 
     void Initialize();
     void Update();
-    void Draw(Camera& camera);
+    void DrawOBB(Camera& camera);
+    void DrawPlane(Camera& camera);
 
     Plane GetPlane(uint32_t index);
     OBB GetOBB(uint32_t index);
 
-    void IsSetAlphaFalse();
-};
+    void IsSetAlpha(const bool& isAlpha,const uint32_t& index);
+}; 
