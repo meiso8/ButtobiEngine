@@ -71,10 +71,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     currentScene = scenes[sceneIndex].get();
     // 現在のシーンの初期化
     currentScene->Initialize();
-    for (int i = 0; i < scenes.size(); i++) {
-        scenes[i]->SetIsEndScene(false);
-    }
-
+  
     // =============================================
     // ウィンドウのxボタンが押されるまでループ メインループ
     // =============================================

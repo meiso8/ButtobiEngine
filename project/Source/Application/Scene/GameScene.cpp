@@ -183,11 +183,27 @@ void GameScene::UpdateSceneChange()
         }
     }
 
-    if (sceneChange_.isEndScene_) {
-
-        Sound::Stop(Sound::ANNOUNCE_FRUIT);
+    if (uiManager_->GetTimer() <= 0.0f) {
+        if (!isGameClear) {
+            Sound::PlayOriginSE(Sound::ALARM);
+            isGameClear = true;
+        }
     }
 
+    if (player_->GetLife() <= 0) {
+        if (!isGameOver) {
+            isGameOver = true;
+        }
+    }
+
+    if (isGameClear || isGameOver) {
+        player_->SetPhase(Player::kTimeUp);
+        Sound::Stop(Sound::CHARGE);
+        Sound::Stop(Sound::ANNOUNCE_FRUIT);
+        //この時カメラが動く
+    }
+
+    //カメラがズームし終わった時
     if (cameraController_->zoomEnd_) {
         sceneChange_.UpdateEnd(120);
         //シャッターを閉める
@@ -224,17 +240,6 @@ void GameScene::Update() {
 
     UpdateSceneChange();
 
-
-
-#ifdef _DEBUG
-    ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
-    currentCamera_->EditTransform("CurrentCamera");
-    ImGui::Text("Score: %u", score_);
-
-
-    lineMesh_->SetVertexData(player_->GetWorldPosition(), forceArrow_->GetWorldPosition());
-#endif // _DEBUG
-
     // 地形の更新処理
     stage_->Update();
 
@@ -244,13 +249,11 @@ void GameScene::Update() {
 
     //プレイヤーの操作 シーン切り替え時や判定完了時はしない
     if (!isGameClear && !isGameOver) {
-
         player_->InputMove();
-
         player_->InputAttack();
 
     } else {
-        player_->ShutterCloseAnimation(sceneChange_.endTimer_ *InverseFPS);
+        player_->ShutterCloseAnimation(sceneChange_.endTimer_ * InverseFPS);
     }
 
     // 自キャラの更新処理
@@ -297,18 +300,6 @@ void GameScene::Update() {
 
     uiManager_->Update();
 
-    if (uiManager_->GetTimer() <= 0.0f) {
-        if (!isGameClear) {
-            Sound::PlayOriginSE(Sound::ALARM);
-            isGameClear = true;
-        }
-    }
-
-    if (player_->GetLife() <= 0) {
-        if (!isGameOver) {
-            isGameOver = true;
-        }
-    }
 };
 
 void GameScene::CheckAllCollisions() {
@@ -473,13 +464,9 @@ void GameScene::UpdateCamera()
 
         if (isGameClear || isGameOver) {
             cameraController_->ZoomIn();
-            player_->SetPhase(Player::kTimeUp);
-            //ちょっとここで音を止める
-            Sound::Stop(Sound::CHARGE);
         } else {
             // 行列更新
             cameraController_->Update();
-
         }
     } else {
 
@@ -494,8 +481,6 @@ void GameScene::Draw() {
 #ifdef _DEBUG
     // グリッドの描画
     DrawGrid::Draw(*currentCamera_, false);
-
-
     lineMesh_->PreDraw();
     lineMesh_->Draw(*currentCamera_, MakeIdentity4x4());
 #endif // _DEBUG
@@ -544,7 +529,14 @@ void GameScene::Draw() {
 
 
 }
+
 void GameScene::Debug() {
+
+#ifdef _DEBUG
+
+    ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
+    ImGui::Text("Score: %u", score_);
+
     player_->Debug();
     uiManager_->Debug();
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
@@ -555,6 +547,9 @@ void GameScene::Debug() {
     DebugUI::CheckDirectionalLight(lightType);
     DebugUI::CheckParticle(*particle_, "chargeParticles");
     DebugUI::CheckParticle(*flashParticle_, "flashParticle");
+#endif // _DEBUG
+
+
 }
 
 bool GameScene::GetIsGameOver() { return isGameOver; }

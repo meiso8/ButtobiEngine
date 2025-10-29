@@ -11,9 +11,11 @@ private:
     WorldTransform worldTransform_;
     WorldTransform worldTransformParent_;
     std::unique_ptr< QuadMesh> quad_;
-
+#ifdef _DEBUG
     //OBBのデバック描画
     std::unique_ptr<OBBRenderer> obbRenderer_ = nullptr;
+#endif // _DEBUG
+
     //キックOBB
     std::unique_ptr < OBB >kickObb_;
 public:
