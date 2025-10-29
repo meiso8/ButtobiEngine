@@ -279,6 +279,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\Physics\Capsule.h" />
     <ClInclude Include="Source\Application\Object\Effect.h" />
     <ClInclude Include="Source\Application\System\AppleSceneChange.h" />
     <ClInclude Include="Source\Application\Object\BackGround.h" />

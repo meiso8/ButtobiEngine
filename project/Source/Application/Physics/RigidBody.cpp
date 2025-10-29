@@ -60,6 +60,9 @@ void RigidBody::Update(float deltaTime) {
 void RigidBody::Edit(const std::string &label) {
 	if (ImGui::TreeNode(label.c_str())) {
 		ImGui::DragFloat3("force", &force_.x, 0.01f, -std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+		ImGui::DragFloat3("gravity", &gravity_.x, 0.01f, -std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+		ImGui::DragFloat3("velocity", &velocity_.x, 0.01f, -std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+		ImGui::DragFloat3("angle", &angle_.x, 0.01f, -std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
 		ImGui::TreePop();
 	}
 }

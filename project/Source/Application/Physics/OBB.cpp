@@ -9,14 +9,24 @@
 #include "../externals/imgui/imgui.h"
 #endif // _DEBUG
 
-void SetAxis(const Vector3 &rotate, OBB &obb) {
+void MakeAxis(const Vector3 &rotate, OBB &obb) {
 	// 回転行列の作成
-	Matrix4x4 rotationMatrix = MakeRotateXYZMatrix(rotate);
+	Matrix4x4 rotateMatrix = MakeRotateXYZMatrix(rotate);
 
 	// 各軸の設定
-	obb.axis[0] = { rotationMatrix.m[0][0], rotationMatrix.m[0][1], rotationMatrix.m[0][2] };
-	obb.axis[1] = { rotationMatrix.m[1][0], rotationMatrix.m[1][1], rotationMatrix.m[1][2] };
-	obb.axis[2] = { rotationMatrix.m[2][0], rotationMatrix.m[2][1], rotationMatrix.m[2][2] };
+	obb.axis[0] = { rotateMatrix.m[0][0], rotateMatrix.m[0][1], rotateMatrix.m[0][2] };
+	obb.axis[1] = { rotateMatrix.m[1][0], rotateMatrix.m[1][1], rotateMatrix.m[1][2] };
+	obb.axis[2] = { rotateMatrix.m[2][0], rotateMatrix.m[2][1], rotateMatrix.m[2][2] };
+}
+
+Matrix4x4 MakeOBBMatrix(const OBB &obb) {
+	Matrix4x4 obbMatrix = {
+		obb.axis[0].x, obb.axis[0].y, obb.axis[0].z, 0.0f,
+		obb.axis[1].x, obb.axis[1].y, obb.axis[1].z, 0.0f,
+		obb.axis[2].x, obb.axis[2].y, obb.axis[2].z, 0.0f,
+		obb.center.x, obb.center.y, obb.center.z, 1.0f
+	};
+	return obbMatrix;
 }
 
 #ifdef _DEBUG
@@ -29,7 +39,7 @@ void EditOBB(const std::string &label, Vector3 &rotate, OBB &obb) {
 		ImGui::SliderAngle("Rotate X", &rotate.x, -180.0f, 180.0f);
 		ImGui::SliderAngle("Rotate Y", &rotate.y, -180.0f, 180.0f);
 		ImGui::SliderAngle("Rotate Z", &rotate.z, -180.0f, 180.0f);
-		SetAxis(rotate, obb);
+		MakeAxis(rotate, obb);
 		ImGui::Separator();
 		ImGui::Text("Axis");
 		ImGui::DragFloat3("Axis X", &obb.axis[0].x, 0.01f, -1.0f, 1.0f);

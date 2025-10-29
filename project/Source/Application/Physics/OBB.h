@@ -1,5 +1,6 @@
 #pragma once
 #include "Vector3.h"
+#include "Matrix4x4.h"
 #include <array>
 #include <memory>
 #include <string>
@@ -10,10 +11,15 @@ struct OBB {
     Vector3 halfSizes;	// 各軸方向の半分の長さ
 };
 
-/// @brief 各軸の単位ベクトルの設定
+/// @brief 各軸の単位ベクトルの作成
 /// @param rotate 回転角
 /// @param obb OBB
-void SetAxis(const Vector3& rotate, OBB& obb);
+void MakeAxis(const Vector3& rotate, OBB& obb);
+
+/// @brief OBB行列の作成
+/// @param obb OBB
+/// @return OBB行列
+Matrix4x4 MakeOBBMatrix(const OBB &obb);
 
 #ifdef _DEBUG
 /// @brief 編集
