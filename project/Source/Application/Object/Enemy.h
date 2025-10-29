@@ -9,6 +9,7 @@
 struct OBB;
 struct AABB;
 struct Sphere;
+struct Capsule;
 struct Plane;
 class Player;
 class Model;
@@ -23,81 +24,84 @@ class FlashParticle;
 /// @brief 敵
 class Enemy : public Collider {
 public:
-    /// @brief コンストラクタ
-    Enemy();
+	/// @brief コンストラクタ
+	Enemy();
 
-    /// @brief デフォルトデストラクタ
-    ~Enemy();
+	/// @brief デフォルトデストラクタ
+	~Enemy();
 
-    /// @brief 初期化
-    /// @param position 位置
-    void Initialize(const Vector3& position);
+	/// @brief 初期化
+	/// @param position 位置
+	void Initialize(const Vector3 &position);
 
-    /// @brief 更新
-    void Update();
+	/// @brief 更新
+	void Update();
 
-    /// @brief 描画
-    /// @param camera カメラ
-    void Draw(Camera& camera);
+	/// @brief 描画
+	/// @param camera カメラ
+	void Draw(Camera &camera);
 
-    /// @brief AABBの取得
-    /// @return AABB
-    AABB GetAABB() const;
+	/// @brief AABBの取得
+	/// @return AABB
+	AABB GetAABB() const;
 
-    /// @brief 球の取得
-    /// @return 球
-    Sphere GetSphere() const;
+	/// @brief 球の取得
+	/// @return 球
+	Sphere GetSphere() const;
 
-    /// @brief ワールド座標を取得
-    /// @return ワールド座標
-    Vector3 GetWorldPosition() const override;
+	/// @brief カプセルの取得
+	/// @return カプセル
+	Capsule GetCapsule() const;
 
-    /// @brief プレイヤーとの当たり判定
-    /// @param player プレイヤー
-    void OnCollision(Player* player);
+	/// @brief ワールド座標を取得
+	/// @return ワールド座標
+	Vector3 GetWorldPosition() const override;
 
-    /// @brief 平面との当たり判定
-    /// @param plane 平面
-    void OnCollision(const Plane& plane);
+	/// @brief プレイヤーとの当たり判定
+	/// @param player プレイヤー
+	void OnCollision(Player *player);
 
-    /// @brief OBBとの当たり判定
-    /// @param obb OBB
-    void OnCollision(const OBB& obb);
+	/// @brief 平面との当たり判定
+	/// @param plane 平面
+	void OnCollision(const Plane &plane);
 
-    /// @brief 衝突応答
-    void OnCollision() override;
+	/// @brief OBBとの当たり判定
+	/// @param obb OBB
+	void OnCollision(const OBB &obb);
 
-    /// @brief 位置の加算
-    /// @param translate 加算する位置
-    void AddTranslate(const Vector3& translate) { worldTransform_.translate_ += translate; };
+	/// @brief 衝突応答
+	void OnCollision() override;
 
-    /// @brief 剛体の取得
-    /// @return 剛体
-    RigidBody* GetRigidBody() { return rigidBody_.get(); };
+	/// @brief 衝突更新
+	void CollisionUpdate();
 
-    /// @brief 速度の取得
-    /// @return 速度
-    Vector3 GetVelocity() const override;
+	/// @brief 剛体の取得
+	/// @return 剛体
+	RigidBody *GetRigidBody() { return rigidBody_.get(); };
 
-    /// @brief 死亡しているか
-    /// @return　死亡しているならtrue
-    bool IsDead() const { return isDead_; };
+	/// @brief 速度の取得
+	/// @return 速度
+	Vector3 GetVelocity() const override;
 
-    /// @brief キックされているか取得
-    /// @return キックされているならtrue
-    bool IsKicked() const override { return isKicked_; };
+	/// @brief 死亡しているか
+	/// @return　死亡しているならtrue
+	bool IsDead() const { return isDead_; };
 
-    /// @brief Particleのポインタをセットする
-    /// @param ptr 
-    void SetCrashParticlePtr(AppleCrashParticle* ptr) { crashParticle_ = ptr; }
-    /// @brief Particleのポインタをセットする
+	/// @brief キックされているか取得
+	/// @return キックされているならtrue
+	bool IsKicked() const override { return isKicked_; };
+
+	/// @brief Particleのポインタをセットする
+	/// @param ptr 
+	void SetCrashParticlePtr(AppleCrashParticle *ptr) { crashParticle_ = ptr; }
+	/// @brief Particleのポインタをセットする
 /// @param ptr 
-    void SetFlashParticlePtr(FlashParticle* ptr) { flashParticle_ = ptr; }
+	void SetFlashParticlePtr(FlashParticle *ptr) { flashParticle_ = ptr; }
 
 #ifdef _DEBUG
-    /// @brief 編集
-    /// @param label ラベル
-    void Edit(const std::string& label);
+	/// @brief 編集
+	/// @param label ラベル
+	void Edit(const std::string &label);
 #endif // _DEBUG
 
 private:
@@ -125,9 +129,16 @@ private:
     static inline const float kWidth = 2.0f;
     static inline const float kHeight = 2.0f;
     static inline const float kRadius = 2.0f;
-    Vector4 color_;
+	  // デルタタイム
+	  static inline constexpr float deltaTime = 1.0f / 60.0f;
+	  // 色
+	  Vector4 color_;
     // 剛体
     std::unique_ptr<RigidBody> rigidBody_ = nullptr;
+	  // 移動量
+	  Vector3 move_ = {};
+	  // 衝突フラグ
+	  bool isCollision_ = false;
     // AABBのデバッグ描画
     std::unique_ptr<AABBRenderer> aabbRenderer_ = nullptr;
     // AABBのデバッグ描画の切り替えフラグ

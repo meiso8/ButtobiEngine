@@ -53,7 +53,7 @@ void Arrow::Update(const Vector3& position, const float& scaleZ, const float& ro
 
     kickObb_->center = worldTransform_.GetWorldPosition();
     kickObb_->halfSizes.z = scaleZ * 0.005f;
-    SetAxis(worldTransformParent_.rotate_, *kickObb_);
+    MakeAxis(worldTransformParent_.rotate_, *kickObb_);
 
 #ifdef _DEBUG
     EditOBB("kickOBB", worldTransformParent_.rotate_, *kickObb_);
