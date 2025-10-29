@@ -27,7 +27,10 @@ public:
         kNone,
         kCharge,
         kFire,
-        kEnd
+        kEnd,
+        kTimeUp,
+        kCloseShutter,
+        kPhaseMax,
     };
 
     enum Parts {
@@ -67,6 +70,8 @@ public:
 
     // @brief 攻撃アニメーション
     void AttackAnimation();
+    //シャッターを閉めるアニメーション
+    void ShutterCloseAnimation(const float time);
 
     /// @brief 描画
     /// @param camera カメラ
@@ -132,6 +137,8 @@ public:
     void SetParticle(FlashParticle* particle) { flashParticle_ = particle; }
     //ImGUi用
     void Debug();
+
+    void SetPhase(AttackPhase attackPhase) { attackPhase_ = attackPhase;}
 private:
     Camera* camera_ = nullptr;
     // ワールド変換データ
@@ -160,9 +167,9 @@ private:
 
     AttackPhase attackPhase_ = AttackPhase::kNone;
 
-    Vector3 targetPartsScale_[4][Parts::kNumParts];
-    Vector3 targetPartsRotate_[4][Parts::kNumParts];
-    Vector3 targetPartsTranslate_[4][Parts::kNumParts];
+    Vector3 targetPartsScale_[kPhaseMax][Parts::kNumParts];
+    Vector3 targetPartsRotate_[kPhaseMax][Parts::kNumParts];
+    Vector3 targetPartsTranslate_[kPhaseMax][Parts::kNumParts];
 
     Vector3 defaultPartsOffset_[Parts::kNumParts];
 
