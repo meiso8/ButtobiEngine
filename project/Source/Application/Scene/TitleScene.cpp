@@ -180,7 +180,7 @@ void TitleScene::Update() {
             StringInOutJuiceAnimation();
 
             WorldTransformUpdate(appleWorldTransform);
-
+		
             break;
         case TitleScene::AnimationPhase::Korokoro:
             KorokoroAnimation();
@@ -190,7 +190,17 @@ void TitleScene::Update() {
         }
 
         appleWorldTransform.rotate_.z += 0.1f;
-
+		if (Input::IsTriggerKey(DIK_SPACE)) {
+			for (int i = 0; i < 8; i++) {
+			    titleStringWorldTransform[i].translate_ = stringOutEndPosition[i];
+				titleStringWorldTransform[i].rotate_.z = 0.0f;
+				camera_->translate_ = {-15, -3, -15};
+				appleWorldTransform.translate_.x = -40;
+				juiceCupWorldTransform.rotate_.z = 1.55f;
+				WorldTransformUpdate(appleWorldTransform);
+            }
+			IsAnimationEnd = true;
+        }
     } else {
         if (iscameraTranslateEnd) {
             LoopAnimation();
