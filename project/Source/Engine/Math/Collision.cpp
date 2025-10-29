@@ -80,6 +80,47 @@ Vector3 ClosestPoint(const Segment &segment, const OBB &obb) {
 	return closestPointWorld;
 }
 
+Vector3 ClosestPoint(const Segment &segment1, const Segment &segment2) {
+	Vector3 d1 = segment1.diff;
+	Vector3 d2 = segment2.diff;
+	Vector3 r = segment1.origin - segment2.origin;
+	float a = Dot(d1, d1);
+	float e = Dot(d2, d2);
+	float f = Dot(d2, r);
+	float s, t;
+	if (a <= 1e-6f && e <= 1e-6f) {
+		s = t = 0.0f;
+		return segment1.origin;
+	}
+	if (a <= 1e-6f) {
+		s = 0.0f;
+		t = std::clamp(f / e, 0.0f, 1.0f);
+	} else {
+		float c = Dot(d1, r);
+		if (e <= 1e-6f) {
+			t = 0.0f;
+			s = std::clamp(-c / a, 0.0f, 1.0f);
+		} else {
+			float b = Dot(d1, d2);
+			float denom = a * e - b * b;
+			if (denom != 0.0f) {
+				s = std::clamp((b * f - c * e) / denom, 0.0f, 1.0f);
+			} else {
+				s = 0.0f;
+			}
+			t = (b * s + f) / e;
+			if (t < 0.0f) {
+				t = 0.0f;
+				s = std::clamp(-c / a, 0.0f, 1.0f);
+			} else if (t > 1.0f) {
+				t = 1.0f;
+				s = std::clamp((b - c) / a, 0.0f, 1.0f);
+			}
+		}
+	}
+	return segment1.origin + d1 * s;
+}
+
 Vector3 Normal(const Vector3 &point, const AABB &aabb) {
 	Vector3 closestPoint = ClosestPoint(point, aabb);
 	Vector3 normal = Normalize(closestPoint - point);
@@ -159,6 +200,14 @@ float Distance(const Segment &segment, const AABB &aabb) {
 float Distance(const Segment &segment, const OBB &obb) {
 	Vector3 closestPoint = ClosestPoint(segment, obb);
 	return Distance(closestPoint, obb);
+}
+
+float Distance(const Segment &segment1, const Segment &segment2) {
+	//線分同士の最近接点を求める
+	Vector3 closestPoint1 = ClosestPoint(segment1, segment2);
+	Vector3 closestPoint2 = ClosestPoint(segment2, segment1);
+	//最近接点同士の距離を求める
+	return Length(closestPoint2 - closestPoint1);
 }
 
 float PenetrationDepth(const Sphere &sphere, const Plane &plane) {
@@ -443,4 +492,8 @@ bool IsCollision(const Capsule &capsule, const AABB &aabb) {
 
 bool IsCollision(const Capsule &capsule, const OBB &obb) {
 	return Distance(capsule.segment, obb) <= capsule.radius;
+}
+
+bool IsCollision(const Capsule &capsule1, const Capsule &capsule2) {
+	return Distance(capsule1.segment, capsule2.segment) <= capsule1.radius + capsule2.radius;
 }

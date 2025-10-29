@@ -38,6 +38,7 @@ public:
 	void SetIsComboSparkle(bool* flag) { isComboSpakle_ = flag; };
 
 private:
+    static inline constexpr float deltaTime = 1.0f / 60.0f; // デルタタイム
     std::list<Collider*> colliders_; // コライダーのリスト
     uint32_t* score_ = nullptr;      // スコアポインタ
     uint32_t* combo_ = nullptr;//コンポのポインタ
