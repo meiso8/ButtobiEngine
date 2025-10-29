@@ -56,8 +56,9 @@ TitleScene::TitleScene()
     appleModel->Create(ModelManager::FRUIT_APPLE);
     appleModel->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 
-
-
+    menuTextureHandle_ = Texture::GetHandle(Texture::MENU);
+	menuSprite_ = std::make_unique<Sprite>();
+	menuSprite_->Create(menuTextureHandle_, {320, 360}, {640, 360});
 
     spaceTExtureHandle_ = Texture::GetHandle(Texture::SPACE);
     spaceSprite_ = std::make_unique<Sprite>();
