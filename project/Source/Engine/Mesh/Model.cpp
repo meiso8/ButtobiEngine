@@ -65,9 +65,9 @@ void Model::UpdateUV() {
     materialResource_->SetUV(uvTransformMatrix_);
 }
 
-void Model::PreDraw(const BlendMode& type) {
+void Model::PreDraw(const BlendMode& type, const CullMode& cullMode) {
     commandList_->SetGraphicsRootSignature(modelConfig_->rootSignature->GetRootSignature(RootSignature::NORMAL));
-    commandList_->SetPipelineState(MyEngine::GetPSO()->GetGraphicsPipelineState(type,kCullModeBack).Get());//PSOを設定
+    commandList_->SetPipelineState(MyEngine::GetPSO()->GetGraphicsPipelineState(type, cullMode).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }

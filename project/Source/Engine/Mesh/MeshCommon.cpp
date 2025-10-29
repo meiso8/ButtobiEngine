@@ -33,9 +33,9 @@ void MeshCommon::Finalize() {
 }
 
 
-void MeshCommon::PreDraw(const BlendMode& blendMode) {
+void MeshCommon::PreDraw(const BlendMode& type , const CullMode& cullMode) {
     commandList_->SetGraphicsRootSignature(modelConfig_->rootSignature->GetRootSignature(0));
-    commandList_->SetPipelineState(PSO::GetGraphicsPipelineState(blendMode, kCullModeBack).Get());//PSOを設定
+    commandList_->SetPipelineState(PSO::GetGraphicsPipelineState(type, cullMode).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
