@@ -407,21 +407,13 @@ void Player::InputAttack() {
 
 
 void Player::AttackAnimation() {
+
     for (int i = 0; i < Parts::kNumParts; i++) {
         PartsWorldTransform_[i].scale_ = Lerp(PartsWorldTransform_[i].scale_, targetPartsScale_[attackPhase_][i], kInterVal_);
         PartsWorldTransform_[i].rotate_ = Lerp(PartsWorldTransform_[i].rotate_, targetPartsRotate_[attackPhase_][i], kInterVal_);
         PartsWorldTransform_[i].translate_ = Lerp(PartsWorldTransform_[i].translate_, targetPartsTranslate_[attackPhase_][i], kInterVal_);
-
-        // ローカル行列を作成（補間済み）
-        Matrix4x4 localMat = MakeAffineMatrix(PartsWorldTransform_[i].scale_, PartsWorldTransform_[i].rotate_, PartsWorldTransform_[i].translate_ + defaultPartsOffset_[i]);
-
-        // 親（プレイヤー本体）のワールド行列
-        Matrix4x4 parentMat = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotate_, worldTransform_.translate_);
-
-
         WorldTransformUpdate(PartsWorldTransform_[i]);
     }
-    WorldTransformUpdate(worldTransform_);
 
 }
 
@@ -484,6 +476,8 @@ void Player::Update() {
     // ==============================
     // 4.ワールド変換の更新
     // ==============================
+
+    WorldTransformUpdate(worldTransform_);
 
     WorldTransformUpdate(shadowWorldTransform_);
 
