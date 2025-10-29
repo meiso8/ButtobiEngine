@@ -14,6 +14,7 @@ class FlashParticle;
 class Enemy;
 class Camera;
 class Model;
+class QuadMesh;
 class AABBRenderer;
 
 class SphereRenderer;
@@ -145,9 +146,13 @@ private:
 
     WorldTransform PartsWorldTransform_[Parts::kNumParts];
     WorldTransform DrawPartsWorldTransform_[Parts::kNumParts];
+	WorldTransform shadowWorldTransform_;
 
     // モデル
     std::array<Model*, Parts::kNumParts> model_ = { nullptr,nullptr,nullptr,nullptr,nullptr,nullptr };
+	std::unique_ptr<QuadMesh> shadowModel_ = {nullptr};
+
+    
     // 速度
     Vector3 velocity_ = {};
     // 加速度
@@ -192,6 +197,7 @@ private:
 
     //色　変更しましたyoshida
     Vector4 objectColor_ = { 1.0f,1.0f,1.0f,1.0f };
+	Vector4 shadowObjectColor_ = {1.0f, 1.0f, 1.0f, 0.5f};
 
     // AABBのデバッグ描画
     //std::unique_ptr<AABBRenderer> aabbRenderer_ = nullptr;
