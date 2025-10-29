@@ -281,10 +281,17 @@ void Player::Initialize(Camera& camera, const Vector3& position) {
 
 void Player::InputMove() {
     // 左右キーは見た目だけを回転させる（移動には影響しない）
+	
     if (Input::IsPushKey(DIK_RIGHT) || Input::IsPushKey(DIK_D)) {
+		if ((!Input::IsPushKey(DIK_UP) && !Input::IsPushKey(DIK_DOWN) && Input::IsPushKey(DIK_D)) || 
+            (!Input::IsPushKey(DIK_W) && !Input::IsPushKey(DIK_S) && Input::IsPushKey(DIK_RIGHT))) {
         worldTransform_.rotate_.y += 0.03f;
+		} 
     } else if (Input::IsPushKey(DIK_LEFT) || Input::IsPushKey(DIK_A)) {
+		if ((!Input::IsPushKey(DIK_UP) && !Input::IsPushKey(DIK_DOWN) && Input::IsPushKey(DIK_A)) || 
+            (!Input::IsPushKey(DIK_W) && !Input::IsPushKey(DIK_S) && Input::IsPushKey(DIK_LEFT))) {
         worldTransform_.rotate_.y -= 0.03f;
+        }
     }
 
     // 前後移動（常にカメラ基準）
@@ -296,10 +303,16 @@ void Player::InputMove() {
         forward = Normalize(forward);
 
         if (Input::IsPushKey(DIK_UP) || Input::IsPushKey(DIK_W)) {
+			if ((!Input::IsPushKey(DIK_LEFT) && !Input::IsPushKey(DIK_RIGHT) && Input::IsPushKey(DIK_W)) || 
+                (!Input::IsPushKey(DIK_A) && !Input::IsPushKey(DIK_D) && Input::IsPushKey(DIK_UP))) {
             worldTransform_.translate_ += forward * kMoveAmount;
+            }
         }
         if (Input::IsPushKey(DIK_DOWN) || Input::IsPushKey(DIK_S)) {
+			if ((!Input::IsPushKey(DIK_LEFT) && !Input::IsPushKey(DIK_RIGHT) && Input::IsPushKey(DIK_S)) || 
+                (!Input::IsPushKey(DIK_A) && !Input::IsPushKey(DIK_D) && Input::IsPushKey(DIK_DOWN))) {
             worldTransform_.translate_ -= forward * kMoveAmount;
+            }
         }
     }
 }
