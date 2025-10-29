@@ -27,56 +27,56 @@ Enemy::Enemy() {
     model_->Create(ModelManager::FRUIT_APPLE);
     shadow_ = std::make_unique<QuadMesh>();
     shadow_->Create(Texture::GetHandle(Texture::SHADOW));
-    shadow_->SetColor({1.0f,1.0f,1.0f,0.5f});
+    shadow_->SetColor({ 1.0f,1.0f,1.0f,0.5f });
 }
 
 Enemy::~Enemy() = default;
 
-void Enemy::Initialize(const Vector3 &position) {
+void Enemy::Initialize(const Vector3& position) {
 
-	color_ = { 1.0f, 0.0f, 0.0f, 1.0f };
-	worldTransform_.Initialize();
-	worldTransform_.translate_ = position; // 初期位置をオリジンにしておく
-	worldTransform_.rotate_.y = std::numbers::pi_v<float> *3.0f / 2.0f;
-	WorldTransformUpdate(worldTransform_);
+    color_ = { 1.0f, 0.0f, 0.0f, 1.0f };
+    worldTransform_.Initialize();
+    worldTransform_.translate_ = position; // 初期位置をオリジンにしておく
+    worldTransform_.rotate_.y = std::numbers::pi_v<float> *3.0f / 2.0f;
+    WorldTransformUpdate(worldTransform_);
 
-  shadowWorldTransform_.Initialize();
-  shadowWorldTransform_.rotate_.x = std::numbers::pi_v<float>*0.5f;
+    shadowWorldTransform_.Initialize();
+    shadowWorldTransform_.rotate_.x = std::numbers::pi_v<float>*0.5f;
 
-  walkTimer_ = 0.0f;
+    walkTimer_ = 0.0f;
 
-	// 剛体の生成
-	rigidBody_ = std::make_unique<RigidBody>();
-	rigidBody_->Initialize(1.0f, kRadius);
+    // 剛体の生成
+    rigidBody_ = std::make_unique<RigidBody>();
+    rigidBody_->Initialize(1.0f, kRadius);
 
-	isKicked_ = false;
+    isKicked_ = false;
 
 #ifdef _DEBUG
-	// AABBのデバッグ描画の生成と初期化
-	isExistAABB_ = false;
-	if (isExistAABB_) {
-		aabbRenderer_ = std::make_unique<AABBRenderer>();
-		aabbRenderer_->Initialize();
-	}
+    // AABBのデバッグ描画の生成と初期化
+    isExistAABB_ = false;
+    if (isExistAABB_) {
+        aabbRenderer_ = std::make_unique<AABBRenderer>();
+        aabbRenderer_->Initialize();
+    }
 
-	// 球のデバッグ描画の生成と初期化
-	isExistSphere_ = false;
-	if (isExistSphere_) {
-		sphereRenderer_ = std::make_unique<SphereRenderer>();
-		sphereRenderer_->Initialize();
-	}
+    // 球のデバッグ描画の生成と初期化
+    isExistSphere_ = false;
+    if (isExistSphere_) {
+        sphereRenderer_ = std::make_unique<SphereRenderer>();
+        sphereRenderer_->Initialize();
+    }
 #endif // _DEBUG
 
 
 }
 
 void Enemy::Update() {
-	isCollision_ = false;
+    isCollision_ = false;
 
-	// 移動
-	rigidBody_->Update(deltaTime);
-	worldTransform_.rotate_ = rigidBody_->GetAngle();
-	move_ = rigidBody_->GetVelocity() * deltaTime;
+    // 移動
+    rigidBody_->Update(deltaTime);
+    worldTransform_.rotate_ = rigidBody_->GetAngle();
+    move_ = rigidBody_->GetVelocity() * deltaTime;
 
     shadowWorldTransform_.translate_ = {
          worldTransform_.translate_.x,
@@ -84,7 +84,7 @@ void Enemy::Update() {
           worldTransform_.translate_.z
     };
 
-    float scale = 4.0f-worldTransform_.translate_.y / 5.0f;
+    float scale = 4.0f - worldTransform_.translate_.y / 5.0f;
     shadowWorldTransform_.scale_ = { scale, scale ,1.0f };
 
     if (isKicked_) {
@@ -108,31 +108,31 @@ void Enemy::Update() {
     WorldTransformUpdate(shadowWorldTransform_);
 
 #ifdef _DEBUG
-	// AABBのデバッグ描画の更新
-	if (isExistAABB_) {
-		aabbRenderer_->Update(GetAABB());
-	}
+    // AABBのデバッグ描画の更新
+    if (isExistAABB_) {
+        aabbRenderer_->Update(GetAABB());
+    }
 
-	// 球のデバッグ描画の更新
-	if (isExistSphere_) {
-		sphereRenderer_->Update(GetSphere());
-	}
+    // 球のデバッグ描画の更新
+    if (isExistSphere_) {
+        sphereRenderer_->Update(GetSphere());
+    }
 #endif // _DEBUG
 
 }
 
-void Enemy::Draw(Camera &camera) {
+void Enemy::Draw(Camera& camera) {
 #ifdef _DEBUG
 
-	// 球のデバッグ描画
-	if (isExistSphere_) {
-		sphereRenderer_->Draw(camera);
-	}
+    // 球のデバッグ描画
+    if (isExistSphere_) {
+        sphereRenderer_->Draw(camera);
+    }
 
-	// AABBのデバッグ描画
-	if (isExistAABB_) {
-		aabbRenderer_->Draw(camera);
-	}
+    // AABBのデバッグ描画
+    if (isExistAABB_) {
+        aabbRenderer_->Draw(camera);
+    }
 
 #endif // _DEBUG
 
@@ -149,12 +149,12 @@ void Enemy::Draw(Camera &camera) {
 }
 
 AABB Enemy::GetAABB() const {
-	Vector3 worldPos = GetWorldPosition();
-	AABB aabb = {
-		.min = { worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kWidth / 2.0f },
-		.max = { worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kWidth / 2.0f }
-	};
-	return aabb;
+    Vector3 worldPos = GetWorldPosition();
+    AABB aabb = {
+        .min = { worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kWidth / 2.0f },
+        .max = { worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kWidth / 2.0f }
+    };
+    return aabb;
 }
 
 Sphere Enemy::GetSphere() const { return Sphere{ .center = GetWorldPosition(), .radius = kRadius }; }
@@ -163,109 +163,109 @@ Capsule Enemy::GetCapsule() const { return Capsule{ .segment = {.origin = GetWor
 
 Vector3 Enemy::GetWorldPosition() const { return { worldTransform_.matWorld_.m[3][0],worldTransform_.matWorld_.m[3][1],worldTransform_.matWorld_.m[3][2] }; }
 
-void Enemy::OnCollision(Player *player) {
+void Enemy::OnCollision(Player* player) {
 
-	color_ = { 1.0f, 1.0f, 0.0f, 1.0f };
+    if (isKicked_) {
+        return;
+    }
 
-	if (isKicked_) {
-		return;
-	}
+    color_ = { 1.0f, 1.0f, 0.0f, 1.0f };
 
-	if (player->IsAttack()) {
+    if (player->IsAttack()) {
 
-		Sound::PlaySE(Sound::FRUIT_FALL);
-		//パーティクルを出す
-		flashParticle_->emitter_.transform.translate = GetWorldPosition();
-		flashParticle_->EmitParticle(false, { 2.0f,2.0f,2.0f }, { 1.0f, 1.0f, 1.0f, 1.0f });
+        Sound::PlaySE(Sound::FRUIT_FALL);
+        //パーティクルを出す
+        flashParticle_->emitter_.transform.translate = GetWorldPosition();
+        flashParticle_->EmitParticle(false, { 2.0f,2.0f,2.0f }, { 1.0f, 1.0f, 1.0f, 1.0f });
 
-		//キック継続時間の初期化
-		kickDurationTimer_ = 0;
-		Vector3 kickForce = player->GetKickForce();
-		rigidBody_->ApplyForce(kickForce);
-		isKicked_ = true;
-		//キック力を初期化
-		player->InitKickForce();
-	}
+        //キック継続時間の初期化
+        kickDurationTimer_ = 0;
+        Vector3 kickForce = player->GetKickForce();
+        rigidBody_->ApplyForce(kickForce);
+        isKicked_ = true;
+        //キック力を初期化
+        player->InitKickForce();
+    }
 }
 
-void Enemy::OnCollision(const Plane &plane) {
-	constexpr float e = 0.8f;												// 反発係数
-	Capsule capsule = GetCapsule();											// カプセル
-	Vector3 velocity = rigidBody_->GetVelocity();							// 現在の速度を取得
-	float mass = rigidBody_->GetMass();										// 質量の取得
-	Vector3 segmentContactPoint = ClosestPoint(capsule.segment, plane);		// カプセルのセグメントから最も近い点を取得
-	Vector3 planeContactPoint = ClosestPoint(segmentContactPoint, plane);	// 平面から最も近い点を取得
-	float reflected = Dot(velocity, plane.normal);							// 反射ベクトルの計算
-	
-	// 速度と法線が同じ向きなら衝突応答しない
-	if (reflected > 0.0f) {
-		return;
-	}
+void Enemy::OnCollision(const Plane& plane) {
+    constexpr float e = 0.8f;												// 反発係数
+    Capsule capsule = GetCapsule();											// カプセル
+    Vector3 velocity = rigidBody_->GetVelocity();							// 現在の速度を取得
+    float mass = rigidBody_->GetMass();										// 質量の取得
+    Vector3 segmentContactPoint = ClosestPoint(capsule.segment, plane);		// カプセルのセグメントから最も近い点を取得
+    Vector3 planeContactPoint = ClosestPoint(segmentContactPoint, plane);	// 平面から最も近い点を取得
+    float reflected = Dot(velocity, plane.normal);							// 反射ベクトルの計算
 
-	Vector3 newVelocity = velocity - (1.0f + e) * reflected * plane.normal;	// 衝突後のボールの速度を更新
-	Vector3 impulse = (newVelocity - velocity) * mass / deltaTime;			// 衝突インパルスを計算
-	rigidBody_->ApplyForce(impulse);										// 衝突インパルスをフルーツに加える
-	rigidBody_->SetLeverArm(segmentContactPoint - planeContactPoint);		// 重心から接触点までのベクトルを設定
-	newVelocity -= Project(newVelocity, plane.normal);						// 法線方向の移動分の計算
-	worldTransform_.translate_ += newVelocity * deltaTime;					// フルーツの位置を修正
-	isCollision_ = true;
+    // 速度と法線が同じ向きなら衝突応答しない
+    if (reflected > 0.0f) {
+        return;
+    }
+
+    Vector3 newVelocity = velocity - (1.0f + e) * reflected * plane.normal;	// 衝突後のボールの速度を更新
+    Vector3 impulse = (newVelocity - velocity) * mass / deltaTime;			// 衝突インパルスを計算
+    rigidBody_->ApplyForce(impulse);										// 衝突インパルスをフルーツに加える
+    rigidBody_->SetLeverArm(segmentContactPoint - planeContactPoint);		// 重心から接触点までのベクトルを設定
+    newVelocity -= Project(newVelocity, plane.normal);						// 法線方向の移動分の計算
+    worldTransform_.translate_ += newVelocity * deltaTime;					// フルーツの位置を修正
+    isCollision_ = true;
 }
 
-void Enemy::OnCollision(const OBB &obb) {
-	constexpr float e = 0.8f;											// 反発係数
-	Capsule capsule = GetCapsule();										// カプセル
-	Vector3 velocity = rigidBody_->GetVelocity();						// 現在の速度を取得
-	float mass = rigidBody_->GetMass();									// 質量の取得
-	Vector3 normal = Normal(capsule.segment, obb);						// 法線ベクトルの計算
-	Vector3 segmentContactPoint = ClosestPoint(capsule.segment, obb);	// カプセルのセグメントから最も近い点を取得
-	Vector3 obbContactPoint = ClosestPoint(segmentContactPoint, obb);	// OBBから最も近い点を取得
-	float reflected = Dot(velocity, normal);							// 反射ベクトルの計算
+void Enemy::OnCollision(const OBB& obb) {
+    constexpr float e = 0.8f;											// 反発係数
+    Capsule capsule = GetCapsule();										// カプセル
+    Vector3 velocity = rigidBody_->GetVelocity();						// 現在の速度を取得
+    float mass = rigidBody_->GetMass();									// 質量の取得
+    Vector3 normal = Normal(capsule.segment, obb);						// 法線ベクトルの計算
+    Vector3 segmentContactPoint = ClosestPoint(capsule.segment, obb);	// カプセルのセグメントから最も近い点を取得
+    Vector3 obbContactPoint = ClosestPoint(segmentContactPoint, obb);	// OBBから最も近い点を取得
+    float reflected = Dot(velocity, normal);							// 反射ベクトルの計算
 
-	// 速度と法線が同じ向きなら衝突応答しない
-	if (reflected > 0.0f) {
-		return;
-	}
+    // 速度と法線が同じ向きなら衝突応答しない
+    if (reflected > 0.0f) {
+        return;
+    }
 
-	Vector3 newVelocity = velocity - (1.0f + e) * reflected * normal;	// 衝突後のボールの速度を更新
-	Vector3 impulse = (newVelocity - velocity) * mass / deltaTime;		// 衝突インパルスを計算
-	rigidBody_->ApplyForce(impulse);									// 衝突インパルスをフルーツに加える
-	rigidBody_->SetLeverArm(segmentContactPoint - obbContactPoint);		// 重心から接触点までのベクトルを設定
-	newVelocity -= Project(newVelocity, normal);						// 法線方向の移動分の計算
-	worldTransform_.translate_ += newVelocity * deltaTime;				// フルーツの位置を修正
-	isCollision_ = true;
+    Vector3 newVelocity = velocity - (1.0f + e) * reflected * normal;	// 衝突後のボールの速度を更新
+    Vector3 impulse = (newVelocity - velocity) * mass / deltaTime;		// 衝突インパルスを計算
+    rigidBody_->ApplyForce(impulse);									// 衝突インパルスをフルーツに加える
+    rigidBody_->SetLeverArm(segmentContactPoint - obbContactPoint);		// 重心から接触点までのベクトルを設定
+    newVelocity -= Project(newVelocity, normal);						// 法線方向の移動分の計算
+    worldTransform_.translate_ += newVelocity * deltaTime;				// フルーツの位置を修正
+    isCollision_ = true;
 }
 
 void Enemy::OnCollision() {
 
-	isDead_ = true;
+    isDead_ = true;
 
-	if (crashParticle_ != nullptr) {
-		crashParticle_->emitter_.transform.translate = GetWorldPosition();
-		crashParticle_->EmitParticle(true, { 0.5f,0.5f,0.5f }, { 1.0f, 1.0f, 1.0f, 1.0f });
-	}
+    if (crashParticle_ != nullptr) {
+        crashParticle_->emitter_.transform.translate = GetWorldPosition();
+        crashParticle_->EmitParticle(true, { 0.5f,0.5f,0.5f }, { 1.0f, 1.0f, 1.0f, 1.0f });
+    }
 }
 
 void Enemy::CollisionUpdate() {
-	if (!isCollision_) {
-		worldTransform_.translate_ += move_;
-	}
+    if (!isCollision_) {
+        worldTransform_.translate_ += move_;
+    }
 
-	WorldTransformUpdate(worldTransform_);
+    WorldTransformUpdate(worldTransform_);
 }
 
 Vector3 Enemy::GetVelocity() const { return rigidBody_->GetVelocity(); }
 
 #ifdef _DEBUG
-void Enemy::Edit(const std::string &label) {
-	if (ImGui::TreeNode(label.c_str())) {
-		ImGui::DragFloat3("translate", &worldTransform_.translate_.x, 0.01f, -std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
-		ImGui::SliderAngle("rotateX", &worldTransform_.rotate_.x, -360.0f, 360.0f);
-		ImGui::SliderAngle("rotateY", &worldTransform_.rotate_.y, -360.0f, 360.0f);
-		ImGui::SliderAngle("rotateZ", &worldTransform_.rotate_.z, -360.0f, 360.0f);
-		rigidBody_->Edit("RigidBody");
-		ImGui::Checkbox("DrawAABB", &isExistAABB_);
-		ImGui::Checkbox("DrawSphere", &isExistSphere_);
-		ImGui::TreePop();
-	}
+void Enemy::Edit(const std::string& label) {
+    if (ImGui::TreeNode(label.c_str())) {
+        ImGui::DragFloat3("translate", &worldTransform_.translate_.x, 0.01f, -std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+        ImGui::SliderAngle("rotateX", &worldTransform_.rotate_.x, -360.0f, 360.0f);
+        ImGui::SliderAngle("rotateY", &worldTransform_.rotate_.y, -360.0f, 360.0f);
+        ImGui::SliderAngle("rotateZ", &worldTransform_.rotate_.z, -360.0f, 360.0f);
+        rigidBody_->Edit("RigidBody");
+        ImGui::Checkbox("DrawAABB", &isExistAABB_);
+        ImGui::Checkbox("DrawSphere", &isExistSphere_);
+        ImGui::TreePop();
+    }
 }
 #endif // _DEBUG
