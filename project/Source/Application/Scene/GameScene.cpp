@@ -522,12 +522,12 @@ void GameScene::Draw() {
         forceArrow_->Draw(*currentCamera_);
     }
   
-	crashParticle_->Draw(kBlendModeNormal);
-
-	flashParticle_->Draw(kBlendModeNormal);
     // 地形の描画
     stage_->DrawOBB(*currentCamera_);
 
+	crashParticle_->Draw(kBlendModeNormal);
+	flashParticle_->Draw(kBlendModeNormal);
+	
 	//UI
 	uiManager_->Draw();
 
