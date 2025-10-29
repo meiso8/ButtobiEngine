@@ -514,16 +514,18 @@ void GameScene::Draw() {
         newEnemy->Draw(*currentCamera_);
     }
 
-    if (player_->IsCharge() || player_->IsAttack()) {
-        //パーティクルを描画
-        particle_->Draw(kBlendModeAdd);
-        effect_->Draw(*currentCamera_);
-        //力を描画
-        forceArrow_->Draw(*currentCamera_);
-    }
+
   
     // 地形の描画
     stage_->DrawOBB(*currentCamera_);
+
+	if (player_->IsCharge() || player_->IsAttack()) {
+		//パーティクルを描画
+		particle_->Draw(kBlendModeAdd);
+		effect_->Draw(*currentCamera_);
+		//力を描画
+		forceArrow_->Draw(*currentCamera_);
+	}
 
 	crashParticle_->Draw(kBlendModeNormal);
 	flashParticle_->Draw(kBlendModeNormal);
