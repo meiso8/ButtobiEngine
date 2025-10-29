@@ -13,11 +13,22 @@
 #include"Particle/FlashParticle.h"
 #include"Random.h"
 #include"AppleSceneChange.h"
+#include"DebugUI.h"
+#include"Quad.h"
 
 TitleScene::TitleScene()
 {
 
     camera_ = std::make_unique<Camera>();
+
+#ifdef _DEBUG
+    // デバッグカメラの初期化
+    debugCamera_ = std::make_unique<DebugCamera>();
+    debugCamera_->Initialize(1280, 720);
+#endif // _DEBUG
+
+    // 現在のカメラを設定
+    currentCamera_ = camera_.get();
 
     for (uint32_t i = 0; i < 8; i++) {
         titleStringModel[i] = new Model();
@@ -29,14 +40,23 @@ TitleScene::TitleScene()
     juiceCupModel->Create(ModelManager::JUICE_CUP);
 
 
-    tableModel = new Model();
-    tableModel->Create(ModelManager::TABLE);
+    for (uint32_t i = 0; i < tableModels.size(); ++i) {
+        tableModels[i] = std::make_unique<Model>();
+        tableModels[i]->Create(ModelManager::TABLE);
+    }
+
+    for (uint32_t i = 3; i < tableModels.size(); ++i) {
+        tableModels[i]->SetColor({ 0.75f,0.75f,0.75f,1.0f });
+    }
+
+    quad_ = std::make_unique<QuadMesh>();
+    quad_->Create(Texture::GetHandle(Texture::CUTTING_BOARD));
 
     appleModel = new Model();
     appleModel->Create(ModelManager::FRUIT_APPLE);
     appleModel->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 
-    
+
 
 
     spaceTExtureHandle_ = Texture::GetHandle(Texture::SPACE);
@@ -79,10 +99,27 @@ void TitleScene::Initialize() {
     juiceCupWorldTransform.translate_ = { 0, -1.8f, 0 };
     WorldTransformUpdate(juiceCupWorldTransform);
 
-    tableWorldTransform.Initialize();
-    tableWorldTransform.scale_ = { 100.0f, 1.0f, 100.0f };
-    tableWorldTransform.translate_ = { 0, -5.0f, 0 };
-    WorldTransformUpdate(tableWorldTransform);
+
+    for (uint32_t i = 0; i < tableWorldTransforms.size(); ++i) {
+        tableWorldTransforms[i].Initialize();
+        tableWorldTransforms[i].scale_ = { 25.0f, 25.0f, 25.0f };
+    }
+    for (uint32_t i = 0; i < 3; ++i) {
+        tableWorldTransforms[i].translate_ = { i * 30.0f - 40.0f, -10.0f, 0.0f };
+    }
+    for (uint32_t i = 3; i < 5; ++i) {
+        tableWorldTransforms[i].translate_ = { (i - 3) * 50.0f - 25.0f, 0.0f, 40.0f };
+    }
+    tableWorldTransforms[5].translate_ = { 0.0f, 11.0f, 45.0f };
+
+    for (uint32_t i = 0; i < tableWorldTransforms.size(); ++i) {
+        WorldTransformUpdate(tableWorldTransforms[i]);
+    }
+
+    quadWorldTransform_.Initialize();
+    quadWorldTransform_.translate_.z = 75.0f;
+    quadWorldTransform_.scale_ = { 200.0f,100.0f,1.0f };
+    WorldTransformUpdate(quadWorldTransform_);
 
     appleWorldTransform.Initialize();
     appleWorldTransform.scale_ = { 1.5f, 1.5f, 1.5f };
@@ -100,8 +137,8 @@ void TitleScene::Initialize() {
 
     //パーティクルをすべて削除する
     flashParticle_->particles.clear();
-	spaceSprite_->SetTextureSize({768, 768});
-	spaceSprite_->Update();
+    spaceSprite_->SetTextureSize({ 768, 768 });
+    spaceSprite_->Update();
 }
 
 void TitleScene::Update() {
@@ -109,7 +146,7 @@ void TitleScene::Update() {
     if (!sceneChange_.isSceneStart_) {
         sceneChange_.UpdateStart(60);
         appleSceneChange_->Update(
-            static_cast<float>(sceneChange_.startTimer_ *InverseFPS));
+            static_cast<float>(sceneChange_.startTimer_ * InverseFPS));
     }
 
     //パーティクルの更新
@@ -156,6 +193,13 @@ void TitleScene::Update() {
     }
     WorldTransformUpdate(juiceCupWorldTransform);
     stringAnimationTimer += 0.01f;
+
+#ifdef _DEBUG
+    if (isDebugCameraActive_) {
+        debugCamera_->UpdateMatrix();
+    }
+
+#endif
 
 }
 
@@ -299,11 +343,11 @@ void TitleScene::Move() {
     }
 
     if (Input::IsPushKey(DIK_SPACE)) {
-		spaceSprite_->SetTextureLeftTop({768, 0});
-	} else {
-		spaceSprite_->SetTextureLeftTop({0, 0});
+        spaceSprite_->SetTextureLeftTop({ 768, 0 });
+    } else {
+        spaceSprite_->SetTextureLeftTop({ 0, 0 });
     }
-	spaceSprite_->Update();
+    spaceSprite_->Update();
 }
 
 
@@ -318,8 +362,6 @@ TitleScene::~TitleScene()
     delete juiceCupModel;
     juiceCupModel = nullptr;
 
-    delete tableModel;
-    tableModel = nullptr;
     delete appleModel;
     appleModel = nullptr;
 
@@ -490,18 +532,30 @@ void TitleScene::FlashParticlePop()
     }
 }
 
-void TitleScene::Draw() {
+void TitleScene::Debug()
+{
+    DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
+    std::function<void()> func = [this]() { SwitchCamera(); };
+    DebugUI::Button("ChangeCamera", func);
+}
 
-    tableModel->PreDraw();
-    tableModel->Draw(*camera_, tableWorldTransform.matWorld_);
-    for (int i = 0; i < 8; i++) {
-        titleStringModel[i]->Draw(*camera_, titleStringWorldTransform[i].matWorld_);
+void TitleScene::Draw() {
+   
+    tableModels[0]->PreDraw();
+    quad_->Draw(*currentCamera_, quadWorldTransform_.matWorld_);
+
+    for (uint32_t i = 0; i < tableModels.size(); ++i) {
+        tableModels[i]->Draw(*currentCamera_, tableWorldTransforms[i].matWorld_);
     }
 
-    juiceCupModel->PreDraw(kBlendModeNormal,kCullModeNone);
-    juiceCupModel->Draw(*camera_, juiceCupWorldTransform.matWorld_);
+    for (int i = 0; i < 8; i++) {
+        titleStringModel[i]->Draw(*currentCamera_, titleStringWorldTransform[i].matWorld_);
+    }
+
+    juiceCupModel->PreDraw(kBlendModeNormal, kCullModeNone);
+    juiceCupModel->Draw(*currentCamera_, juiceCupWorldTransform.matWorld_);
     appleModel->PreDraw();
-    appleModel->Draw(*camera_, appleWorldTransform.matWorld_);
+    appleModel->Draw(*currentCamera_, appleWorldTransform.matWorld_);
     if (iscameraTranslateEnd) {
         spaceSprite_->PreDraw();
         spaceSprite_->Draw();
@@ -512,7 +566,7 @@ void TitleScene::Draw() {
     }
 
     flashParticle_->Draw(BlendMode::kBlendModeNormal);
-  
+
 }
 
 Vector3 TitleScene
