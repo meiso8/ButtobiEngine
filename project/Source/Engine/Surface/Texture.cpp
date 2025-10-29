@@ -27,6 +27,9 @@ void Texture::LoadAllTexture() {
 	handle_[JUICECOUNT] = TextureManager::Load("Resources/Textures/UI/JuiceCount.png");
 	handle_[SPARKLE] = TextureManager::Load("Resources/Textures/Sparkle.png");
 	handle_[MENU] = TextureManager::Load("Resources/Textures/Menu/Menu.png");
+	handle_[FLAME] = TextureManager::Load("Resources/Textures/Menu/flame.png");
+	handle_[CREDIT] = TextureManager::Load("Resources/Textures/Menu/Credit.png");
+	handle_[BACK] = TextureManager::Load("Resources/Textures/Menu/Back.png");
 	handle_[PARTICLE] = TextureManager::Load("Resources/Textures/particle.png");
 	handle_[FLASH_PARTICLE] = TextureManager::Load("Resources/Textures/flashParticle.png");
 	handle_[ARROW] = TextureManager::Load("Resources/Textures/arrow.png");
