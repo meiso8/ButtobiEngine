@@ -10,40 +10,7 @@ void Texture::LoadAllTexture() {
     handle_[WHITE_1X1] = TextureManager::Load("Resources/Textures/white1x1.png");
     handle_[UV_CHECKER] = TextureManager::Load("Resources/Textures/uvChecker.png");
     handle_[NUMBERS] = TextureManager::Load("Resources/Textures/numbers.png");
-	handle_[LIFE] = TextureManager::Load("Resources/Textures/UI/life.png");
-	handle_[SCORE] = TextureManager::Load("Resources/Textures/UI/score.png");
-	handle_[HIGHSCORE] = TextureManager::Load("Resources/Textures/UI/highScore.png");
-	handle_[COMBO] = TextureManager::Load("Resources/Textures/UI/combo.png");
-	handle_[COMBONUMBERS] = TextureManager::Load("Resources/Textures/UI/ComboNumber.png");
-	handle_[SPEED_BONUS] = TextureManager::Load("Resources/Textures/UI/speedBonus.png");
-	handle_[SPEED_BONUSNUMBERS] = TextureManager::Load("Resources/Textures/UI/SpeedNumber.png");
-	handle_[WASD] = TextureManager::Load("Resources/Textures/UI/WASD.png");
-	handle_[SPACE] = TextureManager::Load("Resources/Textures/UI/space.png");
-	handle_[TIMER] = TextureManager::Load("Resources/Textures/UI/timer.png");
-	handle_[TIMERNUMBERS] = TextureManager::Load("Resources/Textures/UI/timerNumbers.png");
-	handle_[JUICE] = TextureManager::Load("Resources/Textures/UI/juice.png");
-	handle_[JUICESTRING] = TextureManager::Load("Resources/Textures/UI/JuiceString.png");
-	handle_[JUICENUMBER] = TextureManager::Load("Resources/Textures/UI/JuiceNumber.png");
-	handle_[JUICECOUNT] = TextureManager::Load("Resources/Textures/UI/JuiceCount.png");
-	handle_[SPARKLE] = TextureManager::Load("Resources/Textures/Sparkle.png");
-	handle_[MENU] = TextureManager::Load("Resources/Textures/Menu/Menu.png");
-	handle_[FLAME] = TextureManager::Load("Resources/Textures/Menu/flame.png");
-	handle_[CREDIT] = TextureManager::Load("Resources/Textures/Menu/Credit.png");
-	handle_[BACK] = TextureManager::Load("Resources/Textures/Menu/Back.png");
-	handle_[PARTICLE] = TextureManager::Load("Resources/Textures/particle.png");
-	handle_[FLASH_PARTICLE] = TextureManager::Load("Resources/Textures/flashParticle.png");
-	handle_[ARROW] = TextureManager::Load("Resources/Textures/arrow.png");
-	handle_[CLEAR] = TextureManager::Load("Resources/Textures/clear.png");
-	handle_[CLEARSCENESTRING] = TextureManager::Load("Resources/Textures/ClearSceneString.png");
-	handle_[RANK] = TextureManager::Load("Resources/Textures/Rank.png");
-	handle_[QUALITY] = TextureManager::Load("Resources/Textures/quality.png");
-	handle_[GAME_OVER] = TextureManager::Load("Resources/Textures/gameOver.png");
-	handle_[SHUTTER] = TextureManager::Load("Resources/Textures/shutter.png");
-	handle_[CLOSED] = TextureManager::Load("Resources/Textures/closed.png");
-	handle_[APPLE_SCENE_CHANGE] = TextureManager::Load("Resources/Textures/appleSceneChange.png");
-	handle_[CUTTING_BOARD] = TextureManager::Load("Resources/Textures/cuttingBoard.png");
-	handle_[SHADOW] = TextureManager::Load("Resources/Textures/shadow.png");
-
+	
 }
 
 uint32_t Texture::AddTextureHandle(const std::string& filePath) {

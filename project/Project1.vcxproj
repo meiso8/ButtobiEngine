@@ -157,7 +157,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Application\System\Score.cpp" />
     <ClCompile Include="Source\Application\Scene\SceneChange.cpp" />
     <ClCompile Include="Source\Engine\Mesh\OBBCube.cpp" />
     <ClCompile Include="Source\Engine\Particle\AppleCrashParticle.cpp" />
@@ -263,7 +262,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Application\System\Score.h" />
     <ClInclude Include="Source\Application\Scene\SceneChange.h" />
     <ClInclude Include="Source\Engine\Mesh\OBBCube.h" />
     <ClInclude Include="Source\Engine\Particle\AppleCrashParticle.h" />
@@ -386,7 +384,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <Image Include="Resources\numbers.png" />
     <Image Include="Resources\player.png" />
-    <Image Include="Resources\Textures\gameOver.png" />
     <Image Include="Resources\Textures\numbers.png" />
     <Image Include="Resources\Textures\particle.png" />
     <Image Include="Resources\Textures\uvChecker.png" />
