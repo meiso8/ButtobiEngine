@@ -1,0 +1,12 @@
+# Blender 4.4.1 MTL File: 'fruitMixChara.blend'
+# www.blender.org
+
+newmtl Material.002
+Ns 629.765991
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.422018
+illum 9
+map_Kd tex.png
