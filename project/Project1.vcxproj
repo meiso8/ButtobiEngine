@@ -109,7 +109,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <Optimization>MinSpace</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)externals\assimp\include;$(ProjectDir)Source\Engine\Math;$(ProjectDir)Source\Engine\Mesh;$(ProjectDir)Source;$(ProjectDir)Source\Engine;$(ProjectDir)Source\Engine\Surface;$(ProjectDir)Source\Engine\Sound;$(ProjectDir)Source\Engine\Input;$(ProjectDir)Source\Engine\ImGui;$(ProjectDir)Source\Engine\DirectXCommon;$(ProjectDir)Source\Application/Scene;$(ProjectDir)Source\Application/Object;$(ProjectDir)Source\Application/GameObject;$(ProjectDir)Source\Application/Physics;$(ProjectDir)Source\Application/System</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)externals\assimp\include;$(ProjectDir)Source\Engine\Math;$(ProjectDir)Source\Engine\Mesh;$(ProjectDir)Source;$(ProjectDir)Source\Engine;$(ProjectDir)Source\Engine\Surface;$(ProjectDir)Source\Engine\Sound;$(ProjectDir)Source\Engine\Input;$(ProjectDir)Source\Engine\ImGui;$(ProjectDir)Source\Engine\DirectXCommon;$(ProjectDir)Source\Application/Scene;$(ProjectDir)Source\Application/Object;$(ProjectDir)Source\Application/GameObject;$(ProjectDir)Source\Application/Physics;$(ProjectDir)Source\Application/System;$(ProjectDir)Source\Engine\PSO</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -187,8 +187,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Math\Collision.cpp" />
     <ClCompile Include="Source\Engine\Math\Vector2.cpp" />
     <ClCompile Include="Source\Engine\Math\Vector4.cpp" />
-    <ClCompile Include="Source\Engine\DirectXCommon\RootSignature.cpp" />
-    <ClCompile Include="Source\Engine\DirectXCommon\InputLayout.cpp" />
+    <ClCompile Include="Source\Engine\PSO\RootSignature.cpp" />
+    <ClCompile Include="Source\Engine\PSO\InputLayout.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\GPU.cpp" />
     <ClCompile Include="Source\Engine\ImGui\ImGuiClass.cpp" />
     <ClCompile Include="Source\Engine\Surface\Texture.cpp" />
@@ -201,13 +201,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Mesh\Model.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\ShaderResourceView.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\ScissorRect.cpp" />
-    <ClCompile Include="Source\Engine\DirectXCommon\BlendState.cpp" />
+    <ClCompile Include="Source\Engine\PSO\BlendState.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\CompileShader.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\Log.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\Fence.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\DebugError.cpp" />
-    <ClCompile Include="Source\Engine\DirectXCommon\PSO.cpp" />
-    <ClCompile Include="Source\Engine\DirectXCommon\RasterizerState.cpp" />
+    <ClCompile Include="Source\Engine\PSO\PSO.cpp" />
+    <ClCompile Include="Source\Engine\PSO\RasterizerState.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\RenderTargetView.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\CommandList.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\CommandQueue.cpp" />
@@ -226,7 +226,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">true</WholeProgramOptimization>
     </ClCompile>
     <ClCompile Include="Source\Engine\Math\cotangent.cpp" />
-    <ClCompile Include="Source\Engine\DirectXCommon\Depth.cpp" />
+    <ClCompile Include="Source\Engine\PSO\Depth.cpp" />
     <ClCompile Include="Source\Engine\Input\Input.cpp" />
     <ClCompile Include="Source\Engine\Math\MakeMatrix.cpp" />
     <ClCompile Include="Source\Engine\Surface\MaterialData.cpp" />
@@ -294,7 +294,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Particle\Particle.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\MyEngine.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\Balloon.h" />
-    <ClInclude Include="Source\Engine\DirectXCommon\BlendState.h" />
+    <ClInclude Include="Source\Engine\PSO\BlendState.h" />
     <ClInclude Include="Source\Engine\Camera\Camera.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\CommandList.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\CommandQueue.h" />
@@ -306,7 +306,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Camera\DebugCamera.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\DebugError.h" />
     <ClInclude Include="Source\Engine\ImGui\DebugUI.h" />
-    <ClInclude Include="Source\Engine\DirectXCommon\Depth.h" />
+    <ClInclude Include="Source\Engine\PSO\Depth.h" />
     <ClInclude Include="Source\Engine\Surface\DirectionalLight.h" />
     <ClInclude Include="Source\Engine\Mesh\DrawGrid.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\DXGIFactory.h" />
@@ -314,7 +314,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\DirectXCommon\GPU.h" />
     <ClInclude Include="Source\Engine\ImGui\ImGuiClass.h" />
     <ClInclude Include="Source\Engine\Input\Input.h" />
-    <ClInclude Include="Source\Engine\DirectXCommon\InputLayout.h" />
+    <ClInclude Include="Source\Engine\PSO\InputLayout.h" />
     <ClInclude Include="Source\Engine\Mesh\LineMesh.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\Log.h" />
     <ClInclude Include="Source\Engine\Surface\Texture.h" />
@@ -347,10 +347,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Math\WorldTransform.h" />
     <ClInclude Include="Source\Engine\Mesh\Model.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\ModelData.h" />
-    <ClInclude Include="Source\Engine\DirectXCommon\PSO.h" />
-    <ClInclude Include="Source\Engine\DirectXCommon\RasterizerState.h" />
+    <ClInclude Include="Source\Engine\PSO\PSO.h" />
+    <ClInclude Include="Source\Engine\PSO\RasterizerState.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\RenderTargetView.h" />
-    <ClInclude Include="Source\Engine\DirectXCommon\RootSignature.h" />
+    <ClInclude Include="Source\Engine\PSO\RootSignature.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\ScissorRect.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\ShaderResourceView.h" />
     <ClInclude Include="Source\Engine\Sound\Sound.h" />

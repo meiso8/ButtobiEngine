@@ -7,6 +7,7 @@
 #include"TextureManager.h"
 #include"Sprite.h"
 #include"Sound.h"
+#include"SphereMesh.h"
 #include"Random.h"
 #include"DebugUI.h"
 #include"Quad.h"
@@ -28,6 +29,7 @@ TitleScene::TitleScene()
     currentCamera_ = camera_.get();
     //矩形を描画
     quadMesh_ = std::make_unique<QuadMesh>();
+    sphereMesh_ = std::make_unique<SphereMesh>();
 }
 
 void TitleScene::Initialize() {
@@ -36,6 +38,7 @@ void TitleScene::Initialize() {
     camera_->Initialize(1280.0f, 720.0f);
     camera_->UpdateMatrix();
     quadMesh_->Create(Texture::GetHandle(Texture::UV_CHECKER));
+    sphereMesh_->Create({Texture::GetHandle(Texture::UV_CHECKER) });
 }
 
 void TitleScene::Update() {
@@ -60,5 +63,6 @@ void TitleScene::Debug()
 void TitleScene::Draw() {
     DrawGrid::Draw(*currentCamera_);
     quadMesh_->PreDraw();
-    quadMesh_->Draw(*currentCamera_, MakeIdentity4x4());
+    quadMesh_->Draw(*currentCamera_, MakeIdentity4x4(), MaterialResource::L_REFLECTANCE);
+    sphereMesh_->Draw(*currentCamera_, MakeIdentity4x4(), MaterialResource::L_REFLECTANCE);
 }

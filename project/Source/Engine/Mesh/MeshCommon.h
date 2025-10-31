@@ -9,7 +9,7 @@
 #include"Wave.h"
 #include"MaterialResource.h"  
 #include"TransformationMatrix.h"  
-#include"PSO.h"  
+#include"PSO/PSO.h"  
 #include"Camera/Camera.h"  
 
 class MeshCommon

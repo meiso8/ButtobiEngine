@@ -5,7 +5,7 @@
 #include"Input.h"
 #include"DirectXCommon.h"
 
-#include"PSO.h"
+#include"PSO/PSO.h"
 #include"Texture.h"
 
 #include"ModelManager.h"

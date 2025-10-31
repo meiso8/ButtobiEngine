@@ -11,7 +11,7 @@ SphereMesh::~SphereMesh()
     Finalize();
 }
 
-void SphereMesh::Create(uint32_t& textureHandle)
+void SphereMesh::Create(uint32_t textureHandle)
 {
     commandList_ = DirectXCommon::GetCommandList();
     modelConfig_ = ModelConfig::GetInstance();

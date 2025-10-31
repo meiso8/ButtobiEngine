@@ -2,7 +2,7 @@
 #include<d3d12.h>
 #include"DirectXCommon.h"
 #include"commandList.h"
-#include"RootSignature.h"
+#include"PSO/RootSignature.h"
 #include"VertexData.h"
 class PSO;
 

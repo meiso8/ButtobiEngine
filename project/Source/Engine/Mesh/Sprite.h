@@ -1,13 +1,13 @@
 #pragma once  
 
-#include"PSO.h"  
+#include"PSO/PSO.h"  
 #include"ShaderResourceView.h"  
 
 #include"Transform.h"  
 #include"TransformationMatrix.h"  
 #include"MaterialResource.h"  
 #include"Vector2.h"  
-#include"RootSignature.h"  
+#include"PSO/RootSignature.h"  
 
 #include<d3d12.h>
 #include"SpriteCommon.h"

@@ -52,8 +52,6 @@ PixelShaderOutput main(VertexShaderOutput input)
     }
     else if (gMaterial.lightType == 1)
     {
-
-        
         float32_t3 toEye = normalize(gCamera.worldPosition - input.worldPosition);
         float32_t3 reflectLight = reflect(gDirectionalLight.direction, normalize(input.normal));
     
@@ -69,6 +67,8 @@ PixelShaderOutput main(VertexShaderOutput input)
     
         float32_t3 specular =
         gDirectionalLight.color.rgb * gDirectionalLight.intensity * specularPow * float32_t3(1.0f, 1.0f, 1.0f); //反射色をここで設定
+
+        
 
         output.color.rgb = diffuse + specular;
         output.color.a = gMaterial.color.a * textureColor.a;

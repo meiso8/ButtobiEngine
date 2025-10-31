@@ -7,7 +7,7 @@
 
 #include"SphereMesh.h"
 #include"DirectionalLight.h"
-#include"PSO.h"
+#include"PSO/PSO.h"
 #include"Camera/Camera.h"
 
 #include<numbers>
