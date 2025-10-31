@@ -5,6 +5,13 @@
 #include"SphericalCoordinate.h"
 #include <string>
 
+#include<wrl.h>
+#include<d3d12.h>
+
+struct CameraForGPU {
+    Vector3 worldPosition;
+};
+
 class Camera {
 public:
     Vector3 scale_ = { 1.0f,1.0f,1.0f };
@@ -27,7 +34,7 @@ public:
     //ビュー行列
     Matrix4x4 viewMat_;
     //射影行列
-    Matrix4x4 projectionMat_ = {0.0f};
+    Matrix4x4 projectionMat_ = { 0.0f };
     Matrix4x4 viewProjectionMat_ = { 0.0f };
 
     //球面座標系
@@ -39,6 +46,13 @@ protected:
 
     virtual void UpdateViewMatrix();
     virtual void UpdateProjectionMatrix();
+
+    //カメラのGPU用リソース
+    Microsoft::WRL::ComPtr<ID3D12Resource> cameraResource_;
+    CameraForGPU* cameraData_ = nullptr;
+
+    void CreateResource();
+    void UpdateData();
 
 public:
     /// @brief 初期化
@@ -56,12 +70,10 @@ public:
     };
 
     Vector3 GetWorldPos();
-
-#ifdef _DEBUG
-	/// @brief ワールド変換データの編集
-	/// @param label ラベル
-    void EditTransform(const std::string &label);
-#endif // _DEBUG
-
     void InitializeTransform();
+    
+    ID3D12Resource* GetResource() {
+        return cameraResource_.Get();
+    }
+
 };

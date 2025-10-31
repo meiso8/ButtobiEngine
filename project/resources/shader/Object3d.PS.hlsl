@@ -1,4 +1,5 @@
 #include "object3d.hlsli"
+#include "Camera.hlsli"
 #include"DirectionalLight.hlsli"
 
 //テクスチャを貼り付けたり、ライティングを行ったりと、もっとも主要なShaderである
@@ -9,7 +10,7 @@ struct Material
     float32_t4 color;
     int32_t lightType;
     float32_t4x4 uvTransform;
-
+    float32_t shininess;
 };
 
 //ConstantBufferを定義する
@@ -17,6 +18,7 @@ struct Material
 //CPUから値を渡すにはConstantBufferという機能を利用する
 ConstantBuffer<Material> gMaterial : register(b0);
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
+ConstantBuffer<Camera> gCamera : register(b2);
 
 Texture2D<float32_t4> gTexture : register(t2); //SRVはt
 SamplerState gSampler : register(s0); //Samplerはs これを介してtextureを読む
@@ -39,6 +41,7 @@ PixelShaderOutput main(VertexShaderOutput input)
         discard;
     }
     
+
     PixelShaderOutput output;
 
     if (gMaterial.lightType == 0)
@@ -50,10 +53,24 @@ PixelShaderOutput main(VertexShaderOutput input)
     else if (gMaterial.lightType == 1)
     {
 
-        float cos = saturate(dot(normalize(input.normal), -gDirectionalLight.direction));
-        //output.color = gMaterial.color * textureColor * gDirectionalLight.color * cos * gDirectionalLight.intensity;
         
-        output.color.rgb = gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * cos * gDirectionalLight.intensity;
+        float32_t3 toEye = normalize(gCamera.worldPosition - input.worldPosition);
+        float32_t3 reflectLight = reflect(gDirectionalLight.direction, normalize(input.normal));
+    
+        float RdotE = dot(reflectLight, toEye);
+        float specularPow = pow(saturate(RdotE), gMaterial.shininess);
+
+        
+        
+        float cos = saturate(dot(normalize(input.normal), -gDirectionalLight.direction));
+           
+        float32_t3 diffuse =
+        gMaterial.color.rbg * textureColor.rgb * gDirectionalLight.color.rbg * cos * gDirectionalLight.intensity;
+    
+        float32_t3 specular =
+        gDirectionalLight.color.rgb * gDirectionalLight.intensity * specularPow * float32_t3(1.0f, 1.0f, 1.0f); //反射色をここで設定
+
+        output.color.rgb = diffuse + specular;
         output.color.a = gMaterial.color.a * textureColor.a;
     }
     else

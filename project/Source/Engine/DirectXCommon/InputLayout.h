@@ -11,7 +11,7 @@ public:
         return inputLayoutDesc_;
    };
 private:
-    D3D12_INPUT_ELEMENT_DESC inputElementDescs_[3] = {};
+    D3D12_INPUT_ELEMENT_DESC inputElementDescs_[4] = {};
     D3D12_INPUT_LAYOUT_DESC inputLayoutDesc_{};
 };
 

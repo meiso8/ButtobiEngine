@@ -382,6 +382,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <None Include="externals\assimp\lib\Debug\assimp-vc143-mtd.pdb" />
+    <None Include="resources\shader\Camera.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png" />

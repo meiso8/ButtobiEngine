@@ -9,7 +9,9 @@
 #include"Sound.h"
 #include"Random.h"
 #include"DebugUI.h"
-
+#include"Quad.h"
+#include"MakeMatrix.h"
+#include"DrawGrid.h"
 
 TitleScene::TitleScene()
 {
@@ -24,7 +26,8 @@ TitleScene::TitleScene()
 
     // 現在のカメラを設定
     currentCamera_ = camera_.get();
-
+    //矩形を描画
+    quadMesh_ = std::make_unique<QuadMesh>();
 }
 
 void TitleScene::Initialize() {
@@ -32,6 +35,7 @@ void TitleScene::Initialize() {
     sceneChange_.Initialize();
     camera_->Initialize(1280.0f, 720.0f);
     camera_->UpdateMatrix();
+    quadMesh_->Create(Texture::GetHandle(Texture::UV_CHECKER));
 }
 
 void TitleScene::Update() {
@@ -54,5 +58,7 @@ void TitleScene::Debug()
 }
 
 void TitleScene::Draw() {
-
+    DrawGrid::Draw(*currentCamera_);
+    quadMesh_->PreDraw();
+    quadMesh_->Draw(*currentCamera_, MakeIdentity4x4());
 }

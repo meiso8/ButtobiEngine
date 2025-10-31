@@ -16,4 +16,5 @@ public:
     void Update()override;
     void Draw()override;
     void Debug()override;
+    std::unique_ptr<QuadMesh> quadMesh_= nullptr;
 };

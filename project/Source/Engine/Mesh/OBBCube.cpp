@@ -260,6 +260,8 @@ void OBBCube::Draw(Camera& camera, const Matrix4x4& worldMatrix, const uint32_t 
     commandList_->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
     //expansionのCBufferの場所を設定
     commandList_->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
+    //cameraのCBufferの場所を設定
+    commandList_->SetGraphicsRootConstantBufferView(6, camera.GetResource()->GetGPUVirtualAddress());
 
     ////描画!（DrawCall/ドローコール）6個のインデックスを使用し1つのインスタンスを描画。その他は当面0で良い。
     commandList_->DrawIndexedInstanced(36, 1, 0, 0, 0);

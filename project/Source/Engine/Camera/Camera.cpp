@@ -1,15 +1,9 @@
 #include"Camera.h"
 #include"MakeMatrix.h"
-
-#ifdef _DEBUG
-#include "../externals/imgui/imgui.h"
-#endif // _DEBUG
-
+#include"DirectXCommon.h"
 
 float Camera::width_;
 float Camera::height_;
-//Matrix4x4 Camera::viewMat_;
-//ShericalCoordinate Camera::shericalCoordinate_;
 
 void Camera::Initialize(const float& width, const float& height, const PROJECTION_TYPE& type) {
 
@@ -22,6 +16,9 @@ void Camera::Initialize(const float& width, const float& height, const PROJECTIO
     InitializeTransform();
     UpdateProjectionMatrix();
 
+    //座標が確定後リソースを作成
+    CreateResource();
+
     sphericalCoordinate_.radius = 0.0f;
     sphericalCoordinate_.azimuthal = 0.0f;
     sphericalCoordinate_.polar = 0.0f;
@@ -31,19 +28,6 @@ void Camera::Initialize(const float& width, const float& height, const PROJECTIO
 Vector3 Camera::GetWorldPos() {
     return { worldMat_.m[3][0], worldMat_.m[3][1], worldMat_.m[3][2] };
 }
-
-#ifdef _DEBUG
-void Camera::EditTransform(const std::string& label) {
-    if (ImGui::TreeNode(label.c_str())) {
-        ImGui::DragFloat3("scale", &scale_.x, 0.01f, -std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
-        ImGui::SliderAngle("rotateX", &rotate_.x);
-        ImGui::SliderAngle("rotateY", &rotate_.y);
-        ImGui::SliderAngle("rotateZ", &rotate_.z);
-        ImGui::DragFloat3("translate", &translate_.x, 0.01f, -std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
-        ImGui::TreePop();
-    }
-}
-#endif // _DEBUG
 
 void Camera::InitializeTransform()
 {
@@ -65,6 +49,26 @@ void Camera::UpdateMatrix() {
 void Camera::UpdateWorldMatrix()
 {
     worldMat_ = MakeAffineMatrix(scale_, rotate_, translate_);
+    //カメラデータを挿入
+    UpdateData();
+}
+
+void Camera::CreateResource()
+{
+
+    cameraResource_ = DirectXCommon::CreateBufferResource(sizeof(CameraForGPU));
+
+    UpdateData();
+
+}
+
+void Camera::UpdateData()
+{
+    //書き込むためのアドレスを取得
+    cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraData_));
+    cameraData_->worldPosition = GetWorldPos();
+    ////書き込むためのアドレスを取得
+    //cameraResource_->Unmap(0, nullptr);
 }
 
 void Camera::UpdateViewMatrix()

@@ -667,6 +667,7 @@
     <None Include="externals\assimp\lib\Debug\assimp-vc143-mtd.pdb">
       <Filter>externals\assimp</Filter>
     </None>
+    <None Include="resources\shader\Camera.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\numbers.png">

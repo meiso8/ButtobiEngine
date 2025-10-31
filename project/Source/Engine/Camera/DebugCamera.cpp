@@ -23,6 +23,8 @@ void DebugCamera::Initialize(const float& width, const float& height, const PROJ
     translate_ = { 0.0f,0.0f,-30.0f };
     worldMat_ = MakeIdentity4x4();
 
+    CreateResource();
+
     viewMat_ = Inverse(MakeAffineMatrix(scale_, rotate_, translate_));
     projectionMat_ = MakePerspectiveFovMatrix(0.45f, width_ / height_, nearZ_, farZ_);
 
@@ -53,6 +55,9 @@ void DebugCamera::UpdateMatrix() {
 
     UpdateProjectionMatrix();
     viewProjectionMat_ = Multiply(viewMat_, projectionMat_);
+
+    //りそーすデータを更新
+    UpdateData();
 }
 
 void DebugCamera::UpdateProjectionMatrix()
@@ -143,7 +148,7 @@ void DebugCamera::MouseInputMove() {
         //後でoffsetをくわえる
         Vector2 deltaOffset = { 0.0f,0.0f };
         deltaOffset += Input::GetMousePos();
-        offset_ += { deltaOffset.x * InverseFPS,deltaOffset.y* InverseFPS * 2.0f };
+        offset_ += { deltaOffset.x* InverseFPS, deltaOffset.y* InverseFPS * 2.0f };
     } else if (Input::IsPressMouse(2)) {
         //視点の回転
         //中ボタン押し込み&&ドラッグ
