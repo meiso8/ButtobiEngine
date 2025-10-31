@@ -273,7 +273,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\hlslTypeToCpp.h" />
     <ClInclude Include="Source\Engine\Particle\Particle.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\MyEngine.h" />
-    <ClInclude Include="Source\Engine\DirectXCommon\Balloon.h" />
+    <ClInclude Include="Source\Engine\Mesh\Balloon.h" />
     <ClInclude Include="Source\Engine\PSO\BlendState.h" />
     <ClInclude Include="Source\Engine\Camera\Camera.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\CommandList.h" />
@@ -339,9 +339,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\DirectXCommon\SwapChain.h" />
     <ClInclude Include="Source\Engine\Math\TransformationMatrix.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\TransitionBarrier.h" />
-    <ClInclude Include="Source\Engine\DirectXCommon\VertexData.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\Viewport.h" />
-    <ClInclude Include="Source\Engine\DirectXCommon\Wave.h" />
+    <ClInclude Include="Source\Engine\Mesh\Wave.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\Window.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\StringUtility.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\SpriteCommon.h" />

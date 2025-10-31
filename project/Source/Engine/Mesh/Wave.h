@@ -1,10 +1,10 @@
 #pragma once
-#include"Vector3.h"
+#include"hlslTypeToCpp.h"
 
 //波の頂点アニメーション用
 struct Wave
 {
-    Vector3 direction;
+    float32_t3 direction;
     float padding;
     float time; // アニメーション用の時間変数
     float amplitude; //振幅

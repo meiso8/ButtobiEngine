@@ -353,7 +353,7 @@
     <ClInclude Include="Source\Engine\Math\AABB.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\Balloon.h">
+    <ClInclude Include="Source\Engine\Mesh\Balloon.h">
       <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Camera\Camera.h">
@@ -446,10 +446,7 @@
     <ClInclude Include="Source\Engine\Math\WorldTransform.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\Wave.h">
-      <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\VertexData.h">
+    <ClInclude Include="Source\Engine\Mesh\Wave.h">
       <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Sound\Sound.h">
