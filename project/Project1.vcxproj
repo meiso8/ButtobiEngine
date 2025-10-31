@@ -245,24 +245,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Camera\SpriteCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resources\shader\Object3d.PS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Development|x64'">Vertex</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Development|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\Object3d.VS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Development|x64'">Vertex</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Development|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Source\Application\System\Score.h" />
     <ClInclude Include="Source\Application\Scene\SceneChange.h" />
     <ClInclude Include="Source\Engine\Mesh\OBBCube.h" />
@@ -382,24 +364,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <None Include="externals\assimp\lib\Debug\assimp-vc143-mtd.pdb" />
-    <None Include="resources\shader\Camera.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png" />
     <Image Include="Resources\player.png" />
-    <Image Include="Resources\Textures\gameOver.png" />
-    <Image Include="Resources\Textures\numbers.png" />
-    <Image Include="Resources\Textures\particle.png" />
-    <Image Include="Resources\Textures\uvChecker.png" />
-    <Image Include="Resources\Textures\white1x1.png" />
     <Image Include="Resources\uvChecker.png" />
     <Image Include="Resources\white1x1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Media Include="Resources\Sounds\externals\attack.mp3" />
-    <Media Include="Resources\Sounds\externals\cheers!.mp3" />
-    <Media Include="Resources\Sounds\externals\playerHit.mp3" />
-    <Media Include="Resources\Sounds\externals\pour_drink.mp3" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

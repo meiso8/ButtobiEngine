@@ -329,14 +329,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resources\shader\Object3d.PS.hlsl">
-      <Filter>リソース ファイル\shader</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\Object3d.VS.hlsl">
-      <Filter>リソース ファイル\shader</Filter>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
       <Filter>externals\imgui</Filter>
     </ClInclude>
@@ -667,21 +659,8 @@
     <None Include="externals\assimp\lib\Debug\assimp-vc143-mtd.pdb">
       <Filter>externals\assimp</Filter>
     </None>
-    <None Include="resources\shader\Camera.hlsli" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Resources\Textures\numbers.png">
-      <Filter>リソース ファイル</Filter>
-    </Image>
-    <Image Include="Resources\Textures\particle.png">
-      <Filter>リソース ファイル</Filter>
-    </Image>
-    <Image Include="Resources\Textures\uvChecker.png">
-      <Filter>リソース ファイル</Filter>
-    </Image>
-    <Image Include="Resources\Textures\white1x1.png">
-      <Filter>リソース ファイル</Filter>
-    </Image>
     <Image Include="Resources\numbers.png">
       <Filter>リソース ファイル</Filter>
     </Image>
@@ -694,14 +673,5 @@
     <Image Include="Resources\white1x1.png">
       <Filter>リソース ファイル</Filter>
     </Image>
-    <Image Include="Resources\Textures\gameOver.png">
-      <Filter>リソース ファイル</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Media Include="Resources\Sounds\externals\attack.mp3" />
-    <Media Include="Resources\Sounds\externals\cheers!.mp3" />
-    <Media Include="Resources\Sounds\externals\playerHit.mp3" />
-    <Media Include="Resources\Sounds\externals\pour_drink.mp3" />
   </ItemGroup>
 </Project>
