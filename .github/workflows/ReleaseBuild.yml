@@ -5,7 +5,7 @@ on:
       - master
 env:
   #リポジトリのルートディレクトリを起点としたソリューションファイルのパス
-  SOLUTION_FILE_PATH: project/2102_ぶっとびミックス.sln
+  SOLUTION_FILE_PATH: project/GE3.sln
   #Visual Studioの構成（Debug/Release）
   CONFIGURATION: Release
 jobs:
