@@ -36,25 +36,9 @@ void Sound::LoadAllSound()
     handles_.resize(SOUNDS);
 
     //サウンドの読み込み
-    handles_[BGM1] = Load("Resources/Sounds/fruit_mix.mp3");
-    handles_[PICO] = Load("Resources/Sounds/pico.mp3");
-    handles_[CRACKER] = Load("Resources/Sounds/cracker_short.mp3");
-    handles_[CHARGE] = Load("Resources/Sounds/charge.mp3");
-    handles_[FRUIT_FALL] = Load("Resources/Sounds/poi.mp3");
-
-    handles_[ATTACK] = Load("Resources/Sounds/externals/attack.mp3");
-    handles_[CHREERS] = Load("Resources/Sounds/externals/cheers!.mp3");
-    handles_[PLAYER_HIT] = Load("Resources/Sounds/externals/playerHit.mp3");
-    handles_[POUR_DRINK] = Load("Resources/Sounds/externals/pour_drink.mp3");
-    handles_[YEAH] = Load("Resources/Sounds/yeah.mp3");
-    handles_[GAME_OVER] = Load("Resources/Sounds/gameOver.mp3");
-    handles_[BOUND] = Load("Resources/Sounds/externals/biyon.mp3");
-    handles_[FULL_CHARGE] = Load("Resources/Sounds/externals/up.mp3");
-    handles_[ALARM] = Load("Resources/Sounds/alarm.mp3");
-
-    handles_[ANNOUNCE] = Load("Resources/Sounds/externals/announce.mp3");
-    handles_[ANNOUNCE_CLOSE] = Load("Resources/Sounds/externals/announce_close.mp3");
-    handles_[ANNOUNCE_FRUIT] = Load("Resources/Sounds/externals/announce_fruit.mp3");
+    handles_[BGM1] = Load("Resource/Sounds/fruit_mix.mp3");
+    handles_[PICO] = Load("Resource/Sounds/pico.mp3");
+    handles_[CRACKER] = Load("Resource/Sounds/cracker_short.mp3");
 
 }
 

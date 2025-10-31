@@ -157,7 +157,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Application\System\Score.cpp" />
     <ClCompile Include="Source\Application\Scene\SceneChange.cpp" />
     <ClCompile Include="Source\Engine\Mesh\OBBCube.cpp" />
     <ClCompile Include="Source\Engine\Particle\AppleCrashParticle.cpp" />
@@ -202,7 +201,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\DirectXCommon\ShaderResourceView.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\ScissorRect.cpp" />
     <ClCompile Include="Source\Engine\PSO\BlendState.cpp" />
-    <ClCompile Include="Source\Engine\DirectXCommon\CompileShader.cpp" />
+    <ClCompile Include="Source\Engine\PSO\CompileShader.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\Log.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\Fence.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\DebugError.cpp" />
@@ -245,7 +244,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Camera\SpriteCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Application\System\Score.h" />
     <ClInclude Include="Source\Application\Scene\SceneChange.h" />
     <ClInclude Include="Source\Engine\Mesh\OBBCube.h" />
     <ClInclude Include="Source\Engine\Particle\AppleCrashParticle.h" />
@@ -280,7 +278,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Camera\Camera.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\CommandList.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\CommandQueue.h" />
-    <ClInclude Include="Source\Engine\DirectXCommon\CompileShader.h" />
+    <ClInclude Include="Source\Engine\PSO\CompileShader.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\ModelConfig.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\CrashHandler.h" />
     <ClInclude Include="Source\Engine\Mesh\Cube.h" />

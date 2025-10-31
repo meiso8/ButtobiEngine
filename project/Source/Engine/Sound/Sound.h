@@ -30,21 +30,7 @@ public:
         BGM1,
         PICO,
         CRACKER,
-        CHARGE,//チャージ
-        FRUIT_FALL,//フルーツを落とす
-        ATTACK,//アタック
-        CHREERS,//乾杯
-        PLAYER_HIT,//敵に当たった時の音
-        POUR_DRINK,//飲み物を注ぐ
-        YEAH,//イエーイ
-        GAME_OVER,//ゲームオーバー
-        BOUND,//バウンドする
-        FULL_CHARGE,//フルチャージ
-        ALARM,//アラーム
 
-        ANNOUNCE,
-        ANNOUNCE_CLOSE,
-        ANNOUNCE_FRUIT,
 
         SOUNDS
     };

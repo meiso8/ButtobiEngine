@@ -24,40 +24,8 @@ void ModelManager::LoadAllModel()
 {
     handle_.resize(MODELS);
 
-    handle_[HEAD] = Load("Resources/Models/player", "head.obj");
-    handle_[BODY] = Load("Resources/Models/player", "body.obj");
-    handle_[LEFTARM] = Load("Resources/Models/player/", "armL.obj");
-    handle_[RIGHTARM] = Load("Resources/Models/player", "armR.obj");
-    handle_[LEFTLEG] = Load("Resources/Models/player", "legL.obj");
-    handle_[RIGHTLEG] = Load("Resources/Models/player", "legR.obj");
-   
-    handle_[WORLD] = Load("Resources/Models/world", "world.obj");
-    
-    handle_[PARTICLE] = Load("Resources/Models/particle", "particle.obj");
-
-    handle_[STAGE] = Load("Resources/Models/stage", "stage.obj");
-
-    std::string resourceString = "Resources/Models/";
-    std::string titleString = "titleString";
-    std::string titleStrings[8] = { "bu", "tt", "to", "bi", "mi", "kk", "ku", "su" };
-    std::string objString = ".obj";
-
-    for (int i = 0; i < 8; i++) {
-        std::string fileName = titleString + titleStrings[i];
-        std::string directoryPath = resourceString + fileName;
-        std::string modelname = fileName + objString;
-        handle_[TITLE_BU+i] = Load(directoryPath, modelname);
-    }
-
-    handle_[JUICE_CUP] = Load("Resources/Models/juiceCup", "juiceCup.obj");
-
-    handle_[FRUIT_APPLE] = Load("Resources/Models/apple", "apple.obj");
-
-    handle_[TABLE] = Load("Resources/Models/cube", "box.obj");
-
-    handle_[BACK_GROUND] = Load("Resources/Models/stage", "backGround.obj");
-    handle_[EFFECT] = Load("Resources/Models/effect", "effect.obj");
-
+    handle_[WORLD] = Load("Resource/Models/world", "world.obj");
+ 
 }
 
 void ModelManager::Finalize()

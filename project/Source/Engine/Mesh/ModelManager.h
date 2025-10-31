@@ -7,37 +7,9 @@ private:
 public:
     enum MODEL_HANDLE {
 
-        //プレイヤー
-        HEAD,
-        BODY,
-        LEFTARM,
-        RIGHTARM,
-        LEFTLEG,
-        RIGHTLEG,
-      
         WORLD,
       
-        PARTICLE,
 
-        STAGE,
-
-        TITLE_BU, //ぶ
-        TITLE_TT, // っ
-        TITLE_TO, // と
-        TITLE_BI, // び
-        TITLE_MI, // み
-        TITLE_KK, // っ
-        TITLE_KU, // く
-        TITLE_SU, // す
-
-        JUICE_CUP,
-
-        FRUIT_APPLE,//リンゴ
-
-        TABLE,
-        BACK_GROUND,//背景
-
-        EFFECT,
         MODELS,
     };
 
