@@ -20,3 +20,21 @@ void CollisionManager::CheckAllCollisions() {
 		}
 	}
 }
+
+void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* colliderB) {
+	Sphere sphereA = {
+		.center = colliderA->GetWorldPosition(),
+		.radius = colliderA->GetRadius()
+	};
+
+	Sphere sphereB = {
+		.center = colliderB->GetWorldPosition(),
+		.radius = colliderB->GetRadius()
+	};
+
+	// 衝突判定
+	if (IsCollision(sphereA, sphereB)) {
+		colliderA->OnCollision();
+		colliderB->OnCollision();
+	}
+}
