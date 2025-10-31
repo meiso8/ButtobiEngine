@@ -7,8 +7,10 @@
 #include"RootSignature.h"
 #include "BlendState.h"
 #include<list>
+#include<memory>
 #include<cstdint>
 #include"AccelerationField.h"
+
 
 class Camera;
 class ShaderResourceView;
@@ -31,32 +33,34 @@ struct Particle {
     float currentTime;
 };
 
-std::list<Particle> Emit(const Emitter& emitter);
-
-
-
 struct ParticleForGPU {
     Matrix4x4 WVP;
     Matrix4x4 World;
     Vector4 color;
 };
 
-class ParticleMesh
+std::list<Particle> Emit(const bool& isRandom, const Emitter& emitter, const Vector3& scale = { 1.0f,1.0f,1.0f }, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
+Particle MakeNewParticle(const bool& isRandom, const Vector3& translate, const Vector3& scale = { 1.0f,1.0f,1.0f }, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
+
+class ParticleManager
 {
 public:
     const uint32_t kNumMaxInstance = 100;//インスタンス数
     std::list<Particle>particles;
-    bool useBillboard_ = false;
     Emitter emitter_{};
     AccelerationField accelerationField;
-private:
+    bool useBillboard_ = false;
+protected:
 
     const float kDeltaTime = 1.0f / 60.0f;
 
+
+    uint32_t numInstance_ = 0;
     ParticleForGPU* instancingData = nullptr;
-    ModelData modelData_;
-    MaterialResource materialResource_{};
+    std::unique_ptr<ModelData> modelData_ = nullptr;
+    std::unique_ptr < MaterialResource> materialResource_ = nullptr;
     RootSignature* rootSignature_ = nullptr;
+    static ID3D12GraphicsCommandList* commandList_;
 
     D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU;
     D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU;
@@ -67,19 +71,33 @@ private:
     VertexData* vertexBufferData_ = nullptr;
     uint32_t textureHandle_ = 0;
 
-    Matrix4x4 backToFrontMatrix;
 
+    Matrix4x4 backToFrontMatrix;
     Matrix4x4 billboardMatrix;
     Matrix4x4 worldMatrix;
-
+    Matrix4x4 worldViewProjectionMatrix;
 public:
-    void Initialize(uint32_t textureHandle);
-    static Particle MakeNewParticle(const Vector3& translate);
-    void Draw(Camera& camera,uint32_t blendMode = BlendMode::kBlendModeAdd);
-    void Update();
+    virtual ~ParticleManager();
+    void Create(uint32_t textureHandle, int modelHandle = -1);
 
-private:
-    void CreateModelData();
+    virtual void Update(Camera& camera);
+    virtual void EmitParticle(const bool& isRandom, const Vector3& scale, const Vector4& color);
+    void TimerUpdate(const bool& isRandom, const Vector3& scale, const Vector4& color);
+
+    void Draw(uint32_t blendMode = BlendMode::kBlendModeAdd);
+    void Finalize();
+
+
+    void InitEmitter();
+    void InitAccelerationField();
+
+protected:
+    void CreateModelData(const uint32_t& textureHandle, const int& modelHandle);
+    void CreateVertexBufferResource();
     void CreateTransformationMatrix();
+    void UpdateBillBordMatrix(Camera& camera);
+    void UpdateWorldMatrixForBillBord(Particle& particleItr);
+    void UpdateWorldMatrix(Particle& particleItr);
+    void IsCollisionFieldArea(Particle& particleItr);
 };
 
