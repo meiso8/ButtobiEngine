@@ -3,7 +3,7 @@
 void SceneChange::Initialize()
 {
     isEndScene_ = false;
-    isSceneStart_ = false;
+    isStartScene_ = false;
     endTimer_ = 0;
     startTimer_ = 0;
 }
@@ -14,7 +14,7 @@ void SceneChange::UpdateStart(uint32_t endTime)
     startTimer_++;
     if (startTimer_ > endTime) {
         //シーンが始まるよ！
-        isSceneStart_ = true;
+        isStartScene_ = true;
     }
 }
 

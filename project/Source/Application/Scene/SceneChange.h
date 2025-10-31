@@ -13,6 +13,6 @@ public:
     uint32_t startTimer_ = 0;
     uint32_t endTimer_ = 0;
     bool isEndScene_ = false;
-    bool isSceneStart_ = false;
+    bool isStartScene_ = false;
 };
 

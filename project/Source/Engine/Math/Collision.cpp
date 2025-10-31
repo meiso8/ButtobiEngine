@@ -27,15 +27,6 @@ Vector3 ClosestPoint(const Vector3 &point, const AABB &aabb) {
 	return result;
 }
 
-Vector3 ClosestPoint(const Vector3 &point, const OBB &obb) {
-	Matrix4x4 obbWorldMatrix = MakeOBBMatrix(obb);
-	Matrix4x4 inverseOBBWorldMatrix = Inverse(obbWorldMatrix);
-	Vector3 centerInOBBLocalSpace = CoordinateTransform(point, inverseOBBWorldMatrix);
-	AABB aabbInOBBLocalSpace{ .min = -obb.halfSizes, .max = obb.halfSizes };
-	Vector3 closestPointLocal = ClosestPoint(centerInOBBLocalSpace, aabbInOBBLocalSpace);
-	Vector3 closestPointWorld = CoordinateTransform(closestPointLocal, obbWorldMatrix);
-	return closestPointWorld;
-}
 
 Vector3 ClosestPoint(const Segment &segment, const Plane &plane) {
 	float dot = Dot(plane.normal, segment.diff);
@@ -66,18 +57,6 @@ Vector3 ClosestPoint(const Segment &segment, const AABB &aabb) {
 	float tmin = std::max(std::max(tNear.x, tNear.y), tNear.z);
 	tmin = std::clamp(tmin, 0.0f, 1.0f);
 	return segment.origin + tmin * segment.diff;
-}
-
-Vector3 ClosestPoint(const Segment &segment, const OBB &obb) {
-	Matrix4x4 obbWorldMatrix = MakeOBBMatrix(obb);
-	Matrix4x4 inverseOBBWorldMatrix = Inverse(obbWorldMatrix);
-	Vector3 startInOBBLocalSpace = CoordinateTransform(segment.origin, inverseOBBWorldMatrix);
-	Vector3 endInOBBLocalSpace = CoordinateTransform(segment.origin + segment.diff, inverseOBBWorldMatrix);
-	Segment segmentInOBBLocalSpace{ .origin = startInOBBLocalSpace, .diff = endInOBBLocalSpace - startInOBBLocalSpace };
-	AABB aabbInOBBLocalSpace{ .min = -obb.halfSizes, .max = obb.halfSizes };
-	Vector3 closestPointLocal = ClosestPoint(segmentInOBBLocalSpace, aabbInOBBLocalSpace);
-	Vector3 closestPointWorld = CoordinateTransform(closestPointLocal, obbWorldMatrix);
-	return closestPointWorld;
 }
 
 Vector3 ClosestPoint(const Segment &segment1, const Segment &segment2) {
@@ -146,32 +125,12 @@ Vector3 Normal(const Vector3 &point, const AABB &aabb) {
 	return normal;
 }
 
-Vector3 Normal(const Vector3 &point, const OBB &obb) {
-	Matrix4x4 obbWorldMatrix = MakeOBBMatrix(obb);
-	Matrix4x4 inverseOBBWorldMatrix = Inverse(obbWorldMatrix);
-	Vector3 pointInOBBLocalSpace = CoordinateTransform(point, inverseOBBWorldMatrix);
-	AABB aabbInOBBLocalSpace{ .min = -obb.halfSizes, .max = obb.halfSizes };
-	Vector3 normalLocal = Normal(pointInOBBLocalSpace, aabbInOBBLocalSpace);
-	Vector3 normalWorld = obb.axis[0] * normalLocal.x + obb.axis[1] * normalLocal.y + obb.axis[2] * normalLocal.z;
-	return Normalize(normalWorld);
-}
 
 Vector3 Normal(const Segment &segment, const AABB &aabb) {
 	Vector3 closestPoint = ClosestPoint(segment, aabb);
 	return Normal(ClosestPoint(closestPoint, aabb), aabb);
 }
 
-Vector3 Normal(const Segment &segment, const OBB &obb) {
-	Matrix4x4 obbWorldMatrix = MakeOBBMatrix(obb);
-	Matrix4x4 inverseOBBWorldMatrix = Inverse(obbWorldMatrix);
-	Vector3 startInOBBLocalSpace = CoordinateTransform(segment.origin, inverseOBBWorldMatrix);
-	Vector3 endInOBBLocalSpace = CoordinateTransform(segment.origin + segment.diff, inverseOBBWorldMatrix);
-	Segment segmentInOBBLocalSpace{ .origin = startInOBBLocalSpace, .diff = endInOBBLocalSpace - startInOBBLocalSpace };
-	AABB aabbInOBBLocalSpace{ .min = -obb.halfSizes, .max = obb.halfSizes };
-	Vector3 normalLocal = Normal(segmentInOBBLocalSpace, aabbInOBBLocalSpace);
-	Vector3 normalWorld = obb.axis[0] * normalLocal.x + obb.axis[1] * normalLocal.y + obb.axis[2] * normalLocal.z;
-	return Normalize(normalWorld);
-}
 
 float Distance(const Vector3 &point, const Plane &plane) {
 	return std::abs(Dot(point, plane.normal) - plane.distance);
@@ -182,10 +141,6 @@ float Distance(const Vector3 &point, const AABB &aabb) {
 	return Length(closestPoint - point);
 }
 
-float Distance(const Vector3 &point, const OBB &obb) {
-	Vector3 closestPoint = ClosestPoint(point, obb);
-	return Length(closestPoint - point);
-}
 
 float Distance(const Segment &segment, const Plane &plane) {
 	Vector3 closestPoint = ClosestPoint(segment, plane);
@@ -197,10 +152,6 @@ float Distance(const Segment &segment, const AABB &aabb) {
 	return Distance(closestPoint, aabb);
 }
 
-float Distance(const Segment &segment, const OBB &obb) {
-	Vector3 closestPoint = ClosestPoint(segment, obb);
-	return Distance(closestPoint, obb);
-}
 
 float Distance(const Segment &segment1, const Segment &segment2) {
 	//線分同士の最近接点を求める
@@ -218,26 +169,6 @@ float PenetrationDepth(const Sphere &sphere, const Plane &plane) {
 float PenetrationDepth(const Sphere &sphere, const AABB &aabb) {
 	float distance = Distance(sphere.center, aabb);
 	return sphere.radius - distance;
-}
-
-float PenetrationDepth(const Sphere &sphere, const OBB &obb) {
-	float distance = Distance(sphere.center, obb);
-	return sphere.radius - distance;
-}
-
-float PenetrationDepth(const Capsule &capsule, const Plane &plane) {
-	float distance = Distance(capsule.segment, plane);
-	return capsule.radius - distance;
-}
-
-float PenetrationDepth(const Capsule &capsule, const AABB &aabb) {
-	float distance = Distance(capsule.segment, aabb);
-	return capsule.radius - distance;
-}
-
-float PenetrationDepth(const Capsule &capsule, const OBB &obb) {
-	float distance = Distance(capsule.segment, obb);
-	return capsule.radius - distance;
 }
 
 bool IsCollision(const Sphere &s1, const Sphere &s2) {
@@ -476,24 +407,4 @@ bool IsCollision(const Sphere &sphere, const Plane &plane) {
 
 bool IsCollision(const Sphere &sphere, const AABB &aabb) {
 	return Distance(sphere.center, aabb) <= sphere.radius;
-}
-
-bool IsCollision(const Sphere &sphere, const OBB &obb) {
-	return Distance(sphere.center, obb) <= sphere.radius;
-}
-
-bool IsCollision(const Capsule &capsule, const Plane &plane) {
-	return Distance(capsule.segment, plane) <= capsule.radius;
-}
-
-bool IsCollision(const Capsule &capsule, const AABB &aabb) {
-	return Distance(capsule.segment, aabb) <= capsule.radius;
-}
-
-bool IsCollision(const Capsule &capsule, const OBB &obb) {
-	return Distance(capsule.segment, obb) <= capsule.radius;
-}
-
-bool IsCollision(const Capsule &capsule1, const Capsule &capsule2) {
-	return Distance(capsule1.segment, capsule2.segment) <= capsule1.radius + capsule2.radius;
 }

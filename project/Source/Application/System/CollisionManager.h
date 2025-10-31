@@ -16,27 +16,6 @@ public:
     /// @brief 衝突判定と応答
     void CheckAllCollisions();
 
-    /// @brief スコアポインタを設定する
-    /// @param score スコアポインタ
-    void SetScorePointer(uint32_t* score) { score_ = score; }
-
-    /// @brief スコアポインタを設定する
-/// @param score スコアポインタ
-    void SetComboPointer(uint32_t* combo) { combo_ = combo; }
-    void SetComboTimerPtr(float* comBoTimer) { comboTimer_ = comBoTimer ;}
-
-    /// @brief スコア加算するかのポインタ
-    /// @param flag フラグ
-	void SetIsScoreUp(bool* flag) { isScoreUp_ = flag; };
-
-    /// @brief ジュースポイントを設定する
-    /// @param jMeter メーター
-	void SetJuiceMeter(uint32_t* meter) { juiceMeter_ = meter; };
-
-    /// @brief コンボの花火出すかのポインタ
-	/// @param flag フラグ
-	void SetIsComboSparkle(bool* flag) { isComboSpakle_ = flag; };
-
 private:
     static inline constexpr float deltaTime = 1.0f / 60.0f; // デルタタイム
     std::list<Collider*> colliders_; // コライダーのリスト

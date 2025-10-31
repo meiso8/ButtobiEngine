@@ -1,12 +1,11 @@
 #pragma once
 #include"MeshCommon.h"
-struct OBB;
 
 class OBBCube :public MeshCommon
 {
 public:
     ~OBBCube();
-    void SetVertex(const OBB& obb);
+    void SetVertex(const Vector3(&vertices)[8]);
 
     void Create(uint32_t& textureHandle);
 

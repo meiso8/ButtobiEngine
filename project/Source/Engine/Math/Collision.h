@@ -4,8 +4,6 @@
 #include "Line.h"
 #include "Triangle.h"
 #include "AABB.h"
-#include "OBB.h"
-#include "Capsule.h"
 
 /// @brief 反射ベクトルを求める関数
 /// @param input 入射ベクトル
@@ -31,11 +29,6 @@ Vector3 ClosestPoint(const Vector3 &point, const Plane &plane);
 /// @return 最近接点
 Vector3 ClosestPoint(const Vector3 &point, const AABB &aabb);
 
-/// @brief 点とOBBの最近接点を求める
-/// @param point 点
-/// @param obb OBB
-/// @return 最近接点
-Vector3 ClosestPoint(const Vector3 &point, const OBB &obb);
 
 /// @brief 線分と平面の最近接点を求める関数
 /// @param segment 線分
@@ -49,12 +42,6 @@ Vector3 ClosestPoint(const Segment &segment, const Plane &plane);
 /// @return 最近接点
 Vector3 ClosestPoint(const Segment &segment, const AABB &aabb);
 
-/// @brief 線分とOBBの最近接点を求める
-/// @param segment 線分
-/// @param obb OBB
-/// @return 最近接点
-Vector3 ClosestPoint(const Segment &segment, const OBB &obb);
-
 /// @brief 線分と線分の最近接点を求める
 /// @param segment1 線分1
 /// @param segment2 線分2
@@ -67,23 +54,12 @@ Vector3 ClosestPoint(const Segment &segment1, const Segment &segment2);
 /// @return 衝突面法線
 Vector3 Normal(const Vector3 &point, const AABB &aabb);
 
-/// @brief 点とOBBの衝突面法線を求める
-/// @param point 点
-/// @param obb OBB
-/// @return 衝突面法線
-Vector3 Normal(const Vector3 &point, const OBB &obb);
-
 /// @brief 線分とAABBの衝突面法線を求める
 /// @param segment 線分
 /// @param aabb AABB
 /// @return 衝突面法線
 Vector3 Normal(const Segment &segment, const AABB &aabb);
 
-/// @brief 線分とAABBの衝突面法線を求める
-/// @param segment 線分
-/// @param obb OBB
-/// @return 衝突面法線
-Vector3 Normal(const Segment &segment, const OBB &obb);
 
 /// @brief 点と平面の距離を求める
 /// @param point 点
@@ -97,11 +73,6 @@ float Distance(const Vector3 &point, const Plane &plane);
 /// @return 距離
 float Distance(const Vector3 &point, const AABB &aabb);
 
-/// @brief 点とOBBの距離を求める
-/// @param point 点
-/// @param obb OBB
-/// @return 距離
-float Distance(const Vector3 &point, const OBB &obb);
 
 /// @brief 線分と平面の距離を求める関数
 /// @param segment 線分
@@ -115,11 +86,6 @@ float Distance(const Segment &segment, const Plane &plane);
 /// @return 距離
 float Distance(const Segment &segment, const AABB &aabb);
 
-/// @brief 線分とOBBの距離を求める関数
-/// @param segment 線分
-/// @param obb OBB
-/// @return 距離
-float Distance(const Segment &segment, const OBB &obb);
 
 /// @brief 線分と線分の距離を求める
 /// @param segment1 線分1
@@ -138,30 +104,6 @@ float PenetrationDepth(const Sphere &sphere, const Plane &plane);
 /// @param aabb AABB
 /// @return 貫入量
 float PenetrationDepth(const Sphere &sphere, const AABB &aabb);
-
-/// @brief 球とOBBの貫入量を求める
-/// @param sphere 球
-/// @param obb OBB
-/// @return 貫入量
-float PenetrationDepth(const Sphere &sphere, const OBB &obb);
-
-/// @brief カプセルと平面の貫入量を求める
-/// @param capsule カプセル
-/// @param plane 平面
-/// @return 貫入量
-float PenetrationDepth(const Capsule &capsule, const Plane &plane);
-
-/// @brief カプセルとAABBの貫入量を求める
-/// @param capsule カプセル
-/// @param aabb AABB
-/// @return 貫入量
-float PenetrationDepth(const Capsule &capsule, const AABB &aabb);
-
-/// @brief カプセルとOBBの貫入量を求める
-/// @param capsule カプセル
-/// @param obb OBB
-/// @return 貫入量
-float PenetrationDepth(const Capsule &capsule, const OBB &obb);
 
 /// @brief 球と球の衝突判定
 /// @param s1 球1
@@ -228,33 +170,3 @@ bool IsCollision(const Sphere &sphere, const Plane &plane);
 /// @param aabb AABB
 /// @return 判定結果
 bool IsCollision(const Sphere &sphere, const AABB &aabb);
-
-/// @brief 球とOBBの衝突判定
-/// @param sphere 球
-/// @param obb OBB
-/// @return 判定結果
-bool IsCollision(const Sphere &sphere, const OBB &obb);
-
-/// @brief カプセルと平面の衝突判定
-/// @param capsule カプセル
-/// @param plane 平面
-/// @return 判定結果
-bool IsCollision(const Capsule &capsule, const Plane &plane);
-
-/// @brief カプセルとAABBの衝突判定
-/// @param capsule 線分
-/// @param aabb AABB
-/// @return 判定結果
-bool IsCollision(const Capsule &capsule, const AABB &aabb);
-
-/// @brief カプセルとOBBの衝突判定
-/// @param capsule 線分
-/// @param obb OBB
-/// @return 判定結果
-bool IsCollision(const Capsule &capsule, const OBB &obb);
-
-/// @brief カプセルとカプセルの衝突判定
-/// @param capsule1 カプセル1
-/// @param capsule2 カプセル2
-/// @return 判定結果
-bool IsCollision(const Capsule &capsule1, const Capsule &capsule2);

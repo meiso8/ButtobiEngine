@@ -1,8 +1,5 @@
 #include"MyEngine.h"
-#include"GameScene.h"
 #include"TitleScene.h"
-#include"GameClearScene.h"
-#include"GameOverScene.h"
 
 #define WIN_WIDTH 1280
 #define WIN_HEIGHT 720
@@ -15,7 +12,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // ==============================================//↓基本いじらない↓//============================================
     //エンジンの生成
     std::unique_ptr<MyEngine> myEngine = std::make_unique<MyEngine>();
-    myEngine->Create(L"2102_ぶっとびミックス", WIN_WIDTH, WIN_HEIGHT);
+    myEngine->Create(L"ぶっとびヨシダエンジン！", WIN_WIDTH, WIN_HEIGHT);
 
     // ==============================================//↑基本いじらない↑//============================================
 
@@ -28,42 +25,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
     enum Scene {
         kTitleScene,
-        kGameScene,
-        kGameClearScene,
-        kGameOverScene,
     };
 
     const char* sceneName[] = {
        "TitleScene",
-       "GameScene",
-       "GameClearScene",
-       "GameOverScene",
     };
 
     std::vector<std::unique_ptr<SceneManager>> scenes;
     // タイトルシーンの生成
     scenes.push_back(std::make_unique < TitleScene>());
-    // ゲームシーンのインスタンスの取得
-    scenes.push_back(std::make_unique < GameScene>());
-    // ゲームクリアシーンの生成
-    scenes.push_back(std::make_unique < GameClearScene>());
-    // ゲームオーバーシーンの生成
-    scenes.push_back(std::make_unique<GameOverScene>());
-
-    GameScene* gameScene = dynamic_cast<GameScene*>(scenes[kGameScene].get());
-    GameClearScene* gameClearScene = dynamic_cast<GameClearScene*>(scenes[kGameClearScene].get());
-    gameClearScene->SetScore(gameScene->GetScoreClass());
-    gameClearScene->SetShutter(gameScene->GetShutter());
-    GameOverScene* gameOverScene = dynamic_cast<GameOverScene*>(scenes[kGameOverScene].get());
-    gameOverScene->SetScore(gameScene->GetScoreClass());
-    gameOverScene->SetShutter(gameScene->GetShutter());
 
     //シーンのインデックス
     int sceneIndex = kTitleScene;
-#ifdef _DEBUG
-    // シーンのインデックス
-    sceneIndex = kGameScene;
-#endif // _DEBUG
 
     // 現在のシーン
     SceneManager* currentScene = nullptr;
@@ -87,45 +60,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #ifdef _DEBUG
 
         if (Input::IsTriggerKey(DIK_RETURN)) {
-            sceneIndex = (sceneIndex + 1) % scenes.size(); // 次のシーンへ
-            currentScene = scenes[sceneIndex].get();
             // 現在のシーンの初期化
             currentScene->Initialize();
         }
 
 #endif // _DEBUG
 
-        if (scenes[kTitleScene]->GetIsEndScene()) {
-            currentScene->SetIsEndScene(false);
-            currentScene = scenes[kGameScene].get();
-            // 現在のシーンの初期化
-            currentScene->Initialize();
-        }
-
-        if (scenes[kGameScene]->GetIsEndScene()) {
-            currentScene->SetIsEndScene(false);
-            if (gameScene->GetIsGameClear()) {
-                currentScene = scenes[kGameClearScene].get();
-            } else if (gameScene->GetIsGameOver()) {
-                currentScene = scenes[kGameOverScene].get();
-            }
-            // 現在のシーンの初期化
-            currentScene->Initialize();
-        }
-
-        if (scenes[kGameClearScene]->GetIsEndScene() || scenes[kGameOverScene]->GetIsEndScene()) {
-            currentScene->SetIsEndScene(false);
-            currentScene = scenes[kTitleScene].get();
-            // 現在のシーンの初期化
-            currentScene->Initialize();
-        }
-
         // エンジンの更新処理
         myEngine->Update();
 
 #ifdef _DEBUG
         // デバック用
-
         DebugUI::CheckColor(screenColor, "screenColor");
         ImGui::Text("%s", sceneName[sceneIndex]);
         
