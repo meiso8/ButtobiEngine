@@ -20,7 +20,7 @@
     <ProjectGuid>{0bdf6d0f-7dc9-4be0-84ee-3f1a8b776470}</ProjectGuid>
     <RootNamespace>Project1</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>GE3</ProjectName>
+    <ProjectName>CG3</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
