@@ -157,7 +157,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Application\System\Score.cpp" />
     <ClCompile Include="Source\Application\Scene\SceneChange.cpp" />
     <ClCompile Include="Source\Engine\Mesh\OBBCube.cpp" />
     <ClCompile Include="Source\Engine\Particle\AppleCrashParticle.cpp" />
