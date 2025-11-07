@@ -4,6 +4,7 @@
 ModelConfig* ModelConfig::instance_ = nullptr;
 RootSignature* ModelConfig::rootSignature = nullptr;
 ID3D12Resource* ModelConfig::directionalLightResource = nullptr;//共通のライトリソース
+
 ModelConfig* ModelConfig::GetInstance()
 {
     if (instance_ == nullptr) {
@@ -17,5 +18,14 @@ void ModelConfig::Initialize(RootSignature* rootSignature, const Microsoft::WRL:
     this->rootSignature =rootSignature;
     this->directionalLightResource =directionalLightResource.Get();
 
+}
+
+void ModelConfig::Finalize()
+{
+    if (instance_ != nullptr) {
+        delete instance_;
+        instance_ = nullptr;
+    }
+   
 }
 

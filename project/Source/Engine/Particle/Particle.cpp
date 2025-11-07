@@ -63,7 +63,7 @@ void ParticleManager::Create(uint32_t textureHandle, int modelHandle)
     CreateTransformationMatrix();
     //マテリアルリソースを作成 //ライトなし
     materialResource_ = std::make_unique<MaterialResource>();
-    materialResource_->CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, MaterialResource::LIGHTTYPE::NONE);
+    materialResource_->CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, LightMode::klightModeNone);
 
     CreateVertexBufferResource();
 

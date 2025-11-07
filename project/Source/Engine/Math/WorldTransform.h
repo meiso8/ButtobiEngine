@@ -3,6 +3,7 @@
 #include"Vector3.h"
 #include"Matrix4x4.h"
 #include"Matrix3x3.h"
+#include<numbers>
 
 class WorldTransform {
 public://一旦public
@@ -14,6 +15,7 @@ public://一旦public
 public:
     void Initialize();
     Vector3 GetWorldPosition()const;
+    void Parent(const WorldTransform& parentWorldTransform);
 };
 
 class WorldTransform2D {

@@ -5,7 +5,7 @@
 #include"Input.h"
 #include"DirectXCommon.h"
 
-#include"PSO/PSO.h"
+#include"PSO.h"
 #include"Texture.h"
 
 #include"ModelManager.h"
@@ -30,6 +30,7 @@ public:
 
     void Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight);
     void Update();
+    void Debug();
     void PreCommandSet(Vector4& screenColor);
     void PostCommandSet();
     void Finalize();
@@ -37,7 +38,6 @@ public:
     static Window& GetWC() { return *wc; };
     static PSO* GetPSO() { return pso.get(); }
     static DirectionalLight* GetDirectionalLightData() { return directionalLightData; }
-    static void SetBlendMode(uint32_t blendMode = kBlendModeNormal, uint32_t cullMode = kCullModeBack);
 
 private:
 

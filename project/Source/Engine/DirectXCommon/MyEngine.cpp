@@ -2,7 +2,7 @@
 #include"SpriteCommon.h"
 #include"TextureManager.h"
 #include<algorithm>
-#include"Camera/SpriteCamera.h"
+#include"SpriteCamera.h"
 #include"DrawGrid.h"
 
  std::unique_ptr<PSO> MyEngine::pso = nullptr;
@@ -84,7 +84,7 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
 
 #ifdef _DEBUG
     //グリット描画
-    DrawGrid::Initialize();
+    DrawGrid::Create();
 #endif
     //ファイルへのログ出力
     LogFile::Log("LoopStart");
@@ -97,6 +97,11 @@ void MyEngine::Update() {
     input->Update();
     directXCommon->Update();
 
+}
+
+void MyEngine::Debug()
+{
+    DebugUI::CheckFPS();
 }
 
 void MyEngine::PreCommandSet(Vector4& screenColor) {
@@ -122,6 +127,7 @@ void MyEngine::Finalize() {
 
     SpriteCommon::Finalize();
 
+    modelConfig_->Finalize();
     modelConfig_.reset();
 
     if (directionalLightResource) {
@@ -139,13 +145,5 @@ void MyEngine::Finalize() {
     wc.reset();
 
     logFile.reset();
-
-}
-
-
-//ここでBlenModeを変更する
-void MyEngine::SetBlendMode(uint32_t blendMode,uint32_t cullMode) {
-
-    DirectXCommon::GetCommandList()->SetPipelineState(pso->GetGraphicsPipelineState(blendMode, cullMode).Get());//PSOを設定
 
 }

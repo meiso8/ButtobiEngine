@@ -3,7 +3,7 @@
 #include"DirectXCommon.h"
 #include"commandList.h"
 #include"PSO/RootSignature.h"
-#include"VertexData.h"
+
 class PSO;
 
 class SpriteCommon

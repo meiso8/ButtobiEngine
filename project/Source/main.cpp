@@ -12,7 +12,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // ==============================================//↓基本いじらない↓//============================================
     //エンジンの生成
     std::unique_ptr<MyEngine> myEngine = std::make_unique<MyEngine>();
-    myEngine->Create(L"ぶっとびヨシダエンジン！", WIN_WIDTH, WIN_HEIGHT);
+    myEngine->Create(L"ぶっとびEngine!", WIN_WIDTH, WIN_HEIGHT);
 
     // ==============================================//↑基本いじらない↑//============================================
 
@@ -71,11 +71,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #ifdef _DEBUG
         // デバック用
+        myEngine->Debug();
         DebugUI::CheckColor(screenColor, "screenColor");
         ImGui::Text("%s", sceneName[sceneIndex]);
-        
         DebugUI::CheckDirectionalLight(lightType);
-        DebugUI::CheckFPS();
+
         currentScene->Debug();
 
 #endif // _DEBUG

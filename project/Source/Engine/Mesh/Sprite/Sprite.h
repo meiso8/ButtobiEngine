@@ -1,6 +1,7 @@
 #pragma once  
 
-#include"PSO/PSO.h"  
+#include"VertexData.h"
+#include"PSO.h"  
 #include"ShaderResourceView.h"  
 
 #include"Transform.h"  
@@ -21,7 +22,7 @@ public:
     void Update();
 
     static void PreDraw(uint32_t blendMode = BlendMode::kBlendModeNormal);
-    void Draw(uint32_t lightType = MaterialResource::LIGHTTYPE::NONE
+    void Draw(const LightMode& lightMode =LightMode::klightModeNone
     );
 
     void SetColor(const Vector4& color);
@@ -37,7 +38,7 @@ public:
     float& GetRotate() { return rotate_; };
     Vector2& GetPosition() { return position_; };
 
-    MaterialResource::Material* GetMaterial() { return materialResource_.GetMaterial(); };
+    Material* GetMaterial() { return materialResource_.GetMaterial(); };
     Vector3& GetUVScale() { return uvTransform_.scale; };
     Vector3& GetUVRotate() { return uvTransform_.rotate; };
     Vector3& GetUVTranslate() { return uvTransform_.translate; };
@@ -74,7 +75,6 @@ private:
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
     VertexData* vertexData_ = nullptr;
 
-
     Microsoft::WRL::ComPtr <ID3D12Resource> transformationMatrixResource_ = nullptr;
     Vector2 position_ = { 0.0f,0.0f };
     float rotate_ = 0.0f;
@@ -82,7 +82,6 @@ private:
 
     Transform transform_{};
     Matrix4x4 worldMatrix_{};
-    Matrix4x4 worldViewProjectionMatrix_{};
     TransformationMatrix* transformationMatrixData_ = nullptr;
 
     Transform uvTransform_ = { 0.0f };

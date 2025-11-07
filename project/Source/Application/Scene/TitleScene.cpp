@@ -10,7 +10,7 @@
 #include"SphereMesh.h"
 #include"Random.h"
 #include"DebugUI.h"
-#include"Quad.h"
+#include"Quad/Quad.h"
 #include"MakeMatrix.h"
 #include"DrawGrid.h"
 
@@ -30,6 +30,21 @@ TitleScene::TitleScene()
     //矩形を描画
     quadMesh_ = std::make_unique<QuadMesh>();
     sphereMesh_ = std::make_unique<SphereMesh>();
+    quadMesh_->Create(Texture::GetHandle(Texture::UV_CHECKER));
+    sphereMesh_->Create({ Texture::GetHandle(Texture::UV_CHECKER) });
+    model_ = std::make_unique<Model>();
+    model_->Create(ModelManager::WORLD);
+
+    for (int i = 0; i < object3ds_.size(); ++i) {
+        object3ds_[i] = std::make_unique<Object3d>();
+        object3ds_[i]->Create();
+    }
+
+    object3ds_[0]->worldTransform_.Parent(object3ds_[1]->worldTransform_);
+    object3ds_[0]->worldTransform_.translate_.x = 2.0f;
+    object3ds_[0]->SetMesh(quadMesh_.get());
+    object3ds_[1]->SetMesh(sphereMesh_.get());
+    object3ds_[2]->SetMesh(model_.get());
 }
 
 void TitleScene::Initialize() {
@@ -37,13 +52,23 @@ void TitleScene::Initialize() {
     sceneChange_.Initialize();
     camera_->Initialize(1280.0f, 720.0f);
     camera_->UpdateMatrix();
-    quadMesh_->Create(Texture::GetHandle(Texture::UV_CHECKER));
-    sphereMesh_->Create({Texture::GetHandle(Texture::UV_CHECKER) });
+
 }
 
 void TitleScene::Update() {
 
     currentCamera_->UpdateMatrix();
+
+    model_->GetUVTransform().translate.x += std::numbers::pi_v<float> *0.0625f * InverseFPS;
+    model_->UpdateUV();
+
+    for (int i = 0; i < object3ds_.size() - 1; ++i) {
+        object3ds_[i]->worldTransform_.rotate_.z += std::numbers::pi_v<float> *0.25f * InverseFPS;
+    }
+
+    for (int i = 0; i < object3ds_.size(); ++i) {
+        object3ds_[i]->Update();
+    }
 }
 
 
@@ -58,11 +83,18 @@ void TitleScene::Debug()
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
     std::function<void()> func = [this]() { SwitchCamera(); };
     DebugUI::Button("ChangeCamera", func);
+    DebugUI::CheckObject3d(*object3ds_[0], "0");
+    DebugUI::CheckObject3d(*object3ds_[1], "1");
 }
 
 void TitleScene::Draw() {
+
     DrawGrid::Draw(*currentCamera_);
-    quadMesh_->PreDraw();
-    quadMesh_->Draw(*currentCamera_, MakeIdentity4x4(), MaterialResource::L_REFLECTANCE);
-    sphereMesh_->Draw(*currentCamera_, MakeIdentity4x4(), MaterialResource::L_REFLECTANCE);
+
+    for (int i = 0; i < object3ds_.size() - 1; ++i) {
+        object3ds_[i]->Draw(*currentCamera_);
+    }
+
+    object3ds_[2]->Draw(*currentCamera_, klightModeNone);
+
 }

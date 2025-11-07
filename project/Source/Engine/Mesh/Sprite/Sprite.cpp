@@ -4,7 +4,7 @@
 #include"MakeMatrix.h"
 #include"MyEngine.h"
 #include"TextureManager.h"
-#include"Camera/SpriteCamera.h"  
+#include"SpriteCamera.h"  
 #include"ImGuiClass.h"
 
 ID3D12GraphicsCommandList* Sprite::commandList = nullptr;
@@ -87,18 +87,17 @@ void Sprite::PreDraw(uint32_t blendMode) {
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-void Sprite::Draw(uint32_t lightType
+void Sprite::Draw(const LightMode& lightMode
 ) {
 
-    materialResource_.SetLightType(lightType);
+    materialResource_.SetLightMode(lightMode);
     transform_.scale = { size_.x,size_.y,1.0f };
     transform_.rotate = { 0.0f,0.0f,rotate_ };
     transform_.translate = { position_.x,position_.y,0.0f };
 
     worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
-    worldViewProjectionMatrix_ = Multiply(worldMatrix_, SpriteCamera::GetViewProjectionMatrix());
 
-    *transformationMatrixData_ = { worldViewProjectionMatrix_,worldMatrix_ };
+    *transformationMatrixData_ = { Multiply(worldMatrix_, SpriteCamera::GetViewProjectionMatrix()),worldMatrix_ };
 
 
     //頂点バッファビューを設定
@@ -188,7 +187,7 @@ void Sprite::CreateTransformationMatrix() {
 void Sprite::CreateMaterial(const Vector4& color) {
 
     //マテリアルリソースを作成 //ライトなし
-    materialResource_.CreateMaterial(color, MaterialResource::LIGHTTYPE::NONE);
+    materialResource_.CreateMaterial(color,LightMode::klightModeNone);
 
 }
 

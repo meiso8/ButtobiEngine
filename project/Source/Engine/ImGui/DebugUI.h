@@ -17,6 +17,7 @@ class SphereMesh;
 class Camera;
 class Model;
 class ParticleManager;
+class Object3d;
 
 class DebugUI
 {
@@ -30,6 +31,9 @@ public:
     static void CheckSprite(Sprite& sprite, const char* label);
     static void CheckBalloonData(Balloon& balloon);
     static void CheckWaveData(Wave& wave, const char* label);
+
+    static void CheckObject3d(Object3d& object3d, const char* label);
+
     static void CheckParticle(ParticleManager& particle,const char* label);
     /// @brief ワールドトランスフォーム
     /// @param worldTransform 

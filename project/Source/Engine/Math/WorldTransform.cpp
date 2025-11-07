@@ -1,6 +1,6 @@
 #include "WorldTransform.h"  
 #include"MakeMatrix.h"
-
+#include<assert.h>
 void WorldTransform::Initialize() {
 
     scale_ = { 1.0f,1.0f,1.0f };
@@ -12,6 +12,13 @@ void WorldTransform::Initialize() {
 Vector3 WorldTransform::GetWorldPosition() const
 {
     return { matWorld_.m[3][0], matWorld_.m[3][1], matWorld_.m[3][2] };
+}
+
+void WorldTransform::Parent(const WorldTransform& parentWorldTransform)
+{
+    //自分にペアレントしていたら引っかかる
+    assert(this != &parentWorldTransform);
+    parent_ = &parentWorldTransform;
 }
 
 void WorldTransform2D::Initialize()
