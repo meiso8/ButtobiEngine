@@ -1,6 +1,7 @@
 #include "MeshCommon.h"
 #include"DirectXCommon.h"
 #include"MyEngine.h"
+#include"MakeMatrix.h"
 
 ModelConfig* MeshCommon::modelConfig_ = nullptr;
 ID3D12GraphicsCommandList* MeshCommon::commandList_ = nullptr;
@@ -78,8 +79,8 @@ void MeshCommon::CreateTransformationMatrix() {
     //データを書き込む
     //書き込むためのアドレスを取得
     transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
-
-
+    transformationMatrixData_->WVP = MakeIdentity4x4();
+    transformationMatrixData_->World = MakeIdentity4x4();
 }
 
 void MeshCommon::CreateMaterial(const Vector4& color, uint32_t lightType) {
@@ -98,9 +99,6 @@ void MeshCommon::CreateWaveData()
     waveResource_->Map(0, nullptr, reinterpret_cast<void**>(&waveData_));
 
     InitWaveData();
-
-
-
 }
 
 void MeshCommon::CreateBalloonData()

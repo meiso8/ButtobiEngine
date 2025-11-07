@@ -37,7 +37,7 @@ public:
     float& GetRotate() { return rotate_; };
     Vector2& GetPosition() { return position_; };
 
-    Material* GetMaterial() { return materialResource_.GetMaterial(); };
+    MaterialResource::Material* GetMaterial() { return materialResource_.GetMaterial(); };
     Vector3& GetUVScale() { return uvTransform_.scale; };
     Vector3& GetUVRotate() { return uvTransform_.rotate; };
     Vector3& GetUVTranslate() { return uvTransform_.translate; };

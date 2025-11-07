@@ -33,7 +33,7 @@ void Camera::InitializeTransform()
 {
     scale_ = { 1.0f,1.0f,1.0f };
     rotate_ = { 0.0f,0.0f,0.0f };
-    translate_ = { 0.0f,0.0f,0.0f };
+    translate_ = { 0.0f,0.0f,-10.0f };
     worldMat_ = MakeIdentity4x4();
 }
 

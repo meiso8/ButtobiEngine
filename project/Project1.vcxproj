@@ -298,7 +298,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Mesh\LineMesh.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\Log.h" />
     <ClInclude Include="Source\Engine\Surface\Texture.h" />
-    <ClInclude Include="Source\Engine\Surface\Material.h" />
     <ClInclude Include="Source\Engine\Surface\MaterialData.h" />
     <ClInclude Include="Source\Engine\Surface\MaterialResource.h" />
     <ClInclude Include="Source\Engine\Math\AABB.h" />

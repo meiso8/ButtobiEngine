@@ -1,6 +1,5 @@
 #pragma once
-
-#include"VertexData.h"
+#include"hlslTypeToCpp.h"
 #include<wrl.h>
 #include<d3d12.h>
 #include"ModelConfig.h"
@@ -15,12 +14,19 @@
 class MeshCommon
 {
 public:
+
+    struct VertexData {
+        float32_t4 position;
+        float32_t2 texcoord;
+        float32_t3 normal;
+    };
+
     void Finalize();
     virtual void PreDraw(const BlendMode& type = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack);
     virtual void Draw(Camera& camera, const Matrix4x4& worldMatrix, const uint32_t lightType = MaterialResource::LIGHTTYPE::NONE) = 0;
 
     void SetColor(const Vector4& color);
-    Material* GetMaterial() { return materialResource_->GetMaterial(); };
+    MaterialResource::Material* GetMaterial() { return materialResource_->GetMaterial(); };
     Vector4& GetColor() { return materialResource_->GetMaterial()->color; };
     VertexData& GetVertexData(const uint32_t& index) {
         return vertexData_[index];
@@ -29,33 +35,37 @@ public:
         return *balloonData_;
     }
     Wave& GetWaveData(size_t index) { return waveData_[index]; };
-    
+
     void InitWaveData();
     void InitBalloonData();
 protected:
+    /// @brief テクスチャハンドル
     uint32_t textureHandle_ = 0;
+    //マテリアルリソース
     MaterialResource* materialResource_ = nullptr;
-
+    //rootSignatureとdirectionalLight
     static ModelConfig* modelConfig_;
+    //コマンドリスト
     static  ID3D12GraphicsCommandList* commandList_;
-
+    //頂点データ
     Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
     VertexData* vertexData_ = nullptr;
+    //インデックスデータ
     D3D12_INDEX_BUFFER_VIEW  indexBufferView_{};
     Microsoft::WRL::ComPtr <ID3D12Resource> indexResource_{};
     uint32_t* indexData_ = nullptr;
-
+    //膨張データ
     Microsoft::WRL::ComPtr<ID3D12Resource> expansionResource_;
     Balloon* balloonData_ = nullptr;
-
+    //波データ
     Microsoft::WRL::ComPtr<ID3D12Resource> waveResource_;
     Wave* waveData_ = nullptr;
-
+    //位置情報
     Microsoft::WRL::ComPtr <ID3D12Resource> transformationMatrixResource_ = nullptr;
-
-    Matrix4x4 worldViewProjectionMatrix_{};
     TransformationMatrix* transformationMatrixData_ = nullptr;
+    Matrix4x4 worldViewProjectionMatrix_{};
+
 protected:
     virtual void CreateVertex() = 0;
     virtual void CreateIndexResource();

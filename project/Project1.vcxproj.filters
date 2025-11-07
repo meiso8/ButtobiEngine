@@ -407,9 +407,6 @@
     <ClInclude Include="Source\Engine\Math\MakeMatrix.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Surface\Material.h">
-      <Filter>ヘッダー ファイル\Engine\Surface</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Engine\Surface\MaterialData.h">
       <Filter>ヘッダー ファイル\Engine\Surface</Filter>
     </ClInclude>

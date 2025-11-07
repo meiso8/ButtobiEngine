@@ -12,6 +12,6 @@ public:
 private:
 public:
     static ModelConfig* GetInstance();
-    void Initialize(RootSignature* rootSignature, const Microsoft::WRL::ComPtr <ID3D12Resource> directionalLightResource);;
+    void Initialize(RootSignature* rootSignature, const Microsoft::WRL::ComPtr <ID3D12Resource> directionalLightResource);
     //~ModelConfig();
 };
