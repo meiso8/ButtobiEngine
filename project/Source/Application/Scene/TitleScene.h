@@ -19,7 +19,7 @@ public:
     void Debug()override;
     std::unique_ptr<QuadMesh> quadMesh_= nullptr;
     std::unique_ptr<SphereMesh> sphereMesh_ = nullptr;
-    std::array< Model*,3> models_;
+    std::array< Model*,2> models_;
 
     std::array< std::unique_ptr < Object3d>, 3> object3ds_;
 };

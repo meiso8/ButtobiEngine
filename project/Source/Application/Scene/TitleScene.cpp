@@ -34,8 +34,7 @@ TitleScene::TitleScene()
     sphereMesh_->Create({ Texture::GetHandle(Texture::UV_CHECKER) });
     //モデルを借りる
     models_[0] = ModelManager::GetModel(ModelManager::WORLD);
-    models_[1] = ModelManager::GetModel(ModelManager::ARM_L);
-    models_[2] = ModelManager::GetModel(ModelManager::ARM_R);
+    models_[1] = ModelManager::GetModel(ModelManager::EFFECT);
 
     for (int i = 0; i < object3ds_.size(); ++i) {
         object3ds_[i] = std::make_unique<Object3d>();
@@ -44,6 +43,10 @@ TitleScene::TitleScene()
 
     object3ds_[0]->worldTransform_.Parent(object3ds_[1]->worldTransform_);
     object3ds_[0]->worldTransform_.translate_.x = 2.0f;
+    object3ds_[0]->worldTransform_.rotate_.x = std::numbers::pi_v<float>*0.5f;
+
+    object3ds_[1]->worldTransform_.rotate_.x = -std::numbers::pi_v<float>*0.5f;
+
     object3ds_[0]->SetMesh(quadMesh_.get());
     object3ds_[1]->SetMesh(models_[1]);
     object3ds_[2]->SetMesh(models_[0]);
@@ -62,7 +65,13 @@ void TitleScene::Update() {
     currentCamera_->UpdateMatrix();
 
     models_[0]->GetUVTransform().translate.x += std::numbers::pi_v<float> *0.0625f * InverseFPS;
-    models_[0]->UpdateUV();
+    models_[1]->GetUVTransform().translate.y += std::numbers::pi_v<float> *0.0625f * InverseFPS;
+
+
+    for (int i = 0; i < models_.size(); ++i) {
+        models_[i]->UpdateUV();
+    }
+
 
     for (int i = 0; i < object3ds_.size() - 1; ++i) {
         object3ds_[i]->worldTransform_.rotate_.z += std::numbers::pi_v<float> *0.25f * InverseFPS;
@@ -91,11 +100,14 @@ void TitleScene::Debug()
 
 void TitleScene::Draw() {
 
+#ifdef _DEBGU
     DrawGrid::Draw(*currentCamera_);
 
-    for (int i = 0; i < object3ds_.size() - 1; ++i) {
-        object3ds_[i]->Draw(*currentCamera_);
-    }
+#endif
+
+        object3ds_[1]->Draw(*currentCamera_);
+
+    object3ds_[0]->Draw(*currentCamera_,kLightModeLReflectance,kBlendModeNormal,kCullModeNone);
 
     object3ds_[2]->Draw(*currentCamera_, klightModeNone);
 

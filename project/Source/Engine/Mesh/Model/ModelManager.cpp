@@ -30,6 +30,7 @@ void ModelManager::LoadAllModel()
     LoadModel("Resource/Models/world", "world.obj", WORLD);
     LoadModel("Resource/Models/player", "armL.obj", ARM_L);
     LoadModel("Resource/Models/player", "armR.obj", ARM_R);
+    LoadModel("Resource/Models/effect", "effect.obj", EFFECT);
 }
 
 void ModelManager::Finalize()

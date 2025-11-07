@@ -12,6 +12,7 @@ public:
         WORLD,
         ARM_L,
         ARM_R,
+        EFFECT,
         MODELS,
     };
 
