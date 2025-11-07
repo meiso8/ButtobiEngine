@@ -6,6 +6,7 @@
 #include"MyEngine.h"
 #include"Random.h"
 #include"Collision.h"
+#include"SRVmanager/SrvManager.h"
 
 using namespace  Microsoft::WRL;
 
@@ -147,9 +148,9 @@ void ParticleManager::Draw(uint32_t blendMode)
         //マテリアルの設定
         commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
         //粒ごとのトランスフォーム
-        commandList_->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU);
+        SrvManager::SetGraphicsRootDescriptorTable(1, instanceSrvIndex);
         //テスクチャ
-        commandList_->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureHandle_));
+        SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
         //描画!（DrawCall/ドローコール）6個のインデックスを使用しインスタンスを描画。
         commandList_->DrawInstanced(UINT(modelData_->vertices.size()), numInstance_, 0, 0);
     }
@@ -217,20 +218,22 @@ void ParticleManager::CreateTransformationMatrix()
         instancingData[index].color = Vector4{ 1.0f,1.0f,1.0f,1.0f };
     }
 
-    D3D12_SHADER_RESOURCE_VIEW_DESC instancingSrvDesc{};
-    instancingSrvDesc.Format = DXGI_FORMAT_UNKNOWN;
-    instancingSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-    instancingSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
-    instancingSrvDesc.Buffer.FirstElement = 0;
-    instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
-    instancingSrvDesc.Buffer.NumElements = kNumMaxInstance;
-    instancingSrvDesc.Buffer.StructureByteStride = sizeof(ParticleForGPU);
+    //D3D12_SHADER_RESOURCE_VIEW_DESC instancingSrvDesc{};
+    //instancingSrvDesc.Format = DXGI_FORMAT_UNKNOWN;
+    //instancingSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    //instancingSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+    //instancingSrvDesc.Buffer.FirstElement = 0;
+    //instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+    //instancingSrvDesc.Buffer.NumElements = kNumMaxInstance;
+    //instancingSrvDesc.Buffer.StructureByteStride = sizeof(ParticleForGPU);
+    //DirectXCommon::GetDevice()->CreateShaderResourceView(instancingResource.Get(), &instancingSrvDesc, instancingSrvHandleCPU);
 
     //一旦応急処置でtextureHandleに入れる textureのサイス+2分が入る
-    uint32_t srvIndex = Texture::AddHandleForSRV(textureHandle_) + 3;
-    instancingSrvHandleCPU = DirectXCommon::GetSRVCPUDescriptorHandle(srvIndex);//この書き方はダメですね
-    instancingSrvHandleGPU = DirectXCommon::GetSRVGPUDescriptorHandle(srvIndex);
-    DirectXCommon::GetDevice()->CreateShaderResourceView(instancingResource.Get(), &instancingSrvDesc, instancingSrvHandleCPU);
+    instanceSrvIndex = SrvManager::Allocate();
+    instancingSrvHandleCPU = SrvManager::GetCPUDescriptorHandle(instanceSrvIndex);//この書き方はダメですね
+    instancingSrvHandleGPU = SrvManager::GetGPUDescriptorHandle(instanceSrvIndex);
+
+    SrvManager::CreateSRVforStructuredBuffer(instanceSrvIndex, instancingResource.Get(), kNumMaxInstance, sizeof(ParticleForGPU));
 }
 
 void ParticleManager::UpdateBillBordMatrix(Camera& camera)

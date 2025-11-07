@@ -15,7 +15,6 @@
 #include"Window.h"
 #include<array>
 #include"ImGuiClass.h"
-#include"Vector4.h"
 #include"TransitionBarrier.h"
 
 //Textureデータを読み込むためにDirectXTex.hをインクルード
@@ -24,13 +23,14 @@
 #include"../externals/DirectXTex/d3dx12.h"
 #include<chrono>
 
+#include"Vector4.h"
+
 class DirectXCommon
 {
 public:
     static uint32_t descriptorSizeRTV;
     static uint32_t descriptorSizeDSV;
-    static uint32_t descriptorSizeSRV;
-    static const uint32_t kMaxSRVCount;
+
     static const uint32_t kMaxSoundCount;
     static const uint32_t kMaxModelCount;
 private:
@@ -39,8 +39,7 @@ private:
 
     static Microsoft::WRL::ComPtr<ID3D12Device> device;
     static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvDescriptorHeap;
-    //ゲームに一つだけ
-    static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvDescriptorHeap;
+
     static Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> dsvDescriptorHeap;
 
     static std::unique_ptr< DxcCompiler> dxcCompiler;
@@ -61,23 +60,25 @@ private:
     TransitionBarrier barrier = {};
     std::chrono::steady_clock::time_point reference_;
 
-#ifdef _DEBUG
-    ImGuiClass imGuiClass = {};
-#endif // _DEBUG
+
 public:
 
     ~DirectXCommon();
 
     void Initialize(Window& window);
-    void Update();
     void PreDraw(Vector4& color);
     void PostDraw();
     void EndFrame();
 
+    SwapChain& GetSwapChain() { return swapChainClass; };
+    RenderTargetView& GetSwapChainRtv() {
+        return rtvClass
+            ;
+    }
     static Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(
         size_t sizeInBytes);
 
-    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(
+   static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(
         D3D12_DESCRIPTOR_HEAP_TYPE heapType,
         UINT numDescriptors,
         bool shaderVisible);
@@ -91,19 +92,20 @@ public:
     static Microsoft::WRL::ComPtr<ID3D12Device> GetDevice() { return device; };
     static DxcCompiler* GetDxcCompiler() { return dxcCompiler.get(); }
     static ID3D12GraphicsCommandList* GetCommandList() { return commandList->GetCommandList().Get(); };
-    static ID3D12DescriptorHeap* GetSrvDescriptorHeap() { return srvDescriptorHeap.Get(); }
-    static D3D12_CPU_DESCRIPTOR_HANDLE GetSRVCPUDescriptorHandle(uint32_t index);
-    static D3D12_GPU_DESCRIPTOR_HANDLE GetSRVGPUDescriptorHandle(uint32_t index);
-    static D3D12_CPU_DESCRIPTOR_HANDLE GetRTVCPUDescriptorHandle(uint32_t index);
+
+  static D3D12_CPU_DESCRIPTOR_HANDLE GetRTVCPUDescriptorHandle(uint32_t index);
     static D3D12_GPU_DESCRIPTOR_HANDLE GetRTVGPUDescriptorHandle(uint32_t index);
     static D3D12_CPU_DESCRIPTOR_HANDLE GetDSVCPUDescriptorHandle(uint32_t index);
     static D3D12_GPU_DESCRIPTOR_HANDLE GetDSVGPUDescriptorHandle(uint32_t index);
+  
+    
+    
+    static D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
+    static D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
 
 
 private:
-    static D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
-    static D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
-    void InitializeDevice();
+ void InitializeDevice();
     void InitializeCommand();
     void CreateSwapChain();
     void CreateDepthBuffer();
@@ -114,7 +116,6 @@ private:
     void InitializeViewPort();
     void ScissorRectSetting();
     void CreateDXCCompiler();
-    void InitializeImGui();
     void InitializeFixFPS();
     void UpdateFixFPS();
 };

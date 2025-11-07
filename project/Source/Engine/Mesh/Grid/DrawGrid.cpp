@@ -1,7 +1,7 @@
 #include"DrawGrid.h"
 #include<numbers>
 #include"MakeMatrix.h"
-#include"Texture.h"
+#include"TextureManager.h"
 
 std::array<LineMesh*, 102> DrawGrid::line_;
 std::array < Cube*, 2> DrawGrid::cube_;

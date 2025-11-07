@@ -188,7 +188,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\PSO\InputLayout.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\GPU.cpp" />
     <ClCompile Include="Source\Engine\ImGui\ImGuiClass.cpp" />
-    <ClCompile Include="Source\Engine\Surface\Texture.cpp" />
     <ClCompile Include="Source\Engine\Surface\MaterialResource.cpp" />
     <ClCompile Include="Source\Engine\Math\Easing.cpp" />
     <ClCompile Include="Source\Engine\Math\Lerp.cpp" />
@@ -196,7 +195,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Math\Vector3.cpp" />
     <ClCompile Include="Source\Engine\Math\WorldTransform.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Model\Model.cpp" />
-    <ClCompile Include="Source\Engine\DirectXCommon\ShaderResourceView.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\ScissorRect.cpp" />
     <ClCompile Include="Source\Engine\PSO\BlendState.cpp" />
     <ClCompile Include="Source\Engine\PSO\CompileShader.cpp" />
@@ -237,9 +235,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Mesh\Sprite\Sprite.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Sphere\SphereMesh.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\StringUtility.cpp" />
-    <ClCompile Include="Source\Engine\DirectXCommon\SpriteCommon.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\Sprite\SpriteCommon.cpp" />
     <ClCompile Include="Source\Engine\Surface\TextureManager.cpp" />
     <ClCompile Include="Source\Engine\Camera\SpriteCamera.cpp" />
+    <ClCompile Include="Source\Engine\SRVmanager\SrvManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\Object3d\Object3d.h" />
@@ -297,7 +296,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\PSO\InputLayout.h" />
     <ClInclude Include="Source\Engine\Mesh\Line\LineMesh.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\Log.h" />
-    <ClInclude Include="Source\Engine\Surface\Texture.h" />
     <ClInclude Include="Source\Engine\Surface\MaterialData.h" />
     <ClInclude Include="Source\Engine\Surface\MaterialResource.h" />
     <ClInclude Include="Source\Engine\Math\AABB.h" />
@@ -331,7 +329,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\DirectXCommon\RenderTargetView.h" />
     <ClInclude Include="Source\Engine\PSO\RootSignature.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\ScissorRect.h" />
-    <ClInclude Include="Source\Engine\DirectXCommon\ShaderResourceView.h" />
     <ClInclude Include="Source\Engine\Sound\Sound.h" />
     <ClInclude Include="Source\Engine\Mesh\Sphere\SphereMesh.h" />
     <ClInclude Include="Source\Engine\Mesh\Sprite\Sprite.h" />
@@ -342,9 +339,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Mesh\MeshCommon\Wave.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\Window.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\StringUtility.h" />
-    <ClInclude Include="Source\Engine\DirectXCommon\SpriteCommon.h" />
+    <ClInclude Include="Source\Engine\Mesh\Sprite\SpriteCommon.h" />
     <ClInclude Include="Source\Engine\Surface\TextureManager.h" />
     <ClInclude Include="Source\Engine\Camera\SpriteCamera.h" />
+    <ClInclude Include="Source\Engine\SRVmanager\SrvManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />

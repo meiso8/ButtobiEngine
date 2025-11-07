@@ -3,7 +3,7 @@
 #include "Input.h"
 #include"Model.h"
 #include"ModelManager.h"
-#include"Texture.h"
+
 #include"TextureManager.h"
 #include"Sprite.h"
 #include"Sound.h"
@@ -50,6 +50,9 @@ TitleScene::TitleScene()
     object3ds_[0]->SetMesh(quadMesh_.get());
     object3ds_[1]->SetMesh(models_[1]);
     object3ds_[2]->SetMesh(models_[0]);
+
+    sprite_ = std::make_unique<Sprite>();
+    sprite_->Create(Texture::GetHandle(Texture::UV_CHECKER),{0.0f,0.0f},{100.0f,100.0f});
 }
 
 void TitleScene::Initialize() {
@@ -110,5 +113,8 @@ void TitleScene::Draw() {
     object3ds_[0]->Draw(*currentCamera_,kLightModeLReflectance,kBlendModeNormal,kCullModeNone);
 
     object3ds_[2]->Draw(*currentCamera_, klightModeNone);
+
+    sprite_->PreDraw();
+    sprite_->Draw();
 
 }

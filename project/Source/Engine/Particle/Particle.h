@@ -53,7 +53,7 @@ public:
 protected:
 
     const float kDeltaTime = 1.0f / 60.0f;
-
+    uint32_t instanceSrvIndex = 0;
 
     uint32_t numInstance_ = 0;
     ParticleForGPU* instancingData = nullptr;

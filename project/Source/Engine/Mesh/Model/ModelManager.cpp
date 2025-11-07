@@ -8,7 +8,7 @@
 #include<assimp/scene.h>
 #include<assimp/postprocess.h>
 #include"DirectXCommon.h"
-#include"Texture.h"
+
 #include"TextureManager.h"
 #include"Model.h"
 
@@ -109,7 +109,6 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
 
     //モデルのテクスチャを読む
     modelData->textureHandle = Texture::AddTextureHandle(modelData->material.textureFilePath);
-
     model->SetModelData(std::move(modelData));
     model->Create();
 

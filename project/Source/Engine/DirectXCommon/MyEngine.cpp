@@ -14,6 +14,7 @@ std::unique_ptr<Window> MyEngine::wc = nullptr;
 
 
 std::unique_ptr<DirectXCommon> MyEngine::directXCommon = nullptr;
+std::unique_ptr<SrvManager> MyEngine::srvManager = nullptr;
 std::unique_ptr<LogFile> MyEngine::logFile = nullptr;
 
 std::unique_ptr<ModelConfig> modelConfig_ = nullptr;
@@ -45,6 +46,18 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     directXCommon = std::make_unique<DirectXCommon>();
     directXCommon->Initialize(*wc);
 
+    srvManager = std::make_unique<SrvManager>();
+    srvManager->Initialize();
+
+#ifdef _DEBUG
+    //ImGuiの初期化。
+    imGuiClass.Initialize(*wc, directXCommon->GetDevice().Get(), directXCommon->GetSwapChain(), directXCommon->GetSwapChainRtv());
+    LogFile::Log("InitImGui");
+#endif
+
+
+
+
     pso = std::make_unique<PSO>();
     pso->CreateALLPSO();
 
@@ -72,13 +85,13 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     //サウンド管理
     Sound::Initialize();
     //テクスチャ管理
-    TextureManager::Initialize();
-
+    Texture::Initialize();
+    //テスクチャ読み込み
+    Texture::LoadAllTexture();
 
     //音声の読み込み
     Sound::LoadAllSound();
-    //テスクチャ読み込み
-    Texture::LoadAllTexture();
+
     //モデル読み込み
     ModelManager::LoadAllModel();
 
@@ -95,8 +108,10 @@ void MyEngine::Update() {
 
     //キーボード情報の取得開始
     input->Update();
-    directXCommon->Update();
-
+#ifdef _DEBUG
+    //ImGuiにここからフレームが始まる旨を伝える
+    imGuiClass.FrameStart();
+#endif
 }
 
 void MyEngine::Debug()
@@ -105,10 +120,20 @@ void MyEngine::Debug()
 }
 
 void MyEngine::PreCommandSet(Vector4& screenColor) {
+
+#ifdef _DEBUG
+    //ImGuiの内部コマンドを生成する
+    imGuiClass.Render();
+#endif
     directXCommon->PreDraw(screenColor);
 };
 
 void MyEngine::PostCommandSet() {
+#ifdef _DEBUG
+    //諸々の描画処理が終了下タイミングでImGuiの描画コマンドを積む
+    imGuiClass.DrawImGui(CommandList::GetCommandList().Get());
+
+#endif // _DEBUG
     directXCommon->PostDraw();
 };
 
@@ -122,7 +147,7 @@ void MyEngine::Finalize() {
 
 #endif
 
-    TextureManager::Finalize();
+    Texture::Finalize();
     Sound::Finalize();
 
     SpriteCommon::Finalize();
@@ -136,8 +161,15 @@ void MyEngine::Finalize() {
 
     pso.reset();
 
+#ifdef _DEBUG
+    //ImGuiの終了処理 ゲームループが終わったら行う
+    imGuiClass.ShutDown();
+#endif
+
     directXCommon->EndFrame();
     directXCommon.reset();
+
+    srvManager.reset();
 
     input.reset();
 

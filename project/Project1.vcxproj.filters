@@ -207,9 +207,6 @@
     <ClCompile Include="Source\Engine\DirectXCommon\ScissorRect.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\DirectXCommon\ShaderResourceView.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\Math\Vector2.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
@@ -258,16 +255,13 @@
     <ClCompile Include="Source\Engine\DirectXCommon\StringUtility.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\DirectXCommon\SpriteCommon.cpp">
+    <ClCompile Include="Source\Engine\Mesh\Sprite\SpriteCommon.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\DirectXCommon\ModelConfig.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Surface\TextureManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Surface\Texture.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Mesh\Model\ModelManager.cpp">
@@ -316,6 +310,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Object3d\Object3d.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\SRVmanager\SrvManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -530,9 +527,6 @@
     <ClInclude Include="Source\Engine\DirectXCommon\ScissorRect.h">
       <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\ShaderResourceView.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Engine\DirectXCommon\StringUtility.h">
       <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
     </ClInclude>
@@ -548,16 +542,13 @@
     <ClInclude Include="Source\Engine\DirectXCommon\Window.h">
       <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\SpriteCommon.h">
+    <ClInclude Include="Source\Engine\Mesh\Sprite\SpriteCommon.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Surface\TextureManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\hlslTypeToCpp.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Surface\Texture.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Mesh\Model\ModelManager.h">
@@ -627,6 +618,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Mesh\MeshCommon\VertexData.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\SRVmanager\SrvManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

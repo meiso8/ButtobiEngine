@@ -5,19 +5,19 @@
 #include<cassert>
 #include"StringUtility.h"
 #include <thread>
+#include"SRVmanager/SrvManager.h"
 
 using namespace Microsoft::WRL;
 ComPtr<ID3D12Device> DirectXCommon::device = nullptr;
-ComPtr<ID3D12DescriptorHeap> DirectXCommon::srvDescriptorHeap = nullptr;
+
 ComPtr<ID3D12DescriptorHeap> DirectXCommon::rtvDescriptorHeap = nullptr;
 ComPtr<ID3D12DescriptorHeap> DirectXCommon::dsvDescriptorHeap = nullptr;
 
-const uint32_t DirectXCommon::kMaxSRVCount = 512;
 const uint32_t DirectXCommon::kMaxSoundCount = 128;
 const uint32_t DirectXCommon::kMaxModelCount = 128;
 uint32_t DirectXCommon::descriptorSizeRTV = 0;
 uint32_t DirectXCommon::descriptorSizeDSV = 0;
-uint32_t DirectXCommon::descriptorSizeSRV = 0;
+
 
 std::unique_ptr< DxcCompiler> DirectXCommon::dxcCompiler = nullptr;
 std::unique_ptr<CommandList> DirectXCommon::commandList = nullptr;
@@ -32,7 +32,7 @@ DirectXCommon::~DirectXCommon()
  
     dxcCompiler.reset();
     dsvDescriptorHeap.Reset();
-    srvDescriptorHeap.Reset();
+
     rtvDescriptorHeap.Reset();
 
     for (auto& resource : swapChainResources) {
@@ -62,26 +62,10 @@ void DirectXCommon::Initialize(Window& window)
     InitializeViewPort();
     ScissorRectSetting();
     CreateDXCCompiler();
-    InitializeImGui();
-}
-
-void DirectXCommon::Update()
-{
-#ifdef _DEBUG
-
-    //ImGuiにここからフレームが始まる旨を伝える
-    imGuiClass.FrameStart();
-#endif
-
 }
 
 void DirectXCommon::PreDraw(Vector4& color)
 {
-
-#ifdef _DEBUG
-    //ImGuiの内部コマンドを生成する
-    imGuiClass.Render();
-#endif
 
     //これからの流れ
     //1.  BackBufferを決定する
@@ -108,9 +92,7 @@ void DirectXCommon::PreDraw(Vector4& color)
     //指定した深度で画面全体をクリアする
     commandList->GetCommandList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
-    //描画用のDescriptorHeapの設定
-    ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescriptorHeap.Get() };
-    commandList->GetCommandList()->SetDescriptorHeaps(1, descriptorHeaps);
+    SrvManager::PreDraw();
 
     //ビューポート領域の設定
     commandList->GetCommandList()->RSSetViewports(1, &viewport);//Viewportを設定
@@ -123,11 +105,6 @@ void DirectXCommon::PreDraw(Vector4& color)
 
 void DirectXCommon::PostDraw()
 {
-#ifdef _DEBUG
-    //諸々の描画処理が終了下タイミングでImGuiの描画コマンドを積む
-    imGuiClass.DrawImGui(*commandList);
-
-#endif // _DEBUG
 
     //画面に書く処理は終わり、画面に移すので、状態を遷移
     barrier.Transition();
@@ -161,10 +138,6 @@ void DirectXCommon::PostDraw()
 void DirectXCommon::EndFrame()
 {
 
-#ifdef _DEBUG
-    //ImGuiの終了処理 ゲームループが終わったら行う
-    imGuiClass.ShutDown();
-#endif
 
     //CloseHandle(fenceEvent.GetEvent());
 
@@ -254,8 +227,7 @@ void DirectXCommon::DescriptorHeapSettings()
 {
     //DescriptorSizeを取得しておく
     descriptorSizeRTV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-    descriptorSizeSRV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-    descriptorSizeDSV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+descriptorSizeDSV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
     //DescriptorHeapを生成する
     if (rtvDescriptorHeap == nullptr) {
@@ -263,12 +235,7 @@ void DirectXCommon::DescriptorHeapSettings()
         LogFile::Log("Create RTV DescriptorHeap");
     }
 
-    //SRV　SRVやCBV用のDescriptorHeapは一旦ゲーム中に一つだけ
-    if (srvDescriptorHeap == nullptr) {
-        srvDescriptorHeap = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, kMaxSRVCount, true);
-        LogFile::Log("Create SRV DescriptorHeap");
 
-    }
 
     //DSV用ヒープでディスクリプタの数は1。DSVはShader内で触るものではないので、ShaderVisibleはfalse
     if (dsvDescriptorHeap == nullptr) {
@@ -326,15 +293,6 @@ void DirectXCommon::CreateDXCCompiler()
     dxcCompiler->ShaderSetting();
     LogFile::Log("InitDxcCompiler");
 
-}
-
-void DirectXCommon::InitializeImGui()
-{
-#ifdef _DEBUG
-    //ImGuiの初期化。
-    imGuiClass.Initialize(*window_, device.Get(), swapChainClass, rtvClass, srvDescriptorHeap);
-    LogFile::Log("InitImGui");
-#endif
 }
 
 void DirectXCommon::InitializeFixFPS()
@@ -468,15 +426,6 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::UploadTextureData(const Mi
     return intermediateResource;
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE DirectXCommon::GetSRVCPUDescriptorHandle(uint32_t index)
-{
-    return GetCPUDescriptorHandle(srvDescriptorHeap.Get(), descriptorSizeSRV, index);
-}
-
-D3D12_GPU_DESCRIPTOR_HANDLE DirectXCommon::GetSRVGPUDescriptorHandle(uint32_t index)
-{
-    return GetGPUDescriptorHandle(srvDescriptorHeap.Get(), descriptorSizeSRV, index);
-}
 
 D3D12_CPU_DESCRIPTOR_HANDLE DirectXCommon::GetRTVCPUDescriptorHandle(uint32_t index)
 {

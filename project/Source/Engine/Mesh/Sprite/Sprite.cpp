@@ -26,7 +26,7 @@ void Sprite::Create(uint32_t textureHandle, const Vector2& position, const Vecto
 {
     commandList = DirectXCommon::GetCommandList();
     position_ = position;
-    textureIndex = textureHandle;
+    textureHandle_ = textureHandle;
 
     CreateMaterial(color);
     CreateVertex();
@@ -60,7 +60,7 @@ void Sprite::Update()
     vertexData_[2].position = { right,bottom,0.0f,1.0f };//右下
     vertexData_[3].position = { right,top,0.0f,1.0f };//右上
 
-    const DirectX::TexMetadata& metadata = TextureManager::GetMetaData(textureIndex);
+    const DirectX::TexMetadata& metadata = Texture::GetMetaData(textureHandle_);
     float tex_left = textureLeftTop.x / metadata.width;
     float tex_right = (textureLeftTop.x + textureSize.x) / metadata.width;
     float tex_top = textureLeftTop.y / metadata.height;
@@ -108,7 +108,7 @@ void Sprite::Draw(const LightMode& lightMode
     //TransformationMatrixCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
-    commandList->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureIndex));
+    SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
 
     SpriteCommon::DrawCall(commandList);
 
@@ -198,7 +198,7 @@ void Sprite::UpdateUV() {
 
 void Sprite::AdjustTextureSize()
 {
-    const DirectX::TexMetadata& metadata = TextureManager::GetMetaData(textureIndex);
+    const DirectX::TexMetadata& metadata = Texture::GetMetaData(textureHandle_);
     textureSize.x = static_cast<float>(metadata.width);
     textureSize.y = static_cast<float>(metadata.height);
     size_ = textureSize;
