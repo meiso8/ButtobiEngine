@@ -13,11 +13,9 @@ Model::~Model()
     Finalize();
 }
 
-void Model::Create(const ModelManager::MODEL_HANDLE& modelHandle) {
+void Model::Create() {
 
-    modelData_ = &ModelManager::GetModelData(modelHandle);
     modelConfig_ = ModelConfig::GetInstance();
-
     textureHandle_ = modelData_->textureHandle;
 
     //マテリアルの作成 lightType halfLambert

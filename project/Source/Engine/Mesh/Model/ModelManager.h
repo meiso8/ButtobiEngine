@@ -1,29 +1,26 @@
 #pragma once
 #include"ModelData.h"
+#include<map>
+
+class Model;
 
 class ModelManager
 {
 private:
 public:
     enum MODEL_HANDLE {
-
         WORLD,
-      
-
+        ARM_L,
+        ARM_R,
         MODELS,
     };
 
-    static ModelData& GetModelData(const uint32_t& handle);
+    static Model* GetModel(const uint32_t& handle);
     static void LoadAllModel();
     static void Finalize();
 private:
-
-    static void LoadModel(const std::string& directoryPath, const std::string& filename);
-    //インデックスの開始番号
-    static uint32_t Load(const std::string& directoryPath, const std::string& filename);
-    static uint32_t GetTextureIndexByFileName(const std::string& filename);
+    static void LoadModel(const std::string& directoryPath, const std::string& filename,const uint32_t& handle);
 private:
-    static std::vector<ModelData> modelDatas_;
-    static std::vector<uint32_t> handle_;
+    static std::map < const uint32_t, std::unique_ptr< Model> > models_;
 };
 
