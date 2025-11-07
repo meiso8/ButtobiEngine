@@ -277,8 +277,8 @@ void ParticleManager::CreateModelData(const uint32_t& textureHandle, const int& 
         modelData_->material.textureFilePath = "./resources/uvChecker.png";
         textureHandle_ = textureHandle;
     } else {
-        *modelData_ = ModelManager::GetModelData(modelHandle);
-        textureHandle_ = modelData_->textureHandle;
+        //*modelData_ = ModelManager::GetModel(modelHandle);
+        //textureHandle_ = modelData_->textureHandle;
     }
 
 }

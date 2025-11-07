@@ -10,62 +10,52 @@
 #include"DirectXCommon.h"
 #include"Texture.h"
 #include"TextureManager.h"
+#include"Model.h"
 
-std::vector<ModelData> ModelManager::modelDatas_;
-std::vector<uint32_t> ModelManager::handle_;
+std::map<const uint32_t, std::unique_ptr< Model> >ModelManager::models_;
 
-ModelData& ModelManager::GetModelData(const uint32_t& handle)
+Model* ModelManager::GetModel(const uint32_t& handle)
 {
-    assert(handle < modelDatas_.size());
-    return modelDatas_[handle];
+    assert(handle < models_.size());
+   
+    if (models_.contains(handle)) {
+        return models_.at(handle).get();
+    }
+    return nullptr;
+
 }
 
 void ModelManager::LoadAllModel()
 {
-    handle_.resize(MODELS);
-
-    handle_[WORLD] = Load("Resource/Models/world", "world.obj");
- 
+    LoadModel("Resource/Models/world", "world.obj", WORLD);
+    LoadModel("Resource/Models/player", "armL.obj", ARM_L);
+    LoadModel("Resource/Models/player", "armR.obj", ARM_R);
 }
 
 void ModelManager::Finalize()
 {
-    modelDatas_.clear();
+    models_.clear();
 }
 
 // ========================================================================================================
 
-uint32_t ModelManager::Load(const std::string& directoryPath, const std::string& filename)
-{
-    LoadModel(directoryPath, filename);
-    std::string filePath = directoryPath + "/" + filename;
-    return GetTextureIndexByFileName(filePath);
-}
-
-void ModelManager::LoadModel(const std::string& directoryPath, const std::string& filename)
+void ModelManager::LoadModel(const std::string& directoryPath, const std::string& filename, const uint32_t& handle)
 {
     //読み込み済みテクスチャを検索
-    auto it = std::find_if(
-        modelDatas_.begin(),
-        modelDatas_.end(),
-        [&](ModelData& modelData) {return modelData.filePath == filename; }
-    );
-
-    //テクスチャ枚数上限チェック
-    assert(modelDatas_.size() < DirectXCommon::kMaxModelCount);
-
-    if (it != modelDatas_.end()) {
+    if (models_.contains(handle)) {
         return;
     }
+    //テクスチャ枚数上限チェック
+    assert(models_.size() < DirectXCommon::kMaxModelCount);
 
-    //テクスチャデータを追加
-    modelDatas_.resize(modelDatas_.size() + 1);
-    //追加したテクスチャデータの参照を取得する
-    ModelData& modelData = modelDatas_.back();
+    //追加したテクスチャデータのポインタ
+    std::unique_ptr<Model> model = std::make_unique<Model>();
+   
+    std::unique_ptr<ModelData> modelData = std::make_unique<ModelData>();
 
     Assimp::Importer importer;
     std::string filePath = directoryPath + "/" + filename;
-    modelData.filePath = filePath;
+    modelData->filePath = filePath;
 
     const aiScene* scene = importer.ReadFile(filePath.c_str(),
         aiProcess_Triangulate |
@@ -96,7 +86,7 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
 
                 vertex.position.x *= -1.0f;
                 vertex.normal.x *= -1.0f;
-                modelData.vertices.push_back(vertex);
+                modelData->vertices.push_back(vertex);
             }
 
         }
@@ -111,30 +101,18 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
         if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
             aiString textureFilePath;
             material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
-            modelData.material.textureFilePath = directoryPath + "/" + textureFilePath.C_Str();
+            modelData->material.textureFilePath = directoryPath + "/" + textureFilePath.C_Str();
         }
 
     }
 
     //モデルのテクスチャを読む
-    modelData.textureHandle = Texture::AddTextureHandle(modelData.material.textureFilePath);
+    modelData->textureHandle = Texture::AddTextureHandle(modelData->material.textureFilePath);
 
-}
+    model->SetModelData(std::move(modelData));
+    model->Create();
 
-uint32_t ModelManager::GetTextureIndexByFileName(const std::string& filePath)
-{
-    //読み込み済みデータを検索
-    auto it = std::find_if(
-        modelDatas_.begin(),
-        modelDatas_.end(),
-        [&](ModelData& modelData) {return modelData.filePath == filePath; }
-    );
+    //ハンドルとモデルをセットにする
+    models_.insert(std::make_pair(handle, std::move(model)));
 
-    if (it != modelDatas_.end()) {
-        uint32_t modelIndex = static_cast<uint32_t>(std::distance(modelDatas_.begin(), it));
-        return modelIndex;
-    }
-
-    assert(0);
-    return 0;
 }
