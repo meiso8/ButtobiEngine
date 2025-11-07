@@ -26,7 +26,7 @@ void MaterialResource::CreateMaterial(const Vector4& color, uint32_t lightType) 
     //書き込むためのアドレスを取得
     HRESULT result = materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&material_));
     material_->color = color;
-    material_->lightType = lightType;
+    material_->lightMode = lightType;
     material_->uvTransform = MakeIdentity4x4();
     material_->shininess = 1.0f;
 };
@@ -42,9 +42,9 @@ void MaterialResource::SetUV(const Matrix4x4& transform) {
         ;
 }
 
-void MaterialResource::SetLightType(uint32_t lightType)
+void MaterialResource::SetLightMode(uint32_t lightType)
 {
-    material_->lightType = lightType;
+    material_->lightMode = lightType;
 }
 
 void MaterialResource::SetShininess(const float32_t& shininess)

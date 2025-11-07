@@ -6,6 +6,8 @@
 std::array<LineMesh*, 102> DrawGrid::line_;
 std::array < Cube*, 2> DrawGrid::cube_;
 
+std::array<Object3d*, 104> DrawGrid::lineTransforms_;
+
 void DrawGrid::Finalize()
 {
 
@@ -16,9 +18,15 @@ void DrawGrid::Finalize()
     for (auto& cube : cube_) {
         delete cube;
     }
+
+
+    for (auto& line : lineTransforms_) {
+        delete line;
+    }
+
 }
 
-void DrawGrid::Initialize()
+void DrawGrid::Create()
 {
     uint32_t textureHandle = Texture::GetHandle(Texture::WHITE_1X1);
 
@@ -45,16 +53,27 @@ void DrawGrid::Initialize()
 
     for (int i = 0; i < cube_.size(); ++i) {
         cube_[i] = new Cube();
+        cube_[i]->Create(textureHandle);
     }
-
-    cube_[0]->Create(textureHandle);
-    cube_[1]->Create(textureHandle);
 
     cube_[0]->SetMinMax({ -1.0f / 128.0f,-1.0f / 128.0f,-25.0f }, { 1.0f / 128.0f,1.0f / 128.0f,25.0f });
     cube_[1]->SetMinMax({ -25.0f,-1.0f / 128.0f,-1.0f / 128.0f }, { 25.0f,1.0f / 128.0f,1.0f / 128.0f });
 
     cube_[0]->SetColor(Vector4(0.0f, 1.0f, 0.0f, 1.0f));
     cube_[1]->SetColor(Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+
+    for (size_t i = 0; i < lineTransforms_.size(); ++i) {
+        lineTransforms_[i] = new Object3d();
+        lineTransforms_[i]->Create();
+        lineTransforms_[i]->Update();
+        if (i >= 2) {
+            lineTransforms_[i-2]->SetMesh(line_[i-2]);
+        } else {
+            lineTransforms_[i]->SetMesh(cube_[i]);
+        }
+    }
+
+
 }
 
 void DrawGrid::Draw(Camera& camera, bool isDraw) {
@@ -63,17 +82,7 @@ void DrawGrid::Draw(Camera& camera, bool isDraw) {
         return;
     }
 
-    Matrix4x4 identity4x4 = MakeIdentity4x4();
-
-    line_[0]->PreDraw();
-
-    for (int i = 0; i < 102; ++i) {
-        line_[i]->Draw(camera, identity4x4);
+    for (int i = 0; i < lineTransforms_.size(); ++i) {
+        lineTransforms_[i]->Draw(camera,klightModeNone);
     }
-    cube_[0]->PreDraw();
-
-    for (int i = 0; i < 2; ++i) {
-        cube_[i]->Draw(camera, identity4x4);
-    }
-
 }

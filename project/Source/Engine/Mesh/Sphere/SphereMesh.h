@@ -7,7 +7,7 @@ class SphereMesh :public MeshCommon
 public:
     ~SphereMesh();
     void Create(uint32_t textureHandle);
-    void Draw(Camera& camera, const Matrix4x4& worldMatrix, uint32_t lightType = MaterialResource::LIGHTTYPE::NONE)override;
+    void Draw(ID3D12GraphicsCommandList* commandList)override;
     void SetUVScale(const Vector3& scale) { uvTransform_.scale = scale; };
     void UpdateUV();
     void SetVertex(const float& radius = 1.0f);

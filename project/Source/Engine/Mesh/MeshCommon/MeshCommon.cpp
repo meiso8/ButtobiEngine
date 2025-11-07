@@ -1,11 +1,8 @@
 #include "MeshCommon.h"
 #include"DirectXCommon.h"
 #include"MyEngine.h"
-#include"MakeMatrix.h"
 
 ModelConfig* MeshCommon::modelConfig_ = nullptr;
-ID3D12GraphicsCommandList* MeshCommon::commandList_ = nullptr;
-
 
 void MeshCommon::Finalize() {
 
@@ -13,7 +10,6 @@ void MeshCommon::Finalize() {
         materialResource_->UnMap();
         delete materialResource_;
     }
-
 
     if (waveResource_) {
         waveResource_->Unmap(0, nullptr);
@@ -27,18 +23,16 @@ void MeshCommon::Finalize() {
     indexResource_.Reset();
     waveResource_.Reset();
     expansionResource_.Reset();
-    if (transformationMatrixResource_) {
-        transformationMatrixResource_->Unmap(0, nullptr);
-    }
-    transformationMatrixResource_.Reset();
+
 }
 
-
-void MeshCommon::PreDraw(const BlendMode& type , const CullMode& cullMode) {
-    commandList_->SetGraphicsRootSignature(modelConfig_->rootSignature->GetRootSignature(0));
-    commandList_->SetPipelineState(PSO::GetGraphicsPipelineState(type, cullMode).Get());//PSOを設定
+void MeshCommon::PreDraw(ID3D12GraphicsCommandList* commandList, const LightMode& lightMode,const BlendMode& blendMode, const CullMode& cullMode) {
+    commandList->SetGraphicsRootSignature(modelConfig_->rootSignature->GetRootSignature(RootSignature::NORMAL));
+    commandList->SetPipelineState(PSO::GetGraphicsPipelineState(blendMode, cullMode).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
-    commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    //ライトの設定
+    materialResource_->SetLightMode(lightMode);
 }
 
 void MeshCommon::SetColor(const Vector4& color) {
@@ -72,16 +66,6 @@ void MeshCommon::CreateIndexResource()
 {
 }
 
-void MeshCommon::CreateTransformationMatrix() {
-
-    //Matrix4x4　1つ分のサイズを用意
-    transformationMatrixResource_ = DirectXCommon::CreateBufferResource(sizeof(TransformationMatrix));
-    //データを書き込む
-    //書き込むためのアドレスを取得
-    transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
-    transformationMatrixData_->WVP = MakeIdentity4x4();
-    transformationMatrixData_->World = MakeIdentity4x4();
-}
 
 void MeshCommon::CreateMaterial(const Vector4& color, uint32_t lightType) {
     //マテリアルリソースを作成

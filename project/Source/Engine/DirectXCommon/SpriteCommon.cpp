@@ -1,6 +1,6 @@
 #include "SpriteCommon.h"
 #include"DirectXCommon.h"
-#include"PSO/PSO.h"
+#include"PSO.h"
 
 RootSignature* SpriteCommon::rootSignature_ = nullptr;
 

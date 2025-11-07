@@ -11,13 +11,11 @@ QuadMesh::~QuadMesh() {
 
 void QuadMesh::Create(uint32_t textureHandle)
 {
-    commandList_ = DirectXCommon::GetCommandList();
     modelConfig_ = ModelConfig::GetInstance();
     textureHandle_ = textureHandle;
 
     CreateVertex();
     CreateIndexResource();
-    CreateTransformationMatrix();
     CreateUVTransformationMatrix();
     CreateMaterial();
     CreateWaveData();
@@ -43,7 +41,6 @@ void QuadMesh::CreateVertex() {
     vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
     //1枚目の三角形 四頂点でスプライト描画が完成
     ResetSize({ 1.0f,1.0f });
-
 
     vertexData_[0].texcoord = { 0.0f, 1.0f };//左下
     vertexData_[1].texcoord = { 0.0f,0.0f };//左上
@@ -88,44 +85,27 @@ void QuadMesh::ResetSize(const Vector2& size) {
 
 };
 
-void QuadMesh::PreDraw(const BlendMode& type ,const CullMode& cullMode) {
-    commandList_->SetGraphicsRootSignature(modelConfig_->rootSignature->GetRootSignature(0));
-    commandList_->SetPipelineState(MyEngine::GetPSO()->GetGraphicsPipelineState(type, cullMode).Get());//PSOを設定
-    //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
-    commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-}
-
-void QuadMesh::Draw(Camera& camera, const Matrix4x4& worldMatrix, const uint32_t lightType)
+void QuadMesh::Draw(ID3D12GraphicsCommandList* commandList)
 {
-    materialResource_->SetLightType(lightType);
-
-    worldViewProjectionMatrix_ = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
-
-    *transformationMatrixData_ = { worldViewProjectionMatrix_,worldMatrix };
-
-
 
     //頂点バッファビューを設定
-    commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
+    commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
     //IBVを設定new
-    commandList_->IASetIndexBuffer(&indexBufferView_);//IBVを設定
+    commandList->IASetIndexBuffer(&indexBufferView_);//IBVを設定
     //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
-    //TransformationMatrixCBufferの場所を設定
-    commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
+
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
-    commandList_->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureHandle_));
+    commandList->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureHandle_));
     //LightのCBufferの場所を設定
-    commandList_->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
     //timeのSRVの場所を設定
-    commandList_->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
     //expansionのCBufferの場所を設定
-    commandList_->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
-    //cameraのCBufferの場所を設定
-    commandList_->SetGraphicsRootConstantBufferView(6, camera.GetResource()->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
 
     //描画!（DrawCall/ドローコール）6個のインデックスを使用し1つのインスタンスを描画。その他は当面0で良い。
-    commandList_->DrawIndexedInstanced(6, 1, 0, 0, 0);
+    commandList->DrawIndexedInstanced(6, 1, 0, 0, 0);
 };
 
 void QuadMesh::CreateIndexResource() {
@@ -145,12 +125,6 @@ void QuadMesh::CreateIndexResource() {
 #pragma region//IndexResourceにデータを書き込む
     //インデックスリーソースにデータを書き込む
     indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
-
-    //右下
-    //右上
-    //左下
-    //左上
-
     //頂点数を削減
     indexData_[0] = 0;
     indexData_[1] = 1;

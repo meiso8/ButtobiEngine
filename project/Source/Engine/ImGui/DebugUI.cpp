@@ -4,11 +4,12 @@
 #include"Sprite.h"
 #include"Model.h"
 #include"Particle/Particle.h"
+#include"Object3d.h"
 
 #include"SphereMesh.h"
 #include"DirectionalLight.h"
-#include"PSO/PSO.h"
-#include"Camera/Camera.h"
+#include"PSO.h"
+#include"Camera.h"
 
 #include<numbers>
 #include<algorithm>
@@ -126,14 +127,14 @@ void DebugUI::CheckSprite(Sprite& sprite, const char* label) {
         if (ImGui::TreeNode("anchorPointTextureSize")) {
 
             ImGui::SliderFloat2("anchorPoint", &sprite.GetAnchorPoint().x, 0.0f, 1.0f);
-            ImGui::Checkbox("isFlipX",&sprite.GetIsFlipX());
+            ImGui::Checkbox("isFlipX", &sprite.GetIsFlipX());
             ImGui::Checkbox("isFlipY", &sprite.GetIsFlipY());
             ImGui::SliderFloat2("textureLeftTop", &sprite.GetTextureLeftTop().x, 0.0f, 1280.0f);
             ImGui::SliderFloat2("textureSize", &sprite.GetTextureSize().x, 0.0f, 1280.0f);
             ImGui::TreePop();
         }
 
-        CheckColor(sprite.GetColor(),"color");
+        CheckColor(sprite.GetColor(), "color");
 
         ImGui::TreePop();
     }
@@ -180,6 +181,12 @@ void DebugUI::CheckWaveData(Wave& wave, const char* label)
         ImGui::TreePop();
     }
 }
+void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
+{
+    ImGui::Begin("Object3d");
+    CheckWorldTransform(object3d.worldTransform_, label);
+    ImGui::End();
+}
 void DebugUI::CheckParticle(ParticleManager& particle, const char* label)
 {
 
@@ -199,7 +206,7 @@ void DebugUI::CheckParticle(ParticleManager& particle, const char* label)
 
     if (ImGui::Button("Add　Particle")) {
         Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
-        particle.particles.splice(particle.particles.end(), Emit(true, emitter, {1.0f,1.0f,1.0f}, color));
+        particle.particles.splice(particle.particles.end(), Emit(true, emitter, { 1.0f,1.0f,1.0f }, color));
     }
 
     int index = 0;

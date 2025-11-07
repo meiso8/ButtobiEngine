@@ -6,30 +6,34 @@
 #include<cstdint>
 #include"hlslTypeToCpp.h"
 
+enum LightMode {
+    klightModeNone,
+    kLightModeLReflectance,
+    kLightModeHalfL,
+};
+
+struct Material
+{
+    float32_t4 color;
+    int32_t lightMode;
+    float padding[3];
+    float32_t4x4 uvTransform;
+    float32_t shininess;
+    float padding2[3];
+};
+
 class MaterialResource {
 
 public:
 
-    struct Material
-    {
-        float32_t4 color;
-        int32_t lightType;
-        float padding[3];
-        float32_t4x4 uvTransform;
-        float32_t shininess;
-        float padding2[3];
-    };
+
 
     MaterialResource() = default;
     ~MaterialResource();
     void UnMap();
-    enum LIGHTTYPE {
-        NONE,
-        L_REFLECTANCE,
-        HALF_L,
-    };
 
-    void CreateMaterial(const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, uint32_t lightType = LIGHTTYPE::NONE);
+
+    void CreateMaterial(const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, uint32_t lightType = LightMode::klightModeNone);
     Material* GetMaterial() {
         return material_;
     };
@@ -43,7 +47,7 @@ public:
 
     void SetColor(const Vector4& color);
     void SetUV(const Matrix4x4& transform);
-    void SetLightType(uint32_t lightType);
+    void SetLightMode(uint32_t lightType);
     void SetShininess(const float32_t& shininess);
 private:
     Microsoft::WRL::ComPtr <ID3D12Resource> materialResource_ = nullptr;

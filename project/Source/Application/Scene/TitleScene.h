@@ -4,7 +4,7 @@
 #include "Sprite.h"
 #include<memory>
 #include<array>
-
+#include"Object3d.h"
 class QuadMesh;
 class SphereMesh;
 class Model;
@@ -19,4 +19,7 @@ public:
     void Debug()override;
     std::unique_ptr<QuadMesh> quadMesh_= nullptr;
     std::unique_ptr<SphereMesh> sphereMesh_ = nullptr;
+    std::unique_ptr<Model> model_ = nullptr;
+
+    std::array< std::unique_ptr < Object3d>, 3> object3ds_;
 };

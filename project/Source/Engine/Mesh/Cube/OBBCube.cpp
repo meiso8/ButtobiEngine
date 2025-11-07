@@ -9,14 +9,12 @@ OBBCube::~OBBCube() {
 
 void OBBCube::Create(uint32_t& textureHandle) {
 
-    commandList_ = DirectXCommon::GetCommandList();
     modelConfig_ = ModelConfig::GetInstance();
     textureHandle_ = textureHandle;
 
     CreateVertex();
     CreateIndexResource();
 
-    CreateTransformationMatrix();
     CreateMaterial();
     CreateWaveData();
     CreateBalloonData();
@@ -235,35 +233,25 @@ void OBBCube::SetVertex(const Vector3 (& vertices)[8]) {
     vertexResource_->Unmap(0, nullptr);
 }
 
-void OBBCube::Draw(Camera& camera, const Matrix4x4& worldMatrix, const uint32_t lightType)
+void OBBCube::Draw(ID3D12GraphicsCommandList* commandList)
 {
 
-    materialResource_->SetLightType(lightType);
-
-    worldViewProjectionMatrix_ = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
-
-    *transformationMatrixData_ = { worldViewProjectionMatrix_,worldMatrix };
-
     //頂点バッファビューを設定
-    commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
+    commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
     ////IBVを設定new
-    commandList_->IASetIndexBuffer(&indexBufferView_);//IBVを設定
+    commandList->IASetIndexBuffer(&indexBufferView_);//IBVを設定
     ////マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
-    //TransformationMatrixCBufferの場所を設定
-    commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
-    //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
-    commandList_->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureHandle_));
+    commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
+  //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
+    commandList->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureHandle_));
     //LightのCBufferの場所を設定
-    commandList_->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
     //timeのSRVの場所を設定
-    commandList_->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
     //expansionのCBufferの場所を設定
-    commandList_->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
-    //cameraのCBufferの場所を設定
-    commandList_->SetGraphicsRootConstantBufferView(6, camera.GetResource()->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
 
     ////描画!（DrawCall/ドローコール）6個のインデックスを使用し1つのインスタンスを描画。その他は当面0で良い。
-    commandList_->DrawIndexedInstanced(36, 1, 0, 0, 0);
+    commandList->DrawIndexedInstanced(36, 1, 0, 0, 0);
 }
 
