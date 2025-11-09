@@ -94,7 +94,7 @@ public:
 
     virtual void Update(Camera& camera);
     virtual void EmitParticle(const std::string name, const Vector3& position, uint32_t count, const Vector3& scale = {1.0f,1.0f,1.0f}, const Vector4& color = {1.0f,1.0f,1.0f,1.0f}, const bool& isRandom = true);
-    void TimerUpdate(const std::string name, const Vector3& position, uint32_t count, const bool& isRandom, const Vector3& scale, const Vector4& color);
+    void TimerUpdate(const std::string name, const Vector3& position, uint32_t count, const bool& isRandom = true, const Vector3& scale = { 1.0f,1.0f,1.0f }, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
 
     void Draw(uint32_t blendMode = BlendMode::kBlendModeAdd);
     void Finalize();

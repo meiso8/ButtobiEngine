@@ -36,7 +36,7 @@ public:
 
     static void CheckObject3d(Object3d& object3d, const char* label);
 
-    static void CheckParticle(ParticleManager& particle,const char* label);
+    static void CheckParticle(ParticleManager& particle);
     /// @brief ワールドトランスフォーム
     /// @param worldTransform 
     static void CheckWorldTransform(WorldTransform& worldTransform,const char* label);

@@ -20,7 +20,6 @@ std::list<Particle> Emit(const bool& isRandom, const Emitter& emitter, const Vec
         particles.push_back(MakeNewParticle(isRandom, emitter.transform.translate, scale, color));
     }
     return particles;
-
 }
 
 Particle MakeNewParticle(const bool& isRandom, const Vector3& translate, const Vector3& scale, const Vector4& color)
@@ -48,8 +47,6 @@ Particle MakeNewParticle(const bool& isRandom, const Vector3& translate, const V
 
     return particle;
 }
-
-
 
 ParticleManager::~ParticleManager()
 {
@@ -89,30 +86,6 @@ void ParticleManager::CreateParticleGroup(const std::string name, const uint32_t
     particleGroups.insert(std::make_pair(name, std::move(newParticleGroup)));
 
 }
-
-
-//void ParticleManager::CreateTransformationMatrix()
-//{
-//    //Instancing用のTransformationMatrixリソースを作成
-//    instancingResource = DirectXCommon::CreateBufferResource(sizeof(ParticleForGPU) * kNumMaxInstance);
-//    //書き込むためのアドレスを取得
-//    instancingResource->Map(0, nullptr, reinterpret_cast<void**>(&instancingData));
-//
-//    assert(instancingResource != nullptr);
-//
-//    for (uint32_t index = 0; index < kNumMaxInstance; ++index) {
-//        instancingData[index].WVP = MakeIdentity4x4();
-//        instancingData[index].World = MakeIdentity4x4();
-//        instancingData[index].color = Vector4{ 1.0f,1.0f,1.0f,1.0f };
-//    }
-//
-//    //一旦応急処置でtextureHandleに入れる textureのサイス+2分が入る
-//    instanceSrvIndex = SrvManager::Allocate();
-//    instancingSrvHandleCPU = SrvManager::GetCPUDescriptorHandle(instanceSrvIndex);//この書き方はダメですね
-//    instancingSrvHandleGPU = SrvManager::GetGPUDescriptorHandle(instanceSrvIndex);
-//
-//    SrvManager::CreateSRVforStructuredBuffer(instanceSrvIndex, instancingResource.Get(), kNumMaxInstance, sizeof(ParticleForGPU));
-//}
 
 void ParticleManager::Create()
 {
@@ -203,9 +176,8 @@ void ParticleManager::EmitParticle(const std::string name, const Vector3& positi
     emitter_.cont = count;
     emitter_.transform.translate = position;
 
-    for (const auto& [name, group] : particleGroups) {
-        group->particles.splice(group->particles.end(), Emit(isRandom, emitter_, scale, color));
-    }
+    particleGroups[name]->particles.splice(particleGroups[name]->particles.end(), Emit(isRandom, emitter_, scale, color));
+
 
 }
 

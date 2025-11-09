@@ -52,13 +52,13 @@ TitleScene::TitleScene()
     object3ds_[2]->SetMesh(models_[0]);
 
     sprite_ = std::make_unique<Sprite>();
-    sprite_->Create(Texture::GetHandle(Texture::UV_CHECKER),{0.0f,0.0f},{100.0f,100.0f});
+    sprite_->Create(Texture::GetHandle(Texture::UV_CHECKER), { 0.0f,0.0f }, { 100.0f,100.0f });
 
 
     particleManager_ = std::make_unique<ParticleManager>();
     particleManager_->Create();
-    particleManager_->CreateParticleGroup("uvChecker",Texture::GetHandle(Texture::UV_CHECKER));
-
+    particleManager_->CreateParticleGroup("uvChecker", Texture::GetHandle(Texture::UV_CHECKER));
+    particleManager_->CreateParticleGroup("numbers", Texture::GetHandle(Texture::NUMBERS));
 }
 
 void TitleScene::Initialize() {
@@ -91,6 +91,7 @@ void TitleScene::Update() {
     }
 
     particleManager_->Update(*currentCamera_);
+    particleManager_->TimerUpdate("numbers", object3ds_[0]->worldTransform_.translate_,3,true);
 }
 
 
@@ -107,19 +108,18 @@ void TitleScene::Debug()
     DebugUI::Button("ChangeCamera", func);
     DebugUI::CheckObject3d(*object3ds_[0], "0");
     DebugUI::CheckObject3d(*object3ds_[1], "1");
-    DebugUI::CheckParticle(*particleManager_,"particleManager");
+    DebugUI::CheckParticle(*particleManager_);
 }
 
 void TitleScene::Draw() {
 
-#ifdef _DEBGU
+#ifdef _DEBUG
+
     DrawGrid::Draw(*currentCamera_);
-
 #endif
+    object3ds_[1]->Draw(*currentCamera_);
 
-        object3ds_[1]->Draw(*currentCamera_);
-
-    object3ds_[0]->Draw(*currentCamera_,kLightModeLReflectance,kBlendModeNormal,kCullModeNone);
+    object3ds_[0]->Draw(*currentCamera_, kLightModeLReflectance, kBlendModeNormal, kCullModeNone);
 
     object3ds_[2]->Draw(*currentCamera_, klightModeNone);
 

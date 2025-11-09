@@ -187,10 +187,10 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
     CheckWorldTransform(object3d.worldTransform_, label);
     ImGui::End();
 }
-void DebugUI::CheckParticle(ParticleManager& particle, const char* label)
+void DebugUI::CheckParticle(ParticleManager& particle)
 {
 
-    ImGui::Begin(label);
+    ImGui::Begin("Particle");
 
     ImGui::Checkbox("useBillboard", &particle.useBillboard_);
 
@@ -204,19 +204,12 @@ void DebugUI::CheckParticle(ParticleManager& particle, const char* label)
     ImGui::SliderFloat("frequency", &emitter.frequency, 0.1f, 10.0f);
     ImGui::Text("frequencyTime : %f", emitter.frequencyTime);
     
-    if (ImGui::Button("Add　uvChecker Particle")) {
-        particle.EmitParticle("uvChecker", emitter.transform.translate,emitter.cont);
-    }
-
-    for (int i = 0; i < 5; ++i) {
-        ImGui::PushID(i); // 一意のIDを追加！
-
-        ImGui::Button("Click Me"); // 同じラベルでもOK！
-
-        ImGui::PopID(); // 忘れずに戻す！
-    }
-
     for (const auto& [name, group] : particle.GetParticleGroups()) {
+
+        if (ImGui::Button(name.c_str())) {
+            particle.EmitParticle(name, emitter.transform.translate, emitter.cont);
+        }
+
         for (std::list<Particle>::iterator itr = group->particles.begin(); itr != group->particles.end(); ++itr) {
             CheckTransform((*itr).transform, name.c_str());
         }
