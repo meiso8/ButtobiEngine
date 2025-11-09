@@ -2,8 +2,6 @@
 
 #include"VertexData.h"
 #include"PSO.h"  
-#include"ShaderResourceView.h"  
-
 #include"Transform.h"  
 #include"TransformationMatrix.h"  
 #include"MaterialResource.h"  
@@ -26,7 +24,7 @@ public:
     );
 
     void SetColor(const Vector4& color);
-    void SetTexture(uint32_t textureHandle) { textureIndex = textureHandle; };
+    void SetTexture(uint32_t textureHandle) { textureHandle_ = textureHandle; };
 
     void SetSize(const Vector2& size) { size_ = size; };
     void SetPosition(const Vector2& position) { position_ = position; }
@@ -63,7 +61,7 @@ private:
     void UpdateUV();
     void AdjustTextureSize();
 private:
-    uint32_t textureIndex = 0;
+    uint32_t textureHandle_ = 0;
     Vector2 anchorPoint_ = { 0.0f,0.0f };
     bool isFlipX_ = false;
     bool isFlipY_ = false;

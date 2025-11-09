@@ -1,13 +1,14 @@
 #include "ImGuiClass.h"
 #include"CommandList.h"
-
+#include"SRVmanager/SrvManager.h"
 
 
 void ImGuiClass::Initialize(Window& window,
     const Microsoft::WRL::ComPtr<ID3D12Device>& device,
     SwapChain& swapChain,
-    RenderTargetView& rtv,
-    const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& srvDescriptorHeap) {
+    RenderTargetView& rtv) {
+    
+    uint32_t srvIndex = SrvManager::Allocate();
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -16,9 +17,9 @@ void ImGuiClass::Initialize(Window& window,
     ImGui_ImplDX12_Init(device.Get(),
         swapChain.GetDesc().BufferCount,
         rtv.GetDesc().Format,
-        srvDescriptorHeap.Get(),
-        srvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(),
-        srvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+        SrvManager::GetDescriptorHeap(),
+        SrvManager::GetCPUDescriptorHandle(srvIndex),
+        SrvManager::GetGPUDescriptorHandle(srvIndex));
 }
 
 void ImGuiClass::FrameStart() {
@@ -37,11 +38,11 @@ void ImGuiClass::Render() {
 
 }
 
-void ImGuiClass::DrawImGui(CommandList& commandList) {
+void ImGuiClass::DrawImGui(ID3D12GraphicsCommandList* commandList) {
 
     //諸々の描画処理が終了下タイミングでImGuiの描画コマンドを積む
 //実際のcommandListのImGuiの描画コマンドを積む
-    ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList.GetCommandList().Get());
+    ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
 }
 
 void ImGuiClass::ShutDown() {

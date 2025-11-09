@@ -9,6 +9,8 @@
 #include"Balloon.h"
 #include"Wave.h"
 #include <functional>
+#include<memory>
+#include<unordered_map>
 
 enum BlendMode;
 class Input;
@@ -17,6 +19,7 @@ class SphereMesh;
 class Camera;
 class Model;
 class ParticleManager;
+class ParticleEmitter;
 class Object3d;
 
 class DebugUI
@@ -34,7 +37,7 @@ public:
 
     static void CheckObject3d(Object3d& object3d, const char* label);
 
-    static void CheckParticle(ParticleManager& particle,const char* label);
+    static void CheckParticle(ParticleManager& particle, ParticleEmitter& particleEmitter);
     /// @brief ワールドトランスフォーム
     /// @param worldTransform 
     static void CheckWorldTransform(WorldTransform& worldTransform,const char* label);

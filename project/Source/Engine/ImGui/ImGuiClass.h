@@ -25,12 +25,11 @@ public:
     void Initialize(Window& window,
         const Microsoft::WRL::ComPtr<ID3D12Device>& device,
         SwapChain& swapChain,
-        RenderTargetView& rtv,
-        const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& srvDescriptorHeap);
+        RenderTargetView& rtv);
 
     void FrameStart();
     void Render();
-    void DrawImGui(CommandList& commandList);
+    void DrawImGui(ID3D12GraphicsCommandList* commandList);
     void ShutDown();
 
 };

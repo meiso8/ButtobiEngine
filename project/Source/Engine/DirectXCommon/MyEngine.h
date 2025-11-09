@@ -2,11 +2,12 @@
 
 #pragma region //自作関数
 #include"D3DResourceLeakChecker.h"
+
 #include"Input.h"
 #include"DirectXCommon.h"
+#include"SRVmanager/SrvManager.h"
 
 #include"PSO.h"
-#include"Texture.h"
 
 #include"ModelManager.h"
 #include"ModelConfig.h"
@@ -42,6 +43,11 @@ public:
 private:
 
     static std::unique_ptr<DirectXCommon> directXCommon;
+#ifdef _DEBUG
+    ImGuiClass imGuiClass = {};
+#endif // _DEBUG
+
+
     static std::unique_ptr<LogFile> logFile;
     static std::unique_ptr<Window> wc;
     static std::unique_ptr<ModelConfig> modelConfig_;
@@ -52,6 +58,6 @@ private:
     static DirectionalLight* directionalLightData;
 
     static std::unique_ptr<PSO> pso;
-
+    static std::unique_ptr<SrvManager> srvManager;
 };
 

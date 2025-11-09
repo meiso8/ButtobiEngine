@@ -2,7 +2,7 @@
 
 #include"DirectXCommon.h"
 #include"MyEngine.h"
-#include"TextureManager.h"
+#include"Texture.h"
 #include"MakeMatrix.h"
 
 QuadMesh::~QuadMesh() {
@@ -96,7 +96,9 @@ void QuadMesh::Draw(ID3D12GraphicsCommandList* commandList)
     commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
 
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
-    commandList->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureHandle_));
+SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
+
+    
     //LightのCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
     //timeのSRVの場所を設定

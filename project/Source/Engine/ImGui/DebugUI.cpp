@@ -4,6 +4,7 @@
 #include"Sprite.h"
 #include"Model.h"
 #include"Particle/Particle.h"
+#include"Particle/ParticleEmitter.h"
 #include"Object3d.h"
 
 #include"SphereMesh.h"
@@ -187,14 +188,14 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
     CheckWorldTransform(object3d.worldTransform_, label);
     ImGui::End();
 }
-void DebugUI::CheckParticle(ParticleManager& particle, const char* label)
+void DebugUI::CheckParticle(ParticleManager& particle,ParticleEmitter& particleEmitter)
 {
 
-    ImGui::Begin(label);
+    ImGui::Begin("Particle");
 
     ImGui::Checkbox("useBillboard", &particle.useBillboard_);
 
-    Emitter& emitter = particle.emitter_;
+    Emitter& emitter = particleEmitter.emitter_;
     int count = emitter.cont;
     ImGui::SliderInt("createNum", &count, 0, particle.kNumMaxInstance);
     emitter.cont = count;
@@ -203,18 +204,18 @@ void DebugUI::CheckParticle(ParticleManager& particle, const char* label)
 
     ImGui::SliderFloat("frequency", &emitter.frequency, 0.1f, 10.0f);
     ImGui::Text("frequencyTime : %f", emitter.frequencyTime);
+    
+    for (const auto& [name, group] : particle.GetParticleGroups()) {
 
-    if (ImGui::Button("Add　Particle")) {
-        Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
-        particle.particles.splice(particle.particles.end(), Emit(true, emitter, { 1.0f,1.0f,1.0f }, color));
+        if (ImGui::Button(name.c_str())) {
+            particle.EmitParticle(name, emitter.transform.translate, emitter.cont);
+        }
+
+        for (std::list<Particle>::iterator itr = group->particles.begin(); itr != group->particles.end(); ++itr) {
+            CheckTransform((*itr).transform, name.c_str());
+        }
     }
 
-    int index = 0;
-    for (std::list<Particle>::iterator itr = particle.particles.begin(); itr != particle.particles.end(); ++itr) {
-        std::string labels = std::format("{}", index);
-        CheckTransform((*itr).transform, labels.c_str());
-        ++index;
-    }
 
     ImGui::End();
 }

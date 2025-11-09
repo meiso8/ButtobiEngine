@@ -4,7 +4,7 @@
 #include"MakeMatrix.h"
 #include"Transform.h"
 #include<numbers>
-#include"TextureManager.h"
+#include"Texture.h"
 #include"ModelManager.h"
 #include"MyEngine.h"
 
@@ -16,7 +16,7 @@ Model::~Model()
 void Model::Create() {
 
     modelConfig_ = ModelConfig::GetInstance();
-    textureHandle_ = modelData_->textureHandle;
+    textureHandle_ = modelData_->material.textureSrvIndex;
 
     //マテリアルの作成 lightType halfLambert
     CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, kLightModeHalfL);
@@ -65,7 +65,8 @@ void Model::Draw(ID3D12GraphicsCommandList* commandList) {
     //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
     commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
-    commandList->SetGraphicsRootDescriptorTable(2, TextureManager::GetSrvHandleGPU(textureHandle_));
+    SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
+ 
     //LightのCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
     //timeのSRVの場所を設定
