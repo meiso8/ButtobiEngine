@@ -9,7 +9,7 @@
 #include<assimp/postprocess.h>
 #include"DirectXCommon.h"
 
-#include"TextureManager.h"
+#include"Texture.h"
 #include"Model.h"
 
 std::map<const uint32_t, std::unique_ptr< Model> >ModelManager::models_;
@@ -108,7 +108,7 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
     }
 
     //モデルのテクスチャを読む
-    modelData->textureHandle = Texture::AddTextureHandle(modelData->material.textureFilePath);
+    modelData->material.textureSrvIndex = Texture::AddTextureHandle(modelData->material.textureFilePath);
     model->SetModelData(std::move(modelData));
     model->Create();
 

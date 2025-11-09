@@ -1,6 +1,6 @@
 #include "Cube.h"
 #include"DirectXCommon.h"
-#include"TextureManager.h"
+#include"Texture.h"
 #include"MyEngine.h"
 
 Cube::~Cube() {

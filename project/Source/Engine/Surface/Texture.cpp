@@ -1,4 +1,4 @@
-#include "TextureManager.h"
+#include "Texture.h"
 #include"DirectXCommon.h"
 #include"StringUtility.h"
 #include<cassert>

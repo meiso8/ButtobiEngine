@@ -160,9 +160,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Object3d\Object3d.cpp" />
     <ClCompile Include="Source\Application\Scene\SceneChange.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Cube\OBBCube.cpp" />
-    <ClCompile Include="Source\Engine\Particle\AppleCrashParticle.cpp" />
-    <ClCompile Include="Source\Engine\Particle\ChargeParticle.cpp" />
-    <ClCompile Include="Source\Engine\Particle\Flashparticle.cpp" />
     <ClCompile Include="Source\Application\System\CollisionManager.cpp" />
     <ClCompile Include="Source\Engine\Math\Matrix3x3.cpp" />
     <ClCompile Include="Source\Engine\Math\Perpendicular.cpp" />
@@ -236,7 +233,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Mesh\Sphere\SphereMesh.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\StringUtility.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Sprite\SpriteCommon.cpp" />
-    <ClCompile Include="Source\Engine\Surface\TextureManager.cpp" />
+    <ClCompile Include="Source\Engine\Surface\Texture.cpp" />
     <ClCompile Include="Source\Engine\Camera\SpriteCamera.cpp" />
     <ClCompile Include="Source\Engine\SRVmanager\SrvManager.cpp" />
   </ItemGroup>
@@ -245,14 +242,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\Scene\SceneChange.h" />
     <ClInclude Include="Source\Engine\Mesh\Cube\OBBCube.h" />
     <ClInclude Include="Source\Engine\Mesh\MeshCommon\VertexData.h" />
-    <ClInclude Include="Source\Engine\Particle\AppleCrashParticle.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\BlendMode.h" />
-    <ClInclude Include="Source\Engine\Particle\ChargeParticle.h" />
-    <ClInclude Include="Source\Engine\Particle\FlashParticle.h" />
     <ClInclude Include="Source\Application\System\Collider.h" />
     <ClInclude Include="Source\Application\System\CollisionConfig.h" />
     <ClInclude Include="Source\Application\System\CollisionManager.h" />
-    <ClInclude Include="Source\Engine\Particle\AccelerationField.h" />
     <ClInclude Include="Source\Engine\Math\Perpendicular.h" />
     <ClInclude Include="Source\Engine\Math\Random.h" />
     <ClInclude Include="Source\Engine\Mesh\MeshCommon\MeshCommon.h" />
@@ -340,7 +333,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\DirectXCommon\Window.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\StringUtility.h" />
     <ClInclude Include="Source\Engine\Mesh\Sprite\SpriteCommon.h" />
-    <ClInclude Include="Source\Engine\Surface\TextureManager.h" />
+    <ClInclude Include="Source\Engine\Surface\Texture.h" />
     <ClInclude Include="Source\Engine\Camera\SpriteCamera.h" />
     <ClInclude Include="Source\Engine\SRVmanager\SrvManager.h" />
   </ItemGroup>

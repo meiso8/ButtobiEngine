@@ -4,7 +4,7 @@
 #include"MakeMatrix.h"
 #include"Transform.h"
 #include<numbers>
-#include"TextureManager.h"
+#include"Texture.h"
 #include"ModelManager.h"
 #include"MyEngine.h"
 
@@ -16,7 +16,7 @@ Model::~Model()
 void Model::Create() {
 
     modelConfig_ = ModelConfig::GetInstance();
-    textureHandle_ = modelData_->textureHandle;
+    textureHandle_ = modelData_->material.textureSrvIndex;
 
     //マテリアルの作成 lightType halfLambert
     CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, kLightModeHalfL);

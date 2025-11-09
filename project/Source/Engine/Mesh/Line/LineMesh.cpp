@@ -2,7 +2,7 @@
 
 #include"DirectXCommon.h"
 #include"MyEngine.h"
-#include"TextureManager.h"
+#include"Texture.h"
 
 LineMesh::~LineMesh() {
     Finalize();

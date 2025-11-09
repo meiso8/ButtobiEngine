@@ -203,18 +203,25 @@ void DebugUI::CheckParticle(ParticleManager& particle, const char* label)
 
     ImGui::SliderFloat("frequency", &emitter.frequency, 0.1f, 10.0f);
     ImGui::Text("frequencyTime : %f", emitter.frequencyTime);
-
-    if (ImGui::Button("Add　Particle")) {
-        Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
-        particle.particles.splice(particle.particles.end(), Emit(true, emitter, { 1.0f,1.0f,1.0f }, color));
+    
+    if (ImGui::Button("Add　uvChecker Particle")) {
+        particle.EmitParticle("uvChecker", emitter.transform.translate,emitter.cont);
     }
 
-    int index = 0;
-    for (std::list<Particle>::iterator itr = particle.particles.begin(); itr != particle.particles.end(); ++itr) {
-        std::string labels = std::format("{}", index);
-        CheckTransform((*itr).transform, labels.c_str());
-        ++index;
+    for (int i = 0; i < 5; ++i) {
+        ImGui::PushID(i); // 一意のIDを追加！
+
+        ImGui::Button("Click Me"); // 同じラベルでもOK！
+
+        ImGui::PopID(); // 忘れずに戻す！
     }
+
+    for (const auto& [name, group] : particle.GetParticleGroups()) {
+        for (std::list<Particle>::iterator itr = group->particles.begin(); itr != group->particles.end(); ++itr) {
+            CheckTransform((*itr).transform, name.c_str());
+        }
+    }
+
 
     ImGui::End();
 }

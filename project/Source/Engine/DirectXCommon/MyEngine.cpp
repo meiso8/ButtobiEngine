@@ -1,6 +1,6 @@
 #include "MyEngine.h"
 #include"SpriteCommon.h"
-#include"TextureManager.h"
+#include"Texture.h"
 #include<algorithm>
 #include"SpriteCamera.h"
 #include"DrawGrid.h"

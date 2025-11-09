@@ -3,7 +3,7 @@
 #include"TransformationMatrix.h"
 #include"MakeMatrix.h"
 #include"MyEngine.h"
-#include"TextureManager.h"
+#include"Texture.h"
 #include"SpriteCamera.h"  
 #include"ImGuiClass.h"
 

@@ -9,6 +9,8 @@
 #include"Balloon.h"
 #include"Wave.h"
 #include <functional>
+#include<memory>
+#include<unordered_map>
 
 enum BlendMode;
 class Input;

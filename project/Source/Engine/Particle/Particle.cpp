@@ -1,12 +1,13 @@
 #include "Particle.h"
 #include"DirectXCommon.h"
-#include"Camera/Camera.h"
+#include"Camera.h"
 #include"MakeMatrix.h"
-#include"TextureManager.h"
+#include"Texture.h"
 #include"MyEngine.h"
 #include"Random.h"
 #include"Collision.h"
 #include"SRVmanager/SrvManager.h"
+#include"Model.h"
 
 using namespace  Microsoft::WRL;
 
@@ -24,10 +25,13 @@ std::list<Particle> Emit(const bool& isRandom, const Emitter& emitter, const Vec
 
 Particle MakeNewParticle(const bool& isRandom, const Vector3& translate, const Vector3& scale, const Vector4& color)
 {
-    Random::SetMinMax(-1.0f, 1.0f);
+
     Particle particle;
     particle.transform.scale = scale;
     particle.transform.rotate = { 0.0f,0.0f,0.0f };
+
+    Random::SetMinMax(-1.0f, 1.0f);
+
     if (isRandom) {
         Vector3 randomTranslate{ Random::Get(), Random::Get(), Random::Get() };
         particle.transform.translate = randomTranslate + translate;
@@ -52,22 +56,76 @@ ParticleManager::~ParticleManager()
     Finalize();
 }
 
-void ParticleManager::Create(uint32_t textureHandle, int modelHandle)
+void ParticleManager::CreateParticleGroup(const std::string name, const uint32_t& textureHandle)
+{
+
+    assert(!particleGroups.contains(name));
+    std::unique_ptr<ParticleGroup> newParticleGroup = std::make_unique<ParticleGroup>();
+
+    newParticleGroup->materialData.textureFilePath = "./resources/uvChecker.png";
+    newParticleGroup->materialData.textureSrvIndex = textureHandle;
+
+    //Instancing用のTransformationMatrixリソースを作成
+    newParticleGroup->instancingResource = DirectXCommon::CreateBufferResource(sizeof(ParticleForGPU) * kNumMaxInstance);
+    //書き込むためのアドレスを取得
+    newParticleGroup->instancingResource->Map(0, nullptr, reinterpret_cast<void**>(&newParticleGroup->instancingData));
+
+    assert(newParticleGroup->instancingResource != nullptr);
+
+    for (uint32_t index = 0; index < kNumMaxInstance; ++index) {
+        newParticleGroup->instancingData[index].WVP = MakeIdentity4x4();
+        newParticleGroup->instancingData[index].World = MakeIdentity4x4();
+        newParticleGroup->instancingData[index].color = Vector4{ 1.0f,1.0f,1.0f,1.0f };
+    }
+
+    //一旦応急処置でtextureHandleに入れる textureのサイス+2分が入る
+    newParticleGroup->instanceSrvIndex = SrvManager::Allocate();
+    instancingSrvHandleCPU = SrvManager::GetCPUDescriptorHandle(newParticleGroup->instanceSrvIndex);//この書き方はダメですね
+    instancingSrvHandleGPU = SrvManager::GetGPUDescriptorHandle(newParticleGroup->instanceSrvIndex);
+
+    SrvManager::CreateSRVforStructuredBuffer(newParticleGroup->instanceSrvIndex, newParticleGroup->instancingResource.Get(), kNumMaxInstance, sizeof(ParticleForGPU));
+
+    //なまえとパーティクルをセットにする
+    particleGroups.insert(std::make_pair(name, std::move(newParticleGroup)));
+
+}
+
+
+//void ParticleManager::CreateTransformationMatrix()
+//{
+//    //Instancing用のTransformationMatrixリソースを作成
+//    instancingResource = DirectXCommon::CreateBufferResource(sizeof(ParticleForGPU) * kNumMaxInstance);
+//    //書き込むためのアドレスを取得
+//    instancingResource->Map(0, nullptr, reinterpret_cast<void**>(&instancingData));
+//
+//    assert(instancingResource != nullptr);
+//
+//    for (uint32_t index = 0; index < kNumMaxInstance; ++index) {
+//        instancingData[index].WVP = MakeIdentity4x4();
+//        instancingData[index].World = MakeIdentity4x4();
+//        instancingData[index].color = Vector4{ 1.0f,1.0f,1.0f,1.0f };
+//    }
+//
+//    //一旦応急処置でtextureHandleに入れる textureのサイス+2分が入る
+//    instanceSrvIndex = SrvManager::Allocate();
+//    instancingSrvHandleCPU = SrvManager::GetCPUDescriptorHandle(instanceSrvIndex);//この書き方はダメですね
+//    instancingSrvHandleGPU = SrvManager::GetGPUDescriptorHandle(instanceSrvIndex);
+//
+//    SrvManager::CreateSRVforStructuredBuffer(instanceSrvIndex, instancingResource.Get(), kNumMaxInstance, sizeof(ParticleForGPU));
+//}
+
+void ParticleManager::Create()
 {
 
     rootSignature_ = PSO::GetRootSignature();
     commandList_ = DirectXCommon::GetCommandList();
 
-    //モデルデータの作成後にInstancingを作成
-    CreateModelData(textureHandle, modelHandle);
-    //Instancingを作成
-    CreateTransformationMatrix();
     //マテリアルリソースを作成 //ライトなし
-    materialResource_ = std::make_unique<MaterialResource>();
-    materialResource_->CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, LightMode::klightModeNone);
+    materialResource = std::make_unique<MaterialResource>();
+    materialResource->CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, LightMode::klightModeNone);
 
+    CreateModelData();
     CreateVertexBufferResource();
-
     InitEmitter();
     InitAccelerationField();
 
@@ -75,13 +133,13 @@ void ParticleManager::Create(uint32_t textureHandle, int modelHandle)
 
 
 
-void ParticleManager::TimerUpdate(const bool& isRandom, const Vector3& scale, const Vector4& color)
+void ParticleManager::TimerUpdate(const std::string name, const Vector3& position, uint32_t count, const bool& isRandom, const Vector3& scale, const Vector4& color)
 {
     emitter_.frequencyTime += kDeltaTime;
 
     if (emitter_.frequency <= emitter_.frequencyTime) {
         emitter_.frequencyTime -= emitter_.frequency;
-        EmitParticle(isRandom, scale, color);
+        EmitParticle(name, position, count, scale, color, isRandom);
     }
 }
 
@@ -90,83 +148,98 @@ void ParticleManager::Update(Camera& camera)
 
     UpdateBillBordMatrix(camera);
 
-    numInstance_ = 0;
+    for (const auto& [name, group] : particleGroups) {
 
-    for (std::list <Particle>::iterator particleIterator = particles.begin(); particleIterator != particles.end();) {
+        group->numInstance = 0;
 
-        if (numInstance_ < kNumMaxInstance) {
-            if ((*particleIterator).lifeTime <= (*particleIterator).currentTime) {
-                particleIterator = particles.erase(particleIterator);
-                continue;
+        for (std::list <Particle>::iterator particleIterator = group->particles.begin(); particleIterator != group->particles.end();) {
+
+            if (group->numInstance < kNumMaxInstance) {
+
+                //寿命に達していたらグループから外す
+                if ((*particleIterator).lifeTime <= (*particleIterator).currentTime) {
+                    particleIterator = group->particles.erase(particleIterator);
+                    continue;
+                }
+                //場の処理
+                IsCollisionFieldArea(*particleIterator);
+                //移動処理
+                (*particleIterator).transform.translate += (*particleIterator).velocity * kDeltaTime;
+                //経過時間を加算
+                (*particleIterator).currentTime += kDeltaTime;
+
+                //ビルボード処理
+                if (useBillboard_) {
+                    UpdateWorldMatrixForBillBord(*particleIterator);
+                } else {
+                    UpdateWorldMatrix(*particleIterator);
+                }
+
+                //ビュープロジェクション行列
+                worldViewProjectionMatrix = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
+
+                //データにそれぞれ追加
+                group->instancingData[group->numInstance].WVP = worldViewProjectionMatrix;
+                group->instancingData[group->numInstance].World = worldMatrix;
+                group->instancingData[group->numInstance].color = (*particleIterator).color;
+                float alpha = 1.0f - ((*particleIterator).currentTime / (*particleIterator).lifeTime);
+                group->instancingData[group->numInstance].color.w = alpha;
+
+                ++group->numInstance;
             }
-
-            IsCollisionFieldArea(*particleIterator);
-
-            (*particleIterator).transform.translate += (*particleIterator).velocity * kDeltaTime;
-
-            (*particleIterator).currentTime += kDeltaTime;
-
-            if (useBillboard_) {
-                UpdateWorldMatrixForBillBord(*particleIterator);
-            } else {
-                UpdateWorldMatrix(*particleIterator);
-            }
-
-            worldViewProjectionMatrix = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
-
-            instancingData[numInstance_].WVP = worldViewProjectionMatrix;
-            instancingData[numInstance_].World = worldMatrix;
-            instancingData[numInstance_].color = (*particleIterator).color;
-            float alpha = 1.0f - ((*particleIterator).currentTime / (*particleIterator).lifeTime);
-            instancingData[numInstance_].color.w = alpha;
-
-            ++numInstance_;
+            ++particleIterator;
         }
-        ++particleIterator;
     }
+
 
 
 }
 
 
 
-void ParticleManager::EmitParticle(const bool& isRandom, const Vector3& scale, const Vector4& color)
+void ParticleManager::EmitParticle(const std::string name, const Vector3& position, uint32_t count, const Vector3& scale, const Vector4& color, const bool& isRandom)
 {
-    particles.splice(particles.end(), Emit(isRandom, emitter_, scale, color));
+    assert(particleGroups.contains(name));
+    emitter_.cont = count;
+    emitter_.transform.translate = position;
+
+    for (const auto& [name, group] : particleGroups) {
+        group->particles.splice(group->particles.end(), Emit(isRandom, emitter_, scale, color));
+    }
+
 }
 
 void ParticleManager::Draw(uint32_t blendMode)
 {
-    if (numInstance_ > 0) {
+    for (const auto& [name, group] : particleGroups) {
 
-        //rootSignatureの設定
-        commandList_->SetGraphicsRootSignature(rootSignature_->GetRootSignature(RootSignature::PARTICLE));
-        commandList_->SetPipelineState(MyEngine::GetPSO()->GetGraphicsPipelineStateParticle(blendMode).Get());
-        //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
-        commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);
-        //マテリアルの設定
-        commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
-        //粒ごとのトランスフォーム
-        SrvManager::SetGraphicsRootDescriptorTable(1, instanceSrvIndex);
-        //テスクチャ
-        SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
-        //描画!（DrawCall/ドローコール）6個のインデックスを使用しインスタンスを描画。
-        commandList_->DrawInstanced(UINT(modelData_->vertices.size()), numInstance_, 0, 0);
+        if (group->numInstance > 0) {
+            //rootSignatureの設定
+            commandList_->SetGraphicsRootSignature(rootSignature_->GetRootSignature(RootSignature::PARTICLE));
+            commandList_->SetPipelineState(MyEngine::GetPSO()->GetGraphicsPipelineStateParticle(blendMode).Get());
+            //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
+            commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+            commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);
+            //マテリアルの設定
+            commandList_->SetGraphicsRootConstantBufferView(0, materialResource->GetMaterialResource()->GetGPUVirtualAddress());
+            //粒ごとのトランスフォーム
+            SrvManager::SetGraphicsRootDescriptorTable(1, group->instanceSrvIndex);
+            //テスクチャ
+            SrvManager::SetGraphicsRootDescriptorTable(2, group->materialData.textureSrvIndex);
+            //描画!（DrawCall/ドローコール）6個のインデックスを使用しインスタンスを描画。
+            commandList_->DrawInstanced(UINT(modelData_->vertices.size()), group->numInstance, 0, 0);
+
+        }
+
     }
 }
 
 void ParticleManager::Finalize()
 {
 
-    if (materialResource_ != nullptr) {
-        materialResource_->UnMap();
-        materialResource_ = nullptr;
-    }
-
-    if (instancingResource != nullptr) {
-        instancingResource->Unmap(0, nullptr);
-        instancingResource = nullptr;
+    if (materialResource != nullptr) {
+        materialResource->UnMap();
+        materialResource = nullptr;
     }
 }
 
@@ -189,6 +262,20 @@ void ParticleManager::InitAccelerationField()
 
 // ==========================================================================================================-
 
+void ParticleManager::CreateModelData()
+{
+    modelData_ = std::make_unique<ModelData>();
+    modelData_->vertices.push_back({ .position = {1.0f,1.0f,0.0f,1.0f},.texcoord = {0.0f,0.0f},.normal = {0.0f,0.0f,1.0f} });//左上
+    modelData_->vertices.push_back({ .position = {-1.0f,1.0f,0.0f,1.0f}, .texcoord = {1.0f,0.0f}, .normal = {0.0f,0.0f,1.0f} });//右上
+    modelData_->vertices.push_back({ .position = {1.0f,-1.0f,0.0f,1.0f}, .texcoord = {0.0f,1.0f}, .normal = {0.0f,0.0f,1.0f} });//左下
+    modelData_->vertices.push_back({ .position = {1.0f,-1.0f,0.0f,1.0f}, .texcoord = {0.0f,1.0f}, .normal = {0.0f,0.0f,1.0f} });//左下
+    modelData_->vertices.push_back({ .position = {-1.0f,1.0f,0.0f,1.0f}, .texcoord = {1.0f,0.0f}, .normal = {0.0f,0.0f,1.0f} });//右上
+    modelData_->vertices.push_back({ .position = {-1.0f,-1.0f,0.0f,1.0f}, .texcoord = {1.0f,1.0f}, .normal = {0.0f,0.0f,1.0f} });//右下
+
+    modelData_->material.textureFilePath = "./Resource/uvChecker.png";
+    modelData_->material.textureSrvIndex = Texture::GetHandle(Texture::UV_CHECKER);
+}
+
 void ParticleManager::CreateVertexBufferResource()
 {
     vertexBufferResource_ = DirectXCommon::CreateBufferResource(sizeof(VertexData) * modelData_->vertices.size());
@@ -203,38 +290,6 @@ void ParticleManager::CreateVertexBufferResource()
 
 }
 
-void ParticleManager::CreateTransformationMatrix()
-{
-    //Instancing用のTransformationMatrixリソースを作成
-    instancingResource = DirectXCommon::CreateBufferResource(sizeof(ParticleForGPU) * kNumMaxInstance);
-    //書き込むためのアドレスを取得
-    instancingResource->Map(0, nullptr, reinterpret_cast<void**>(&instancingData));
-
-    assert(instancingResource != nullptr);
-
-    for (uint32_t index = 0; index < kNumMaxInstance; ++index) {
-        instancingData[index].WVP = MakeIdentity4x4();
-        instancingData[index].World = MakeIdentity4x4();
-        instancingData[index].color = Vector4{ 1.0f,1.0f,1.0f,1.0f };
-    }
-
-    //D3D12_SHADER_RESOURCE_VIEW_DESC instancingSrvDesc{};
-    //instancingSrvDesc.Format = DXGI_FORMAT_UNKNOWN;
-    //instancingSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-    //instancingSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
-    //instancingSrvDesc.Buffer.FirstElement = 0;
-    //instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
-    //instancingSrvDesc.Buffer.NumElements = kNumMaxInstance;
-    //instancingSrvDesc.Buffer.StructureByteStride = sizeof(ParticleForGPU);
-    //DirectXCommon::GetDevice()->CreateShaderResourceView(instancingResource.Get(), &instancingSrvDesc, instancingSrvHandleCPU);
-
-    //一旦応急処置でtextureHandleに入れる textureのサイス+2分が入る
-    instanceSrvIndex = SrvManager::Allocate();
-    instancingSrvHandleCPU = SrvManager::GetCPUDescriptorHandle(instanceSrvIndex);//この書き方はダメですね
-    instancingSrvHandleGPU = SrvManager::GetGPUDescriptorHandle(instanceSrvIndex);
-
-    SrvManager::CreateSRVforStructuredBuffer(instanceSrvIndex, instancingResource.Get(), kNumMaxInstance, sizeof(ParticleForGPU));
-}
 
 void ParticleManager::UpdateBillBordMatrix(Camera& camera)
 {
@@ -266,23 +321,3 @@ void ParticleManager::IsCollisionFieldArea(Particle& particleItr)
         particleItr.velocity += accelerationField.acceleration * kDeltaTime;
     }
 }
-
-void ParticleManager::CreateModelData(const uint32_t& textureHandle, const int& modelHandle)
-{
-    if (modelHandle == -1) {
-        modelData_ = std::make_unique<ModelData>();
-        modelData_->vertices.push_back({ .position = {1.0f,1.0f,0.0f,1.0f},.texcoord = {0.0f,0.0f},.normal = {0.0f,0.0f,1.0f} });//左上
-        modelData_->vertices.push_back({ .position = {-1.0f,1.0f,0.0f,1.0f}, .texcoord = {1.0f,0.0f}, .normal = {0.0f,0.0f,1.0f} });//右上
-        modelData_->vertices.push_back({ .position = {1.0f,-1.0f,0.0f,1.0f}, .texcoord = {0.0f,1.0f}, .normal = {0.0f,0.0f,1.0f} });//左下
-        modelData_->vertices.push_back({ .position = {1.0f,-1.0f,0.0f,1.0f}, .texcoord = {0.0f,1.0f}, .normal = {0.0f,0.0f,1.0f} });//左下
-        modelData_->vertices.push_back({ .position = {-1.0f,1.0f,0.0f,1.0f}, .texcoord = {1.0f,0.0f}, .normal = {0.0f,0.0f,1.0f} });//右上
-        modelData_->vertices.push_back({ .position = {-1.0f,-1.0f,0.0f,1.0f}, .texcoord = {1.0f,1.0f}, .normal = {0.0f,0.0f,1.0f} });//右下
-        modelData_->material.textureFilePath = "./resources/uvChecker.png";
-        textureHandle_ = textureHandle;
-    } else {
-        //*modelData_ = ModelManager::GetModel(modelHandle);
-        //textureHandle_ = modelData_->textureHandle;
-    }
-
-}
-

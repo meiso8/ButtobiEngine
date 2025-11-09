@@ -46,8 +46,6 @@ void FlashParticle::Update(Camera& camera)
             instancingData[numInstance_].WVP = worldViewProjectionMatrix;
             instancingData[numInstance_].World = worldMatrix;
             instancingData[numInstance_].color = (*particleIterator).color;
-        /*    float alpha = 1.0f - ((*particleIterator).currentTime / (*particleIterator).lifeTime) * 2.0f;
-            instancingData[numInstance_].color.w = alpha;*/
 
             ++numInstance_;
         }

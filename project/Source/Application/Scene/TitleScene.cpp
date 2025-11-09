@@ -4,7 +4,7 @@
 #include"Model.h"
 #include"ModelManager.h"
 
-#include"TextureManager.h"
+#include"Texture.h"
 #include"Sprite.h"
 #include"Sound.h"
 #include"SphereMesh.h"
@@ -53,6 +53,12 @@ TitleScene::TitleScene()
 
     sprite_ = std::make_unique<Sprite>();
     sprite_->Create(Texture::GetHandle(Texture::UV_CHECKER),{0.0f,0.0f},{100.0f,100.0f});
+
+
+    particleManager_ = std::make_unique<ParticleManager>();
+    particleManager_->Create();
+    particleManager_->CreateParticleGroup("uvChecker",Texture::GetHandle(Texture::UV_CHECKER));
+
 }
 
 void TitleScene::Initialize() {
@@ -83,6 +89,8 @@ void TitleScene::Update() {
     for (int i = 0; i < object3ds_.size(); ++i) {
         object3ds_[i]->Update();
     }
+
+    particleManager_->Update(*currentCamera_);
 }
 
 
@@ -99,6 +107,7 @@ void TitleScene::Debug()
     DebugUI::Button("ChangeCamera", func);
     DebugUI::CheckObject3d(*object3ds_[0], "0");
     DebugUI::CheckObject3d(*object3ds_[1], "1");
+    DebugUI::CheckParticle(*particleManager_,"particleManager");
 }
 
 void TitleScene::Draw() {
@@ -113,6 +122,8 @@ void TitleScene::Draw() {
     object3ds_[0]->Draw(*currentCamera_,kLightModeLReflectance,kBlendModeNormal,kCullModeNone);
 
     object3ds_[2]->Draw(*currentCamera_, klightModeNone);
+
+    particleManager_->Draw();
 
     sprite_->PreDraw();
     sprite_->Draw();
