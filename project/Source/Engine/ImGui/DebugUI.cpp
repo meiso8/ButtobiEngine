@@ -4,6 +4,7 @@
 #include"Sprite.h"
 #include"Model.h"
 #include"Particle/Particle.h"
+#include"Particle/ParticleEmitter.h"
 #include"Object3d.h"
 
 #include"SphereMesh.h"
@@ -187,14 +188,14 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
     CheckWorldTransform(object3d.worldTransform_, label);
     ImGui::End();
 }
-void DebugUI::CheckParticle(ParticleManager& particle)
+void DebugUI::CheckParticle(ParticleManager& particle,ParticleEmitter& particleEmitter)
 {
 
     ImGui::Begin("Particle");
 
     ImGui::Checkbox("useBillboard", &particle.useBillboard_);
 
-    Emitter& emitter = particle.emitter_;
+    Emitter& emitter = particleEmitter.emitter_;
     int count = emitter.cont;
     ImGui::SliderInt("createNum", &count, 0, particle.kNumMaxInstance);
     emitter.cont = count;

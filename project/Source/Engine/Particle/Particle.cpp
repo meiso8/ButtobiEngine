@@ -13,18 +13,11 @@ using namespace  Microsoft::WRL;
 
 ID3D12GraphicsCommandList* ParticleManager::commandList_ = nullptr;
 
-std::list<Particle> Emit(const bool& isRandom, const Emitter& emitter, const Vector3& scale, const Vector4& color)
-{
-    std::list<Particle>particles;
-    for (uint32_t count = 0; count < emitter.cont; ++count) {
-        particles.push_back(MakeNewParticle(isRandom, emitter.transform.translate, scale, color));
-    }
-    return particles;
-}
+std::unordered_map<std::string, std::unique_ptr <ParticleGroup> >ParticleManager::particleGroups;
+const float ParticleManager::kDeltaTime = 1.0f / 60.0f;
 
 Particle MakeNewParticle(const bool& isRandom, const Vector3& translate, const Vector3& scale, const Vector4& color)
 {
-
     Particle particle;
     particle.transform.scale = scale;
     particle.transform.rotate = { 0.0f,0.0f,0.0f };
@@ -50,7 +43,15 @@ Particle MakeNewParticle(const bool& isRandom, const Vector3& translate, const V
 
 ParticleManager::~ParticleManager()
 {
-    Finalize();
+
+    for (auto& [name, group] : particleGroups) {
+        if (group->instancingResource) {
+            group->instancingResource->Unmap(0, nullptr);
+            group->instancingResource = nullptr;
+        }
+    }
+
+
 }
 
 void ParticleManager::CreateParticleGroup(const std::string name, const uint32_t& textureHandle)
@@ -99,21 +100,8 @@ void ParticleManager::Create()
 
     CreateModelData();
     CreateVertexBufferResource();
-    InitEmitter();
     InitAccelerationField();
 
-}
-
-
-
-void ParticleManager::TimerUpdate(const std::string name, const Vector3& position, uint32_t count, const bool& isRandom, const Vector3& scale, const Vector4& color)
-{
-    emitter_.frequencyTime += kDeltaTime;
-
-    if (emitter_.frequency <= emitter_.frequencyTime) {
-        emitter_.frequencyTime -= emitter_.frequency;
-        EmitParticle(name, position, count, scale, color, isRandom);
-    }
 }
 
 void ParticleManager::Update(Camera& camera)
@@ -169,15 +157,19 @@ void ParticleManager::Update(Camera& camera)
 }
 
 
+std::list<Particle> Emit(const bool& isRandom, const Vector3& position, uint32_t count, const Vector3& scale, const Vector4& color)
+{
+    std::list<Particle>particles;
+    for (uint32_t i = 0; i < count; ++i) {
+        particles.push_back(MakeNewParticle(isRandom, position, scale, color));
+    }
+    return particles;
+}
 
 void ParticleManager::EmitParticle(const std::string name, const Vector3& position, uint32_t count, const Vector3& scale, const Vector4& color, const bool& isRandom)
 {
     assert(particleGroups.contains(name));
-    emitter_.cont = count;
-    emitter_.transform.translate = position;
-
-    particleGroups[name]->particles.splice(particleGroups[name]->particles.end(), Emit(isRandom, emitter_, scale, color));
-
+    particleGroups[name]->particles.splice(particleGroups[name]->particles.end(), Emit(isRandom, position, count, scale, color));
 
 }
 
@@ -206,24 +198,6 @@ void ParticleManager::Draw(uint32_t blendMode)
     }
 }
 
-void ParticleManager::Finalize()
-{
-
-    if (materialResource != nullptr) {
-        materialResource->UnMap();
-        materialResource = nullptr;
-    }
-}
-
-void ParticleManager::InitEmitter()
-{
-    emitter_.cont = 3;
-    emitter_.frequency = 0.5f;
-    emitter_.frequencyTime = 0.0f;
-    emitter_.transform.rotate = { 0.0f,0.0f,0.0f };
-    emitter_.transform.scale = { 1.0f,1.0f,1.0f };
-    emitter_.transform.translate = { 0.0f,0.0f,0.0f };
-}
 
 void ParticleManager::InitAccelerationField()
 {

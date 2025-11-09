@@ -13,6 +13,7 @@
 #include"Quad/Quad.h"
 #include"MakeMatrix.h"
 #include"DrawGrid.h"
+#include "Particle/ParticleEmitter.h"
 
 TitleScene::TitleScene()
 {
@@ -54,11 +55,12 @@ TitleScene::TitleScene()
     sprite_ = std::make_unique<Sprite>();
     sprite_->Create(Texture::GetHandle(Texture::UV_CHECKER), { 0.0f,0.0f }, { 100.0f,100.0f });
 
-
     particleManager_ = std::make_unique<ParticleManager>();
     particleManager_->Create();
     particleManager_->CreateParticleGroup("uvChecker", Texture::GetHandle(Texture::UV_CHECKER));
     particleManager_->CreateParticleGroup("numbers", Texture::GetHandle(Texture::NUMBERS));
+    particleEmitter_ = std::make_unique<ParticleEmitter>();
+    particleEmitter_->SetName("uvChecker");
 }
 
 void TitleScene::Initialize() {
@@ -66,12 +68,38 @@ void TitleScene::Initialize() {
     sceneChange_.Initialize();
     camera_->Initialize(1280.0f, 720.0f);
     camera_->UpdateMatrix();
+    particleEmitter_->Initialize();
 
 }
 
 void TitleScene::Update() {
 
     currentCamera_->UpdateMatrix();
+
+    if (Input::IsTriggerKey(DIK_W)) {
+        particleEmitter_->SetName("uvChecker");
+    } 
+    if (Input::IsTriggerKey(DIK_S)) {
+        particleEmitter_->SetName("numbers");
+    }
+
+    if (Input::IsPushKey(DIK_A)) {
+        particleEmitter_->emitter_.transform.translate.x-= InverseFPS * 2.0f;
+    }
+    if (Input::IsPushKey(DIK_D)) {
+        particleEmitter_->emitter_.transform.translate.x+= InverseFPS*2.0f;
+    }
+
+    if (Input::IsPushKey(DIK_Q)) {
+       currentCamera_->translate_.x-= InverseFPS * 2.0f;
+    }
+    if (Input::IsPushKey(DIK_E)) {
+        currentCamera_->translate_.x+= InverseFPS * 2.0f;
+    }
+
+
+    particleEmitter_->Update();
+    particleManager_->Update(*currentCamera_);
 
     models_[0]->GetUVTransform().translate.x += std::numbers::pi_v<float> *0.0625f * InverseFPS;
     models_[1]->GetUVTransform().translate.y += std::numbers::pi_v<float> *0.0625f * InverseFPS;
@@ -90,15 +118,13 @@ void TitleScene::Update() {
         object3ds_[i]->Update();
     }
 
-    particleManager_->Update(*currentCamera_);
-    particleManager_->TimerUpdate("numbers", object3ds_[0]->worldTransform_.translate_,3,true);
+
 }
 
 
 TitleScene::~TitleScene()
 {
     camera_ = nullptr;
-
 }
 
 void TitleScene::Debug()
@@ -108,7 +134,7 @@ void TitleScene::Debug()
     DebugUI::Button("ChangeCamera", func);
     DebugUI::CheckObject3d(*object3ds_[0], "0");
     DebugUI::CheckObject3d(*object3ds_[1], "1");
-    DebugUI::CheckParticle(*particleManager_);
+    DebugUI::CheckParticle(*particleManager_,*particleEmitter_);
 }
 
 void TitleScene::Draw() {
