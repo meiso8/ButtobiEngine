@@ -8,11 +8,13 @@
 #include"Particle.h"
 #include"Player.h"
 #include"World.h"
-
+#include"Locker.h"
+#include"Medjed.h"
 class QuadMesh;
 class SphereMesh;
 class Model;
 class ParticleEmitter;
+
 class TitleScene :public SceneManager {
 
 public:
@@ -28,7 +30,9 @@ public:
 
     std::unique_ptr<Player>player_ = nullptr;
     std::unique_ptr<World>world_ = nullptr;
+    std::array < std::unique_ptr<Locker>,32>lockers_;
     std::array< std::unique_ptr < Object3d>, 2> object3ds_;
+    std::unique_ptr<Medjed>medjed_ = nullptr;
     std::unique_ptr<Sprite> sprite_ =nullptr;
     std::unique_ptr<ParticleManager> particleManager_ = nullptr;
     std::unique_ptr<ParticleEmitter>particleEmitter_ = nullptr;

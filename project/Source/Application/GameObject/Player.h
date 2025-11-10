@@ -18,8 +18,11 @@ public:
     Vector3& GetForward();
     void LookBack();
     void MouseLook();
-    Matrix4x4 GetWorldMatrix() {
-        return object3d_.worldTransform_.matWorld_;
+    Matrix4x4& GetEyePos() {
+        return eyePos_.worldTransform_.matWorld_;
+    };
+    Matrix4x4& GetBodyPos() {
+        return bodyPos_.worldTransform_.matWorld_;
     };
     float endRotateY_ = 0.0f;
     float startRotateY = 0.0f;
@@ -33,6 +36,7 @@ private:
     float walkingTheta_ = 0.0f;
     float soundTimer_ = 0.0f;
     Model*model_;
-    Object3d object3d_;
+    Object3d eyePos_;
+    Object3d bodyPos_;
 };
 

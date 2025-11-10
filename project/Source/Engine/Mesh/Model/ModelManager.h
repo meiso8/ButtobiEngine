@@ -10,10 +10,13 @@ private:
 public:
     enum MODEL_HANDLE {
         WORLD,
-        ARM_L,
-        ARM_R,
+        PLAYER,
         EFFECT,
         LOCKER,
+        PEOPLE,
+        MEDJED,
+        MUMMY,
+        BUILDING,
         MODELS,
     };
 
@@ -21,7 +24,7 @@ public:
     static void LoadAllModel();
     static void Finalize();
 private:
-    static void LoadModel(const std::string& directoryPath, const std::string& filename,const uint32_t& handle);
+    static void LoadModel(const std::string& directoryPath, const std::string& filename, const uint32_t& handle);
 private:
     static std::map < const uint32_t, std::unique_ptr< Model> > models_;
 };

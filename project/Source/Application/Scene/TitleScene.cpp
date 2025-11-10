@@ -35,7 +35,7 @@ TitleScene::TitleScene()
     sphereMesh_->Create({ Texture::GetHandle(Texture::UV_CHECKER) });
     //モデルを借りる
 
-    models_[0] = ModelManager::GetModel(ModelManager::LOCKER);
+    models_[0] = ModelManager::GetModel(ModelManager::BUILDING);
 
     for (int i = 0; i < object3ds_.size(); ++i) {
         object3ds_[i] = std::make_unique<Object3d>();
@@ -45,7 +45,7 @@ TitleScene::TitleScene()
     object3ds_[0]->worldTransform_.Parent(object3ds_[1]->worldTransform_);
     object3ds_[0]->worldTransform_.translate_.x = 2.0f;
     object3ds_[0]->worldTransform_.rotate_.x = std::numbers::pi_v<float>*0.5f;
-    object3ds_[1]->worldTransform_.translate_.y = 1.0f;
+    object3ds_[1]->worldTransform_.translate_.x = -10.0f;
     object3ds_[0]->SetMesh(quadMesh_.get());
     object3ds_[1]->SetMesh(models_[0]);
 
@@ -62,6 +62,11 @@ TitleScene::TitleScene()
 
     player_ = std::make_unique<Player>();
     world_ = std::make_unique<World>();
+    medjed_ = std::make_unique<Medjed>();
+    medjed_->SetTargetMatrix(&player_->GetBodyPos());
+    for (int i = 0; i < lockers_.size(); ++i) {
+        lockers_[i] = std::make_unique<Locker>();
+    }
 }
 
 void TitleScene::Initialize() {
@@ -72,6 +77,11 @@ void TitleScene::Initialize() {
     particleEmitter_->Initialize();
     player_->Init();
     world_->Init();
+    for (int i = 0; i < lockers_.size(); ++i) {
+        lockers_[i]->Init();
+        lockers_[i]->SetPosX(i * 1.0f);
+    }
+    medjed_->Init();
 }
 
 void TitleScene::Update() {
@@ -79,15 +89,12 @@ void TitleScene::Update() {
     if (isDebugCameraActive_) {
         currentCamera_->UpdateMatrix();
     } else {
-        camera_->worldMat_ = player_->GetWorldMatrix();
-        camera_->worldMat_.m[3][1] += 1.8f;
-
-
+        camera_->worldMat_ = player_->GetEyePos();
         if (Input::IsPushKey(DIK_SPACE)) {
             Vector3 translate = player_->GetForward();
-            camera_->worldMat_.m[3][0] += translate.x*3.0f;
-            camera_->worldMat_.m[3][1] += translate.y*3.0f;
-            camera_->worldMat_.m[3][2] += translate.z*3.0f;
+            camera_->worldMat_.m[3][0] += translate.x * 3.0f;
+            camera_->worldMat_.m[3][1] += translate.y * 3.0f;
+            camera_->worldMat_.m[3][2] += translate.z * 3.0f;
         }
 
         camera_->UpdateViewProjectionMatrix();
@@ -116,14 +123,20 @@ void TitleScene::Update() {
     }
     player_->Update();
 
+    medjed_->Update();
+
     particleEmitter_->Update();
     particleManager_->Update(*currentCamera_);
 
     object3ds_[0]->worldTransform_.rotate_.z += std::numbers::pi_v<float> *0.25f * InverseFPS;
 
     for (int i = 0; i < object3ds_.size(); ++i) {
-      object3ds_[i]->Update();
+        object3ds_[i]->Update();
     }
+    for (int i = 0; i < lockers_.size(); ++i) {
+        lockers_[i]->Update();
+    }
+
 
 
     world_->Update();
@@ -155,9 +168,14 @@ void TitleScene::Draw() {
 #endif
 
     world_->Draw(*currentCamera_);
-    object3ds_[1]->Draw(*currentCamera_);
+    object3ds_[1]->Draw(*currentCamera_, kLightModeHalfL, kBlendModeNormal, kCullModeNone);
     object3ds_[0]->Draw(*currentCamera_, kLightModeLReflectance, kBlendModeNormal, kCullModeNone);
 
+    for (int i = 0; i < lockers_.size(); ++i) {
+        lockers_[i]->Draw(*currentCamera_);
+    }
+
+    medjed_->Draw(*currentCamera_);
 
     player_->Draw(*currentCamera_, kLightModeHalfL);
 
