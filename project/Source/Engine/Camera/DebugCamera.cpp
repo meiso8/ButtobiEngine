@@ -5,11 +5,10 @@
 #include<numbers>
 #include<cmath>
 #include"Input.h"
+#include"Window.h"
 
-void DebugCamera::Initialize(const float& width, const float& height, const PROJECTION_TYPE& type)
+void DebugCamera::Initialize(const PROJECTION_TYPE& type)
 {
-    width_ = width;
-    height_ = height;
     projectionType_ = type;
     farZ_ = 1000.0f;
     nearZ_ = 0.1f;
@@ -23,16 +22,21 @@ void DebugCamera::Initialize(const float& width, const float& height, const PROJ
     translate_ = { 0.0f,0.0f,-30.0f };
     worldMat_ = MakeIdentity4x4();
 
-    CreateResource();
-
     viewMat_ = Inverse(MakeAffineMatrix(scale_, rotate_, translate_));
-    projectionMat_ = MakePerspectiveFovMatrix(0.45f, width_ / height_, nearZ_, farZ_);
+    projectionMat_ = MakePerspectiveFovMatrix(fovAngleY_, width_ / height_, nearZ_, farZ_);
 
     matRot_ = MakeIdentity4x4();
 
     sphericalCoordinate_.radius = -30.0f;
     sphericalCoordinate_.azimuthal = 0.0f;
     sphericalCoordinate_.polar = 0.0f;
+}
+
+DebugCamera::DebugCamera()
+{
+    SetScreenSize(static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()));
+    Initialize(PERSPECTIVE);
+    CreateResource();
 }
 
 void DebugCamera::UpdateMatrix() {
@@ -64,7 +68,7 @@ void DebugCamera::UpdateProjectionMatrix()
 {
     if (projectionType_ == PERSPECTIVE) {
         //投資投影
-        projectionMat_ = MakePerspectiveFovMatrix(0.45f, width_ / height_, nearZ_, farZ_);
+        projectionMat_ = MakePerspectiveFovMatrix(fovAngleY_, width_ / height_, nearZ_, farZ_);
     } else if (projectionType_ == PARALLEL) {
         //平行投影
         float halfWidth = width_ * 0.5f;
@@ -147,7 +151,7 @@ void DebugCamera::MouseInputMove() {
         //視点の移動 offset をずらす
         //後でoffsetをくわえる
         Vector2 deltaOffset = { 0.0f,0.0f };
-        deltaOffset += Input::GetMousePos();
+        deltaOffset += Input::GetMousePosFiltered();
         offset_ += { deltaOffset.x* InverseFPS, deltaOffset.y* InverseFPS * 2.0f };
     } else if (Input::IsPressMouse(2)) {
         //視点の回転

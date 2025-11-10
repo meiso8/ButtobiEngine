@@ -79,6 +79,7 @@ void DebugUI::CheckModel(Model& model, const char* label) {
 void DebugUI::CheckInput(Input& input) {
 
     ImGui::Begin("Input");
+    ImGui::SliderFloat2("mousePos", &input.GetMousePos().x, 0.0f, 1280.0f);
 
     float x = 100;
     float y = 100;
@@ -106,6 +107,7 @@ void DebugUI::CheckInput(Input& input) {
         ImGui::Text("Button[%d]: %s", i,
             (input.GetJoyState().rgbButtons[i] & 0x80) ? "Pressed" : "Released");
     }
+
 
     ImGui::End();
 

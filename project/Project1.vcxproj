@@ -157,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\Player.cpp" />
     <ClCompile Include="Source\Engine\Particle\ParticleEmitter.cpp" />
     <ClCompile Include="Source\Engine\Object3d\Object3d.cpp" />
     <ClCompile Include="Source\Application\Scene\SceneChange.cpp" />
@@ -237,8 +238,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Surface\Texture.cpp" />
     <ClCompile Include="Source\Engine\Camera\SpriteCamera.cpp" />
     <ClCompile Include="Source\Engine\SRVmanager\SrvManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\Player.h" />
     <ClInclude Include="Source\Engine\Particle\ParticleEmitter.h" />
     <ClInclude Include="Source\Engine\Object3d\Object3d.h" />
     <ClInclude Include="Source\Application\Scene\SceneChange.h" />
@@ -338,6 +341,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Surface\Texture.h" />
     <ClInclude Include="Source\Engine\Camera\SpriteCamera.h" />
     <ClInclude Include="Source\Engine\SRVmanager\SrvManager.h" />
+    <ClInclude Include="Source\Application\GameObject\World.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />

@@ -1,0 +1,24 @@
+#pragma once
+#include<memory>
+#include"Object3d.h"
+#include<functional>
+class Camera;
+class Model;
+
+class World
+{
+private:
+    std::unique_ptr <Object3d> object3d_;
+    Model* model_ = nullptr;
+    enum Tex {
+        NORMAL,
+    };
+public:
+    World();
+    void Init();
+    void Update();
+    void Draw(Camera& camera);
+    uint32_t texture_ = NORMAL;
+    void SetTexture(const uint32_t& texture);
+};
+

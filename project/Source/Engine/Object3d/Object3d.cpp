@@ -24,6 +24,11 @@ void Object3d::Create()
 {
     commandList_ = DirectXCommon::GetCommandList();
     CreateTransformationMatrix();
+    Initialize();
+}
+
+void Object3d::Initialize()
+{
     worldTransform_.Initialize();
 }
 

@@ -13,6 +13,7 @@ public:
         ARM_L,
         ARM_R,
         EFFECT,
+        LOCKER,
         MODELS,
     };
 

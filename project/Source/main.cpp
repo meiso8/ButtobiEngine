@@ -1,8 +1,8 @@
 #include"MyEngine.h"
 #include"TitleScene.h"
 
-#define WIN_WIDTH 1280
-#define WIN_HEIGHT 720
+#define WIN_WIDTH 1920
+#define WIN_HEIGHT 1080
 
 // Windowsアプリでのエントリーポイント(main関数)
 
@@ -44,7 +44,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     currentScene = scenes[sceneIndex].get();
     // 現在のシーンの初期化
     currentScene->Initialize();
-  
+
     uint32_t lightType = 0;
 
     // =============================================
@@ -68,6 +68,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
         // エンジンの更新処理
         myEngine->Update();
+        //エスケープボタンを押したら終了
+        if (Input::IsTriggerKey(DIK_ESCAPE)) { break; }
 
 #ifdef _DEBUG
         // デバック用

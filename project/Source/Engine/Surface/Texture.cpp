@@ -17,6 +17,7 @@ void Texture::LoadAllTexture() {
     handles[WHITE_1X1] = Load("Resource/Textures/white1x1.png");
     handles[UV_CHECKER] = Load("Resource/Textures/uvChecker.png");
     handles[NUMBERS] = Load("Resource/Textures/numbers.png");
+    handles[TEST] = Load("Resource/Textures/test.png");
 }
 
 uint32_t Texture::Load(const std::string& filePath)

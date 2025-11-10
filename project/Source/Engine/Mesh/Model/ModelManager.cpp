@@ -31,6 +31,7 @@ void ModelManager::LoadAllModel()
     LoadModel("Resource/Models/player", "armL.obj", ARM_L);
     LoadModel("Resource/Models/player", "armR.obj", ARM_R);
     LoadModel("Resource/Models/effect", "effect.obj", EFFECT);
+    LoadModel("Resource/Models", "locker.obj", LOCKER);
 }
 
 void ModelManager::Finalize()

@@ -31,6 +31,10 @@ public:
 
     void InitWaveData();
     void InitBalloonData();
+
+    void SetTextureHandle(const uint32_t textureHandle) {
+        textureHandle_ = textureHandle;
+    };
 protected:
     /// @brief テクスチャハンドル
     uint32_t textureHandle_ = 0;
