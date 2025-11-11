@@ -15,7 +15,7 @@ class Sprite
 {
 public:
     ~Sprite();
-    void Create(uint32_t textureHandle, const Vector2& position, const Vector2& size, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
+    void Create(uint32_t textureHandle, const Vector2& position, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
 
     void Update();
 

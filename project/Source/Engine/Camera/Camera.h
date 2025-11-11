@@ -41,9 +41,9 @@ public:
     SphericalCoordinate sphericalCoordinate_;
 
 protected:
+
     static float width_;
     static float height_;
-
     virtual void UpdateViewMatrix();
     virtual void UpdateProjectionMatrix();
 
@@ -55,8 +55,10 @@ protected:
     void UpdateData();
 
 public:
+    void SetScreenSize(const float& width, const float& height);
+     Camera();
     /// @brief 初期化
-    virtual void Initialize(const float& width, const float& height, const PROJECTION_TYPE& type = PROJECTION_TYPE::PERSPECTIVE);
+    virtual void Initialize(const PROJECTION_TYPE& type = PROJECTION_TYPE::PERSPECTIVE);
     /// @brief 更新
     virtual void UpdateMatrix();
     virtual void UpdateWorldMatrix();

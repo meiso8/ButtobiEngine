@@ -44,7 +44,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     currentScene = scenes[sceneIndex].get();
     // 現在のシーンの初期化
     currentScene->Initialize();
-  
+
     uint32_t lightType = 0;
 
     // =============================================
@@ -68,13 +68,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
         // エンジンの更新処理
         myEngine->Update();
+        //エスケープボタンを押したら終了
+        if (Input::IsTriggerKey(DIK_ESCAPE)) { break; }
 
 #ifdef _DEBUG
         // デバック用
         myEngine->Debug();
         DebugUI::CheckColor(screenColor, "screenColor");
         ImGui::Text("%s", sceneName[sceneIndex]);
-        DebugUI::CheckDirectionalLight(lightType);
+        DebugUI::CheckDirectionalLight();
 
         currentScene->Debug();
 

@@ -17,6 +17,10 @@ public:
     void Draw(ID3D12GraphicsCommandList* commandList)override;
     void UpdateUV();
     Transform& GetUVTransform() { return uvTransform_; }
+
+    void ResetTextureHandle() {
+        textureHandle_ = modelData_->material.textureSrvIndex;
+    };
 private:
     void CreateVertex()override;
     void CreateUV();

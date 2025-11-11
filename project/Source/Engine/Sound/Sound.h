@@ -30,7 +30,7 @@ public:
         BGM1,
         PICO,
         CRACKER,
-
+        FOOT_STEP,
 
         SOUNDS
     };

@@ -21,6 +21,7 @@ class Model;
 class ParticleManager;
 class ParticleEmitter;
 class Object3d;
+struct Material;
 
 class DebugUI
 {
@@ -60,7 +61,10 @@ public:
     /// @brief 光源
     /// @param directionalLights 
     /// @param lightType 
-    static void CheckDirectionalLight(uint32_t& lightType);
+    static void CheckDirectionalLight();
+    static void CheckMaterial(Material& material, const char* label);
+    static void CheckLightMode(int32_t& lightMode, const char* label);
+
     /// @brief 色
     /// @param color 
     static void CheckColor(Vector4& color, const char* label);

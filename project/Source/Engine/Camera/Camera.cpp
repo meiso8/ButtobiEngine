@@ -5,10 +5,8 @@
 float Camera::width_;
 float Camera::height_;
 
-void Camera::Initialize(const float& width, const float& height, const PROJECTION_TYPE& type) {
+void Camera::Initialize(const PROJECTION_TYPE& type) {
 
-    width_ = width;
-    height_ = height;
     projectionType_ = type;
 
     farZ_ = 1000.0f;
@@ -40,9 +38,6 @@ void Camera::InitializeTransform()
 void Camera::UpdateMatrix() {
 
     UpdateWorldMatrix();
-
-
-
     UpdateViewProjectionMatrix();
 }
 
@@ -70,6 +65,20 @@ void Camera::UpdateData()
     ////書き込むためのアドレスを取得
     //cameraResource_->Unmap(0, nullptr);
 }
+
+void Camera::SetScreenSize(const float& width, const float& height)
+{
+    width_ = width;
+    height_ = height;
+}
+
+Camera::Camera()
+{
+    SetScreenSize(static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()));
+    Initialize(PERSPECTIVE);
+    CreateResource();
+}
+
 
 void Camera::UpdateViewMatrix()
 {

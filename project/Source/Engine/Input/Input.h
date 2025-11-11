@@ -55,9 +55,10 @@ public:
     static bool GetJoyStickPos(float* x, float* y, ButtonType buttonType);
     static bool GetJoyStickDPadButton(float* x, float* y);
 
-    DIJOYSTATE& GetJoyState() { return joyState_; };
+    static DIJOYSTATE& GetJoyState() { return joyState_; };
 
     static Vector2& GetMousePos();
+    static Vector2& GetMousePosFiltered();
     static float GetMouseWheel();
 
 private:

@@ -117,6 +117,7 @@ void MyEngine::Update() {
 void MyEngine::Debug()
 {
     DebugUI::CheckFPS();
+    DebugUI::CheckInput(*input);
 }
 
 void MyEngine::PreCommandSet(Vector4& screenColor) {

@@ -21,7 +21,7 @@ public:
         WHITE_1X1,
         UV_CHECKER,
         NUMBERS,
-
+        TEST,
         TEXTURES
     };
     static void LoadAllTexture();

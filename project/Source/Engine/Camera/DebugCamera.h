@@ -13,9 +13,10 @@ private:
     //上下左右移動
     float speed_ = 0.0f;
 public:
+    DebugCamera();
     /// @brief 更新
     void UpdateMatrix()override;
-    void Initialize(const float& width, const float& height, const PROJECTION_TYPE& type = PROJECTION_TYPE::PERSPECTIVE)override;
+    void Initialize(const PROJECTION_TYPE& type = PROJECTION_TYPE::PERSPECTIVE)override;
 private:
     void UpdateProjectionMatrix();
     void MouseInputMove();

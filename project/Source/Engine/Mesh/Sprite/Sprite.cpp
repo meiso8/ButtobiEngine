@@ -22,7 +22,7 @@ Sprite::~Sprite()
     }
 }
 
-void Sprite::Create(uint32_t textureHandle, const Vector2& position, const Vector2& size, const Vector4& color)
+void Sprite::Create(uint32_t textureHandle, const Vector2& position, const Vector4& color)
 {
     commandList = DirectXCommon::GetCommandList();
     position_ = position;
@@ -33,8 +33,6 @@ void Sprite::Create(uint32_t textureHandle, const Vector2& position, const Vecto
     CreateTransformationMatrix();
     CreateUVTransformationMatrix();
     AdjustTextureSize();
-
-    size_ = size;
 }
 
 void Sprite::Update()

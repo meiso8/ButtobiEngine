@@ -21,6 +21,7 @@ private:
     static  ID3D12GraphicsCommandList* commandList_;
 public:
     void Create();
+    void Initialize();
     void Update();
     void Draw(Camera& camera, const LightMode& lightMode = LightMode::kLightModeHalfL, const BlendMode& blendMode = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack);
     void SetMesh(MeshCommon* mesh) { meshCommon_ = mesh; };
