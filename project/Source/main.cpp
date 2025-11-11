@@ -1,8 +1,8 @@
 #include"MyEngine.h"
 #include"TitleScene.h"
 
-#define WIN_WIDTH 1920
-#define WIN_HEIGHT 1080
+#define WIN_WIDTH 1280
+#define WIN_HEIGHT 720
 
 // Windowsアプリでのエントリーポイント(main関数)
 
@@ -76,7 +76,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         myEngine->Debug();
         DebugUI::CheckColor(screenColor, "screenColor");
         ImGui::Text("%s", sceneName[sceneIndex]);
-        DebugUI::CheckDirectionalLight(lightType);
+        DebugUI::CheckDirectionalLight();
 
         currentScene->Debug();
 

@@ -69,7 +69,8 @@ void DebugUI::CheckModel(Model& model, const char* label) {
 
         CheckTransform(model.GetUVTransform(), "UVTransform");
         CheckColor(model.GetColor(), "modelColor");
-
+      
+        CheckMaterial(*model.GetMaterial(),"material");
         ImGui::TreePop();
     }
 
@@ -190,7 +191,7 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
     CheckWorldTransform(object3d.worldTransform_, label);
     ImGui::End();
 }
-void DebugUI::CheckParticle(ParticleManager& particle,ParticleEmitter& particleEmitter)
+void DebugUI::CheckParticle(ParticleManager& particle, ParticleEmitter& particleEmitter)
 {
 
     ImGui::Begin("Particle");
@@ -206,7 +207,7 @@ void DebugUI::CheckParticle(ParticleManager& particle,ParticleEmitter& particleE
 
     ImGui::SliderFloat("frequency", &emitter.frequency, 0.1f, 10.0f);
     ImGui::Text("frequencyTime : %f", emitter.frequencyTime);
-    
+
     for (const auto& [name, group] : particle.GetParticleGroups()) {
 
         if (ImGui::Button(name.c_str())) {
@@ -239,6 +240,17 @@ void DebugUI::CheckColor(Vector4& color, const char* label) {
     }
 }
 
+void DebugUI::CheckMaterial(Material& material, const char* label) {
+
+    if (ImGui::TreeNode(label)) {
+        CheckColor(material.color, "color");
+        CheckLightMode(material.lightMode, "material");
+        ImGui::SliderFloat("shininess", &material.shininess, 0.0f, 100.0f);
+        ImGui::TreePop();
+    }
+}
+
+
 void DebugUI::CheckTransform(Transform& transform, const char* label)
 {
     CheckTransforms(transform.scale, transform.rotate, transform.translate, label);
@@ -250,7 +262,7 @@ void DebugUI::CheckWorldTransform(WorldTransform& worldTransform, const char* la
 
 };
 
-void DebugUI::CheckDirectionalLight(uint32_t& lightType) {
+void DebugUI::CheckDirectionalLight() {
 
     if (ImGui::TreeNode("DirectionalLight")) {
         DirectionalLight* directionalLight = MyEngine::GetDirectionalLightData();
@@ -260,13 +272,19 @@ void DebugUI::CheckDirectionalLight(uint32_t& lightType) {
         ImGui::SliderFloat3("direction", &direction.x, -1.0f, 1.0f);//後で正規化する
         directionalLight->direction = Normalize(direction);
         ImGui::DragFloat("intensity", &directionalLight->intensity);
+        ImGui::TreePop();
+    }
+
+};
+
+void DebugUI::CheckLightMode(int32_t& lightMode, const char* label) {
+
+    if (ImGui::TreeNode(label)) {
 
         const char* lights[] = { "NONE", "LambertianReflectance", "HalfLambert" };
-
         static int light_current = 0;
-
         ImGui::Combo("LightMode", &light_current, lights, IM_ARRAYSIZE(lights));
-        lightType = light_current % 3;
+        lightMode = light_current % 3;
 
         ImGui::TreePop();
     }

@@ -46,7 +46,7 @@ TitleScene::TitleScene()
     object3ds_[0]->worldTransform_.translate_.x = 2.0f;
     object3ds_[0]->worldTransform_.rotate_.x = std::numbers::pi_v<float>*0.5f;
     object3ds_[1]->worldTransform_.translate_.x = -10.0f;
-    object3ds_[0]->SetMesh(quadMesh_.get());
+    object3ds_[0]->SetMesh(sphereMesh_.get());
     object3ds_[1]->SetMesh(models_[0]);
 
 
@@ -157,6 +157,8 @@ void TitleScene::Debug()
     DebugUI::CheckObject3d(*object3ds_[0], "0");
     DebugUI::CheckObject3d(*object3ds_[1], "1");
     DebugUI::CheckParticle(*particleManager_, *particleEmitter_);
+    DebugUI::CheckMaterial(*sphereMesh_->GetMaterial(),"sphereMesh");
+
 }
 
 void TitleScene::Draw() {
