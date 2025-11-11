@@ -45,7 +45,6 @@ TitleScene::TitleScene()
     object3ds_[0]->worldTransform_.Parent(object3ds_[1]->worldTransform_);
     object3ds_[0]->worldTransform_.translate_.x = 2.0f;
     object3ds_[0]->worldTransform_.rotate_.x = std::numbers::pi_v<float>*0.5f;
-    object3ds_[1]->worldTransform_.translate_.x = -10.0f;
     object3ds_[0]->SetMesh(sphereMesh_.get());
     object3ds_[1]->SetMesh(models_[0]);
 
@@ -170,7 +169,7 @@ void TitleScene::Draw() {
 #endif
 
     world_->Draw(*currentCamera_);
-    object3ds_[1]->Draw(*currentCamera_, kLightModeHalfL, kBlendModeNormal, kCullModeNone);
+    object3ds_[1]->Draw(*currentCamera_, kLightModeHalfL);
     object3ds_[0]->Draw(*currentCamera_, kLightModeLReflectance, kBlendModeNormal, kCullModeNone);
 
     for (int i = 0; i < lockers_.size(); ++i) {
