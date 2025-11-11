@@ -4,7 +4,6 @@
 #include"MakeMatrix.h"
 #include"Transform.h"
 #include<numbers>
-#include"Texture.h"
 #include"ModelManager.h"
 #include"MyEngine.h"
 
@@ -24,6 +23,7 @@ void Model::Create() {
     CreateUV();
     CreateWaveData();
     CreateBalloonData();
+    CreatePointLightData();
 }
 
 
@@ -73,6 +73,8 @@ void Model::Draw(ID3D12GraphicsCommandList* commandList) {
     commandList->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
     //expansionのCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
+    //pointLightのCBufferの場所を設定
+    commandList->SetGraphicsRootConstantBufferView(7, pointLightResource_->GetGPUVirtualAddress());
     //描画!(DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
     commandList->DrawInstanced(UINT(modelData_->vertices.size()), 1, 0, 0);
 

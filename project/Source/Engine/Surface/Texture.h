@@ -28,7 +28,7 @@ public:
 
     static uint32_t AddTextureHandle(const std::string& filePath);
 
-    static uint32_t GetHandle(const uint32_t& handle) { return handles[handle]; }
+    static uint32_t GetHandle(const TEXTURE_HANDLE& handle) { return handles[handle]; }
 
     //SRVインデックスの開始番号
     static uint32_t kSRVIndexTop;

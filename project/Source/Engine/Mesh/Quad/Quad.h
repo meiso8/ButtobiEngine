@@ -1,11 +1,10 @@
 #pragma once
 #include"MeshCommon.h"
 
-
 class QuadMesh :public MeshCommon
 {
 public:
-    void Create(uint32_t textureHandle);
+    void Create(const Texture::TEXTURE_HANDLE& textureHandle);
 void Draw(ID3D12GraphicsCommandList* commandList)override;
 
     void ResetSize(const Vector2& size);

@@ -59,29 +59,8 @@ PixelShaderOutput main(VertexShaderOutput input)
     {
         textureColor.b = 2.0f * textureColor.b * color.b;
     }
-    
-    
-    output.color = gMaterial.color * textureColor; //ベクトル*ベクトルと記述すると乗算が行われる
-    //float3 targetTint = float3(0.65, 0.9, 1.0); // 赤と緑を少し抑えて青みを足す
-    //output.color.rgb *= targetTint;
-    
-    //float3 color = output.color.rgb;
-    ////// トーン調整スケール
-    ////float3 toneScale = float3(0.95f, 0.98f, 0.98f);
-
-    ////// 色補正
-    ////color *= toneScale;
-
-    //// 彩度調整（オプション）
-    //float gray = dot(color, float3(0.299f, 0.587f, 0.114f));
-    //float saturation = 1.5f; // 少し鮮やかに
-    //color = lerp(float3(gray, gray, gray), color, saturation);
-
-    //// 最終色
-    //output.color.rgb = saturate(color);
       
-    
-
+    output.color = gMaterial.color * textureColor; //ベクトル*ベクトルと記述すると乗算が行われる
 
     return output;
 }

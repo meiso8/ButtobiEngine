@@ -32,7 +32,7 @@ void World::Update()
 
 void World::Draw(Camera& camera)
 {
-    object3d_->Draw(camera, klightModeNone);
+    object3d_->Draw(camera,kBlendModeNormal);
 }
 
 void World::SetTexture(const uint32_t& texture)
@@ -40,7 +40,7 @@ void World::SetTexture(const uint32_t& texture)
     if (texture == NORMAL) {
         model_->ResetTextureHandle();
     } else {
-        model_->SetTextureHandle(Texture::GetHandle(texture));
+        model_->SetTextureHandle(Texture::TEXTURE_HANDLE(texture));
     }
   
 }

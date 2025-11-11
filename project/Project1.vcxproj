@@ -288,7 +288,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\DirectXCommon\DebugError.h" />
     <ClInclude Include="Source\Engine\ImGui\DebugUI.h" />
     <ClInclude Include="Source\Engine\PSO\Depth.h" />
-    <ClInclude Include="Source\Engine\Surface\DirectionalLight.h" />
+    <ClInclude Include="Source\Engine\Surface\Light.h" />
     <ClInclude Include="Source\Engine\Mesh\Grid\DrawGrid.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\DXGIFactory.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\Fence.h" />

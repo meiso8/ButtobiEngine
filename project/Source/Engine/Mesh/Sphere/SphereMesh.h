@@ -6,7 +6,7 @@ class SphereMesh :public MeshCommon
 {
 public:
     ~SphereMesh();
-    void Create(uint32_t textureHandle);
+    void Create(const Texture::TEXTURE_HANDLE& textureHandle);
     void Draw(ID3D12GraphicsCommandList* commandList)override;
     void SetUVScale(const Vector3& scale) { uvTransform_.scale = scale; };
     void UpdateUV();

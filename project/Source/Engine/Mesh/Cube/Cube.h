@@ -7,7 +7,7 @@ public:
     ~Cube();
     void SetMinMax(const Vector3& min, const Vector3& max);
 
-    void Create(uint32_t& textureHandle);
+    void Create(const Texture::TEXTURE_HANDLE& textureHandle);
 
     void Draw(ID3D12GraphicsCommandList* commandList)override;
 private:

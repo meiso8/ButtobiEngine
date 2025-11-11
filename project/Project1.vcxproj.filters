@@ -383,7 +383,7 @@
     <ClInclude Include="Source\Engine\Math\Easing.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Surface\DirectionalLight.h">
+    <ClInclude Include="Source\Engine\Surface\Light.h">
       <Filter>ヘッダー ファイル\Engine\Surface</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\ImGui\ImGuiClass.h">
