@@ -6,15 +6,16 @@
 #include<numbers>
 #include"SRVmanager/SrvManager.h"
 
+
 SphereMesh::~SphereMesh()
 {
     Finalize();
 }
 
-void SphereMesh::Create(uint32_t textureHandle)
+void SphereMesh::Create(const Texture::TEXTURE_HANDLE& textureHandle)
 {
   modelConfig_ = ModelConfig::GetInstance();
-    textureHandle_ = textureHandle;
+  textureHandle_ = Texture::GetHandle(textureHandle);
 
     CreateVertex();
     //CreateIndexResource();
@@ -22,6 +23,7 @@ void SphereMesh::Create(uint32_t textureHandle)
     CreateMaterial();
     CreateWaveData();
     CreateBalloonData();
+    CreatePointLightData();
     //UVを作成
     CreateUV();
 }
@@ -132,7 +134,8 @@ void SphereMesh::Draw(ID3D12GraphicsCommandList* commandList) {
     commandList->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
     //expansionのCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
-
+    //pointLightのCBufferの場所を設定
+    commandList->SetGraphicsRootConstantBufferView(7, pointLightResource_->GetGPUVirtualAddress());
     //描画!(DrawCall/ドローコール)。
     commandList->DrawInstanced(6 * kSubdivision_ * kSubdivision_, 1, 0, 0);
 

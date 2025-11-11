@@ -23,7 +23,7 @@ public:
     void Create();
     void Initialize();
     void Update();
-    void Draw(Camera& camera, const LightMode& lightMode = LightMode::kLightModeHalfL, const BlendMode& blendMode = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack);
+    void Draw(Camera& camera, const BlendMode& blendMode = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack);
     void SetMesh(MeshCommon* mesh) { meshCommon_ = mesh; };
 private:
     void CreateTransformationMatrix();

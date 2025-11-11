@@ -18,7 +18,7 @@
 #include"Log.h"
 #include"DebugUI.h"
 
-#include"DirectionalLight.h"
+#include"Light.h"
 #include<memory>
 
 #pragma endregion
@@ -39,7 +39,6 @@ public:
     static Window& GetWC() { return *wc; };
     static PSO* GetPSO() { return pso.get(); }
     static DirectionalLight* GetDirectionalLightData() { return directionalLightData; }
-
 private:
 
     static std::unique_ptr<DirectXCommon> directXCommon;

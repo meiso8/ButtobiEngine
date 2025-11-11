@@ -8,7 +8,7 @@
 #include"Object3d.h"
 
 #include"SphereMesh.h"
-#include"DirectionalLight.h"
+#include"Light.h"
 #include"PSO.h"
 #include"Camera.h"
 
@@ -69,8 +69,9 @@ void DebugUI::CheckModel(Model& model, const char* label) {
 
         CheckTransform(model.GetUVTransform(), "UVTransform");
         CheckColor(model.GetColor(), "modelColor");
-      
-        CheckMaterial(*model.GetMaterial(),"material");
+
+        CheckMaterial(model.GetMaterial(), "material");
+        CheckPointLightData(model.GetPointLightData(),"pointLight");
         ImGui::TreePop();
     }
 
@@ -185,6 +186,15 @@ void DebugUI::CheckWaveData(Wave& wave, const char* label)
         ImGui::TreePop();
     }
 }
+void DebugUI::CheckPointLightData(PointLight& pointLight, const char* label)
+{
+    if (ImGui::TreeNode(label)) {
+        CheckColor(pointLight.color, "PointLightcolor");
+        ImGui::DragFloat("intensity", &pointLight.intensity, 0.03f);
+        ImGui::DragFloat3("position", &pointLight.position.x, 0.03f, -10000.0f, 10000.0f);
+        ImGui::TreePop();
+    }
+}
 void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
 {
     ImGui::Begin("Object3d");
@@ -282,9 +292,11 @@ void DebugUI::CheckLightMode(int32_t& lightMode, const char* label) {
     if (ImGui::TreeNode(label)) {
 
         const char* lights[] = { "NONE", "LambertianReflectance", "HalfLambert" };
-        static int light_current = 0;
-        ImGui::Combo("LightMode", &light_current, lights, IM_ARRAYSIZE(lights));
-        lightMode = light_current % 3;
+        int light_current = lightMode;
+
+        if (ImGui::Combo("LightMode", &light_current, lights, IM_ARRAYSIZE(lights))) {
+            lightMode = light_current % 3;
+        };
 
         ImGui::TreePop();
     }

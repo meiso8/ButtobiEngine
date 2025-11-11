@@ -65,7 +65,7 @@ void RootSignature::Create() {
 #pragma region//NormalRootParameters
     //CBufferを利用することになったので、RootParameterに設定を追加する
    /* RootParameter作成。PixelShaderのMaterialとVertexShaderのTransform*/
-    D3D12_ROOT_PARAMETER rootParameters[7] = {};
+    D3D12_ROOT_PARAMETER rootParameters[8] = {};
     //Material b0
     rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
     rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
@@ -102,7 +102,10 @@ void RootSignature::Create() {
     rootParameters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
     rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
     rootParameters[6].Descriptor.ShaderRegister = 2;//レジスタ番号2を使う
-
+    //PointLight b3
+    rootParameters[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+    rootParameters[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParameters[7].Descriptor.ShaderRegister = 3;//レジスタ番号1を使う
 
 #pragma endregion
 

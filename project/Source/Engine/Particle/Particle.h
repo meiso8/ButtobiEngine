@@ -12,9 +12,11 @@
 #include<list>
 #include<memory>
 #include<cstdint>
+#include"Texture.h"
 
 class Camera;
 class ShaderResourceView;
+
 
 struct Particle {
     Transform transform;
@@ -83,7 +85,7 @@ public:
     }
 
 
-    void CreateParticleGroup(const std::string name, const uint32_t& textureHandle);
+    void CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE &textureHandle);
     void Create();
 
     virtual void Update(Camera& camera);

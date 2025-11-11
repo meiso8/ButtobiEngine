@@ -6,26 +6,27 @@
 #include"TransformationMatrix.h"  
 #include"MaterialResource.h"  
 #include"Vector2.h"  
-#include"PSO/RootSignature.h"  
+#include"RootSignature.h"  
 
 #include<d3d12.h>
 #include"SpriteCommon.h"
+
+#include"Texture.h"
 
 class Sprite
 {
 public:
     ~Sprite();
-    void Create(uint32_t textureHandle, const Vector2& position, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
+    void Create(const Texture::TEXTURE_HANDLE& textureHandle, const Vector2& position, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
 
     void Update();
 
     static void PreDraw(uint32_t blendMode = BlendMode::kBlendModeNormal);
-    void Draw(const LightMode& lightMode =LightMode::klightModeNone
+    void Draw(const LightMode& lightMode =LightMode::kLightModeNone
     );
 
     void SetColor(const Vector4& color);
-    void SetTexture(uint32_t textureHandle) { textureHandle_ = textureHandle; };
-
+    void SetTexture(const Texture::TEXTURE_HANDLE& textureHandle);
     void SetSize(const Vector2& size) { size_ = size; };
     void SetPosition(const Vector2& position) { position_ = position; }
     void SetRotate(const float& rotate) { rotate_ = rotate; }

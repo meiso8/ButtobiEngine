@@ -2,25 +2,25 @@
 
 #include"DirectXCommon.h"
 #include"MyEngine.h"
-#include"Texture.h"
+
 
 LineMesh::~LineMesh() {
     Finalize();
 }
 
-void LineMesh::Create(uint32_t textureHandle)
+void LineMesh::Create(const Texture::TEXTURE_HANDLE& textureHandle)
 {
 
     modelConfig_ = ModelConfig::GetInstance();
-    textureHandle_ = textureHandle;
+    textureHandle_ = Texture::GetHandle(textureHandle);
 
     CreateVertex();
     //CreateIndexResource();
 
-    CreateMaterial();
+    CreateMaterial({1.0f,1.0f,1.0f,1.0f}, kLightModeNone);
     CreateWaveData();
     CreateBalloonData();
-
+    CreatePointLightData();
 }
 
 void LineMesh::CreateVertex() {
@@ -57,7 +57,7 @@ void LineMesh::SetVertexData(const Vector3& start, const Vector3& end) {
     vertexData_[1].normal = { vertexData_[1].position.x,  vertexData_[1].position.y,  vertexData_[1].position.z };
 };
 
-void LineMesh::PreDraw(ID3D12GraphicsCommandList* commandList, const LightMode& lightMode, const BlendMode& blendMode, const CullMode& cullMode) {
+void LineMesh::PreDraw(ID3D12GraphicsCommandList* commandList,  const BlendMode& blendMode,const CullMode& cullMode) {
 
     commandList->SetGraphicsRootSignature(modelConfig_->rootSignature->GetRootSignature(0));
     commandList->SetPipelineState(MyEngine::GetPSO()->GetGraphicsPipelineStateLine().Get());//PSOを設定
@@ -66,7 +66,7 @@ void LineMesh::PreDraw(ID3D12GraphicsCommandList* commandList, const LightMode& 
 
     (void)blendMode;
     (void)cullMode;
-    (void)lightMode;
+
 }
 
 void LineMesh::Draw(ID3D12GraphicsCommandList* commandList)
@@ -87,6 +87,10 @@ void LineMesh::Draw(ID3D12GraphicsCommandList* commandList)
     //expansionのCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
  
+    //expansionのCBufferの場所を設定
+    commandList->SetGraphicsRootConstantBufferView(7, pointLightResource_->GetGPUVirtualAddress());
+
+
     //描画!（DrawCall/ドローコール）
     commandList->DrawInstanced(2, 1, 0, 0);
 };

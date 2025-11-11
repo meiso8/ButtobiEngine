@@ -31,8 +31,8 @@ TitleScene::TitleScene()
     //矩形を描画
     quadMesh_ = std::make_unique<QuadMesh>();
     sphereMesh_ = std::make_unique<SphereMesh>();
-    quadMesh_->Create(Texture::GetHandle(Texture::UV_CHECKER));
-    sphereMesh_->Create({ Texture::GetHandle(Texture::UV_CHECKER) });
+    quadMesh_->Create(Texture::UV_CHECKER);
+    sphereMesh_->Create(Texture::UV_CHECKER);
     //モデルを借りる
 
     models_[0] = ModelManager::GetModel(ModelManager::BUILDING);
@@ -45,18 +45,17 @@ TitleScene::TitleScene()
     object3ds_[0]->worldTransform_.Parent(object3ds_[1]->worldTransform_);
     object3ds_[0]->worldTransform_.translate_.x = 2.0f;
     object3ds_[0]->worldTransform_.rotate_.x = std::numbers::pi_v<float>*0.5f;
-    object3ds_[1]->worldTransform_.translate_.x = -10.0f;
     object3ds_[0]->SetMesh(sphereMesh_.get());
     object3ds_[1]->SetMesh(models_[0]);
 
 
     sprite_ = std::make_unique<Sprite>();
-    sprite_->Create(Texture::GetHandle(Texture::TEST), { 0.0f,0.0f });
+    sprite_->Create(Texture::TEST, { 0.0f,0.0f });
 
     particleManager_ = std::make_unique<ParticleManager>();
     particleManager_->Create();
-    particleManager_->CreateParticleGroup("uvChecker", Texture::GetHandle(Texture::UV_CHECKER));
-    particleManager_->CreateParticleGroup("numbers", Texture::GetHandle(Texture::NUMBERS));
+    particleManager_->CreateParticleGroup("uvChecker", Texture::UV_CHECKER);
+    particleManager_->CreateParticleGroup("numbers", Texture::NUMBERS);
     particleEmitter_ = std::make_unique<ParticleEmitter>();
     particleEmitter_->SetName("uvChecker");
 
@@ -157,8 +156,8 @@ void TitleScene::Debug()
     DebugUI::CheckObject3d(*object3ds_[0], "0");
     DebugUI::CheckObject3d(*object3ds_[1], "1");
     DebugUI::CheckParticle(*particleManager_, *particleEmitter_);
-    DebugUI::CheckMaterial(*sphereMesh_->GetMaterial(),"sphereMesh");
-
+    DebugUI::CheckMaterial(sphereMesh_->GetMaterial(), "sphereMesh");
+    DebugUI::CheckPointLightData(sphereMesh_->GetPointLightData(), "sphereMesh");
 }
 
 void TitleScene::Draw() {
@@ -170,8 +169,8 @@ void TitleScene::Draw() {
 #endif
 
     world_->Draw(*currentCamera_);
-    object3ds_[1]->Draw(*currentCamera_, kLightModeHalfL, kBlendModeNormal, kCullModeNone);
-    object3ds_[0]->Draw(*currentCamera_, kLightModeLReflectance, kBlendModeNormal, kCullModeNone);
+    object3ds_[1]->Draw(*currentCamera_);
+    object3ds_[0]->Draw(*currentCamera_);
 
     for (int i = 0; i < lockers_.size(); ++i) {
         lockers_[i]->Draw(*currentCamera_);

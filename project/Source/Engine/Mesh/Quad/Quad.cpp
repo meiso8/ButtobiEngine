@@ -2,17 +2,17 @@
 
 #include"DirectXCommon.h"
 #include"MyEngine.h"
-#include"Texture.h"
+
 #include"MakeMatrix.h"
 
 QuadMesh::~QuadMesh() {
     Finalize();
 }
 
-void QuadMesh::Create(uint32_t textureHandle)
+void QuadMesh::Create(const Texture::TEXTURE_HANDLE& textureHandle)
 {
     modelConfig_ = ModelConfig::GetInstance();
-    textureHandle_ = textureHandle;
+    textureHandle_ = Texture::GetHandle(textureHandle);
 
     CreateVertex();
     CreateIndexResource();
@@ -20,7 +20,8 @@ void QuadMesh::Create(uint32_t textureHandle)
     CreateMaterial();
     CreateWaveData();
     CreateBalloonData();
-
+    CreatePointLightData();
+    SetLightMode(kLightModeHalfL);
 }
 
 void QuadMesh::CreateVertex() {
@@ -105,7 +106,8 @@ SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
     commandList->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
     //expansionのCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
-
+    //pointLightのCBufferの場所を設定
+    commandList->SetGraphicsRootConstantBufferView(7, pointLightResource_->GetGPUVirtualAddress());
     //描画!（DrawCall/ドローコール）6個のインデックスを使用し1つのインスタンスを描画。その他は当面0で良い。
     commandList->DrawIndexedInstanced(6, 1, 0, 0, 0);
 };

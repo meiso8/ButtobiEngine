@@ -3,7 +3,7 @@
 #include"TransformationMatrix.h"
 #include"MakeMatrix.h"
 #include"MyEngine.h"
-#include"Texture.h"
+
 #include"SpriteCamera.h"  
 #include"ImGuiClass.h"
 
@@ -22,11 +22,11 @@ Sprite::~Sprite()
     }
 }
 
-void Sprite::Create(uint32_t textureHandle, const Vector2& position, const Vector4& color)
+void Sprite::Create(const Texture::TEXTURE_HANDLE& textureHandle, const Vector2& position, const Vector4& color)
 {
     commandList = DirectXCommon::GetCommandList();
     position_ = position;
-    textureHandle_ = textureHandle;
+    textureHandle_ = Texture::GetHandle(textureHandle);
 
     CreateMaterial(color);
     CreateVertex();
@@ -75,6 +75,12 @@ void Sprite::Update()
 
 void Sprite::SetColor(const Vector4& color) {
     materialResource_.SetColor(color);
+}
+
+void Sprite::SetTexture(const Texture::TEXTURE_HANDLE& textureHandle)
+{
+    textureHandle_ = Texture::GetHandle(textureHandle);
+
 }
 
 
@@ -185,7 +191,7 @@ void Sprite::CreateTransformationMatrix() {
 void Sprite::CreateMaterial(const Vector4& color) {
 
     //マテリアルリソースを作成 //ライトなし
-    materialResource_.CreateMaterial(color,LightMode::klightModeNone);
+    materialResource_.CreateMaterial(color, LightMode::kLightModeNone);
 
 }
 

@@ -22,6 +22,7 @@ class ParticleManager;
 class ParticleEmitter;
 class Object3d;
 struct Material;
+struct PointLight;
 
 class DebugUI
 {
@@ -35,6 +36,7 @@ public:
     static void CheckSprite(Sprite& sprite, const char* label);
     static void CheckBalloonData(Balloon& balloon);
     static void CheckWaveData(Wave& wave, const char* label);
+    static void CheckPointLightData(PointLight& pointLight, const char* label);
 
     static void CheckObject3d(Object3d& object3d, const char* label);
 

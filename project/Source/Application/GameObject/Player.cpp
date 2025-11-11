@@ -21,7 +21,7 @@ void Player::Init()
     eyePos_.Initialize();
     eyePos_.worldTransform_.Initialize();
     eyePos_.worldTransform_.translate_.y = 1.5f;
-    eyePos_.worldTransform_.translate_.z= 0.5f;
+    eyePos_.worldTransform_.translate_.z = 0.5f;
 
     //体の位置が親
     eyePos_.worldTransform_.Parent(bodyPos_.worldTransform_);
@@ -34,8 +34,9 @@ void Player::Init()
 
 void Player::Draw(Camera& camera, const LightMode& lightType)
 {
-    bodyPos_.Draw(camera,lightType);
-    eyePos_.Draw(camera, lightType);
+    model_->SetLightMode(lightType);
+    bodyPos_.Draw(camera, kBlendModeNormal);
+    eyePos_.Draw(camera, kBlendModeNormal);
 }
 
 void Player::Update()
@@ -43,7 +44,7 @@ void Player::Update()
 
     Move();
     LookBack();
-    MouseLook();   
+    MouseLook();
     bodyPos_.Update();
     eyePos_.Update();
 
@@ -177,10 +178,10 @@ void Player::MouseLook()
     }
 
     bodyPos_.worldTransform_.rotate_.y += Input::GetMousePosFiltered().x * InverseFPS * 0.25f;
-   
 
-    
-    
+
+
+
     eyePos_.worldTransform_.rotate_.x += Input::GetMousePosFiltered().y * InverseFPS * 0.25f;
 
     eyePos_.worldTransform_.rotate_.x = std::clamp(

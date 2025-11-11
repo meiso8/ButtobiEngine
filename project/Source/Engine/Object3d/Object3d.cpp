@@ -5,13 +5,13 @@
 ID3D12GraphicsCommandList* Object3d::commandList_ = nullptr;
 
 
-void Object3d::Draw(Camera& camera, const LightMode& lightMode, const BlendMode& blendMode, const CullMode& cullMode)
+void Object3d::Draw(Camera& camera, const BlendMode& blendMode,  const CullMode& cullMode)
 {
 
     *transformationMatrixData_ = { Multiply(worldTransform_.matWorld_, camera.GetViewProjectionMatrix()),worldTransform_.matWorld_,Transpose(Inverse(worldTransform_.matWorld_))};
 
     if (meshCommon_) {
-        meshCommon_->PreDraw(commandList_, lightMode, blendMode, cullMode);
+        meshCommon_->PreDraw(commandList_,  blendMode,cullMode);
         //wvp用のCBufferの場所を設定
         commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
         //cameraのCBufferの場所を設定

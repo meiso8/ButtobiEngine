@@ -7,7 +7,7 @@
 #include"hlslTypeToCpp.h"
 
 enum LightMode {
-    klightModeNone,
+    kLightModeNone,
     kLightModeLReflectance,
     kLightModeHalfL,
 };
@@ -33,7 +33,7 @@ public:
     void UnMap();
 
 
-    void CreateMaterial(const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, uint32_t lightType = LightMode::klightModeNone);
+    void CreateMaterial(const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, uint32_t lightType = LightMode::kLightModeNone);
     Material* GetMaterial() {
         return material_;
     };

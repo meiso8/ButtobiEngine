@@ -28,11 +28,9 @@ void DrawGrid::Finalize()
 
 void DrawGrid::Create()
 {
-    uint32_t textureHandle = Texture::GetHandle(Texture::WHITE_1X1);
-
     for (int i = 0; i < line_.size(); ++i) {
         line_[i] = new LineMesh();
-        line_[i]->Create(textureHandle);
+        line_[i]->Create(Texture::WHITE_1X1);
     }
 
     for (int i = 0; i < 51; ++i) {
@@ -53,7 +51,8 @@ void DrawGrid::Create()
 
     for (int i = 0; i < cube_.size(); ++i) {
         cube_[i] = new Cube();
-        cube_[i]->Create(textureHandle);
+        cube_[i]->Create(Texture::WHITE_1X1);
+        cube_[i]->SetLightMode(kLightModeNone);
     }
 
     cube_[0]->SetMinMax({ -1.0f / 128.0f,-1.0f / 128.0f,-25.0f }, { 1.0f / 128.0f,1.0f / 128.0f,25.0f });
@@ -67,7 +66,7 @@ void DrawGrid::Create()
         lineTransforms_[i]->Create();
         lineTransforms_[i]->Update();
         if (i >= 2) {
-            lineTransforms_[i-2]->SetMesh(line_[i-2]);
+            lineTransforms_[i - 2]->SetMesh(line_[i - 2]);
         } else {
             lineTransforms_[i]->SetMesh(cube_[i]);
         }
@@ -83,6 +82,6 @@ void DrawGrid::Draw(Camera& camera, bool isDraw) {
     }
 
     for (int i = 0; i < lineTransforms_.size(); ++i) {
-        lineTransforms_[i]->Draw(camera,klightModeNone);
+        lineTransforms_[i]->Draw(camera, kBlendModeNone);
     }
 }

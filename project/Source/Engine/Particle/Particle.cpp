@@ -2,12 +2,12 @@
 #include"DirectXCommon.h"
 #include"Camera.h"
 #include"MakeMatrix.h"
-#include"Texture.h"
 #include"MyEngine.h"
 #include"Random.h"
 #include"Collision.h"
 #include"SRVmanager/SrvManager.h"
 #include"Model.h"
+
 
 using namespace  Microsoft::WRL;
 
@@ -54,14 +54,14 @@ ParticleManager::~ParticleManager()
 
 }
 
-void ParticleManager::CreateParticleGroup(const std::string name, const uint32_t& textureHandle)
+void ParticleManager::CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle)
 {
 
     assert(!particleGroups.contains(name));
     std::unique_ptr<ParticleGroup> newParticleGroup = std::make_unique<ParticleGroup>();
 
     newParticleGroup->materialData.textureFilePath = "./resources/uvChecker.png";
-    newParticleGroup->materialData.textureSrvIndex = textureHandle;
+    newParticleGroup->materialData.textureSrvIndex = Texture::GetHandle(textureHandle);
 
     //Instancing用のTransformationMatrixリソースを作成
     newParticleGroup->instancingResource = DirectXCommon::CreateBufferResource(sizeof(ParticleForGPU) * kNumMaxInstance);
@@ -96,7 +96,7 @@ void ParticleManager::Create()
 
     //マテリアルリソースを作成 //ライトなし
     materialResource = std::make_unique<MaterialResource>();
-    materialResource->CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, LightMode::klightModeNone);
+    materialResource->CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, LightMode::kLightModeNone);
 
     CreateModelData();
     CreateVertexBufferResource();

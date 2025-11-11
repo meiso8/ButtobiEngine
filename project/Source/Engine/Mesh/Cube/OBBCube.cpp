@@ -1,23 +1,23 @@
 #include "OBBCube.h"
 #include"DirectXCommon.h"
-#include"Texture.h"
 #include"MyEngine.h"
 
 OBBCube::~OBBCube() {
     Finalize();
 }
 
-void OBBCube::Create(uint32_t& textureHandle) {
+void OBBCube::Create(const Texture::TEXTURE_HANDLE& textureHandle) {
 
     modelConfig_ = ModelConfig::GetInstance();
-    textureHandle_ = textureHandle;
+    textureHandle_ = Texture::GetHandle(textureHandle);
 
     CreateVertex();
     CreateIndexResource();
 
-    CreateMaterial();
+    CreateMaterial({1.0f,1.0f,1.0f,1.0f},kLightModeHalfL);
     CreateWaveData();
     CreateBalloonData();
+    CreatePointLightData();
 
 };
 
@@ -251,7 +251,10 @@ void OBBCube::Draw(ID3D12GraphicsCommandList* commandList)
     //expansionのCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
 
-    ////描画!（DrawCall/ドローコール）6個のインデックスを使用し1つのインスタンスを描画。その他は当面0で良い。
+    //expansionのCBufferの場所を設定
+    commandList->SetGraphicsRootConstantBufferView(7, pointLightResource_->GetGPUVirtualAddress());
+
+    //描画!（DrawCall/ドローコール）6個のインデックスを使用し1つのインスタンスを描画。その他は当面0で良い。
     commandList->DrawIndexedInstanced(36, 1, 0, 0, 0);
 }
 
