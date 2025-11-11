@@ -5,6 +5,7 @@ struct TransformationMatrix
 {
     float32_t4x4 WVP;
     float32_t4x4 World;
+    float32_t4x4 WorldInversTtanspose;
 };
 
 struct Wave
@@ -84,8 +85,7 @@ VertexShaderOutput main(VertexShaderInput input)
     input.position.y += WaveUpdate(input);
      
     input.position.xyz += BalloonUpdate(input);
-    //output.position = ;
-    
+
     if (gBalloon.isSphere)
     {
         output.position = mul(SphereUpdate(input), gTransformationMatrix.WVP);
@@ -97,7 +97,7 @@ VertexShaderOutput main(VertexShaderInput input)
 
     
     output.texcoord = input.texcoord;
-    output.normal = normalize(mul(input.normal, (float32_t3x3) gTransformationMatrix.World));
+    output.normal = normalize(mul(input.normal, (float32_t3x3) gTransformationMatrix.WorldInversTtanspose));
     output.worldPosition = mul(input.position, gTransformationMatrix.World).xyz;
     return output;
 }
