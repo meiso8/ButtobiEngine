@@ -80,7 +80,7 @@ private:
 
     Transform transform_{};
     Matrix4x4 worldMatrix_{};
-    TransformationMatrix* transformationMatrixData_ = nullptr;
+    TransformationMatrixFor2D* transformationMatrixData_ = nullptr;
 
     Transform uvTransform_ = { 0.0f };
     Matrix4x4 uvTransformMatrix_{};

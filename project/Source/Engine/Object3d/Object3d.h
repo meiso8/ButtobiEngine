@@ -14,7 +14,7 @@ public:
 private:
     //位置情報
     Microsoft::WRL::ComPtr <ID3D12Resource> transformationMatrixResource_ = nullptr;
-    TransformationMatrix* transformationMatrixData_ = nullptr;
+    TransformationMatrixFor3D* transformationMatrixData_ = nullptr;
     //メッシュ情報
     MeshCommon* meshCommon_ = nullptr;
     //コマンドリスト 借り物
