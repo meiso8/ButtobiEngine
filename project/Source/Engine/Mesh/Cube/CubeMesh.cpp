@@ -1,13 +1,14 @@
-#include "Cube.h"
+#include "CubeMesh.h"
 #include"DirectXCommon.h"
 #include"MyEngine.h"
 #include"AABB.h"
 
-Cube::~Cube() {
+CubeMesh::~CubeMesh()
+{
     Finalize();
 }
 
-void Cube::Create(const Texture::TEXTURE_HANDLE& textureHandle) {
+void CubeMesh::Create(const Texture::TEXTURE_HANDLE& textureHandle) {
 
     modelConfig_ = ModelConfig::GetInstance();
     textureHandle_ = Texture::GetHandle(textureHandle);
@@ -23,7 +24,7 @@ void Cube::Create(const Texture::TEXTURE_HANDLE& textureHandle) {
 
 };
 
-void Cube::CreateVertex()
+void CubeMesh::CreateVertex()
 {
     vertexResource_ = DirectXCommon::CreateBufferResource(sizeof(VertexData) * 20);
 
@@ -33,7 +34,7 @@ void Cube::CreateVertex()
     vertexBufferView_.StrideInBytes = sizeof(VertexData);
 }
 
-void Cube::CreateIndexResource() {
+void CubeMesh::CreateIndexResource() {
 
 #pragma region//IndexResourceを作成
     indexResource_ = DirectXCommon::CreateBufferResource(sizeof(uint32_t) * 36);
@@ -80,7 +81,7 @@ void Cube::CreateIndexResource() {
 #pragma endregion
 }
 
-void Cube::SetVertex(const Vector3(&vertices)[8]) {
+void CubeMesh::SetVertex(const Vector3(&vertices)[8]) {
 
     vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 
@@ -230,7 +231,7 @@ void Cube::SetVertex(const Vector3(&vertices)[8]) {
     vertexResource_->Unmap(0, nullptr);
 }
 
-void Cube::Draw(ID3D12GraphicsCommandList* commandList)
+void CubeMesh::Draw(ID3D12GraphicsCommandList* commandList)
 {
 
     //頂点バッファビューを設定
@@ -255,7 +256,8 @@ void Cube::Draw(ID3D12GraphicsCommandList* commandList)
     commandList->DrawIndexedInstanced(36, 1, 0, 0, 0);
 }
 
-void Cube::SetMinMax(const AABB& aabb) {
+
+void CubeMesh::SetMinMax(const AABB& aabb) {
 
     Vector3 vertexData[8] = {};
 

@@ -2,10 +2,10 @@
 #include"MeshCommon.h"
 struct AABB;
 
-class Cube :public MeshCommon
+class CubeMesh :public MeshCommon
 {
 public:
-    ~Cube();
+    ~CubeMesh();
     void SetMinMax(const AABB& aabb);
     void SetVertex(const Vector3(&vertices)[8]);
     //デフォルト値を設定

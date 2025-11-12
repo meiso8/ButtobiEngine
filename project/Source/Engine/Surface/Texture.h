@@ -29,6 +29,7 @@ public:
     static uint32_t AddTextureHandle(const std::string& filePath);
 
     static uint32_t GetHandle(const TEXTURE_HANDLE& handle) { return handles[handle]; }
+    static std::string& GetFilePath(const TEXTURE_HANDLE& handle) { return handleToPath_[handles[handle]]; }
 
     //SRVインデックスの開始番号
     static uint32_t kSRVIndexTop;
@@ -61,10 +62,6 @@ private:
     //コンストラク・タデストラクタの隠ぺい
     Texture() = default;
     ~Texture() = default;
-    //コピーコンストラクタの封印
-    Texture(Texture&) = delete;
-    //コピー代入演算子の封印
-    Texture& operator=(Texture&) = delete;
     /// @brief テクスチャファイルの読み込み
 /// @param filePath テクスチャファイルのパス
     static void LoadTexture(const std::string& filePath);

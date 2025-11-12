@@ -3,7 +3,7 @@
 #include"Object3d.h"
 #include"AABB.h"
 #include"CharacterState.h"
-#include"Cube.h"
+#include"CubeMesh.h"
 #include<memory>
 
 class Model;
@@ -26,7 +26,7 @@ private:
     //AABB
     AABB aabb_;
     //立体のメッシュデバック用
-    std::unique_ptr<Cube>cubeMesh_;
+    std::unique_ptr<CubeMesh>cubeMesh_;
     //モデル
     Model* model_;
     //体の位置
@@ -44,6 +44,7 @@ private:
     //メンバ関数ポインタテーブル
     static void(Enemy::* spFuncTable[])();
     PHASE phase_ = PHASE::APPROACH;
+    Vector3 velocity_ = { 0.0f };
 private:
     void Approach();
     void Attack();

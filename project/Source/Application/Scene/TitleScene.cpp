@@ -52,7 +52,7 @@ TitleScene::TitleScene()
     planeMesh_->Create();
     sphereMesh_ = std::make_unique<SphereMesh>();
     sphereMesh_->Create();
-    cube_ = std::make_unique<Cube>();
+    cube_ = std::make_unique<CubeMesh>();
     cube_->Create();
 
     //モデルを借りる
@@ -77,10 +77,12 @@ TitleScene::TitleScene()
     sprite_ = std::make_unique<Sprite>();
     sprite_->Create(Texture::TEST, { 0.0f,0.0f });
 
-    particleManager_ = std::make_unique<ParticleManager>();
-    particleManager_->Create();
+
+    particleManager_ = ParticleManager::GetInstance();
+        particleManager_->Create();
     particleManager_->CreateParticleGroup("uvChecker", Texture::UV_CHECKER);
-    particleManager_->CreateParticleGroup("numbers", Texture::NUMBERS);
+
+
     particleEmitter_ = std::make_unique<ParticleEmitter>();
     particleEmitter_->SetName("uvChecker");
 

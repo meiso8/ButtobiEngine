@@ -4,8 +4,9 @@
 #include<algorithm>
 #include"SpriteCamera.h"
 #include"DrawGrid.h"
+#include"Particle.h"
 
- std::unique_ptr<PSO> MyEngine::pso = nullptr;
+std::unique_ptr<PSO> MyEngine::pso = nullptr;
 
 std::unique_ptr <Input> MyEngine::input = nullptr;
 DirectionalLight* MyEngine::directionalLightData = nullptr;
@@ -15,6 +16,7 @@ std::unique_ptr<Window> MyEngine::wc = nullptr;
 
 std::unique_ptr<DirectXCommon> MyEngine::directXCommon = nullptr;
 std::unique_ptr<SrvManager> MyEngine::srvManager = nullptr;
+std::unique_ptr<ParticleManager>  MyEngine::particleManager_ = nullptr;
 std::unique_ptr<LogFile> MyEngine::logFile = nullptr;
 
 std::unique_ptr<ModelConfig> modelConfig_ = nullptr;
@@ -68,7 +70,7 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     //書き込むためのアドレスを取得
     directionalLightResource->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData));
     //デフォルト値はとりあえず以下のようにしておく   
-    directionalLightData->color = { 1.0f,230.0f/255.0f,200.0f / 255.0f,1.0f };
+    directionalLightData->color = { 1.0f,230.0f / 255.0f,200.0f / 255.0f,1.0f };
 
     directionalLightData->direction = { 0.0f,-1.0f,0.0f };//向きは正規化する
     directionalLightData->intensity = 1.0f;
@@ -99,6 +101,9 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     //グリット描画
     DrawGrid::Create();
 #endif
+
+    particleManager_ = std::make_unique <ParticleManager>();
+
     //ファイルへのログ出力
     LogFile::Log("LoopStart");
 
@@ -144,6 +149,9 @@ void MyEngine::PostCommandSet() {
 };
 
 void MyEngine::Finalize() {
+
+    particleManager_->Finalize();
+    particleManager_.reset();
 
     ModelManager::Finalize();
 

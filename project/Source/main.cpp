@@ -1,5 +1,6 @@
 #include"MyEngine.h"
 #include"TitleScene.h"
+#include"GameScene.h"
 
 #define WIN_WIDTH 1280
 #define WIN_HEIGHT 720
@@ -25,18 +26,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
     enum Scene {
         kTitleScene,
+        kGameScene
     };
 
     const char* sceneName[] = {
        "TitleScene",
+       "GameScene"
     };
 
     std::vector<std::unique_ptr<SceneManager>> scenes;
     // タイトルシーンの生成
     scenes.push_back(std::make_unique < TitleScene>());
+    scenes.push_back(std::make_unique < GameScene>());
 
     //シーンのインデックス
     int sceneIndex = kTitleScene;
+
+#ifdef _DEBUG
+    sceneIndex = kGameScene;
+#endif // _DEBUG
 
     // 現在のシーン
     SceneManager* currentScene = nullptr;
@@ -59,7 +67,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #ifdef _DEBUG
 
-        if (Input::IsTriggerKey(DIK_RETURN)) {
+        if (Input::IsTriggerKey(DIK_I)) {
             // 現在のシーンの初期化
             currentScene->Initialize();
         }
@@ -74,10 +82,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #ifdef _DEBUG
         // デバック用
         myEngine->Debug();
+
 #ifdef USE_IMGUI
         DebugUI::CheckColor(screenColor, "screenColor");
         ImGui::Text("%s", sceneName[sceneIndex]);
 #endif // USE_IMGUI
+
         currentScene->Debug();
 
 #endif // _DEBUG

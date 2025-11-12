@@ -42,6 +42,8 @@ struct ParticleGroup {
     ParticleForGPU* instancingData;
 };
 
+
+
 std::list<Particle> Emit(const bool& isRandom, const Vector3& position, uint32_t count, const Vector3& scale = { 1.0f,1.0f,1.0f }, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
 Particle MakeNewParticle(const bool& isRandom, const Vector3& translate, const Vector3& scale = { 1.0f,1.0f,1.0f }, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
 
@@ -60,9 +62,6 @@ protected:
 
     RootSignature* rootSignature_ = nullptr;
 
-    D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU;
-    D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU;
-
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
     Microsoft::WRL::ComPtr<ID3D12Resource> vertexBufferResource_;
     VertexData* vertexBufferData_ = nullptr;
@@ -76,16 +75,32 @@ protected:
     Matrix4x4 worldMatrix;
     Matrix4x4 worldViewProjectionMatrix;
 
+private:
+    static ParticleManager* instance_;
 public:
 
-    ~ParticleManager();
+    //コンストラク・タデストラクタの隠ぺい
+    ParticleManager() = default;
+    ~ParticleManager() = default;
+    //コピーコンストラクタの封印
+    ParticleManager(ParticleManager&) = delete;
+    //コピー代入演算子の封印
+    ParticleManager& operator=(ParticleManager&) = delete;
+
+    static ParticleManager* GetInstance() {
+        if (instance_ == nullptr) {
+            instance_ = new ParticleManager();
+        }
+        return instance_;
+    }
+
 
     std::unordered_map<std::string, std::unique_ptr <ParticleGroup>>& GetParticleGroups() {
         return particleGroups;
     }
 
 
-    void CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE &textureHandle);
+    void CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle);
     void Create();
 
     virtual void Update(Camera& camera);
@@ -96,6 +111,8 @@ public:
 
     void InitAccelerationField();
 
+    void Finalize();
+
 protected:
     void CreateModelData();
     void CreateVertexBufferResource();
@@ -103,5 +120,7 @@ protected:
     void UpdateWorldMatrixForBillBord(Particle& particleItr);
     void UpdateWorldMatrix(Particle& particleItr);
     void IsCollisionFieldArea(Particle& particleItr);
+
+
 };
 

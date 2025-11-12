@@ -15,6 +15,7 @@ Player::Player() {
     bodyPos_.Create();
     //モデルやメッシュをセットする
     bodyPos_.SetMesh(model_);
+
 }
 
 void Player::Init()
@@ -35,6 +36,8 @@ void Player::Init()
     lookBackTime_ = 1.0f;
     isLookBackEnd_ = true;
     circle_.radius = 1.0f;
+    aabb_.min = { -circle_.radius , -circle_.radius ,-circle_.radius };
+    aabb_.max = { circle_.radius , circle_.radius ,circle_.radius };
     characterState_ = { .isHit = false,.isAttack = false,  .hp = 100 };
 }
 
@@ -195,6 +198,15 @@ void Player::MouseLook()
 
 }
 
+AABB Player::GetWorldAABB()
+{
+    Vector3 pos = bodyPos_.worldTransform_.GetWorldPosition();
+    return AABB{
+        .min = {pos + aabb_.min},
+        .max = {pos + aabb_.max}
+    };
+}
+
 void Player::OnCollision(const Circle& circle)
 {
     //中心に向かって移動する
@@ -203,6 +215,8 @@ void Player::OnCollision(const Circle& circle)
             bodyPos_.worldTransform_.translate_,
             circle_.center + Normalize(circle.center - circle_.center) * circle_.radius
             , 0.5f);
+    //仮に音を鳴らす
+    Sound::PlayOriginSE(Sound::CRACKER);
 }
 
 void Player::OnCollisionEnemy()

@@ -65,6 +65,7 @@ void DebugUI::CheckCamera(Camera& camera) {
 
 void DebugUI::CheckCharacterState(CharacterState& state, const char* label)
 {
+#ifdef USE_IMGUI
     ImGui::Begin("CharacterState");
 
     if (ImGui::TreeNode(label)) {
@@ -75,6 +76,7 @@ void DebugUI::CheckCharacterState(CharacterState& state, const char* label)
     }
 
     ImGui::End();
+#endif
 }
 
 void DebugUI::CheckMesh(MeshCommon& mesh, const char* label) {

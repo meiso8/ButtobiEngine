@@ -12,6 +12,7 @@
 using namespace  Microsoft::WRL;
 
 ID3D12GraphicsCommandList* ParticleManager::commandList_ = nullptr;
+ParticleManager* ParticleManager::instance_ = nullptr;
 
 std::unordered_map<std::string, std::unique_ptr <ParticleGroup> >ParticleManager::particleGroups;
 const float ParticleManager::kDeltaTime = 1.0f / 60.0f;
@@ -41,27 +42,13 @@ Particle MakeNewParticle(const bool& isRandom, const Vector3& translate, const V
     return particle;
 }
 
-ParticleManager::~ParticleManager()
-{
-
-    for (auto& [name, group] : particleGroups) {
-        if (group->instancingResource) {
-            group->instancingResource->Unmap(0, nullptr);
-            group->instancingResource = nullptr;
-        }
-    }
-
-
-}
-
 void ParticleManager::CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle)
 {
 
     assert(!particleGroups.contains(name));
     std::unique_ptr<ParticleGroup> newParticleGroup = std::make_unique<ParticleGroup>();
-
-    newParticleGroup->materialData.textureFilePath = "./resources/uvChecker.png";
     newParticleGroup->materialData.textureSrvIndex = Texture::GetHandle(textureHandle);
+    newParticleGroup->materialData.textureFilePath = Texture::GetFilePath(textureHandle);
 
     //Instancing用のTransformationMatrixリソースを作成
     newParticleGroup->instancingResource = DirectXCommon::CreateBufferResource(sizeof(ParticleForGPU) * kNumMaxInstance);
@@ -76,10 +63,12 @@ void ParticleManager::CreateParticleGroup(const std::string name, const Texture:
         newParticleGroup->instancingData[index].color = Vector4{ 1.0f,1.0f,1.0f,1.0f };
     }
 
-    //一旦応急処置でtextureHandleに入れる textureのサイス+2分が入る
+    newParticleGroup->instancingResource->Unmap(0, nullptr);
+
+
     newParticleGroup->instanceSrvIndex = SrvManager::Allocate();
-    instancingSrvHandleCPU = SrvManager::GetCPUDescriptorHandle(newParticleGroup->instanceSrvIndex);//この書き方はダメですね
-    instancingSrvHandleGPU = SrvManager::GetGPUDescriptorHandle(newParticleGroup->instanceSrvIndex);
+    //newParticleGroup->instancingSrvHandleCPU = SrvManager::GetCPUDescriptorHandle(newParticleGroup->instanceSrvIndex);//この書き方はダメですね
+    //newParticleGroup->instancingSrvHandleGPU = SrvManager::GetGPUDescriptorHandle(newParticleGroup->instanceSrvIndex);
 
     SrvManager::CreateSRVforStructuredBuffer(newParticleGroup->instanceSrvIndex, newParticleGroup->instancingResource.Get(), kNumMaxInstance, sizeof(ParticleForGPU));
 
@@ -139,12 +128,16 @@ void ParticleManager::Update(Camera& camera)
                 //ビュープロジェクション行列
                 worldViewProjectionMatrix = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
 
+                group->instancingResource->Map(0, nullptr, reinterpret_cast<void**>(&group->instancingData));
+
                 //データにそれぞれ追加
                 group->instancingData[group->numInstance].WVP = worldViewProjectionMatrix;
                 group->instancingData[group->numInstance].World = worldMatrix;
                 group->instancingData[group->numInstance].color = (*particleIterator).color;
                 float alpha = 1.0f - ((*particleIterator).currentTime / (*particleIterator).lifeTime);
                 group->instancingData[group->numInstance].color.w = alpha;
+
+                group->instancingResource->Unmap(0, nullptr);
 
                 ++group->numInstance;
             }
@@ -204,6 +197,20 @@ void ParticleManager::InitAccelerationField()
     accelerationField.acceleration = { 0.0f,0.0f,0.0f };
     accelerationField.area.min = { -1.0f,-1.0f,-1.0f };
     accelerationField.area.max = { 1.0f,1.0f,1.0f };
+}
+
+void ParticleManager::Finalize()
+{
+    for (auto& [name, group] : particleGroups) {
+        if (group->instancingResource != nullptr) {
+            group->instancingResource = nullptr;
+        }
+    }
+
+    if (instance_ != nullptr) {
+        delete instance_;
+        instance_ = nullptr;
+    }
 }
 
 // ==========================================================================================================-

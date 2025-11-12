@@ -3,6 +3,7 @@
 #include"ModelManager.h"
 #include"Camera.h"
 #include"Input.h"
+#include"Sound.h"
 
 //テーブルにポインタを入れる
 void(Enemy::* Enemy::spFuncTable[])() {
@@ -14,8 +15,8 @@ void(Enemy::* Enemy::spFuncTable[])() {
 Enemy::Enemy()
 {
     model_ = ModelManager::GetModel(ModelManager::MEDJED);
-    cubeMesh_ = std::make_unique<Cube>();
-    cubeMesh_->Create();
+    cubeMesh_ = std::make_unique<CubeMesh>();
+    cubeMesh_->Create(Texture::WHITE_1X1);
     bodyPos_.Create();
     bodyPos_.SetMesh(cubeMesh_.get());
     aabb_ = { .min = {-1.0f,-1.0f,-1.0f},.max = {1.0f,1.0f,1.0f} };
@@ -28,7 +29,8 @@ void Enemy::Init()
 {
     bodyPos_.Initialize();
     characterState_ = { .isHit = false,.isAttack = false,.hp = 100 };
-
+    cubeMesh_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+    velocity_ = { 2.0f,2.0f,2.0f };
 }
 
 void Enemy::Draw(Camera& camera)
@@ -36,34 +38,39 @@ void Enemy::Draw(Camera& camera)
     bodyPos_.Draw(camera, kBlendModeNormal);
 }
 
-void Enemy::Update()
-{
+void Enemy::Update()  
+{  
+   // とりあえずフェーズが最大になったら処理を終える  
+   if (phase_ >= MAX_PHASE || phase_ < 0) {  
+       return;  
+   }  
 
-    //とりあえずフェーズが最大になったら処理を終える
-    if (phase_ >= MAX_PHASE) {
-        return;
-    }
+   // 呼び出す  
+   (this->*spFuncTable[static_cast<size_t>(phase_ % MAX_PHASE)])();  
 
-    //呼び出す
-    (this->*spFuncTable[static_cast<size_t>(phase_)])();
+#ifdef _DEBUG  
+   if (Input::IsTriggerKey(DIK_Z)) {  
 
+       if (!characterState_.isAttack) {
+           characterState_.isAttack = true;
+       }
+ 
+   }  
 
-#ifdef _DEBUG
+   if (Input::IsTriggerKey(DIK_X)) {  
+       phase_ = APPROACH;  
+   }  
 
-    if (Input::IsTriggerKey(DIK_T)) {
-        phase_ = ATTACK;
-    }
+   if (Input::IsTriggerKey(DIK_C)) {  
+       phase_ = EXIT;  
+   }  
+#endif // _DEBUG  
 
-    if (Input::IsTriggerKey(DIK_Y)) {
-        phase_ = APPROACH;
-    }
+   if (characterState_.isAttack) {
+       phase_ = ATTACK;
+   }
 
-    if (Input::IsTriggerKey(DIK_U)) {
-        phase_ = EXIT;
-    }
-#endif // _DEBUG
-
-    bodyPos_.Update();
+   bodyPos_.Update();  
 }
 
 AABB Enemy::GetWorldAABB()
@@ -74,11 +81,15 @@ AABB Enemy::GetWorldAABB()
 
 void Enemy::OnCollision()
 {
+    //仮に音を鳴らす
+    Sound::PlayOriginSE(Sound::PICO);
+
     if (characterState_.isHit) {
         return;
     }
 
     characterState_.isHit = true;
+
 }
 
 
@@ -90,23 +101,17 @@ void Enemy::Approach()
     }
 
     Vector3 direction =  Normalize(*target_ - bodyPos_.worldTransform_.GetWorldPosition());
-    bodyPos_.worldTransform_.translate_ += direction;
-
+    bodyPos_.worldTransform_.translate_ += direction*InverseFPS* velocity_;
+    cubeMesh_->SetColor({ 1.0f,1.0f,0.0f,1.0f });
 }
 
 void Enemy::Attack()
 {
-
-
-    if (characterState_.isAttack) {
-        return;
-    }
-
-    characterState_.isAttack = true;
-    cubeMesh_->SetColor({1.0f,0.0f,0.0f,1.0f});
+    //bodyPos_.worldTransform_.rotate_.y += std::numbers::pi_v<float> *InverseFPS;
+    cubeMesh_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 }
 
 void Enemy::Exit()
 {
- 
+    cubeMesh_->SetColor({ 0.0f,0.0f,1.0f,1.0f });
 }

@@ -17,7 +17,7 @@
 class Sprite;
 class PlaneMesh;
 class SphereMesh;
-class Cube;
+class CubeMesh;
 class Model;
 
 class ParticleEmitter;
@@ -39,7 +39,7 @@ public:
 #pragma region//メッシュ
     std::unique_ptr<PlaneMesh> planeMesh_ = nullptr;
     std::unique_ptr<SphereMesh> sphereMesh_ = nullptr;
-    std::unique_ptr<Cube> cube_ = nullptr;
+    std::unique_ptr<CubeMesh> cube_ = nullptr;
 
     std::array< Model*, 1> models_;
 #pragma endregion
@@ -58,6 +58,6 @@ public:
     std::array< std::unique_ptr < Object3d>, 2> object3ds_;
 
  
-    std::unique_ptr<ParticleManager> particleManager_ = nullptr;
+    ParticleManager* particleManager_ = nullptr;
     std::unique_ptr<ParticleEmitter>particleEmitter_ = nullptr;
 };

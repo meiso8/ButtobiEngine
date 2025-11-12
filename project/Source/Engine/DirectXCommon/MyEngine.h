@@ -58,5 +58,6 @@ private:
 
     static std::unique_ptr<PSO> pso;
     static std::unique_ptr<SrvManager> srvManager;
+    static std::unique_ptr<ParticleManager> particleManager_;
 };
 

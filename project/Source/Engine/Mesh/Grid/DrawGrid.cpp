@@ -4,7 +4,7 @@
 #include"Texture.h"
 #include"AABB.h"
 std::array<LineMesh*, 102> DrawGrid::line_;
-std::array < Cube*, 2> DrawGrid::cube_;
+std::array < CubeMesh*, 2> DrawGrid::cube_;
 
 std::array<Object3d*, 104> DrawGrid::lineTransforms_;
 
@@ -50,7 +50,7 @@ void DrawGrid::Create()
     }
 
     for (int i = 0; i < cube_.size(); ++i) {
-        cube_[i] = new Cube();
+        cube_[i] = new CubeMesh();
         cube_[i]->Create(Texture::WHITE_1X1);
         cube_[i]->SetLightMode(kLightModeNone);
     }

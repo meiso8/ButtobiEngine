@@ -4,6 +4,7 @@
 #include"Object3d.h"
 #include"Circle.h"
 #include"CharacterState.h"
+#include"AABB.h"
 
 class Model;
 class Camera;
@@ -27,6 +28,7 @@ public:
         return bodyPos_.worldTransform_.matWorld_;
     };
 
+    AABB GetWorldAABB();
     Circle& GetCircle() {
         return circle_;
     };
@@ -34,13 +36,18 @@ public:
     void OnCollision(const Circle& circle);
     void OnCollisionEnemy();
 
+private:
+
     float endRotateY_ = 0.0f;
     float startRotateY = 0.0f;
     float lookBackTime_ = 1.0f;
     bool isLookBackEnd_ = false;
 
     bool isLookBack_ = false;
-private:
+
+    //AABB
+    AABB aabb_;
+    Circle circle_;
     Vector3 velocity_;
     float kSpeed_;
     float walkingTheta_ = 0.0f;
@@ -48,7 +55,7 @@ private:
     Model* model_;
     Object3d eyePos_;
     Object3d bodyPos_;
-    Circle circle_;
+
     CharacterState characterState_;
 };
 
