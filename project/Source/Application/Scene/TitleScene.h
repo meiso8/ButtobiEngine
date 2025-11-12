@@ -14,7 +14,7 @@ class QuadMesh;
 class SphereMesh;
 class Model;
 class ParticleEmitter;
-
+class  Cube; 
 class TitleScene :public SceneManager {
 
 public:
@@ -26,6 +26,9 @@ public:
     void Debug()override;
     std::unique_ptr<QuadMesh> quadMesh_= nullptr;
     std::unique_ptr<SphereMesh> sphereMesh_ = nullptr;
+    std::unique_ptr<Cube> cube_ = nullptr;
+
+
     std::array< Model*,1> models_;
 
     std::unique_ptr<Player>player_ = nullptr;

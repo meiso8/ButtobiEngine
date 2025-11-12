@@ -31,8 +31,11 @@ TitleScene::TitleScene()
     //矩形を描画
     quadMesh_ = std::make_unique<QuadMesh>();
     sphereMesh_ = std::make_unique<SphereMesh>();
+    cube_ = std::make_unique<Cube>();
     quadMesh_->Create(Texture::UV_CHECKER);
     sphereMesh_->Create(Texture::UV_CHECKER);
+    cube_->Create(Texture::UV_CHECKER);
+
     //モデルを借りる
 
     models_[0] = ModelManager::GetModel(ModelManager::BUILDING);
@@ -45,7 +48,7 @@ TitleScene::TitleScene()
     object3ds_[0]->worldTransform_.Parent(object3ds_[1]->worldTransform_);
     object3ds_[0]->worldTransform_.translate_.x = 2.0f;
     object3ds_[0]->worldTransform_.rotate_.x = std::numbers::pi_v<float>*0.5f;
-    object3ds_[0]->SetMesh(sphereMesh_.get());
+    object3ds_[0]->SetMesh(cube_.get());
     object3ds_[1]->SetMesh(models_[0]);
 
 
@@ -107,19 +110,6 @@ void TitleScene::Update() {
         particleEmitter_->SetName("numbers");
     }
 
-    if (Input::IsPushKey(DIK_A)) {
-        particleEmitter_->emitter_.transform.translate.x -= InverseFPS * 2.0f;
-    }
-    if (Input::IsPushKey(DIK_D)) {
-        particleEmitter_->emitter_.transform.translate.x += InverseFPS * 2.0f;
-    }
-
-    if (Input::IsPushKey(DIK_Q)) {
-        currentCamera_->translate_.x -= InverseFPS * 2.0f;
-    }
-    if (Input::IsPushKey(DIK_E)) {
-        currentCamera_->translate_.x += InverseFPS * 2.0f;
-    }
     player_->Update();
 
     medjed_->Update();
@@ -135,8 +125,6 @@ void TitleScene::Update() {
     for (int i = 0; i < lockers_.size(); ++i) {
         lockers_[i]->Update();
     }
-
-
 
     world_->Update();
 

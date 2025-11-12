@@ -10,6 +10,7 @@ void MeshCommon::Finalize() {
     if (materialResource_) {
         materialResource_->UnMap();
         delete materialResource_;
+        //materialResource_ = nullptr;
     }
 
     if (waveResource_) {

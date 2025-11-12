@@ -2,7 +2,7 @@
 #include<numbers>
 #include"MakeMatrix.h"
 #include"Texture.h"
-
+#include"AABB.h"
 std::array<LineMesh*, 102> DrawGrid::line_;
 std::array < Cube*, 2> DrawGrid::cube_;
 
@@ -55,8 +55,11 @@ void DrawGrid::Create()
         cube_[i]->SetLightMode(kLightModeNone);
     }
 
-    cube_[0]->SetMinMax({ -1.0f / 128.0f,-1.0f / 128.0f,-25.0f }, { 1.0f / 128.0f,1.0f / 128.0f,25.0f });
-    cube_[1]->SetMinMax({ -25.0f,-1.0f / 128.0f,-1.0f / 128.0f }, { 25.0f,1.0f / 128.0f,1.0f / 128.0f });
+    AABB aabb0 = { { -1.0f / 128.0f,-1.0f / 128.0f,-25.0f }, { 1.0f / 128.0f,1.0f / 128.0f,25.0f } };
+    AABB aabb1 = { { -25.0f,-1.0f / 128.0f,-1.0f / 128.0f }, { 25.0f,1.0f / 128.0f,1.0f / 128.0f } };
+
+    cube_[0]->SetMinMax(aabb0);
+    cube_[1]->SetMinMax(aabb1);
 
     cube_[0]->SetColor(Vector4(0.0f, 1.0f, 0.0f, 1.0f));
     cube_[1]->SetColor(Vector4(1.0f, 0.0f, 0.0f, 1.0f));
