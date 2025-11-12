@@ -49,7 +49,7 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     srvManager = std::make_unique<SrvManager>();
     srvManager->Initialize();
 
-#ifdef _DEBUG
+#ifdef USE_IMGUI
     //ImGuiの初期化。
     imGuiClass.Initialize(*wc, directXCommon->GetDevice().Get(), directXCommon->GetSwapChain(), directXCommon->GetSwapChainRtv());
     LogFile::Log("InitImGui");
@@ -108,7 +108,7 @@ void MyEngine::Update() {
 
     //キーボード情報の取得開始
     input->Update();
-#ifdef _DEBUG
+#ifdef USE_IMGUI
     //ImGuiにここからフレームが始まる旨を伝える
     imGuiClass.FrameStart();
 #endif
@@ -116,13 +116,18 @@ void MyEngine::Update() {
 
 void MyEngine::Debug()
 {
+#ifdef USE_IMGUI
     DebugUI::CheckFPS();
     DebugUI::CheckInput(*input);
+    DebugUI::CheckDirectionalLight();
+#endif // USE_IMGUI
+
+
 }
 
 void MyEngine::PreCommandSet(Vector4& screenColor) {
 
-#ifdef _DEBUG
+#ifdef USE_IMGUI
     //ImGuiの内部コマンドを生成する
     imGuiClass.Render();
 #endif
@@ -130,7 +135,7 @@ void MyEngine::PreCommandSet(Vector4& screenColor) {
 };
 
 void MyEngine::PostCommandSet() {
-#ifdef _DEBUG
+#ifdef USE_IMGUI
     //諸々の描画処理が終了下タイミングでImGuiの描画コマンドを積む
     imGuiClass.DrawImGui(CommandList::GetCommandList().Get());
 
@@ -162,7 +167,7 @@ void MyEngine::Finalize() {
 
     pso.reset();
 
-#ifdef _DEBUG
+#ifdef USE_IMGUI
     //ImGuiの終了処理 ゲームループが終わったら行う
     imGuiClass.ShutDown();
 #endif

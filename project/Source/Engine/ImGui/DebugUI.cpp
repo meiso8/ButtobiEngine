@@ -1,4 +1,6 @@
 #include "DebugUI.h"
+
+
 #include"MyEngine.h"
 #include"Input.h"
 #include"Sprite.h"
@@ -18,14 +20,18 @@
 
 void DebugUI::CheckInt(int& value, const char* label) {
 
+#ifdef USE_IMGUI
+
     if (ImGui::TreeNode(label)) {
         ImGui::SliderInt(label, &value, -100, 100);
         ImGui::TreePop();
     }
+#endif
 }
 
 void DebugUI::CheckCamera(Camera& camera) {
 
+#ifdef USE_IMGUI
     if (ImGui::TreeNode("Camera")) {
 
         CheckTransforms(camera.scale_, camera.rotate_, camera.translate_, "worldMatrix");
@@ -53,11 +59,11 @@ void DebugUI::CheckCamera(Camera& camera) {
         ImGui::TreePop();
 
     }
-
+#endif
 }
 
 void DebugUI::CheckModel(Model& model, const char* label) {
-
+#ifdef USE_IMGUI
     ImGui::Begin("Model");
 
     if (ImGui::TreeNode(label)) {
@@ -76,10 +82,11 @@ void DebugUI::CheckModel(Model& model, const char* label) {
     }
 
     ImGui::End();
+#endif
 }
 
 void DebugUI::CheckInput(Input& input) {
-
+#ifdef USE_IMGUI
     ImGui::Begin("Input");
     ImGui::SliderFloat2("mousePos", &input.GetMousePos().x, 0.0f, 1280.0f);
 
@@ -112,10 +119,12 @@ void DebugUI::CheckInput(Input& input) {
 
 
     ImGui::End();
+#endif
 
 }
 
 void DebugUI::CheckSprite(Sprite& sprite, const char* label) {
+#ifdef USE_IMGUI
     ImGui::Begin("Sprite");
 
     if (ImGui::TreeNode(label)) {
@@ -147,9 +156,11 @@ void DebugUI::CheckSprite(Sprite& sprite, const char* label) {
 
 
     ImGui::End();
+#endif
 }
 
 void DebugUI::ShowMatrix4x4(const Matrix4x4& matrix, const char* label) {
+#ifdef USE_IMGUI
     if (ImGui::BeginTable(label, 4, ImGuiTableFlags_Borders)) {
         for (uint32_t row = 0; row < 4; ++row) {
             ImGui::TableNextRow();
@@ -160,11 +171,13 @@ void DebugUI::ShowMatrix4x4(const Matrix4x4& matrix, const char* label) {
         }
         ImGui::EndTable();
     }
+#endif
 }
 
 
 void DebugUI::CheckBalloonData(Balloon& balloon)
 {
+#ifdef USE_IMGUI
     if (ImGui::TreeNode("Balloon")) {
         ImGui::DragFloat("expansionData", &balloon.expansion, 0.03f, 0.0f, 10.0f);
         ImGui::DragFloat("sphere", &balloon.sphere, 0.03f, 0.0f, 1.0f);
@@ -172,9 +185,11 @@ void DebugUI::CheckBalloonData(Balloon& balloon)
         ImGui::Checkbox("isSphere", &balloon.isSphere);
         ImGui::TreePop();
     }
+#endif
 }
 void DebugUI::CheckWaveData(Wave& wave, const char* label)
 {
+#ifdef USE_IMGUI
     if (ImGui::TreeNode(label)) {
 
         ImGui::DragFloat("time", &wave.time, 0.03f);
@@ -185,25 +200,30 @@ void DebugUI::CheckWaveData(Wave& wave, const char* label)
         wave.direction = Normalize(waveDirection);
         ImGui::TreePop();
     }
+#endif
 }
 void DebugUI::CheckPointLightData(PointLight& pointLight, const char* label)
 {
+#ifdef USE_IMGUI
     if (ImGui::TreeNode(label)) {
         CheckColor(pointLight.color, "PointLightcolor");
         ImGui::DragFloat("intensity", &pointLight.intensity, 0.03f);
         ImGui::DragFloat3("position", &pointLight.position.x, 0.03f, -10000.0f, 10000.0f);
         ImGui::TreePop();
     }
+#endif
 }
 void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
 {
+#ifdef USE_IMGUI
     ImGui::Begin("Object3d");
     CheckWorldTransform(object3d.worldTransform_, label);
     ImGui::End();
+#endif
 }
 void DebugUI::CheckParticle(ParticleManager& particle, ParticleEmitter& particleEmitter)
 {
-
+#ifdef USE_IMGUI
     ImGui::Begin("Particle");
 
     ImGui::Checkbox("useBillboard", &particle.useBillboard_);
@@ -231,33 +251,37 @@ void DebugUI::CheckParticle(ParticleManager& particle, ParticleEmitter& particle
 
 
     ImGui::End();
+#endif
 }
 
 void DebugUI::CheckTransforms(Vector3& scale, Vector3& rotate, Vector3& translate, const char* label) {
-
+#ifdef USE_IMGUI
     if (ImGui::TreeNode(label)) {
         ImGui::SliderFloat3("scale", &scale.x, 0.0f, 10.0f);
         ImGui::SliderFloat3("rotation", &rotate.x, 0.0f, std::numbers::pi_v<float>*2.0f);
         ImGui::SliderFloat3("translation", &translate.x, -1000.0f, 1000.0f);
         ImGui::TreePop();
     }
+#endif
 };
 void DebugUI::CheckColor(Vector4& color, const char* label) {
-
+#ifdef USE_IMGUI
     if (ImGui::TreeNode(label)) {
         ImGui::ColorEdit4("color", (float*)&color);
         ImGui::TreePop();
     }
+#endif
 }
 
 void DebugUI::CheckMaterial(Material& material, const char* label) {
-
+#ifdef USE_IMGUI
     if (ImGui::TreeNode(label)) {
         CheckColor(material.color, "color");
         CheckLightMode(material.lightMode, "material");
         ImGui::SliderFloat("shininess", &material.shininess, 0.0f, 100.0f);
         ImGui::TreePop();
     }
+#endif
 }
 
 
@@ -273,7 +297,7 @@ void DebugUI::CheckWorldTransform(WorldTransform& worldTransform, const char* la
 };
 
 void DebugUI::CheckDirectionalLight() {
-
+#ifdef USE_IMGUI
     if (ImGui::TreeNode("DirectionalLight")) {
         DirectionalLight* directionalLight = MyEngine::GetDirectionalLightData();
         Vector3 direction = directionalLight->direction;
@@ -284,11 +308,11 @@ void DebugUI::CheckDirectionalLight() {
         ImGui::DragFloat("intensity", &directionalLight->intensity);
         ImGui::TreePop();
     }
-
+#endif
 };
 
 void DebugUI::CheckLightMode(int32_t& lightMode, const char* label) {
-
+#ifdef USE_IMGUI
     if (ImGui::TreeNode(label)) {
 
         const char* lights[] = { "NONE", "LambertianReflectance", "HalfLambert" };
@@ -300,11 +324,11 @@ void DebugUI::CheckLightMode(int32_t& lightMode, const char* label) {
 
         ImGui::TreePop();
     }
-
+#endif
 };
 
 void DebugUI::CheckBlendMode(uint32_t& blendMode) {
-
+#ifdef USE_IMGUI
     if (ImGui::TreeNode("BlendMode")) {
 
         const char* blendModes[] = {
@@ -322,35 +346,43 @@ void DebugUI::CheckBlendMode(uint32_t& blendMode) {
         blendMode = blendMode_current % 6;
         ImGui::TreePop();
     }
-
+#endif
 };
 
 void DebugUI::CheckFPS() {
+#ifdef USE_IMGUI
     ImGui::Text("FPS : %f", ImGui::GetIO().Framerate);
+#endif
 }
 
 void DebugUI::CheckFlag(bool& flag, const char* label)
 {
+#ifdef USE_IMGUI
     std::string labels = std::string(label) + " : " + (flag ? "true" : "false");
     ImGui::Text("%s", labels.c_str());
+#endif
 }
 
 void DebugUI::SwitchFlag(bool& flag, const char* label)
 {
+#ifdef USE_IMGUI
     CheckFlag(flag, label);
 
     if (ImGui::Button(label)) {
         // スペースキーを押すとデバッグカメラに切り替える
         flag = flag ? false : true;
     }
-
+#endif
 
 }
 void DebugUI::Button(const char* label, std::function<void()> onSwitch)
 {
+#ifdef USE_IMGUI
     if (ImGui::Button(label)) {
         if (onSwitch) {
             onSwitch(); // ボタンが押されたら関数オブジェクトを実行！
         }
     }
+#endif
 }
+

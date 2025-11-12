@@ -76,8 +76,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         myEngine->Debug();
         DebugUI::CheckColor(screenColor, "screenColor");
         ImGui::Text("%s", sceneName[sceneIndex]);
-        DebugUI::CheckDirectionalLight();
-
         currentScene->Debug();
 
 #endif // _DEBUG

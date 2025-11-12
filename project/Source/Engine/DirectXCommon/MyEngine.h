@@ -42,9 +42,9 @@ public:
 private:
 
     static std::unique_ptr<DirectXCommon> directXCommon;
-#ifdef _DEBUG
+#ifdef USE_IMGUI
     ImGuiClass imGuiClass = {};
-#endif // _DEBUG
+#endif // USE_IMGUI
 
 
     static std::unique_ptr<LogFile> logFile;

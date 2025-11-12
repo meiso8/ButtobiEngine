@@ -3,9 +3,12 @@
 //入力処理に必要なもの
 #include "Input.h"
 //Debug用のImGui表示セット
+
+
 #include"DebugUI.h"
 //ImGuiだけ使用したかったら以下をインクルードすること
 //#include"ImGuiClass.h"
+
 
 //グリッド表示
 #include"DrawGrid.h"
@@ -22,7 +25,7 @@
 //球体のメッシュ
 #include"SphereMesh.h"
 //平面のメッシュ
-#include"PlaneMesh.h"
+#include"Plane/PlaneMesh.h"
 
 #include "ParticleEmitter.h"
 #include"Particle.h"
@@ -152,6 +155,7 @@ TitleScene::~TitleScene()
 
 void TitleScene::Debug()
 {
+#ifndef USE_IMGUI
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
     std::function<void()> func = [this]() { SwitchCamera(); };
     DebugUI::Button("ChangeCamera", func);
@@ -160,6 +164,7 @@ void TitleScene::Debug()
     DebugUI::CheckParticle(*particleManager_, *particleEmitter_);
     DebugUI::CheckMaterial(sphereMesh_->GetMaterial(), "sphereMesh");
     DebugUI::CheckPointLightData(sphereMesh_->GetPointLightData(), "sphereMesh");
+#endif // !USE_IMGUI
 }
 
 void TitleScene::Draw() {

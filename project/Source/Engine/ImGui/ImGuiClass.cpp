@@ -2,7 +2,7 @@
 #include"CommandList.h"
 #include"SRVmanager/SrvManager.h"
 
-
+#ifdef USE_IMGUI
 void ImGuiClass::Initialize(Window& window,
     const Microsoft::WRL::ComPtr<ID3D12Device>& device,
     SwapChain& swapChain,
@@ -52,3 +52,4 @@ void ImGuiClass::ShutDown() {
     ImGui::DestroyContext();
 }
 
+#endif
