@@ -95,6 +95,12 @@ float Distance(const Segment& segment, const AABB& aabb);
 /// @return 距離
 float Distance(const Segment& segment1, const Segment& segment2);
 
+/// @brief 円と円の距離を求める
+/// @param p1 
+/// @param p2 
+/// @return 距離
+float Distance(const Circle& p1, const Circle& p2);
+
 /// @brief 球と平面の貫入量を求める
 /// @param sphere 球
 /// @param plane 平面
@@ -173,5 +179,8 @@ bool IsCollision(const Sphere& sphere, const Plane& plane);
 /// @return 判定結果
 bool IsCollision(const Sphere& sphere, const AABB& aabb);
 
-
-bool IsInCircleAndCollision(const Circle& smallCircle, const Circle& largeCircle);
+/// @brief 円が円から出たときの判定
+/// @param smallCircle 
+/// @param largeCircle 
+/// @return 判定結果
+bool IsCollisionInCircleLine(const Circle& smallCircle, const Circle& largeCircle);

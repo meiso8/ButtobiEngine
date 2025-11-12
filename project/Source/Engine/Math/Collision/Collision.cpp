@@ -184,17 +184,20 @@ bool IsCollision(const Sphere &s1, const Sphere &s2) {
 	return false;
 }
 
-bool IsInCircleAndCollision(const Circle& smallCircle,const Circle& largeCircle)
+float Distance(const Circle& p1, const Circle& p2) {
+	return Length({ p1.center - p2.center });
+}
+
+bool IsCollisionInCircleLine(const Circle& smallCircle,const Circle& largeCircle)
 {
 	//2つの急の中心点間距離を求める 
-	float distance = Length({ smallCircle.center - largeCircle.center });
-
-	if (distance >= largeCircle.radius- smallCircle.radius) {
+	if (Distance(smallCircle, largeCircle) >= largeCircle.radius - smallCircle.radius) {
 		return true;
 	}
 
 	return false;
 }
+
 
 
 //線分　Segment

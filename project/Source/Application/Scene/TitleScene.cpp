@@ -183,8 +183,15 @@ void TitleScene::Debug()
 
 void TitleScene::CheckAllCollision()
 {
-    if (IsInCircleAndCollision(player_->GetCircle(), filed_->circle_)) {
-    
+
+    //2つの急の中心点間距離を求める 
+    if (Distance(player_->GetCircle(), filed_->circle_) >= player_->GetCircle().radius - filed_->circle_.radius) {
+         
+    }
+
+    if (IsCollisionInCircleLine(player_->GetCircle(), filed_->circle_)) {
+        
+        player_->OnCollision(filed_->circle_);
         Sound::PlayOriginSE(Sound::CRACKER);
     };
 }

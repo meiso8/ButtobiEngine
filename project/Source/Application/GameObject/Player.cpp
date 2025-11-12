@@ -4,6 +4,7 @@
 #include"MyEngine.h"
 #include"Easing.h"
 #include<algorithm>
+#include"Collision.h"
 
 Player::Player() {
 
@@ -129,8 +130,6 @@ void Player::LookBack()
     ImGui::SliderFloat3("forward", &GetForward().x, 0.0f, 100.0f);
 #endif // USE_IMGUI
 
-
-
     if (Input::IsTriggerMouse(1)) {
         isLookBack_ = true;
 
@@ -183,10 +182,6 @@ void Player::MouseLook()
     }
 
     bodyPos_.worldTransform_.rotate_.y += Input::GetMousePosFiltered().x * InverseFPS * 0.25f;
-
-
-
-
     eyePos_.worldTransform_.rotate_.x += Input::GetMousePosFiltered().y * InverseFPS * 0.25f;
 
     eyePos_.worldTransform_.rotate_.x = std::clamp(
@@ -194,5 +189,15 @@ void Player::MouseLook()
         -std::numbers::pi_v<float> / 2.0f,
         std::numbers::pi_v<float> / 2.0f);
 
+}
+
+void Player::OnCollision(const Circle& circle)
+{
+    //中心に向かって移動する
+    bodyPos_.worldTransform_.translate_ = 
+        Easing::EaseInOut(
+            bodyPos_.worldTransform_.translate_, 
+            circle_.center + Normalize(circle.center - circle_.center) * circle_.radius
+            ,0.5f);
 
 }

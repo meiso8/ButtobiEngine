@@ -29,6 +29,9 @@ public:
     Circle& GetCircle() {
         return circle_;
     };
+
+    void OnCollision(const Circle& circle);
+
     float endRotateY_ = 0.0f;
     float startRotateY = 0.0f;
     float time_ = 1.0f;
