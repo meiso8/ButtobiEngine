@@ -157,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\Enemy.cpp" />
     <ClCompile Include="externals\imgui\imgui.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -256,12 +257,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\Enemy.h" />
+    <ClInclude Include="Source\Application\GameObject\CharacterState.h" />
     <ClInclude Include="Source\Application\GameObject\Field.h" />
     <ClInclude Include="Source\Application\GameObject\Medjed.h" />
     <ClInclude Include="Source\Application\GameObject\Locker.h" />
     <ClInclude Include="Source\Application\GameObject\Player.h" />
     <ClInclude Include="Source\Engine\Math\Structs\Circle.h" />
-    <ClInclude Include="Source\Engine\Math\Structs\CircleA.h" />
     <ClInclude Include="Source\Engine\Mesh\Circle\CircleMesh.h" />
     <ClInclude Include="Source\Engine\Particle\ParticleEmitter.h" />
     <ClInclude Include="Source\Engine\Object3d\Object3d.h" />

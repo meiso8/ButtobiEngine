@@ -8,31 +8,34 @@
 
 Player::Player() {
 
+    //モデルを取得する
     model_ = ModelManager::GetModel(ModelManager::PLAYER);
+    //それぞれのObject3d（WorldTransform）を作る
     eyePos_.Create();
-    //eyePos_.SetMesh(model_);
     bodyPos_.Create();
+    //モデルやメッシュをセットする
     bodyPos_.SetMesh(model_);
 }
 
 void Player::Init()
 {
+    //体の位置初期化
     bodyPos_.worldTransform_.Initialize();
-
+    //目の位置初期化
     eyePos_.Initialize();
     eyePos_.worldTransform_.Initialize();
     eyePos_.worldTransform_.translate_.y = 1.5f;
     eyePos_.worldTransform_.translate_.z = 0.5f;
 
-    //体の位置が親
+    //体の位置を親に設定
     eyePos_.worldTransform_.Parent(bodyPos_.worldTransform_);
 
     velocity_ = { 0.0f,0.0f,0.0f };
     kSpeed_ = { 0.5f };
-    time_ = 1.0f;
-    isEnd_ = true;
+    lookBackTime_ = 1.0f;
+    isLookBackEnd_ = true;
     circle_.radius = 1.0f;
-
+    characterState_ = { .isHit = false,.isAttack = false,  .hp = 100 };
 }
 
 void Player::Draw(Camera& camera, const LightMode& lightType)
@@ -76,7 +79,7 @@ void Player::Move()
         velocity_.z = -1.0f;
     }
 
-    kSpeed_ = (Input::IsPushKey(DIK_LSHIFT)) ? 0.25f : 0.5f;
+    kSpeed_ = (Input::IsPushKey(DIK_LSHIFT)) ? 0.125f : 0.25f;
 
     if (Input::IsPushKey(DIK_A) || Input::IsPushKey(DIK_D) || Input::IsPushKey(DIK_W) || Input::IsPushKey(DIK_S)) {
 
@@ -126,16 +129,17 @@ void Player::LookBack()
 
 #ifdef USE_IMGUI
     DebugUI::CheckFlag(isLookBack_, "isLookBack_");
-    DebugUI::CheckFlag(isEnd_, "isEnd_");
+    DebugUI::CheckFlag(isLookBackEnd_, "isEnd_");
     ImGui::SliderFloat3("forward", &GetForward().x, 0.0f, 100.0f);
+    DebugUI::CheckCharacterState(characterState_, "player");
 #endif // USE_IMGUI
 
     if (Input::IsTriggerMouse(1)) {
         isLookBack_ = true;
 
-        if (isEnd_) {
-            isEnd_ = false;
-            time_ = 0.0f;
+        if (isLookBackEnd_) {
+            isLookBackEnd_ = false;
+            lookBackTime_ = 0.0f;
             startRotateY = bodyPos_.worldTransform_.rotate_.y;
             endRotateY_ = bodyPos_.worldTransform_.rotate_.y + std::numbers::pi_v<float>;
         }
@@ -149,25 +153,25 @@ void Player::LookBack()
     //マウスを離したら
     if (Input::IsPressMouse(1)) {
 
-        if (!isEnd_) {
-            if (time_ < 1.0f) {
-                time_ += InverseFPS * 2.0f;
+        if (!isLookBackEnd_) {
+            if (lookBackTime_ < 1.0f) {
+                lookBackTime_ += InverseFPS * 2.0f;
             } else {
-                time_ = 1.0f;
-                isEnd_ = true;
+                lookBackTime_ = 1.0f;
+                isLookBackEnd_ = true;
             }
         }
-        bodyPos_.worldTransform_.rotate_.y = Easing::EaseOutBack(startRotateY, endRotateY_, time_);
+        bodyPos_.worldTransform_.rotate_.y = Easing::EaseOutBack(startRotateY, endRotateY_, lookBackTime_);
 
     } else {
-        if (time_ > 0.0f) {
-            time_ -= InverseFPS * 2.0f;
+        if (lookBackTime_ > 0.0f) {
+            lookBackTime_ -= InverseFPS * 2.0f;
         } else {
-            time_ = 0.0f;
+            lookBackTime_ = 0.0f;
             isLookBack_ = false;
         }
 
-        bodyPos_.worldTransform_.rotate_.y = Easing::EaseOutQuad(startRotateY, endRotateY_, time_);
+        bodyPos_.worldTransform_.rotate_.y = Easing::EaseOutQuad(startRotateY, endRotateY_, lookBackTime_);
 
     }
 
@@ -181,8 +185,8 @@ void Player::MouseLook()
         return;
     }
 
-    bodyPos_.worldTransform_.rotate_.y += Input::GetMousePosFiltered().x * InverseFPS * 0.25f;
-    eyePos_.worldTransform_.rotate_.x += Input::GetMousePosFiltered().y * InverseFPS * 0.25f;
+    bodyPos_.worldTransform_.rotate_.y += Input::GetMousePosFiltered().x * InverseFPS * 0.125f;
+    eyePos_.worldTransform_.rotate_.x += Input::GetMousePosFiltered().y * InverseFPS * 0.125f;
 
     eyePos_.worldTransform_.rotate_.x = std::clamp(
         eyePos_.worldTransform_.rotate_.x,
@@ -194,10 +198,19 @@ void Player::MouseLook()
 void Player::OnCollision(const Circle& circle)
 {
     //中心に向かって移動する
-    bodyPos_.worldTransform_.translate_ = 
+    bodyPos_.worldTransform_.translate_ =
         Easing::EaseInOut(
-            bodyPos_.worldTransform_.translate_, 
+            bodyPos_.worldTransform_.translate_,
             circle_.center + Normalize(circle.center - circle_.center) * circle_.radius
-            ,0.5f);
+            , 0.5f);
+}
+
+void Player::OnCollisionEnemy()
+{
+    if (characterState_.isHit) {
+        return;
+    }
+    //衝突フラグを真に
+    characterState_.isHit = true;
 
 }

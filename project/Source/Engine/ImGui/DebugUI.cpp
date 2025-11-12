@@ -1,5 +1,5 @@
 #include "DebugUI.h"
-
+#include"CharacterState.h"
 
 #include"MyEngine.h"
 #include"Input.h"
@@ -63,6 +63,20 @@ void DebugUI::CheckCamera(Camera& camera) {
 #endif
 }
 
+void DebugUI::CheckCharacterState(CharacterState& state, const char* label)
+{
+    ImGui::Begin("CharacterState");
+
+    if (ImGui::TreeNode(label)) {
+        ImGui::Checkbox("isAttack", &state.isAttack);
+        ImGui::Checkbox("isHit", &state.isHit);
+        ImGui::DragInt(label, &state.hp, 1, 0, 100);
+        ImGui::TreePop();
+    }
+
+    ImGui::End();
+}
+
 void DebugUI::CheckMesh(MeshCommon& mesh, const char* label) {
 #ifdef USE_IMGUI
     ImGui::Begin("Mesh");
@@ -74,7 +88,7 @@ void DebugUI::CheckMesh(MeshCommon& mesh, const char* label) {
         CheckBalloonData(mesh.GetBalloonData());
         CheckMaterial(mesh.GetMaterial(), "material");
         CheckColor(mesh.GetColor(), "modelColor");//一応マテリアルについている
-        CheckPointLightData(mesh.GetPointLightData(),"pointLight");
+        CheckPointLightData(mesh.GetPointLightData(), "pointLight");
         ImGui::TreePop();
     }
 
@@ -87,7 +101,7 @@ void DebugUI::CheckModel(Model& model, const char* label) {
     ImGui::Begin("Model");
 
     CheckMesh(model, label);
-    CheckTransform(model.GetUVTransform(),"uvTransfrom");
+    CheckTransform(model.GetUVTransform(), "uvTransfrom");
     ImGui::End();
 #endif
 }

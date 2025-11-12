@@ -114,16 +114,18 @@ void TitleScene::Initialize() {
 
 void TitleScene::Update() {
 
+
+
     if (isDebugCameraActive_) {
         currentCamera_->UpdateMatrix();
     } else {
         camera_->worldMat_ = player_->GetEyeMatrix();
-        if (Input::IsPushKey(DIK_SPACE)) {
-            Vector3 translate = player_->GetForward();
-            camera_->worldMat_.m[3][0] += translate.x * 3.0f;
-            camera_->worldMat_.m[3][1] += translate.y * 3.0f;
-            camera_->worldMat_.m[3][2] += translate.z * 3.0f;
-        }
+        //if (Input::IsPushKey(DIK_SPACE)) {
+        //    Vector3 translate = player_->GetForward();
+        //    camera_->worldMat_.m[3][0] += translate.x * 3.0f;
+        //    camera_->worldMat_.m[3][1] += translate.y * 3.0f;
+        //    camera_->worldMat_.m[3][2] += translate.z * 3.0f;
+        //}
 
         camera_->UpdateViewProjectionMatrix();
 
@@ -155,6 +157,7 @@ void TitleScene::Update() {
     }
 
     world_->Update();
+
     CheckAllCollision();
 }
 
@@ -166,8 +169,14 @@ TitleScene::~TitleScene()
 
 void TitleScene::Debug()
 {
+
+    if (Input::IsTriggerKey(DIK_Q)) {
+        SwitchCamera();
+    }
+
 #ifdef USE_IMGUI
 
+    ImGui::Text("SwitchCamera : Q key");
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
     std::function<void()> func = [this]() { SwitchCamera(); };
     DebugUI::Button("ChangeCamera", func);

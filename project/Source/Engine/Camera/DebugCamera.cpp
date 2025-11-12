@@ -151,7 +151,7 @@ void DebugCamera::MouseInputMove() {
         //視点の移動 offset をずらす
         //後でoffsetをくわえる
         Vector2 deltaOffset = { 0.0f,0.0f };
-        deltaOffset += Input::GetMousePosFiltered();
+        deltaOffset += Input::GetMousePos();
         offset_ += { deltaOffset.x* InverseFPS, deltaOffset.y* InverseFPS * 2.0f };
     } else if (Input::IsPressMouse(2)) {
         //視点の回転
@@ -167,9 +167,9 @@ void DebugCamera::MouseInputMove() {
     }
 
     if (Input::isDragging_) {
-        Vector2 currentPos = Input::GetMousePos();
-        sphericalCoordinate_.polar += currentPos.x * InverseFPS;
-        sphericalCoordinate_.azimuthal += currentPos.y * InverseFPS;
+        Vector2 currentPos = Input::GetMousePosFiltered();
+        sphericalCoordinate_.polar += currentPos.x * InverseFPS*0.5f;
+        sphericalCoordinate_.azimuthal -= currentPos.y * InverseFPS*0.25f;
         rotate_.y = sphericalCoordinate_.polar;
         rotate_.z = sphericalCoordinate_.azimuthal;
     }

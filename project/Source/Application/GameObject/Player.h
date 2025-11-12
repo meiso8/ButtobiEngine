@@ -3,6 +3,7 @@
 #include"WorldTransform.h"
 #include"Object3d.h"
 #include"Circle.h"
+#include"CharacterState.h"
 
 class Model;
 class Camera;
@@ -31,11 +32,12 @@ public:
     };
 
     void OnCollision(const Circle& circle);
+    void OnCollisionEnemy();
 
     float endRotateY_ = 0.0f;
     float startRotateY = 0.0f;
-    float time_ = 1.0f;
-    bool isEnd_ = false;
+    float lookBackTime_ = 1.0f;
+    bool isLookBackEnd_ = false;
 
     bool isLookBack_ = false;
 private:
@@ -47,5 +49,6 @@ private:
     Object3d eyePos_;
     Object3d bodyPos_;
     Circle circle_;
+    CharacterState characterState_;
 };
 

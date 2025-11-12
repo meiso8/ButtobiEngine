@@ -357,14 +357,14 @@ Vector2& Input::GetMousePosFiltered()
     static Vector2 mousePos; // 静的変数を使用して左辺値を確保 
     mousePos.x = static_cast<float>(mouseState_.lX);
     mousePos.y = static_cast<float>(mouseState_.lY);
-    mousePos.x = (std::abs(mousePos.x) < 5.0f) ? 0.0f : mousePos.x;
-    mousePos.y = (std::abs(mousePos.y) < 5.0f) ? 0.0f : mousePos.y;
+    mousePos.x = (std::abs(mousePos.x) < 1.0f) ? 0.0f : mousePos.x;
+    mousePos.y = (std::abs(mousePos.y) < 1.0f) ? 0.0f : mousePos.y;
     return mousePos;
 
 }
 
 float Input::GetMouseWheel() {
-    return  static_cast<float>(mouseState_.lZ) *InverseFPS;
+    return  static_cast<float>(mouseState_.lZ) * InverseFPS;
 };
 
 

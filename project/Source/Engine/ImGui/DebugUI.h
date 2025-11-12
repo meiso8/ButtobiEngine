@@ -24,10 +24,14 @@ class Object3d;
 struct Material;
 struct PointLight;
 class MeshCommon;
+struct CharacterState;
+
 
 class DebugUI
 {
 public:
+
+    static void CheckCharacterState(CharacterState& state,const char* label);
 
     /// @brief メッシュ
     /// @param mesh 
