@@ -1,15 +1,15 @@
-#include "Quad.h"
+#include "PlaneMesh.h"
 
 #include"DirectXCommon.h"
 #include"MyEngine.h"
 
 #include"MakeMatrix.h"
 
-QuadMesh::~QuadMesh() {
+PlaneMesh::~PlaneMesh() {
     Finalize();
 }
 
-void QuadMesh::Create(const Texture::TEXTURE_HANDLE& textureHandle)
+void PlaneMesh::Create(const Texture::TEXTURE_HANDLE& textureHandle)
 {
     modelConfig_ = ModelConfig::GetInstance();
     textureHandle_ = Texture::GetHandle(textureHandle);
@@ -24,7 +24,7 @@ void QuadMesh::Create(const Texture::TEXTURE_HANDLE& textureHandle)
     SetLightMode(kLightModeHalfL);
 }
 
-void QuadMesh::CreateVertex() {
+void PlaneMesh::CreateVertex() {
 
     //VertexResourceとVertexBufferViewを用意 矩形を表現するための三角形を二つ(頂点4つ)
     vertexResource_ = DirectXCommon::CreateBufferResource(sizeof(VertexData) * 4);
@@ -59,7 +59,7 @@ void QuadMesh::CreateVertex() {
 
 }
 
-void QuadMesh::CreateUVTransformationMatrix()
+void PlaneMesh::CreateUVTransformationMatrix()
 {
     uvTransform_ = {
      {1.0f,1.0f,1.0f},
@@ -71,12 +71,12 @@ void QuadMesh::CreateUVTransformationMatrix()
 }
 
 
-void QuadMesh::UpdateUV() {
+void PlaneMesh::UpdateUV() {
     uvTransformMatrix_ = MakeAffineMatrix(uvTransform_.scale, uvTransform_.rotate, uvTransform_.translate);
     materialResource_->SetUV(uvTransformMatrix_);
 }
 
-void QuadMesh::ResetSize(const Vector2& size) {
+void PlaneMesh::ResetSize(const Vector2& size) {
     size_ = size;
     Vector2 halfSize = size_ * 0.5f;
     vertexData_[0].position = { -halfSize.x,-halfSize.y,0.0f,1.0f };//左下
@@ -86,7 +86,7 @@ void QuadMesh::ResetSize(const Vector2& size) {
 
 };
 
-void QuadMesh::Draw(ID3D12GraphicsCommandList* commandList)
+void PlaneMesh::Draw(ID3D12GraphicsCommandList* commandList)
 {
 
     //頂点バッファビューを設定
@@ -97,9 +97,9 @@ void QuadMesh::Draw(ID3D12GraphicsCommandList* commandList)
     commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
 
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
-SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
+    SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
 
-    
+
     //LightのCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
     //timeのSRVの場所を設定
@@ -112,7 +112,7 @@ SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
     commandList->DrawIndexedInstanced(6, 1, 0, 0, 0);
 };
 
-void QuadMesh::CreateIndexResource() {
+void PlaneMesh::CreateIndexResource() {
 
 #pragma region//IndexResourceを作成
     indexResource_ = DirectXCommon::CreateBufferResource(sizeof(uint32_t) * 6);

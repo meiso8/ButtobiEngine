@@ -1,7 +1,7 @@
 #pragma once
 #include"MeshCommon.h"
 
-class QuadMesh :public MeshCommon
+class PlaneMesh :public MeshCommon
 {
 public:
     void Create(const Texture::TEXTURE_HANDLE& textureHandle);
@@ -12,7 +12,7 @@ void Draw(ID3D12GraphicsCommandList* commandList)override;
     Vector3& GetUVScale() { return uvTransform_.scale; };
     Vector3& GetUVRotate() { return uvTransform_.rotate; };
     Vector3& GetUVTranslate() { return uvTransform_.translate; };
-    ~QuadMesh();
+    ~PlaneMesh();
 private:
     void CreateVertex()override;
     void CreateIndexResource()override;

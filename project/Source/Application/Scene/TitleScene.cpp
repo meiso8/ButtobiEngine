@@ -1,20 +1,34 @@
 #define NOMINMAX
 #include "TitleScene.h"
+//入力処理に必要なもの
 #include "Input.h"
+//Debug用のImGui表示セット
+#include"DebugUI.h"
+//ImGuiだけ使用したかったら以下をインクルードすること
+//#include"ImGuiClass.h"
+
+//グリッド表示
+#include"DrawGrid.h"
+
+//モデル読み込みに必要なもの
 #include"Model.h"
 #include"ModelManager.h"
-
+//スプライトに必要なもの
 #include"Texture.h"
 #include"Sprite.h"
+//音を鳴らすのに必要なもの
 #include"Sound.h"
-#include"SphereMesh.h"
-#include"Random.h"
-#include"DebugUI.h"
-#include"Quad/Quad.h"
-#include"MakeMatrix.h"
-#include"DrawGrid.h"
-#include "Particle/ParticleEmitter.h"
 
+//球体のメッシュ
+#include"SphereMesh.h"
+//平面のメッシュ
+#include"PlaneMesh.h"
+
+#include "ParticleEmitter.h"
+#include"Particle.h"
+
+#include"Random.h"
+#include"MakeMatrix.h"
 
 TitleScene::TitleScene()
 {
@@ -29,10 +43,10 @@ TitleScene::TitleScene()
     // 現在のカメラを設定
     currentCamera_ = camera_.get();
     //矩形を描画
-    quadMesh_ = std::make_unique<QuadMesh>();
+    planeMesh_ = std::make_unique<PlaneMesh>();
     sphereMesh_ = std::make_unique<SphereMesh>();
     cube_ = std::make_unique<Cube>();
-    quadMesh_->Create(Texture::UV_CHECKER);
+    planeMesh_->Create(Texture::UV_CHECKER);
     sphereMesh_->Create(Texture::UV_CHECKER);
     cube_->Create(Texture::UV_CHECKER);
 
