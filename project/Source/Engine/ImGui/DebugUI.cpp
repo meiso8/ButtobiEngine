@@ -245,9 +245,11 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
     ImGui::End();
 #endif
 }
-void DebugUI::CheckParticle(ParticleManager& particle, ParticleEmitter& particleEmitter)
+void DebugUI::CheckParticle(ParticleEmitter& particleEmitter)
 {
 #ifdef USE_IMGUI
+   
+    ParticleManager& particle =  *ParticleManager::GetInstance();
     ImGui::Begin("Particle");
 
     ImGui::Checkbox("useBillboard", &particle.useBillboard_);

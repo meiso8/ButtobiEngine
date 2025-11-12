@@ -30,6 +30,9 @@ public:
     void Debug()override;
 
 private:
+    void UpdateCamera();
+    void UpdateGameObject();
+    void UpdateParticle();
     //全衝突判定
     void CheckAllCollision();
 private:

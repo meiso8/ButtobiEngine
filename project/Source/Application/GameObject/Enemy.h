@@ -18,6 +18,7 @@ public:
     void Draw(Camera& camera);
     void Update();
     AABB GetWorldAABB();
+    Vector3 GetWorldPos();
     void OnCollision();
     void SetTarget(Vector3& target) { target_ = &target; };
 private:

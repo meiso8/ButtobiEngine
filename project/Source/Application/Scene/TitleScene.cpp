@@ -184,7 +184,7 @@ void TitleScene::Debug()
     DebugUI::Button("ChangeCamera", func);
     DebugUI::CheckObject3d(*object3ds_[0], "0");
     DebugUI::CheckObject3d(*object3ds_[1], "1");
-    DebugUI::CheckParticle(*particleManager_, *particleEmitter_);
+    DebugUI::CheckParticle(*particleEmitter_);
     DebugUI::CheckMesh(*sphereMesh_, "sphereMesh");
     DebugUI::CheckMesh(*cube_, "cube_");
     DebugUI::CheckModel(*models_[0], "model0");

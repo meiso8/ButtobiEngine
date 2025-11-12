@@ -49,7 +49,7 @@ public:
 
     static void CheckObject3d(Object3d& object3d, const char* label);
 
-    static void CheckParticle(ParticleManager& particle, ParticleEmitter& particleEmitter);
+    static void CheckParticle(ParticleEmitter& particleEmitter);
     /// @brief ワールドトランスフォーム
     /// @param worldTransform 
     static void CheckWorldTransform(WorldTransform& worldTransform,const char* label);

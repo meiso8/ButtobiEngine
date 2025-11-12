@@ -28,7 +28,7 @@ void Sound::LoadAllSound()
 {
 #ifdef _DEBUG
 
-    bgmVolume_ = 0.0f;
+    bgmVolume_ = 0.1f;
     seVolume_ = 0.1f;
 #endif // _DEBUG
 
@@ -36,7 +36,7 @@ void Sound::LoadAllSound()
     handles_.resize(SOUNDS);
 
     //サウンドの読み込み
-    handles_[BGM1] = Load("Resource/Sounds/fruit_mix.mp3");
+    handles_[BGM1] = Load("Resource/Sounds/externals/maou_bgm_acoustic01b.mp3");
     handles_[PICO] = Load("Resource/Sounds/pico.mp3");
     handles_[CRACKER] = Load("Resource/Sounds/cracker_short.mp3");
 

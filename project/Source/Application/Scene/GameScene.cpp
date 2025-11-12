@@ -25,6 +25,7 @@
 //平面のメッシュ
 #include"PlaneMesh.h"
 
+
 //円のメッシュ
 #include"CircleMesh.h"
 //立方体のメッシュ（AABBでセットするか8頂点でセット);
@@ -39,7 +40,6 @@
 #include"MakeMatrix.h"
 
 #include"Collision.h"
-#include"Circle/CircleMesh.h"
 #include"Circle.h"
 
 GameScene::GameScene()
@@ -84,31 +84,28 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 
-    if (isDebugCameraActive_) {
-        //これを呼べばOK
-        currentCamera_->UpdateMatrix();
-        /*    camera_->UpdateMatrix();*/
-    } else {
-        //プレイヤーの視点にしている
-        camera_->worldMat_ = player_->GetEyeMatrix();
-        camera_->UpdateViewProjectionMatrix();
-    }
+    //仮に音声を鳴らす　全体のvolumeがあってオフセット分だけいじる
+    Sound::PlayBGM(Sound::BGM1, 0.1f);
 
-    player_->Update();
-    enemy_->Update();
-    filed_->Update();
-    world_->Update();
+    UpdateCamera();
 
-    particleEmitter_->Update();
-    particleManager_->Update(*currentCamera_);
+    UpdateGameObject();
+
+    UpdateParticle();
 
     CheckAllCollision();
 }
 
+void GameScene::Draw() {
 
-GameScene::~GameScene()
-{
-    camera_ = nullptr;
+#ifdef _DEBUG
+    DrawGrid::Draw(*currentCamera_);
+#endif
+    world_->Draw(*currentCamera_);
+    filed_->Draw(*currentCamera_);
+    enemy_->Draw(*currentCamera_);
+    player_->Draw(*currentCamera_, kLightModeHalfL);
+    particleManager_->Draw();
 }
 
 void GameScene::Debug()
@@ -118,15 +115,43 @@ void GameScene::Debug()
         SwitchCamera();
     }
 
-#ifdef USE_IMGUI
-
+#ifdef USE_IMGUI //ImGuiを使用する際はこれで囲んでください
     ImGui::Text("SwitchCamera : Q key");
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
     std::function<void()> func = [this]() { SwitchCamera(); };
     DebugUI::Button("ChangeCamera", func);
-    DebugUI::CheckParticle(*particleManager_, *particleEmitter_);
-
+    DebugUI::CheckParticle(*particleEmitter_);
 #endif // !USE_IMGUI
+}
+
+void GameScene::UpdateCamera()
+{
+    if (isDebugCameraActive_) {
+        //これを呼べばOK
+        currentCamera_->UpdateMatrix();
+        /*    camera_->UpdateMatrix();*/
+    } else {
+        //プレイヤーの視点にしている
+        camera_->worldMat_ = player_->GetEyeMatrix();
+        camera_->UpdateViewProjectionMatrix();
+    }
+}
+
+void GameScene::UpdateGameObject()
+{
+    player_->Update();
+    enemy_->Update();
+    filed_->Update();
+    world_->Update();
+}
+
+void GameScene::UpdateParticle()
+{
+    //エミッター
+    particleEmitter_->Update();
+    particleEmitter_->emitter_.transform.translate = enemy_->GetWorldPos();
+    //パーティクル管理
+    particleManager_->Update(*currentCamera_);
 }
 
 void GameScene::CheckAllCollision()
@@ -142,14 +167,7 @@ void GameScene::CheckAllCollision()
     };
 }
 
-void GameScene::Draw() {
-
-#ifdef _DEBUG
-    DrawGrid::Draw(*currentCamera_);
-#endif
-    world_->Draw(*currentCamera_);
-    filed_->Draw(*currentCamera_);
-    enemy_->Draw(*currentCamera_);
-    player_->Draw(*currentCamera_, kLightModeHalfL);
-    particleManager_->Draw();
+GameScene::~GameScene()
+{
+    camera_ = nullptr;
 }

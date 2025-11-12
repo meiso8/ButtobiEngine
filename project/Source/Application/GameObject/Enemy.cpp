@@ -29,7 +29,7 @@ void Enemy::Init()
 {
     bodyPos_.Initialize();
     characterState_ = { .isHit = false,.isAttack = false,.hp = 100 };
-    cubeMesh_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+    cubeMesh_->SetColor({ 1.0f,1.0f,1.0f,0.5f });
     velocity_ = { 2.0f,2.0f,2.0f };
 }
 
@@ -75,14 +75,20 @@ void Enemy::Update()
 
 AABB Enemy::GetWorldAABB()
 {
-    Vector3 pos = bodyPos_.worldTransform_.GetWorldPosition();
+    Vector3 pos = GetWorldPos();
     return { pos + aabb_.min,pos + aabb_.max };
+}
+
+Vector3 Enemy::GetWorldPos()
+{
+    return bodyPos_.worldTransform_.GetWorldPosition();
 }
 
 void Enemy::OnCollision()
 {
     //仮に音を鳴らす
     Sound::PlayOriginSE(Sound::PICO);
+    cubeMesh_->SetColor({ 1.0f,0.0f,0.0f,0.5f });
 
     if (characterState_.isHit) {
         return;
@@ -102,13 +108,14 @@ void Enemy::Approach()
 
     Vector3 direction =  Normalize(*target_ - bodyPos_.worldTransform_.GetWorldPosition());
     bodyPos_.worldTransform_.translate_ += direction*InverseFPS* velocity_;
-    cubeMesh_->SetColor({ 1.0f,1.0f,0.0f,1.0f });
+    cubeMesh_->SetColor({ 1.0f,1.0f,0.0f,0.5f });
 }
 
 void Enemy::Attack()
 {
     //bodyPos_.worldTransform_.rotate_.y += std::numbers::pi_v<float> *InverseFPS;
-    cubeMesh_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+    cubeMesh_->SetColor({ 0.0f,1.0f,0.0f,0.5f });
+
 }
 
 void Enemy::Exit()
