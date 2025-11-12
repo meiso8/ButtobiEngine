@@ -6,7 +6,7 @@ class LineMesh :public MeshCommon
 {
 public:
     ~LineMesh();
-    void Create(const Texture::TEXTURE_HANDLE& textureHandle);
+    void Create(const Texture::TEXTURE_HANDLE& textureHandle = Texture::WHITE_1X1);
     void PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode& blendMode = BlendMode::kBlendModeNormal,const CullMode& cullMode = CullMode::kCullModeBack)override;
     void Draw(ID3D12GraphicsCommandList* commandList)override;
 

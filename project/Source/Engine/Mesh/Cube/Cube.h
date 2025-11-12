@@ -8,7 +8,8 @@ public:
     ~Cube();
     void SetMinMax(const AABB& aabb);
     void SetVertex(const Vector3(&vertices)[8]);
-    void Create(const Texture::TEXTURE_HANDLE& textureHandle);
+    //デフォルト値を設定
+    void Create(const Texture::TEXTURE_HANDLE& textureHandle = Texture::UV_CHECKER);
     void Draw(ID3D12GraphicsCommandList* commandList)override;
 protected:
     void CreateVertex()override;

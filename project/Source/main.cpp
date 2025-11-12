@@ -74,8 +74,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #ifdef _DEBUG
         // デバック用
         myEngine->Debug();
+#ifdef USE_IMGUI
         DebugUI::CheckColor(screenColor, "screenColor");
         ImGui::Text("%s", sceneName[sceneIndex]);
+#endif // USE_IMGUI
         currentScene->Debug();
 
 #endif // _DEBUG

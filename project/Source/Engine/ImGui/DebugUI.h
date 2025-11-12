@@ -23,14 +23,19 @@ class ParticleEmitter;
 class Object3d;
 struct Material;
 struct PointLight;
+class MeshCommon;
 
 class DebugUI
 {
 public:
 
+    /// @brief メッシュ
+    /// @param mesh 
+    static void CheckMesh(MeshCommon& mesh,const char* label);
     /// @brief モデル
-    /// @param model 
-    static void CheckModel(Model& model,const char* label);
+    /// @param model
+    /// @param label 
+    static void CheckModel(Model& model, const char* label);
     /// @brief スプライト
     /// @param sprite 
     static void CheckSprite(Sprite& sprite, const char* label);

@@ -4,7 +4,7 @@
 class PlaneMesh :public MeshCommon
 {
 public:
-    void Create(const Texture::TEXTURE_HANDLE& textureHandle);
+    void Create(const Texture::TEXTURE_HANDLE& textureHandle = Texture::UV_CHECKER);
 void Draw(ID3D12GraphicsCommandList* commandList)override;
 
     void ResetSize(const Vector2& size);

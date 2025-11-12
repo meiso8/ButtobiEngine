@@ -4,11 +4,9 @@
 #include "Input.h"
 //Debug用のImGui表示セット
 
-
 #include"DebugUI.h"
 //ImGuiだけ使用したかったら以下をインクルードすること
 //#include"ImGuiClass.h"
-
 
 //グリッド表示
 #include"DrawGrid.h"
@@ -45,13 +43,13 @@ TitleScene::TitleScene()
 
     // 現在のカメラを設定
     currentCamera_ = camera_.get();
-    //矩形を描画
+    //メッシュの生成
     planeMesh_ = std::make_unique<PlaneMesh>();
+    planeMesh_->Create();
     sphereMesh_ = std::make_unique<SphereMesh>();
+    sphereMesh_->Create();
     cube_ = std::make_unique<Cube>();
-    planeMesh_->Create(Texture::UV_CHECKER);
-    sphereMesh_->Create(Texture::UV_CHECKER);
-    cube_->Create(Texture::UV_CHECKER);
+    cube_->Create();
 
     //モデルを借りる
 
@@ -155,15 +153,18 @@ TitleScene::~TitleScene()
 
 void TitleScene::Debug()
 {
-#ifndef USE_IMGUI
+#ifdef USE_IMGUI
+
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
     std::function<void()> func = [this]() { SwitchCamera(); };
     DebugUI::Button("ChangeCamera", func);
     DebugUI::CheckObject3d(*object3ds_[0], "0");
     DebugUI::CheckObject3d(*object3ds_[1], "1");
     DebugUI::CheckParticle(*particleManager_, *particleEmitter_);
-    DebugUI::CheckMaterial(sphereMesh_->GetMaterial(), "sphereMesh");
-    DebugUI::CheckPointLightData(sphereMesh_->GetPointLightData(), "sphereMesh");
+    DebugUI::CheckMesh(*sphereMesh_, "sphereMesh");
+    DebugUI::CheckMesh(*cube_, "cube_");
+    DebugUI::CheckModel(*models_[0], "model0");
+
 #endif // !USE_IMGUI
 }
 

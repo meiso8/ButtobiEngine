@@ -30,7 +30,7 @@ void DrawGrid::Create()
 {
     for (int i = 0; i < line_.size(); ++i) {
         line_[i] = new LineMesh();
-        line_[i]->Create(Texture::WHITE_1X1);
+        line_[i]->Create();
     }
 
     for (int i = 0; i < 51; ++i) {
@@ -78,11 +78,8 @@ void DrawGrid::Create()
 
 }
 
-void DrawGrid::Draw(Camera& camera, bool isDraw) {
+void DrawGrid::Draw(Camera& camera) {
 
-    if (!isDraw) {
-        return;
-    }
 
     for (int i = 0; i < lineTransforms_.size(); ++i) {
         lineTransforms_[i]->Draw(camera, kBlendModeNone);

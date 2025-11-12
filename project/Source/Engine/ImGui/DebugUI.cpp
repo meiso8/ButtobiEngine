@@ -4,6 +4,7 @@
 #include"MyEngine.h"
 #include"Input.h"
 #include"Sprite.h"
+#include"MeshCommon.h"
 #include"Model.h"
 #include"Particle/Particle.h"
 #include"Particle/ParticleEmitter.h"
@@ -62,28 +63,35 @@ void DebugUI::CheckCamera(Camera& camera) {
 #endif
 }
 
-void DebugUI::CheckModel(Model& model, const char* label) {
+void DebugUI::CheckMesh(MeshCommon& mesh, const char* label) {
 #ifdef USE_IMGUI
-    ImGui::Begin("Model");
+    ImGui::Begin("Mesh");
 
     if (ImGui::TreeNode(label)) {
 
-        CheckWaveData(model.GetWaveData(0), "wave0");
-        CheckWaveData(model.GetWaveData(1), "wave1");
-
-        CheckBalloonData(model.GetBalloonData());
-
-        CheckTransform(model.GetUVTransform(), "UVTransform");
-        CheckColor(model.GetColor(), "modelColor");
-
-        CheckMaterial(model.GetMaterial(), "material");
-        CheckPointLightData(model.GetPointLightData(),"pointLight");
+        CheckWaveData(mesh.GetWaveData(0), "wave0");
+        CheckWaveData(mesh.GetWaveData(1), "wave1");
+        CheckBalloonData(mesh.GetBalloonData());
+        CheckMaterial(mesh.GetMaterial(), "material");
+        CheckColor(mesh.GetColor(), "modelColor");//一応マテリアルについている
+        CheckPointLightData(mesh.GetPointLightData(),"pointLight");
         ImGui::TreePop();
     }
 
     ImGui::End();
 #endif
 }
+
+void DebugUI::CheckModel(Model& model, const char* label) {
+#ifdef USE_IMGUI
+    ImGui::Begin("Model");
+
+    CheckMesh(model, label);
+    CheckTransform(model.GetUVTransform(),"uvTransfrom");
+    ImGui::End();
+#endif
+}
+
 
 void DebugUI::CheckInput(Input& input) {
 #ifdef USE_IMGUI
@@ -289,6 +297,7 @@ void DebugUI::CheckTransform(Transform& transform, const char* label)
 {
     CheckTransforms(transform.scale, transform.rotate, transform.translate, label);
 }
+
 
 void DebugUI::CheckWorldTransform(WorldTransform& worldTransform, const char* label) {
 
