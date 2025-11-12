@@ -11,6 +11,7 @@
 #include"World.h"
 #include"Locker.h"
 #include"Medjed.h"
+#include"Field.h"
 #pragma endregion
 
 class Sprite;
@@ -31,6 +32,7 @@ public:
     void Update()override;
     void Draw()override;
     void Debug()override;
+    void CheckAllCollision();
 
     std::unique_ptr<Sprite> sprite_ = nullptr;
 
@@ -38,6 +40,7 @@ public:
     std::unique_ptr<PlaneMesh> planeMesh_ = nullptr;
     std::unique_ptr<SphereMesh> sphereMesh_ = nullptr;
     std::unique_ptr<Cube> cube_ = nullptr;
+
     std::array< Model*, 1> models_;
 #pragma endregion
 
@@ -46,6 +49,7 @@ public:
     std::unique_ptr<Player>player_ = nullptr;
     std::unique_ptr<World>world_ = nullptr;
     std::array < std::unique_ptr<Locker>, 32>lockers_;
+    std::unique_ptr<Field>filed_ = nullptr;
 #pragma endregion
 
 

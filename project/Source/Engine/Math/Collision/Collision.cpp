@@ -1,5 +1,6 @@
 #define NOMINMAX
 #include"Collision.h"
+#include "Circle.h"
 #include"MakeMatrix.h"
 #include"CoordinateTransform.h"
 #include<algorithm>
@@ -182,6 +183,19 @@ bool IsCollision(const Sphere &s1, const Sphere &s2) {
 
 	return false;
 }
+
+bool IsInCircleAndCollision(const Circle& smallCircle,const Circle& largeCircle)
+{
+	//2つの急の中心点間距離を求める 
+	float distance = Length({ smallCircle.center - largeCircle.center });
+
+	if (distance >= largeCircle.radius- smallCircle.radius) {
+		return true;
+	}
+
+	return false;
+}
+
 
 //線分　Segment
 bool IsCollision(const Segment &segment, const Plane &plane) {

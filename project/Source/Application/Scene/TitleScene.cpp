@@ -31,6 +31,10 @@
 #include"Random.h"
 #include"MakeMatrix.h"
 
+#include"Collision.h"
+#include"Circle/CircleMesh.h"
+#include"Circle.h"
+
 TitleScene::TitleScene()
 {
 
@@ -65,7 +69,7 @@ TitleScene::TitleScene()
     object3ds_[0]->worldTransform_.translate_.y = 1.0f;
     object3ds_[0]->worldTransform_.translate_.z = -2.0f;
     object3ds_[0]->worldTransform_.rotate_.x = std::numbers::pi_v<float>*0.5f;
-    object3ds_[0]->SetMesh(sphereMesh_.get());
+    object3ds_[0]->SetMesh(cube_.get());
 
     object3ds_[1]->SetMesh(models_[0]);
 
@@ -83,10 +87,13 @@ TitleScene::TitleScene()
     player_ = std::make_unique<Player>();
     world_ = std::make_unique<World>();
     medjed_ = std::make_unique<Medjed>();
-    medjed_->SetTargetMatrix(&player_->GetBodyPos());
+    medjed_->SetTargetMatrix(&player_->GetBodyMatrix());
     for (int i = 0; i < lockers_.size(); ++i) {
         lockers_[i] = std::make_unique<Locker>();
     }
+
+    filed_ = std::make_unique<Field>();
+ 
 }
 
 void TitleScene::Initialize() {
@@ -102,6 +109,7 @@ void TitleScene::Initialize() {
         lockers_[i]->SetPosX(i * 1.0f);
     }
     medjed_->Init();
+    filed_->Init();
 }
 
 void TitleScene::Update() {
@@ -109,7 +117,7 @@ void TitleScene::Update() {
     if (isDebugCameraActive_) {
         currentCamera_->UpdateMatrix();
     } else {
-        camera_->worldMat_ = player_->GetEyePos();
+        camera_->worldMat_ = player_->GetEyeMatrix();
         if (Input::IsPushKey(DIK_SPACE)) {
             Vector3 translate = player_->GetForward();
             camera_->worldMat_.m[3][0] += translate.x * 3.0f;
@@ -132,6 +140,8 @@ void TitleScene::Update() {
 
     medjed_->Update();
 
+    filed_->Update();
+
     particleEmitter_->Update();
     particleManager_->Update(*currentCamera_);
 
@@ -145,7 +155,7 @@ void TitleScene::Update() {
     }
 
     world_->Update();
-
+    CheckAllCollision();
 }
 
 
@@ -171,6 +181,16 @@ void TitleScene::Debug()
 #endif // !USE_IMGUI
 }
 
+void TitleScene::CheckAllCollision()
+{
+    if (IsInCircleAndCollision(player_->GetCircle(), filed_->circle_)) {
+    
+        Sound::PlayOriginSE(Sound::CRACKER);
+    };
+}
+
+
+
 void TitleScene::Draw() {
 
 #ifdef _DEBUG
@@ -180,8 +200,10 @@ void TitleScene::Draw() {
 #endif
 
     world_->Draw(*currentCamera_);
-    object3ds_[1]->Draw(*currentCamera_);
-    object3ds_[0]->Draw(*currentCamera_);
+    filed_->Draw(*currentCamera_);
+
+    //object3ds_[1]->Draw(*currentCamera_);
+    //object3ds_[0]->Draw(*currentCamera_);
 
     for (int i = 0; i < lockers_.size(); ++i) {
         lockers_[i]->Draw(*currentCamera_);

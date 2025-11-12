@@ -30,6 +30,8 @@ void Player::Init()
     kSpeed_ = { 0.5f };
     time_ = 1.0f;
     isEnd_ = true;
+    circle_.radius = 1.0f;
+
 }
 
 void Player::Draw(Camera& camera, const LightMode& lightType)
@@ -47,7 +49,7 @@ void Player::Update()
     MouseLook();
     bodyPos_.Update();
     eyePos_.Update();
-
+    circle_.center = bodyPos_.worldTransform_.GetWorldPosition();
 
 }
 

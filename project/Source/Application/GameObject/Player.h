@@ -2,6 +2,7 @@
 
 #include"WorldTransform.h"
 #include"Object3d.h"
+#include"Circle.h"
 
 class Model;
 class Camera;
@@ -18,11 +19,15 @@ public:
     Vector3& GetForward();
     void LookBack();
     void MouseLook();
-    Matrix4x4& GetEyePos() {
+    Matrix4x4& GetEyeMatrix() {
         return eyePos_.worldTransform_.matWorld_;
     };
-    Matrix4x4& GetBodyPos() {
+    Matrix4x4& GetBodyMatrix() {
         return bodyPos_.worldTransform_.matWorld_;
+    };
+
+    Circle& GetCircle() {
+        return circle_;
     };
     float endRotateY_ = 0.0f;
     float startRotateY = 0.0f;
@@ -35,8 +40,9 @@ private:
     float kSpeed_;
     float walkingTheta_ = 0.0f;
     float soundTimer_ = 0.0f;
-    Model*model_;
+    Model* model_;
     Object3d eyePos_;
     Object3d bodyPos_;
+    Circle circle_;
 };
 
