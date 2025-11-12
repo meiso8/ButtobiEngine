@@ -32,8 +32,3 @@ public:
 
 void WorldTransformUpdate(WorldTransform& worldTransform);
 void WorldTransformUpdate(WorldTransform2D& worldTransform2D);
-
-//template <typename T> void WorldTransformUpdate(T& worldTransform) {
-//
-//
-//};

@@ -1,6 +1,7 @@
 #pragma once
 
 #include"MeshCommon.h"
+#include"Sphere.h"
 
 class SphereMesh :public MeshCommon
 {
@@ -10,7 +11,7 @@ public:
     void Draw(ID3D12GraphicsCommandList* commandList)override;
     void SetUVScale(const Vector3& scale) { uvTransform_.scale = scale; };
     void UpdateUV();
-    void SetVertex(const float& radius = 1.0f);
+    void SetVertex(const Sphere& spehre);
 private:
     void CreateVertex()override;
     void CreateUV();

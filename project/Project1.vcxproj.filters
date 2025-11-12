@@ -105,10 +105,7 @@
     <ClCompile Include="Source\Engine\Camera\DebugCamera.cpp">
       <Filter>ソース ファイル\Engine\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Math\CatmullRom.cpp">
-      <Filter>ソース ファイル\Engine\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Math\Collision.cpp">
+    <ClCompile Include="Source\Engine\Math\Collision\Collision.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\DirectXCommon\CommandList.cpp">
@@ -123,16 +120,16 @@
     <ClCompile Include="Source\Engine\PSO\BlendState.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Math\CoordinateTransform.cpp">
+    <ClCompile Include="Source\Engine\Math\CoordinateTransform\CoordinateTransform.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Math\cotangent.cpp">
+    <ClCompile Include="Source\Engine\Math\Cotangent\cotangent.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\PSO\Depth.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Math\Easing.cpp">
+    <ClCompile Include="Source\Engine\Math\Lerp\Easing.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\DirectXCommon\Fence.cpp">
@@ -141,7 +138,7 @@
     <ClCompile Include="Source\Engine\DirectXCommon\GPU.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Math\Lerp.cpp">
+    <ClCompile Include="Source\Engine\Math\Lerp\Lerp.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Mesh\Cube\Cube.cpp">
@@ -168,7 +165,7 @@
     <ClCompile Include="Source\Engine\Mesh\Line\LineMesh.cpp">
       <Filter>ソース ファイル\Engine\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Math\MakeMatrix.cpp">
+    <ClCompile Include="Source\Engine\Math\Matrix\MakeMatrix.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\PSO\InputLayout.cpp">
@@ -183,7 +180,7 @@
     <ClCompile Include="Source\Engine\Surface\MaterialResource.cpp">
       <Filter>ソース ファイル\Engine\Surface</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Math\Matrix4x4.cpp">
+    <ClCompile Include="Source\Engine\Math\Matrix\Matrix4x4.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\DirectXCommon\MyEngine.cpp">
@@ -204,19 +201,19 @@
     <ClCompile Include="Source\Engine\DirectXCommon\ScissorRect.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Math\Vector2.cpp">
+    <ClCompile Include="Source\Engine\Math\Vector\Vector2.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Math\Vector3.cpp">
+    <ClCompile Include="Source\Engine\Math\Vector\Vector3.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Math\Vector4.cpp">
+    <ClCompile Include="Source\Engine\Math\Vector\Vector4.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\DirectXCommon\Viewport.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Math\SphericalCoordinate.cpp">
+    <ClCompile Include="Source\Engine\Math\SphericalCoordinate\SphericalCoordinate.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Sound\Sound.cpp">
@@ -231,7 +228,7 @@
     <ClCompile Include="Source\Engine\Mesh\Model\Model.cpp">
       <Filter>ソース ファイル\Engine\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Math\WorldTransform.cpp">
+    <ClCompile Include="Source\Engine\Math\WorldTransform\WorldTransform.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\DirectXCommon\SwapChain.cpp">
@@ -276,19 +273,16 @@
     <ClCompile Include="Source\Engine\Mesh\MeshCommon\MeshCommon.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Math\Perpendicular.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\Mesh\Plane\PlaneMesh.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Math\Random.cpp">
+    <ClCompile Include="Source\Engine\Math\Random\Random.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\System\CollisionManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Math\Matrix3x3.cpp">
+    <ClCompile Include="Source\Engine\Math\Matrix\Matrix3x3.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\Scene\SceneChange.cpp">
@@ -347,7 +341,7 @@
     <ClInclude Include="externals\imgui\imstb_truetype.h">
       <Filter>externals\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Math\AABB.h">
+    <ClInclude Include="Source\Engine\Math\Structs\AABB.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Mesh\MeshCommon\Balloon.h">
@@ -356,16 +350,13 @@
     <ClInclude Include="Source\Engine\Camera\Camera.h">
       <Filter>ヘッダー ファイル\Engine\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Math\CatmullRom.h">
+    <ClInclude Include="Source\Engine\Math\Collision\Collision.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Collision.h">
+    <ClInclude Include="Source\Engine\Math\CoordinateTransform\CoordinateTransform.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Math\CoordinateTransform.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\cotangent.h">
+    <ClInclude Include="Source\Engine\Math\Cotangent\cotangent.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Mesh\Cube\Cube.h">
@@ -380,7 +371,7 @@
     <ClInclude Include="Source\Engine\Mesh\Grid\DrawGrid.h">
       <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Easing.h">
+    <ClInclude Include="Source\Engine\Math\Lerp\Easing.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Surface\Light.h">
@@ -392,16 +383,16 @@
     <ClInclude Include="Source\Engine\Input\Input.h">
       <Filter>ヘッダー ファイル\Engine\Input</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Lerp.h">
+    <ClInclude Include="Source\Engine\Math\Lerp\Lerp.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Line.h">
+    <ClInclude Include="Source\Engine\Math\Structs\Line.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Mesh\Line\LineMesh.h">
       <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Math\MakeMatrix.h">
+    <ClInclude Include="Source\Engine\Math\Matrix\MakeMatrix.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Surface\MaterialData.h">
@@ -416,28 +407,28 @@
     <ClInclude Include="Source\Engine\Mesh\Model\ModelData.h">
       <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Matrix3x3.h">
+    <ClInclude Include="Source\Engine\Math\Matrix\Matrix3x3.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Matrix4x4.h">
+    <ClInclude Include="Source\Engine\Math\Matrix\Matrix4x4.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Plane.h">
+    <ClInclude Include="Source\Engine\Math\Structs\Plane.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Triangle.h">
+    <ClInclude Include="Source\Engine\Math\Structs\Triangle.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Vector2.h">
+    <ClInclude Include="Source\Engine\Math\Vector\Vector2.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Vector3.h">
+    <ClInclude Include="Source\Engine\Math\Vector\Vector3.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Vector4.h">
+    <ClInclude Include="Source\Engine\Math\Vector\Vector4.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Math\WorldTransform.h">
+    <ClInclude Include="Source\Engine\Math\WorldTransform\WorldTransform.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Mesh\MeshCommon\Wave.h">
@@ -446,13 +437,13 @@
     <ClInclude Include="Source\Engine\Sound\Sound.h">
       <Filter>ヘッダー ファイル\Engine\Sound</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Pendulum.h">
+    <ClInclude Include="Source\Engine\Math\Structs\Pendulum.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Transform.h">
+    <ClInclude Include="Source\Engine\Math\Structs\Transform.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Math\TransformationMatrix.h">
+    <ClInclude Include="Source\Engine\Math\Matrix\TransformationMatrix.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Mesh\Sphere\SphereMesh.h">
@@ -461,10 +452,10 @@
     <ClInclude Include="Source\Engine\Mesh\Sprite\Sprite.h">
       <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Sphere.h">
+    <ClInclude Include="Source\Engine\Math\Structs\Sphere.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Math\SphericalCoordinate.h">
+    <ClInclude Include="Source\Engine\Math\SphericalCoordinate\SphericalCoordinate.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\PSO\BlendState.h">
@@ -575,7 +566,7 @@
     <ClInclude Include="Source\Engine\Mesh\Plane\PlaneMesh.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Random.h">
+    <ClInclude Include="Source\Engine\Math\Random\Random.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Math\Ray.h">
@@ -585,9 +576,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Math\Project.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Perpendicular.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\System\Collider.h">

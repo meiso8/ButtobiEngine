@@ -48,6 +48,7 @@ float Length(const Vector3& v) {
 };
 
 
+
 Vector3 Normalize(const Vector3& v) {
     float length = Length(v);
     if (length != 0.0f) {
@@ -60,6 +61,13 @@ Vector3 Normalize(const Vector3& v) {
 
 bool IsZero(const Vector3 &v) {
 	return (v.x == 0.0f) && (v.y == 0.0f) && (v.z == 0.0f);
+}
+
+Vector3 Perpendicular(const Vector3& vector) {
+    if (vector.x != 0.0f || vector.y != 0.0f) {
+        return { -vector.y, vector.x, 0.0f };
+    }
+    return { 0.0f, -vector.z, vector.y };
 }
 
 Vector3 operator+(const Vector3& v1, const Vector3& v2) { return Add(v1, v2); }

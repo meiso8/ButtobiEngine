@@ -3,6 +3,7 @@
 #include"Vector3.h"
 #include"Vector4.h"
 #include"LineMesh.h"
+#include<vector>
 
 class Camera;
 
@@ -25,3 +26,6 @@ template <typename T> T Bezier(const T& p0, const T& p1, const T& p2, float t) {
     return static_cast<T>(p);
 
 };
+
+Vector3 CatmullRomInterpolation(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, float t);
+Vector3 CatmullRomPosition(const std::vector<Vector3>& points, float t);

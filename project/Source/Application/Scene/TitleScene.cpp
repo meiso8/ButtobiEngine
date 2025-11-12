@@ -62,8 +62,11 @@ TitleScene::TitleScene()
 
     object3ds_[0]->worldTransform_.Parent(object3ds_[1]->worldTransform_);
     object3ds_[0]->worldTransform_.translate_.x = 2.0f;
+    object3ds_[0]->worldTransform_.translate_.y = 1.0f;
+    object3ds_[0]->worldTransform_.translate_.z = -2.0f;
     object3ds_[0]->worldTransform_.rotate_.x = std::numbers::pi_v<float>*0.5f;
-    object3ds_[0]->SetMesh(cube_.get());
+    object3ds_[0]->SetMesh(sphereMesh_.get());
+
     object3ds_[1]->SetMesh(models_[0]);
 
 

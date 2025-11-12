@@ -35,6 +35,11 @@ Vector3 Normalize(const Vector3& v);
 /// @return ゼロベクトルであればtrue、そうでなければfalse
 bool IsZero(const Vector3 &v);
 
+/// @brief 垂直ベクトルのうちの一つを求める関数
+/// @param vector ベクトル
+/// @return 垂直ベクトル
+Vector3 Perpendicular(const Vector3& vector);
+
 //二項演算子 Binary Operator
 Vector3 operator+(const Vector3& v1, const Vector3& v2);
 Vector3 operator-(const Vector3& v1, const Vector3& v2);

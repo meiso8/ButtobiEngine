@@ -6,7 +6,6 @@
 #include<numbers>
 #include"SRVmanager/SrvManager.h"
 
-
 SphereMesh::~SphereMesh()
 {
     Finalize();
@@ -47,7 +46,7 @@ void SphereMesh::UpdateUV() {
     materialResource_->SetUV(uvTransformMatrix_);
 }
 
-void SphereMesh::SetVertex(const float& radius)
+void SphereMesh::SetVertex(const Sphere& spehre)
 {
     const float pi = std::numbers::pi_v<float>;
     const float kLonEvery = 2.0f * pi / float(kSubdivision_);
@@ -102,9 +101,9 @@ void SphereMesh::SetVertex(const float& radius)
                 uv.y - 1.0f / float(kSubdivision_) };
 
             for (int i = 0; i < 6; ++i) {
-                vertexData_[startIndex + i].position.x *= radius;
-                vertexData_[startIndex + i].position.y *= radius;
-                vertexData_[startIndex + i].position.z *= radius;
+                vertexData_[startIndex + i].position.x = (vertexData_[startIndex + i].position.x+spehre.center.x)* spehre.radius;
+                vertexData_[startIndex + i].position.y = (vertexData_[startIndex + i].position.y+spehre.center.y)* spehre.radius;
+                vertexData_[startIndex + i].position.z = (vertexData_[startIndex + i].position.z+spehre.center.z)* spehre.radius;
                 vertexData_[startIndex + i].normal = { vertexData_[startIndex + i].position.x , vertexData_[startIndex + i].position.y, vertexData_[startIndex + i].position.z };
             }
 
@@ -160,7 +159,9 @@ void SphereMesh::CreateVertex() {
     vertexResource_->Map(0, nullptr,
         reinterpret_cast<void**>(&vertexData_));
 
-    SetVertex();
+    Sphere sphere{ .center = {0.0f,0.0f,0.0f },.radius = 3.0f };
+
+    SetVertex(sphere);
 
     //緯度の方向に分割　-pi/2 ~ pi/2
 
