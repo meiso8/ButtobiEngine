@@ -15,6 +15,7 @@ FloorGameFloor::FloorGameFloor() {
     {
       { FloorType::Normal, ModelManager::GetModel(ModelManager::FLOOR)},
       { FloorType::Sticky, ModelManager::GetModel(ModelManager::MELT_FLOOR) },
+      //仮にプレイヤーの腕を入れているだけなので後で変更してください吉田
       { FloorType::Strong, ModelManager::GetModel(ModelManager::PLAYER_ARM_L) }
     };
 
@@ -76,7 +77,7 @@ void FloorGameFloor::SwapNextFloorType() {
 }
 
 void FloorGameFloor::NormalFloorUpdate() {
-    models_[floorType_]->SetColor({1.0f,1.0f,1.0f,1.0f});
+    models_[floorType_]->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 }
 
 void FloorGameFloor::StickyFloorUpdate() {
