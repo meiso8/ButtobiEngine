@@ -13,7 +13,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // ==============================================//↓基本いじらない↓//============================================
     //エンジンの生成
     std::unique_ptr<MyEngine> myEngine = std::make_unique<MyEngine>();
-    myEngine->Create(L"ぶっとびEngine!", WIN_WIDTH, WIN_HEIGHT);
+    myEngine->Create(L"2206_チーム制作二回目", WIN_WIDTH, WIN_HEIGHT);
 
     // ==============================================//↑基本いじらない↑//============================================
 
@@ -25,7 +25,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // =============================================
 
     enum Scene {
-   
+
         kGameScene,
         kSampleScene,
         kMaxScene,
@@ -44,7 +44,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     int sceneIndex = kGameScene;
 
 #ifdef _DEBUG
-    sceneIndex = kGameScene;
+    sceneIndex = kSampleScene;
 #endif // _DEBUG
 
     // 現在のシーン

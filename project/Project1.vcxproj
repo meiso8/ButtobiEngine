@@ -172,8 +172,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\Field.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Medjed.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Locker.cpp" />
     <ClCompile Include="Source\Application\GameObject\Player.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Circle\CircleMesh.cpp" />
     <ClCompile Include="Source\Engine\Particle\ParticleEmitter.cpp" />
@@ -281,8 +279,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\GameObject\Enemy.h" />
     <ClInclude Include="Source\Application\GameObject\CharacterState.h" />
     <ClInclude Include="Source\Application\GameObject\Field.h" />
-    <ClInclude Include="Source\Application\GameObject\Medjed.h" />
-    <ClInclude Include="Source\Application\GameObject\Locker.h" />
     <ClInclude Include="Source\Application\GameObject\Player.h" />
     <ClInclude Include="Source\Engine\Math\Structs\Circle.h" />
     <ClInclude Include="Source\Engine\Mesh\Circle\CircleMesh.h" />

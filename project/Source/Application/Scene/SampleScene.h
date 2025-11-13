@@ -9,8 +9,6 @@
 #pragma region//ゲームオブジェクト
 #include"Player.h"
 #include"World.h"
-#include"Locker.h"
-#include"Medjed.h"
 #include"Field.h"
 #pragma endregion
 
@@ -48,12 +46,8 @@ public:
 #pragma region//ゲームオブジェクト
     std::unique_ptr<Player>player_ = nullptr;
     std::unique_ptr<World>world_ = nullptr;
-    std::array < std::unique_ptr<Locker>, 32>lockers_;
     std::unique_ptr<Field>filed_ = nullptr;
 #pragma endregion
-
-
-    std::unique_ptr<Medjed>medjed_ = nullptr;
 
     std::array< std::unique_ptr < Object3d>, 2> object3ds_;
 
