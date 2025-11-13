@@ -8,21 +8,15 @@
 
 BYTE Input::key_[256];
 BYTE Input::preKey_[256];
-bool Input::foundJoystick_ = false;
-DIJOYSTATE Input::joyState_;
+
 float Input::deadZone_ = 0.1f;
-BYTE Input::preJoyButtons_[32];
 DIMOUSESTATE Input::mouseState_;
 DIMOUSESTATE Input::preMouseState_;
 
-bool Input::isDragging_ = false;
+XINPUT_STATE Input::xinputState_;
+WORD Input::preWButtons_;
 
-BOOL CALLBACK EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance, VOID* pContext) {
-    auto* self = static_cast<Input*>(pContext);
-    self->joystickGUID = pdidInstance->guidInstance;
-    self->foundJoystick_ = true;
-    return DIENUM_STOP; // 最初のデバイスだけ取得
-}
+bool Input::isDragging_ = false;
 
 HRESULT Input::Initialize(Window& window/*, int& fps*/) {
 
@@ -56,9 +50,6 @@ HRESULT Input::Initialize(Window& window/*, int& fps*/) {
     );
     assert(SUCCEEDED(result));
 
-
-
-
     //マウスデバイスの生成
     result = directInput->CreateDevice(GUID_SysMouse, &mouse_, NULL);
     assert(SUCCEEDED(result));
@@ -86,30 +77,7 @@ HRESULT Input::Initialize(Window& window/*, int& fps*/) {
 
     result = mouse_->SetProperty(DIPROP_AXISMODE, &diprop.diph);
     assert(SUCCEEDED(result));
-
-
-    directInput->EnumDevices(DI8DEVCLASS_GAMECTRL, EnumJoysticksCallback, this, DIEDFL_ATTACHEDONLY);
-
-    if (foundJoystick_) {
-        HRESULT result = directInput->CreateDevice(GUID_Joystick, &gamePad_, NULL);
-        assert(SUCCEEDED(result));
-
-        //入力データ形式のセット
-        result = gamePad_->SetDataFormat(&c_dfDIJoystick);//標準形式 
-        assert(SUCCEEDED(result));
-
-        //排他制御レベルのセット
-        result = gamePad_->SetCooperativeLevel(
-            window_->GetHwnd(),
-            DISCL_FOREGROUND//画面が手前にある場合のみ入力を受け付ける
-            | DISCL_NONEXCLUSIVE //デバイスをこのアプリだけで占有しない
-            | DISCL_NOWINKEY//Windowsキーを無効にする
-        );
-        assert(SUCCEEDED(result));
-    }
-
     return result;
-
 };
 
 bool Input::IsPushKey(const uint8_t& keyNum) {
@@ -175,105 +143,38 @@ void Input::Update() {
     //マウスの状態を取得する
     mouse_->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState_);
 
-
-    if (foundJoystick_) {
-        ////ゲームパッドの状態を取得する
-        memcpy(preJoyButtons_, joyState_.rgbButtons, 32);
-        gamePad_->Acquire();
-        gamePad_->Poll(); // デバイスにポーリング
-        gamePad_->GetDeviceState(sizeof(DIJOYSTATE), &joyState_);
-    }
+    //ボタン状態をコピーする
+    memcpy(&preWButtons_, &xinputState_.Gamepad.wButtons, sizeof(xinputState_.Gamepad.wButtons));
 }
 
-
-bool Input::GetJoyStickPos(float* x, float* y, ButtonType buttonType) {
-
-    if (foundJoystick_) {
-
-        if (!x || !y) {
-            return 0;
-        }
-
-        if (buttonType == BUTTON_LEFT) {
-            return NormalizeButtonCount(x, y, joyState_.lX, joyState_.lY);
-        }
-
-        if (buttonType == BUTTON_RIGHT) {
-            return NormalizeButtonCount(x, y, joyState_.lRx, joyState_.lRy);
-        }
-
-    }
-
-    *x = 0.0f;
-    *y = 0.0f;
-    return 0;
-}
-
-bool Input::GetJoyStickDPadButton(float* x, float* y)
+Vector2 Input::GetControllerStickPos(ButtonType index, DWORD dwUserIndex)
 {
-
-    if (!foundJoystick_) {
-        return false;
-    }
-    if (joyState_.rgdwPOV[0] == -1) {
-        *x = 0.0f;
-        *y = 0.0f;
-        return false;
-    }
-
-    if (joyState_.rgdwPOV[0] == 0) {
-        //上
-        *x = 0.0f;
-        *y = 1.0f;
-    }
-
-    if (joyState_.rgdwPOV[0] == 4500) {
-        //上
-        *x = 0.707107f;
-        *y = 0.707107f;
+    if (IsControllerConnected(dwUserIndex))
+    {
+        if (index == ButtonType::BUTTON_LEFT) {
+            SHORT lx = xinputState_.Gamepad.sThumbLX; // 左スティックX軸
+            SHORT ly = xinputState_.Gamepad.sThumbLY; // 左スティックY軸
+            if (abs(lx) > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || abs(ly) > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+            {
+                return NormalizeButtonCount(xinputState_.Gamepad.sThumbLX, xinputState_.Gamepad.sThumbLY);
+            }
+        } else if (index == ButtonType::BUTTON_RIGHT) {
+            SHORT rx = xinputState_.Gamepad.sThumbRX; // 右スティックX軸
+            SHORT ry = xinputState_.Gamepad.sThumbRY; // 右スティックY軸
+            if (abs(rx) > XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE || abs(ry) > XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
+            {
+               return NormalizeButtonCount(xinputState_.Gamepad.sThumbRX, xinputState_.Gamepad.sThumbRY);
+            }
+        }
     }
 
-    if (joyState_.rgdwPOV[0] == 9000) {
-        *x = 1.0f;
-        *y = 0.0f;
-    }
 
-    if (joyState_.rgdwPOV[0] == 13500) {
-        //上
-        *x = 0.707107f;
-        *y = -0.707107f;
-    }
-
-    if (joyState_.rgdwPOV[0] == 18000) {
-        //上
-        *x = 0.0f;
-        *y = -1.0f;
-    }
-    if (joyState_.rgdwPOV[0] == 22500) {
-        *x = -0.707107f;
-        *y = -0.707107f;
-    }
-
-    if (joyState_.rgdwPOV[0] == 27000) {
-        //左
-        *x = -1.0f;
-        *y = 0.0f;
-    }
-
-    if (joyState_.rgdwPOV[0] == 31500) {
-        //左上
-        //*x = -1.0f / std::sqrtf(2.0f);
-        *x = -0.707107f;
-        *y = 0.707107f;
-    }
-
-    return false;
+    return { 0.0f,0.0f };
 }
-
-bool Input::NormalizeButtonCount(float* x, float* y, LONG& buttonLX, LONG& buttonLY)
+Vector2 Input::NormalizeButtonCount(SHORT& buttonLX, SHORT& buttonLY)
 {
-    float normX = (static_cast<float>(buttonLX) - SHRT_MAX) / SHRT_MAX;
-    float normY = (static_cast<float>(buttonLY) - SHRT_MAX) / SHRT_MAX;
+    float normX = (static_cast<float>(buttonLX) / SHRT_MAX);
+    float normY = (static_cast<float>(buttonLY) / SHRT_MAX);
 
     if (normX > 1.0f - deadZone_) {
         normX = 1.0f;
@@ -298,37 +199,96 @@ bool Input::NormalizeButtonCount(float* x, float* y, LONG& buttonLX, LONG& butto
         normX = 0.0f;
     }
 
-    *x = normX;
-    *y = -normY;
-
-    return 1;
+    return { normX,normY };
 
 }
 
-
-
-bool Input::IsJoyStickPressButton(uint32_t index) {
-
-    if (foundJoystick_) {
-        assert(index < 32);
-        if (joyState_.rgbButtons[index] & 0x80) {
-            return true;
-        }
-    }
-    return false;
-}
-bool Input::IsJoyStickTrigger(uint32_t index)
+bool Input::IsControllerConnected(DWORD dwUserIndex)
 {
-    if (foundJoystick_) {
-        assert(index < 32);
+    return (XInputGetState(dwUserIndex, &GetControllerState(dwUserIndex)) == ERROR_SUCCESS);
+}
 
-        if (joyState_.rgbButtons[index] & 0x80 && !(preJoyButtons_[index] & 0x80)) {
+XINPUT_STATE& Input::GetControllerState(DWORD dwUserIndex)
+{
+    ZeroMemory(&xinputState_, sizeof(XINPUT_STATE));
+    return xinputState_;
+}
+
+void Input::VibrateController(DWORD dwUserIndex, WORD leftMotor, WORD rightMotor)
+{
+    XINPUT_VIBRATION vibration;
+    vibration.wLeftMotorSpeed = leftMotor;   // 0 ～ 65535（低周波）
+    vibration.wRightMotorSpeed = rightMotor; // 0 ～ 65535（高周波）
+
+    XInputSetState(dwUserIndex, &vibration);
+}
+
+
+
+bool Input::IsControllerPressButton(UINT16 button, DWORD dwUserIndex)
+{
+    if (IsControllerConnected(dwUserIndex))
+    {
+        if (xinputState_.Gamepad.wButtons & button) {
             return true;
         }
     }
+
     return false;
 }
-;
+
+bool Input::IsControllerTriggerButton(UINT16 button, DWORD dwUserIndex)
+{
+    if (IsControllerConnected(dwUserIndex))
+    {
+        if (!(preWButtons_ & button) && (xinputState_.Gamepad.wButtons & button)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+bool Input::IsControllerTrigger(ButtonType index, DWORD dwUserIndex)
+{
+    if (IsControllerConnected(dwUserIndex))
+    {
+        if (index == 0) {
+            if (xinputState_.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+            {
+                return true;
+            }
+        } else {
+            if (xinputState_.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+BYTE Input::GetControllerTriggerCount(ButtonType index, DWORD dwUserIndex)
+{
+    if (IsControllerConnected(dwUserIndex))
+    {
+        if (index == 0) {
+            if (xinputState_.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+            {
+                return xinputState_.Gamepad.bLeftTrigger;
+            }
+        } else {
+            if (xinputState_.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+            {
+                return xinputState_.Gamepad.bRightTrigger;
+            }
+        }
+    }
+
+    return 0;
+}
 
 bool Input::IsPressMouse(uint32_t index) {
     assert(index < 4);
@@ -365,7 +325,7 @@ Vector2& Input::GetMousePosFiltered()
 
 float Input::GetMouseWheel() {
     return  static_cast<float>(mouseState_.lZ) * InverseFPS;
-};
+}
 
 
 
@@ -374,6 +334,4 @@ Input::~Input() {
     mouse_->Unacquire();
     mouse_->Release();
     mouse_ = nullptr;
-
-    //delete instance_;
 }
