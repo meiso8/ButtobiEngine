@@ -15,9 +15,13 @@ public:
         return modelData_.get();
     }
     void Draw(ID3D12GraphicsCommandList* commandList)override;
+    
+    /// @brief UVを更新する
     void UpdateUV();
+    /// @brief UVのTransformを得る
+    /// @return Transform
     Transform& GetUVTransform() { return uvTransform_; }
-
+    /// @brief テクスチャをモデルオリジナルのものに戻す
     void ResetTextureHandle() {
         textureHandle_ = modelData_->material.textureSrvIndex;
     };
