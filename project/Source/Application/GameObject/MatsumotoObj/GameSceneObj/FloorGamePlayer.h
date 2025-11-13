@@ -29,8 +29,8 @@ private:
 	void StriptFloor();
 	void ShotFloor();
 	
-	std::unique_ptr<CubeMesh>cubeMesh_ = nullptr;
-
+	//std::unique_ptr<CubeMesh>cubeMesh_ = nullptr;
+	Model* model_ = nullptr;
 	bool isMove_;
 	float moveSpeed_;
 	Vector3 moveDir_;
