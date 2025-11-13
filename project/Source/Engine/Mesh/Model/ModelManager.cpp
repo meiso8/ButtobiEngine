@@ -14,19 +14,9 @@
 
 std::map<const uint32_t, std::unique_ptr< Model> >ModelManager::models_;
 
-Model* ModelManager::GetModel(const uint32_t& handle)
-{
-    assert(handle < models_.size());
-   
-    if (models_.contains(handle)) {
-        return models_.at(handle).get();
-    }
-    return nullptr;
-
-}
-
 void ModelManager::LoadAllModel()
 {
+    //モデルのファイルパスとタグを関連付けてください
     LoadModel("Resource/Models/Box", "Box.obj", BOX);
     LoadModel("Resource/Models/world", "world.obj", WORLD);
     LoadModel("Resource/Models/player", "player.obj", PLAYER);
@@ -39,6 +29,18 @@ void ModelManager::LoadAllModel()
 
 }
 
+// ========================================================================================================
+
+Model* ModelManager::GetModel(const uint32_t& handle)
+{
+    assert(handle < models_.size());
+
+    if (models_.contains(handle)) {
+        return models_.at(handle).get();
+    }
+    return nullptr;
+
+}
 void ModelManager::Finalize()
 {
     models_.clear();

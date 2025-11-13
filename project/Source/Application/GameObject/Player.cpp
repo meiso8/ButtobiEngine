@@ -71,22 +71,21 @@ void Player::Update()
 
     DWORD controllerIndex = 0; // 0〜3の範囲で指定
 
-    //コントローラー
+    //コントローラーのボタンのトリガーを得る
     if (Input::IsControllerTriggerButton(XINPUT_GAMEPAD_A, controllerIndex))
     {
-        //SEを鳴らす
-        Sound::PlaySE(Sound::CRACKER);
+        Input::VibrateController(controllerIndex, 10000, 10000);
+        // 少し待ってから振動停止（例：1秒）
+        Sleep(1000);
+        Input::VibrateController(controllerIndex, 0, 0);
+ 
     };
+    //コントローラーのLTRTが押されているかを得る
     if (Input::IsControllerLTRT(BUTTON_LEFT, controllerIndex)) {
         //SEを鳴らす
         Sound::PlaySE(Sound::CRACKER);
     }
-    if (Input::IsControllerLTRT(BUTTON_RIGHT, controllerIndex)) {
-        Input::VibrateController(controllerIndex, 10000, 10000);
-        // 少し待ってから振動停止（例：1秒）
-        Sleep(500);
-        Input::VibrateController(controllerIndex, 0, 0);
-    }
+ 
 
 }
 
