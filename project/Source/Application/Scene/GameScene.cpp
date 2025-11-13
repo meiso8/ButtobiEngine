@@ -127,7 +127,7 @@ void GameScene::UpdateCamera()
         /*    camera_->UpdateMatrix();*/
     } else {
         //プレイヤーの視点にしている
-        camera_->UpdateViewProjectionMatrix();
+        camera_->UpdateMatrix();
     }
 }
 
