@@ -6,23 +6,23 @@
 #include"Vector2.h"
 #include"Window.h"
 
-#include"Window.h"
 #include<memory>
 #define InverseFPS 1.0f/60.0f
 
+#include <Xinput.h>
+#pragma comment(lib, "xinput.lib")
+
 class Camera;
+
+enum ButtonType {
+    BUTTON_LEFT,
+    BUTTON_RIGHT,
+};
 
 class Input {
 public:
-    static bool foundJoystick_;
-    GUID joystickGUID = GUID_NULL;
     static bool isDragging_;
 public:
-
-    enum ButtonType {
-        BUTTON_LEFT,
-        BUTTON_RIGHT,
-    };
 
     Input() = default;
     Input(Input&) = delete;
@@ -49,17 +49,20 @@ public:
     /// @param index マウスボタンの番号　0 =左 1 = 右　2 = 中　3 = XButton2
     /// @return トリガーされたかどうか
     static bool IsTriggerMouse(uint32_t index);
-    static bool IsJoyStickPressButton(uint32_t index);
-    static bool IsJoyStickTrigger(uint32_t index);
-
-    static bool GetJoyStickPos(float* x, float* y, ButtonType buttonType);
-    static bool GetJoyStickDPadButton(float* x, float* y);
-
-    static DIJOYSTATE& GetJoyState() { return joyState_; };
-
     static Vector2& GetMousePos();
     static Vector2& GetMousePosFiltered();
     static float GetMouseWheel();
+
+    static bool IsControllerConnected(DWORD dwUserIndex);
+    static XINPUT_STATE& GetControllerState(DWORD dwUserIndex);
+    static Vector2 GetControllerStickPos(ButtonType type,DWORD dwUserIndex);
+    static void VibrateController(DWORD dwUserIndex, WORD leftMotor, WORD rightMotor);
+
+    static bool IsControllerPressButton(UINT16 button, DWORD dwUserIndex);
+    static bool IsControllerTriggerButton(UINT16 button, DWORD dwUserIndex);
+
+    static bool IsControllerTrigger(ButtonType type, DWORD dwUserIndex);
+    static BYTE GetControllerTriggerCount(ButtonType type, DWORD dwUserIndex);
 
 private:
     Window* window_ = nullptr;
@@ -73,12 +76,11 @@ private:
     static DIMOUSESTATE preMouseState_;	// マウス情報(変化検知用)
 
     //ゲームパッド
-    IDirectInputDevice8* gamePad_ = nullptr;
-    static DIJOYSTATE joyState_;
     static float deadZone_;
-    static BYTE preJoyButtons_[32];
+    static WORD preWButtons_;
+    static XINPUT_STATE xinputState_;
 
 private:
-    static bool NormalizeButtonCount(float* x, float* y, LONG& buttonLX, LONG& buttonLY);
+    static Vector2 NormalizeButtonCount(SHORT& buttonLX, SHORT& buttonLY);
 
 };

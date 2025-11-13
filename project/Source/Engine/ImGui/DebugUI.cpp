@@ -114,32 +114,55 @@ void DebugUI::CheckInput(Input& input) {
     ImGui::Begin("Input");
     ImGui::SliderFloat2("mousePos", &input.GetMousePos().x, 0.0f, 1280.0f);
 
-    float x = 100;
-    float y = 100;
-    input.GetJoyStickPos(&x, &y, Input::BUTTON_LEFT);
-    ImGui::Text("normLX:%f %f", x, y);
-    float dX = 100;
-    float dY = 100;
-    input.GetJoyStickDPadButton(&dX, &dY);
+    ImGui::Text("Controller %s", input.IsControllerConnected(0) ? "Connected" : "Unkown");
+    ImGui::Text("left %d", input.GetControllerTriggerCount(BUTTON_LEFT, 0));
+    ImGui::Text("right %d", input.GetControllerTriggerCount(BUTTON_RIGHT, 0));
 
-    ImGui::Text("Dpad:%f %f", dX, dY);
+    ImGui::Text("DPAD_UP %d", input.IsControllerPressButton(XINPUT_GAMEPAD_DPAD_UP, 0));
+    ImGui::Text("DPAD_DOWN %d", input.IsControllerPressButton(XINPUT_GAMEPAD_DPAD_DOWN, 0));
+    ImGui::Text("DPAD_LEFT %d", input.IsControllerPressButton(XINPUT_GAMEPAD_DPAD_LEFT, 0));
+    ImGui::Text("DPAD_RIGHT %d", input.IsControllerPressButton(XINPUT_GAMEPAD_DPAD_RIGHT, 0));
+    ImGui::Text("START %d", input.IsControllerPressButton(XINPUT_GAMEPAD_START, 0));
+    ImGui::Text("BACK %d", input.IsControllerPressButton(XINPUT_GAMEPAD_BACK, 0));
+    ImGui::Text("LEFT_THUMB %d", input.IsControllerPressButton(XINPUT_GAMEPAD_LEFT_THUMB, 0));
+    ImGui::Text("RIGHT_THUMB %d", input.IsControllerPressButton(XINPUT_GAMEPAD_RIGHT_THUMB, 0));
+    ImGui::Text("LEFT_SHOULDER %d", input.IsControllerPressButton(XINPUT_GAMEPAD_LEFT_SHOULDER, 0));
+    ImGui::Text("RIGHT_SHOULDER %d", input.IsControllerPressButton(XINPUT_GAMEPAD_RIGHT_SHOULDER, 0));
+    ImGui::Text("A %d", input.IsControllerPressButton(XINPUT_GAMEPAD_A, 0));
+    ImGui::Text("B %d", input.IsControllerPressButton(XINPUT_GAMEPAD_B, 0));
+    ImGui::Text("X %d", input.IsControllerPressButton(XINPUT_GAMEPAD_X, 0));
+    ImGui::Text("Y %d", input.IsControllerPressButton(XINPUT_GAMEPAD_Y, 0));
+    Vector2 L = input.GetControllerStickPos(BUTTON_LEFT, 0);
+    Vector2 R = input.GetControllerStickPos(BUTTON_RIGHT, 0);
+    ImGui::SliderFloat2("BUTTON_LEFT", &L.x,-32768.0f, 32768.0f);
+    ImGui::SliderFloat2("BUTTON_RIGHT", &R.x, -32768.0f, 32768.0f);
 
-    ImGui::Text("joyStateLX: %ld", input.GetJoyState().lX);//x軸位置
-    ImGui::Text("joyStateLY: %ld", input.GetJoyState().lY);
-    ImGui::Text("joyStateLZ: %ld", input.GetJoyState().lZ);
-    ImGui::Text("joyStateRX: %ld", input.GetJoyState().lRx);//右スティック
-    ImGui::Text("joyStateRY: %ld", input.GetJoyState().lRy);
+    //float x = 100;
+    //float y = 100;
+    //input.GetJoyStickPos(&x, &y, Input::BUTTON_LEFT);
+    //ImGui::Text("normLX:%f %f", x, y);
+    //float dX = 100;
+    //float dY = 100;
+    //input.GetJoyStickDPadButton(&dX, &dY);
 
-    if (input.GetJoyState().rgdwPOV[0] != -1) {//十字キー　角度を表す
-        ImGui::Text("POV[%d]: %lu", 0, input.GetJoyState().rgdwPOV[0]);
-    } else {
-        ImGui::Text("POV[%d]: Centered", 0);
-    }
+    //ImGui::Text("Dpad:%f %f", dX, dY);
 
-    for (int i = 0; i < 12; ++i) {
-        ImGui::Text("Button[%d]: %s", i,
-            (input.GetJoyState().rgbButtons[i] & 0x80) ? "Pressed" : "Released");
-    }
+    //ImGui::Text("joyStateLX: %ld", input.GetJoyState().lX);//x軸位置
+    //ImGui::Text("joyStateLY: %ld", input.GetJoyState().lY);
+    //ImGui::Text("joyStateLZ: %ld", input.GetJoyState().lZ);
+    //ImGui::Text("joyStateRX: %ld", input.GetJoyState().lRx);//右スティック
+    //ImGui::Text("joyStateRY: %ld", input.GetJoyState().lRy);
+
+    //if (input.GetJoyState().rgdwPOV[0] != -1) {//十字キー　角度を表す
+    //    ImGui::Text("POV[%d]: %lu", 0, input.GetJoyState().rgdwPOV[0]);
+    //} else {
+    //    ImGui::Text("POV[%d]: Centered", 0);
+    //}
+
+    //for (int i = 0; i < 12; ++i) {
+    //    ImGui::Text("Button[%d]: %s", i,
+    //        (input.GetJoyState().rgbButtons[i] & 0x80) ? "Pressed" : "Released");
+    //}
 
 
     ImGui::End();

@@ -68,6 +68,24 @@ void Player::Update()
     bodyPos_.Update();
     eyePos_.Update();
     circle_.center = bodyPos_.worldTransform_.GetWorldPosition();
+   
+    DWORD controllerIndex = 0; // 0〜3の範囲で指定
+
+    if(Input::IsControllerTriggerButton(XINPUT_GAMEPAD_A, controllerIndex))
+   {
+        Sound::PlaySE(Sound::CRACKER);
+    };
+    if (Input::IsControllerTrigger(BUTTON_LEFT, controllerIndex)) {
+    
+        Sound::PlaySE(Sound::CRACKER);
+    }
+    if (Input::IsControllerTrigger(BUTTON_RIGHT, controllerIndex)) {
+            // 左モーター：強め、右モーター：弱め
+    Input::VibrateController(controllerIndex, 10000, 10000);
+    // 少し待ってから振動停止（例：1秒）
+    Sleep(1000);
+    Input::VibrateController(controllerIndex, 0, 0);
+    }
 
 }
 
@@ -146,6 +164,8 @@ void Player::LookBack()
     DebugUI::CheckFlag(isLookBackEnd_, "isEnd_");
     ImGui::SliderFloat3("forward", &GetForward().x, 0.0f, 100.0f);
     DebugUI::CheckCharacterState(characterState_, "player");
+    DebugUI::CheckMesh(*cubeMesh_, "PlayerCube");
+    DebugUI::CheckMesh(*model_, "PlayerModel");
 #endif // USE_IMGUI
 
     if (Input::IsTriggerMouse(1)) {
