@@ -30,10 +30,10 @@ public:
     void SetSize(const Vector2& size) { size_ = size; };
     void SetPosition(const Vector2& position) { position_ = position; }
     void SetRotate(const float& rotate) { rotate_ = rotate; }
-    void SetScale(const Vector3& scale) { transform_.scale = scale; };
+    void SetScale(const Vector2& scale) { scale_ = scale; };
 
     Vector2& GetSize() { return size_; }
-    Vector3& GetScale() { return transform_.scale; };
+    Vector2& GetScale() { return scale_; };
     float& GetRotate() { return rotate_; };
     Vector2& GetPosition() { return position_; };
 
@@ -78,7 +78,7 @@ private:
     Vector2 position_ = { 0.0f,0.0f };
     float rotate_ = 0.0f;
     Vector2 size_ = { 0.0f,0.0f };
-
+    Vector2 scale_ = { 1.0f,1.0f };
     Transform transform_{};
     Matrix4x4 worldMatrix_{};
     TransformationMatrixFor2D* transformationMatrixData_ = nullptr;

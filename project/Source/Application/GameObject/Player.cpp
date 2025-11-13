@@ -11,17 +11,19 @@
 Player::Player() {
 
     //モデルを取得する
-    model_ = ModelManager::GetModel(ModelManager::PLAYER);
+    model_ = ModelManager::GetModel(ModelManager::BOX);
 
     circleMesh_ = std::make_unique<CircleMesh>();
     cubeMesh_ = std::make_unique<CubeMesh>();
-    circleMesh_->Create(Texture::NUMBERS);
+    cubeMesh_->Create();
+    cubeMesh_->SetMinMax(localAabb_);
+    circleMesh_->Create();
 
     //それぞれのObject3d（WorldTransform）を作る
     eyePos_.Create();
     bodyPos_.Create();
     //モデルやメッシュをセットする
-    bodyPos_.SetMesh(model_);
+    bodyPos_.SetMesh(cubeMesh_.get());
   
 }
 

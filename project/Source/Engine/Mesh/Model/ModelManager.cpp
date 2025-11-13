@@ -27,6 +27,7 @@ Model* ModelManager::GetModel(const uint32_t& handle)
 
 void ModelManager::LoadAllModel()
 {
+    LoadModel("Resource/Models/Box", "Box.obj", BOX);
     LoadModel("Resource/Models/world", "world.obj", WORLD);
     LoadModel("Resource/Models/player", "player.obj", PLAYER);
     LoadModel("Resource/Models/effect", "effect.obj", EFFECT);

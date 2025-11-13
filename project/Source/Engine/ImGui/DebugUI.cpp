@@ -156,6 +156,7 @@ void DebugUI::CheckSprite(Sprite& sprite, const char* label) {
         if (ImGui::TreeNode("transform2D")) {
             ImGui::SliderFloat2("pos", &sprite.GetPosition().x, -1280.0f, 1280.0f);
             ImGui::SliderFloat("rotation", &sprite.GetRotate(), 0.0f, std::numbers::pi_v<float>*2.0f);
+            ImGui::SliderFloat2("scale", &sprite.GetScale().x, -1280.0f, 1280.0f);
             ImGui::SliderFloat2("size", &sprite.GetSize().x, -1280.0f, 1280.0f);
             ImGui::TreePop();
         }
@@ -248,8 +249,8 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
 void DebugUI::CheckParticle(ParticleEmitter& particleEmitter)
 {
 #ifdef USE_IMGUI
-   
-    ParticleManager& particle =  *ParticleManager::GetInstance();
+
+    ParticleManager& particle = *ParticleManager::GetInstance();
     ImGui::Begin("Particle");
 
     ImGui::Checkbox("useBillboard", &particle.useBillboard_);

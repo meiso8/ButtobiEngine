@@ -9,6 +9,7 @@ class ModelManager
 private:
 public:
     enum MODEL_HANDLE {
+        BOX,
         WORLD,
         PLAYER,
         EFFECT,

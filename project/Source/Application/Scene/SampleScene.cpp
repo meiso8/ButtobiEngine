@@ -186,6 +186,7 @@ void SampleScene::Debug()
     DebugUI::CheckMesh(*sphereMesh_, "sphereMesh");
     DebugUI::CheckMesh(*cube_, "cube_");
     DebugUI::CheckModel(*models_[0], "model0");
+    DebugUI::CheckSprite(*sprite_, "sprite0");
 
 #endif // !USE_IMGUI
 }
