@@ -8,16 +8,14 @@
 //Transformなどの情報が入っている
 #include"Object3d.h"
 
-#pragma region//ゲームオブジェクト
-#include"Player.h"
-#include"World.h"
-#include"Locker.h"
-#include"Field.h"
-#include"Enemy.h"
+#pragma region //ゲームオブジェクト
+#include "MatsumotoObj/GameSceneObj/FloorGamePlayer.h"
+#include "MatsumotoObj/GameSceneObj/FloorGameFloorManager.h"
+#include "MatsumotoObj/GameSceneObj/FloorStripManager.h"
+#include "MatsumotoObj/GameSceneObj/FloorBulletManager.h"
+#include "MatsumotoObj/GameSceneObj/FloorPlayerShotBulletManager.h"
+#include "MatsumotoObj/GameSceneObj/FloorPlayerStripTargetUI.h"
 #pragma endregion
-
-class ParticleEmitter;
-class ParticleManager;
 
 class GameScene :public SceneManager {
 
@@ -32,16 +30,15 @@ public:
 private:
     void UpdateCamera();
     void UpdateGameObject();
-    void UpdateParticle();
     //全衝突判定
     void CheckAllCollision();
 private:
 #pragma region//ゲームオブジェクト
-    std::unique_ptr<Player>player_ = nullptr;
-    std::unique_ptr<World>world_ = nullptr;
-    std::unique_ptr<Field>filed_ = nullptr;
-    std::unique_ptr<Enemy>enemy_ = nullptr;
+	std::unique_ptr<FloorGamePlayer>floorGamePlayer_ = nullptr;
+	std::unique_ptr<FloorGameFloorManager>floorGameFloorManager_ = nullptr;
+	std::unique_ptr<FloorStripManager>floorStripManager_ = nullptr;
+	std::unique_ptr<FloorBulletManager>floorBulletManager_ = nullptr;
+	std::unique_ptr<FloorPlayerShotBulletManager>floorPlayerShotBulletManager_ = nullptr;
+	std::unique_ptr<FloorPlayerStripTargetUI>floorPlayerStripTargetUI_ = nullptr;
 #pragma endregion
-    std::unique_ptr<ParticleEmitter>particleEmitter_ = nullptr;
-    ParticleManager* particleManager_ = nullptr;
 };
