@@ -32,8 +32,9 @@ public:
 	FloorType floorType_;
 
 private:
-	std::unique_ptr<CubeMesh>cubeMesh_ = nullptr;
+	//std::unique_ptr<CubeMesh>cubeMesh_ = nullptr;
 	std::unordered_map<FloorType, std::function<void()>> floorTypeUpdate_;
+	std::unordered_map<FloorType, Model*> models_;
 	void NormalFloorUpdate();
 	void StickyFloorUpdate();
 	void StrongFloorUpdate();

@@ -12,11 +12,11 @@
 
 FloorGamePlayer::FloorGamePlayer() {
 	body_.Create();
-	cubeMesh_ = std::make_unique<CubeMesh>();
-	cubeMesh_.get()->Create(Texture::WHITE_1X1);
-	cubeMesh_->SetColor({ 0.0f,1.0f,0.0f,1.0f });
-
-	body_.SetMesh(cubeMesh_.get());
+	//cubeMesh_ = std::make_unique<CubeMesh>();
+	//cubeMesh_.get()->Create(Texture::WHITE_1X1);
+	//cubeMesh_->SetColor({ 0.0f,1.0f,0.0f,1.0f });
+	model_ = ModelManager::GetModel(ModelManager::PLAYER_MODEL);
+	body_.SetMesh(model_);
 }
 
 FloorGamePlayer::~FloorGamePlayer() {
