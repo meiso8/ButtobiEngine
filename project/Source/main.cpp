@@ -1,5 +1,5 @@
 #include"MyEngine.h"
-#include"TitleScene.h"
+#include"SampleScene.h"
 #include"GameScene.h"
 
 #define WIN_WIDTH 1280
@@ -25,22 +25,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // =============================================
 
     enum Scene {
-        kTitleScene,
-        kGameScene
+   
+        kGameScene,
+        kSampleScene,
+        kMaxScene,
     };
 
     const char* sceneName[] = {
-       "TitleScene",
-       "GameScene"
+       "GameScene",
+       "SampleScene",
     };
 
     std::vector<std::unique_ptr<SceneManager>> scenes;
-    // タイトルシーンの生成
-    scenes.push_back(std::make_unique < TitleScene>());
     scenes.push_back(std::make_unique < GameScene>());
+    scenes.push_back(std::make_unique < SampleScene>());
 
     //シーンのインデックス
-    int sceneIndex = kTitleScene;
+    int sceneIndex = kGameScene;
 
 #ifdef _DEBUG
     sceneIndex = kGameScene;
@@ -69,6 +70,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
         if (Input::IsTriggerKey(DIK_I)) {
             // 現在のシーンの初期化
+            sceneIndex++;
+            sceneIndex %= kMaxScene;
+            // 現在のシーンに代入
+            currentScene = scenes[sceneIndex].get();
             currentScene->Initialize();
         }
 

@@ -19,8 +19,8 @@ Enemy::Enemy()
     cubeMesh_->Create(Texture::WHITE_1X1);
     bodyPos_.Create();
     bodyPos_.SetMesh(cubeMesh_.get());
-    aabb_ = { .min = {-1.0f,-1.0f,-1.0f},.max = {1.0f,1.0f,1.0f} };
-    cubeMesh_->SetMinMax(aabb_);
+    localAabb_ = { .min = {-1.0f,-1.0f,-1.0f},.max = {1.0f,1.0f,1.0f} };
+    cubeMesh_->SetMinMax(localAabb_);
     Init();
 
 }
@@ -76,7 +76,7 @@ void Enemy::Update()
 AABB Enemy::GetWorldAABB()
 {
     Vector3 pos = GetWorldPos();
-    return { pos + aabb_.min,pos + aabb_.max };
+    return { pos + localAabb_.min,pos + localAabb_.max };
 }
 
 Vector3 Enemy::GetWorldPos()

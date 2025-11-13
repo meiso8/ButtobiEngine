@@ -1,5 +1,5 @@
 #define NOMINMAX
-#include "TitleScene.h"
+#include "SampleScene.h"
 //入力処理に必要なもの
 #include "Input.h"
 //Debug用のImGui表示セット
@@ -35,7 +35,7 @@
 #include"Circle/CircleMesh.h"
 #include"Circle.h"
 
-TitleScene::TitleScene()
+SampleScene::SampleScene()
 {
 
     camera_ = std::make_unique<Camera>();
@@ -81,8 +81,6 @@ TitleScene::TitleScene()
     particleManager_ = ParticleManager::GetInstance();
         particleManager_->Create();
     particleManager_->CreateParticleGroup("uvChecker", Texture::UV_CHECKER);
-
-
     particleEmitter_ = std::make_unique<ParticleEmitter>();
     particleEmitter_->SetName("uvChecker");
 
@@ -98,7 +96,7 @@ TitleScene::TitleScene()
  
 }
 
-void TitleScene::Initialize() {
+void SampleScene::Initialize() {
 
     sceneChange_.Initialize();
     camera_->Initialize();
@@ -114,7 +112,7 @@ void TitleScene::Initialize() {
     filed_->Init();
 }
 
-void TitleScene::Update() {
+void SampleScene::Update() {
 
 
 
@@ -164,12 +162,12 @@ void TitleScene::Update() {
 }
 
 
-TitleScene::~TitleScene()
+SampleScene::~SampleScene()
 {
     camera_ = nullptr;
 }
 
-void TitleScene::Debug()
+void SampleScene::Debug()
 {
 
     if (Input::IsTriggerKey(DIK_Q)) {
@@ -192,7 +190,7 @@ void TitleScene::Debug()
 #endif // !USE_IMGUI
 }
 
-void TitleScene::CheckAllCollision()
+void SampleScene::CheckAllCollision()
 {
 
     //2つの急の中心点間距離を求める 
@@ -209,7 +207,7 @@ void TitleScene::CheckAllCollision()
 
 
 
-void TitleScene::Draw() {
+void SampleScene::Draw() {
 
 #ifdef _DEBUG
 

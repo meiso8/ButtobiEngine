@@ -25,7 +25,7 @@ private:
     //目標地点
     Vector3* target_ = nullptr;
     //AABB
-    AABB aabb_;
+    AABB localAabb_;
     //立体のメッシュデバック用
     std::unique_ptr<CubeMesh>cubeMesh_;
     //モデル

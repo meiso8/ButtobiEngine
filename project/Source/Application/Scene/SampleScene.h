@@ -23,11 +23,11 @@ class Model;
 class ParticleEmitter;
 class ParticleManager;
 
-class TitleScene :public SceneManager {
+class SampleScene :public SceneManager {
 
 public:
-    TitleScene();
-    ~TitleScene() override;
+    SampleScene();
+    ~SampleScene() override;
     void Initialize()override;
     void Update()override;
     void Draw()override;

@@ -35,6 +35,7 @@ void ModelManager::LoadAllModel()
     LoadModel("Resource/Models/medjed", "medjed.obj", MEDJED);
     LoadModel("Resource/Models/mummy", "mummy.obj", MUMMY);
     LoadModel("Resource/Models/building", "building.obj", BUILDING);
+
 }
 
 void ModelManager::Finalize()

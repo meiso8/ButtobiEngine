@@ -175,7 +175,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Math\Random\Random.cpp" />
     <ClCompile Include="Source\Engine\Mesh\MeshCommon\MeshCommon.cpp" />
     <ClCompile Include="Source\Application\Scene\SceneManager.cpp" />
-    <ClCompile Include="Source\Application\Scene\TitleScene.cpp" />
+    <ClCompile Include="Source\Application\Scene\SampleScene.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Model\ModelManager.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Plane\PlaneMesh.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\DirectXCommon.cpp" />
@@ -278,7 +278,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Math\Random\Random.h" />
     <ClInclude Include="Source\Engine\Mesh\MeshCommon\MeshCommon.h" />
     <ClInclude Include="Source\Application\Scene\SceneManager.h" />
-    <ClInclude Include="Source\Application\Scene\TitleScene.h" />
+    <ClInclude Include="Source\Application\Scene\SampleScene.h" />
     <ClInclude Include="Source\Engine\Mesh\Model\ModelManager.h" />
     <ClInclude Include="Source\Engine\Mesh\Plane\PlaneMesh.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\DirectXCommon.h" />

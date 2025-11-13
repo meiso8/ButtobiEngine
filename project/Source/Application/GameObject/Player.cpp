@@ -5,17 +5,24 @@
 #include"Easing.h"
 #include<algorithm>
 #include"Collision.h"
+#include"CircleMesh.h"
+#include"CubeMesh.h"
 
 Player::Player() {
 
     //モデルを取得する
     model_ = ModelManager::GetModel(ModelManager::PLAYER);
+
+    circleMesh_ = std::make_unique<CircleMesh>();
+    cubeMesh_ = std::make_unique<CubeMesh>();
+    circleMesh_->Create(Texture::NUMBERS);
+
     //それぞれのObject3d（WorldTransform）を作る
     eyePos_.Create();
     bodyPos_.Create();
     //モデルやメッシュをセットする
     bodyPos_.SetMesh(model_);
-
+  
 }
 
 void Player::Init()
@@ -36,8 +43,8 @@ void Player::Init()
     lookBackTime_ = 1.0f;
     isLookBackEnd_ = true;
     circle_.radius = 1.0f;
-    aabb_.min = { -circle_.radius , -circle_.radius ,-circle_.radius };
-    aabb_.max = { circle_.radius , circle_.radius ,circle_.radius };
+    localAabb_.min = { -circle_.radius , -circle_.radius ,-circle_.radius };
+    localAabb_.max = { circle_.radius , circle_.radius ,circle_.radius };
     characterState_ = { .isHit = false,.isAttack = false,  .hp = 100 };
 }
 
@@ -202,8 +209,8 @@ AABB Player::GetWorldAABB()
 {
     Vector3 pos = bodyPos_.worldTransform_.GetWorldPosition();
     return AABB{
-        .min = {pos + aabb_.min},
-        .max = {pos + aabb_.max}
+        .min = {pos + localAabb_.min},
+        .max = {pos + localAabb_.max}
     };
 }
 

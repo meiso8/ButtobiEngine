@@ -9,6 +9,8 @@
 class Model;
 class Camera;
 enum LightMode;
+class CircleMesh;
+class CubeMesh;
 
 class Player
 {
@@ -46,7 +48,7 @@ private:
     bool isLookBack_ = false;
 
     //AABB
-    AABB aabb_;
+    AABB localAabb_;
     Circle circle_;
     Vector3 velocity_;
     float kSpeed_;
@@ -57,5 +59,7 @@ private:
     Object3d bodyPos_;
 
     CharacterState characterState_;
+    std::unique_ptr<CircleMesh>circleMesh_ = nullptr;
+    std::unique_ptr<CubeMesh>cubeMesh_ = nullptr;
 };
 
