@@ -28,7 +28,7 @@ Player::Player() {
     bodyPos_.Create();
     //モデルやメッシュをセットする
     bodyPos_.SetMesh(cubeMesh_.get());
-  
+
 }
 
 void Player::Init()
@@ -68,23 +68,24 @@ void Player::Update()
     bodyPos_.Update();
     eyePos_.Update();
     circle_.center = bodyPos_.worldTransform_.GetWorldPosition();
-   
+
     DWORD controllerIndex = 0; // 0〜3の範囲で指定
 
-    if(Input::IsControllerTriggerButton(XINPUT_GAMEPAD_A, controllerIndex))
-   {
+    //コントローラー
+    if (Input::IsControllerTriggerButton(XINPUT_GAMEPAD_A, controllerIndex))
+    {
+        //SEを鳴らす
         Sound::PlaySE(Sound::CRACKER);
     };
-    if (Input::IsControllerTrigger(BUTTON_LEFT, controllerIndex)) {
-    
+    if (Input::IsControllerLTRT(BUTTON_LEFT, controllerIndex)) {
+        //SEを鳴らす
         Sound::PlaySE(Sound::CRACKER);
     }
-    if (Input::IsControllerTrigger(BUTTON_RIGHT, controllerIndex)) {
-            // 左モーター：強め、右モーター：弱め
-    Input::VibrateController(controllerIndex, 10000, 10000);
-    // 少し待ってから振動停止（例：1秒）
-    Sleep(1000);
-    Input::VibrateController(controllerIndex, 0, 0);
+    if (Input::IsControllerLTRT(BUTTON_RIGHT, controllerIndex)) {
+        Input::VibrateController(controllerIndex, 10000, 10000);
+        // 少し待ってから振動停止（例：1秒）
+        Sleep(500);
+        Input::VibrateController(controllerIndex, 0, 0);
     }
 
 }

@@ -49,19 +49,48 @@ public:
     /// @param index マウスボタンの番号　0 =左 1 = 右　2 = 中　3 = XButton2
     /// @return トリガーされたかどうか
     static bool IsTriggerMouse(uint32_t index);
+    /// @brief マウスの座標を得る
+    /// @return マウスの座標
     static Vector2& GetMousePos();
+    /// @brief フィルタリングされた座標を得る
+    /// @return フィルタリングされた座標
     static Vector2& GetMousePosFiltered();
+    /// @brief マウスのホイール値を得る
+    /// @return マウスのホイール値
     static float GetMouseWheel();
-
+    /// @brief コントローラーが接続されているかどうか
+    /// @param dwUserIndex コントローラーのインデックス
+    /// @return コントローラー接続判定
     static bool IsControllerConnected(DWORD dwUserIndex);
-    static XINPUT_STATE& GetControllerState(DWORD dwUserIndex);
-    static Vector2 GetControllerStickPos(ButtonType type,DWORD dwUserIndex);
+    /// @brief コントローラーの正規化されたスティックの座標(-1~1)を得る
+    /// @param type BUTTON_LEFTかBUTTON_RIGHTをいれる
+    /// @param dwUserIndex コントローラーのインデックス
+    /// @return 正規化されたスティックの座標(-1~1)
+    static Vector2 GetControllerStickPos(ButtonType type, DWORD dwUserIndex);
+    /// @brief コントローラーを振動させる
+    /// @param dwUserIndex コントローラーのインデックス
+    /// @param leftMotor 左モーターの振動値
+    /// @param rightMotor  右モーターの振動値
     static void VibrateController(DWORD dwUserIndex, WORD leftMotor, WORD rightMotor);
-
+    /// @brief コントローラーのボタンを押している判定
+    /// @param button ボタンの値
+    /// @param dwUserIndex コントローラーのインデックス
+    /// @return 判定結果
     static bool IsControllerPressButton(UINT16 button, DWORD dwUserIndex);
+    /// @brief コントローラーのボタントリガー判定
+    /// @param button ボタンの値
+    /// @param dwUserIndex コントローラーのインデックス
+    /// @return 判定結果
     static bool IsControllerTriggerButton(UINT16 button, DWORD dwUserIndex);
-
-    static bool IsControllerTrigger(ButtonType type, DWORD dwUserIndex);
+    /// @brief コントローラーのLTRTのボタンが押されているかどうかを得る
+    /// @param type BUTTON_LEFTかBUTTON_RIGHTをいれる
+    /// @param dwUserIndex コントローラーのインデックス
+    /// @return 判定結果
+    static bool IsControllerLTRT(ButtonType type, DWORD dwUserIndex);
+    /// @brief コントローラーのLTRTのボタンの値を得る
+    /// @param type BUTTON_LEFTかBUTTON_RIGHTをいれる
+    /// @param dwUserIndex コントローラーのインデックス
+    /// @return LTRTのボタンの値
     static BYTE GetControllerTriggerCount(ButtonType type, DWORD dwUserIndex);
 
 private:
@@ -82,5 +111,5 @@ private:
 
 private:
     static Vector2 NormalizeButtonCount(SHORT& buttonLX, SHORT& buttonLY);
-
+    static XINPUT_STATE& GetControllerState(DWORD& dwUserIndex);
 };

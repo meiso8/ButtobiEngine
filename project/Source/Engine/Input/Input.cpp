@@ -163,7 +163,7 @@ Vector2 Input::GetControllerStickPos(ButtonType index, DWORD dwUserIndex)
             SHORT ry = xinputState_.Gamepad.sThumbRY; // 右スティックY軸
             if (abs(rx) > XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE || abs(ry) > XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
             {
-               return NormalizeButtonCount(xinputState_.Gamepad.sThumbRX, xinputState_.Gamepad.sThumbRY);
+                return NormalizeButtonCount(xinputState_.Gamepad.sThumbRX, xinputState_.Gamepad.sThumbRY);
             }
         }
     }
@@ -208,7 +208,7 @@ bool Input::IsControllerConnected(DWORD dwUserIndex)
     return (XInputGetState(dwUserIndex, &GetControllerState(dwUserIndex)) == ERROR_SUCCESS);
 }
 
-XINPUT_STATE& Input::GetControllerState(DWORD dwUserIndex)
+XINPUT_STATE& Input::GetControllerState(DWORD& dwUserIndex)
 {
     ZeroMemory(&xinputState_, sizeof(XINPUT_STATE));
     return xinputState_;
@@ -216,11 +216,12 @@ XINPUT_STATE& Input::GetControllerState(DWORD dwUserIndex)
 
 void Input::VibrateController(DWORD dwUserIndex, WORD leftMotor, WORD rightMotor)
 {
-    XINPUT_VIBRATION vibration;
-    vibration.wLeftMotorSpeed = leftMotor;   // 0 ～ 65535（低周波）
-    vibration.wRightMotorSpeed = rightMotor; // 0 ～ 65535（高周波）
-
-    XInputSetState(dwUserIndex, &vibration);
+    if (IsControllerConnected(dwUserIndex)) {
+        XINPUT_VIBRATION vibration;
+        vibration.wLeftMotorSpeed = leftMotor;   // 0 ～ 65535（低周波）
+        vibration.wRightMotorSpeed = rightMotor; // 0 ～ 65535（高周波）
+        XInputSetState(dwUserIndex, &vibration);
+    }
 }
 
 
@@ -250,7 +251,7 @@ bool Input::IsControllerTriggerButton(UINT16 button, DWORD dwUserIndex)
 }
 
 
-bool Input::IsControllerTrigger(ButtonType index, DWORD dwUserIndex)
+bool Input::IsControllerLTRT(ButtonType index, DWORD dwUserIndex)
 {
     if (IsControllerConnected(dwUserIndex))
     {

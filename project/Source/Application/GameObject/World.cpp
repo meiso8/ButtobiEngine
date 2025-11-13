@@ -43,5 +43,4 @@ void World::SetTexture(const uint32_t& texture)
     } else {
         model_->SetTextureHandle(Texture::TEXTURE_HANDLE(texture));
     }
-  
 }

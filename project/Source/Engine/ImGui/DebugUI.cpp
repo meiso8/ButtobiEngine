@@ -136,35 +136,6 @@ void DebugUI::CheckInput(Input& input) {
     Vector2 R = input.GetControllerStickPos(BUTTON_RIGHT, 0);
     ImGui::SliderFloat2("BUTTON_LEFT", &L.x,-32768.0f, 32768.0f);
     ImGui::SliderFloat2("BUTTON_RIGHT", &R.x, -32768.0f, 32768.0f);
-
-    //float x = 100;
-    //float y = 100;
-    //input.GetJoyStickPos(&x, &y, Input::BUTTON_LEFT);
-    //ImGui::Text("normLX:%f %f", x, y);
-    //float dX = 100;
-    //float dY = 100;
-    //input.GetJoyStickDPadButton(&dX, &dY);
-
-    //ImGui::Text("Dpad:%f %f", dX, dY);
-
-    //ImGui::Text("joyStateLX: %ld", input.GetJoyState().lX);//x軸位置
-    //ImGui::Text("joyStateLY: %ld", input.GetJoyState().lY);
-    //ImGui::Text("joyStateLZ: %ld", input.GetJoyState().lZ);
-    //ImGui::Text("joyStateRX: %ld", input.GetJoyState().lRx);//右スティック
-    //ImGui::Text("joyStateRY: %ld", input.GetJoyState().lRy);
-
-    //if (input.GetJoyState().rgdwPOV[0] != -1) {//十字キー　角度を表す
-    //    ImGui::Text("POV[%d]: %lu", 0, input.GetJoyState().rgdwPOV[0]);
-    //} else {
-    //    ImGui::Text("POV[%d]: Centered", 0);
-    //}
-
-    //for (int i = 0; i < 12; ++i) {
-    //    ImGui::Text("Button[%d]: %s", i,
-    //        (input.GetJoyState().rgbButtons[i] & 0x80) ? "Pressed" : "Released");
-    //}
-
-
     ImGui::End();
 #endif
 
