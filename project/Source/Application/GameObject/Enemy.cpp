@@ -14,7 +14,7 @@ void(Enemy::* Enemy::spFuncTable[])() {
 
 Enemy::Enemy()
 {
-    model_ = ModelManager::GetModel(ModelManager::MEDJED);
+    model_ = ModelManager::GetModel(ModelManager::ENEMY);
     cubeMesh_ = std::make_unique<CubeMesh>();
     cubeMesh_->Create(Texture::WHITE_1X1);
     bodyPos_.Create();

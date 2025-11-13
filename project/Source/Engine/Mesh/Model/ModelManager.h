@@ -11,14 +11,18 @@ public:
     /// @brief モデルのハンドルを宣言します
     enum MODEL_HANDLE {
         BOX,
+        ENEMY,
+        FLOOR,
+        MELT_FLOOR,
+
+        PLAYER_ARM_L,
+        PLAYER_ARM_R,
+        PLAYER_BODY,
+        PLAYER_LEG_L,
+        PLAYER_LEG_R,
+        PLAYER_MODEL,
+
         WORLD,
-        PLAYER,
-        EFFECT,
-        LOCKER,
-        PEOPLE,
-        MEDJED,
-        MUMMY,
-        BUILDING,
         MODELS,
     };
     /// @brief モデルを取得します

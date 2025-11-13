@@ -57,7 +57,7 @@ SampleScene::SampleScene()
 
     //モデルを借りる
 
-    models_[0] = ModelManager::GetModel(ModelManager::BUILDING);
+    models_[0] = ModelManager::GetModel(ModelManager::FLOOR);
 
     for (int i = 0; i < object3ds_.size(); ++i) {
         object3ds_[i] = std::make_unique<Object3d>();
@@ -79,19 +79,13 @@ SampleScene::SampleScene()
 
 
     particleManager_ = ParticleManager::GetInstance();
-        particleManager_->Create();
+    particleManager_->Create();
     particleManager_->CreateParticleGroup("uvChecker", Texture::UV_CHECKER);
     particleEmitter_ = std::make_unique<ParticleEmitter>();
     particleEmitter_->SetName("uvChecker");
 
     player_ = std::make_unique<Player>();
     world_ = std::make_unique<World>();
-    medjed_ = std::make_unique<Medjed>();
-    medjed_->SetTargetMatrix(&player_->GetBodyMatrix());
-    for (int i = 0; i < lockers_.size(); ++i) {
-        lockers_[i] = std::make_unique<Locker>();
-    }
-
     filed_ = std::make_unique<Field>();
  
 }
@@ -104,11 +98,6 @@ void SampleScene::Initialize() {
     particleEmitter_->Initialize();
     player_->Init();
     world_->Init();
-    for (int i = 0; i < lockers_.size(); ++i) {
-        lockers_[i]->Init();
-        lockers_[i]->SetPosX(i * 1.0f);
-    }
-    medjed_->Init();
     filed_->Init();
 }
 
@@ -134,14 +123,8 @@ void SampleScene::Update() {
     if (Input::IsTriggerKey(DIK_W)) {
         particleEmitter_->SetName("uvChecker");
     }
-    if (Input::IsTriggerKey(DIK_S)) {
-        particleEmitter_->SetName("numbers");
-    }
 
     player_->Update();
-
-    medjed_->Update();
-
     filed_->Update();
 
     particleEmitter_->Update();
@@ -151,9 +134,6 @@ void SampleScene::Update() {
 
     for (int i = 0; i < object3ds_.size(); ++i) {
         object3ds_[i]->Update();
-    }
-    for (int i = 0; i < lockers_.size(); ++i) {
-        lockers_[i]->Update();
     }
 
     world_->Update();
@@ -221,12 +201,6 @@ void SampleScene::Draw() {
 
     //object3ds_[1]->Draw(*currentCamera_);
     //object3ds_[0]->Draw(*currentCamera_);
-
-    for (int i = 0; i < lockers_.size(); ++i) {
-        lockers_[i]->Draw(*currentCamera_);
-    }
-
-    medjed_->Draw(*currentCamera_);
 
     player_->Draw(*currentCamera_, kLightModeHalfL);
 
