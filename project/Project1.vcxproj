@@ -157,6 +157,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorBullet.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorBulletManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGameFloor.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGameFloorManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGamePlayer.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorPlayerShotBulletManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorPlayerStripTargetUI.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorStripManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\MY_Utility.cpp" />
     <ClCompile Include="Source\Application\Scene\GameScene.cpp" />
     <ClCompile Include="Source\Application\GameObject\Enemy.cpp" />
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -258,6 +267,16 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorBullet.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorBulletManager.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGameFloor.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGameFloorManager.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGamePlayer.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorPlayerShotBulletManager.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorPlayerStripTargetUI.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorStripManager.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\KeyBindConfig.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\MY_Utility.h" />
     <ClInclude Include="Source\Application\Scene\GameScene.h" />
     <ClInclude Include="Source\Application\GameObject\Enemy.h" />
     <ClInclude Include="Source\Application\GameObject\CharacterState.h" />
