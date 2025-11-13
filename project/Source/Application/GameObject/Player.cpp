@@ -13,6 +13,10 @@ Player::Player() {
     //モデルを取得する
     model_ = ModelManager::GetModel(ModelManager::BOX);
 
+    circle_.radius = 0.5f;
+    localAabb_.min = { -circle_.radius , -circle_.radius ,-circle_.radius };
+    localAabb_.max = { circle_.radius , circle_.radius ,circle_.radius };
+
     circleMesh_ = std::make_unique<CircleMesh>();
     cubeMesh_ = std::make_unique<CubeMesh>();
     cubeMesh_->Create();
@@ -44,9 +48,7 @@ void Player::Init()
     kSpeed_ = { 0.5f };
     lookBackTime_ = 1.0f;
     isLookBackEnd_ = true;
-    circle_.radius = 1.0f;
-    localAabb_.min = { -circle_.radius , -circle_.radius ,-circle_.radius };
-    localAabb_.max = { circle_.radius , circle_.radius ,circle_.radius };
+
     characterState_ = { .isHit = false,.isAttack = false,  .hp = 100 };
 }
 
