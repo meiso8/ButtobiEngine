@@ -8,6 +8,7 @@
 #include"CircleMesh.h"
 #include"CubeMesh.h"
 #include<numbers>
+#include"JsonFile/JsonFile.h"
 
 Player::Player() {
 
@@ -51,6 +52,11 @@ void Player::Init()
     isLookBackEnd_ = true;
 
     characterState_ = { .isHit = false,.isAttack = false,  .hp = 100 };
+
+    Json file = JsonFile::GetJsonFiles(JsonFile::TEST);
+
+    characterState_.hp = file["CharacterState"]["hp"];
+    characterState_.isAttack = file["CharacterState"]["isAttack"];
 }
 
 void Player::Draw(Camera& camera, const LightMode& lightType)
