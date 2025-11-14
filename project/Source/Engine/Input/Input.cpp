@@ -15,7 +15,8 @@ DIMOUSESTATE Input::preMouseState_;
 
 XINPUT_STATE Input::xinputState_;
 WORD Input::preWButtons_;
-
+BYTE  Input::preBLeftTrigger_;
+BYTE  Input::preBRightTrigger_;
 bool Input::isDragging_ = false;
 
 HRESULT Input::Initialize(Window& window/*, int& fps*/) {
@@ -144,7 +145,10 @@ void Input::Update() {
     mouse_->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState_);
 
     //ボタン状態をコピーする
-    memcpy(&preWButtons_, &xinputState_.Gamepad.wButtons, sizeof(xinputState_.Gamepad.wButtons));
+    memcpy(&preWButtons_, &xinputState_.Gamepad.wButtons, sizeof(preWButtons_));
+    memcpy(&preBLeftTrigger_, &xinputState_.Gamepad.bLeftTrigger, sizeof(preBLeftTrigger_));
+    memcpy(&preBRightTrigger_, &xinputState_.Gamepad.bRightTrigger, sizeof(preBRightTrigger_));
+
 }
 
 Vector2 Input::GetControllerStickPos(ButtonType index, DWORD dwUserIndex)
@@ -251,20 +255,28 @@ bool Input::IsControllerTriggerButton(UINT16 button, DWORD dwUserIndex)
 }
 
 
-bool Input::IsControllerLTRT(ButtonType index, DWORD dwUserIndex)
+bool Input::IsControllerPressLTRT(ButtonType index, DWORD dwUserIndex)
+{
+    if (IsControllerConnected(dwUserIndex)) {
+        if (index == 0) {
+            return IsControllerDeadZone(xinputState_.Gamepad.bLeftTrigger);
+        } else {
+            return IsControllerDeadZone(xinputState_.Gamepad.bRightTrigger);
+        }
+    }
+
+    return false;
+};
+
+
+bool Input::IsControllerTriggerLTRT(ButtonType index, DWORD dwUserIndex)
 {
     if (IsControllerConnected(dwUserIndex))
     {
         if (index == 0) {
-            if (xinputState_.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
-            {
-                return true;
-            }
+            return (IsControllerDeadZone(xinputState_.Gamepad.bLeftTrigger) && !IsControllerDeadZone(preBLeftTrigger_));
         } else {
-            if (xinputState_.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
-            {
-                return true;
-            }
+            return (IsControllerDeadZone(xinputState_.Gamepad.bRightTrigger) && !IsControllerDeadZone(preBRightTrigger_));
         }
     }
 
@@ -276,12 +288,12 @@ BYTE Input::GetControllerTriggerCount(ButtonType index, DWORD dwUserIndex)
     if (IsControllerConnected(dwUserIndex))
     {
         if (index == 0) {
-            if (xinputState_.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+            if (IsControllerDeadZone(xinputState_.Gamepad.bLeftTrigger))
             {
                 return xinputState_.Gamepad.bLeftTrigger;
             }
         } else {
-            if (xinputState_.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+            if (IsControllerDeadZone(xinputState_.Gamepad.bRightTrigger))
             {
                 return xinputState_.Gamepad.bRightTrigger;
             }
@@ -289,6 +301,11 @@ BYTE Input::GetControllerTriggerCount(ButtonType index, DWORD dwUserIndex)
     }
 
     return 0;
+}
+
+bool Input::IsControllerDeadZone(BYTE& triggerButton)
+{
+    return triggerButton > XINPUT_GAMEPAD_TRIGGER_THRESHOLD;
 }
 
 bool Input::IsPressMouse(uint32_t index) {

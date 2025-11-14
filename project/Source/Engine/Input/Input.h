@@ -86,13 +86,19 @@ public:
     /// @param type BUTTON_LEFTかBUTTON_RIGHTをいれる
     /// @param dwUserIndex コントローラーのインデックス
     /// @return 判定結果
-    static bool IsControllerLTRT(ButtonType type, DWORD dwUserIndex);
+    static bool IsControllerPressLTRT(ButtonType type, DWORD dwUserIndex);
+    /// @brief コントローラーのLTRTのボタンがトリガーされたかどうかを得る
+ /// @param type BUTTON_LEFTかBUTTON_RIGHTをいれる
+ /// @param dwUserIndex コントローラーのインデックス
+ /// @return 判定結果
+    static bool IsControllerTriggerLTRT(ButtonType index, DWORD dwUserIndex);
     /// @brief コントローラーのLTRTのボタンの値を得る
     /// @param type BUTTON_LEFTかBUTTON_RIGHTをいれる
     /// @param dwUserIndex コントローラーのインデックス
     /// @return LTRTのボタンの値
     static BYTE GetControllerTriggerCount(ButtonType type, DWORD dwUserIndex);
 
+    static bool IsControllerDeadZone(BYTE& triggerButton);
 private:
     Window* window_ = nullptr;
     IDirectInputDevice8* keyboard_ = nullptr;
@@ -107,6 +113,8 @@ private:
     //ゲームパッド
     static float deadZone_;
     static WORD preWButtons_;
+    static BYTE  preBLeftTrigger_;
+    static BYTE  preBRightTrigger_;
     static XINPUT_STATE xinputState_;
 
 private:
