@@ -71,7 +71,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #ifdef _DEBUG
 
-        if (Input::IsTriggerKey(DIK_I)) {
+        currentScene->SceneChangeUpdate();
+
+        if (currentScene->GetIsEndScene()) {
             // 現在のシーンの初期化
             sceneIndex++;
             sceneIndex %= kMaxScene;

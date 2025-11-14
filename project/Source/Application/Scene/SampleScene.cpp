@@ -37,14 +37,6 @@
 
 SampleScene::SampleScene()
 {
-
-    camera_ = std::make_unique<Camera>();
-
-#ifdef _DEBUG
-    // デバッグカメラの初期化
-    debugCamera_ = std::make_unique<DebugCamera>();
-#endif // _DEBUG
-
     // 現在のカメラを設定
     currentCamera_ = camera_.get();
     //メッシュの生成
@@ -87,12 +79,13 @@ SampleScene::SampleScene()
     player_ = std::make_unique<Player>();
     world_ = std::make_unique<World>();
     filed_ = std::make_unique<Field>();
- 
+
 }
 
 void SampleScene::Initialize() {
 
-    sceneChange_.Initialize();
+    sceneChange_->Initialize();
+    sceneChange_->SetState(SceneChange::kWipeOut, 60);
     camera_->Initialize();
     camera_->UpdateMatrix();
     particleEmitter_->Initialize();
@@ -102,7 +95,6 @@ void SampleScene::Initialize() {
 }
 
 void SampleScene::Update() {
-
 
 
     if (isDebugCameraActive_) {
@@ -176,11 +168,11 @@ void SampleScene::CheckAllCollision()
 
     //2つの急の中心点間距離を求める 
     if (Distance(player_->GetCircle(), filed_->circle_) >= player_->GetCircle().radius - filed_->circle_.radius) {
-         
+
     }
 
     if (IsCollisionInCircleLine(player_->GetCircle(), filed_->circle_)) {
-        
+
         player_->OnCollision(filed_->circle_);
         Sound::PlayOriginSE(Sound::CRACKER);
     };
@@ -209,4 +201,5 @@ void SampleScene::Draw() {
     sprite_->PreDraw();
     sprite_->Draw();
 
+    sceneChange_->Draw();
 }
