@@ -157,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\Scene\ResultScene.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorBullet.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorBulletManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGameFloor.cpp" />
@@ -266,6 +267,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\Scene\TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\Scene\ResultScene.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorBullet.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorBulletManager.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGameFloor.h" />

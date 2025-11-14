@@ -2,7 +2,9 @@
 #include"SampleScene.h"
 #include"GameScene.h"
 #include"TitleScene.h"
-
+#include"ResultScene.h"
+#include<map>
+#include<unordered_map>
 #define WIN_WIDTH 1280
 #define WIN_HEIGHT 720
 
@@ -25,39 +27,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // シーンの生成
     // =============================================
 
-    enum Scene {
-        kTitleScene,
-        kGameScene,
-        kSampleScene,
-        kMaxScene,
-    };
+    std::map<const std::string, std::unique_ptr<SceneManager>> scenes;
+    scenes["Title"] = std::make_unique < TitleScene>();
+    scenes["Game"] = std::make_unique < GameScene>();
+    scenes["Result"] = std::make_unique < ResultScene>();
+    scenes["Sample"] = std::make_unique < SampleScene>();
 
-    const char* sceneName[] = {
-       "TitleScene",
-        "GameScene",
-       "SampleScene",
-    };
-
-    std::vector<std::unique_ptr<SceneManager>> scenes;
-    scenes.push_back(std::make_unique < TitleScene>());
-    scenes.push_back(std::make_unique < GameScene>());
-    scenes.push_back(std::make_unique < SampleScene>());
-
-    //シーンのインデックス
-    int sceneIndex = kTitleScene;
-
-#ifdef _DEBUG
-    sceneIndex = kGameScene;
-#endif // _DEBUG
-
-    // 現在のシーン
-    SceneManager* currentScene = nullptr;
-    // 現在のシーンに代入
-    currentScene = scenes[sceneIndex].get();
-    // 現在のシーンの初期化
+    //最初の位置を保持
+    auto currentIt = scenes.begin();
+    SceneManager* currentScene = currentIt->second.get();
     currentScene->Initialize();
-
-    uint32_t lightType = 0;
 
     // =============================================
     // ウィンドウのxボタンが押されるまでループ メインループ
@@ -74,13 +53,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         currentScene->SceneChangeUpdate();
 
         if (currentScene->GetIsEndScene()) {
-            // 現在のシーンの初期化
-            sceneIndex++;
-            sceneIndex %= kMaxScene;
-            // 現在のシーンに代入
-            currentScene = scenes[sceneIndex].get();
+            ++currentIt; // 次のシーンへ
+
+            if (currentIt == scenes.end()) {
+                currentIt = scenes.begin(); // 最初に戻る
+            }
+
+            currentScene = currentIt->second.get();
             currentScene->Initialize();
         }
+
 
 #endif // _DEBUG
 
@@ -95,7 +77,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #ifdef USE_IMGUI
         DebugUI::CheckColor(screenColor, "screenColor");
-        ImGui::Text("%s", sceneName[sceneIndex]);
+       
+        for (const auto& [sceneName, scenePtr] : scenes) { 
+            if (scenePtr.get() == currentScene) {
+                ImGui::Text("%s", sceneName.c_str());
+                break;
+            }
+        }
+     
 #endif // USE_IMGUI
 
         currentScene->Debug();
