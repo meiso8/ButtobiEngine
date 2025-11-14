@@ -81,7 +81,7 @@ void Player::Update()
  
     };
     //コントローラーのLTRTが押されているかを得る
-    if (Input::IsControllerLTRT(BUTTON_LEFT, controllerIndex)) {
+    if (Input::IsControllerTriggerLTRT(BUTTON_LEFT, controllerIndex)) {
         //SEを鳴らす
         Sound::PlaySE(Sound::CRACKER);
     }
