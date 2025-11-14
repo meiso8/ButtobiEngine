@@ -5,6 +5,7 @@
 #include"ResultScene.h"
 #include<map>
 #include<unordered_map>
+
 #define WIN_WIDTH 1280
 #define WIN_HEIGHT 720
 
@@ -17,7 +18,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     //エンジンの生成
     std::unique_ptr<MyEngine> myEngine = std::make_unique<MyEngine>();
     myEngine->Create(L"2206_チーム制作二回目", WIN_WIDTH, WIN_HEIGHT);
-
     // ==============================================//↑基本いじらない↑//============================================
 
     //画面の色

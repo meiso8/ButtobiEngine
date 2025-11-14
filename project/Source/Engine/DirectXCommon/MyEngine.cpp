@@ -5,6 +5,7 @@
 #include"SpriteCamera.h"
 #include"DrawGrid.h"
 #include"Particle.h"
+#include"JsonFile.h"
 
 std::unique_ptr<PSO> MyEngine::pso = nullptr;
 
@@ -88,14 +89,15 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     Sound::Initialize();
     //テクスチャ管理
     Texture::Initialize();
+
     //テスクチャ読み込み
     Texture::LoadAllTexture();
-
     //音声の読み込み
     Sound::LoadAllSound();
-
     //モデル読み込み
     ModelManager::LoadAllModel();
+    //JsonFileの読み込み
+    JsonFile::LoadAllJsonFile();
 
 #ifdef _DEBUG
     //グリット描画
@@ -103,6 +105,9 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
 #endif
 
     particleManager_ = std::make_unique <ParticleManager>();
+
+
+
 
     //ファイルへのログ出力
     LogFile::Log("LoopStart");
