@@ -53,7 +53,7 @@ void Player::Init()
 
     characterState_ = { .isHit = false,.isAttack = false,  .hp = 100 };
 
-    Json file = JsonFile::GetJsonFiles(JsonFile::TEST);
+    Json file = JsonFile::GetJsonFiles("config");
 
     characterState_.hp = file["CharacterState"]["hp"];
     characterState_.isAttack = file["CharacterState"]["isAttack"];
@@ -166,6 +166,7 @@ void Player::LookBack()
     DebugUI::CheckCharacterState(characterState_, "player");
     DebugUI::CheckMesh(*cubeMesh_, "PlayerCube");
     DebugUI::CheckMesh(*model_, "PlayerModel");
+    DebugUI::SaveJsonFile();
 #endif // USE_IMGUI
 
     if (Input::IsTriggerMouse(1) || Input::IsControllerTriggerLTRT(BUTTON_RIGHT, 0)) {

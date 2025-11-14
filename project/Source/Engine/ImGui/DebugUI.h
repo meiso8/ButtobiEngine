@@ -26,10 +26,11 @@ struct PointLight;
 class MeshCommon;
 struct CharacterState;
 
-
 class DebugUI
 {
 public:
+
+    static void SaveJsonFile();
 
     static void CheckCharacterState(CharacterState& state,const char* label);
 

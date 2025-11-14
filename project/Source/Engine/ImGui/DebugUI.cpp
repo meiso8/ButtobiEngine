@@ -14,6 +14,8 @@
 #include"Light.h"
 #include"PSO.h"
 #include"Camera.h"
+#include"JsonFile.h"
+
 
 #include<numbers>
 #include<algorithm>
@@ -59,6 +61,83 @@ void DebugUI::CheckCamera(Camera& camera) {
 
         ImGui::TreePop();
 
+    }
+#endif
+}
+
+void DebugUI::SaveJsonFile()
+{
+#ifdef USE_IMGUI
+
+    // 保存完了フラグ
+    static bool saved = false;
+
+    if (ImGui::TreeNode("Save Json")) {
+
+        static char tagBuffer[128] = "";
+        static char name[128] = "name";
+        static char name0[128] = "param0";
+        static char name1[128] = "param1";
+        static char name2[128] = "param2";
+
+        static char buffer0[128] = "";
+        static char buffer1[128] = "";
+        static char buffer2[128] = "";
+
+        ImGui::InputText("FileTag", tagBuffer, IM_ARRAYSIZE(tagBuffer));
+        ImGui::InputText("StructName", name, IM_ARRAYSIZE(name));
+       
+        if (ImGui::TreeNode("param0")) {
+
+            ImGui::InputText("param0Name", name0, IM_ARRAYSIZE(name0));
+            ImGui::InputText(name0, buffer0, IM_ARRAYSIZE(buffer0));
+            ImGui::TreePop();
+        }
+
+        if (ImGui::TreeNode("param1")) {
+            ImGui::InputText("param1Name", name1, IM_ARRAYSIZE(name1));
+            ImGui::InputText(name1, buffer1, IM_ARRAYSIZE(buffer1));
+            ImGui::TreePop();
+        }
+
+        if (ImGui::TreeNode("param2")) {
+            ImGui::InputText("param2Name", name2, IM_ARRAYSIZE(name2));
+            ImGui::InputText(name2, buffer2, IM_ARRAYSIZE(buffer2));
+            ImGui::TreePop();
+        }
+
+        if (ImGui::Button("Save")) {
+
+            nlohmann::json& jsonFile = JsonFile::GetJsonFiles(tagBuffer);
+            jsonFile[name][name0] = buffer0;
+            jsonFile[name][name1] = buffer1;
+            jsonFile[name][name2] = buffer2;
+            // ファイル保存
+            JsonFile::SaveJson(tagBuffer);
+            saved = true;
+        }
+
+        if (ImGui::Button("CreateNewFile")) {
+
+            // 新しい構造化JSONを作成
+            nlohmann::json newJson;
+            newJson[name][name0] = buffer0;
+            newJson[name][name1] = buffer1;
+            newJson[name][name2] = buffer2;
+            // 管理マップに登録
+            JsonFile::SetJson(tagBuffer, newJson);
+
+            // ファイル保存
+            JsonFile::SaveJson(tagBuffer);
+            saved = true;
+        }
+
+        // 保存完了メッセージを表示
+        if (saved) {
+            ImGui::TextColored(ImVec4(0, 1, 0, 1), "FileSaved");
+        }
+
+        ImGui::TreePop();
     }
 #endif
 }
@@ -134,7 +213,7 @@ void DebugUI::CheckInput(Input& input) {
     ImGui::Text("Y %d", input.IsControllerPressButton(XINPUT_GAMEPAD_Y, 0));
     Vector2 L = input.GetControllerStickPos(BUTTON_LEFT, 0);
     Vector2 R = input.GetControllerStickPos(BUTTON_RIGHT, 0);
-    ImGui::SliderFloat2("BUTTON_LEFT", &L.x,-32768.0f, 32768.0f);
+    ImGui::SliderFloat2("BUTTON_LEFT", &L.x, -32768.0f, 32768.0f);
     ImGui::SliderFloat2("BUTTON_RIGHT", &R.x, -32768.0f, 32768.0f);
     ImGui::End();
 #endif
@@ -237,6 +316,7 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
 #ifdef USE_IMGUI
     ImGui::Begin("Object3d");
     CheckWorldTransform(object3d.worldTransform_, label);
+    ShowMatrix4x4(object3d.worldTransform_.matWorld_);
     ImGui::End();
 #endif
 }

@@ -4,16 +4,20 @@
 
 using Json = nlohmann::json;
 
-Json LoadJson(const std::string& path);
+struct JsonData {
+    Json data;
+    std::string path;
+};
 
 class JsonFile {
 public:
-    enum Handle {
-        TEST,
-    };
-    static Json GetJsonFiles(Handle handle) { return jsonFiles_[handle]; };
-    static void LoadAllJsonFile();
+
+    static Json& GetJsonFiles(const std::string& Tag) { return jsonFiles_[Tag].data; };
+    static void SaveJson(const std::string& Tag);
+    static void LoadJson(const std::string& Tag);
+   static void LoadAllJsonFile();
+    static void SetJson(const std::string& tag, const nlohmann::json& j);
 private:
-    static std::unordered_map<Handle, Json> jsonFiles_;
+    static std::unordered_map <std::string, JsonData > jsonFiles_;
 
 };
