@@ -40,44 +40,42 @@
 
 GameScene::GameScene()
 {
-    camera_ = std::make_unique<Camera>();
-#ifdef _DEBUG
-    // デバッグカメラの初期化
-    debugCamera_ = std::make_unique<DebugCamera>();
-#endif // _DEBUG
 
     // 現在のカメラを設定
     currentCamera_ = camera_.get();
 
 #pragma region // オブジェクト生成
-	floorGamePlayer_ = std::make_unique<FloorGamePlayer>();
-	floorGameFloorManager_ = std::make_unique<FloorGameFloorManager>();
-	floorStripManager_ = std::make_unique<FloorStripManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
-	floorBulletManager_ = std::make_unique<FloorBulletManager>();
-	floorPlayerShotBulletManager_ = std::make_unique<FloorPlayerShotBulletManager>(floorGamePlayer_.get(), floorBulletManager_.get());
-	floorPlayerStripTargetUI_ = std::make_unique<FloorPlayerStripTargetUI>(floorGamePlayer_.get());
+    floorGamePlayer_ = std::make_unique<FloorGamePlayer>();
+    floorGameFloorManager_ = std::make_unique<FloorGameFloorManager>();
+    floorStripManager_ = std::make_unique<FloorStripManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
+    floorBulletManager_ = std::make_unique<FloorBulletManager>();
+    floorPlayerShotBulletManager_ = std::make_unique<FloorPlayerShotBulletManager>(floorGamePlayer_.get(), floorBulletManager_.get());
+    floorPlayerStripTargetUI_ = std::make_unique<FloorPlayerStripTargetUI>(floorGamePlayer_.get());
 #pragma endregion
 }
 
 void GameScene::Initialize() {
 
-    sceneChange_.Initialize();
+    sceneChange_->Initialize();
+    sceneChange_->SetState(SceneChange::kFadeOut, 60);
     camera_->Initialize();
-	camera_->translate_ = { 0.0f, 14.0f,-8.0f };
-	camera_->rotate_ = { 1.2f,0.0f,0.0f };
+    camera_->translate_ = { 0.0f, 14.0f,-8.0f };
+    camera_->rotate_ = { 1.2f,0.0f,0.0f };
     camera_->UpdateMatrix();
 
 #pragma region // オブジェクト初期化
-	floorGamePlayer_->Initialize();
+    floorGamePlayer_->Initialize();
     floorGameFloorManager_->Initialize();
-	floorStripManager_->Initialize();
-	floorBulletManager_->Initialize();
-	floorPlayerShotBulletManager_->Initialize();
-	floorPlayerStripTargetUI_->Initialize();
+    floorStripManager_->Initialize();
+    floorBulletManager_->Initialize();
+    floorPlayerShotBulletManager_->Initialize();
+    floorPlayerStripTargetUI_->Initialize();
 #pragma endregion
 }
 
 void GameScene::Update() {
+
+    sceneChange_->Update();
 
     //仮に音声を鳴らす　全体のvolumeがあってオフセット分だけいじる
     Sound::PlayBGM(Sound::BGM1, 0.1f);
@@ -87,6 +85,7 @@ void GameScene::Update() {
     UpdateGameObject();
 
     CheckAllCollision();
+
 }
 
 void GameScene::Draw() {
@@ -97,11 +96,13 @@ void GameScene::Draw() {
 
 #pragma region // オブジェクト描画
     floorGamePlayer_->Draw(*currentCamera_, LightMode::kLightModeNone);
-	floorGameFloorManager_->Draw(*currentCamera_, LightMode::kLightModeNone);
-	floorBulletManager_->Draw(*currentCamera_, LightMode::kLightModeNone);
-	floorPlayerStripTargetUI_->Draw(*currentCamera_, LightMode::kLightModeNone);
+    floorGameFloorManager_->Draw(*currentCamera_, LightMode::kLightModeNone);
+    floorBulletManager_->Draw(*currentCamera_, LightMode::kLightModeNone);
+    floorPlayerStripTargetUI_->Draw(*currentCamera_, LightMode::kLightModeNone);
 #pragma endregion
-	
+
+    //シーン遷移を描画する
+    sceneChange_->Draw();
 }
 
 void GameScene::Debug()
@@ -122,26 +123,23 @@ void GameScene::Debug()
 void GameScene::UpdateCamera()
 {
     if (isDebugCameraActive_) {
-        //これを呼べばOK
         currentCamera_->UpdateMatrix();
-        /*    camera_->UpdateMatrix();*/
     } else {
-        //プレイヤーの視点にしている
         camera_->UpdateMatrix();
     }
 }
 
 void GameScene::UpdateGameObject()
 {
-	// オブジェクト個人の更新
-	floorGamePlayer_->Update();
-	floorGameFloorManager_->Update();
-	floorBulletManager_->Update();
+    // オブジェクト個人の更新
+    floorGamePlayer_->Update();
+    floorGameFloorManager_->Update();
+    floorBulletManager_->Update();
 
-	// オブジェクト同士の干渉
-	floorStripManager_->Update();
-	floorPlayerShotBulletManager_->Update();
-	floorPlayerStripTargetUI_->Update();
+    // オブジェクト同士の干渉
+    floorStripManager_->Update();
+    floorPlayerShotBulletManager_->Update();
+    floorPlayerStripTargetUI_->Update();
 }
 
 void GameScene::CheckAllCollision()

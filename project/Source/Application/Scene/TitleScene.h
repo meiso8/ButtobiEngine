@@ -9,5 +9,6 @@ public:
     void Update()override;
     void Draw()override;
     void Debug()override;
+   void SceneChangeUpdate()override;
 };
 
