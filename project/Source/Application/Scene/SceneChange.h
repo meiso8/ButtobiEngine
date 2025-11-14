@@ -13,23 +13,43 @@ class SceneChange
 public:
 
     enum State {
+        //何もない
         kUnKnown,
+        //フェードイン
         kFadeIn,
+        //フェードアウト
         kFadeOut,
+        //ワイプイン
         kWipeIn,
+        //ワイプアウト
         kWipeOut,
+        //シーンの開始　1フレーム
         kSceneStart,
+        //シーンの終了　1フレーム
         kSceneEnd
     };
+
+    /// @brief シーンの状態と終了時間を設定する
+    /// @param state シーンの状態
+    /// @param endTime 終了時間 60=1秒とする
+    void SetState(State state, uint32_t endTime);
+    /// @brief 時間を得る
+    /// @return 
+    static uint32_t GetTimer() { return timer_; }
+    /// @brief シーン遷移の初期化　これをシーンの初期化で呼ぶ
+    void Initialize();
+    /// @brief シーン遷移の描画処理
+    void Draw();
+    /// @brief スタート判定を得る
+    /// @return 判定結果
+    bool IsStartScene() { return(state_ == kSceneStart) ? true : false; }
+    /// @brief エンド判定を得る
+    /// @return 判定結果
+    bool IsEndScene() { return(state_ == kSceneEnd) ? true : false; }
+    /// @brief シーンの更新
+    void Update();
     SceneChange();
     ~SceneChange();
-    void SetState(State state, uint32_t endTime);
-    void Initialize();
-    void Update();
-    void Draw();
-    bool IsStartScene() { return(state_ == kSceneStart) ? true : false; }
-    bool IsEndScene() { return(state_ == kSceneEnd) ? true : false; }
-    static uint32_t GetTimer() { return timer_; }
 private:
     static uint32_t timer_;
     static uint32_t endTime_;

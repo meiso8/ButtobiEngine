@@ -88,9 +88,9 @@ public:
     /// @return 判定結果
     static bool IsControllerPressLTRT(ButtonType type, DWORD dwUserIndex);
     /// @brief コントローラーのLTRTのボタンがトリガーされたかどうかを得る
- /// @param type BUTTON_LEFTかBUTTON_RIGHTをいれる
- /// @param dwUserIndex コントローラーのインデックス
- /// @return 判定結果
+    /// @param type BUTTON_LEFTかBUTTON_RIGHTをいれる
+    /// @param dwUserIndex コントローラーのインデックス
+    /// @return 判定結果
     static bool IsControllerTriggerLTRT(ButtonType index, DWORD dwUserIndex);
     /// @brief コントローラーのLTRTのボタンの値を得る
     /// @param type BUTTON_LEFTかBUTTON_RIGHTをいれる
