@@ -38,6 +38,8 @@ public:
     void OnCollision(const Circle& circle);
     void OnCollisionEnemy();
 
+    float cameraSpeed_ = 4.0f;
+
 private:
 
     float endRotateY_ = 0.0f;

@@ -7,6 +7,7 @@
 #include"Collision.h"
 #include"CircleMesh.h"
 #include"CubeMesh.h"
+#include<numbers>
 
 Player::Player() {
 
@@ -78,14 +79,14 @@ void Player::Update()
         // 少し待ってから振動停止（例：1秒）
         Sleep(1000);
         Input::VibrateController(controllerIndex, 0, 0);
- 
+
     };
     //コントローラーのLTRTが押されているかを得る
     if (Input::IsControllerTriggerLTRT(BUTTON_LEFT, controllerIndex)) {
         //SEを鳴らす
         Sound::PlaySE(Sound::CRACKER);
     }
- 
+
 
 }
 
@@ -95,27 +96,20 @@ void Player::Move()
 
     bodyPos_.worldTransform_.translate_.y = Lerp(0.0f, bodyPos_.worldTransform_.translate_.y, 0.5f);
 
-    if (Input::IsPushKey(DIK_A)) {
-        velocity_.x = -1.0f;
+    if (Input::IsControllerConnected(0)) {
+        Vector2 controllerPos = Input::GetControllerStickPos(BUTTON_LEFT, 0);
+        velocity_.x = controllerPos.x;
+        velocity_.z = controllerPos.y;
     }
 
-    if (Input::IsPushKey(DIK_D)) {
-        velocity_.x = 1.0f;
-    }
+    if (Input::IsPushKey(DIK_A)) { velocity_.x = -1.0f; }
+    if (Input::IsPushKey(DIK_D)) { velocity_.x = 1.0f; }
+    if (Input::IsPushKey(DIK_W)) { velocity_.z = 1.0f; }
+    if (Input::IsPushKey(DIK_S)) { velocity_.z = -1.0f; }
 
-    if (Input::IsPushKey(DIK_W)) {
-        velocity_.z = 1.0f;
-    }
+    kSpeed_ = (Input::IsPushKey(DIK_LSHIFT) || Input::IsControllerPressButton(XINPUT_GAMEPAD_X, 0)) ? 0.125f : 0.25f;
 
-    if (Input::IsPushKey(DIK_S)) {
-        velocity_.z = -1.0f;
-    }
-
-    kSpeed_ = (Input::IsPushKey(DIK_LSHIFT)) ? 0.125f : 0.25f;
-
-    if (Input::IsPushKey(DIK_A) || Input::IsPushKey(DIK_D) || Input::IsPushKey(DIK_W) || Input::IsPushKey(DIK_S)) {
-
-
+    if (fabs(velocity_.x) > 0.0f || fabs(velocity_.z) > 0.0f) {
         if (soundTimer_ == 0.0f) {
             Sound::PlaySE(Sound::FOOT_STEP);
         }
@@ -168,7 +162,7 @@ void Player::LookBack()
     DebugUI::CheckMesh(*model_, "PlayerModel");
 #endif // USE_IMGUI
 
-    if (Input::IsTriggerMouse(1)) {
+    if (Input::IsTriggerMouse(1) || Input::IsControllerTriggerLTRT(BUTTON_RIGHT, 0)) {
         isLookBack_ = true;
 
         if (isLookBackEnd_) {
@@ -184,8 +178,7 @@ void Player::LookBack()
         return;
     }
 
-    //マウスを離したら
-    if (Input::IsPressMouse(1)) {
+    if (Input::IsPressMouse(1) || Input::IsControllerPressLTRT(BUTTON_RIGHT, 0)) {
 
         if (!isLookBackEnd_) {
             if (lookBackTime_ < 1.0f) {
@@ -219,8 +212,11 @@ void Player::MouseLook()
         return;
     }
 
-    bodyPos_.worldTransform_.rotate_.y += Input::GetMousePosFiltered().x * InverseFPS * 0.125f;
-    eyePos_.worldTransform_.rotate_.x += Input::GetMousePosFiltered().y * InverseFPS * 0.125f;
+    bodyPos_.worldTransform_.rotate_.y += Input::GetControllerStickPos(BUTTON_RIGHT, 0).x * InverseFPS * cameraSpeed_;
+    bodyPos_.worldTransform_.rotate_.y += Input::GetMousePosFiltered().x * InverseFPS / cameraSpeed_;
+    eyePos_.worldTransform_.rotate_.x -= Input::GetControllerStickPos(BUTTON_RIGHT, 0).y * InverseFPS * cameraSpeed_;
+
+    eyePos_.worldTransform_.rotate_.x += Input::GetMousePosFiltered().y * InverseFPS / cameraSpeed_;
 
     eyePos_.worldTransform_.rotate_.x = std::clamp(
         eyePos_.worldTransform_.rotate_.x,
