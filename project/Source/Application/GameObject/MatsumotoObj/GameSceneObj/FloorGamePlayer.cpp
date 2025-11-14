@@ -76,8 +76,7 @@ void FloorGamePlayer::Move() {
 	
 	//コントローラーの処理を追加しました。吉田
 	if (Input::IsControllerConnected(0)) {
-		Vector2 controllerStickPos =
-			Input::GetControllerStickPos(BUTTON_LEFT, 0);
+		Vector2 controllerStickPos =Input::GetControllerStickPos(BUTTON_LEFT, 0);
 		moveDir_.x = controllerStickPos.x;
 		moveDir_.z = controllerStickPos.y;
 		if (std::fabs(moveDir_.x) > 0.0f || std::fabs(moveDir_.z) > 0.0f) {
