@@ -32,11 +32,11 @@ void Sound::LoadAllSound()
     seVolume_ = 0.1f;
 #endif // _DEBUG
 
-
     handles_.resize(SOUNDS);
 
     //サウンドの読み込み
-    handles_[BGM1] = Load("Resource/Sounds/externals/maou_bgm_acoustic01b.mp3");
+    handles_[BGM1] = Load("Resource/Sounds/externals/sea.mp3");
+
     handles_[PICO] = Load("Resource/Sounds/pico.mp3");
     handles_[CRACKER] = Load("Resource/Sounds/cracker_short.mp3");
 

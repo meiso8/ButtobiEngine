@@ -73,6 +73,18 @@ void FloorGamePlayer::Move() {
 	// 移動方向決定
 	isMove_ = false;
 	moveDir_ = { 0.0f,0.0f,0.0f };
+	
+	//コントローラーの処理を追加しました。吉田
+	if (Input::IsControllerConnected(0)) {
+		Vector2 controllerStickPos =
+			Input::GetControllerStickPos(BUTTON_LEFT, 0);
+		moveDir_.x = controllerStickPos.x;
+		moveDir_.z = controllerStickPos.y;
+		if (std::fabs(moveDir_.x) > 0.0f || std::fabs(moveDir_.z) > 0.0f) {
+			isMove_ = true;
+		}
+	}
+	
 	if (Input::IsPushKey(DIK_W)) {
 		moveDir_.z = 1.0f;
 		isMove_ = true;
@@ -121,8 +133,8 @@ void FloorGamePlayer::StriptFloor() {
 		return;
 	}
 
-	// 床剥がし入力
-	if (Input::IsTriggerKey(DIK_SPACE)) {
+	// 床剥がし入力 //コントローラーの処理を追加しました　吉田
+	if (Input::IsTriggerKey(DIK_SPACE) || Input::IsControllerTriggerButton(XINPUT_GAMEPAD_A,0)) {
 		isReqestStript_ = true;
 		striptTimer_ = striptDuration_;
 	}
@@ -139,7 +151,7 @@ void FloorGamePlayer::ShotFloor() {
 		return;
 	}
 	// 床投げ入力
-	if (Input::IsTriggerKey(DIK_SPACE)) {
+	if (Input::IsTriggerKey(DIK_SPACE)||Input::IsControllerTriggerButton(XINPUT_GAMEPAD_A, 0)) {
 		isReqestShot_ = true;
 		isStriptting_ = false;
 		shotTimer_ = shotDuration_;
