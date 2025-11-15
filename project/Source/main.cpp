@@ -17,7 +17,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // ==============================================//↓基本いじらない↓//============================================
     //エンジンの生成
     std::unique_ptr<MyEngine> myEngine = std::make_unique<MyEngine>();
-    myEngine->Create(L"2206_チーム制作二回目", WIN_WIDTH, WIN_HEIGHT);
+    myEngine->Create(L"2206_ベリベリベンジ！", WIN_WIDTH, WIN_HEIGHT);
     // ==============================================//↑基本いじらない↑//============================================
 
     //画面の色
@@ -77,7 +77,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #ifdef USE_IMGUI
         DebugUI::CheckColor(screenColor, "screenColor");
-       
+
         for (const auto& [sceneName, scenePtr] : scenes) { 
             if (scenePtr.get() == currentScene) {
                 ImGui::Text("%s", sceneName.c_str());

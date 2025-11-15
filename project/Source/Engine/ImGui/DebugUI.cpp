@@ -16,10 +16,8 @@
 #include"Camera.h"
 #include"JsonFile.h"
 
-
 #include<numbers>
 #include<algorithm>
-
 
 struct Param {
     char name[128];
@@ -71,14 +69,14 @@ void DebugUI::CheckCamera(Camera& camera) {
 #endif
 }
 
-void DebugUI::SaveJsonFile()
+
+void DebugUI::CheckJsonFile()
 {
 #ifdef USE_IMGUI
 
     if (ImGui::TreeNode("Json")) {
 
-
-        if (ImGui::TreeNode("NewFile")) {
+        if (ImGui::TreeNode("CreateNewFile")) {
 
             static char tagBuffer[128] = "";
             ImGui::InputText("FileTag", tagBuffer, IM_ARRAYSIZE(tagBuffer));
@@ -119,13 +117,12 @@ void DebugUI::SaveJsonFile()
 
             nlohmann::json& jsonFile = JsonFile::GetJsonFiles(tagOptions[tag_current]);
 
+            ImGui::Separator();
             if (ImGui::TreeNode("ShowJsonData")) {
-
-                ImGui::Separator();
                 ImGui::Text("Name: %s", tagOptions[tag_current]);
                 ImGui::TextWrapped("Data: %s", jsonFile.dump(2).c_str());
-                ImGui::Separator();
                 ImGui::TreePop();
+                ImGui::Separator();
             }
 
             static char structName[128] = "structName";
@@ -144,7 +141,7 @@ void DebugUI::SaveJsonFile()
                             JsonFile::ClearModified(tagOptions[tag_current]);
                         }
 
-                        if (ImGui::InputText(params[i].name, params[i].value, IM_ARRAYSIZE(params[i].value))) {
+                        if (ImGui::InputText("Value##", params[i].value, IM_ARRAYSIZE(params[i].value))) {
                             JsonFile::ClearModified(tagOptions[tag_current]);
                         }
 
@@ -506,7 +503,13 @@ void DebugUI::CheckBlendMode(uint32_t& blendMode) {
 
 void DebugUI::CheckFPS() {
 #ifdef USE_IMGUI
-    ImGui::Text("FPS : %f", ImGui::GetIO().Framerate);
+
+    if (ImGui::GetIO().Framerate < 55.0f) {
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "FPS : %0.1f", ImGui::GetIO().Framerate);
+    } else {
+        ImGui::TextColored(ImVec4(0, 1, 0, 1), "FPS : %0.1f", ImGui::GetIO().Framerate);
+    }
+
 #endif
 }
 

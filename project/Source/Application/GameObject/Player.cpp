@@ -166,7 +166,6 @@ void Player::LookBack()
     DebugUI::CheckCharacterState(characterState_, "player");
     DebugUI::CheckMesh(*cubeMesh_, "PlayerCube");
     DebugUI::CheckMesh(*model_, "PlayerModel");
-    DebugUI::SaveJsonFile();
 #endif // USE_IMGUI
 
     if (Input::IsTriggerMouse(1) || Input::IsControllerTriggerLTRT(BUTTON_RIGHT, 0)) {
