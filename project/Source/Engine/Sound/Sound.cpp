@@ -36,59 +36,63 @@ void Sound::LoadAllSound()
 
     //サウンドの読み込み
     handles_[BGM1] = Load("Resource/Sounds/externals/sea.mp3");
-
     handles_[PICO] = Load("Resource/Sounds/pico.mp3");
     handles_[CRACKER] = Load("Resource/Sounds/cracker_short.mp3");
-
     handles_[FOOT_STEP] = Load("Resource/Sounds/externals/maou_se_sound_footstep02.mp3");
 
 }
 
-void Sound::PlayBGM(const uint32_t index, const float& volumeOffset, const bool& loop)
+void Sound::PlayBGM(const TAG& tag, const float& volumeOffset, const bool& loop)
 {
+    SetVol(bgmVolume_ + volumeOffset, tag);
+
     if (!IsPlayingAll()) {
-        Play(handles_[index], bgmVolume_ + volumeOffset, loop);
+
+        Play(handles_[tag], bgmVolume_ + volumeOffset, loop);
+    }
+
+
+}
+
+void Sound::PlaySE(const TAG& tag, const float& volumeOffset, const bool& loop)
+{
+    Play(handles_[tag], seVolume_ + volumeOffset);
+
+}
+
+void Sound::PlayLoopSE(const TAG& tag, const float& volumeOffset)
+{
+    if (!IsPlaying(tag)) {
+        Play(handles_[tag], seVolume_ + volumeOffset, true);
     }
 }
 
-void Sound::PlaySE(const uint32_t index, const float& volumeOffset, const bool& loop)
+void Sound::PlayOriginSE(const TAG& tag, const float& volumeOffset)
 {
-    Play(handles_[index], seVolume_ + volumeOffset);
-}
-
-void Sound::PlayLoopSE(const uint32_t index, const float& volumeOffset)
-{
-    if (!IsPlaying(handles_[index])) {
-        Play(handles_[index], seVolume_ + volumeOffset, true);
+    if (!IsPlaying(tag)) {
+        Play(handles_[tag], seVolume_ + volumeOffset, false);
     }
 }
 
-void Sound::PlayOriginSE(const uint32_t handleIndex, const float& volumeOffset)
+void Sound::Pause(const TAG& tag)
 {
-    if (!IsPlaying(handles_[handleIndex])) {
-        Play(handles_[handleIndex], seVolume_ + volumeOffset, false);
-    }
-}
-
-void Sound::Pause(const uint32_t handleIndex)
-{
-    auto it = voices_.find(handles_[handleIndex]);
+    auto it = voices_.find(handles_[tag]);
     if (it != voices_.end() && it->second != nullptr) {
         it->second->Stop(); // バッファは保持されたまま停止
     }
 }
 
-void Sound::Resume(const uint32_t handleIndex)
+void Sound::Resume(const TAG& tag)
 {
-    auto it = voices_.find(handles_[handleIndex]);
+    auto it = voices_.find(handles_[tag]);
     if (it != voices_.end() && it->second != nullptr) {
         it->second->Start(); // 停止した位置から再開
     }
 }
 
-void Sound::Stop(const uint32_t index)
+void Sound::Stop(const TAG& tag)
 {
-    auto it = voices_.find(handles_[index]);
+    auto it = voices_.find(handles_[tag]);
     if (it != voices_.end() && it->second != nullptr) {
         it->second->Stop(); // バッファは保持されたまま停止
         it->second->Discontinuity();
@@ -98,9 +102,9 @@ void Sound::Stop(const uint32_t index)
 
 }
 
-bool Sound::IsPlaying(const uint32_t& index) {
+bool Sound::IsPlaying(const TAG& tag) {
 
-    auto it = voices_.find(handles_[index]);
+    auto it = voices_.find(handles_[tag]);
     if (it != voices_.end() && it->second != nullptr) {
         XAUDIO2_VOICE_STATE state{};
         it->second->GetState(&state);
@@ -144,6 +148,42 @@ uint32_t Sound::GetSoundByIndex(const std::string& filePath)
 
     assert(0);
     return 0;
+}
+
+XAUDIO2_BUFFER Sound::GetBuffer(const TAG& tag)
+{
+    XAUDIO2_BUFFER buf{};
+    buf.pAudioData = soundDatas[handles_[tag]].mediaData.data();
+    buf.AudioBytes = static_cast<UINT32>(soundDatas[handles_[tag]].mediaData.size());
+    buf.Flags = XAUDIO2_END_OF_STREAM;
+
+    return buf;
+}
+
+std::vector<float> Sound::GetWaveform(const TAG& tag)
+{
+    XAUDIO2_BUFFER buf = Sound::GetBuffer(tag);
+    std::vector<float> waveform;
+    const int16_t* pcm = reinterpret_cast<const int16_t*>(buf.pAudioData);
+    size_t sampleCount = buf.AudioBytes / sizeof(int16_t);
+
+    // オーディオ入力コールバック側（例）
+    waveform.resize(sampleCount);
+    for (size_t i = 0; i < sampleCount; ++i) {
+        waveform[i] = pcm[i] / 32768.0f; // -32768〜32767 → -1.0〜1.0
+    }
+    return waveform;
+}
+
+UINT64 Sound::GetSamplesPlayed(const TAG& tag)
+{
+    XAUDIO2_VOICE_STATE state{};
+    auto it = voices_.find(handles_[tag]);
+    if (it != voices_.end() && it->second != nullptr) {
+        it->second->GetState(&state);
+    }
+
+    return state.SamplesPlayed;
 }
 
 void Sound::Unload(SoundData& soundData) {
@@ -192,6 +232,17 @@ void Sound::Play(const uint32_t& handle, const float& volume, const bool& isLoop
     voices_[handle] = newVoice;
 };
 
+
+void Sound::SetVol(const float& vol, const TAG& tag)
+{
+    auto it = voices_.find(handles_[tag]);
+    if (it != voices_.end() && it->second != nullptr) {
+        float newVolume = vol;
+        //最大値と最小値を入れる
+        newVolume = std::clamp(newVolume, 0.0f, 1.0f);
+        it->second->SetVolume(newVolume);
+    }
+}
 
 bool Sound::IsPlayingAll() {
 

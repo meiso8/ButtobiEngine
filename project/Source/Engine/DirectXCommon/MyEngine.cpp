@@ -128,7 +128,7 @@ void MyEngine::Debug()
     DebugUI::CheckFPS();
     DebugUI::CheckInput(*input);
     DebugUI::CheckDirectionalLight();
-
+    DebugUI::CheckSound();
 #endif // USE_IMGUI
 
 

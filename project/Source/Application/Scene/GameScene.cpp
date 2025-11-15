@@ -78,7 +78,7 @@ void GameScene::Update() {
     sceneChange_->Update();
 
     //仮に音声を鳴らす　全体のvolumeがあってオフセット分だけいじる
-    Sound::PlayBGM(Sound::BGM1, 0.1f);
+    Sound::PlayBGM(Sound::BGM1, 0.0f);
 
     UpdateCamera();
 
