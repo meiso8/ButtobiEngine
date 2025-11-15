@@ -400,6 +400,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <None Include="externals\assimp\lib\Debug\assimp-vc143-mtd.pdb" />
+    <None Include="Resource\JsonFiles\asdfasdf.json" />
     <None Include="Resource\JsonFiles\config.json" />
   </ItemGroup>
   <ItemGroup>

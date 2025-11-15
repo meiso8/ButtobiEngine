@@ -1,6 +1,6 @@
 {
     "CharacterState": {
-        "hp": 10,
+        "hp": 100,
         "isAttack": false
     }
 }
