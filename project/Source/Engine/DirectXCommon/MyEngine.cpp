@@ -106,9 +106,6 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
 
     particleManager_ = std::make_unique <ParticleManager>();
 
-
-
-
     //ファイルへのログ出力
     LogFile::Log("LoopStart");
 
@@ -127,9 +124,11 @@ void MyEngine::Update() {
 void MyEngine::Debug()
 {
 #ifdef USE_IMGUI
+    DebugUI::CheckJsonFile();
     DebugUI::CheckFPS();
     DebugUI::CheckInput(*input);
     DebugUI::CheckDirectionalLight();
+
 #endif // USE_IMGUI
 
 
