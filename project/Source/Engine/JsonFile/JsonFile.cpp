@@ -1,10 +1,16 @@
 #include "JsonFile.h"
-
+#include <filesystem>
 std::unordered_map<std::string, JsonData>JsonFile::jsonFiles_;
 
 void JsonFile::LoadAllJsonFile()
 {
-    LoadJson("config");
+    std::string folder = "Resource/JsonFiles/";
+    for (const auto& entry : std::filesystem::directory_iterator(folder)) {
+        if (entry.path().extension() == ".json") {
+            std::string filename = entry.path().stem().string(); // 拡張子なしのファイル名
+            LoadJson(filename);
+        }
+    }
 }
 
 void JsonFile::LoadJson(const std::string& Tag) {
@@ -23,6 +29,12 @@ void JsonFile::LoadJson(const std::string& Tag) {
     file >> jsonFiles_[Tag].data;
 
 }
+
+const std::unordered_map <std::string, JsonData >JsonFile::GetJsonData()
+{
+    return jsonFiles_;
+}
+
 void JsonFile::SaveJson(const std::string& Tag) {
 
     if (jsonFiles_.contains(Tag)) {
@@ -37,6 +49,8 @@ void JsonFile::SaveJson(const std::string& Tag) {
 
 }
 void JsonFile::SetJson(const std::string& tag, const nlohmann::json& j) {
-    jsonFiles_[tag].data = j;
-    jsonFiles_[tag].path = "Resource/JsonFiles/" + tag + ".json";
+    JsonData& data = jsonFiles_[tag];
+    data.data = j;
+    data.path = "Resource/JsonFiles/" + tag + ".json";
+    SaveJson(tag);
 }

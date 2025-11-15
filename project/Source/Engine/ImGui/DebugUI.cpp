@@ -21,6 +21,12 @@
 #include<algorithm>
 
 
+struct Param {
+    char name[128];
+    char value[128];
+};
+
+
 void DebugUI::CheckInt(int& value, const char* label) {
 
 #ifdef USE_IMGUI
@@ -69,72 +75,119 @@ void DebugUI::SaveJsonFile()
 {
 #ifdef USE_IMGUI
 
-    // 保存完了フラグ
-    static bool saved = false;
+    if (ImGui::TreeNode("Json")) {
 
-    if (ImGui::TreeNode("Save Json")) {
 
-        static char tagBuffer[128] = "";
-        static char name[128] = "name";
-        static char name0[128] = "param0";
-        static char name1[128] = "param1";
-        static char name2[128] = "param2";
+        if (ImGui::TreeNode("NewFile")) {
 
-        static char buffer0[128] = "";
-        static char buffer1[128] = "";
-        static char buffer2[128] = "";
+            static char tagBuffer[128] = "";
+            ImGui::InputText("FileTag", tagBuffer, IM_ARRAYSIZE(tagBuffer));
 
-        ImGui::InputText("FileTag", tagBuffer, IM_ARRAYSIZE(tagBuffer));
-        ImGui::InputText("StructName", name, IM_ARRAYSIZE(name));
-       
-        if (ImGui::TreeNode("param0")) {
+            if (ImGui::Button("Create")) {
+                // 新しい構造化JSONを作成
+                nlohmann::json newJson;
+                // 管理マップに登録
+                JsonFile::SetJson(tagBuffer, newJson);
+                JsonFile::MarkModified(tagBuffer);
+            }
 
-            ImGui::InputText("param0Name", name0, IM_ARRAYSIZE(name0));
-            ImGui::InputText(name0, buffer0, IM_ARRAYSIZE(buffer0));
             ImGui::TreePop();
         }
 
-        if (ImGui::TreeNode("param1")) {
-            ImGui::InputText("param1Name", name1, IM_ARRAYSIZE(name1));
-            ImGui::InputText(name1, buffer1, IM_ARRAYSIZE(buffer1));
+        if (ImGui::TreeNode("FindTag")) {
+
+            // 安定した文字列保持用
+            static std::vector<std::string> tagStrings;
+            static std::vector<const char*> tagOptions;
+
+            tagStrings.clear();
+            tagOptions.clear();
+
+            for (const auto& [tag, data] : JsonFile::GetJsonData()) {
+                tagStrings.push_back(tag); // std::string を保持
+            }
+
+            for (const auto& str : tagStrings) {
+                tagOptions.push_back(str.c_str()); // 安定したポインタを取得
+            }
+
+            // ImGui::Combo に渡す
+            static int tag_current = 0;
+            if (ImGui::Combo("Tags", &tag_current, tagOptions.data(), static_cast<int>(tagOptions.size()))) {
+                ImGui::Text("Tag: %s", tagOptions[tag_current]);
+            }
+
+            nlohmann::json& jsonFile = JsonFile::GetJsonFiles(tagOptions[tag_current]);
+
+            if (ImGui::TreeNode("ShowJsonData")) {
+
+                ImGui::Separator();
+                ImGui::Text("Name: %s", tagOptions[tag_current]);
+                ImGui::TextWrapped("Data: %s", jsonFile.dump(2).c_str());
+                ImGui::Separator();
+                ImGui::TreePop();
+            }
+
+            static char structName[128] = "structName";
+            static std::vector<Param> params = {};
+
+            if (ImGui::TreeNode("AddParam")) {
+                           
+                if (ImGui::InputText("StructName", structName, IM_ARRAYSIZE(structName))) {
+                    JsonFile::ClearModified(tagOptions[tag_current]);
+                }
+
+                for (size_t i = 0; i < params.size(); ++i) {
+                    if (ImGui::TreeNode(("param" + std::to_string(i)).c_str())) {
+
+                        if (ImGui::InputText(("Name##" + std::to_string(i)).c_str(), params[i].name, IM_ARRAYSIZE(params[i].name))) {
+                            JsonFile::ClearModified(tagOptions[tag_current]);
+                        }
+
+                        if (ImGui::InputText(params[i].name, params[i].value, IM_ARRAYSIZE(params[i].value))) {
+                            JsonFile::ClearModified(tagOptions[tag_current]);
+                        }
+
+                        // 削除ボタン
+                        if (ImGui::Button(("Delete##" + std::to_string(i)).c_str())) {
+                            params.erase(params.begin() + i);
+                            ImGui::TreePop(); // 消したあとに TreeNode を閉じておく
+                            break; // erase したらループを抜ける（インデックスがズレるのを防ぐため）
+                        }
+
+                        ImGui::TreePop();
+                    }
+                }
+
+                // パラメータ追加ボタン
+                if (ImGui::Button("Add New Param")) {
+                    params.push_back({ "newParam", "" });
+                    JsonFile::ClearModified(tagOptions[tag_current]);
+                }
+
+
+                ImGui::TreePop();
+            }
+
+            if (ImGui::Button("Save")) {
+
+                for (const auto& param : params) {
+                    jsonFile[structName][param.name] = param.value;
+                }
+                // ファイル保存
+                JsonFile::SaveJson(tagOptions[tag_current]);
+                JsonFile::MarkModified(tagOptions[tag_current]);
+
+            }
+
+            // 保存完了メッセージを表示
+            if (JsonFile::IsModified(tagOptions[tag_current])) {
+                ImGui::TextColored(ImVec4(0, 1, 0, 1), "File saved");
+            } else {
+                ImGui::TextColored(ImVec4(1, 0, 0, 1), "File not saved.");
+            }
+
             ImGui::TreePop();
-        }
-
-        if (ImGui::TreeNode("param2")) {
-            ImGui::InputText("param2Name", name2, IM_ARRAYSIZE(name2));
-            ImGui::InputText(name2, buffer2, IM_ARRAYSIZE(buffer2));
-            ImGui::TreePop();
-        }
-
-        if (ImGui::Button("Save")) {
-
-            nlohmann::json& jsonFile = JsonFile::GetJsonFiles(tagBuffer);
-            jsonFile[name][name0] = buffer0;
-            jsonFile[name][name1] = buffer1;
-            jsonFile[name][name2] = buffer2;
-            // ファイル保存
-            JsonFile::SaveJson(tagBuffer);
-            saved = true;
-        }
-
-        if (ImGui::Button("CreateNewFile")) {
-
-            // 新しい構造化JSONを作成
-            nlohmann::json newJson;
-            newJson[name][name0] = buffer0;
-            newJson[name][name1] = buffer1;
-            newJson[name][name2] = buffer2;
-            // 管理マップに登録
-            JsonFile::SetJson(tagBuffer, newJson);
-
-            // ファイル保存
-            JsonFile::SaveJson(tagBuffer);
-            saved = true;
-        }
-
-        // 保存完了メッセージを表示
-        if (saved) {
-            ImGui::TextColored(ImVec4(0, 1, 0, 1), "FileSaved");
         }
 
         ImGui::TreePop();

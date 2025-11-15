@@ -726,6 +726,7 @@
       <Filter>externals\assimp</Filter>
     </None>
     <None Include="Resource\JsonFiles\config.json" />
+    <None Include="Resource\JsonFiles\asdfasdf.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png">
