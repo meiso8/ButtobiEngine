@@ -30,6 +30,7 @@ class DebugUI
 {
 public:
     static void CheckFPS();
+    static void CheckSound();
     static void CheckJsonFile();
     static void CheckCharacterState(CharacterState& state, const char* label);
     /// @brief 入力
