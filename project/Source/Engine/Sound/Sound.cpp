@@ -27,7 +27,6 @@ float Sound::seVolume_ = 0.5f;
 void Sound::LoadAllSound()
 {
 #ifdef _DEBUG
-
     bgmVolume_ = 0.0f;
     seVolume_ = 0.1f;
 #endif // _DEBUG
