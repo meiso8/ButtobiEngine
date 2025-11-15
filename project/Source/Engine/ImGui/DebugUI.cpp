@@ -524,15 +524,17 @@ void DebugUI::CheckSound()
         ImGui::SliderFloat("BGM Val", &Sound::bgmVolume_, 0.0f, 1.0f);
 
         // 正規化済みのモノラル波形バッファ
-        static int writeIdx = 0;
-        std::vector<float> waveform = Sound::GetWaveform(Sound::BGM1);
-        writeIdx = (int)(Sound::GetSamplesPlayed(Sound::BGM1) % waveform.size());
+        if (ImGui::TreeNode("ShowOscilloscope")) {
+            static int writeIdx = 0;
+            std::vector<float> waveform = Sound::GetWaveform(Sound::BGM1);
+            writeIdx = (int)(Sound::GetSamplesPlayed(Sound::BGM1) % waveform.size());
 
-        float scale = Sound::bgmVolume_; // 0.0〜1.0
+            float scale = Sound::bgmVolume_; // 0.0〜1.0
 
-        ImGui::PlotLines("oscilloscope", waveform.data(), (int)waveform.size(), writeIdx,
-            nullptr, -scale, scale, ImVec2(0, 64));
-
+            ImGui::PlotLines("", waveform.data(), (int)waveform.size(), writeIdx,
+                nullptr, -scale, scale, ImVec2(0, 64));
+            ImGui::TreePop();
+        }
         ImGui::TreePop();
     };
 #endif
