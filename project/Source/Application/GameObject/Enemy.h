@@ -62,7 +62,7 @@ private:
     SphericalCoordinate sphericalPos_;
     Vector3 startPos_ = { 0.0f };
     Vector3 endPos_ = { 0.0f };
-
+    float poyoAnimTimer_ = 0.0f;
 private:
     void SetPhase(PHASE phase);
     void Round();
@@ -74,5 +74,10 @@ private:
     void Exit();
     void UpdateTimer();
     void LookTarget();
+    void PoyoPoyo(const float& endTimer = 0.25f);
+    void HitUpdate();
+    void LerpScale();
+    void RotateY
+    ();
 };
 
