@@ -19,10 +19,6 @@ FloorGameFloor::FloorGameFloor() {
       { FloorType::Strong, ModelManager::GetModel(ModelManager::PLAYER_ARM_L) }
     };
 
-    //cubeMesh_ = std::make_unique<CubeMesh>();
-    //cubeMesh_.get()->Create(Texture::WHITE_1X1);
-    //cubeMesh_->SetColor({ 0.5f,0.5f,0.5f,1.0f });
-
     body_.SetMesh(models_[FloorType::Normal]);
 }
 
