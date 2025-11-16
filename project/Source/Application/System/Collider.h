@@ -10,7 +10,7 @@ class Collider {
 public:
 	Collider();
 	/// @brief 衝突時コールバック関数
-	virtual void OnCollision() = 0;
+	virtual void OnCollision(Collider* collider) = 0;
 
 	/// @brief ワールド座標を取得する
 	/// @return ワールド座標

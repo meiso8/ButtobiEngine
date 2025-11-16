@@ -20,7 +20,7 @@ public:
     void Draw(Camera& camera,const LightMode& lightMode);
     void Update();
     Vector3 GetWorldPosition()const override;
-    void OnCollision()override;
+    void OnCollision(Collider* collder)override;
     void SetTarget(Vector3& target) { target_ = &target; };
 private:
     float actionTimer_ = 0.0f;

@@ -25,9 +25,9 @@ Enemy::Enemy()
     Init();
 
     SetRadius(1.5f);
-    SetCollisionAttribute(kCollisionAttributeEnemy);
+    SetCollisionAttribute(kCollisionEnemy);
     // 敵は「プレイヤー」と「プレイヤーの弾」と衝突したい
-    SetCollisionMask(kCollisionAttributePlayer | kCollisionAttributePlayerBullet);
+    SetCollisionMask(kCollisionPlayer | kCollisionPlayerBullet);
 }
 
 void Enemy::Init()
@@ -89,19 +89,18 @@ Vector3 Enemy::GetWorldPosition()const
     return bodyPos_.worldTransform_.GetWorldPosition();
 }
 
-void Enemy::OnCollision()
+void Enemy::OnCollision(Collider* collider)
 {
     //デバック用
     OnCollisionCollider();
 
-    bodyPos_.SetColor({ 1.0f,0.0f,0.0f,1.0f });
-
-    if (characterState_.isHit) {
-        return;
+    if (collider->GetCollisionAttribute() == kCollisionPlayerBullet) {
+        bodyPos_.SetColor({ 1.0f,0.0f,0.0f,1.0f });
+        if (characterState_.isHit) {
+            return;
+        }
+        characterState_.isHit = true;
     }
-
-    characterState_.isHit = true;
-
 }
 
 

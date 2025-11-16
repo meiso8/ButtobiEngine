@@ -34,7 +34,7 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 
 	// 衝突判定
 	if (IsCollision(sphereA, sphereB)) {
-		colliderA->OnCollision();
-		colliderB->OnCollision();
+		colliderA->OnCollision(colliderB);
+		colliderB->OnCollision(colliderA);
 	}
 }
