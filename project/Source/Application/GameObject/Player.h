@@ -6,6 +6,7 @@
 #include"CharacterState.h"
 #include"AABB.h"
 
+
 class Model;
 class Camera;
 enum LightMode;

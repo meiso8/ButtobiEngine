@@ -4,8 +4,9 @@
 #include"MyEngine.h"
 #include"Easing.h"
 #include<algorithm>
-#include"Collision.h"
+
 #include"CubeMesh.h"
+#include"CollisionConfig.h"
 
 FloorBullet::FloorBullet() {
 	body_.Create();
@@ -13,6 +14,11 @@ FloorBullet::FloorBullet() {
 	cubeMesh_.get()->Create(Texture::WHITE_1X1);
 	cubeMesh_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 	body_.SetMesh(cubeMesh_.get());
+
+	SetRadius(0.5f);
+	SetCollisionAttribute(kCollisionAttributePlayerBullet);
+	// 弾は「敵」とだけ衝突したい
+	SetCollisionMask(kCollisionAttributeEnemy);
 }
 
 FloorBullet::~FloorBullet() {
@@ -27,8 +33,20 @@ void FloorBullet::Initialize() {
 	isActive_ = false;
 	size_ = 1.0f;
 }
-
+void FloorBullet::OnCollision()
+{
+	if (!isActive_) {
+		return;
+	}
+	//デバック用
+	OnCollisionCollider();
+}
+Vector3 FloorBullet::GetWorldPosition() const
+{
+	return body_.worldTransform_.GetWorldPosition();
+}
 void FloorBullet::Update() {
+	
 	if (!isActive_) {
 		return;
 	}
@@ -43,14 +61,22 @@ void FloorBullet::Update() {
 	body_.worldTransform_.rotate_ = moveDir_;
 	body_.worldTransform_.translate_ += moveDir_ * moveSpeed_;
 	body_.Update();
+
+	ColliderUpdate();
+
 }
 
 void FloorBullet::Draw(Camera& camera, const LightMode& lightType) {
+	
+
 	if (!isActive_) {
 		return;
 	}
 	body_.SetLightMode(lightType);
 	body_.Draw(camera, kBlendModeNormal);
+	ColliderDraw(camera);
+
+
 }
 
 void FloorBullet::Shot(const Vector3& position, const Vector3& direction, const float& speed, const float& size) {

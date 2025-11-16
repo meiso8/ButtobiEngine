@@ -3,14 +3,15 @@
 #include"Object3d.h"
 #include"AABB.h"
 #include"CharacterState.h"
-#include"SphereMesh.h"
+
+#include"Collider.h"
 #include<memory>
 
 class Model;
 class Camera;
 enum LightMode;
 
-class Enemy
+class Enemy :public Collider
 {
 public:
 
@@ -18,17 +19,14 @@ public:
     void Init();
     void Draw(Camera& camera,const LightMode& lightMode);
     void Update();
-    Sphere GetWorldSphere();
-    Vector3 GetWorldPos();
-    void OnCollision();
+    Vector3 GetWorldPosition()const override;
+    void OnCollision()override;
     void SetTarget(Vector3& target) { target_ = &target; };
 private:
     float actionTimer_ = 0.0f;
     //目標地点
     Vector3* target_ = nullptr;
-    //デバック用
-    std::unique_ptr<SphereMesh>sphereMesh_;
-    Sphere sphere_;
+
     //モデル
     Model* model_;
     //体の位置

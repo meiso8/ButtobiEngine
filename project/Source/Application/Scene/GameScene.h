@@ -18,6 +18,8 @@
 #include "Enemy.h"
 #pragma endregion
 
+#include"CollisionManager.h"
+
 class GameScene :public SceneManager {
 
 public:
@@ -43,4 +45,5 @@ private:
     std::unique_ptr<FloorPlayerStripTargetUI>floorPlayerStripTargetUI_ = nullptr;
     std::unique_ptr<Enemy>enemy_ = nullptr;
 #pragma endregion
+    std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
 };

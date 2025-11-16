@@ -42,11 +42,13 @@
 
 GameScene::GameScene()
 {
-
     // 現在のカメラを設定
     currentCamera_ = camera_.get();
 
 #pragma region // オブジェクト生成
+    //衝突判定管理
+    collisionManager_ = std::make_unique<CollisionManager>();
+
     floorGamePlayer_ = std::make_unique<FloorGamePlayer>();
     floorGameFloorManager_ = std::make_unique<FloorGameFloorManager>();
     floorStripManager_ = std::make_unique<FloorStripManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
@@ -59,7 +61,7 @@ GameScene::GameScene()
 
 void GameScene::Initialize() {
 
-    MyEngine::GetDirectionalLightData()->direction = {0.0f,0.0f,1.0f};
+    MyEngine::GetDirectionalLightData()->direction = { 0.0f,0.0f,1.0f };
 
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 60);
@@ -77,6 +79,8 @@ void GameScene::Initialize() {
     floorPlayerStripTargetUI_->Initialize();
     enemy_->SetTarget(floorGamePlayer_->body_.worldTransform_.translate_);
 #pragma endregion
+    collisionManager_->ClearColliders();
+
 }
 
 void GameScene::Update() {
@@ -152,6 +156,17 @@ void GameScene::UpdateGameObject()
 
 void GameScene::CheckAllCollision()
 {
+
+    collisionManager_->ClearColliders();
+
+    collisionManager_->AddCollider(floorGamePlayer_.get());
+    collisionManager_->AddCollider(enemy_.get());
+
+    for (auto& bullet : floorBulletManager_->GetBullets()) {
+        if (bullet->isActive_) { collisionManager_->AddCollider(bullet.get()); }
+    }
+
+    collisionManager_->CheckAllCollisions();
 }
 
 GameScene::~GameScene()

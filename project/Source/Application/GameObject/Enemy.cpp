@@ -5,11 +5,12 @@
 #include"Input.h"
 #include"Sound.h"
 #include"JsonFile.h"
+#include"CollisionConfig.h"
 
 //テーブルにポインタを入れる
 void(Enemy::* Enemy::spFuncTable[])() {
     &Enemy::Tackle,
-    &Enemy::Fireball,
+        & Enemy::Fireball,
         & Enemy::FloorChangeAttack,
         & Enemy::ShockWaveAttack,
         & Enemy::Exit,
@@ -18,16 +19,15 @@ void(Enemy::* Enemy::spFuncTable[])() {
 Enemy::Enemy()
 {
     model_ = ModelManager::GetModel(ModelManager::ENEMY);
-    sphereMesh_ = std::make_unique<SphereMesh>();
-    sphereMesh_->Create(Texture::WHITE_1X1);
-    sphere_ = { { 0.0f,0.0f,0.0f }, { 1.0f } };
-    sphereMesh_->SetVertex(sphere_);
-
     bodyPos_.Create();
-    //bodyPos_.SetMesh(cubeMesh_.get());
-    bodyPos_.SetMesh(sphereMesh_.get());
+    bodyPos_.SetMesh(model_);
+    bodyPos_.worldTransform_.scale_ = { 3.0f,3.0f,3.0f };
     Init();
 
+    SetRadius(1.5f);
+    SetCollisionAttribute(kCollisionAttributeEnemy);
+    // 敵は「プレイヤー」と「プレイヤーの弾」と衝突したい
+    SetCollisionMask(kCollisionAttributePlayer | kCollisionAttributePlayerBullet);
 }
 
 void Enemy::Init()
@@ -41,10 +41,11 @@ void Enemy::Init()
     velocity_ = { 2.0f,2.0f,2.0f };
 }
 
-void Enemy::Draw(Camera& camera,const LightMode& lightMode)
+void Enemy::Draw(Camera& camera, const LightMode& lightMode)
 {
     bodyPos_.SetLightMode(lightMode);
     bodyPos_.Draw(camera, kBlendModeNormal);
+    ColliderDraw(camera);
 }
 
 void Enemy::Update()
@@ -80,22 +81,19 @@ void Enemy::Update()
     }
 
     bodyPos_.Update();
+    ColliderUpdate();
 }
 
-Sphere Enemy::GetWorldSphere()
-{
-    return Sphere(sphere_.center+ GetWorldPos(),sphere_.radius);
-}
-
-Vector3 Enemy::GetWorldPos()
+Vector3 Enemy::GetWorldPosition()const
 {
     return bodyPos_.worldTransform_.GetWorldPosition();
 }
 
 void Enemy::OnCollision()
 {
-    //仮に音を鳴らす
-    Sound::PlayOriginSE(Sound::PICO);
+    //デバック用
+    OnCollisionCollider();
+
     bodyPos_.SetColor({ 1.0f,0.0f,0.0f,1.0f });
 
     if (characterState_.isHit) {
