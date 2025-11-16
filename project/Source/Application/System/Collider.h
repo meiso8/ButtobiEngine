@@ -1,10 +1,14 @@
 #pragma once
 #include "Vector3.h"
 #include <cstdint>
+#include"SphereMesh.h"
+#include"Object3d.h"
+class Camera;
 
 /// @brief 衝突判定オブジェクト
 class Collider {
 public:
+	Collider();
 	/// @brief 衝突時コールバック関数
 	virtual void OnCollision() = 0;
 
@@ -36,8 +40,21 @@ public:
 	/// @param mask 衝突マスク
 	void SetCollisionMask(uint32_t mask) { collisionMask_ = mask; }
 
+	void ColliderUpdate();
+	void ColliderDraw(Camera& camera);
+	void OnCollisionCollider();
 private:
 	float radius_ = 1.0f;						// 衝突半径
 	uint32_t collisionAttribute_ = 0xffffffff;	// 衝突属性
 	uint32_t collisionMask_ = 0xffffffff;		// 衝突マスク
+
+
+#ifdef _DEBUG
+	//デバック用
+	std::unique_ptr<SphereMesh>sphereMesh_;
+	//体の位置
+	Object3d object3d_;
+#endif // DEBUG
+
+
 };

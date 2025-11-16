@@ -1,9 +1,8 @@
 {
     "CharacterState": {
         "hp": 100,
-        "isAttack": false
-    },
-    "structName": {
-        "newParam": ""
+        "isAttack": false,
+        "isHit": false
     }
+
 }

@@ -38,23 +38,30 @@
 #include"Collision.h"
 #include"Circle.h"
 
+#include"MyEngine.h"
+
 GameScene::GameScene()
 {
-
     // 現在のカメラを設定
     currentCamera_ = camera_.get();
 
 #pragma region // オブジェクト生成
+    //衝突判定管理
+    collisionManager_ = std::make_unique<CollisionManager>();
+
     floorGamePlayer_ = std::make_unique<FloorGamePlayer>();
     floorGameFloorManager_ = std::make_unique<FloorGameFloorManager>();
     floorStripManager_ = std::make_unique<FloorStripManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
     floorBulletManager_ = std::make_unique<FloorBulletManager>();
     floorPlayerShotBulletManager_ = std::make_unique<FloorPlayerShotBulletManager>(floorGamePlayer_.get(), floorBulletManager_.get());
     floorPlayerStripTargetUI_ = std::make_unique<FloorPlayerStripTargetUI>(floorGamePlayer_.get());
+    enemy_ = std::make_unique<Enemy>();
 #pragma endregion
 }
 
 void GameScene::Initialize() {
+
+    MyEngine::GetDirectionalLightData()->direction = { 0.0f,0.0f,1.0f };
 
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 60);
@@ -70,7 +77,10 @@ void GameScene::Initialize() {
     floorBulletManager_->Initialize();
     floorPlayerShotBulletManager_->Initialize();
     floorPlayerStripTargetUI_->Initialize();
+    enemy_->SetTarget(floorGamePlayer_->body_.worldTransform_.translate_);
 #pragma endregion
+    collisionManager_->ClearColliders();
+
 }
 
 void GameScene::Update() {
@@ -95,10 +105,11 @@ void GameScene::Draw() {
 #endif
 
 #pragma region // オブジェクト描画
-    floorGamePlayer_->Draw(*currentCamera_, LightMode::kLightModeNone);
-    floorGameFloorManager_->Draw(*currentCamera_, LightMode::kLightModeNone);
-    floorBulletManager_->Draw(*currentCamera_, LightMode::kLightModeNone);
-    floorPlayerStripTargetUI_->Draw(*currentCamera_, LightMode::kLightModeNone);
+    floorGamePlayer_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    floorGameFloorManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    floorBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    floorPlayerStripTargetUI_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    enemy_->Draw(*currentCamera_, kLightModeHalfL);
 #pragma endregion
 
     //シーン遷移を描画する
@@ -135,6 +146,7 @@ void GameScene::UpdateGameObject()
     floorGamePlayer_->Update();
     floorGameFloorManager_->Update();
     floorBulletManager_->Update();
+    enemy_->Update();
 
     // オブジェクト同士の干渉
     floorStripManager_->Update();
@@ -144,6 +156,17 @@ void GameScene::UpdateGameObject()
 
 void GameScene::CheckAllCollision()
 {
+
+    collisionManager_->ClearColliders();
+
+    collisionManager_->AddCollider(floorGamePlayer_.get());
+    collisionManager_->AddCollider(enemy_.get());
+
+    for (auto& bullet : floorBulletManager_->GetBullets()) {
+        if (bullet->isActive_) { collisionManager_->AddCollider(bullet.get()); }
+    }
+
+    collisionManager_->CheckAllCollisions();
 }
 
 GameScene::~GameScene()

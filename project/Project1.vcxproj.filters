@@ -354,6 +354,9 @@
     <ClCompile Include="Source\Engine\JsonFile\JsonFile.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Application\System\Collider.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -726,7 +729,7 @@
       <Filter>externals\assimp</Filter>
     </None>
     <None Include="Resource\JsonFiles\config.json" />
-    <None Include="Resource\JsonFiles\asdfasdf.json" />
+    <None Include="Resource\JsonFiles\Boss.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png">

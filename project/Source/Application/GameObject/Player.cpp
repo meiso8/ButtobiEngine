@@ -57,6 +57,7 @@ void Player::Init()
 
     characterState_.hp = file["CharacterState"]["hp"];
     characterState_.isAttack = file["CharacterState"]["isAttack"];
+    characterState_.isHit = file["CharacterState"]["isHit"];
 }
 
 void Player::Draw(Camera& camera, const LightMode& lightType)

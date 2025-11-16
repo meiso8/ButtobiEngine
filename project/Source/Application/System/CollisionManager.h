@@ -17,7 +17,6 @@ public:
     void CheckAllCollisions();
 
 private:
-    static inline constexpr float deltaTime = 1.0f / 60.0f; // デルタタイム
     std::list<Collider*> colliders_; // コライダーのリスト
     /// @brief コライダー2つの衝突判定と応答
     /// @param colliderA コライダーA

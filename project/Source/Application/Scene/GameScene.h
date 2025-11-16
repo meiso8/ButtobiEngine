@@ -15,7 +15,10 @@
 #include "MatsumotoObj/GameSceneObj/FloorBulletManager.h"
 #include "MatsumotoObj/GameSceneObj/FloorPlayerShotBulletManager.h"
 #include "MatsumotoObj/GameSceneObj/FloorPlayerStripTargetUI.h"
+#include "Enemy.h"
 #pragma endregion
+
+#include"CollisionManager.h"
 
 class GameScene :public SceneManager {
 
@@ -34,11 +37,13 @@ private:
     void CheckAllCollision();
 private:
 #pragma region//ゲームオブジェクト
-	std::unique_ptr<FloorGamePlayer>floorGamePlayer_ = nullptr;
-	std::unique_ptr<FloorGameFloorManager>floorGameFloorManager_ = nullptr;
-	std::unique_ptr<FloorStripManager>floorStripManager_ = nullptr;
-	std::unique_ptr<FloorBulletManager>floorBulletManager_ = nullptr;
-	std::unique_ptr<FloorPlayerShotBulletManager>floorPlayerShotBulletManager_ = nullptr;
-	std::unique_ptr<FloorPlayerStripTargetUI>floorPlayerStripTargetUI_ = nullptr;
+    std::unique_ptr<FloorGamePlayer>floorGamePlayer_ = nullptr;
+    std::unique_ptr<FloorGameFloorManager>floorGameFloorManager_ = nullptr;
+    std::unique_ptr<FloorStripManager>floorStripManager_ = nullptr;
+    std::unique_ptr<FloorBulletManager>floorBulletManager_ = nullptr;
+    std::unique_ptr<FloorPlayerShotBulletManager>floorPlayerShotBulletManager_ = nullptr;
+    std::unique_ptr<FloorPlayerStripTargetUI>floorPlayerStripTargetUI_ = nullptr;
+    std::unique_ptr<Enemy>enemy_ = nullptr;
 #pragma endregion
+    std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
 };

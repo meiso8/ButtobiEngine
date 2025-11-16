@@ -4,91 +4,97 @@
 #include"Camera.h"
 #include"Input.h"
 #include"Sound.h"
+#include"JsonFile.h"
+#include"CollisionConfig.h"
 
 //テーブルにポインタを入れる
 void(Enemy::* Enemy::spFuncTable[])() {
-    &Enemy::Approach,
-        & Enemy::Attack,
+    &Enemy::Tackle,
+        & Enemy::Fireball,
+        & Enemy::FloorChangeAttack,
+        & Enemy::ShockWaveAttack,
         & Enemy::Exit,
 };
 
 Enemy::Enemy()
 {
     model_ = ModelManager::GetModel(ModelManager::ENEMY);
-    cubeMesh_ = std::make_unique<CubeMesh>();
-    cubeMesh_->Create(Texture::WHITE_1X1);
     bodyPos_.Create();
-    bodyPos_.SetMesh(cubeMesh_.get());
-    localAabb_ = { .min = {-1.0f,-1.0f,-1.0f},.max = {1.0f,1.0f,1.0f} };
-    cubeMesh_->SetMinMax(localAabb_);
+    bodyPos_.SetMesh(model_);
+    bodyPos_.worldTransform_.scale_ = { 3.0f,3.0f,3.0f };
     Init();
 
+    SetRadius(1.5f);
+    SetCollisionAttribute(kCollisionAttributeEnemy);
+    // 敵は「プレイヤー」と「プレイヤーの弾」と衝突したい
+    SetCollisionMask(kCollisionAttributePlayer | kCollisionAttributePlayerBullet);
 }
 
 void Enemy::Init()
 {
-    bodyPos_.Initialize();
-    characterState_ = { .isHit = false,.isAttack = false,.hp = 100 };
-    cubeMesh_->SetColor({ 1.0f,1.0f,1.0f,0.5f });
+    Json file = JsonFile::GetJsonFiles("Boss");
+    actionTimer_ = file["First"]["ActionTimer"];
+    characterState_.hp = file["First"]["HP"];
+    characterState_.isAttack = false;
+    characterState_.isHit = false;
+    bodyPos_.SetColor({ 1.0f,1.0f,1.0f,1.0f });
     velocity_ = { 2.0f,2.0f,2.0f };
 }
 
-void Enemy::Draw(Camera& camera)
+void Enemy::Draw(Camera& camera, const LightMode& lightMode)
 {
+    bodyPos_.SetLightMode(lightMode);
     bodyPos_.Draw(camera, kBlendModeNormal);
+    ColliderDraw(camera);
 }
 
-void Enemy::Update()  
-{  
-   // とりあえずフェーズが最大になったら処理を終える  
-   if (phase_ >= MAX_PHASE || phase_ < 0) {  
-       return;  
-   }  
+void Enemy::Update()
+{
+    // とりあえずフェーズが最大になったら処理を終える  
+    if (phase_ >= MAX_PHASE || phase_ < 0) {
+        return;
+    }
 
-   // 呼び出す  
-   (this->*spFuncTable[static_cast<size_t>(phase_ % MAX_PHASE)])();  
+    // 呼び出す  
+    (this->*spFuncTable[static_cast<size_t>(phase_ % MAX_PHASE)])();
 
 #ifdef _DEBUG  
-   if (Input::IsTriggerKey(DIK_Z)) {  
+    if (Input::IsTriggerKey(DIK_Z)) {
 
-       if (!characterState_.isAttack) {
-           characterState_.isAttack = true;
-       }
- 
-   }  
+        if (!characterState_.isAttack) {
+            characterState_.isAttack = true;
+        }
 
-   if (Input::IsTriggerKey(DIK_X)) {  
-       phase_ = APPROACH;  
-   }  
+    }
 
-   if (Input::IsTriggerKey(DIK_C)) {  
-       phase_ = EXIT;  
-   }  
+    if (Input::IsTriggerKey(DIK_X)) {
+        phase_ = APPROACH;
+    }
+
+    if (Input::IsTriggerKey(DIK_C)) {
+        phase_ = EXIT;
+    }
 #endif // _DEBUG  
 
-   if (characterState_.isAttack) {
-       phase_ = ATTACK;
-   }
+    if (characterState_.isAttack) {
+        phase_ = ATTACK;
+    }
 
-   bodyPos_.Update();  
+    bodyPos_.Update();
+    ColliderUpdate();
 }
 
-AABB Enemy::GetWorldAABB()
-{
-    Vector3 pos = GetWorldPos();
-    return { pos + localAabb_.min,pos + localAabb_.max };
-}
-
-Vector3 Enemy::GetWorldPos()
+Vector3 Enemy::GetWorldPosition()const
 {
     return bodyPos_.worldTransform_.GetWorldPosition();
 }
 
 void Enemy::OnCollision()
 {
-    //仮に音を鳴らす
-    Sound::PlayOriginSE(Sound::PICO);
-    cubeMesh_->SetColor({ 1.0f,0.0f,0.0f,0.5f });
+    //デバック用
+    OnCollisionCollider();
+
+    bodyPos_.SetColor({ 1.0f,0.0f,0.0f,1.0f });
 
     if (characterState_.isHit) {
         return;
@@ -99,26 +105,39 @@ void Enemy::OnCollision()
 }
 
 
-void Enemy::Approach()
+
+void Enemy::Tackle()
 {
 
     if (target_ == nullptr) {
         return;
     }
 
-    Vector3 direction =  Normalize(*target_ - bodyPos_.worldTransform_.GetWorldPosition());
-    bodyPos_.worldTransform_.translate_ += direction*InverseFPS* velocity_;
-    cubeMesh_->SetColor({ 1.0f,1.0f,0.0f,0.5f });
+    Vector3 direction = Normalize(*target_ - bodyPos_.worldTransform_.GetWorldPosition());
+    bodyPos_.worldTransform_.translate_ += direction * InverseFPS * velocity_;
+    bodyPos_.SetColor({ 1.0f,1.0f,0.0f,1.0f });
 }
 
-void Enemy::Attack()
+void Enemy::Fireball()
 {
     //bodyPos_.worldTransform_.rotate_.y += std::numbers::pi_v<float> *InverseFPS;
-    cubeMesh_->SetColor({ 0.0f,1.0f,0.0f,0.5f });
+    bodyPos_.SetColor({ 0.0f,1.0f,0.0f,1.0f });
 
 }
 
+void Enemy::FloorChangeAttack()
+{
+    //bodyPos_.worldTransform_.rotate_.y += std::numbers::pi_v<float> *InverseFPS;
+    bodyPos_.SetColor({ 0.0f,1.0f,0.0f,1.0f });
+
+}
+void Enemy::ShockWaveAttack()
+{
+    //bodyPos_.worldTransform_.rotate_.y += std::numbers::pi_v<float> *InverseFPS;
+    bodyPos_.SetColor({ 0.0f,1.0f,0.0f,1.0f });
+
+}
 void Enemy::Exit()
 {
-    cubeMesh_->SetColor({ 0.0f,0.0f,1.0f,1.0f });
+    bodyPos_.SetColor({ 0.0f,0.0f,1.0f,1.0f });
 }
