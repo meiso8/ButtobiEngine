@@ -22,16 +22,26 @@ public:
     Vector3 GetWorldPosition()const override;
     void OnCollision(Collider* collder)override;
     void SetTarget(Vector3& target) { target_ = &target; };
+    Vector3 GetToTarget() { 
+        if (target_ != nullptr) {
+            return Normalize(*target_ - bodyPos_.worldTransform_.GetWorldPosition());
+        }
+        
+        return { 0.0f };
+    }
+    bool isShot_ = false;
+    //体の位置
+    Object3d bodyPos_;
 private:
     float timer_ = 0.0f;
     float actionTime_ = 0.0f;
+    float fireBallCoolTime_ = 0.0f;
     //目標地点
     Vector3* target_ = nullptr;
 
     //モデル
     Model* model_;
-    //体の位置
-    Object3d bodyPos_;
+
     //キャラクターの共通でもつ状態
     CharacterState characterState_;
 
@@ -63,6 +73,9 @@ private:
     Vector3 startPos_ = { 0.0f };
     Vector3 endPos_ = { 0.0f };
     float poyoAnimTimer_ = 0.0f;
+    float endRotateY_ = 0.0f;
+    float startRotateY_ = 0.0f;
+
 private:
     void SetPhase(PHASE phase);
     void Round();
@@ -77,7 +90,6 @@ private:
     void PoyoPoyo(const float& endTimer = 0.25f);
     void HitUpdate();
     void LerpScale();
-    void RotateY
-    ();
+    void RotateY (const float& timer);
 };
 

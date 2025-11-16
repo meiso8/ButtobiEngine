@@ -157,6 +157,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyShotBulletManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBulletManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBullet.cpp" />
     <ClCompile Include="Source\Application\Scene\ResultScene.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorBullet.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorBulletManager.cpp" />
@@ -168,7 +171,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorStripManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\MY_Utility.cpp" />
     <ClCompile Include="Source\Application\Scene\GameScene.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Enemy.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Enemy\Enemy.cpp" />
     <ClCompile Include="externals\imgui\imgui.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -269,6 +272,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\Scene\TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyShotBulletManager.h" />
+    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBulletManager.h" />
+    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBullet.h" />
     <ClInclude Include="Source\Application\Scene\ResultScene.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorBullet.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorBulletManager.h" />
@@ -281,7 +287,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\KeyBindConfig.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\MY_Utility.h" />
     <ClInclude Include="Source\Application\Scene\GameScene.h" />
-    <ClInclude Include="Source\Application\GameObject\Enemy.h" />
+    <ClInclude Include="Source\Application\GameObject\Enemy\Enemy.h" />
     <ClInclude Include="Source\Application\GameObject\CharacterState.h" />
     <ClInclude Include="Source\Application\GameObject\Field.h" />
     <ClInclude Include="Source\Application\GameObject\Player.h" />

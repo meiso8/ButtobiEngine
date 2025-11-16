@@ -122,7 +122,7 @@ void Enemy::Tackle()
     } else if (timer_ < 3.7f) {
         float localTimer = (timer_ - 3.0f) / 0.7f;
         LerpScale();
-       bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(startPos_, endPos_, localTimer);
+        bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(startPos_, endPos_, localTimer);
 
     } else if (timer_ < 4.7f) {
         float localTimer = (timer_ - 3.7f) / 1.0f;
@@ -137,15 +137,17 @@ void Enemy::Tackle()
 
 void Enemy::Knockback()
 {
-    if (timer_ < 1.0f) {
-        RotateY();
+    if (timer_ <=  1.0f) {
+        RotateY(timer_);
     }
 
     if (timer_ < 0.25f) {
-     
-    } else if (timer_ >= 0.25f&&timer_ <= 2.0f) {
-        bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(endPos_, startPos_, timer_/2.0f);
+
+    } else if (timer_ >= 0.25f && timer_ <= 2.0f) {
+        bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(endPos_, startPos_, timer_ / 2.0f);
         bodyPos_.SetColor({ 1.0f - timer_,0.0f,0.0f,1.0f });
+        LookTarget();
+    
     } else {
         SetPhase(ROUND);
     }
@@ -155,6 +157,12 @@ void Enemy::SetPhase(PHASE phase)
 {
     timer_ = 0.0f;
     phase_ = phase;
+    poyoAnimTimer_ = 0.0f;
+
+    if (phase_ == FIREBALL || phase_ == KNOCKBACK) {
+        startRotateY_ = bodyPos_.worldTransform_.rotate_.y;
+        endRotateY_ = startRotateY_ + std::numbers::pi_v<float>*2.0f;
+    }
 }
 
 void Enemy::Round()
@@ -168,15 +176,35 @@ void Enemy::Round()
     bodyPos_.SetColor({ 0.0f,0.0f,0.0f,1.0f });
 
     if (timer_ >= actionTime_) {
-        poyoAnimTimer_ = 0.0f;
-        SetPhase(TACKLE);
+        int randNum = rand() % 2;
+        if (randNum == 0) {
+            SetPhase(TACKLE);
+        } else {
+            SetPhase(FIREBALL);
+        }
+
     }
 }
 
 void Enemy::Fireball()
 {
     if (timer_ <= 1.0f) {
-        RotateY();
+        RotateY(timer_);
+        fireBallCoolTime_ = 0.0f;
+    } else {
+
+        LookTarget();
+
+        fireBallCoolTime_ += InverseFPS;
+
+        if (fireBallCoolTime_ > 1.0f) {
+            fireBallCoolTime_ = 0.0f;
+            isShot_ = true;
+        }
+    }
+
+    if (timer_ >= actionTime_) {
+        SetPhase(ROUND);
     }
 
     bodyPos_.SetColor({ 1.0f,1.0f,0.0f,1.0f });
@@ -249,7 +277,7 @@ void Enemy::LerpScale()
     bodyPos_.worldTransform_.scale_ = Lerp(Vector3{ bodyPos_.worldTransform_.scale_ }, { 3.0f,3.0f,3.0f }, 0.5f);
 }
 
-void Enemy::RotateY()
+void Enemy::RotateY(const float& timer)
 {
-    bodyPos_.worldTransform_.rotate_.y = Easing::EaseInBack(bodyPos_.worldTransform_.rotate_.y,std::numbers::phi_v<float>*2.0f,0.5f);
+    bodyPos_.worldTransform_.rotate_.y = Easing::EaseInBack(startRotateY_, endRotateY_,timer);
 }
