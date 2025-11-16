@@ -247,7 +247,6 @@ void Enemy::HitUpdate()
 void Enemy::LerpScale()
 {
     bodyPos_.worldTransform_.scale_ = Lerp(Vector3{ bodyPos_.worldTransform_.scale_ }, { 3.0f,3.0f,3.0f }, 0.5f);
-
 }
 
 void Enemy::RotateY()
