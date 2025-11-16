@@ -16,9 +16,9 @@ FloorBullet::FloorBullet() {
 	body_.SetMesh(cubeMesh_.get());
 
 	SetRadius(0.5f);
-	SetCollisionAttribute(kCollisionAttributePlayerBullet);
+	SetCollisionAttribute(kCollisionPlayerBullet);
 	// 弾は「敵」とだけ衝突したい
-	SetCollisionMask(kCollisionAttributeEnemy);
+	SetCollisionMask(kCollisionEnemy);
 }
 
 FloorBullet::~FloorBullet() {
@@ -33,7 +33,7 @@ void FloorBullet::Initialize() {
 	isActive_ = false;
 	size_ = 1.0f;
 }
-void FloorBullet::OnCollision()
+void FloorBullet::OnCollision(Collider* collider)
 {
 	if (!isActive_) {
 		return;

@@ -17,18 +17,20 @@ FloorGamePlayer::FloorGamePlayer() {
 
     SetRadius(0.5f);
 
-    SetCollisionAttribute(kCollisionAttributePlayer);
+    SetCollisionAttribute(kCollisionPlayer);
     //敵のみと衝突
-    SetCollisionMask(kCollisionAttributeEnemy);
+    SetCollisionMask(kCollisionEnemy);
 }
 
 FloorGamePlayer::~FloorGamePlayer() {
 }
 
-void FloorGamePlayer::OnCollision()
+void FloorGamePlayer::OnCollision(Collider* collider)
 {
-    //デバック用
-    OnCollisionCollider();
+    if (collider->GetCollisionAttribute() == kCollisionEnemy) {
+        //デバック用
+        OnCollisionCollider();
+    }
 }
 
 void FloorGamePlayer::Initialize() {

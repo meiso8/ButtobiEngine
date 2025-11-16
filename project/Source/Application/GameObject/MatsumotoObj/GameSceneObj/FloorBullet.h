@@ -15,7 +15,7 @@ class FloorBullet :public Collider
 public:
     FloorBullet();
     ~FloorBullet();
-    void OnCollision()override;
+    void OnCollision(Collider* collider)override;
     Vector3 GetWorldPosition() const;
     void Initialize();
     void Update();
