@@ -59,5 +59,6 @@ void FloorPlayerStripTargetUI::Draw(Camera& camera, const LightMode& lightType) 
 	if (!isActive_) {
 		return;
 	}
+	body_.SetLightMode(lightType);
 	body_.Draw(camera, kBlendModeNormal);
 }

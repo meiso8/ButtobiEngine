@@ -66,6 +66,8 @@ void FloorGamePlayer::Update() {
 }
 
 void FloorGamePlayer::Draw(Camera& camera, const LightMode& lightType) {
+	
+	body_.SetLightMode(lightType);
 	body_.Draw(camera, kBlendModeNormal);
 }
 
