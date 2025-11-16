@@ -3,7 +3,7 @@
 #include"Object3d.h"
 #include"AABB.h"
 #include"CharacterState.h"
-
+#include"Circle.h"
 #include"Collider.h"
 #include<memory>
 
@@ -17,13 +17,14 @@ public:
 
     Enemy();
     void Init();
-    void Draw(Camera& camera,const LightMode& lightMode);
+    void Draw(Camera& camera, const LightMode& lightMode);
     void Update();
     Vector3 GetWorldPosition()const override;
     void OnCollision(Collider* collder)override;
     void SetTarget(Vector3& target) { target_ = &target; };
 private:
-    float actionTimer_ = 0.0f;
+    float timer_ = 0.0f;
+    float actionTime_ = 0.0f;
     //目標地点
     Vector3* target_ = nullptr;
 
@@ -33,7 +34,10 @@ private:
     Object3d bodyPos_;
     //キャラクターの共通でもつ状態
     CharacterState characterState_;
-    
+
+    Circle enemyRoundCircle_ = { {0.0f,0.0f,0.0f} ,7.0f};
+    Circle enemyFieldCircle_ = { {0.0f,0.0f,0.0f} ,9.0f };
+
     enum State {
         FIRST,
         SECOND,
@@ -41,21 +45,34 @@ private:
     };
 
     enum PHASE {
-        APPROACH,
-        ATTACK,
+        ROUND,
+        FIREBALL,
+        FLOORCHANGEATTACK,
+        TACKLE,
+        KNOCKBACK,
+        SHOCKWAVEATTACK,
         EXIT,
         MAX_PHASE
     };
 
     //メンバ関数ポインタテーブル
-    static void(Enemy::* spFuncTable[])();
-    PHASE phase_ = PHASE::APPROACH;
+    std::unordered_map<PHASE, std::function<void()>> UpdateActions_;
+    PHASE phase_ = PHASE::ROUND;
     Vector3 velocity_ = { 0.0f };
+    SphericalCoordinate sphericalPos_;
+    Vector3 startPos_ = { 0.0f };
+    Vector3 endPos_ = { 0.0f };
+
 private:
+    void SetPhase(PHASE phase);
+    void Round();
     void Fireball();
     void FloorChangeAttack();
     void Tackle();
+    void Knockback();
     void ShockWaveAttack();
     void Exit();
+    void UpdateTimer();
+    void LookTarget();
 };
 

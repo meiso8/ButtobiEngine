@@ -6,18 +6,22 @@
 #include"Sound.h"
 #include"JsonFile.h"
 #include"CollisionConfig.h"
-
-//テーブルにポインタを入れる
-void(Enemy::* Enemy::spFuncTable[])() {
-    &Enemy::Tackle,
-        & Enemy::Fireball,
-        & Enemy::FloorChangeAttack,
-        & Enemy::ShockWaveAttack,
-        & Enemy::Exit,
-};
+#include"SphericalCoordinate.h"
+#include"Collision.h"
+#include"Easing.h"
 
 Enemy::Enemy()
 {
+    UpdateActions_ = {
+         {PHASE::ROUND, std::bind(&Enemy::Round, this)},
+         {PHASE::FIREBALL, std::bind(&Enemy::Fireball, this)},
+         {PHASE::FLOORCHANGEATTACK, std::bind(&Enemy::FloorChangeAttack, this)},
+         {PHASE::TACKLE, std::bind(&Enemy::Tackle, this)},
+         {PHASE::KNOCKBACK, std::bind(&Enemy::Knockback, this)},
+         {PHASE::SHOCKWAVEATTACK, std::bind(&Enemy::ShockWaveAttack, this)},
+         {PHASE::EXIT, std::bind(&Enemy::Exit, this)},
+    };
+
     model_ = ModelManager::GetModel(ModelManager::ENEMY);
     bodyPos_.Create();
     bodyPos_.SetMesh(model_);
@@ -33,12 +37,15 @@ Enemy::Enemy()
 void Enemy::Init()
 {
     Json file = JsonFile::GetJsonFiles("Boss");
-    actionTimer_ = file["First"]["ActionTimer"];
+    actionTime_ = file["First"]["ActionTimer"];
     characterState_.hp = file["First"]["HP"];
     characterState_.isAttack = false;
     characterState_.isHit = false;
     bodyPos_.SetColor({ 1.0f,1.0f,1.0f,1.0f });
-    velocity_ = { 2.0f,2.0f,2.0f };
+
+    velocity_ = { 10.0f,10.0f,10.0f };
+    sphericalPos_ = { .radius = 0.0f,.azimuthal = 0.0f ,.polar = 0.0f };
+
 }
 
 void Enemy::Draw(Camera& camera, const LightMode& lightMode)
@@ -55,31 +62,22 @@ void Enemy::Update()
         return;
     }
 
-    // 呼び出す  
-    (this->*spFuncTable[static_cast<size_t>(phase_ % MAX_PHASE)])();
 
 #ifdef _DEBUG  
-    if (Input::IsTriggerKey(DIK_Z)) {
-
-        if (!characterState_.isAttack) {
-            characterState_.isAttack = true;
-        }
-
-    }
-
-    if (Input::IsTriggerKey(DIK_X)) {
-        phase_ = APPROACH;
-    }
 
     if (Input::IsTriggerKey(DIK_C)) {
-        phase_ = EXIT;
+        phase_ = FIREBALL;
     }
+
+    if (Input::IsTriggerKey(DIK_V)) {
+        phase_ = FLOORCHANGEATTACK;
+    }
+
 #endif // _DEBUG  
 
-    if (characterState_.isAttack) {
-        phase_ = ATTACK;
-    }
-
+    UpdateTimer();
+    // 呼び出す  
+    UpdateActions_[phase_]();
     bodyPos_.Update();
     ColliderUpdate();
 }
@@ -96,38 +94,91 @@ void Enemy::OnCollision(Collider* collider)
 
     if (collider->GetCollisionAttribute() == kCollisionPlayerBullet) {
         bodyPos_.SetColor({ 1.0f,0.0f,0.0f,1.0f });
-        if (characterState_.isHit) {
-            return;
-        }
-        characterState_.isHit = true;
     }
+
+    if (collider->GetCollisionAttribute() == kCollisionPlayer) {
+        if (phase_ == TACKLE) {
+            SetPhase(KNOCKBACK);
+        }
+    }
+
 }
-
-
 
 void Enemy::Tackle()
 {
 
-    if (target_ == nullptr) {
+
+    if (timer_ <= 3.0f) {
+
+        if (timer_ <= 2.0f) {
+            LookTarget();
+        }
+
+        float theta = std::numbers::pi_v<float> *timer_;
+        bodyPos_.worldTransform_.scale_.x = 3.0f + cos(theta) * 0.5f;
+        bodyPos_.worldTransform_.scale_.y = 3.0f + sin(theta) * 0.5f;
+        bodyPos_.SetColor({ timer_ / 3.0f,0.0f,0.0f,1.0f });
+
+
+    } else if (timer_ < 3.7f) {
+        float localTimer = (timer_ - 3.0f) / 0.7f;
+        bodyPos_.worldTransform_.scale_ = Lerp(Vector3{ bodyPos_.worldTransform_.scale_ }, { 3.0f,3.0f,3.0f }, 0.5f);
+        bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(startPos_, endPos_, localTimer);
+
+    } else if (timer_ < 4.7f) {
+        float localTimer = (timer_ - 3.7f) / 1.0f;
+        bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(endPos_, startPos_, localTimer);
+        bodyPos_.SetColor({ 1.0f - localTimer,0.0f,0.0f,1.0f });
+    } else {
+        SetPhase(ROUND);
         return;
     }
 
-    Vector3 direction = Normalize(*target_ - bodyPos_.worldTransform_.GetWorldPosition());
-    bodyPos_.worldTransform_.translate_ += direction * InverseFPS * velocity_;
-    bodyPos_.SetColor({ 1.0f,1.0f,0.0f,1.0f });
+}
+
+void Enemy::Knockback()
+{
+
+    if (timer_ <= 1.0f) {
+        bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(endPos_, startPos_, timer_);
+        bodyPos_.SetColor({ 1.0f - timer_,0.0f,0.0f,1.0f });
+    } else {
+        SetPhase(ROUND);
+    }
+}
+
+void Enemy::SetPhase(PHASE phase)
+{
+    timer_ = 0.0f;
+    phase_ = phase;
+}
+
+void Enemy::Round()
+{
+    sphericalPos_.radius = Lerp(sphericalPos_.radius,enemyRoundCircle_.radius,0.5f);
+    sphericalPos_.polar += InverseFPS;
+    if (sphericalPos_.polar >= std::numbers::pi_v<float>*2.0f) { sphericalPos_.polar = 0.0f; } 
+    LookTarget();
+    bodyPos_.worldTransform_.translate_ = TransformCoordinate(sphericalPos_);
+
+    bodyPos_.SetColor({ 0.0f,0.0f,0.0f,1.0f });
+
+    if (timer_ >= actionTime_) {
+        SetPhase(TACKLE);
+    }
 }
 
 void Enemy::Fireball()
 {
     //bodyPos_.worldTransform_.rotate_.y += std::numbers::pi_v<float> *InverseFPS;
-    bodyPos_.SetColor({ 0.0f,1.0f,0.0f,1.0f });
+    bodyPos_.SetColor({ 1.0f,1.0f,0.0f,1.0f });
 
 }
 
 void Enemy::FloorChangeAttack()
 {
     //bodyPos_.worldTransform_.rotate_.y += std::numbers::pi_v<float> *InverseFPS;
-    bodyPos_.SetColor({ 0.0f,1.0f,0.0f,1.0f });
+    bodyPos_.SetColor({ 0.0f,0.0f,1.0f,1.0f });
 
 }
 void Enemy::ShockWaveAttack()
@@ -138,5 +189,24 @@ void Enemy::ShockWaveAttack()
 }
 void Enemy::Exit()
 {
-    bodyPos_.SetColor({ 0.0f,0.0f,1.0f,1.0f });
+    bodyPos_.SetColor({ 0.0f,0.0f,0.0f,1.0f });
+}
+
+void Enemy::UpdateTimer()
+{
+    if (timer_ < actionTime_) {
+        timer_ += InverseFPS;
+    } else {
+        timer_ = actionTime_;
+    }
+
+}
+
+void Enemy::LookTarget()
+{
+    startPos_ = GetWorldPosition();
+    endPos_ = *target_;
+    Vector3 direction = endPos_ - startPos_;
+    bodyPos_.worldTransform_.rotate_.y = std::atan2(direction.x, direction.z); // Y軸回転（ラジアン）
+
 }

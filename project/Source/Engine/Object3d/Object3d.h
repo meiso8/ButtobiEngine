@@ -5,6 +5,8 @@
 #include"Camera.h"  
 #include"MeshCommon.h"
 #include"WorldTransform.h"
+
+
 enum LightMode;
 class Object3d
 {

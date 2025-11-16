@@ -66,7 +66,7 @@ void GameScene::Initialize() {
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 60);
     camera_->Initialize();
-    camera_->translate_ = { 0.0f, 14.0f,-8.0f };
+    camera_->translate_ = { 0.0f, 16.0f,-8.0f };
     camera_->rotate_ = { 1.2f,0.0f,0.0f };
     camera_->UpdateMatrix();
 
