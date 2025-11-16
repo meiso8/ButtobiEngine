@@ -15,7 +15,10 @@
 #include "MatsumotoObj/GameSceneObj/FloorBulletManager.h"
 #include "MatsumotoObj/GameSceneObj/FloorPlayerShotBulletManager.h"
 #include "MatsumotoObj/GameSceneObj/FloorPlayerStripTargetUI.h"
-#include "Enemy.h"
+#include "Enemy/Enemy.h"
+#include "Enemy/EnemyBulletManager.h"
+#include "Enemy/EnemyShotBulletManager.h"
+
 #pragma endregion
 
 #include"CollisionManager.h"
@@ -43,7 +46,10 @@ private:
     std::unique_ptr<FloorBulletManager>floorBulletManager_ = nullptr;
     std::unique_ptr<FloorPlayerShotBulletManager>floorPlayerShotBulletManager_ = nullptr;
     std::unique_ptr<FloorPlayerStripTargetUI>floorPlayerStripTargetUI_ = nullptr;
+
     std::unique_ptr<Enemy>enemy_ = nullptr;
+    std::unique_ptr<EnemyBulletManager>enemyBulletManager_ = nullptr;
+    std::unique_ptr<EnemyShotBulletManager>enemyShotBulletManager_ = nullptr;
 #pragma endregion
     std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
 };
