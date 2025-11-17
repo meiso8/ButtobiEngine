@@ -105,7 +105,7 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
 #endif
 
     particleManager_ = std::make_unique <ParticleManager>();
-
+    particleManager_->Create();
     //ファイルへのログ出力
     LogFile::Log("LoopStart");
 

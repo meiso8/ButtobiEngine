@@ -1,7 +1,7 @@
 #include "FloorPlayerShotBulletManager.h"
 #include "FloorGamePlayer.h"
 #include "FloorBulletManager.h"
-
+#include"Sound.h"
 FloorPlayerShotBulletManager::FloorPlayerShotBulletManager(FloorGamePlayer* player, FloorBulletManager* bulletManager) :
 	player_(player), bulletManager_(bulletManager) {
 }
@@ -17,6 +17,7 @@ void FloorPlayerShotBulletManager::Update() {
 
 	// 床投げ
 	if (player_->isReqestShot_) {
+		Sound::PlaySE(Sound::THROW_FLOOR);
 		player_->isReqestShot_ = false;
 		// プレイヤーの向いている方向に床を投げる
 		Vector3 shotDirection = player_->GetLookDir();

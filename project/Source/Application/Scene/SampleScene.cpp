@@ -71,7 +71,7 @@ SampleScene::SampleScene()
 
 
     particleManager_ = ParticleManager::GetInstance();
-    particleManager_->Create();
+
     particleManager_->CreateParticleGroup("uvChecker", Texture::UV_CHECKER);
     particleManager_->CreateParticleGroup("white", Texture::WHITE_1X1);
     particleEmitter_ = std::make_unique<ParticleEmitter>();
