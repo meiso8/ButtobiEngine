@@ -38,7 +38,8 @@ void Sound::LoadAllSound()
     handles_[PICO] = Load("Resource/Sounds/pico.mp3");
     handles_[CRACKER] = Load("Resource/Sounds/cracker_short.mp3");
     handles_[FOOT_STEP] = Load("Resource/Sounds/externals/maou_se_sound_footstep02.mp3");
-
+    handles_[FIRE_BALL] = Load("Resource/Sounds/externals/fireBall.mp3");
+    handles_[THROW_FLOOR] = Load("Resource/Sounds/externals/throwFloor.mp3");
 }
 
 void Sound::PlayBGM(const TAG& tag, const float& volumeOffset, const bool& loop)

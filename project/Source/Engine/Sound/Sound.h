@@ -33,6 +33,10 @@ public:
         CRACKER,
         FOOT_STEP,
 
+        FIRE_BALL,
+        THROW_FLOOR,
+
+
         SOUNDS
     };
 

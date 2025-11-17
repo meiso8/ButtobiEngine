@@ -96,11 +96,14 @@ void Enemy::OnCollision(Collider* collider)
 
     if (collider->GetCollisionAttribute() == kCollisionPlayerBullet) {
         if (!characterState_.isHit) {
+            characterState_.isHit = true;
+
+
+            Sound::PlaySE(Sound::);
+
             if (characterState_.hps.hp > 0) {
                 characterState_.hps.hp--;
             }
-
-            characterState_.isHit = true;
             poyoAnimTimer_ = 0.0f;
         }
     }

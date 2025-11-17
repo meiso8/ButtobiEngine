@@ -3,6 +3,7 @@
 #include "Enemy.h"
 #include "EnemyBulletManager.h"
 
+#include"Sound.h"
 EnemyShotBulletManager::EnemyShotBulletManager(Enemy* enemy, EnemyBulletManager* bulletManager) :
 	enemy_(enemy), bulletManager_(bulletManager) {
 }
@@ -18,6 +19,7 @@ void EnemyShotBulletManager::Update() {
 
 	// 弾投げ
 	if (enemy_->isShot_) {
+		Sound::PlaySE(Sound::FIRE_BALL);
 		enemy_->isShot_ = false;
 		// playerに向かって投げる
 		Vector3 shotDirection = enemy_->GetToTarget();
