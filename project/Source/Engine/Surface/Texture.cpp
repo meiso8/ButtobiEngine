@@ -19,6 +19,7 @@ void Texture::LoadAllTexture() {
     handles[NUMBERS] = Load("Resource/Textures/numbers.png");
     handles[TEST] = Load("Resource/Textures/test.png");
     handles[HART] = Load("Resource/Textures/hart.png");
+    handles[HP_GAGE_EFFECCT] = Load("Resource/Textures/hpGageEffect.png");
 }
 
 uint32_t Texture::Load(const std::string& filePath)

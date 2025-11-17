@@ -23,6 +23,7 @@ public:
         NUMBERS,
         TEST,
         HART,
+        HP_GAGE_EFFECCT,
         TEXTURES
     };
     static void LoadAllTexture();
