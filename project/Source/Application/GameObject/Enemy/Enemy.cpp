@@ -99,7 +99,7 @@ void Enemy::OnCollision(Collider* collider)
             characterState_.isHit = true;
 
 
-            Sound::PlaySE(Sound::);
+            Sound::PlaySE(Sound::CRACKER);
 
             if (characterState_.hps.hp > 0) {
                 characterState_.hps.hp--;
