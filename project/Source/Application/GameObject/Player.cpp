@@ -51,11 +51,10 @@ void Player::Init()
     lookBackTime_ = 1.0f;
     isLookBackEnd_ = true;
 
-    characterState_ = { .isHit = false,.isAttack = false,  .hp = 100 };
-
     Json file = JsonFile::GetJsonFiles("config");
 
-    characterState_.hp = file["CharacterState"]["hp"];
+    characterState_.hps.hp = file["CharacterState"]["hp"];
+    characterState_.hps.maxHp = file["CharacterState"]["hp"];
     characterState_.isAttack = file["CharacterState"]["isAttack"];
     characterState_.isHit = file["CharacterState"]["isHit"];
 }

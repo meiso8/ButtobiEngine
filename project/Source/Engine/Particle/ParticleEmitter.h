@@ -10,7 +10,8 @@ struct Emitter
     uint32_t cont;//発生数
     float frequency;//発生頻度
     float frequencyTime;//頻度用時刻
-
+    bool isRandom;
+    Vector4 color;
 };
 
 class ParticleEmitter
@@ -18,9 +19,7 @@ class ParticleEmitter
 private:
 
     std::string name_ = "unknown";
-    bool isRandom_ = false;
-    Vector3 scale_ = { 1.0f,1.0f,1.0f };
-    Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
+
 public:
     Emitter emitter_{};
 public:

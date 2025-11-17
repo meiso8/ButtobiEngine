@@ -20,9 +20,9 @@ public:
     void Create(const Texture::TEXTURE_HANDLE& textureHandle, const Vector2& position, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
 
     void Update();
-
+    void UpdateAnchorPoint();
     static void PreDraw(uint32_t blendMode = BlendMode::kBlendModeNormal);
-    void Draw(const LightMode& lightMode =LightMode::kLightModeNone
+    void Draw(const LightMode& lightMode = LightMode::kLightModeNone
     );
 
     void SetColor(const Vector4& color);
@@ -44,6 +44,8 @@ public:
     Vector4& GetColor() { return materialResource_.GetMaterial()->color; }
 
     Vector2& GetAnchorPoint() { return anchorPoint_; }
+    /// @brief アンカーポイント
+    /// @param anchorPoint 0.0f~1.0f
     void SetAnchorPoint(const Vector2& anchorPoint) { anchorPoint_ = anchorPoint; }
     void SetIsFlipX(const bool isFlipX) { isFlipX_ = isFlipX; };
     void SetIsFlipY(const bool isFlipY) { isFlipY_ = isFlipY; };

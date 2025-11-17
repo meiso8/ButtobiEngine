@@ -38,6 +38,17 @@ void DebugUI::CheckInt(int& value, const char* label) {
 #endif
 }
 
+void DebugUI::CheckFloat(float& value, const char* label) {
+
+#ifdef USE_IMGUI
+
+    if (ImGui::TreeNode(label)) {
+        ImGui::SliderFloat(label, &value, -100.0f, 100.0f);
+        ImGui::TreePop();
+    }
+#endif
+}
+
 void DebugUI::CheckCamera(Camera& camera) {
 
 #ifdef USE_IMGUI
@@ -131,7 +142,7 @@ void DebugUI::CheckJsonFile()
             static std::vector<Param> params = {};
 
             if (ImGui::TreeNode("AddParam")) {
-                           
+
                 if (ImGui::InputText("StructName", structName, IM_ARRAYSIZE(structName))) {
                     JsonFile::ClearModified(tagOptions[tag_current]);
                 }
@@ -202,7 +213,8 @@ void DebugUI::CheckCharacterState(CharacterState& state, const char* label)
     if (ImGui::TreeNode(label)) {
         ImGui::Checkbox("isAttack", &state.isAttack);
         ImGui::Checkbox("isHit", &state.isHit);
-        ImGui::DragInt(label, &state.hp, 1, 0, 100);
+        ImGui::DragInt("HP", &state.hps.hp, 1, 0, 100);
+        ImGui::DragInt("MaxHP", &state.hps.maxHp, 1, 0, 100);
         ImGui::TreePop();
     }
 
@@ -380,28 +392,39 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter)
     ImGui::Begin("Particle");
 
     ImGui::Checkbox("useBillboard", &particle.useBillboard_);
+    ImGui::Checkbox("useSpriteCamera", &particle.useSpriteCamera_);
+    ImGui::SliderFloat2("textureSize", &particle.textureSize_.x, 0.0f, static_cast<float>(Window::GetClientWidth()));
+
+    static  Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
+
 
     Emitter& emitter = particleEmitter.emitter_;
-    int count = emitter.cont;
-    ImGui::SliderInt("createNum", &count, 0, particle.kNumMaxInstance);
-    emitter.cont = count;
 
-    CheckTransform(emitter.transform, "EmitterTransform");
+    if (ImGui::TreeNode("Emitter")) {
 
-    ImGui::SliderFloat("frequency", &emitter.frequency, 0.1f, 10.0f);
-    ImGui::Text("frequencyTime : %f", emitter.frequencyTime);
+        int count = emitter.cont;
+        ImGui::SliderInt("createNum", &count, 0, particle.kNumMaxInstance);
+        emitter.cont = count;
+        CheckColor(emitter.color, "color");
+  
+        CheckTransform(emitter.transform, "EmitterTransform");
+
+        ImGui::SliderFloat("frequency", &emitter.frequency, 0.1f, 10.0f);
+        ImGui::Text("frequencyTime : %f", emitter.frequencyTime);
+
+        ImGui::TreePop();
+    }
 
     for (const auto& [name, group] : particle.GetParticleGroups()) {
 
         if (ImGui::Button(name.c_str())) {
-            particle.EmitParticle(name, emitter.transform.translate, emitter.cont);
+            particle.EmitParticle(name, emitter.transform, emitter.cont,color);
         }
 
         for (std::list<Particle>::iterator itr = group->particles.begin(); itr != group->particles.end(); ++itr) {
             CheckTransform((*itr).transform, name.c_str());
         }
     }
-
 
     ImGui::End();
 #endif

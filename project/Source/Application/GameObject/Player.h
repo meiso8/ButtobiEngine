@@ -35,7 +35,7 @@ public:
     Circle& GetCircle() {
         return circle_;
     };
-
+    HPs* GetHpsPtr() {return &characterState_.hps; }
     void OnCollision(const Circle& circle);
     void OnCollisionEnemy();
 

@@ -157,6 +157,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\UI\HPIcon.cpp" />
+    <ClCompile Include="Source\Application\GameObject\UI\HPGage.cpp" />
     <ClCompile Include="Source\Application\GameObject\Enemy\EnemyShotBulletManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBulletManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBullet.cpp" />
@@ -270,8 +272,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\SRVmanager\SrvManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\World.cpp" />
     <ClCompile Include="Source\Application\Scene\TitleScene.cpp" />
+    <ClCompile Include="Source\Application\GameObject\UI\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\UI\HPIcon.h" />
+    <ClInclude Include="Source\Application\GameObject\UI\HPGage.h" />
     <ClInclude Include="Source\Application\GameObject\Enemy\EnemyShotBulletManager.h" />
     <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBulletManager.h" />
     <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBullet.h" />
@@ -392,6 +397,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\SRVmanager\SrvManager.h" />
     <ClInclude Include="Source\Application\GameObject\World.h" />
     <ClInclude Include="Source\Application\Scene\TitleScene.h" />
+    <ClInclude Include="Source\Application\GameObject\UI\UIManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />

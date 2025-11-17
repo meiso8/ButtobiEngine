@@ -38,10 +38,11 @@ void Enemy::Init()
 {
     Json file = JsonFile::GetJsonFiles("Boss");
     actionTime_ = file["First"]["ActionTimer"];
-    characterState_.hp = file["First"]["HP"];
+    characterState_.hps.maxHp = file["First"]["HP"];
+    characterState_.hps.hp = characterState_.hps.maxHp;
     characterState_.isAttack = false;
     characterState_.isHit = false;
-    bodyPos_.SetColor({ 1.0f,1.0f,1.0f,1.0f });
+    bodyPos_.SetColor({ 1.0f,0.0f,0.0f,1.0f });
     bodyPos_.worldTransform_.translate_.y = GetRadius();
     velocity_ = { 10.0f,10.0f,10.0f };
     sphericalPos_ = { .radius = 0.0f,.azimuthal = 0.0f ,.polar = 0.0f };
@@ -95,6 +96,10 @@ void Enemy::OnCollision(Collider* collider)
 
     if (collider->GetCollisionAttribute() == kCollisionPlayerBullet) {
         if (!characterState_.isHit) {
+            if (characterState_.hps.hp > 0) {
+                characterState_.hps.hp--;
+            }
+
             characterState_.isHit = true;
             poyoAnimTimer_ = 0.0f;
         }
@@ -116,7 +121,6 @@ void Enemy::Tackle()
             LookTarget();
         }
 
-        bodyPos_.SetColor({ timer_ / 3.0f,0.0f,0.0f,1.0f });
         PoyoPoyo(3.0f);
 
     } else if (timer_ < 3.7f) {
@@ -127,7 +131,6 @@ void Enemy::Tackle()
     } else if (timer_ < 4.7f) {
         float localTimer = (timer_ - 3.7f) / 1.0f;
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(endPos_, startPos_, localTimer);
-        bodyPos_.SetColor({ 1.0f - localTimer,0.0f,0.0f,1.0f });
     } else {
         SetPhase(ROUND);
         return;
@@ -145,7 +148,6 @@ void Enemy::Knockback()
 
     } else if (timer_ >= 0.25f && timer_ <= 2.0f) {
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(endPos_, startPos_, timer_ / 2.0f);
-        bodyPos_.SetColor({ 1.0f - timer_,0.0f,0.0f,1.0f });
         LookTarget();
     
     } else {
@@ -173,7 +175,6 @@ void Enemy::Round()
     LookTarget();
     bodyPos_.worldTransform_.translate_ = TransformCoordinate(sphericalPos_);
     bodyPos_.worldTransform_.translate_.y = GetRadius();
-    bodyPos_.SetColor({ 0.0f,0.0f,0.0f,1.0f });
 
     if (timer_ >= actionTime_) {
         int randNum = rand() % 2;
@@ -207,25 +208,24 @@ void Enemy::Fireball()
         SetPhase(ROUND);
     }
 
-    bodyPos_.SetColor({ 1.0f,1.0f,0.0f,1.0f });
 
 }
 
 void Enemy::FloorChangeAttack()
 {
     //bodyPos_.worldTransform_.rotate_.y += std::numbers::pi_v<float> *InverseFPS;
-    bodyPos_.SetColor({ 0.0f,0.0f,1.0f,1.0f });
+    //bodyPos_.SetColor({ 0.0f,0.0f,1.0f,1.0f });
 
 }
 void Enemy::ShockWaveAttack()
 {
     //bodyPos_.worldTransform_.rotate_.y += std::numbers::pi_v<float> *InverseFPS;
-    bodyPos_.SetColor({ 0.0f,1.0f,0.0f,1.0f });
+  /*  bodyPos_.SetColor({ 0.0f,1.0f,0.0f,1.0f });*/
 
 }
 void Enemy::Exit()
 {
-    bodyPos_.SetColor({ 0.0f,0.0f,0.0f,1.0f });
+    //bodyPos_.SetColor({ 0.0f,0.0f,0.0f,1.0f });
 }
 
 void Enemy::UpdateTimer()
@@ -261,7 +261,6 @@ void Enemy::PoyoPoyo(const float& endTimer)
 void Enemy::HitUpdate()
 {
     if (characterState_.isHit) {
-        bodyPos_.SetColor({ 1.0f,0.0f,0.0f,1.0f });
         PoyoPoyo();
 
         if (poyoAnimTimer_ == 0.25f) {

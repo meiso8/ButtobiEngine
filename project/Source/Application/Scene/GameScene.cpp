@@ -60,6 +60,9 @@ GameScene::GameScene()
     enemyBulletManager_ = std::make_unique<EnemyBulletManager>();
     enemyShotBulletManager_ = std::make_unique<EnemyShotBulletManager>(enemy_.get(), enemyBulletManager_.get());
 
+
+    uiManager_ = std::make_unique<UIManager>(*enemy_->GetHpsPtr(), *floorGamePlayer_->GetHpsPtr());
+
 #pragma endregion
 }
 
@@ -89,6 +92,7 @@ void GameScene::Initialize() {
 #pragma endregion
     collisionManager_->ClearColliders();
 
+    uiManager_->Initialize();
 }
 
 void GameScene::Update() {
@@ -104,6 +108,7 @@ void GameScene::Update() {
 
     CheckAllCollision();
 
+    uiManager_->Update();
 }
 
 void GameScene::Draw() {
@@ -120,6 +125,8 @@ void GameScene::Draw() {
     enemy_->Draw(*currentCamera_, kLightModeHalfL);
     enemyBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
 #pragma endregion
+
+    uiManager_->Draw();
 
     //シーン遷移を描画する
     sceneChange_->Draw();

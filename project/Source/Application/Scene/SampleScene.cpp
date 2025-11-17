@@ -73,6 +73,7 @@ SampleScene::SampleScene()
     particleManager_ = ParticleManager::GetInstance();
     particleManager_->Create();
     particleManager_->CreateParticleGroup("uvChecker", Texture::UV_CHECKER);
+    particleManager_->CreateParticleGroup("white", Texture::WHITE_1X1);
     particleEmitter_ = std::make_unique<ParticleEmitter>();
     particleEmitter_->SetName("uvChecker");
 
@@ -114,6 +115,10 @@ void SampleScene::Update() {
 
     if (Input::IsTriggerKey(DIK_W)) {
         particleEmitter_->SetName("uvChecker");
+    }
+
+    if (Input::IsTriggerKey(DIK_S)) {
+        particleEmitter_->SetName("white");
     }
 
     player_->Update();

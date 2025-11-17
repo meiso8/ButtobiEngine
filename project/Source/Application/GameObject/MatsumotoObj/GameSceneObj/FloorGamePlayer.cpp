@@ -30,6 +30,11 @@ void FloorGamePlayer::OnCollision(Collider* collider)
     if (collider->GetCollisionAttribute() == kCollisionEnemy) {
         //デバック用
         OnCollisionCollider();
+        //hpを減らす
+        if (hps_.hp > 0) {
+            hps_.hp--;
+        }
+     
     }
 }
 
@@ -56,6 +61,8 @@ void FloorGamePlayer::Initialize() {
     isReqestShot_ = false;
     shotTimer_ = 0.0f;
     shotDuration_ = 0.5f;
+    //HP
+    hps_.hp = hps_.maxHp;
 }
 
 void FloorGamePlayer::Update() {
