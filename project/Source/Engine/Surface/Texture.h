@@ -22,6 +22,7 @@ public:
         UV_CHECKER,
         NUMBERS,
         TEST,
+        HART,
         TEXTURES
     };
     static void LoadAllTexture();

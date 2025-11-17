@@ -2,7 +2,7 @@
 #include"WorldTransform.h"
 #include"Object3d.h"
 #include"Collider.h"
-
+#include"CharacterState.h"
 class Model;
 class Camera;
 enum LightMode;
@@ -21,7 +21,7 @@ public:
 	void Draw(Camera& camera, const LightMode& lightType);
 
 	Vector3& GetLookDir() { return lookDir_; }
-
+	HPs* GetHpsPtr() { return &hps_; }
 	bool isStriptting_;
 	bool isReqestStript_;
 	bool isReqestShot_;
@@ -47,4 +47,6 @@ private:
 
 	float shotTimer_;
 	float shotDuration_;
+
+	HPs hps_ = { 100,100 };
 };

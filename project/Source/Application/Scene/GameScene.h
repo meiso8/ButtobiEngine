@@ -18,7 +18,7 @@
 #include "Enemy/Enemy.h"
 #include "Enemy/EnemyBulletManager.h"
 #include "Enemy/EnemyShotBulletManager.h"
-
+#include"UI/UIManager.h"
 #pragma endregion
 
 #include"CollisionManager.h"
@@ -50,6 +50,8 @@ private:
     std::unique_ptr<Enemy>enemy_ = nullptr;
     std::unique_ptr<EnemyBulletManager>enemyBulletManager_ = nullptr;
     std::unique_ptr<EnemyShotBulletManager>enemyShotBulletManager_ = nullptr;
+    std::unique_ptr<UIManager>uiManager_ = nullptr;
+
 #pragma endregion
     std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
 };

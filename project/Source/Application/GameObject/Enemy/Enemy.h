@@ -32,6 +32,7 @@ public:
     bool isShot_ = false;
     //体の位置
     Object3d bodyPos_;
+    HPs* GetHpsPtr() { return &characterState_.hps; }
 private:
     float timer_ = 0.0f;
     float actionTime_ = 0.0f;
