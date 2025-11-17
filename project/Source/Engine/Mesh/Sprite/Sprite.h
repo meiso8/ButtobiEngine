@@ -31,6 +31,12 @@ public:
     void SetPosition(const Vector2& position) { position_ = position; }
     void SetRotate(const float& rotate) { rotate_ = rotate; }
     void SetScale(const Vector2& scale) { scale_ = scale; };
+    
+    void SetUVScale(const Vector3& scale) { uvTransform_.scale = scale; };
+    void SetUVRotate(const Vector3& rotate) { uvTransform_.rotate = rotate; };
+    void SetUVTranslate(const Vector3& translate) { uvTransform_.translate = translate; };
+
+
 
     Vector2& GetSize() { return size_; }
     Vector2& GetScale() { return scale_; };
