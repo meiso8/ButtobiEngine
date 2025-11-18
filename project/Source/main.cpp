@@ -60,6 +60,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             currentScene->Initialize();
         }
 
+        if (Input::IsTriggerKey(DIK_R)) { currentScene->Initialize();; }
+
         // エンジンの更新処理
         myEngine->Update();
         //エスケープボタンを押したら終了

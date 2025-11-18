@@ -41,13 +41,13 @@ void HPGage::Update()
     }
 
     if (timer_ < 1.0f) {
-        timer_ += InverseFPS;
+        timer_ += InverseFPS*2.0f;
     } else {
         timer_ = 1.0f;
     }
 
     float scale = Easing::EaseInCubic(preScale_, { static_cast<float>(hps_->hp) / static_cast<float>(hps_->maxHp) }, timer_);
-    float preHPScale = Easing::EaseOutBack(preScale_, { static_cast<float>(preHP_) / static_cast<float>(hps_->maxHp)},timer_);
+    float preHPScale = Lerp(preScale_, { static_cast<float>(preHP_) / static_cast<float>(hps_->maxHp)},0.9f);
     sprites_[layer1]->SetScale({preHPScale,1.0f });
    
     sprites_[layer2]->SetScale({ scale,1.0f });

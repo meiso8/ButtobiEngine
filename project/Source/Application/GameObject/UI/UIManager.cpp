@@ -13,7 +13,6 @@ UIManager::UIManager(HPs& enemyHp, HPs& playerHp)
         hpGages_[kPlayer]->Setting({ 320.0f,16.0f }, { 64.0f, static_cast<float>(Window::GetClientHeight() - 32) }, { 0.0f,0.0f });
     }
 
-
     playerHpIcon_ = std::make_unique<HPIcon>();
     playerHpIcon_->SetHpPtr(&playerHp);
     playerHpIcon_->Setting({ 64.0f,64.0f }, { 64.0f,static_cast<float>(Window::GetClientHeight() - 96) });

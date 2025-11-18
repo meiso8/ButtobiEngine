@@ -24,10 +24,15 @@ public:
     bool isActive_ = false;
     Object3d body_;
     float size_;
+    void Flashing();
+    void Move();
+    bool isHit_ = false;
 private:
     std::unique_ptr<CubeMesh>cubeMesh_ = nullptr;
     Vector3 moveDir_;
     float moveSpeed_;
     float lifeTimer_;
     float lifeDuration_;
+    float flashingTimer_ = 0.0f;
+    const float kFlashingTime_ = 0.3f;
 };

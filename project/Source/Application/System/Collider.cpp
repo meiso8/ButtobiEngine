@@ -13,8 +13,7 @@ Collider::Collider()
 void Collider::ColliderUpdate()
 {
 #ifdef _DEBUG
-    sphereMesh_->SetVertex(Sphere{ {0.0f,0.0f,0.0f }, radius_
-        });
+
     object3d_.SetColor({ 1.0f,1.0f,0.0f,0.5f });
     object3d_.worldTransform_.translate_ = GetWorldPosition();
     object3d_.Update();
