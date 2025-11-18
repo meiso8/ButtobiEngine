@@ -51,7 +51,5 @@ public:
 
     std::array< std::unique_ptr < Object3d>, 2> object3ds_;
 
- 
-    ParticleManager* particleManager_ = nullptr;
     std::unique_ptr<ParticleEmitter>particleEmitter_ = nullptr;
 };

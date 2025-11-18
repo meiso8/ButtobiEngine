@@ -16,17 +16,30 @@ ID3D12GraphicsCommandList* ParticleManager::commandList_ = nullptr;
 std::unordered_map<std::string, std::unique_ptr <ParticleGroup> >ParticleManager::particleGroups;
 const float ParticleManager::kDeltaTime = 1.0f / 60.0f;
 
+ParticleManager::ParticleManager()
+{
+
+
+}
 void ParticleManager::Create()
 {
+    rootSignature_ = PSO::GetRootSignature();
+    commandList_ = DirectXCommon::GetCommandList();
+
+    UpdateFunctions = {
+     {Movements::kNormal, std::bind(&ParticleManager::Normal, this)},
+     {Movements::kSphere, std::bind(&ParticleManager::Sphere, this)},
+     {Movements::kShock, std::bind(&ParticleManager::Shock, this)},
+    };
+
+    InitAccelerationField();
+
     //マテリアルリソースを作成 //ライトなし
     materialResource = std::make_unique<MaterialResource>();
     materialResource->CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, LightMode::kLightModeNone);
-
     CreateModelData();
-    CreateVertexBufferResource();
-    textureSize_ = { 100.0f,100.0f,1.0f };
 
-    CreateAll();
+    CreateVertexBufferResource();
 }
 
 Particle MakeNewParticle(const bool& isRandom, const Transform& transform, const Vector4& color, const float& lifeTime)
@@ -68,13 +81,21 @@ std::list<SphericalCoordinate> EmitCoordinate(const bool& isRandom, const Vector
 
 }
 
-void ParticleManager::CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle)
+void ParticleManager::CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle, const bool& useModel = false, const ModelManager::MODEL_HANDLE& modelHandle)
 {
 
     assert(!particleGroups.contains(name));
     std::unique_ptr<ParticleGroup> newParticleGroup = std::make_unique<ParticleGroup>();
-    newParticleGroup->materialData.textureSrvIndex = Texture::GetHandle(textureHandle);
-    newParticleGroup->materialData.textureFilePath = Texture::GetFilePath(textureHandle);
+    newParticleGroup->useModel = useModel;
+    newParticleGroup->textureSize = { 100.0f,100.0f };
+    if (newParticleGroup->useModel) {
+        newParticleGroup->model = ModelManager::GetModel(modelHandle);
+        newParticleGroup->materialData.textureSrvIndex = newParticleGroup->model->GetModelData()->material.textureSrvIndex;
+        newParticleGroup->materialData.textureFilePath = newParticleGroup->model->GetModelData()->material.textureFilePath;
+    } else {
+        newParticleGroup->materialData.textureSrvIndex = Texture::GetHandle(textureHandle);
+        newParticleGroup->materialData.textureFilePath = Texture::GetFilePath(textureHandle);
+    }
 
     //Instancing用のTransformationMatrixリソースを作成
     newParticleGroup->instancingResource = DirectXCommon::CreateBufferResource(sizeof(ParticleForGPU) * kNumMaxInstance);
@@ -139,7 +160,7 @@ void ParticleManager::Draw(uint32_t blendMode)
             commandList_->SetPipelineState(MyEngine::GetPSO()->GetGraphicsPipelineStateParticle(blendMode).Get());
             //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
             commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-            commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);
+
             //マテリアルの設定
             commandList_->SetGraphicsRootConstantBufferView(0, materialResource->GetMaterialResource()->GetGPUVirtualAddress());
             //粒ごとのトランスフォーム
@@ -147,7 +168,15 @@ void ParticleManager::Draw(uint32_t blendMode)
             //テスクチャ
             SrvManager::SetGraphicsRootDescriptorTable(2, group->materialData.textureSrvIndex);
             //描画!（DrawCall/ドローコール）6個のインデックスを使用しインスタンスを描画。
-            commandList_->DrawInstanced(UINT(modelData_->vertices.size()), group->numInstance, 0, 0);
+
+            if (group->model != nullptr && group->useModel) {
+                commandList_->IASetVertexBuffers(0, 1, &group->model->GetVBV());
+                commandList_->DrawInstanced(UINT(group->model->GetModelData()->vertices.size()), group->numInstance, 0, 0);
+            } else {
+                commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);
+                commandList_->DrawInstanced(UINT(modelData_->vertices.size()), group->numInstance, 0, 0);
+            }
+
 
         }
 
@@ -187,22 +216,10 @@ void ParticleManager::IsCollisionFieldArea(Particle& particleItr)
 void ParticleManager::CreateAll()
 {
     CreateParticleGroup("uvChecker", Texture::UV_CHECKER);
-    CreateParticleGroup("white", Texture::WHITE_1X1);
+    CreateParticleGroup("white", Texture::WHITE_1X1, true, ModelManager::PLAYER_ARM_L);
 }
 
-ParticleManager::ParticleManager()
-{
-    rootSignature_ = PSO::GetRootSignature();
-    commandList_ = DirectXCommon::GetCommandList();
 
-    UpdateFunctions = {
-     {Movements::kNormal, std::bind(&ParticleManager::Normal, this)},
-     {Movements::kSphere, std::bind(&ParticleManager::Sphere, this)},
-     {Movements::kShock, std::bind(&ParticleManager::Shock, this)},
-    };
-
-    InitAccelerationField();
-}
 
 void ParticleManager::SetMovement(Movements& move)
 {
@@ -233,7 +250,7 @@ void ParticleManager::Normal()
                 //経過時間を加算
                 (*particleIterator).currentTime += kDeltaTime;
 
-                UpdateMatrix(*particleIterator);
+                UpdateMatrix(*particleIterator, *group);
 
                 //ビュープロジェクション行列
                 UpdateWVPMatrix(*camera_);
@@ -287,7 +304,7 @@ void ParticleManager::Sphere()
                 particleIterator->transform.scale.y = time * 0.5f;
                 particleIterator->transform.scale.z = time * 0.5f;
 
-                UpdateWorldMatrix(*particleIterator);
+                UpdateWorldMatrix(*particleIterator, *group);
 
                 UpdateWVPMatrix(*camera_);
 
@@ -367,13 +384,13 @@ void ParticleManager::UpdateWVPMatrix(Camera& camera)
 
 }
 
-void ParticleManager::UpdateMatrix(Particle& particleItr)
+void ParticleManager::UpdateMatrix(Particle& particleItr, ParticleGroup& group)
 {
     //ビルボード処理
     if (useBillboard_) {
         UpdateWorldMatrixForBillBord(particleItr);
     } else {
-        UpdateWorldMatrix(particleItr);
+        UpdateWorldMatrix(particleItr, group);
     }
 }
 void ParticleManager::UpdateWorldMatrixForBillBord(Particle& particleItr)
@@ -384,11 +401,11 @@ void ParticleManager::UpdateWorldMatrixForBillBord(Particle& particleItr)
     worldMatrix = scaleMatrix * rotateMatrix * translateMatrix;
 }
 
-void ParticleManager::UpdateWorldMatrix(Particle& particleItr)
+void ParticleManager::UpdateWorldMatrix(Particle& particleItr, ParticleGroup& group)
 {
 
     if (useSpriteCamera_) {
-        worldMatrix = MakeAffineMatrix(particleItr.transform.scale * textureSize_, particleItr.transform.rotate, particleItr.transform.translate);
+        worldMatrix = MakeAffineMatrix(particleItr.transform.scale * group.textureSize, particleItr.transform.rotate, particleItr.transform.translate * group.textureSize);
     } else {
         worldMatrix = MakeAffineMatrix(particleItr.transform.scale, particleItr.transform.rotate, particleItr.transform.translate);
     }
@@ -406,10 +423,6 @@ void ParticleManager::CreateModelData()
     modelData_->vertices.push_back({ .position = {1.0f,-1.0f,0.0f,1.0f}, .texcoord = {0.0f,1.0f}, .normal = {0.0f,0.0f,1.0f} });//左下
     modelData_->vertices.push_back({ .position = {-1.0f,1.0f,0.0f,1.0f}, .texcoord = {1.0f,0.0f}, .normal = {0.0f,0.0f,1.0f} });//右上
     modelData_->vertices.push_back({ .position = {-1.0f,-1.0f,0.0f,1.0f}, .texcoord = {1.0f,1.0f}, .normal = {0.0f,0.0f,1.0f} });//右下
-
-    modelData_->material.textureFilePath = Texture::GetFilePath(Texture::UV_CHECKER);
-    modelData_->material.textureSrvIndex = Texture::GetHandle(Texture::UV_CHECKER);
-
 }
 
 void ParticleManager::CreateVertexBufferResource()

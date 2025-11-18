@@ -47,8 +47,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             break;
         }
 
-#ifdef _DEBUG
-
         currentScene->SceneChangeUpdate();
 
         if (currentScene->GetIsEndScene()) {
@@ -61,9 +59,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             currentScene = currentIt->second.get();
             currentScene->Initialize();
         }
-
-
-#endif // _DEBUG
 
         // エンジンの更新処理
         myEngine->Update();

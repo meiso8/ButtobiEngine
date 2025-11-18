@@ -393,7 +393,6 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter)
 
     ImGui::Checkbox("useBillboard", &particle.useBillboard_);
     ImGui::Checkbox("useSpriteCamera", &particle.useSpriteCamera_);
-    ImGui::SliderFloat2("textureSize", &particle.textureSize_.x, 0.0f, static_cast<float>(Window::GetClientWidth()));
 
     static  Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
 
@@ -402,13 +401,13 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter)
 
     if (ImGui::TreeNode("Emitter")) {
 
+        ImGui::Checkbox("isRandom", &emitter.isRandom);
         int count = emitter.cont;
         ImGui::SliderInt("createNum", &count, 0, particle.kNumMaxInstance);
         emitter.cont = count;
         CheckColor(emitter.color, "color");
-  
         CheckTransform(emitter.transform, "EmitterTransform");
-
+        CheckBlendMode(emitter.blendMode);
         ImGui::SliderFloat("frequency", &emitter.frequency, 0.1f, 10.0f);
         ImGui::Text("frequencyTime : %f", emitter.frequencyTime);
 
@@ -417,13 +416,22 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter)
 
     for (const auto& [name, group] : particle.GetParticleGroups()) {
 
-        if (ImGui::Button(name.c_str())) {
-            particle.EmitParticle(name, emitter.transform, emitter.cont,color);
-        }
 
-        for (std::list<Particle>::iterator itr = group->particles.begin(); itr != group->particles.end(); ++itr) {
-            CheckTransform((*itr).transform, name.c_str());
+        if (ImGui::TreeNode(name.c_str())) {
+
+            ImGui::Checkbox("useModel", &group->useModel);
+            ImGui::SliderFloat2("textureSize", &group->textureSize.x, 0.0f, static_cast<float>(Window::GetClientWidth()));
+
+            if (ImGui::Button(name.c_str())) {
+                particle.EmitParticle(name, emitter.transform, emitter.cont, color);
+            }
+            for (std::list<Particle>::iterator itr = group->particles.begin(); itr != group->particles.end(); ++itr) {
+                CheckTransform((*itr).transform, name.c_str());
+            }
+            ImGui::TreePop();
         }
+   
+ 
     }
 
     ImGui::End();
@@ -504,7 +512,7 @@ void DebugUI::CheckLightMode(int32_t& lightMode, const char* label) {
 #endif
 };
 
-void DebugUI::CheckBlendMode(uint32_t& blendMode) {
+void DebugUI::CheckBlendMode(BlendMode& blendMode) {
 #ifdef USE_IMGUI
     if (ImGui::TreeNode("BlendMode")) {
 
@@ -520,7 +528,7 @@ void DebugUI::CheckBlendMode(uint32_t& blendMode) {
         static int blendMode_current = 1;
 
         ImGui::Combo("blendMode", &blendMode_current, blendModes, IM_ARRAYSIZE(blendModes));
-        blendMode = blendMode_current % 6;
+        blendMode = static_cast<BlendMode>(blendMode_current % 6);
         ImGui::TreePop();
     }
 #endif

@@ -63,6 +63,9 @@ GameScene::GameScene()
 
     uiManager_ = std::make_unique<UIManager>(*enemy_->GetHpsPtr(), *floorGamePlayer_->GetHpsPtr());
 
+    particleEmitter_ = std::make_unique<ParticleEmitter>();
+
+    particleEmitter_->SetName("white");
 #pragma endregion
 }
 
@@ -93,6 +96,8 @@ void GameScene::Initialize() {
     collisionManager_->ClearColliders();
 
     uiManager_->Initialize();
+
+    particleEmitter_->Initialize();
 }
 
 void GameScene::Update() {
@@ -112,6 +117,8 @@ void GameScene::Update() {
     CheckAllCollision();
 
     uiManager_->Update();
+
+    particleEmitter_->Update(*currentCamera_);
 }
 
 void GameScene::Draw() {
@@ -128,6 +135,8 @@ void GameScene::Draw() {
     enemy_->Draw(*currentCamera_, kLightModeHalfL);
     enemyBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
 #pragma endregion
+
+    particleEmitter_->Draw();
 
     uiManager_->Draw();
 

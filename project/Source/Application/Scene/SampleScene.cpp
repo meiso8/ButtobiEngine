@@ -69,9 +69,6 @@ SampleScene::SampleScene()
     sprite_ = std::make_unique<Sprite>();
     sprite_->Create(Texture::TEST, { 0.0f,0.0f });
 
-
-    particleManager_ = ParticleManager::GetInstance();
-    particleManager_->Create();
     particleEmitter_ = std::make_unique<ParticleEmitter>();
     particleEmitter_->SetName("uvChecker");
 
@@ -87,7 +84,7 @@ void SampleScene::Initialize() {
     sceneChange_->SetState(SceneChange::kWipeOut, 60);
     camera_->Initialize();
     camera_->UpdateMatrix();
-    //particleEmitter_->Initialize();
+    particleEmitter_->Initialize();
     player_->Init();
     world_->Init();
     filed_->Init();
@@ -111,19 +108,19 @@ void SampleScene::Update() {
 
     }
 
-    //if (Input::IsTriggerKey(DIK_W)) {
-    //    particleEmitter_->SetName("uvChecker");
-    //}
+    if (Input::IsTriggerKey(DIK_W)) {
+        particleEmitter_->SetName("uvChecker");
+    }
 
-    //if (Input::IsTriggerKey(DIK_S)) {
-    //    particleEmitter_->SetName("white");
-    //}
+    if (Input::IsTriggerKey(DIK_S)) {
+        particleEmitter_->SetName("white");
+    }
 
     player_->Update();
     filed_->Update();
 
-    particleEmitter_->Update();
-    particleManager_->Update(*currentCamera_);
+    particleEmitter_->Update(*currentCamera_);
+
 
     object3ds_[0]->worldTransform_.rotate_.z += std::numbers::pi_v<float> *0.25f * InverseFPS;
 
@@ -199,7 +196,7 @@ void SampleScene::Draw() {
 
     player_->Draw(*currentCamera_, kLightModeHalfL);
 
-    particleManager_->Draw();
+    particleEmitter_->Draw();
 
     sprite_->PreDraw();
     sprite_->Draw();

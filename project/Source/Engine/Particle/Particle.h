@@ -8,13 +8,14 @@
 #include "BlendState.h"
 #include"AccelerationField.h"
 #include"SphericalCoordinate.h"
-
+#include"Texture.h"
+#include"ModelManager.h"
 
 #include<unordered_map>
 #include<list>
 #include<memory>
 #include<cstdint>
-#include"Texture.h"
+
 
 class Camera;
 class ShaderResourceView;
@@ -42,6 +43,9 @@ struct ParticleGroup {
     Microsoft::WRL::ComPtr<ID3D12Resource> instancingResource;
     uint32_t numInstance;//インスタンス数
     ParticleForGPU* instancingData;
+    Vector3 textureSize;
+    bool useModel;
+    Model* model = nullptr;
 };
 
 
@@ -64,10 +68,11 @@ public:
     AccelerationField accelerationField;
     bool useBillboard_ = true;
     bool useSpriteCamera_ = false;
-    Vector3 textureSize_;
+
+
     const uint32_t kNumMaxInstance = 100;//インスタンス数
     static const float kDeltaTime;
-protected:
+private:
     RootSignature* rootSignature_ = nullptr;
     static ID3D12GraphicsCommandList* commandList_;
     static std::unordered_map<std::string, std::unique_ptr <ParticleGroup>>particleGroups;
@@ -77,6 +82,7 @@ protected:
     VertexData* vertexBufferData_ = nullptr;
 
     std::unique_ptr<ModelData> modelData_ = nullptr;
+
     std::unique_ptr < MaterialResource> materialResource;
 
     Matrix4x4 backToFrontMatrix;
@@ -84,7 +90,6 @@ protected:
     Matrix4x4 worldMatrix;
     Matrix4x4 worldViewProjectionMatrix;
 
-private:
     static ParticleManager* instance_;
     Camera* camera_ = nullptr;
 public:
@@ -102,9 +107,9 @@ public:
     static ParticleManager* GetInstance();
 
     static void EmitParticle(const std::string name, const Transform& transform, uint32_t count, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, const bool& isRandom = true);
-  
+
     std::unordered_map<std::string, std::unique_ptr <ParticleGroup>>& GetParticleGroups();
-    void CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle);
+    void CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle, const bool& useModel, const ModelManager::MODEL_HANDLE& modelHandle = ModelManager::MODEL_HANDLE::BOX);
 
     void Update(Camera& camera);
     void Draw(uint32_t blendMode = BlendMode::kBlendModeAdd);
@@ -115,7 +120,7 @@ public:
 
 protected:
     void UpdateBillBordMatrix(Camera& camera);
-    void UpdateMatrix(Particle& particleItr);
+    void UpdateMatrix(Particle& particleItr, ParticleGroup& group);
 private:
 
     std::list<SphericalCoordinate>sphericalCoordinates;
@@ -131,7 +136,7 @@ private:
 
     void IsCollisionFieldArea(Particle& particleItr);
     void UpdateWorldMatrixForBillBord(Particle& particleItr);
-    void UpdateWorldMatrix(Particle& particleItr);
+    void UpdateWorldMatrix(Particle& particleItr, ParticleGroup& group);
     void UpdateWVPMatrix(Camera& camera);
     void UpdateInstancingData(ParticleGroup& group, Particle& particleItr);
 
