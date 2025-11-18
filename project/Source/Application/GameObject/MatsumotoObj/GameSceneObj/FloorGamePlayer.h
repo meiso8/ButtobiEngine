@@ -7,6 +7,14 @@ class Model;
 class Camera;
 enum LightMode;
 
+enum class PlayerAnimationState
+{
+	Idle,
+	Walk,
+	Stript,
+	Shot
+};
+
 class FloorGamePlayer: public Collider
 {
 public:
@@ -30,14 +38,20 @@ public:
 	bool isOnStickyFloor_;
 	bool isOnStripedFloor_;
 	Object3d body_;
+	Object3d rightArmObject_;
+	Object3d leftArmObject_;
+	Object3d rightLegObject_;
+	Object3d leftLegObject_;
+
+	PlayerAnimationState animationState_ = PlayerAnimationState::Idle;
+	bool isMove_;
+
 private:
 	void Move();
 	void LookMoveDir();
 	void StriptFloor();
 	void ShotFloor();
-
-	Model* model_ = nullptr;
-	bool isMove_;
+	
 	float moveSpeed_;
 	Vector3 moveDir_;
 	Vector3 moveLimitMax_;

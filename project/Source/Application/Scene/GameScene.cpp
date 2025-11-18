@@ -56,6 +56,7 @@ GameScene::GameScene()
     floorPlayerShotBulletManager_ = std::make_unique<FloorPlayerShotBulletManager>(floorGamePlayer_.get(), floorBulletManager_.get());
     floorPlayerStripTargetUI_ = std::make_unique<FloorPlayerStripTargetUI>(floorGamePlayer_.get());
 	floorActionManager_ = std::make_unique<FloorActionManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
+	floorGamePlayerAnimationManager_ = std::make_unique<FloorGamePlayerAnimationManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
     
     enemy_ = std::make_unique<Enemy>();
     enemyBulletManager_ = std::make_unique<EnemyBulletManager>();
@@ -176,6 +177,9 @@ void GameScene::UpdateGameObject()
     enemyShotBulletManager_->Update();
     floorPlayerStripTargetUI_->Update();
 	floorActionManager_->Update();
+
+	// アニメーション更新
+    floorGamePlayerAnimationManager_->Update();
 }
 
 void GameScene::CheckAllCollision()
