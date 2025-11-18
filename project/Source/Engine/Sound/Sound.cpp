@@ -35,6 +35,7 @@ void Sound::LoadAllSound()
 
     //サウンドの読み込み
     handles_[BGM1] = Load("Resource/Sounds/externals/sea.mp3");
+    handles_[BGM2] = Load("Resource/Sounds/externals/maou_bgm_ethnic08.mp3");
     handles_[PICO] = Load("Resource/Sounds/pico.mp3");
     handles_[CRACKER] = Load("Resource/Sounds/cracker_short.mp3");
     handles_[FOOT_STEP] = Load("Resource/Sounds/externals/maou_se_sound_footstep02.mp3");
@@ -46,12 +47,9 @@ void Sound::PlayBGM(const TAG& tag, const float& volumeOffset, const bool& loop)
 {
     SetVol(bgmVolume_ + volumeOffset, tag);
 
-    if (!IsPlayingAll()) {
-
+    if (!IsPlaying(tag)) {
         Play(handles_[tag], bgmVolume_ + volumeOffset, loop);
     }
-
-
 }
 
 void Sound::PlaySE(const TAG& tag, const float& volumeOffset, const bool& loop)

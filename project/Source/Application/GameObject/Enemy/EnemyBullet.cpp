@@ -9,13 +9,14 @@
 #include"CollisionConfig.h"
 
 EnemyBullet::EnemyBullet() {
+    model_ = ModelManager::GetModel(ModelManager::PEOPLE);
     body_.Create();
     cubeMesh_ = std::make_unique<CubeMesh>();
     cubeMesh_.get()->Create(Texture::WHITE_1X1);
     cubeMesh_->SetColor({ 0.0f,1.0f,0.0f,1.0f });
-    body_.SetMesh(cubeMesh_.get());
+    body_.SetMesh(model_);
 
-    SetRadius(0.5f);
+    SetRadius(1.5f);
     SetCollisionAttribute(kCollisionEnemyBullet);
     // 弾は「Player」とだけ衝突したい
     SetCollisionMask(kCollisionPlayer);
@@ -31,7 +32,7 @@ void EnemyBullet::Initialize() {
     lifeTimer_ = 0.0f;
     lifeDuration_ = 2.0f;
     isActive_ = false;
-    size_ = 1.0f;
+    size_ = 3.0f;
 }
 void EnemyBullet::OnCollision(Collider* collider)
 {

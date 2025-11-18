@@ -10,30 +10,25 @@ Medjed::Medjed() {
     object3d_->SetMesh(model_);
 }
 
+
+void Medjed::LookTarget()
+{
+
+    Vector3 direction = *targetPos_- GetWorldPos();
+    object3d_->worldTransform_.rotate_.y = std::atan2(direction.x, direction.z); // Y軸回転（ラジアン）
+
+}
+
+
 void Medjed::Update()
 {
-    Matrix4x4 billboardMat =  *targetMatrix_;
-    billboardMat.m[3][0] = 0.0f;
-    billboardMat.m[3][1] = 0.0f;
-    billboardMat.m[3][2] = 0.0f;
-
-
-    Matrix4x4 scaleMatrix = MakeScaleMatrix(object3d_->worldTransform_.scale_);
-    Matrix4x4 translateMatrix = MakeTranslateMatrix(object3d_->worldTransform_.translate_);
-    Matrix4x4 rotateMatrix = MakeRotateXYZMatrix(object3d_->worldTransform_.rotate_) * billboardMat;
-    object3d_->worldTransform_.matWorld_ = scaleMatrix * rotateMatrix * translateMatrix;
-
+    LookTarget();
+    object3d_->Update();
 
 }
 void Medjed::Init()
 {
     object3d_->Initialize();
-    object3d_->worldTransform_.translate_.x = -5.0f;
-}
-
-void Medjed::SetTargetMatrix(Matrix4x4* target)
-{
-    targetMatrix_ = target;
 }
 
 void Medjed::Draw(Camera& camera)

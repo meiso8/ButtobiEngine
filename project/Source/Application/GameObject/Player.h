@@ -27,8 +27,8 @@ public:
     Matrix4x4& GetEyeMatrix() {
         return eyePos_.worldTransform_.matWorld_;
     };
-    Matrix4x4& GetBodyMatrix() {
-        return bodyPos_.worldTransform_.matWorld_;
+    Vector3& GetBodyPos() {
+        return bodyPos_.worldTransform_.translate_;
     };
 
     AABB GetWorldAABB();

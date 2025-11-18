@@ -14,12 +14,17 @@ enum LightMode;
 class Enemy :public Collider
 {
 public:
-
+    bool isApper_ = false;
     Enemy();
     void Init();
     void Draw(Camera& camera, const LightMode& lightMode);
     void Update();
     Vector3 GetWorldPosition()const override;
+
+    Vector3 GetWorldPos()const
+    {
+        return bodyPos_.worldTransform_.GetWorldPosition();
+    }
     void OnCollision(Collider* collder)override;
     void SetTarget(Vector3& target) { target_ = &target; };
     Vector3 GetToTarget() { 
@@ -46,7 +51,7 @@ private:
     //キャラクターの共通でもつ状態
     CharacterState characterState_;
 
-    Circle enemyRoundCircle_ = { {0.0f,0.0f,0.0f} ,7.0f};
+    Circle enemyRoundCircle_ = { {0.0f,0.0f,0.0f} ,15.0f};
     Circle enemyFieldCircle_ = { {0.0f,0.0f,0.0f} ,9.0f };
 
     enum State {
@@ -72,7 +77,6 @@ private:
     Vector3 velocity_ = { 0.0f };
     SphericalCoordinate sphericalPos_;
     Vector3 startPos_ = { 0.0f };
-    Vector3 endPos_ = { 0.0f };
     float poyoAnimTimer_ = 0.0f;
     float endRotateY_ = 0.0f;
     float startRotateY_ = 0.0f;

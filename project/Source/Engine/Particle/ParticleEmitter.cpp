@@ -14,9 +14,9 @@ void ParticleEmitter::Initialize()
     emitter_.cont = 3;
     emitter_.frequency = 0.5f;
     emitter_.frequencyTime = 0.0f;
-    emitter_.transform.rotate = { 0.0f,0.0f,0.0f };
-    emitter_.transform.scale = { 1.0f,1.0f,1.0f };
-    emitter_.transform.translate = { 0.0f,0.0f,0.0f };
+    emitter_.transform.rotate_ = { 0.0f,0.0f,0.0f };
+    emitter_.transform.scale_ = { 1.0f,1.0f,1.0f };
+    emitter_.transform.translate_ = { 0.0f,0.0f,0.0f };
 
     emitter_.isRandom = true;
     emitter_.color = { 1.0f,1.0f,1.0f,1.0f };
@@ -34,10 +34,10 @@ void ParticleEmitter::Update(Camera& camera)
         Emit();
     }
 
+    WorldTransformUpdate(emitter_.transform);
+
     particleManager_->Update(camera);
 
-
-   
 }
 
 void ParticleEmitter::Emit()

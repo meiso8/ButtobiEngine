@@ -13,6 +13,7 @@ private:
     enum Tex {
         NORMAL,
     };
+    float timer_ = 0.0f;
 public:
     World();
     void Init();
@@ -20,5 +21,7 @@ public:
     void Draw(Camera& camera);
     uint32_t texture_ = NORMAL;
     void SetTexture(const uint32_t& texture);
+    void UpdateColor();
+
 };
 

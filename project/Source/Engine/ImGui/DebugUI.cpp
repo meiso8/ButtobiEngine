@@ -406,7 +406,7 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter)
         ImGui::SliderInt("createNum", &count, 0, particle.kNumMaxInstance);
         emitter.cont = count;
         CheckColor(emitter.color, "color");
-        CheckTransform(emitter.transform, "EmitterTransform");
+        CheckWorldTransform(emitter.transform, "EmitterTransform");
         CheckBlendMode(emitter.blendMode);
         ImGui::SliderFloat("frequency", &emitter.frequency, 0.1f, 10.0f);
         ImGui::Text("frequencyTime : %f", emitter.frequencyTime);

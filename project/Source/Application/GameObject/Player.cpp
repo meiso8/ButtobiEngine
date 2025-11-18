@@ -30,7 +30,7 @@ Player::Player() {
     eyePos_.Create();
     bodyPos_.Create();
     //モデルやメッシュをセットする
-    bodyPos_.SetMesh(cubeMesh_.get());
+    bodyPos_.SetMesh(model_);
 
 }
 
@@ -38,6 +38,7 @@ void Player::Init()
 {
     //体の位置初期化
     bodyPos_.worldTransform_.Initialize();
+    bodyPos_.worldTransform_.translate_.z = -15.0f;
     //目の位置初期化
     eyePos_.Initialize();
     eyePos_.worldTransform_.Initialize();
@@ -263,8 +264,8 @@ void Player::ResolveCollision(const AABB& wallAABB, const AABB& playerAABB) {
     // 各軸のオーバーラップ量を計算
     float overlapX1 = wallAABB.max.x - playerAABB.min.x;
     float overlapX2 = playerAABB.max.x - wallAABB.min.x;
-    float overlapY1 = wallAABB.max.y - playerAABB.min.y;
-    float overlapY2 = playerAABB.max.y - wallAABB.min.y;
+    //float overlapY1 = wallAABB.max.y - playerAABB.min.y;
+    //float overlapY2 = playerAABB.max.y - wallAABB.min.y;
     float overlapZ1 = wallAABB.max.z - playerAABB.min.z;
     float overlapZ2 = playerAABB.max.z - wallAABB.min.z;
 
@@ -280,14 +281,14 @@ void Player::ResolveCollision(const AABB& wallAABB, const AABB& playerAABB) {
         minOverlap = overlapX2;
         push = { -overlapX2, 0.0f, 0.0f };
     }
-    if (overlapY1 > 0.0f && overlapY1 < minOverlap) {
-        minOverlap = overlapY1;
-        push = { 0.0f, overlapY1, 0.0f };
-    }
-    if (overlapY2 > 0.0f && overlapY2 < minOverlap) {
-        minOverlap = overlapY2;
-        push = { 0.0f, -overlapY2, 0.0f };
-    }
+    //if (overlapY1 > 0.0f && overlapY1 < minOverlap) {
+    //    minOverlap = overlapY1;
+    //    push = { 0.0f, overlapY1, 0.0f };
+    //}
+    //if (overlapY2 > 0.0f && overlapY2 < minOverlap) {
+    //    minOverlap = overlapY2;
+    //    push = { 0.0f, -overlapY2, 0.0f };
+    //}
     if (overlapZ1 > 0.0f && overlapZ1 < minOverlap) {
         minOverlap = overlapZ1;
         push = { 0.0f, 0.0f, overlapZ1 };
@@ -316,6 +317,8 @@ void Player::OnCollisionEnemy()
     if (characterState_.isHit) {
         return;
     }
+
+    Sound::PlaySE(Sound::CRACKER);
     //衝突フラグを真に
     characterState_.isHit = true;
 

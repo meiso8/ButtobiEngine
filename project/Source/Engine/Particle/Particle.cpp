@@ -42,14 +42,14 @@ void ParticleManager::Create()
     CreateVertexBufferResource();
 }
 
-Particle MakeNewParticle(const bool& isRandom, const Transform& transform, const Vector4& color, const float& lifeTime)
+Particle MakeNewParticle(const bool& isRandom, const WorldTransform& transform, const Vector4& color, const float& lifeTime)
 {
     Particle particle;
 
     Random::SetMinMax(-1.0f, 1.0f);
-    particle.transform.scale = transform.scale;
-    particle.transform.rotate = transform.rotate;
-    particle.transform.translate = (isRandom) ? Vector3{ Random::Get(), Random::Get(), Random::Get() } + transform.translate : transform.translate;
+    particle.transform.scale = transform.scale_;
+    particle.transform.rotate = transform.rotate_;
+    particle.transform.translate = (isRandom) ? Vector3{ Random::Get(), Random::Get(), Random::Get() } + transform.GetWorldPosition() : transform.GetWorldPosition();
     particle.velocity = { Random::Get(), Random::Get(), Random::Get() };
     particle.color = color;
     particle.lifeTime = (lifeTime == -1.0f) ? Random::Get() : lifeTime;
@@ -135,7 +135,7 @@ void ParticleManager::Update(Camera& camera)
 }
 
 
-std::list<Particle> Emit(const bool& isRandom, const Transform& transform, uint32_t count, const Vector4& color)
+std::list<Particle> Emit(const bool& isRandom, const WorldTransform& transform, uint32_t count, const Vector4& color)
 {
     std::list<Particle>particles;
     for (uint32_t i = 0; i < count; ++i) {
@@ -144,7 +144,7 @@ std::list<Particle> Emit(const bool& isRandom, const Transform& transform, uint3
     return particles;
 }
 
-void ParticleManager::EmitParticle(const std::string name, const Transform& transform, uint32_t count, const Vector4& color, const bool& isRandom)
+void ParticleManager::EmitParticle(const std::string name, const WorldTransform& transform, uint32_t count, const Vector4& color, const bool& isRandom)
 {
     assert(particleGroups.contains(name));
     particleGroups[name]->particles.splice(particleGroups[name]->particles.end(), Emit(isRandom, transform, count, color));

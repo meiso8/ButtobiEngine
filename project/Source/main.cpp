@@ -29,9 +29,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     std::map<const std::string, std::unique_ptr<SceneManager>> scenes;
     scenes["Title"] = std::make_unique < TitleScene>();
     scenes["Sample"] = std::make_unique < SampleScene>();
-    scenes["Result"] = std::make_unique < ResultScene>();
-
-
+    //scenes["Result"] = std::make_unique < ResultScene>();
+    
+  
     //最初の位置を保持
     auto currentIt = scenes.begin();
     SceneManager* currentScene = currentIt->second.get();

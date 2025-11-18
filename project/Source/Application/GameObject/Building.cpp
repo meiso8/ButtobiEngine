@@ -51,7 +51,7 @@ Building::Building() {
     };
 
     for (const auto& [type, mesh] : cubes_) {
-        mesh->Create();
+        mesh->Create(Texture::WHITE_1X1);
         mesh->SetMinMax(aabbs_[type]);
     }
 
@@ -102,7 +102,7 @@ void Building::Draw(Camera& camera)
     //buildingPos->Draw(camera, kBlendModeNormal);
 
     for (const auto& [type, pos] : wallPos_) {
-        pos->Draw(camera, kBlendModeNormal);
+        pos->Draw(camera, kBlendModeNormal,kCullModeNone);
     }
 }
 
