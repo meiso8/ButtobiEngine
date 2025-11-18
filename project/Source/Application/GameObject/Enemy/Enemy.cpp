@@ -23,7 +23,7 @@ Enemy::Enemy()
          {PHASE::EXIT, std::bind(&Enemy::Exit, this)},
     };
 
-    model_ = ModelManager::GetModel(ModelManager::ENEMY);
+    model_ = ModelManager::GetModel(ModelManager::MEDJED);
     bodyPos_.Create();
     bodyPos_.SetMesh(model_);
     bodyPos_.worldTransform_.scale_ = { 3.0f,3.0f,3.0f };

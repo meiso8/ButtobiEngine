@@ -2,6 +2,7 @@
 
 #include<memory>
 #include"Object3d.h"
+#include"AABB.h"
 class Model;
 class Locker
 {
@@ -14,6 +15,5 @@ public:
     void SetPosX(const float& x) { object3d_->worldTransform_.translate_.x = x; };
     void Draw(Camera& camera);
     void Update();
-
 };
 

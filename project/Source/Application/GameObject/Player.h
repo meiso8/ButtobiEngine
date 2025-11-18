@@ -37,10 +37,11 @@ public:
     };
     HPs* GetHpsPtr() {return &characterState_.hps; }
     void OnCollision(const Circle& circle);
+    void ResolveCollision(const AABB& wallAABB, const AABB& playerAABB);
+    void OnCollisionWall(const AABB& aabb);
     void OnCollisionEnemy();
 
     float cameraSpeed_ = 4.0f;
-
 private:
 
     float endRotateY_ = 0.0f;
@@ -49,6 +50,8 @@ private:
     bool isLookBackEnd_ = false;
 
     bool isLookBack_ = false;
+
+    bool isWallHit = false;
 
     //AABB
     AABB localAabb_;

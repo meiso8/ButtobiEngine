@@ -49,7 +49,7 @@ SampleScene::SampleScene()
 
     //モデルを借りる
 
-    models_[0] = ModelManager::GetModel(ModelManager::FLOOR);
+    models_[0] = ModelManager::GetModel(ModelManager::BUILDING);
 
     for (int i = 0; i < object3ds_.size(); ++i) {
         object3ds_[i] = std::make_unique<Object3d>();
@@ -84,6 +84,8 @@ SampleScene::SampleScene()
     medjed_ = std::make_unique<Medjed>();
     medjed_->SetTargetMatrix(&player_->GetBodyMatrix());
 
+
+    building_ = std::make_unique<Building>();
 }
 
 void SampleScene::Initialize() {
@@ -103,6 +105,7 @@ void SampleScene::Initialize() {
         lockers_[i]->SetPosX(i * 1.0f);
     }
     medjed_->Init();
+    building_->Init();
 }
 
 void SampleScene::Update() {
@@ -149,8 +152,11 @@ void SampleScene::Update() {
         lockers_[i]->Update();
     }
 
+    building_->Update();
 
     world_->Update();
+
+
 
     CheckAllCollision();
 }
@@ -188,16 +194,33 @@ void SampleScene::Debug()
 void SampleScene::CheckAllCollision()
 {
 
-    //2つの急の中心点間距離を求める 
-    if (Distance(player_->GetCircle(), filed_->circle_) >= player_->GetCircle().radius - filed_->circle_.radius) {
+    /*   if (IsCollisionInCircleLine(player_->GetCircle(), filed_->circle_)) {
 
+           player_->OnCollision(filed_->circle_);
+           Sound::PlayOriginSE(Sound::CRACKER);
+       };*/
+
+    if (IsCollision(medjed_->GetWorldAABB(), player_->GetWorldAABB())) {
+        player_->OnCollisionEnemy();
     }
 
-    if (IsCollisionInCircleLine(player_->GetCircle(), filed_->circle_)) {
+    AABB lockerAABB = { .min = {0.0f,0.0f,-0.5f},.max = {25.0f,2.0f,0.5f} };
 
-        player_->OnCollision(filed_->circle_);
-        Sound::PlayOriginSE(Sound::CRACKER);
-    };
+    if (IsCollision(lockerAABB, player_->GetWorldAABB())) {
+        player_->OnCollisionWall(lockerAABB);
+    }
+
+
+    for (const auto& [type, aabb] : building_->aabbs_) {
+        if (type != Building::AABBType::Floor) {
+            if (IsCollision(building_->GetWorldAABB(type), player_->GetWorldAABB())) {
+                player_->OnCollisionWall(building_->GetWorldAABB(type));
+            }
+
+        }
+
+
+    }
 }
 
 
@@ -212,7 +235,7 @@ void SampleScene::Draw() {
 
     world_->Draw(*currentCamera_);
     filed_->Draw(*currentCamera_);
-
+    building_->Draw(*currentCamera_);
 
     for (int i = 0; i < lockers_.size(); ++i) {
         lockers_[i]->Draw(*currentCamera_);
