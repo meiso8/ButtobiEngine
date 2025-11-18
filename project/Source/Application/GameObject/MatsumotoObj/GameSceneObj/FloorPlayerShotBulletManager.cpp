@@ -23,5 +23,8 @@ void FloorPlayerShotBulletManager::Update() {
 		Vector3 shotDirection = player_->GetLookDir();
 		Vector3 shotPosition = player_->body_.worldTransform_.translate_ + shotDirection * 0.5f;
 		bulletManager_->ShotBullet(shotPosition, shotDirection, shotSpeed_, shotSize_);
+
+		player_->body_.worldTransform_.scale_ = { 1.5f,0.1f,1.5f };
+		player_->animationState_ = PlayerAnimationState::Shot;
 	}
 }

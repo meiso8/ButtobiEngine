@@ -12,8 +12,26 @@
 
 FloorGamePlayer::FloorGamePlayer() {
 	body_.Create();
-	model_ = ModelManager::GetModel(ModelManager::PLAYER_MODEL);
-	body_.SetMesh(model_);
+	rightArmObject_.Create();
+	leftArmObject_.Create();
+	rightLegObject_.Create();
+	leftLegObject_.Create();
+
+	body_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_BODY));
+	rightArmObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_ARM_R));
+	leftArmObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_ARM_L));
+	rightLegObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_LEG_R));
+	leftLegObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_LEG_L));
+
+	rightArmObject_.worldTransform_.Parent(body_.worldTransform_);
+	leftArmObject_.worldTransform_.Parent(body_.worldTransform_);
+	rightLegObject_.worldTransform_.Parent(body_.worldTransform_);
+	leftLegObject_.worldTransform_.Parent(body_.worldTransform_);
+
+	rightArmObject_.worldTransform_.translate_ = { 0.5f,0.0f,0.0f };
+	leftArmObject_.worldTransform_.translate_ = { -0.5f,0.0f,0.0f };
+	rightLegObject_.worldTransform_.translate_ = { 0.3f,-0.5f,-0.3f };
+	leftLegObject_.worldTransform_.translate_ = { -0.3f,-0.5f,-0.3f };
 
 	SetRadius(0.5f);
 
@@ -77,6 +95,10 @@ void FloorGamePlayer::Update() {
 
 	// ワールドトランスフォーム更新
 	body_.Update();
+	rightArmObject_.Update();
+	leftArmObject_.Update();
+	rightLegObject_.Update();
+	leftLegObject_.Update();
 
 	ColliderUpdate();
 
@@ -93,7 +115,16 @@ void FloorGamePlayer::Update() {
 void FloorGamePlayer::Draw(Camera& camera, const LightMode& lightType) {
 
 	body_.SetLightMode(lightType);
+	rightArmObject_.SetLightMode(lightType);
+	leftArmObject_.SetLightMode(lightType);
+	rightLegObject_.SetLightMode(lightType);
+	leftLegObject_.SetLightMode(lightType);
+
 	body_.Draw(camera, kBlendModeNormal);
+	rightArmObject_.Draw(camera, kBlendModeNormal);
+	leftArmObject_.Draw(camera, kBlendModeNormal);
+	rightLegObject_.Draw(camera, kBlendModeNormal);
+	leftLegObject_.Draw(camera, kBlendModeNormal);
 	ColliderDraw(camera);
 
 }
@@ -132,6 +163,7 @@ void FloorGamePlayer::Move() {
 
 	// 移動
 	if (isMove_) {
+		animationState_ = PlayerAnimationState::Walk;
 		moveDir_ = Normalize(moveDir_);
 		lookDir_ = moveDir_;
 		//べとべと床にいるときは移動速度を落とす
@@ -140,6 +172,8 @@ void FloorGamePlayer::Move() {
 		} else {
 			body_.worldTransform_.translate_ += moveDir_ * moveSpeed_;
 		}
+	} else if(animationState_ != PlayerAnimationState::Stript && animationState_ != PlayerAnimationState::Shot) {
+		animationState_ = PlayerAnimationState::Idle;
 	}
 
 	// 移動制限

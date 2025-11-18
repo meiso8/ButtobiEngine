@@ -23,6 +23,8 @@ void FloorStripManager::Update() {
 	if (player_->isReqestStript_ && !player_->isStriptting_) {
 		player_->isStriptting_ = true;
 		player_->isReqestStript_ = false;
+		player_->body_.worldTransform_.scale_ = { 1.5f,0.1f,1.5f };
+		player_->animationState_ = PlayerAnimationState::Stript;
 
 		// プレイヤーの位置から床タイプを取得
 		FloorType currentFloorType = floorManager_->GetFloorTypeAtPosition(player_->body_.worldTransform_.translate_);
