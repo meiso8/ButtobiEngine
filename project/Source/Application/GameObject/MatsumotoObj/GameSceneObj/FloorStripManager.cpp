@@ -26,6 +26,10 @@ void FloorStripManager::Update() {
 
 		// プレイヤーの位置から床タイプを取得
 		FloorType currentFloorType = floorManager_->GetFloorTypeAtPosition(player_->body_.worldTransform_.translate_);
+		std::pair<int,int> tempFloorIndex = floorManager_->GetFloorIndexAtPosition(player_->body_.worldTransform_.translate_);
+		player_->stripFloorPosX_ = tempFloorIndex.first;
+		player_->stripFloorPosY_ = tempFloorIndex.second;
+		player_->isOnStripedFloor_ = true;
 		// 床タイプに応じた剥がし処理を実行
 		striptTypeAction_[currentFloorType]();
 	}

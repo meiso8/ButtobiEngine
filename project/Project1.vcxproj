@@ -157,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorActionManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\HPIcon.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\HPGage.cpp" />
     <ClCompile Include="Source\Application\GameObject\Enemy\EnemyShotBulletManager.cpp" />
@@ -275,6 +276,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\UI\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorActionManager.h" />
     <ClInclude Include="Source\Application\GameObject\UI\HPIcon.h" />
     <ClInclude Include="Source\Application\GameObject\UI\HPGage.h" />
     <ClInclude Include="Source\Application\GameObject\Enemy\EnemyShotBulletManager.h" />
