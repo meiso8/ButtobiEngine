@@ -24,7 +24,11 @@ public:
 	HPs* GetHpsPtr() { return &hps_; }
 	bool isStriptting_;
 	bool isReqestStript_;
+	int stripFloorPosX_;
+	int stripFloorPosY_;
 	bool isReqestShot_;
+	bool isOnStickyFloor_;
+	bool isOnStripedFloor_;
 	Object3d body_;
 private:
 	void Move();
@@ -47,6 +51,8 @@ private:
 
 	float shotTimer_;
 	float shotDuration_;
+
+	float stickyFloorSlowRate_;
 
 	HPs hps_ = { 100,100 };
 };

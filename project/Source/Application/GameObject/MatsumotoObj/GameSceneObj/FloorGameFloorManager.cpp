@@ -40,27 +40,18 @@ void FloorGameFloorManager::Draw(Camera& camera, const LightMode& lightType) {
 }
 
 FloorType FloorGameFloorManager::GetFloorTypeAtPosition(const Vector3& position) const {
-	int xIndex = static_cast<int>(position.x + (static_cast<float>(kMapWidth) * kHalfFloorSize));
-	int yIndex = static_cast<int>(position.z + (static_cast<float>(kMapHeight) * kHalfFloorSize));
-	if (xIndex < 0 || xIndex >= kMapWidth || yIndex < 0 || yIndex >= kMapHeight) {
-		// 範囲外の場合、一番近い端に補正する
-		xIndex = std::clamp(xIndex, 0, kMapWidth - 1);
-		yIndex = std::clamp(yIndex, 0, kMapHeight - 1);
-	}
+	std::pair<int, int> floorIndex = GetFloorIndexAtPosition(position);
+	int xIndex = floorIndex.first;
+	int yIndex = floorIndex.second;
 	return floors_[yIndex][xIndex]->floorType_;
 }
 
 std::vector<std::pair<int, int>> FloorGameFloorManager::GetConnectedFloorsAtPosition(const Vector3& position) const {
 	std::vector<std::pair<int, int>> result;
 
-	// 範囲外チェック
-	int xIndex = static_cast<int>(position.x + (static_cast<float>(kMapWidth) * kHalfFloorSize));
-	int yIndex = static_cast<int>(position.z + (static_cast<float>(kMapHeight) * kHalfFloorSize));
-	// 範囲外の場合、一番近い端に補正する
-	if (xIndex < 0 || xIndex >= kMapWidth || yIndex < 0 || yIndex >= kMapHeight) {
-		xIndex = std::clamp(xIndex, 0, kMapWidth - 1);
-		yIndex = std::clamp(yIndex, 0, kMapHeight - 1);
-	}
+	std::pair<int, int> floorIndex = GetFloorIndexAtPosition(position);
+	int xIndex = floorIndex.first;
+	int yIndex = floorIndex.second;
 
 	FloorType targetType = floors_[yIndex][xIndex]->floorType_;
 	std::vector<std::vector<bool>> visited(kMapHeight, std::vector<bool>(kMapWidth, false));
@@ -101,12 +92,19 @@ void FloorGameFloorManager::SwapFloorTypeAtPosition(const int& xIndex, const int
 }
 
 void FloorGameFloorManager::SwapFloorTypeAtPosition(const Vector3& position) {
-	int xIndex = static_cast<int>(position.x + (static_cast<float>(kMapWidth) * kHalfFloorSize));
-	int yIndex = static_cast<int>(position.z + (static_cast<float>(kMapHeight) * kHalfFloorSize));
+	std::pair<int, int> floorIndex = GetFloorIndexAtPosition(position);
+	int xIndex = floorIndex.first;
+	int yIndex = floorIndex.second;
 	if (xIndex < 0 || xIndex >= kMapWidth || yIndex < 0 || yIndex >= kMapHeight) {
 		// 範囲外の場合は一番近い端に補正する
 		floors_[std::clamp(yIndex, 0, kMapHeight - 1)][std::clamp(xIndex, 0, kMapWidth - 1)]->SwapNextFloorType();
 		return;
 	}
 	floors_[yIndex][xIndex]->SwapNextFloorType();
+}
+
+std::pair<int, int> FloorGameFloorManager::GetFloorIndexAtPosition(const Vector3& position) const {
+	int xIndex = static_cast<int>(position.x + (static_cast<float>(kMapWidth) * kHalfFloorSize));
+	int yIndex = static_cast<int>(position.z + (static_cast<float>(kMapHeight) * kHalfFloorSize));
+	return std::pair<int, int>(std::clamp(xIndex, 0, kMapWidth - 1),std::clamp(yIndex, 0, kMapHeight - 1));
 }
