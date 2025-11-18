@@ -14,7 +14,7 @@
 #include"Enemy/Enemy.h"
 #include"Field.h"
 #include "Building.h"
-
+#include"UI/HPGage.h"
 #include "Enemy/EnemyBulletManager.h"
 #include "Enemy/EnemyShotBulletManager.h"
 
@@ -40,14 +40,14 @@ public:
     void Debug()override;
     void CheckAllCollision();
 
-    std::unique_ptr<Sprite> sprite_ = nullptr;
+    std::array < std::unique_ptr<Sprite>, 3> sprite_;
 
 #pragma region//ゲームオブジェクト
     std::unique_ptr<Player>player_ = nullptr;
     std::unique_ptr<World>world_ = nullptr;
     std::unique_ptr<Field>filed_ = nullptr;
-    std::array < std::unique_ptr<Locker>, 24>lockers1_;
-    std::array < std::unique_ptr<Locker>, 24>lockers2_;
+    std::array < std::unique_ptr<Locker>, 23>lockers1_;
+    std::array < std::unique_ptr<Locker>, 23>lockers2_;
     std::unique_ptr<Medjed>medjed_ = nullptr;
     std::unique_ptr<Enemy>enemy_ = nullptr;
     std::unique_ptr<Building>building_ = nullptr;
@@ -57,5 +57,6 @@ public:
 
 #pragma endregion
 
-    std::unique_ptr<ParticleEmitter>particleEmitter_ = nullptr;
+    std::array<std::unique_ptr<ParticleEmitter>,2>particleEmitters_;
+     std::unique_ptr<HPGage>hpGage_;
 };

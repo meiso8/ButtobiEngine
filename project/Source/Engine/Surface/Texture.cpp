@@ -18,8 +18,9 @@ void Texture::LoadAllTexture() {
     handles[UV_CHECKER] = Load("Resource/Textures/uvChecker.png");
     handles[NUMBERS] = Load("Resource/Textures/numbers.png");
     handles[TEST] = Load("Resource/Textures/test.png");
+    handles[TEST2] = Load("Resource/Textures/test2.png");
+    handles[TEST3] = Load("Resource/Textures/test3.png");
     handles[HART] = Load("Resource/Textures/hart.png");
-    handles[HP_GAGE_EFFECCT] = Load("Resource/Textures/hpGageEffect.png");
 }
 
 uint32_t Texture::Load(const std::string& filePath)

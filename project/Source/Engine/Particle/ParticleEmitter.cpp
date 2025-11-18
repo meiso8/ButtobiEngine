@@ -22,7 +22,7 @@ void ParticleEmitter::Initialize()
     emitter_.color = { 1.0f,1.0f,1.0f,1.0f };
     emitter_.blendMode = kBlendModeAdd;
     emitter_.movement = ParticleManager::kNormal;
-
+    emitter_.lifeTime_ = -1.0f;
 
 }
 void ParticleEmitter::Update(Camera& camera)
@@ -42,7 +42,7 @@ void ParticleEmitter::Update(Camera& camera)
 
 void ParticleEmitter::Emit()
 {
-    particleManager_->EmitParticle(name_, emitter_.transform, emitter_.cont, emitter_.color, emitter_.isRandom);
+    particleManager_->EmitParticle(name_, emitter_.transform, emitter_.cont, emitter_.color, emitter_.isRandom, emitter_.lifeTime_);
 }
 
 void ParticleEmitter::Draw()

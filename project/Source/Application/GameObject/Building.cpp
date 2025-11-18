@@ -51,8 +51,17 @@ Building::Building() {
     };
 
     for (const auto& [type, mesh] : cubes_) {
-        mesh->Create(Texture::WHITE_1X1);
+        if (type == Floor) {
+            mesh->Create(Texture::WHITE_1X1);
+        } else {
+            mesh->Create(Texture::TEST3);
+            mesh->SetLightMode(kLightModeHalfL);
+        }
+
         mesh->SetMinMax(aabbs_[type]);
+
+        mesh->GetUVTransform().scale.y = {2.0f};
+ 
     }
 
     wallPos_[Wall0] = std::make_unique<Object3d>();
@@ -92,8 +101,13 @@ void Building::Update()
         pos->Update();
     }
 
-    model_->GetUVTransform().translate.x += std::numbers::pi_v<float> *0.0625f * 0.5f * InverseFPS;
-    model_->UpdateUV();
+    for (const auto& [type, mesh] : cubes_) {
+
+        mesh->GetUVTransform().translate.x -= std::numbers::pi_v<float> *0.0625f * 0.5f * InverseFPS;
+        mesh->GetUVTransform().scale.x = sinf(mesh->GetUVTransform().translate.x);
+
+        mesh->UpdateUV();
+    }
 }
 
 void Building::Draw(Camera& camera)
@@ -102,7 +116,7 @@ void Building::Draw(Camera& camera)
     //buildingPos->Draw(camera, kBlendModeNormal);
 
     for (const auto& [type, pos] : wallPos_) {
-        pos->Draw(camera, kBlendModeNormal,kCullModeNone);
+        pos->Draw(camera, kBlendModeNormal);
     }
 }
 

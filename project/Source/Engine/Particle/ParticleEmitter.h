@@ -17,6 +17,7 @@ struct Emitter
     Vector4 color;
     BlendMode blendMode;
     ParticleManager::Movements movement;
+    float lifeTime_;
 };
 
 class ParticleEmitter

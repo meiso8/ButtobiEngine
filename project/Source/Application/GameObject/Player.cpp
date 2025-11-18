@@ -36,6 +36,8 @@ Player::Player() {
 
 void Player::Init()
 {
+    isPressSpace_ = false;
+    zoomTimer_ = 0.0f;
     //体の位置初期化
     bodyPos_.worldTransform_.Initialize();
     bodyPos_.worldTransform_.translate_.z = -15.0f;
@@ -72,12 +74,25 @@ void Player::Update()
 {
 
     isWallHit = false;
+   
+    if (characterState_.isHit) {
+        if (hitTimer_ > 0.0f) {
+            hitTimer_ -= InverseFPS;
+        } else {
+            hitTimer_ = 0.0f;
+            characterState_.isHit = false;
+        }
+    }
 
     Move();
 
+    Zoom();
 
-    LookBack();
-    MouseLook();
+    if (!isZoom_) {
+        LookBack();
+        MouseLook();
+    }
+
     bodyPos_.Update();
     eyePos_.Update();
     circle_.center = bodyPos_.worldTransform_.GetWorldPosition();
@@ -151,6 +166,31 @@ void Player::Move()
     }
 
 
+}
+
+void Player::Zoom()
+{
+    if (Input::IsPushKey(DIK_SPACE)) {
+
+        isZoom_ = true;
+        if (zoomTimer_ < 0.2f) {
+            zoomTimer_ += InverseFPS;
+    
+        } else {
+            zoomTimer_ = 0.2f;
+            isPressSpace_ = true;
+        }
+
+
+
+    } else {
+        if (zoomTimer_ > 0.0f) {
+            zoomTimer_ -= InverseFPS;
+        } else {
+            zoomTimer_ = 0.0f;
+            isZoom_ = false;
+        }
+    }
 }
 
 Vector3& Player::GetForward()
@@ -309,7 +349,7 @@ void Player::OnCollisionWall(const AABB& aabb)
     }
     isWallHit = true;
 
-    ResolveCollision(aabb,GetWorldAABB());
+    ResolveCollision(aabb, GetWorldAABB());
 }
 
 void Player::OnCollisionEnemy()
@@ -321,5 +361,7 @@ void Player::OnCollisionEnemy()
     Sound::PlaySE(Sound::CRACKER);
     //衝突フラグを真に
     characterState_.isHit = true;
+    characterState_.hps.hp-=10;
+    hitTimer_ = 1.0f;
 
 }

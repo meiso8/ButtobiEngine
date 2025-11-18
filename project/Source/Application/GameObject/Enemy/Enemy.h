@@ -77,6 +77,7 @@ private:
     Vector3 velocity_ = { 0.0f };
     SphericalCoordinate sphericalPos_;
     Vector3 startPos_ = { 0.0f };
+    Vector3 endPos_ = { 0.0f };
     float poyoAnimTimer_ = 0.0f;
     float endRotateY_ = 0.0f;
     float startRotateY_ = 0.0f;

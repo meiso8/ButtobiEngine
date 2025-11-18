@@ -36,14 +36,26 @@
 #include"Circle/CircleMesh.h"
 #include"Circle.h"
 
+#include"Lerp.h"
+
 SampleScene::SampleScene()
 {
     // 現在のカメラを設定
     currentCamera_ = camera_.get();
 
-    sprite_ = std::make_unique<Sprite>();
-    sprite_->Create(Texture::TEST, { 0.0f,0.0f });
+    for (int i = 0; i < sprite_.size(); ++i) {
+        sprite_[i] = std::make_unique<Sprite>();
+    }
 
+    sprite_[0]->Create(Texture::TEST, { 0.0f,0.0f });
+    sprite_[0]->SetSize({ 320.0f,64.0f });
+    sprite_[1]->Create(Texture::TEST2, { 640.0f,360.0f });
+    sprite_[1]->SetSize({ 320.0f,32.0f });
+    sprite_[1]->SetAnchorPoint({ 0.5f,0.5f });
+    sprite_[1]->UpdateAnchorPoint();
+
+    sprite_[2]->Create(Texture::WHITE_1X1, { 0.0f,0.0f }, { 1.0f,0.75f,0.75f,1.0f });
+    sprite_[2]->SetSize({ 1280.0f,720.0f });
     player_ = std::make_unique<Player>();
     world_ = std::make_unique<World>();
     filed_ = std::make_unique<Field>();
@@ -67,9 +79,20 @@ SampleScene::SampleScene()
 
     building_ = std::make_unique<Building>();
 
-    particleEmitter_ = std::make_unique<ParticleEmitter>();
-    particleEmitter_->SetName("white");
-    particleEmitter_->emitter_.transform.Parent(medjed_->GetWorldTransform());
+    for (int i = 0; i < particleEmitters_.size(); ++i) {
+        particleEmitters_[i] = std::make_unique<ParticleEmitter>();
+    }
+
+    particleEmitters_[0]->SetName("white");
+    particleEmitters_[0]->emitter_.transform.Parent(medjed_->GetWorldTransform());
+
+    particleEmitters_[1]->SetName("people");
+
+
+
+    hpGage_ = std::make_unique<HPGage>();
+    hpGage_->SetHpPtr(player_->GetHpsPtr());
+    hpGage_->Setting({ 640.0f,32.0f }, { 640.0f,720.0f - 64.0f }, { 0.5f,0.0f });
 
 }
 
@@ -79,14 +102,30 @@ void SampleScene::Initialize() {
     MyEngine::GetDirectionalLightData()->intensity = -2.0f;
     Sound::bgmVolume_ = 0.1f;
 
+
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kWipeOut, 60);
     camera_->Initialize();
     camera_->UpdateMatrix();
-    particleEmitter_->Initialize();
-    particleEmitter_->emitter_.cont = 16;
-    particleEmitter_->emitter_.color = { 1.0f,0.75f,0.75f,1.0f };
-    particleEmitter_->emitter_.frequencyTime = 0.25f;
+
+
+    for (int i = 0; i < particleEmitters_.size(); ++i) {
+        particleEmitters_[i]->Initialize();
+    }
+
+    particleEmitters_[0]->emitter_.cont = 16;
+    particleEmitters_[0]->emitter_.color = { 1.0f,0.75f,0.75f,1.0f };
+    particleEmitters_[0]->emitter_.frequencyTime = 0.25f;
+    particleEmitters_[0]->emitter_.lifeTime_ = -1.0f;
+    particleEmitters_[0]->emitter_.blendMode = kBlendModeAdd;
+
+    particleEmitters_[1]->emitter_.transform.translate_.y = 30.0f;
+    particleEmitters_[1]->emitter_.transform.scale_ = { 10.0f,10.0f,10.0f };
+    particleEmitters_[1]->emitter_.cont = 4;
+    particleEmitters_[1]->emitter_.color = { 1.0f,0.75f,0.75f,1.0f };
+    particleEmitters_[1]->emitter_.frequencyTime = 0.1f;
+    particleEmitters_[1]->emitter_.lifeTime_ = 10.0f;
+    particleEmitters_[1]->emitter_.blendMode = kBlendModeNormal;
 
     player_->Init();
     world_->Init();
@@ -99,7 +138,7 @@ void SampleScene::Initialize() {
     }
     for (int i = 0; i < lockers2_.size(); ++i) {
         lockers2_[i]->Init();
-        lockers2_[i]->SetPosX(i * -1.0f -1.0f);
+        lockers2_[i]->SetPosX(i * -1.0f - 1.0f);
     }
 
     medjed_->Init();
@@ -109,9 +148,18 @@ void SampleScene::Initialize() {
     enemyShotBulletManager_->Initialize();
 
     building_->Init();
+
+
+    hpGage_->Initialize();
+
 }
 
 void SampleScene::Update() {
+
+    if (player_->GetHpsPtr()->hp <= 0) {
+    
+        sceneChange_->SetState(SceneChange::kFadeIn, 60);
+    }
 
     if (enemy_->isApper_) {
 
@@ -143,12 +191,11 @@ void SampleScene::Update() {
     } else {
         camera_->worldMat_ = player_->GetEyeMatrix();
 
-        if (Input::IsPushKey(DIK_SPACE)) {
-            Vector3 translate = player_->GetForward();
-            camera_->worldMat_.m[3][0] += translate.x * 3.0f;
-            camera_->worldMat_.m[3][1] += translate.y * 3.0f;
-            camera_->worldMat_.m[3][2] += translate.z * 3.0f;
-        }
+
+        Vector3 translate = player_->GetForward();
+        camera_->worldMat_.m[3][0] = Lerp(camera_->worldMat_.m[3][0], translate.x, player_->zoomTimer_);
+        camera_->worldMat_.m[3][1] = Lerp(camera_->worldMat_.m[3][1], translate.y, player_->zoomTimer_);
+        camera_->worldMat_.m[3][2] = Lerp(camera_->worldMat_.m[3][2], translate.z, player_->zoomTimer_);
 
         camera_->UpdateViewProjectionMatrix();
 
@@ -161,7 +208,10 @@ void SampleScene::Update() {
     enemyBulletManager_->Update();
 
     if (enemy_->isApper_) {
-        particleEmitter_->Update(*currentCamera_);
+        for (int i = 0; i < particleEmitters_.size(); ++i) {
+            particleEmitters_[i]->Update(*currentCamera_);
+        }
+        hpGage_->Update();
     }
 
 
@@ -179,6 +229,8 @@ void SampleScene::Update() {
     enemyShotBulletManager_->Update();
 
     CheckAllCollision();
+
+
 }
 
 
@@ -200,8 +252,8 @@ void SampleScene::Debug()
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
     std::function<void()> func = [this]() { SwitchCamera(); };
     DebugUI::Button("ChangeCamera", func);
-    DebugUI::CheckParticle(*particleEmitter_);
-    DebugUI::CheckSprite(*sprite_, "sprite0");
+    DebugUI::CheckParticle(*particleEmitters_[0]);
+    DebugUI::CheckSprite(*sprite_[0], "sprite0");
 
 #endif // !USE_IMGUI
 }
@@ -221,7 +273,7 @@ void SampleScene::CheckAllCollision()
     }
 
     if (!enemy_->isApper_) {
-    
+
         AABB locker1AABB = { .min = {1.0f,0.0f,-0.5f},.max = {25.0f,2.0f,0.5f} };
 
         if (IsCollision(locker1AABB, player_->GetWorldAABB())) {
@@ -236,7 +288,7 @@ void SampleScene::CheckAllCollision()
     }
 
 
-    for (const auto& [type, aabb] : building_->aabbs_) {
+ /*   for (const auto& [type, aabb] : building_->aabbs_) {
         if (type != Building::AABBType::Floor) {
             if (IsCollision(building_->GetWorldAABB(type), player_->GetWorldAABB())) {
                 player_->OnCollisionWall(building_->GetWorldAABB(type));
@@ -245,7 +297,7 @@ void SampleScene::CheckAllCollision()
         }
 
 
-    }
+    }*/
 }
 
 
@@ -259,6 +311,12 @@ void SampleScene::Draw() {
 #endif
 
     world_->Draw(*currentCamera_);
+
+    if (enemy_->isApper_) {
+        particleEmitters_[1]->Draw();
+    }
+
+
     filed_->Draw(*currentCamera_);
     building_->Draw(*currentCamera_);
 
@@ -277,12 +335,21 @@ void SampleScene::Draw() {
     enemyBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
 
     if (enemy_->isApper_) {
-        particleEmitter_->Draw();
+
+        particleEmitters_[0]->Draw();
+        hpGage_->Draw();
+    }
+
+    if (!player_->isPressSpace_ && !enemy_->isApper_) {
+        for (int i = 0; i < sprite_.size() - 1; ++i) {
+            sprite_[i]->PreDraw();
+            sprite_[i]->Draw();
+        }
     }
 
 
-    sprite_->PreDraw();
-    sprite_->Draw();
+    sprite_[2]->PreDraw(kBlendModeMultiply);
+    sprite_[2]->Draw();
 
     sceneChange_->Draw();
 }

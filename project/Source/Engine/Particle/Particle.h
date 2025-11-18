@@ -52,7 +52,7 @@ struct ParticleGroup {
 
 std::list<SphericalCoordinate> EmitCoordinate(const bool& isRandom, const Vector3& position, uint32_t count, const Vector3& scale = { 1.0f,1.0f,1.0f }, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
 
-std::list<Particle> Emit(const bool& isRandom, const WorldTransform& transform, uint32_t count, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
+std::list<Particle> Emit(const bool& isRandom, const WorldTransform& transform, uint32_t count, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f },const float& lifeTime = -1.0f);
 Particle MakeNewParticle(const bool& isRandom, const WorldTransform& transform, const Vector4& color, const float& lifeTime = -1.0f);
 SphericalCoordinate MakeNewSphericalCoordinate(const float& radius = 3.0f);
 class ParticleManager
@@ -106,7 +106,7 @@ public:
     void Create();
     static ParticleManager* GetInstance();
 
-    static void EmitParticle(const std::string name, const WorldTransform& transform, uint32_t count, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, const bool& isRandom = true);
+    static void EmitParticle(const std::string name, const WorldTransform& transform, uint32_t count, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, const bool& isRandom = true, const float& lifeTime = 1.0f);
 
     std::unordered_map<std::string, std::unique_ptr <ParticleGroup>>& GetParticleGroups();
     void CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle, const bool& useModel, const ModelManager::MODEL_HANDLE& modelHandle = ModelManager::MODEL_HANDLE::BOX);

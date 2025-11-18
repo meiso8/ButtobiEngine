@@ -410,7 +410,7 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter)
         CheckBlendMode(emitter.blendMode);
         ImGui::SliderFloat("frequency", &emitter.frequency, 0.1f, 10.0f);
         ImGui::Text("frequencyTime : %f", emitter.frequencyTime);
-
+        ImGui::Text("lifeTime : %f", emitter.lifeTime_);
         ImGui::TreePop();
     }
 

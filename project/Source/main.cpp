@@ -20,7 +20,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     myEngine->Create(L"ぶっ飛びエンジン！", WIN_WIDTH, WIN_HEIGHT);
     // ==============================================//↑基本いじらない↑//============================================
     //画面の色
-    Vector4 screenColor = { 0.373f,0.804f,0.894f,1.0f };
+    Vector4 screenColor = { 0.75f,0.5f,0.5f,1.0f };
 
     // =============================================
     // シーンの生成

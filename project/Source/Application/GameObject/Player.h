@@ -21,6 +21,7 @@ public:
     void Draw(Camera& camera, const LightMode& lightType);
     void Update();
     void Move();
+    void Zoom();
     Vector3& GetForward();
     void LookBack();
     void MouseLook();
@@ -42,8 +43,11 @@ public:
     void OnCollisionEnemy();
 
     float cameraSpeed_ = 4.0f;
+    bool isPressSpace_ = false;
+    float zoomTimer_ = 0.0f;
+    bool isZoom_ = false;
 private:
-
+    float hitTimer_ = 0.0f;
     float endRotateY_ = 0.0f;
     float startRotateY = 0.0f;
     float lookBackTime_ = 1.0f;

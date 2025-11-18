@@ -30,7 +30,7 @@ Enemy::Enemy()
     bodyPos_.worldTransform_.scale_ = { scale,scale,scale };
     Init();
 
-    SetRadius(bodyPos_.worldTransform_.scale_.x*0.5f);
+    SetRadius(bodyPos_.worldTransform_.scale_.x * 0.5f);
     SetCollisionAttribute(kCollisionEnemy);
     // 敵は「プレイヤー」と「プレイヤーの弾」と衝突したい
     SetCollisionMask(kCollisionPlayer | kCollisionPlayerBullet);
@@ -93,7 +93,7 @@ void Enemy::Update()
 
 Vector3 Enemy::GetWorldPosition()const
 {
-    return bodyPos_.worldTransform_.GetWorldPosition() + Vector3{ 0.0f, GetRadius(), 0.0f};
+    return bodyPos_.worldTransform_.GetWorldPosition() + Vector3{ 0.0f, GetRadius(), 0.0f };
 }
 
 void Enemy::OnCollision(Collider* collider)
@@ -132,6 +132,7 @@ void Enemy::Tackle()
 
         if (timer_ <= 2.0f) {
             LookTarget();
+            endPos_ = *target_;
         }
 
         PoyoPoyo(3.0f);
@@ -140,7 +141,7 @@ void Enemy::Tackle()
         Sound::PlayOriginSE(Sound::FIRE_BALL);
         float localTimer = (timer_ - 3.0f) / 0.7f;
         LerpScale();
-        bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(startPos_, *target_, localTimer);
+        bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(startPos_, endPos_, localTimer);
     } else {
         SetPhase(KNOCKBACK);
         return;
@@ -163,6 +164,8 @@ void Enemy::Knockback()
     } else {
         SetPhase(ROUND);
     }
+
+
 }
 
 void Enemy::SetPhase(PHASE phase)
@@ -171,8 +174,9 @@ void Enemy::SetPhase(PHASE phase)
     phase_ = phase;
     poyoAnimTimer_ = 0.0f;
 
-    if (phase_ == ROUND ) {
-        sphericalPos_ = TransformCoordinate(bodyPos_.worldTransform_.translate_);
+    if (phase_ == ROUND) {
+        sphericalPos_.azimuthal = 0.0f;
+        sphericalPos_.polar = 0.0f;
     }
     if (phase_ == FIREBALL || phase_ == KNOCKBACK) {
         startRotateY_ = bodyPos_.worldTransform_.rotate_.y;
@@ -183,7 +187,7 @@ void Enemy::SetPhase(PHASE phase)
 void Enemy::Round()
 {
     sphericalPos_.radius = Lerp(sphericalPos_.radius, enemyRoundCircle_.radius, 0.5f);
-    sphericalPos_.azimuthal += InverseFPS ;
+    sphericalPos_.azimuthal += InverseFPS * roundSpeedY;
     sphericalPos_.polar += InverseFPS * roundSpeedY;
     if (sphericalPos_.polar > std::numbers::pi_v<float> / 2.0f || sphericalPos_.polar < -std::numbers::pi_v<float> / 2.0f) {
         roundSpeedY *= -1.0f;
@@ -192,7 +196,7 @@ void Enemy::Round()
     bodyPos_.worldTransform_.translate_ = TransformCoordinate(sphericalPos_);
 
     if (timer_ >= actionTime_) {
-        
+
         int randNum = rand() % 2;
         if (randNum == 0) {
             SetPhase(TACKLE);
@@ -295,7 +299,7 @@ void Enemy::HitUpdate()
 
 void Enemy::LerpScale()
 {
-    float scale = GetRadius()*2.0f;
+    float scale = GetRadius() * 2.0f;
     bodyPos_.worldTransform_.scale_ = Lerp(Vector3{ bodyPos_.worldTransform_.scale_ }, { scale,scale,scale }, 0.5f);
 }
 
