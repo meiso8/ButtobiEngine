@@ -1,10 +1,13 @@
 #include "ParticleEmitter.h"
-#include"Particle.h"
 
+#include"Camera.h"
 
 ParticleEmitter::ParticleEmitter()
 {
     Initialize();
+    particleManager_ = ParticleManager::GetInstance();
+    particleManager_->Create();
+    particleManager_->SetMovement(emitter_.movement);
 }
 void ParticleEmitter::Initialize()
 {
@@ -15,10 +18,14 @@ void ParticleEmitter::Initialize()
     emitter_.transform.scale = { 1.0f,1.0f,1.0f };
     emitter_.transform.translate = { 0.0f,0.0f,0.0f };
 
-    emitter_.isRandom = false;
+    emitter_.isRandom = true;
     emitter_.color = { 1.0f,1.0f,1.0f,1.0f };
+    emitter_.blendMode = kBlendModeAdd;
+    emitter_.movement = ParticleManager::kNormal;
+
+
 }
-void ParticleEmitter::Update()
+void ParticleEmitter::Update(Camera& camera)
 {
     emitter_.frequencyTime += ParticleManager::kDeltaTime;
 
@@ -27,9 +34,18 @@ void ParticleEmitter::Update()
         Emit();
     }
 
+    particleManager_->Update(camera);
+
+
+   
 }
 
 void ParticleEmitter::Emit()
 {
-    ParticleManager::EmitParticle(name_, emitter_.transform, emitter_.cont, emitter_.color, emitter_.isRandom);
+    particleManager_->EmitParticle(name_, emitter_.transform, emitter_.cont, emitter_.color, emitter_.isRandom);
+}
+
+void ParticleEmitter::Draw()
+{
+    particleManager_->Draw(emitter_.blendMode);
 }

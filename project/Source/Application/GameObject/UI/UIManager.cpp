@@ -3,16 +3,21 @@
 UIManager::UIManager(HPs& enemyHp, HPs& playerHp)
 {
     hpGages_.emplace(GageType::kEnemy, std::make_unique<HPGage>());
-    hpGages_.emplace(GageType::kPlayer, std::make_unique<HPGage>());
     hpGages_[kEnemy]->SetHpPtr(&enemyHp);
-    hpGages_[kEnemy]->Setting({ 640.0f,32.0f }, { 640.0f,64.0f}, { 0.5f,0.0f });
-    hpGages_[kPlayer]->SetHpPtr(&playerHp);
-    hpGages_[kPlayer]->Setting({320.0f,16.0f}, { 64.0f, static_cast<float>(Window::GetClientHeight() - 32 )}, { 0.0f,0.0f });
-    
+    hpGages_[kEnemy]->Setting({ 640.0f,32.0f }, { 640.0f,64.0f }, { 0.5f,0.0f });
+
+
+    if (isDrawPlayerGage_) {
+        hpGages_.emplace(GageType::kPlayer, std::make_unique<HPGage>());
+        hpGages_[kPlayer]->SetHpPtr(&playerHp);
+        hpGages_[kPlayer]->Setting({ 320.0f,16.0f }, { 64.0f, static_cast<float>(Window::GetClientHeight() - 32) }, { 0.0f,0.0f });
+    }
+
+
     playerHpIcon_ = std::make_unique<HPIcon>();
     playerHpIcon_->SetHpPtr(&playerHp);
-    playerHpIcon_->Setting({ 64.0f,64.0f }, {64.0f,static_cast<float>(Window::GetClientHeight() - 96) });
-  
+    playerHpIcon_->Setting({ 64.0f,64.0f }, { 64.0f,static_cast<float>(Window::GetClientHeight() - 96) });
+
 }
 
 void UIManager::Initialize()

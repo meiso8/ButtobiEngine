@@ -14,6 +14,8 @@ public:
     ModelData* GetModelData() {
         return modelData_.get();
     }
+
+    D3D12_VERTEX_BUFFER_VIEW& GetVBV() { return vertexBufferView_; };
     void Draw(ID3D12GraphicsCommandList* commandList)override;
     
     /// @brief UVを更新する
