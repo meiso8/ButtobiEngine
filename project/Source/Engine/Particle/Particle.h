@@ -89,6 +89,8 @@ private:
     Camera* camera_ = nullptr;
 public:
 
+    void CreateAll();
+
     //コンストラク・タデストラクタの隠ぺい
     ParticleManager();
     ~ParticleManager() = default;

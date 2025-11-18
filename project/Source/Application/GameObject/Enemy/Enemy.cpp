@@ -9,6 +9,7 @@
 #include"SphericalCoordinate.h"
 #include"Collision.h"
 #include"Easing.h"
+#include"DebugUI.h"
 
 Enemy::Enemy()
 {
@@ -82,6 +83,8 @@ void Enemy::Update()
     HitUpdate();
     bodyPos_.Update();
     ColliderUpdate();
+
+    DebugUI::CheckCharacterState(characterState_, "Boss");
 }
 
 Vector3 Enemy::GetWorldPosition()const
@@ -173,8 +176,10 @@ void Enemy::SetPhase(PHASE phase)
 void Enemy::Round()
 {
     sphericalPos_.radius = Lerp(sphericalPos_.radius, enemyRoundCircle_.radius, 0.5f);
-    sphericalPos_.polar += InverseFPS;
-    if (sphericalPos_.polar >= std::numbers::pi_v<float>*2.0f) { sphericalPos_.polar = 0.0f; }
+    sphericalPos_.polar += InverseFPS* roundSpeedY;
+    if (sphericalPos_.polar > std::numbers::pi_v<float>/2.0f|| sphericalPos_.polar < -std::numbers::pi_v<float>/2.0f) {
+        roundSpeedY *= -1.0f;
+    }
     LookTarget();
     bodyPos_.worldTransform_.translate_ = TransformCoordinate(sphericalPos_);
     bodyPos_.worldTransform_.translate_.y = GetRadius();

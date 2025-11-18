@@ -25,6 +25,8 @@ void ParticleManager::Create()
     CreateModelData();
     CreateVertexBufferResource();
     textureSize_ = { 100.0f,100.0f,1.0f };
+
+    CreateAll();
 }
 
 Particle MakeNewParticle(const bool& isRandom, const Transform& transform, const Vector4& color, const float& lifeTime)
@@ -181,6 +183,12 @@ void ParticleManager::IsCollisionFieldArea(Particle& particleItr)
 }
 
 // ==========================================================================================================
+
+void ParticleManager::CreateAll()
+{
+    CreateParticleGroup("uvChecker", Texture::UV_CHECKER);
+    CreateParticleGroup("white", Texture::WHITE_1X1);
+}
 
 ParticleManager::ParticleManager()
 {

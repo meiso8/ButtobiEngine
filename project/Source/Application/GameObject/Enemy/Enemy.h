@@ -76,7 +76,7 @@ private:
     float poyoAnimTimer_ = 0.0f;
     float endRotateY_ = 0.0f;
     float startRotateY_ = 0.0f;
-
+    float roundSpeedY = 1.0f;
 private:
     void SetPhase(PHASE phase);
     void Round();
