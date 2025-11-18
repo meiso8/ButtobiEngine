@@ -81,7 +81,7 @@ public:
     static void CheckColor(Vector4& color, const char* label);
     static void CheckMaterial(Material& material, const char* label);
     static void CheckLightMode(int32_t& lightMode, const char* label);
-    static void CheckBlendMode(uint32_t& blendMode);
+    static void CheckBlendMode(BlendMode& blendMode);
 
     static void CheckInt(int& value, const char* label);
 

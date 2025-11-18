@@ -3,6 +3,9 @@
 #include<cstdint>
 #include<string>
 #include"Vector4.h"
+#include"BlendMode.h"
+#include"Particle.h"
+class Camera;
 
 struct Emitter
 {
@@ -12,6 +15,8 @@ struct Emitter
     float frequencyTime;//頻度用時刻
     bool isRandom;
     Vector4 color;
+    BlendMode blendMode;
+    ParticleManager::Movements movement;
 };
 
 class ParticleEmitter
@@ -19,7 +24,7 @@ class ParticleEmitter
 private:
 
     std::string name_ = "unknown";
-
+    ParticleManager* particleManager_ = nullptr;
 public:
     Emitter emitter_{};
 public:
@@ -31,7 +36,8 @@ public:
 
     ParticleEmitter();
     void Initialize();
-    void Update();
+    void Update(Camera& camera);
     void Emit();
+    void Draw();
 };
 
