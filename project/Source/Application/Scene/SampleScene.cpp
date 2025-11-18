@@ -76,6 +76,14 @@ SampleScene::SampleScene()
     world_ = std::make_unique<World>();
     filed_ = std::make_unique<Field>();
 
+    for (int i = 0; i < lockers_.size(); ++i) {
+        lockers_[i] = std::make_unique<Locker>();
+    }
+
+
+    medjed_ = std::make_unique<Medjed>();
+    medjed_->SetTargetMatrix(&player_->GetBodyMatrix());
+
 }
 
 void SampleScene::Initialize() {
@@ -88,6 +96,13 @@ void SampleScene::Initialize() {
     player_->Init();
     world_->Init();
     filed_->Init();
+
+
+    for (int i = 0; i < lockers_.size(); ++i) {
+        lockers_[i]->Init();
+        lockers_[i]->SetPosX(i * 1.0f);
+    }
+    medjed_->Init();
 }
 
 void SampleScene::Update() {
@@ -119,6 +134,8 @@ void SampleScene::Update() {
     player_->Update();
     filed_->Update();
 
+    medjed_->Update();
+
     particleEmitter_->Update(*currentCamera_);
 
 
@@ -127,6 +144,11 @@ void SampleScene::Update() {
     for (int i = 0; i < object3ds_.size(); ++i) {
         object3ds_[i]->Update();
     }
+
+    for (int i = 0; i < lockers_.size(); ++i) {
+        lockers_[i]->Update();
+    }
+
 
     world_->Update();
 
@@ -191,8 +213,12 @@ void SampleScene::Draw() {
     world_->Draw(*currentCamera_);
     filed_->Draw(*currentCamera_);
 
-    //object3ds_[1]->Draw(*currentCamera_);
-    //object3ds_[0]->Draw(*currentCamera_);
+
+    for (int i = 0; i < lockers_.size(); ++i) {
+        lockers_[i]->Draw(*currentCamera_);
+    }
+
+    medjed_->Draw(*currentCamera_);
 
     player_->Draw(*currentCamera_, kLightModeHalfL);
 

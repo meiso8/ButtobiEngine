@@ -24,6 +24,8 @@ public:
 
         PLAYER_MODEL,//プレイヤーの全体
 
+        MEDJED,
+
         WORLD,
         MODELS,
     };
