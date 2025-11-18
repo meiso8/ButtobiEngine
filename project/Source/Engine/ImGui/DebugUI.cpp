@@ -393,8 +393,6 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter)
 
     ImGui::Checkbox("useBillboard", &particle.useBillboard_);
     ImGui::Checkbox("useSpriteCamera", &particle.useSpriteCamera_);
-    ImGui::Checkbox("useModel", &particle.useModel_);
-    ImGui::SliderFloat2("textureSize", &particle.textureSize_.x, 0.0f, static_cast<float>(Window::GetClientWidth()));
 
     static  Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
 
@@ -418,13 +416,22 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter)
 
     for (const auto& [name, group] : particle.GetParticleGroups()) {
 
-        if (ImGui::Button(name.c_str())) {
-            particle.EmitParticle(name, emitter.transform, emitter.cont, color);
-        }
 
-        for (std::list<Particle>::iterator itr = group->particles.begin(); itr != group->particles.end(); ++itr) {
-            CheckTransform((*itr).transform, name.c_str());
+        if (ImGui::TreeNode(name.c_str())) {
+
+            ImGui::Checkbox("useModel", &group->useModel);
+            ImGui::SliderFloat2("textureSize", &group->textureSize.x, 0.0f, static_cast<float>(Window::GetClientWidth()));
+
+            if (ImGui::Button(name.c_str())) {
+                particle.EmitParticle(name, emitter.transform, emitter.cont, color);
+            }
+            for (std::list<Particle>::iterator itr = group->particles.begin(); itr != group->particles.end(); ++itr) {
+                CheckTransform((*itr).transform, name.c_str());
+            }
+            ImGui::TreePop();
         }
+   
+ 
     }
 
     ImGui::End();

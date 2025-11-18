@@ -40,9 +40,6 @@ void ParticleManager::Create()
     CreateModelData();
 
     CreateVertexBufferResource();
-    textureSize_ = { 100.0f,100.0f,1.0f };
-
-    CreateAll();
 }
 
 Particle MakeNewParticle(const bool& isRandom, const Transform& transform, const Vector4& color, const float& lifeTime)
@@ -89,12 +86,12 @@ void ParticleManager::CreateParticleGroup(const std::string name, const Texture:
 
     assert(!particleGroups.contains(name));
     std::unique_ptr<ParticleGroup> newParticleGroup = std::make_unique<ParticleGroup>();
-    useModel_ = useModel;
-
-    if (useModel_) {
-        model_ = ModelManager::GetModel(modelHandle);
-        newParticleGroup->materialData.textureSrvIndex = model_->GetModelData()->material.textureSrvIndex;
-        newParticleGroup->materialData.textureFilePath = model_->GetModelData()->material.textureFilePath;
+    newParticleGroup->useModel = useModel;
+    newParticleGroup->textureSize = { 100.0f,100.0f };
+    if (newParticleGroup->useModel) {
+        newParticleGroup->model = ModelManager::GetModel(modelHandle);
+        newParticleGroup->materialData.textureSrvIndex = newParticleGroup->model->GetModelData()->material.textureSrvIndex;
+        newParticleGroup->materialData.textureFilePath = newParticleGroup->model->GetModelData()->material.textureFilePath;
     } else {
         newParticleGroup->materialData.textureSrvIndex = Texture::GetHandle(textureHandle);
         newParticleGroup->materialData.textureFilePath = Texture::GetFilePath(textureHandle);
@@ -171,15 +168,15 @@ void ParticleManager::Draw(uint32_t blendMode)
             //テスクチャ
             SrvManager::SetGraphicsRootDescriptorTable(2, group->materialData.textureSrvIndex);
             //描画!（DrawCall/ドローコール）6個のインデックスを使用しインスタンスを描画。
-           
-            if (model_ != nullptr&& useModel_) {
-                commandList_->IASetVertexBuffers(0, 1, &model_->GetVBV());
-                commandList_->DrawInstanced(UINT(model_->GetModelData()->vertices.size()), group->numInstance, 0, 0);
+
+            if (group->model != nullptr && group->useModel) {
+                commandList_->IASetVertexBuffers(0, 1, &group->model->GetVBV());
+                commandList_->DrawInstanced(UINT(group->model->GetModelData()->vertices.size()), group->numInstance, 0, 0);
             } else {
                 commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);
-                commandList_->DrawInstanced(UINT(modelData_->vertices.size()), group->numInstance, 0, 0);     
+                commandList_->DrawInstanced(UINT(modelData_->vertices.size()), group->numInstance, 0, 0);
             }
-           
+
 
         }
 
@@ -219,7 +216,7 @@ void ParticleManager::IsCollisionFieldArea(Particle& particleItr)
 void ParticleManager::CreateAll()
 {
     CreateParticleGroup("uvChecker", Texture::UV_CHECKER);
-    CreateParticleGroup("white", Texture::WHITE_1X1,true,ModelManager::BOX);
+    CreateParticleGroup("white", Texture::WHITE_1X1, true, ModelManager::PLAYER_ARM_L);
 }
 
 
@@ -253,7 +250,7 @@ void ParticleManager::Normal()
                 //経過時間を加算
                 (*particleIterator).currentTime += kDeltaTime;
 
-                UpdateMatrix(*particleIterator);
+                UpdateMatrix(*particleIterator, *group);
 
                 //ビュープロジェクション行列
                 UpdateWVPMatrix(*camera_);
@@ -307,7 +304,7 @@ void ParticleManager::Sphere()
                 particleIterator->transform.scale.y = time * 0.5f;
                 particleIterator->transform.scale.z = time * 0.5f;
 
-                UpdateWorldMatrix(*particleIterator);
+                UpdateWorldMatrix(*particleIterator, *group);
 
                 UpdateWVPMatrix(*camera_);
 
@@ -387,13 +384,13 @@ void ParticleManager::UpdateWVPMatrix(Camera& camera)
 
 }
 
-void ParticleManager::UpdateMatrix(Particle& particleItr)
+void ParticleManager::UpdateMatrix(Particle& particleItr, ParticleGroup& group)
 {
     //ビルボード処理
     if (useBillboard_) {
         UpdateWorldMatrixForBillBord(particleItr);
     } else {
-        UpdateWorldMatrix(particleItr);
+        UpdateWorldMatrix(particleItr, group);
     }
 }
 void ParticleManager::UpdateWorldMatrixForBillBord(Particle& particleItr)
@@ -404,11 +401,11 @@ void ParticleManager::UpdateWorldMatrixForBillBord(Particle& particleItr)
     worldMatrix = scaleMatrix * rotateMatrix * translateMatrix;
 }
 
-void ParticleManager::UpdateWorldMatrix(Particle& particleItr)
+void ParticleManager::UpdateWorldMatrix(Particle& particleItr, ParticleGroup& group)
 {
 
     if (useSpriteCamera_) {
-        worldMatrix = MakeAffineMatrix(particleItr.transform.scale * textureSize_, particleItr.transform.rotate, particleItr.transform.translate * textureSize_);
+        worldMatrix = MakeAffineMatrix(particleItr.transform.scale * group.textureSize, particleItr.transform.rotate, particleItr.transform.translate * group.textureSize);
     } else {
         worldMatrix = MakeAffineMatrix(particleItr.transform.scale, particleItr.transform.rotate, particleItr.transform.translate);
     }

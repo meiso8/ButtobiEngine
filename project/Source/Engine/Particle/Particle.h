@@ -43,6 +43,9 @@ struct ParticleGroup {
     Microsoft::WRL::ComPtr<ID3D12Resource> instancingResource;
     uint32_t numInstance;//インスタンス数
     ParticleForGPU* instancingData;
+    Vector3 textureSize;
+    bool useModel;
+    Model* model = nullptr;
 };
 
 
@@ -65,8 +68,8 @@ public:
     AccelerationField accelerationField;
     bool useBillboard_ = true;
     bool useSpriteCamera_ = false;
-    bool useModel_ = false;
-    Vector3 textureSize_;
+
+
     const uint32_t kNumMaxInstance = 100;//インスタンス数
     static const float kDeltaTime;
 private:
@@ -79,7 +82,7 @@ private:
     VertexData* vertexBufferData_ = nullptr;
 
     std::unique_ptr<ModelData> modelData_ = nullptr;
-    Model* model_ = nullptr;
+
     std::unique_ptr < MaterialResource> materialResource;
 
     Matrix4x4 backToFrontMatrix;
@@ -117,7 +120,7 @@ public:
 
 protected:
     void UpdateBillBordMatrix(Camera& camera);
-    void UpdateMatrix(Particle& particleItr);
+    void UpdateMatrix(Particle& particleItr, ParticleGroup& group);
 private:
 
     std::list<SphericalCoordinate>sphericalCoordinates;
@@ -133,7 +136,7 @@ private:
 
     void IsCollisionFieldArea(Particle& particleItr);
     void UpdateWorldMatrixForBillBord(Particle& particleItr);
-    void UpdateWorldMatrix(Particle& particleItr);
+    void UpdateWorldMatrix(Particle& particleItr, ParticleGroup& group);
     void UpdateWVPMatrix(Camera& camera);
     void UpdateInstancingData(ParticleGroup& group, Particle& particleItr);
 

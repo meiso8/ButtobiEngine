@@ -4,8 +4,9 @@
 #include<string>
 #include"Vector4.h"
 #include"BlendMode.h"
+#include"Particle.h"
 class Camera;
-class ParticleManager;
+
 struct Emitter
 {
     Transform transform;//エミッタのTransfrom
@@ -15,6 +16,7 @@ struct Emitter
     bool isRandom;
     Vector4 color;
     BlendMode blendMode;
+    ParticleManager::Movements movement;
 };
 
 class ParticleEmitter

@@ -1,5 +1,5 @@
 #include "ParticleEmitter.h"
-#include"Particle.h"
+
 #include"Camera.h"
 
 ParticleEmitter::ParticleEmitter()
@@ -7,6 +7,7 @@ ParticleEmitter::ParticleEmitter()
     Initialize();
     particleManager_ = ParticleManager::GetInstance();
     particleManager_->Create();
+    particleManager_->SetMovement(emitter_.movement);
 }
 void ParticleEmitter::Initialize()
 {
@@ -20,6 +21,8 @@ void ParticleEmitter::Initialize()
     emitter_.isRandom = true;
     emitter_.color = { 1.0f,1.0f,1.0f,1.0f };
     emitter_.blendMode = kBlendModeAdd;
+    emitter_.movement = ParticleManager::kNormal;
+
 
 }
 void ParticleEmitter::Update(Camera& camera)
@@ -33,6 +36,8 @@ void ParticleEmitter::Update(Camera& camera)
 
     particleManager_->Update(camera);
 
+
+   
 }
 
 void ParticleEmitter::Emit()
