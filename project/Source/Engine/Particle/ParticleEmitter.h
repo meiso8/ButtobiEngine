@@ -3,7 +3,9 @@
 #include<cstdint>
 #include<string>
 #include"Vector4.h"
-
+#include"BlendMode.h"
+class Camera;
+class ParticleManager;
 struct Emitter
 {
     Transform transform;//エミッタのTransfrom
@@ -12,6 +14,7 @@ struct Emitter
     float frequencyTime;//頻度用時刻
     bool isRandom;
     Vector4 color;
+    BlendMode blendMode;
 };
 
 class ParticleEmitter
@@ -19,7 +22,7 @@ class ParticleEmitter
 private:
 
     std::string name_ = "unknown";
-
+    ParticleManager* particleManager_ = nullptr;
 public:
     Emitter emitter_{};
 public:
@@ -31,7 +34,8 @@ public:
 
     ParticleEmitter();
     void Initialize();
-    void Update();
+    void Update(Camera& camera);
     void Emit();
+    void Draw();
 };
 
