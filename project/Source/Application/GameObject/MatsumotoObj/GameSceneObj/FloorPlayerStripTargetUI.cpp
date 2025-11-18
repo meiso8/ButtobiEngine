@@ -29,6 +29,8 @@ void FloorPlayerStripTargetUI::Update() {
 	Vector3 playerPos = player_->body_.worldTransform_.translate_;
 	int xIndex = static_cast<int>(playerPos.x + (static_cast<float>(kMapWidth) * kHalfFloorSize));
 	int yIndex = static_cast<int>(playerPos.z + (static_cast<float>(kMapHeight) * kHalfFloorSize));
+	xIndex = std::clamp(xIndex, 0, kMapWidth - 1);
+	yIndex = std::clamp(yIndex, 0, kMapHeight - 1);
 	Vector3 targetPos ={
 			static_cast<float>(xIndex) - (static_cast<float>(kMapWidth) * kHalfFloorSize) + kHalfFloorSize,
 			0.5f,
