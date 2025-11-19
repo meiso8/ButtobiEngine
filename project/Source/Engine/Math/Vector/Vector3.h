@@ -40,6 +40,10 @@ bool IsZero(const Vector3 &v);
 /// @return 垂直ベクトル
 Vector3 Perpendicular(const Vector3& vector);
 
+Vector3 Reflect(const Vector3& input, const Vector3& normal);
+Vector3 Project(const Vector3& v1, const Vector3& v2);
+
+
 //二項演算子 Binary Operator
 Vector3 operator+(const Vector3& v1, const Vector3& v2);
 Vector3 operator-(const Vector3& v1, const Vector3& v2);

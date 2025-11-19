@@ -6,15 +6,7 @@
 #include<algorithm>
 #include<cmath>
 
-Vector3 Reflect(const Vector3 &input, const Vector3 &normal) {
-	return input - 2.0f * Dot(input, normal) * normal;
-}
 
-Vector3 Project(const Vector3 &v1, const Vector3 &v2) {
-	Vector3 v2n = Normalize(v2);
-	float d = Dot(v1, v2n);
-	return v2n * d;
-}
 
 Vector3 ClosestPoint(const Vector3 &point, const Plane &plane) {
 	return point - Distance(point, plane) * plane.normal;

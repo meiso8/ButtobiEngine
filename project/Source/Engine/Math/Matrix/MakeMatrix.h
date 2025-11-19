@@ -39,7 +39,7 @@ Matrix3x3 MakeTranslateMatrix(const Vector2& rectCenter);
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
 
 //2次元アフィン行列作成関数
-Matrix3x3 MakeAffineMatrix(const Vector2& scale,const float& theta, const Vector2& translate);
+Matrix3x3 MakeAffineMatrix(const Vector2& scale, const float& theta, const Vector2& translate);
 
 //3.ビューポート変換行列　正規化デバイス座標系->スクリーン座標
 Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth);
@@ -63,3 +63,6 @@ Matrix3x3 Inverse(const Matrix3x3& m);
 
 //逆行列
 Matrix4x4 Inverse(const Matrix4x4& m);
+
+//任意軸回転行列作成関数
+Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
