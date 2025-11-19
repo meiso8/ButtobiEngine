@@ -6,6 +6,8 @@
 #include<map>
 #include<unordered_map>
 
+#include"MakeMatrix.h"
+
 #define WIN_WIDTH 1280
 #define WIN_HEIGHT 720
 
@@ -36,6 +38,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     auto currentIt = scenes.begin();
     SceneManager* currentScene = currentIt->second.get();
     currentScene->Initialize();
+
+
+    Vector3 axis = Normalize({ 1.0f,1.0f,1.0f });
+    float angle = 0.44f;
+
+    Matrix4x4 rotateMatrix = MakeRotateAxisAngle(axis, angle);
 
     // =============================================
     // ウィンドウのxボタンが押されるまでループ メインループ
@@ -71,7 +79,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #ifdef USE_IMGUI
         DebugUI::CheckColor(screenColor, "screenColor");
-
+        DebugUI::ShowMatrix4x4(rotateMatrix,"rotateMatrix");
         for (const auto& [sceneName, scenePtr] : scenes) { 
             if (scenePtr.get() == currentScene) {
                 ImGui::Text("%s", sceneName.c_str());
