@@ -22,8 +22,10 @@ public:
         UV_CHECKER,
         NUMBERS,
         TEST,
+        TEST2,
+        TEST3,
         HART,
-        HP_GAGE_EFFECCT,
+
         TEXTURES
     };
     static void LoadAllTexture();

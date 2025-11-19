@@ -14,8 +14,10 @@ World::World() {
 
 void World::Init()
 {
+    object3d_->SetColor({0.0f,0.0f,0.0f,1.0f});
     object3d_->Initialize();
     model_->ResetTextureHandle();
+    timer_ = 0.0f;
 }
 
 void World::Update()
@@ -23,11 +25,11 @@ void World::Update()
     model_->GetUVTransform().translate.x += std::numbers::pi_v<float> *0.0625f*0.5f * InverseFPS;
     model_->UpdateUV();
 
-    if (Input::IsTriggerKey(DIK_SPACE)) {
-        texture_++;
-        texture_ %= Texture::TEXTURES;
-        SetTexture(texture_);
-    }
+    //if (Input::IsTriggerKey(DIK_SPACE)) {
+    //    texture_++;
+    //    texture_ %= Texture::TEXTURES;
+    //    SetTexture(texture_);
+    //}
 
 }
 
@@ -43,4 +45,20 @@ void World::SetTexture(const uint32_t& texture)
     } else {
         model_->SetTextureHandle(Texture::TEXTURE_HANDLE(texture));
     }
+}
+
+void World::UpdateColor()
+{
+    if (timer_ == 1.0f) {
+        return;
+    }
+
+    if (timer_ < 1.0f) {
+        timer_+=InverseFPS;
+    } else {
+        timer_ = 1.0f;
+    }
+
+    object3d_->SetColor({ timer_,timer_,timer_,1.0f });
+
 }

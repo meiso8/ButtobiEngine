@@ -19,10 +19,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // ==============================================//↓基本いじらない↓//============================================
     //エンジンの生成
     std::unique_ptr<MyEngine> myEngine = std::make_unique<MyEngine>();
-    myEngine->Create(L"2206_ベリベリベンジ！", WIN_WIDTH, WIN_HEIGHT);
+    myEngine->Create(L"ぶっ飛びエンジン！", WIN_WIDTH, WIN_HEIGHT);
     // ==============================================//↑基本いじらない↑//============================================
     //画面の色
-    Vector4 screenColor = { 0.373f,0.804f,0.894f,1.0f };
+    Vector4 screenColor = { 0.75f,0.5f,0.5f,1.0f };
 
     // =============================================
     // シーンの生成
@@ -30,10 +30,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
     std::map<const std::string, std::unique_ptr<SceneManager>> scenes;
     scenes["Title"] = std::make_unique < TitleScene>();
-    scenes["Game"] = std::make_unique < GameScene>();
-    scenes["Result"] = std::make_unique < ResultScene>();
     scenes["Sample"] = std::make_unique < SampleScene>();
-
+    //scenes["Result"] = std::make_unique < ResultScene>();
+    
+  
     //最初の位置を保持
     auto currentIt = scenes.begin();
     SceneManager* currentScene = currentIt->second.get();

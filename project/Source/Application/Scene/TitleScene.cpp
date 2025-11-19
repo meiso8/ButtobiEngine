@@ -37,11 +37,6 @@ void TitleScene::SceneChangeUpdate()
     if (Input::IsTriggerKey(DIK_SPACE)) {
         sceneChange_->SetState(SceneChange::kFadeIn, 30);
     }
-#ifdef _DEBUG
-    // 何かをしたらシーン遷移
-    if (Input::IsTriggerKey(DIK_I)) {
-        sceneChange_->SetState(SceneChange::kFadeIn, 30);
-    }
-#endif
+
     sceneChange_->Update();
 }

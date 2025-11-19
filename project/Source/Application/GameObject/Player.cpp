@@ -1,3 +1,5 @@
+#define NOMINMAX
+#include<numbers>
 #include "Player.h"
 #include"ModelManager.h"
 #include"Model.h"
@@ -7,17 +9,16 @@
 #include"Collision.h"
 #include"CircleMesh.h"
 #include"CubeMesh.h"
-#include<numbers>
 #include"JsonFile.h"
 
 Player::Player() {
 
     //モデルを取得する
-    model_ = ModelManager::GetModel(ModelManager::BOX);
+    model_ = ModelManager::GetModel(ModelManager::PLAYER_BODY);
 
     circle_.radius = 0.5f;
-    localAabb_.min = { -circle_.radius , -circle_.radius ,-circle_.radius };
-    localAabb_.max = { circle_.radius , circle_.radius ,circle_.radius };
+    localAabb_.min = { -circle_.radius , 0.0f ,-circle_.radius };
+    localAabb_.max = { circle_.radius , 1.5f ,circle_.radius };
 
     circleMesh_ = std::make_unique<CircleMesh>();
     cubeMesh_ = std::make_unique<CubeMesh>();
@@ -29,14 +30,17 @@ Player::Player() {
     eyePos_.Create();
     bodyPos_.Create();
     //モデルやメッシュをセットする
-    bodyPos_.SetMesh(cubeMesh_.get());
+    bodyPos_.SetMesh(model_);
 
 }
 
 void Player::Init()
 {
+    isPressSpace_ = false;
+    zoomTimer_ = 0.0f;
     //体の位置初期化
     bodyPos_.worldTransform_.Initialize();
+    bodyPos_.worldTransform_.translate_.z = -15.0f;
     //目の位置初期化
     eyePos_.Initialize();
     eyePos_.worldTransform_.Initialize();
@@ -69,9 +73,26 @@ void Player::Draw(Camera& camera, const LightMode& lightType)
 void Player::Update()
 {
 
+    isWallHit = false;
+   
+    if (characterState_.isHit) {
+        if (hitTimer_ > 0.0f) {
+            hitTimer_ -= InverseFPS;
+        } else {
+            hitTimer_ = 0.0f;
+            characterState_.isHit = false;
+        }
+    }
+
     Move();
-    LookBack();
-    MouseLook();
+
+    Zoom();
+
+    if (!isZoom_) {
+        LookBack();
+        MouseLook();
+    }
+
     bodyPos_.Update();
     eyePos_.Update();
     circle_.center = bodyPos_.worldTransform_.GetWorldPosition();
@@ -145,6 +166,31 @@ void Player::Move()
     }
 
 
+}
+
+void Player::Zoom()
+{
+    if (Input::IsPushKey(DIK_SPACE)) {
+
+        isZoom_ = true;
+        if (zoomTimer_ < 0.2f) {
+            zoomTimer_ += InverseFPS;
+    
+        } else {
+            zoomTimer_ = 0.2f;
+            isPressSpace_ = true;
+        }
+
+
+
+    } else {
+        if (zoomTimer_ > 0.0f) {
+            zoomTimer_ -= InverseFPS;
+        } else {
+            zoomTimer_ = 0.0f;
+            isZoom_ = false;
+        }
+    }
 }
 
 Vector3& Player::GetForward()
@@ -252,12 +298,70 @@ void Player::OnCollision(const Circle& circle)
     Sound::PlayOriginSE(Sound::CRACKER);
 }
 
+void Player::ResolveCollision(const AABB& wallAABB, const AABB& playerAABB) {
+    Vector3& pos = bodyPos_.worldTransform_.translate_;
+
+    // 各軸のオーバーラップ量を計算
+    float overlapX1 = wallAABB.max.x - playerAABB.min.x;
+    float overlapX2 = playerAABB.max.x - wallAABB.min.x;
+    //float overlapY1 = wallAABB.max.y - playerAABB.min.y;
+    //float overlapY2 = playerAABB.max.y - wallAABB.min.y;
+    float overlapZ1 = wallAABB.max.z - playerAABB.min.z;
+    float overlapZ2 = playerAABB.max.z - wallAABB.min.z;
+
+    // 最小のオーバーラップ方向を探す
+    float minOverlap = std::numeric_limits<float>::max();
+    Vector3 push{};
+
+    if (overlapX1 > 0.0f && overlapX1 < minOverlap) {
+        minOverlap = overlapX1;
+        push = { overlapX1, 0.0f, 0.0f };
+    }
+    if (overlapX2 > 0.0f && overlapX2 < minOverlap) {
+        minOverlap = overlapX2;
+        push = { -overlapX2, 0.0f, 0.0f };
+    }
+    //if (overlapY1 > 0.0f && overlapY1 < minOverlap) {
+    //    minOverlap = overlapY1;
+    //    push = { 0.0f, overlapY1, 0.0f };
+    //}
+    //if (overlapY2 > 0.0f && overlapY2 < minOverlap) {
+    //    minOverlap = overlapY2;
+    //    push = { 0.0f, -overlapY2, 0.0f };
+    //}
+    if (overlapZ1 > 0.0f && overlapZ1 < minOverlap) {
+        minOverlap = overlapZ1;
+        push = { 0.0f, 0.0f, overlapZ1 };
+    }
+    if (overlapZ2 > 0.0f && overlapZ2 < minOverlap) {
+        minOverlap = overlapZ2;
+        push = { 0.0f, 0.0f, -overlapZ2 };
+    }
+
+    // 押し戻し！
+    pos += push;
+}
+
+void Player::OnCollisionWall(const AABB& aabb)
+{
+    if (isWallHit) {
+        return;
+    }
+    isWallHit = true;
+
+    ResolveCollision(aabb, GetWorldAABB());
+}
+
 void Player::OnCollisionEnemy()
 {
     if (characterState_.isHit) {
         return;
     }
+
+    Sound::PlaySE(Sound::CRACKER);
     //衝突フラグを真に
     characterState_.isHit = true;
+    characterState_.hps.hp-=10;
+    hitTimer_ = 1.0f;
 
 }

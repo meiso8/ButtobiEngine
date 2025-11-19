@@ -1,7 +1,7 @@
 #include "EnemyBulletManager.h"
 
 namespace {
-	const int kMaxBullets = 128;
+	const int kMaxBullets = 8;
 }
 
 EnemyBulletManager::EnemyBulletManager() {

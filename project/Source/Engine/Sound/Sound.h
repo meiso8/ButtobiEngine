@@ -29,6 +29,7 @@ public:
     //TAGを宣言する
     enum TAG {
         BGM1,
+        BGM2,
         PICO,
         CRACKER,
         FOOT_STEP,
