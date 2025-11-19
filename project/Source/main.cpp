@@ -73,7 +73,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #ifdef USE_IMGUI
         DebugUI::CheckColor(screenColor, "screenColor");
-        DebugUI::ShowMatrix4x4(rotateMatrix,"rotateMatrix");
         for (const auto& [sceneName, scenePtr] : scenes) { 
             if (scenePtr.get() == currentScene) {
                 ImGui::Text("%s", sceneName.c_str());
