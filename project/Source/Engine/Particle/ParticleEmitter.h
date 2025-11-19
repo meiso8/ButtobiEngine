@@ -1,5 +1,5 @@
 #pragma once
-#include"Transform.h"
+#include"WorldTransform.h"
 #include<cstdint>
 #include<string>
 #include"Vector4.h"
@@ -9,7 +9,7 @@ class Camera;
 
 struct Emitter
 {
-    Transform transform;//エミッタのTransfrom
+    WorldTransform transform;//エミッタのTransfrom
     uint32_t cont;//発生数
     float frequency;//発生頻度
     float frequencyTime;//頻度用時刻
@@ -17,6 +17,7 @@ struct Emitter
     Vector4 color;
     BlendMode blendMode;
     ParticleManager::Movements movement;
+    float lifeTime_;
 };
 
 class ParticleEmitter

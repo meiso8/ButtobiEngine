@@ -6,13 +6,11 @@
 #include "Circle.h"
 
 class Camera;
-class Model;
 
 class Field
 {
 private:
     std::unique_ptr <Object3d> object3d_;
-    Model* model_ = nullptr;
     std::unique_ptr<CircleMesh> circleMesh_ = nullptr;
     Circle& GetCircle() {
         return circle_
@@ -25,5 +23,5 @@ public:
     void Update();
     void Draw(Camera& camera);
     Circle circle_;
-
+    float uvTranslate_ = 0.0f;
 };

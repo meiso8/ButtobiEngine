@@ -1,5 +1,6 @@
 #define NOMINMAX
 #include "SampleScene.h"
+#include"MyEngine.h"
 //入力処理に必要なもの
 #include "Input.h"
 //Debug用のImGui表示セット
@@ -35,102 +36,201 @@
 #include"Circle/CircleMesh.h"
 #include"Circle.h"
 
+#include"Lerp.h"
+
 SampleScene::SampleScene()
 {
     // 現在のカメラを設定
     currentCamera_ = camera_.get();
-    //メッシュの生成
-    planeMesh_ = std::make_unique<PlaneMesh>();
-    planeMesh_->Create();
-    sphereMesh_ = std::make_unique<SphereMesh>();
-    sphereMesh_->Create();
-    cube_ = std::make_unique<CubeMesh>();
-    cube_->Create();
 
-    //モデルを借りる
-
-    models_[0] = ModelManager::GetModel(ModelManager::FLOOR);
-
-    for (int i = 0; i < object3ds_.size(); ++i) {
-        object3ds_[i] = std::make_unique<Object3d>();
-        object3ds_[i]->Create();
+    for (int i = 0; i < sprite_.size(); ++i) {
+        sprite_[i] = std::make_unique<Sprite>();
     }
 
-    object3ds_[0]->worldTransform_.Parent(object3ds_[1]->worldTransform_);
-    object3ds_[0]->worldTransform_.translate_.x = 2.0f;
-    object3ds_[0]->worldTransform_.translate_.y = 1.0f;
-    object3ds_[0]->worldTransform_.translate_.z = -2.0f;
-    object3ds_[0]->worldTransform_.rotate_.x = std::numbers::pi_v<float>*0.5f;
-    object3ds_[0]->SetMesh(cube_.get());
+    sprite_[0]->Create(Texture::TEST, { 0.0f,0.0f });
+    sprite_[0]->SetSize({ 320.0f,64.0f });
+    sprite_[1]->Create(Texture::TEST2, { 640.0f,360.0f });
+    sprite_[1]->SetSize({ 320.0f,32.0f });
+    sprite_[1]->SetAnchorPoint({ 0.5f,0.5f });
+    sprite_[1]->UpdateAnchorPoint();
 
-    object3ds_[1]->SetMesh(models_[0]);
-
-
-    sprite_ = std::make_unique<Sprite>();
-    sprite_->Create(Texture::TEST, { 0.0f,0.0f });
-
-    particleEmitter_ = std::make_unique<ParticleEmitter>();
-    particleEmitter_->SetName("uvChecker");
-
+    sprite_[2]->Create(Texture::WHITE_1X1, { 0.0f,0.0f }, { 1.0f,0.75f,0.75f,1.0f });
+    sprite_[2]->SetSize({ 1280.0f,720.0f });
     player_ = std::make_unique<Player>();
     world_ = std::make_unique<World>();
     filed_ = std::make_unique<Field>();
+
+    for (int i = 0; i < lockers1_.size(); ++i) {
+        lockers1_[i] = std::make_unique<Locker>();
+    }
+    for (int i = 0; i < lockers2_.size(); ++i) {
+        lockers2_[i] = std::make_unique<Locker>();
+    }
+
+    medjed_ = std::make_unique<Medjed>();
+    medjed_->SetTarget(player_->GetBodyPos());
+
+    enemy_ = std::make_unique<Enemy>();
+    enemy_->SetTarget(player_->GetBodyPos());
+
+    enemyBulletManager_ = std::make_unique<EnemyBulletManager>();
+    enemyShotBulletManager_ = std::make_unique<EnemyShotBulletManager>(enemy_.get(), enemyBulletManager_.get());
+
+
+    building_ = std::make_unique<Building>();
+
+    for (int i = 0; i < particleEmitters_.size(); ++i) {
+        particleEmitters_[i] = std::make_unique<ParticleEmitter>();
+    }
+
+    particleEmitters_[0]->SetName("white");
+    particleEmitters_[0]->emitter_.transform.Parent(medjed_->GetWorldTransform());
+
+    particleEmitters_[1]->SetName("people");
+
+
+
+    hpGage_ = std::make_unique<HPGage>();
+    hpGage_->SetHpPtr(player_->GetHpsPtr());
+    hpGage_->Setting({ 640.0f,32.0f }, { 640.0f,720.0f - 64.0f }, { 0.5f,0.0f });
 
 }
 
 void SampleScene::Initialize() {
 
+    MyEngine::GetDirectionalLightData()->direction = { 0.0f,-1.0f,0.0f };
+    MyEngine::GetDirectionalLightData()->intensity = -2.0f;
+    Sound::bgmVolume_ = 0.1f;
+
+
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kWipeOut, 60);
     camera_->Initialize();
     camera_->UpdateMatrix();
-    particleEmitter_->Initialize();
+
+
+    for (int i = 0; i < particleEmitters_.size(); ++i) {
+        particleEmitters_[i]->Initialize();
+    }
+
+    particleEmitters_[0]->emitter_.cont = 16;
+    particleEmitters_[0]->emitter_.color = { 1.0f,0.75f,0.75f,1.0f };
+    particleEmitters_[0]->emitter_.frequencyTime = 0.25f;
+    particleEmitters_[0]->emitter_.lifeTime_ = -1.0f;
+    particleEmitters_[0]->emitter_.blendMode = kBlendModeAdd;
+
+    particleEmitters_[1]->emitter_.transform.translate_.y = 30.0f;
+    particleEmitters_[1]->emitter_.transform.scale_ = { 10.0f,10.0f,10.0f };
+    particleEmitters_[1]->emitter_.cont = 4;
+    particleEmitters_[1]->emitter_.color = { 1.0f,0.75f,0.75f,1.0f };
+    particleEmitters_[1]->emitter_.frequencyTime = 0.1f;
+    particleEmitters_[1]->emitter_.lifeTime_ = 10.0f;
+    particleEmitters_[1]->emitter_.blendMode = kBlendModeNormal;
+
     player_->Init();
     world_->Init();
     filed_->Init();
+
+
+    for (int i = 0; i < lockers1_.size(); ++i) {
+        lockers1_[i]->Init();
+        lockers1_[i]->SetPosX(i * 1.0f + 1.0f);
+    }
+    for (int i = 0; i < lockers2_.size(); ++i) {
+        lockers2_[i]->Init();
+        lockers2_[i]->SetPosX(i * -1.0f - 1.0f);
+    }
+
+    medjed_->Init();
+    enemy_->Init();
+
+    enemyBulletManager_->Initialize();
+    enemyShotBulletManager_->Initialize();
+
+    building_->Init();
+
+
+    hpGage_->Initialize();
+
 }
 
 void SampleScene::Update() {
+
+    if (player_->GetHpsPtr()->hp <= 0) {
+    
+        sceneChange_->SetState(SceneChange::kFadeIn, 60);
+    }
+
+    if (enemy_->isApper_) {
+
+        Locker::isSetMesh_ = true;
+
+        if (MyEngine::GetDirectionalLightData()->intensity < 0.0f) {
+            MyEngine::GetDirectionalLightData()->intensity += InverseFPS * 2.0f;
+        } else {
+            MyEngine::GetDirectionalLightData()->intensity = 0.0f;
+        }
+
+
+        if (Sound::bgmVolume_ < 1.0f) {
+            Sound::bgmVolume_ += InverseFPS * 0.25f;
+        }
+        Sound::Stop(Sound::BGM1);
+        Sound::PlayBGM(Sound::BGM2);
+
+        world_->UpdateColor();
+        filed_->Update();
+    } else {
+        Sound::Stop(Sound::BGM2);
+        Sound::PlayBGM(Sound::BGM1);
+    }
 
 
     if (isDebugCameraActive_) {
         currentCamera_->UpdateMatrix();
     } else {
         camera_->worldMat_ = player_->GetEyeMatrix();
-        //if (Input::IsPushKey(DIK_SPACE)) {
-        //    Vector3 translate = player_->GetForward();
-        //    camera_->worldMat_.m[3][0] += translate.x * 3.0f;
-        //    camera_->worldMat_.m[3][1] += translate.y * 3.0f;
-        //    camera_->worldMat_.m[3][2] += translate.z * 3.0f;
-        //}
+
+
+        Vector3 translate = player_->GetForward();
+        camera_->worldMat_.m[3][0] = Lerp(camera_->worldMat_.m[3][0], translate.x, player_->zoomTimer_);
+        camera_->worldMat_.m[3][1] = Lerp(camera_->worldMat_.m[3][1], translate.y, player_->zoomTimer_);
+        camera_->worldMat_.m[3][2] = Lerp(camera_->worldMat_.m[3][2], translate.z, player_->zoomTimer_);
 
         camera_->UpdateViewProjectionMatrix();
 
     }
 
-    if (Input::IsTriggerKey(DIK_W)) {
-        particleEmitter_->SetName("uvChecker");
-    }
-
-    if (Input::IsTriggerKey(DIK_S)) {
-        particleEmitter_->SetName("white");
-    }
-
     player_->Update();
-    filed_->Update();
 
-    particleEmitter_->Update(*currentCamera_);
+    medjed_->Update();
+    enemy_->Update();
+    enemyBulletManager_->Update();
 
-
-    object3ds_[0]->worldTransform_.rotate_.z += std::numbers::pi_v<float> *0.25f * InverseFPS;
-
-    for (int i = 0; i < object3ds_.size(); ++i) {
-        object3ds_[i]->Update();
+    if (enemy_->isApper_) {
+        for (int i = 0; i < particleEmitters_.size(); ++i) {
+            particleEmitters_[i]->Update(*currentCamera_);
+        }
+        hpGage_->Update();
     }
+
+
+    for (int i = 0; i < lockers1_.size(); ++i) {
+        lockers1_[i]->Update();
+    }
+    for (int i = 0; i < lockers2_.size(); ++i) {
+        lockers2_[i]->Update();
+    }
+
+    building_->Update();
 
     world_->Update();
 
+    enemyShotBulletManager_->Update();
+
     CheckAllCollision();
+
+
 }
 
 
@@ -152,13 +252,8 @@ void SampleScene::Debug()
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
     std::function<void()> func = [this]() { SwitchCamera(); };
     DebugUI::Button("ChangeCamera", func);
-    DebugUI::CheckObject3d(*object3ds_[0], "0");
-    DebugUI::CheckObject3d(*object3ds_[1], "1");
-    DebugUI::CheckParticle(*particleEmitter_);
-    DebugUI::CheckMesh(*sphereMesh_, "sphereMesh");
-    DebugUI::CheckMesh(*cube_, "cube_");
-    DebugUI::CheckModel(*models_[0], "model0");
-    DebugUI::CheckSprite(*sprite_, "sprite0");
+    DebugUI::CheckParticle(*particleEmitters_[0]);
+    DebugUI::CheckSprite(*sprite_[0], "sprite0");
 
 #endif // !USE_IMGUI
 }
@@ -166,16 +261,43 @@ void SampleScene::Debug()
 void SampleScene::CheckAllCollision()
 {
 
-    //2つの急の中心点間距離を求める 
-    if (Distance(player_->GetCircle(), filed_->circle_) >= player_->GetCircle().radius - filed_->circle_.radius) {
+    /*   if (IsCollisionInCircleLine(player_->GetCircle(), filed_->circle_)) {
 
+           player_->OnCollision(filed_->circle_);
+           Sound::PlayOriginSE(Sound::CRACKER);
+       };*/
+
+    if (IsCollision(medjed_->GetWorldAABB(), player_->GetWorldAABB())) {
+        player_->OnCollisionEnemy();
+        enemy_->isApper_ = true;
     }
 
-    if (IsCollisionInCircleLine(player_->GetCircle(), filed_->circle_)) {
+    if (!enemy_->isApper_) {
 
-        player_->OnCollision(filed_->circle_);
-        Sound::PlayOriginSE(Sound::CRACKER);
-    };
+        AABB locker1AABB = { .min = {1.0f,0.0f,-0.5f},.max = {25.0f,2.0f,0.5f} };
+
+        if (IsCollision(locker1AABB, player_->GetWorldAABB())) {
+            player_->OnCollisionWall(locker1AABB);
+        }
+
+        AABB locker2AABB = { .min = {-25.0f,0.0f,-0.5f},.max = {-1.0f,2.0f,0.5f} };
+
+        if (IsCollision(locker2AABB, player_->GetWorldAABB())) {
+            player_->OnCollisionWall(locker2AABB);
+        }
+    }
+
+
+ /*   for (const auto& [type, aabb] : building_->aabbs_) {
+        if (type != Building::AABBType::Floor) {
+            if (IsCollision(building_->GetWorldAABB(type), player_->GetWorldAABB())) {
+                player_->OnCollisionWall(building_->GetWorldAABB(type));
+            }
+
+        }
+
+
+    }*/
 }
 
 
@@ -189,17 +311,45 @@ void SampleScene::Draw() {
 #endif
 
     world_->Draw(*currentCamera_);
-    filed_->Draw(*currentCamera_);
 
-    //object3ds_[1]->Draw(*currentCamera_);
-    //object3ds_[0]->Draw(*currentCamera_);
+    if (enemy_->isApper_) {
+        particleEmitters_[1]->Draw();
+    }
+
+
+    filed_->Draw(*currentCamera_);
+    building_->Draw(*currentCamera_);
+
+    for (int i = 0; i < lockers1_.size(); ++i) {
+        lockers1_[i]->Draw(*currentCamera_);
+    }
+    for (int i = 0; i < lockers2_.size(); ++i) {
+        lockers2_[i]->Draw(*currentCamera_);
+    }
+
+    medjed_->Draw(*currentCamera_);
 
     player_->Draw(*currentCamera_, kLightModeHalfL);
+    enemy_->Draw(*currentCamera_, kLightModeHalfL);
 
-    particleEmitter_->Draw();
+    enemyBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
 
-    sprite_->PreDraw();
-    sprite_->Draw();
+    if (enemy_->isApper_) {
+
+        particleEmitters_[0]->Draw();
+        hpGage_->Draw();
+    }
+
+    if (!player_->isPressSpace_ && !enemy_->isApper_) {
+        for (int i = 0; i < sprite_.size() - 1; ++i) {
+            sprite_[i]->PreDraw();
+            sprite_[i]->Draw();
+        }
+    }
+
+
+    sprite_[2]->PreDraw(kBlendModeMultiply);
+    sprite_[2]->Draw();
 
     sceneChange_->Draw();
 }

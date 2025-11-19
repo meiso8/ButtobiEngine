@@ -1,18 +1,14 @@
 #include "Field.h"
-#include"ModelManager.h"
-#include"Model.h"
+#include"Input.h"
 
 Field::Field()
 {
-    //仮
-    model_ = ModelManager::GetModel(ModelManager::WORLD);
-
     object3d_ = std::make_unique<Object3d>();
     object3d_->Create();
 
     circleMesh_ = std::make_unique<CircleMesh>();
-    circleMesh_->Create(Texture::UV_CHECKER);
-   circle_ = { {0.0f,0.0f,0.0f},25.0f };
+    circleMesh_->Create(Texture::NUMBERS);
+    circle_ = { {0.0f,0.0f,0.0f},25.0f };
     circleMesh_->SetVertex(circle_);
 
     object3d_->SetMesh(circleMesh_.get());
@@ -26,7 +22,10 @@ void Field::Init()
 
 void Field::Update()
 {
+    uvTranslate_ += InverseFPS;
+    circleMesh_->SetUVTranslate({ 0.0f,uvTranslate_ ,0.0f });
     object3d_->Update();
+    circleMesh_->UpdateUV();
 }
 
 void Field::Draw(Camera& camera)

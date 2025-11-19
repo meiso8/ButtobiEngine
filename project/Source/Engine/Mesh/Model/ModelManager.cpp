@@ -18,19 +18,13 @@ void ModelManager::LoadAllModel()
 {
     //モデルのファイルパスとタグを関連付けてください
     LoadModel("Resource/Models/Box", "Box.obj", BOX);
+    LoadModel("Resource/Models/player", "player.obj", PLAYER_BODY);
+    LoadModel("Resource/Models/medjed", "medjed.obj", MEDJED);
+    LoadModel("Resource/Models/people", "people.obj", PEOPLE);
+    LoadModel("Resource/Models/mummy", "mummy.obj", MUMMY);
+    LoadModel("Resource/Models/locker", "locker.obj", LOCKER);
+    LoadModel("Resource/Models/building", "building.obj", BUILDING);
     LoadModel("Resource/Models/world", "world.obj", WORLD);
-
-    LoadModel("Resource/Models/Enemy", "Enemy.obj", ENEMY);
-
-    LoadModel("Resource/Models/Floor", "Floor.obj", FLOOR);
-    LoadModel("Resource/Models/MeltFloor", "MeltFloor.obj", MELT_FLOOR);
-
-    LoadModel("Resource/Models/Player", "PlayerArmL.obj", PLAYER_ARM_L);
-    LoadModel("Resource/Models/Player", "PlayerArmR.obj", PLAYER_ARM_R);
-    LoadModel("Resource/Models/Player", "PlayerBody.obj", PLAYER_BODY);
-    LoadModel("Resource/Models/Player", "PlayerLegL.obj", PLAYER_LEG_L);
-    LoadModel("Resource/Models/Player", "PlayerLegR.obj", PLAYER_LEG_R);
-    LoadModel("Resource/Models/Player", "PlayerModel.obj", PLAYER_MODEL);
 
 }
 
@@ -64,7 +58,7 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
 
     //追加したテクスチャデータのポインタ
     std::unique_ptr<Model> model = std::make_unique<Model>();
-   
+
     std::unique_ptr<ModelData> modelData = std::make_unique<ModelData>();
 
     Assimp::Importer importer;

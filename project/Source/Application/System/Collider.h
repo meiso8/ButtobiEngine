@@ -39,7 +39,7 @@ public:
 	/// @brief 衝突マスクを設定する
 	/// @param mask 衝突マスク
 	void SetCollisionMask(uint32_t mask) { collisionMask_ = mask; }
-
+protected:
 	void ColliderUpdate();
 	void ColliderDraw(Camera& camera);
 	void OnCollisionCollider();
