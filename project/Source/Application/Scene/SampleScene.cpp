@@ -115,6 +115,9 @@ void SampleScene::Update() {
     if (Input::IsTriggerKey(DIK_S)) {
         particleEmitter_->SetName("white");
     }
+    if (Input::IsTriggerKey(DIK_X)) {
+        particleEmitter_->SetName("playerModel");
+    }
 
     player_->Update();
     filed_->Update();
