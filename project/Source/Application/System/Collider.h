@@ -23,10 +23,10 @@ public:
 	/// @brief 衝突半径を設定する
 	/// @param radius 衝突半径
 	void SetRadius(float radius) { 
-		
+#ifdef _DEBUG
 		sphereMesh_->SetVertex(Sphere{ {0.0f,0.0f,0.0f }, radius
 			});
-		
+#endif // DEBUG
 		radius_ = radius; }
 
 	/// @brief 衝突属性を取得する
