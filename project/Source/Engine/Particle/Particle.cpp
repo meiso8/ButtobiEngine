@@ -42,19 +42,23 @@ void ParticleManager::Create()
     CreateVertexBufferResource();
 }
 
-Particle MakeNewParticle(const bool& isRandom, const Transform& transform, const Vector4& color, const float& lifeTime)
+Particle MakeNewParticle(const bool& isRandPos, const WorldTransform& transform, const Vector4& color, const float& lifeTime)
 {
     Particle particle;
 
     Random::SetMinMax(-1.0f, 1.0f);
-    particle.transform.scale = transform.scale;
-    particle.transform.rotate = transform.rotate;
-    particle.transform.translate = (isRandom) ? Vector3{ Random::Get(), Random::Get(), Random::Get() } + transform.translate : transform.translate;
-    particle.velocity = { Random::Get(), Random::Get(), Random::Get() };
-    particle.color = color;
+    particle.transform.scale = transform.scale_;
+    particle.transform.translate = (isRandPos) ? Vector3{ Random::Get(), Random::Get(), Random::Get() } + transform.GetWorldPosition() : transform.GetWorldPosition();
     particle.lifeTime = (lifeTime == -1.0f) ? Random::Get() : lifeTime;
+  /*  Random::SetMinMax(0.0f, 2.28f);
+    particle.transform.rotate = (isRandPos) ? Vector3{ Random::Get(), Random::Get(), Random::Get() } : transform.rotate_;*/
+    particle.transform.rotate =  transform.rotate_;
+
+    Random::SetMinMax(-transform.scale_.x, transform.scale_.y);
+    particle.velocity = { Random::Get(), Random::Get(), Random::Get() };
 
     particle.currentTime = 0;
+    particle.color = color;
 
     return particle;
 }
@@ -135,19 +139,19 @@ void ParticleManager::Update(Camera& camera)
 }
 
 
-std::list<Particle> Emit(const bool& isRandom, const Transform& transform, uint32_t count, const Vector4& color)
+std::list<Particle> Emit(const bool& isRandom, const WorldTransform& transform, uint32_t count, const Vector4& color, const float& lifeTime)
 {
     std::list<Particle>particles;
     for (uint32_t i = 0; i < count; ++i) {
-        particles.push_back(MakeNewParticle(isRandom, transform, color));
+        particles.push_back(MakeNewParticle(isRandom, transform, color, lifeTime));
     }
     return particles;
 }
 
-void ParticleManager::EmitParticle(const std::string name, const Transform& transform, uint32_t count, const Vector4& color, const bool& isRandom)
+void ParticleManager::EmitParticle(const std::string name, const WorldTransform& transform, uint32_t count, const Vector4& color, const bool& isRandom, const float& lifeTime)
 {
     assert(particleGroups.contains(name));
-    particleGroups[name]->particles.splice(particleGroups[name]->particles.end(), Emit(isRandom, transform, count, color));
+    particleGroups[name]->particles.splice(particleGroups[name]->particles.end(), Emit(isRandom, transform, count, color, lifeTime));
 }
 
 void ParticleManager::Draw(uint32_t blendMode)
@@ -216,7 +220,8 @@ void ParticleManager::IsCollisionFieldArea(Particle& particleItr)
 void ParticleManager::CreateAll()
 {
     CreateParticleGroup("uvChecker", Texture::UV_CHECKER);
-    CreateParticleGroup("white", Texture::WHITE_1X1, true, ModelManager::PLAYER_ARM_L);
+    CreateParticleGroup("playerModel", Texture::WHITE_1X1, true, ModelManager::PLAYER_MODEL);
+    CreateParticleGroup("white", Texture::WHITE_1X1);
 }
 
 
