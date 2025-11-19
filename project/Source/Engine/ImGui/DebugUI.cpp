@@ -1,3 +1,4 @@
+#define NOMINMAX
 #include "DebugUI.h"
 #include"CharacterState.h"
 
@@ -9,14 +10,21 @@
 #include"Particle/Particle.h"
 #include"Particle/ParticleEmitter.h"
 #include"Object3d.h"
+#include"Sound.h"
 
 #include"SphereMesh.h"
 #include"Light.h"
 #include"PSO.h"
 #include"Camera.h"
+#include"JsonFile.h"
 
 #include<numbers>
 #include<algorithm>
+
+struct Param {
+    char name[128];
+    char value[128];
+};
 
 
 void DebugUI::CheckInt(int& value, const char* label) {
@@ -25,6 +33,17 @@ void DebugUI::CheckInt(int& value, const char* label) {
 
     if (ImGui::TreeNode(label)) {
         ImGui::SliderInt(label, &value, -100, 100);
+        ImGui::TreePop();
+    }
+#endif
+}
+
+void DebugUI::CheckFloat(float& value, const char* label) {
+
+#ifdef USE_IMGUI
+
+    if (ImGui::TreeNode(label)) {
+        ImGui::SliderFloat(label, &value, -100.0f, 100.0f);
         ImGui::TreePop();
     }
 #endif
@@ -63,6 +82,129 @@ void DebugUI::CheckCamera(Camera& camera) {
 #endif
 }
 
+
+void DebugUI::CheckJsonFile()
+{
+#ifdef USE_IMGUI
+
+    if (ImGui::TreeNode("Json")) {
+
+        if (ImGui::TreeNode("CreateNewFile")) {
+
+            static char tagBuffer[128] = "";
+            ImGui::InputText("FileTag", tagBuffer, IM_ARRAYSIZE(tagBuffer));
+
+            if (ImGui::Button("Create")) {
+                // 新しい構造化JSONを作成
+                nlohmann::json newJson;
+                // 管理マップに登録
+                JsonFile::SetJson(tagBuffer, newJson);
+                JsonFile::MarkModified(tagBuffer);
+            }
+
+            ImGui::TreePop();
+        }
+
+        if (ImGui::TreeNode("FindTag")) {
+
+            // 安定した文字列保持用
+            static std::vector<std::string> tagStrings;
+            static std::vector<const char*> tagOptions;
+
+            tagStrings.clear();
+            tagOptions.clear();
+
+            for (const auto& [tag, data] : JsonFile::GetJsonData()) {
+                tagStrings.push_back(tag); // std::string を保持
+            }
+
+            for (const auto& str : tagStrings) {
+                tagOptions.push_back(str.c_str()); // 安定したポインタを取得
+            }
+
+            // ImGui::Combo に渡す
+            static int tag_current = 0;
+            if (ImGui::Combo("Tags", &tag_current, tagOptions.data(), static_cast<int>(tagOptions.size()))) {
+                ImGui::Text("Tag: %s", tagOptions[tag_current]);
+            }
+
+            nlohmann::json& jsonFile = JsonFile::GetJsonFiles(tagOptions[tag_current]);
+
+            ImGui::Separator();
+            if (ImGui::TreeNode("ShowJsonData")) {
+                ImGui::Text("Name: %s", tagOptions[tag_current]);
+                ImGui::TextWrapped("Data: %s", jsonFile.dump(2).c_str());
+                ImGui::TreePop();
+                ImGui::Separator();
+            }
+
+            static char structName[128] = "structName";
+            static std::vector<Param> params = {};
+
+            if (ImGui::TreeNode("AddParam")) {
+
+                if (ImGui::InputText("StructName", structName, IM_ARRAYSIZE(structName))) {
+                    JsonFile::ClearModified(tagOptions[tag_current]);
+                }
+
+                for (size_t i = 0; i < params.size(); ++i) {
+                    if (ImGui::TreeNode(("param" + std::to_string(i)).c_str())) {
+
+                        if (ImGui::InputText(("Name##" + std::to_string(i)).c_str(), params[i].name, IM_ARRAYSIZE(params[i].name))) {
+                            JsonFile::ClearModified(tagOptions[tag_current]);
+                        }
+
+                        if (ImGui::InputText("Value##", params[i].value, IM_ARRAYSIZE(params[i].value))) {
+                            JsonFile::ClearModified(tagOptions[tag_current]);
+                        }
+
+                        // 削除ボタン
+                        if (ImGui::Button(("Delete##" + std::to_string(i)).c_str())) {
+                            params.erase(params.begin() + i);
+                            ImGui::TreePop(); // 消したあとに TreeNode を閉じておく
+                            break; // erase したらループを抜ける（インデックスがズレるのを防ぐため）
+                        }
+
+                        ImGui::TreePop();
+                    }
+                }
+
+                // パラメータ追加ボタン
+                if (ImGui::Button("Add New Param")) {
+                    params.push_back({ "newParam", "" });
+                    JsonFile::ClearModified(tagOptions[tag_current]);
+                }
+
+
+                ImGui::TreePop();
+            }
+
+            if (ImGui::Button("Save")) {
+
+                for (const auto& param : params) {
+                    jsonFile[structName][param.name] = param.value;
+                }
+                // ファイル保存
+                JsonFile::SaveJson(tagOptions[tag_current]);
+                JsonFile::MarkModified(tagOptions[tag_current]);
+
+            }
+
+            // 保存完了メッセージを表示
+            if (JsonFile::IsModified(tagOptions[tag_current])) {
+                ImGui::TextColored(ImVec4(0, 1, 0, 1), "File saved");
+            } else {
+                ImGui::TextColored(ImVec4(1, 0, 0, 1), "File not saved.");
+            }
+
+            ImGui::TreePop();
+        }
+
+        ImGui::TreePop();
+    }
+#endif
+}
+
 void DebugUI::CheckCharacterState(CharacterState& state, const char* label)
 {
 #ifdef USE_IMGUI
@@ -71,7 +213,8 @@ void DebugUI::CheckCharacterState(CharacterState& state, const char* label)
     if (ImGui::TreeNode(label)) {
         ImGui::Checkbox("isAttack", &state.isAttack);
         ImGui::Checkbox("isHit", &state.isHit);
-        ImGui::DragInt(label, &state.hp, 1, 0, 100);
+        ImGui::DragInt("HP", &state.hps.hp, 1, 0, 100);
+        ImGui::DragInt("MaxHP", &state.hps.maxHp, 1, 0, 100);
         ImGui::TreePop();
     }
 
@@ -114,34 +257,28 @@ void DebugUI::CheckInput(Input& input) {
     ImGui::Begin("Input");
     ImGui::SliderFloat2("mousePos", &input.GetMousePos().x, 0.0f, 1280.0f);
 
-    float x = 100;
-    float y = 100;
-    input.GetJoyStickPos(&x, &y, Input::BUTTON_LEFT);
-    ImGui::Text("normLX:%f %f", x, y);
-    float dX = 100;
-    float dY = 100;
-    input.GetJoyStickDPadButton(&dX, &dY);
+    ImGui::Text("Controller %s", input.IsControllerConnected(0) ? "Connected" : "Unkown");
+    ImGui::Text("left %d", input.GetControllerTriggerCount(BUTTON_LEFT, 0));
+    ImGui::Text("right %d", input.GetControllerTriggerCount(BUTTON_RIGHT, 0));
 
-    ImGui::Text("Dpad:%f %f", dX, dY);
-
-    ImGui::Text("joyStateLX: %ld", input.GetJoyState().lX);//x軸位置
-    ImGui::Text("joyStateLY: %ld", input.GetJoyState().lY);
-    ImGui::Text("joyStateLZ: %ld", input.GetJoyState().lZ);
-    ImGui::Text("joyStateRX: %ld", input.GetJoyState().lRx);//右スティック
-    ImGui::Text("joyStateRY: %ld", input.GetJoyState().lRy);
-
-    if (input.GetJoyState().rgdwPOV[0] != -1) {//十字キー　角度を表す
-        ImGui::Text("POV[%d]: %lu", 0, input.GetJoyState().rgdwPOV[0]);
-    } else {
-        ImGui::Text("POV[%d]: Centered", 0);
-    }
-
-    for (int i = 0; i < 12; ++i) {
-        ImGui::Text("Button[%d]: %s", i,
-            (input.GetJoyState().rgbButtons[i] & 0x80) ? "Pressed" : "Released");
-    }
-
-
+    ImGui::Text("DPAD_UP %d", input.IsControllerPressButton(XINPUT_GAMEPAD_DPAD_UP, 0));
+    ImGui::Text("DPAD_DOWN %d", input.IsControllerPressButton(XINPUT_GAMEPAD_DPAD_DOWN, 0));
+    ImGui::Text("DPAD_LEFT %d", input.IsControllerPressButton(XINPUT_GAMEPAD_DPAD_LEFT, 0));
+    ImGui::Text("DPAD_RIGHT %d", input.IsControllerPressButton(XINPUT_GAMEPAD_DPAD_RIGHT, 0));
+    ImGui::Text("START %d", input.IsControllerPressButton(XINPUT_GAMEPAD_START, 0));
+    ImGui::Text("BACK %d", input.IsControllerPressButton(XINPUT_GAMEPAD_BACK, 0));
+    ImGui::Text("LEFT_THUMB %d", input.IsControllerPressButton(XINPUT_GAMEPAD_LEFT_THUMB, 0));
+    ImGui::Text("RIGHT_THUMB %d", input.IsControllerPressButton(XINPUT_GAMEPAD_RIGHT_THUMB, 0));
+    ImGui::Text("LEFT_SHOULDER %d", input.IsControllerPressButton(XINPUT_GAMEPAD_LEFT_SHOULDER, 0));
+    ImGui::Text("RIGHT_SHOULDER %d", input.IsControllerPressButton(XINPUT_GAMEPAD_RIGHT_SHOULDER, 0));
+    ImGui::Text("A %d", input.IsControllerPressButton(XINPUT_GAMEPAD_A, 0));
+    ImGui::Text("B %d", input.IsControllerPressButton(XINPUT_GAMEPAD_B, 0));
+    ImGui::Text("X %d", input.IsControllerPressButton(XINPUT_GAMEPAD_X, 0));
+    ImGui::Text("Y %d", input.IsControllerPressButton(XINPUT_GAMEPAD_Y, 0));
+    Vector2 L = input.GetControllerStickPos(BUTTON_LEFT, 0);
+    Vector2 R = input.GetControllerStickPos(BUTTON_RIGHT, 0);
+    ImGui::SliderFloat2("BUTTON_LEFT", &L.x, -32768.0f, 32768.0f);
+    ImGui::SliderFloat2("BUTTON_RIGHT", &R.x, -32768.0f, 32768.0f);
     ImGui::End();
 #endif
 
@@ -156,6 +293,7 @@ void DebugUI::CheckSprite(Sprite& sprite, const char* label) {
         if (ImGui::TreeNode("transform2D")) {
             ImGui::SliderFloat2("pos", &sprite.GetPosition().x, -1280.0f, 1280.0f);
             ImGui::SliderFloat("rotation", &sprite.GetRotate(), 0.0f, std::numbers::pi_v<float>*2.0f);
+            ImGui::SliderFloat2("scale", &sprite.GetScale().x, -1280.0f, 1280.0f);
             ImGui::SliderFloat2("size", &sprite.GetSize().x, -1280.0f, 1280.0f);
             ImGui::TreePop();
         }
@@ -242,39 +380,59 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
 #ifdef USE_IMGUI
     ImGui::Begin("Object3d");
     CheckWorldTransform(object3d.worldTransform_, label);
+    ShowMatrix4x4(object3d.worldTransform_.matWorld_);
     ImGui::End();
 #endif
 }
 void DebugUI::CheckParticle(ParticleEmitter& particleEmitter)
 {
 #ifdef USE_IMGUI
-   
-    ParticleManager& particle =  *ParticleManager::GetInstance();
+
+    ParticleManager& particle = *ParticleManager::GetInstance();
     ImGui::Begin("Particle");
 
     ImGui::Checkbox("useBillboard", &particle.useBillboard_);
+    ImGui::Checkbox("useSpriteCamera", &particle.useSpriteCamera_);
+
+    static  Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
+
 
     Emitter& emitter = particleEmitter.emitter_;
-    int count = emitter.cont;
-    ImGui::SliderInt("createNum", &count, 0, particle.kNumMaxInstance);
-    emitter.cont = count;
 
-    CheckTransform(emitter.transform, "EmitterTransform");
+    if (ImGui::TreeNode("Emitter")) {
 
-    ImGui::SliderFloat("frequency", &emitter.frequency, 0.1f, 10.0f);
-    ImGui::Text("frequencyTime : %f", emitter.frequencyTime);
+        ImGui::Checkbox("isRandom", &emitter.isRandom);
+        int count = emitter.cont;
+        ImGui::SliderInt("createNum", &count, 0, particle.kNumMaxInstance);
+        emitter.cont = count;
+        CheckColor(emitter.color, "color");
+        CheckWorldTransform(emitter.transform, "EmitterTransform");
+        CheckBlendMode(emitter.blendMode);
+        ImGui::SliderFloat("frequency", &emitter.frequency, 0.1f, 10.0f);
+        ImGui::Text("frequencyTime : %f", emitter.frequencyTime);
+        ImGui::Text("lifeTime : %f", emitter.lifeTime_);
+        ImGui::TreePop();
+    }
 
     for (const auto& [name, group] : particle.GetParticleGroups()) {
 
-        if (ImGui::Button(name.c_str())) {
-            particle.EmitParticle(name, emitter.transform.translate, emitter.cont);
-        }
 
-        for (std::list<Particle>::iterator itr = group->particles.begin(); itr != group->particles.end(); ++itr) {
-            CheckTransform((*itr).transform, name.c_str());
+        if (ImGui::TreeNode(name.c_str())) {
+
+            ImGui::Checkbox("useModel", &group->useModel);
+            ImGui::SliderFloat2("textureSize", &group->textureSize.x, 0.0f, static_cast<float>(Window::GetClientWidth()));
+
+            if (ImGui::Button(name.c_str())) {
+                particle.EmitParticle(name, emitter.transform, emitter.cont, color);
+            }
+            for (std::list<Particle>::iterator itr = group->particles.begin(); itr != group->particles.end(); ++itr) {
+                CheckTransform((*itr).transform, name.c_str());
+            }
+            ImGui::TreePop();
         }
+   
+ 
     }
-
 
     ImGui::End();
 #endif
@@ -354,7 +512,7 @@ void DebugUI::CheckLightMode(int32_t& lightMode, const char* label) {
 #endif
 };
 
-void DebugUI::CheckBlendMode(uint32_t& blendMode) {
+void DebugUI::CheckBlendMode(BlendMode& blendMode) {
 #ifdef USE_IMGUI
     if (ImGui::TreeNode("BlendMode")) {
 
@@ -370,7 +528,7 @@ void DebugUI::CheckBlendMode(uint32_t& blendMode) {
         static int blendMode_current = 1;
 
         ImGui::Combo("blendMode", &blendMode_current, blendModes, IM_ARRAYSIZE(blendModes));
-        blendMode = blendMode_current % 6;
+        blendMode = static_cast<BlendMode>(blendMode_current % 6);
         ImGui::TreePop();
     }
 #endif
@@ -378,8 +536,40 @@ void DebugUI::CheckBlendMode(uint32_t& blendMode) {
 
 void DebugUI::CheckFPS() {
 #ifdef USE_IMGUI
-    ImGui::Text("FPS : %f", ImGui::GetIO().Framerate);
+
+    if (ImGui::GetIO().Framerate < 55.0f) {
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "FPS : %0.1f", ImGui::GetIO().Framerate);
+    } else {
+        ImGui::TextColored(ImVec4(0, 1, 0, 1), "FPS : %0.1f", ImGui::GetIO().Framerate);
+    }
+
 #endif
+}
+
+void DebugUI::CheckSound()
+{
+#ifdef USE_IMGUI
+    if (ImGui::TreeNode("Sound")) {
+
+        ImGui::SliderFloat("SE Val", &Sound::seVolume_, 0.0f, 1.0f);
+        ImGui::SliderFloat("BGM Val", &Sound::bgmVolume_, 0.0f, 1.0f);
+
+        // 正規化済みのモノラル波形バッファ
+        if (ImGui::TreeNode("ShowOscilloscope")) {
+            static int writeIdx = 0;
+            std::vector<float> waveform = Sound::GetWaveform(Sound::BGM1);
+            writeIdx = (int)(Sound::GetSamplesPlayed(Sound::BGM1) % waveform.size());
+
+            float scale = Sound::bgmVolume_; // 0.0〜1.0
+
+            ImGui::PlotLines("", waveform.data(), (int)waveform.size(), writeIdx,
+                nullptr, -scale, scale, ImVec2(0, 64));
+            ImGui::TreePop();
+        }
+        ImGui::TreePop();
+    };
+#endif
+
 }
 
 void DebugUI::CheckFlag(bool& flag, const char* label)

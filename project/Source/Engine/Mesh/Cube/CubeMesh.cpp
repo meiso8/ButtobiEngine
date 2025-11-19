@@ -2,6 +2,7 @@
 #include"DirectXCommon.h"
 #include"MyEngine.h"
 #include"AABB.h"
+#include"MakeMatrix.h"
 
 CubeMesh::~CubeMesh()
 {
@@ -21,6 +22,7 @@ void CubeMesh::Create(const Texture::TEXTURE_HANDLE& textureHandle) {
     CreateWaveData();
     CreateBalloonData();
     CreatePointLightData();
+    CreateUV();
 
 };
 
@@ -267,10 +269,25 @@ void CubeMesh::SetMinMax(const AABB& aabb) {
     vertexData[3] = { aabb.min.x,aabb.min.y,aabb.max.z };  //底面奥左
     vertexData[4] = { aabb.max.x,aabb.max.y,aabb.min.z };  //上面手前右
     vertexData[5] = { aabb.min.x,aabb.max.y,aabb.min.z };     //上面手前左
-    vertexData[6] = { aabb.max.x,aabb.min.y,aabb.min.y };    //底面手前右
-    vertexData[7] = { aabb.min.x,aabb.min.y,aabb.min.y };        //底面手前左
+    vertexData[6] = { aabb.max.x,aabb.min.y,aabb.min.z };    //底面手前右
+    vertexData[7] = { aabb.min.x,aabb.min.y,aabb.min.z };        //底面手前左
 
     SetVertex(vertexData);
 }
 
 
+void CubeMesh::CreateUV() {
+    uvTransform_ = {
+    {1.0f,1.0f,1.0f},
+    {0.0f,0.0f,0.0f},
+    {0.0f,0.0f,0.0f},
+    };
+
+    uvTransformMatrix_ = MakeIdentity4x4();
+}
+
+void CubeMesh::UpdateUV() {
+
+    uvTransformMatrix_ = MakeAffineMatrix(uvTransform_.scale, uvTransform_.rotate, uvTransform_.translate);
+    materialResource_->SetUV(uvTransformMatrix_);
+}

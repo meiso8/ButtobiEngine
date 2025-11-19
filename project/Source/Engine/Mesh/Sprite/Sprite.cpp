@@ -37,6 +37,13 @@ void Sprite::Create(const Texture::TEXTURE_HANDLE& textureHandle, const Vector2&
 
 void Sprite::Update()
 {
+    UpdateAnchorPoint();
+
+    UpdateUV();
+}
+
+void Sprite::UpdateAnchorPoint()
+{
     float left = 0.0f - anchorPoint_.x;
     float right = 1.0f - anchorPoint_.x;
     float top = 0.0f - anchorPoint_.y;
@@ -69,8 +76,6 @@ void Sprite::Update()
     vertexData_[2].texcoord = { tex_right,tex_bottom };
     vertexData_[3].texcoord = { tex_right,tex_top };
 
-
-    UpdateUV();
 }
 
 void Sprite::SetColor(const Vector4& color) {
@@ -95,7 +100,7 @@ void Sprite::Draw(const LightMode& lightMode
 ) {
 
     materialResource_.SetLightMode(lightMode);
-    transform_.scale = { size_.x,size_.y,1.0f };
+    transform_.scale = { scale_.x * size_.x,scale_.y * size_.y,1.0f };
     transform_.rotate = { 0.0f,0.0f,rotate_ };
     transform_.translate = { position_.x,position_.y,0.0f };
 

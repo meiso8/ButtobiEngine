@@ -159,7 +159,7 @@ void SphereMesh::CreateVertex() {
     vertexResource_->Map(0, nullptr,
         reinterpret_cast<void**>(&vertexData_));
 
-    Sphere sphere{ .center = {0.0f,0.0f,0.0f },.radius = 3.0f };
+    Sphere sphere{ .center = {0.0f,0.0f,0.0f },.radius = 0.5f };
 
     SetVertex(sphere);
 

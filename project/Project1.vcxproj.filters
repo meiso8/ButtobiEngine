@@ -261,7 +261,7 @@
     <ClCompile Include="Source\Engine\Mesh\Model\ModelManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Scene\SceneManager.cpp">
+    <ClCompile Include="Source\Engine\SceneManager\SceneManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\Scene\SampleScene.cpp">
@@ -285,7 +285,7 @@
     <ClCompile Include="Source\Engine\Math\Matrix\Matrix3x3.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Scene\SceneChange.cpp">
+    <ClCompile Include="Source\Engine\SceneManager\SceneChange.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Object3d\Object3d.cpp">
@@ -303,12 +303,6 @@
     <ClCompile Include="Source\Application\GameObject\World.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Locker.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Medjed.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Application\GameObject\Field.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -318,10 +312,46 @@
     <ClCompile Include="Source\Engine\Mesh\Circle\CircleMesh.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Enemy.cpp">
+    <ClCompile Include="Source\Application\GameObject\Enemy\Enemy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Scene\GameScene.cpp">
+    <ClCompile Include="Source\Application\Scene\TitleScene.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\Scene\ResultScene.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\JsonFile\JsonFile.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\System\Collider.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBullet.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBulletManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyShotBulletManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\GameObject\UI\HPGage.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\GameObject\UI\UIManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\GameObject\UI\HPIcon.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\GameObject\Locker.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\GameObject\Medjed.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\GameObject\Building.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -560,7 +590,7 @@
     <ClInclude Include="Source\Engine\Mesh\Model\ModelManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Scene\SceneManager.h">
+    <ClInclude Include="Source\Engine\SceneManager\SceneManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\Scene\SampleScene.h">
@@ -599,7 +629,7 @@
     <ClInclude Include="Source\Engine\DirectXCommon\BlendMode.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Scene\SceneChange.h">
+    <ClInclude Include="Source\Engine\SceneManager\SceneChange.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Object3d\Object3d.h">
@@ -620,12 +650,6 @@
     <ClInclude Include="Source\Application\GameObject\World.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Locker.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Medjed.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Application\GameObject\Field.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -638,10 +662,43 @@
     <ClInclude Include="Source\Application\GameObject\CharacterState.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Enemy.h">
+    <ClInclude Include="Source\Application\GameObject\Enemy\Enemy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Scene\GameScene.h">
+    <ClInclude Include="Source\Application\Scene\TitleScene.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\Scene\ResultScene.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\JsonFile\JsonFile.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBullet.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBulletManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyShotBulletManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\GameObject\UI\HPGage.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\GameObject\UI\UIManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\GameObject\UI\HPIcon.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\GameObject\Locker.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\GameObject\Medjed.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\GameObject\Building.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -662,6 +719,8 @@
     <None Include="externals\assimp\lib\Debug\assimp-vc143-mtd.pdb">
       <Filter>externals\assimp</Filter>
     </None>
+    <None Include="Resource\JsonFiles\config.json" />
+    <None Include="Resource\JsonFiles\Boss.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png">

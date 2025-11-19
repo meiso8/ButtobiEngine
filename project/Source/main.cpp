@@ -1,6 +1,12 @@
 #include"MyEngine.h"
 #include"SampleScene.h"
 #include"GameScene.h"
+#include"TitleScene.h"
+#include"ResultScene.h"
+#include<map>
+#include<unordered_map>
+
+#include"MakeMatrix.h"
 
 #define WIN_WIDTH 1280
 #define WIN_HEIGHT 720
@@ -13,48 +19,31 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // ==============================================//↓基本いじらない↓//============================================
     //エンジンの生成
     std::unique_ptr<MyEngine> myEngine = std::make_unique<MyEngine>();
-    myEngine->Create(L"ぶっとびEngine!", WIN_WIDTH, WIN_HEIGHT);
-
+    myEngine->Create(L"ぶっ飛びエンジン！", WIN_WIDTH, WIN_HEIGHT);
     // ==============================================//↑基本いじらない↑//============================================
-
     //画面の色
-    Vector4 screenColor = { 0.75f,0.75f,0.75f,1.0f };
+    Vector4 screenColor = { 0.75f,0.5f,0.5f,1.0f };
 
     // =============================================
     // シーンの生成
     // =============================================
 
-    enum Scene {
-   
-        kGameScene,
-        kSampleScene,
-        kMaxScene,
-    };
-
-    const char* sceneName[] = {
-       "GameScene",
-       "SampleScene",
-    };
-
-    std::vector<std::unique_ptr<SceneManager>> scenes;
-    scenes.push_back(std::make_unique < GameScene>());
-    scenes.push_back(std::make_unique < SampleScene>());
-
-    //シーンのインデックス
-    int sceneIndex = kGameScene;
-
-#ifdef _DEBUG
-    sceneIndex = kGameScene;
-#endif // _DEBUG
-
-    // 現在のシーン
-    SceneManager* currentScene = nullptr;
-    // 現在のシーンに代入
-    currentScene = scenes[sceneIndex].get();
-    // 現在のシーンの初期化
+    std::map<const std::string, std::unique_ptr<SceneManager>> scenes;
+    scenes["Title"] = std::make_unique < TitleScene>();
+    scenes["Sample"] = std::make_unique < SampleScene>();
+    //scenes["Result"] = std::make_unique < ResultScene>();
+    
+  
+    //最初の位置を保持
+    auto currentIt = scenes.begin();
+    SceneManager* currentScene = currentIt->second.get();
     currentScene->Initialize();
 
-    uint32_t lightType = 0;
+
+    Vector3 axis = Normalize({ 1.0f,1.0f,1.0f });
+    float angle = 0.44f;
+
+    Matrix4x4 rotateMatrix = MakeRotateAxisAngle(axis, angle);
 
     // =============================================
     // ウィンドウのxボタンが押されるまでループ メインループ
@@ -66,18 +55,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             break;
         }
 
-#ifdef _DEBUG
+        currentScene->SceneChangeUpdate();
 
-        if (Input::IsTriggerKey(DIK_I)) {
-            // 現在のシーンの初期化
-            sceneIndex++;
-            sceneIndex %= kMaxScene;
-            // 現在のシーンに代入
-            currentScene = scenes[sceneIndex].get();
+        if (currentScene->GetIsEndScene()) {
+            ++currentIt; // 次のシーンへ
+
+            if (currentIt == scenes.end()) {
+                currentIt = scenes.begin(); // 最初に戻る
+            }
+
+            currentScene = currentIt->second.get();
             currentScene->Initialize();
         }
-
-#endif // _DEBUG
 
         // エンジンの更新処理
         myEngine->Update();
@@ -90,7 +79,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #ifdef USE_IMGUI
         DebugUI::CheckColor(screenColor, "screenColor");
-        ImGui::Text("%s", sceneName[sceneIndex]);
+        DebugUI::ShowMatrix4x4(rotateMatrix,"rotateMatrix");
+        for (const auto& [sceneName, scenePtr] : scenes) { 
+            if (scenePtr.get() == currentScene) {
+                ImGui::Text("%s", sceneName.c_str());
+                break;
+            }
+        }
+     
 #endif // USE_IMGUI
 
         currentScene->Debug();

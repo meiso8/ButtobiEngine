@@ -1,25 +1,31 @@
 #include "ParticleEmitter.h"
-#include"Particle.h"
 
+#include"Camera.h"
 
 ParticleEmitter::ParticleEmitter()
 {
     Initialize();
+    particleManager_ = ParticleManager::GetInstance();
+    particleManager_->Create();
+    particleManager_->SetMovement(emitter_.movement);
 }
 void ParticleEmitter::Initialize()
 {
-    isRandom_ = false;
-    scale_ = { 1.0f,1.0f,1.0f };
-    color = { 1.0f,1.0f,1.0f,1.0f };
-
     emitter_.cont = 3;
     emitter_.frequency = 0.5f;
     emitter_.frequencyTime = 0.0f;
-    emitter_.transform.rotate = { 0.0f,0.0f,0.0f };
-    emitter_.transform.scale = { 1.0f,1.0f,1.0f };
-    emitter_.transform.translate = { 0.0f,0.0f,0.0f };
+    emitter_.transform.rotate_ = { 0.0f,0.0f,0.0f };
+    emitter_.transform.scale_ = { 1.0f,1.0f,1.0f };
+    emitter_.transform.translate_ = { 0.0f,0.0f,0.0f };
+
+    emitter_.isRandom = true;
+    emitter_.color = { 1.0f,1.0f,1.0f,1.0f };
+    emitter_.blendMode = kBlendModeAdd;
+    emitter_.movement = ParticleManager::kNormal;
+    emitter_.lifeTime_ = -1.0f;
+
 }
-void ParticleEmitter::Update()
+void ParticleEmitter::Update(Camera& camera)
 {
     emitter_.frequencyTime += ParticleManager::kDeltaTime;
 
@@ -28,9 +34,18 @@ void ParticleEmitter::Update()
         Emit();
     }
 
+    WorldTransformUpdate(emitter_.transform);
+
+    particleManager_->Update(camera);
+
 }
 
 void ParticleEmitter::Emit()
 {
-    ParticleManager::EmitParticle(name_, emitter_.transform.translate, emitter_.cont, scale_, color, isRandom_);
+    particleManager_->EmitParticle(name_, emitter_.transform, emitter_.cont, emitter_.color, emitter_.isRandom, emitter_.lifeTime_);
+}
+
+void ParticleEmitter::Draw()
+{
+    particleManager_->Draw(emitter_.blendMode);
 }

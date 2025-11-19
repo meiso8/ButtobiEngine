@@ -26,34 +26,68 @@ struct SoundData {
 class Sound {
 public:
 
+    //TAGを宣言する
     enum TAG {
         BGM1,
+        BGM2,
         PICO,
         CRACKER,
         FOOT_STEP,
 
+        FIRE_BALL,
+        THROW_FLOOR,
+
+
         SOUNDS
     };
 
-    static void Initialize();
-    static void Finalize();
-
+    /// @brief 全てのサウンドを読み込む
     static void LoadAllSound();
-    static void PlayBGM(const uint32_t handleIndex, const float& volumeOffset = 0.0f, const bool& loop = true);
-    static void PlaySE(const uint32_t handleIndex, const float& volumeOffset = 0.0f, const bool& loop = false);
-    static void PlayLoopSE(const uint32_t handleIndex, const float& volumeOffset = 0.0f);
-    static void PlayOriginSE(const uint32_t handleIndex, const float& volumeOffset = 0.0f);
 
-    static void Pause(const uint32_t handleIndex);  // 一時停止
-    static void Resume(const uint32_t handleIndex); // 再開
-    static void Stop(const uint32_t handleIndex);
-    static bool IsPlaying(const uint32_t& tag);
-
+    /// @brief BGＭを再生する
+    /// @param tag タグ
+    /// @param volumeOffset offset
+    /// @param loop ループフラグ　デフォルト true
+    static void PlayBGM(const TAG& tag, const float& volumeOffset = 0.0f, const bool& loop = true);
+    /// @brief SEを再生する
+    /// @param tag タグ
+    /// @param volumeOffset  offset
+    /// @param loop ループフラグ デフォルト false
+    static void PlaySE(const TAG& tag, const float& volumeOffset = 0.0f, const bool& loop = false);
+    /// @brief LoopSEを再生する
+    /// @param tag タグ
+    /// @param volumeOffset  offset
+    static void PlayLoopSE(const TAG& tag, const float& volumeOffset = 0.0f);
+    /// @brief 重複を省いたSEを再生する
+    /// @param tag タグ
+    /// @param volumeOffset offset
+    static void PlayOriginSE(const TAG& tag, const float& volumeOffset = 0.0f);
+    /// @brief 一時停止
+    /// @param tag 
+    static void Pause(const TAG& tag);
+    /// @brief 再開
+    /// @param tag タグ
+    static void Resume(const TAG& tag);
+    /// @brief 停止
+    /// @param tag タグ 
+    static void Stop(const TAG& tag);
+    /// @brief 全ての音を停止する
     static void StopAllSound();
+    /// @brief プレイ中かどうかを検証する
+    /// @param tag タグ 
+    /// @return 判定結果
+    static bool IsPlaying(const TAG& tag);
+
+
     /// @brief 音声データの解放関数  
 /// @param soundData 音声データ  
     static void Unload(SoundData& soundData);
+    static void Initialize();
+    static void Finalize();
+    static void SetVol(const float& vol, const TAG& tag);
 
+    static std::vector<float> GetWaveform(const TAG& tag);
+    static UINT64 GetSamplesPlayed(const TAG& tag);
 public:
 
     static float bgmVolume_;
@@ -71,6 +105,7 @@ private:
     static bool IsPlayingAll();
 
     static uint32_t GetSoundByIndex(const std::string& filePath);
+    static XAUDIO2_BUFFER GetBuffer(const TAG& tag);
 private:
 
     static  Microsoft::WRL::ComPtr<IXAudio2> xAudio2_; // ComオブジェクトなのでComPtrで管理する。  

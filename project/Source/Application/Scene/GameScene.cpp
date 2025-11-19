@@ -5,8 +5,6 @@
 
 //Debug用のImGui表示セット
 #include"DebugUI.h"
-//ImGuiだけ使用したかったら以下をインクルードすること
-//#include"ImGuiClass.h"
 
 //グリッド表示
 #include"DrawGrid.h"
@@ -30,8 +28,6 @@
 #include"CircleMesh.h"
 //立方体のメッシュ（AABBでセットするか8頂点でセット);
 #include"CubeMesh.h"
-//void SetMinMax(const AABB& aabb);
-//void SetVertex(const Vector3(&vertices)[8]);
 
 #include "ParticleEmitter.h"
 #include"Particle.h"
@@ -42,58 +38,90 @@
 #include"Collision.h"
 #include"Circle.h"
 
+#include"MyEngine.h"
+
 GameScene::GameScene()
 {
-    camera_ = std::make_unique<Camera>();
-#ifdef _DEBUG
-    // デバッグカメラの初期化
-    debugCamera_ = std::make_unique<DebugCamera>();
-#endif // _DEBUG
-
     // 現在のカメラを設定
     currentCamera_ = camera_.get();
 
-#pragma region// Particle正常に機能するかは怪しい
-    //パーティクル管理
-    particleManager_ = ParticleManager::GetInstance();
-    particleManager_->Create();
-    particleManager_->CreateParticleGroup("numbers", Texture::NUMBERS);
-    //エミッター
-    particleEmitter_ = std::make_unique<ParticleEmitter>();
-    particleEmitter_->SetName("numbers");
-#pragma endregion
+#pragma region // オブジェクト生成
+    //衝突判定管理
+    collisionManager_ = std::make_unique<CollisionManager>();
 
-    player_ = std::make_unique<Player>();
-    world_ = std::make_unique<World>();
+    floorGamePlayer_ = std::make_unique<FloorGamePlayer>();
+    floorGameFloorManager_ = std::make_unique<FloorGameFloorManager>();
+    floorStripManager_ = std::make_unique<FloorStripManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
+    floorBulletManager_ = std::make_unique<FloorBulletManager>();
+    floorPlayerShotBulletManager_ = std::make_unique<FloorPlayerShotBulletManager>(floorGamePlayer_.get(), floorBulletManager_.get());
+    floorPlayerStripTargetUI_ = std::make_unique<FloorPlayerStripTargetUI>(floorGamePlayer_.get());
+	floorActionManager_ = std::make_unique<FloorActionManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
+	floorGamePlayerAnimationManager_ = std::make_unique<FloorGamePlayerAnimationManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
+    
     enemy_ = std::make_unique<Enemy>();
-    enemy_->SetTarget(player_->GetCircle().center);
-    filed_ = std::make_unique<Field>();
+    enemyBulletManager_ = std::make_unique<EnemyBulletManager>();
+    enemyShotBulletManager_ = std::make_unique<EnemyShotBulletManager>(enemy_.get(), enemyBulletManager_.get());
+
+
+    uiManager_ = std::make_unique<UIManager>(*enemy_->GetHpsPtr(), *floorGamePlayer_->GetHpsPtr());
+
+    particleEmitter_ = std::make_unique<ParticleEmitter>();
+
+    particleEmitter_->SetName("white");
+#pragma endregion
 }
 
 void GameScene::Initialize() {
 
-    sceneChange_.Initialize();
+    MyEngine::GetDirectionalLightData()->direction = { 0.0f,0.0f,1.0f };
+
+    sceneChange_->Initialize();
+    sceneChange_->SetState(SceneChange::kFadeOut, 60);
     camera_->Initialize();
+    camera_->translate_ = { 0.0f, 14.0f,-6.0f };
+    camera_->rotate_ = { 1.2f,0.0f,0.0f };
     camera_->UpdateMatrix();
-    particleEmitter_->Initialize();
-    player_->Init();
-    world_->Init();
+
+#pragma region // オブジェクト初期化
+    floorGamePlayer_->Initialize();
+    floorGameFloorManager_->Initialize();
+    floorStripManager_->Initialize();
+    floorBulletManager_->Initialize();
+    floorPlayerShotBulletManager_->Initialize();
+    floorPlayerStripTargetUI_->Initialize();
+	floorActionManager_->Initialize();
+  
     enemy_->Init();
-    filed_->Init();
+    enemy_->SetTarget(floorGamePlayer_->body_.worldTransform_.translate_);
+    enemyBulletManager_->Initialize();
+    enemyShotBulletManager_->Initialize();
+#pragma endregion
+    collisionManager_->ClearColliders();
+
+    uiManager_->Initialize();
+
+    particleEmitter_->Initialize();
 }
 
 void GameScene::Update() {
 
+
+    if (enemy_->GetHpsPtr()->hp <= 0.0f) {
+        sceneChange_->SetState(SceneChange::kFadeIn, 30);
+    }
+
     //仮に音声を鳴らす　全体のvolumeがあってオフセット分だけいじる
-    Sound::PlayBGM(Sound::BGM1, 0.1f);
+    Sound::PlayBGM(Sound::BGM1, 0.0f);
 
     UpdateCamera();
 
     UpdateGameObject();
 
-    UpdateParticle();
-
     CheckAllCollision();
+
+    uiManager_->Update();
+
+    particleEmitter_->Update(*currentCamera_);
 }
 
 void GameScene::Draw() {
@@ -101,11 +129,22 @@ void GameScene::Draw() {
 #ifdef _DEBUG
     DrawGrid::Draw(*currentCamera_);
 #endif
-    world_->Draw(*currentCamera_);
-    filed_->Draw(*currentCamera_);
-    enemy_->Draw(*currentCamera_);
-    player_->Draw(*currentCamera_, kLightModeHalfL);
-    particleManager_->Draw();
+
+#pragma region // オブジェクト描画
+    floorGamePlayer_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    floorGameFloorManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    floorBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    floorPlayerStripTargetUI_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    enemy_->Draw(*currentCamera_, kLightModeHalfL);
+    enemyBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+#pragma endregion
+
+    particleEmitter_->Draw();
+
+    uiManager_->Draw();
+
+    //シーン遷移を描画する
+    sceneChange_->Draw();
 }
 
 void GameScene::Debug()
@@ -120,51 +159,51 @@ void GameScene::Debug()
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
     std::function<void()> func = [this]() { SwitchCamera(); };
     DebugUI::Button("ChangeCamera", func);
-    DebugUI::CheckParticle(*particleEmitter_);
 #endif // !USE_IMGUI
 }
 
 void GameScene::UpdateCamera()
 {
     if (isDebugCameraActive_) {
-        //これを呼べばOK
         currentCamera_->UpdateMatrix();
-        /*    camera_->UpdateMatrix();*/
     } else {
-        //プレイヤーの視点にしている
-        camera_->worldMat_ = player_->GetEyeMatrix();
-        camera_->UpdateViewProjectionMatrix();
+        camera_->UpdateMatrix();
     }
 }
 
 void GameScene::UpdateGameObject()
 {
-    player_->Update();
+    // オブジェクト個人の更新
+    floorGamePlayer_->Update();
+    floorGameFloorManager_->Update();
+    floorBulletManager_->Update();
     enemy_->Update();
-    filed_->Update();
-    world_->Update();
-}
+    enemyBulletManager_->Update();
 
-void GameScene::UpdateParticle()
-{
-    //エミッター
-    particleEmitter_->Update();
-    particleEmitter_->emitter_.transform.translate = enemy_->GetWorldPos();
-    //パーティクル管理
-    particleManager_->Update(*currentCamera_);
+    // オブジェクト同士の干渉
+    floorStripManager_->Update();
+    floorPlayerShotBulletManager_->Update();
+    enemyShotBulletManager_->Update();
+    floorPlayerStripTargetUI_->Update();
+	floorActionManager_->Update();
+
+	// アニメーション更新
+    floorGamePlayerAnimationManager_->Update();
 }
 
 void GameScene::CheckAllCollision()
 {
 
-    //フィールドの外側に行ったかどうかを判定する
-    if (IsCollisionInCircleLine(player_->GetCircle(), filed_->circle_)) {
-        player_->OnCollision(filed_->circle_);
-    };
-    //playerとenemyの当たり判定
-    if (IsCollision(player_->GetWorldAABB(), enemy_->GetWorldAABB())) {
-        enemy_->OnCollision();
-    };
+    collisionManager_->ClearColliders();
+
+    collisionManager_->AddCollider(floorGamePlayer_.get());
+    collisionManager_->AddCollider(enemy_.get());
+
+    for (auto& bullet : floorBulletManager_->GetBullets()) {
+        if (bullet->isActive_) { collisionManager_->AddCollider(bullet.get()); }
+    }
+
+    collisionManager_->CheckAllCollisions();
 }
 
 GameScene::~GameScene()

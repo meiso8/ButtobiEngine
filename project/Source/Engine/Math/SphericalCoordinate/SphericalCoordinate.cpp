@@ -5,7 +5,7 @@ SphericalCoordinate TransformCoordinate(const Vector3& v) {
 
     SphericalCoordinate result;
     result.radius = sqrtf(Dot(v, v));
-    result.azimuthal = atanf(v.y / v.x);
+    result.azimuthal = atan2f(v.y, v.x);
     result.polar = acosf(v.z / result.radius);
     return result;
 }

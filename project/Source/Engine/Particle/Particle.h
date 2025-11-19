@@ -7,12 +7,15 @@
 #include"RootSignature.h"
 #include "BlendState.h"
 #include"AccelerationField.h"
+#include"SphericalCoordinate.h"
+#include"Texture.h"
+#include"ModelManager.h"
 
 #include<unordered_map>
 #include<list>
 #include<memory>
 #include<cstdint>
-#include"Texture.h"
+
 
 class Camera;
 class ShaderResourceView;
@@ -40,27 +43,39 @@ struct ParticleGroup {
     Microsoft::WRL::ComPtr<ID3D12Resource> instancingResource;
     uint32_t numInstance;//インスタンス数
     ParticleForGPU* instancingData;
+    Vector3 textureSize;
+    bool useModel;
+    Model* model = nullptr;
 };
 
 
 
-std::list<Particle> Emit(const bool& isRandom, const Vector3& position, uint32_t count, const Vector3& scale = { 1.0f,1.0f,1.0f }, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
-Particle MakeNewParticle(const bool& isRandom, const Vector3& translate, const Vector3& scale = { 1.0f,1.0f,1.0f }, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
+std::list<SphericalCoordinate> EmitCoordinate(const bool& isRandom, const Vector3& position, uint32_t count, const Vector3& scale = { 1.0f,1.0f,1.0f }, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
 
+std::list<Particle> Emit(const bool& isRandom, const WorldTransform& transform, uint32_t count, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f },const float& lifeTime = -1.0f);
+Particle MakeNewParticle(const bool& isRandom, const WorldTransform& transform, const Vector4& color, const float& lifeTime = -1.0f);
+SphericalCoordinate MakeNewSphericalCoordinate(const float& radius = 3.0f);
 class ParticleManager
 {
 public:
 
+    enum Movements {
+        kNormal,
+        kSphere,
+        kShock
+    };
+
     AccelerationField accelerationField;
     bool useBillboard_ = true;
+    bool useSpriteCamera_ = false;
+
+
     const uint32_t kNumMaxInstance = 100;//インスタンス数
     static const float kDeltaTime;
-protected:
-
+private:
+    RootSignature* rootSignature_ = nullptr;
     static ID3D12GraphicsCommandList* commandList_;
     static std::unordered_map<std::string, std::unique_ptr <ParticleGroup>>particleGroups;
-
-    RootSignature* rootSignature_ = nullptr;
 
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
     Microsoft::WRL::ComPtr<ID3D12Resource> vertexBufferResource_;
@@ -75,52 +90,55 @@ protected:
     Matrix4x4 worldMatrix;
     Matrix4x4 worldViewProjectionMatrix;
 
-private:
     static ParticleManager* instance_;
+    Camera* camera_ = nullptr;
 public:
 
+    void CreateAll();
+
     //コンストラク・タデストラクタの隠ぺい
-    ParticleManager() = default;
+    ParticleManager();
     ~ParticleManager() = default;
     //コピーコンストラクタの封印
     ParticleManager(ParticleManager&) = delete;
     //コピー代入演算子の封印
     ParticleManager& operator=(ParticleManager&) = delete;
-
-    static ParticleManager* GetInstance() {
-        if (instance_ == nullptr) {
-            instance_ = new ParticleManager();
-        }
-        return instance_;
-    }
-
-
-    std::unordered_map<std::string, std::unique_ptr <ParticleGroup>>& GetParticleGroups() {
-        return particleGroups;
-    }
-
-
-    void CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle);
     void Create();
+    static ParticleManager* GetInstance();
 
-    virtual void Update(Camera& camera);
+    static void EmitParticle(const std::string name, const WorldTransform& transform, uint32_t count, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, const bool& isRandom = true, const float& lifeTime = 1.0f);
 
-    static void EmitParticle(const std::string name, const Vector3& position, uint32_t count, const Vector3& scale = { 1.0f,1.0f,1.0f }, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, const bool& isRandom = true);
+    std::unordered_map<std::string, std::unique_ptr <ParticleGroup>>& GetParticleGroups();
+    void CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle, const bool& useModel, const ModelManager::MODEL_HANDLE& modelHandle = ModelManager::MODEL_HANDLE::BOX);
 
+    void Update(Camera& camera);
     void Draw(uint32_t blendMode = BlendMode::kBlendModeAdd);
-
     void InitAccelerationField();
-
     void Finalize();
 
+    void SetMovement(Movements& move);
+
 protected:
+    void UpdateBillBordMatrix(Camera& camera);
+    void UpdateMatrix(Particle& particleItr, ParticleGroup& group);
+private:
+
+    std::list<SphericalCoordinate>sphericalCoordinates;
+    //メンバ関数ポインタテーブル
+    std::unordered_map<Movements, std::function<void()>> UpdateFunctions;
+    Movements movements_ = Movements::kNormal;
+    void Normal();
+    void Sphere();
+    void Shock();
+
     void CreateModelData();
     void CreateVertexBufferResource();
-    void UpdateBillBordMatrix(Camera& camera);
-    void UpdateWorldMatrixForBillBord(Particle& particleItr);
-    void UpdateWorldMatrix(Particle& particleItr);
-    void IsCollisionFieldArea(Particle& particleItr);
 
+    void IsCollisionFieldArea(Particle& particleItr);
+    void UpdateWorldMatrixForBillBord(Particle& particleItr);
+    void UpdateWorldMatrix(Particle& particleItr, ParticleGroup& group);
+    void UpdateWVPMatrix(Camera& camera);
+    void UpdateInstancingData(ParticleGroup& group, Particle& particleItr);
 
 };
 

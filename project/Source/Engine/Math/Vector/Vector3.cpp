@@ -70,6 +70,17 @@ Vector3 Perpendicular(const Vector3& vector) {
     return { 0.0f, -vector.z, vector.y };
 }
 
+Vector3 Reflect(const Vector3& input, const Vector3& normal) {
+    return input - 2.0f * Dot(input, normal) * normal;
+}
+
+Vector3 Project(const Vector3& v1, const Vector3& v2) {
+    Vector3 v2n = Normalize(v2);
+    float d = Dot(v1, v2n);
+    return v2n * d;
+}
+
+
 Vector3 operator+(const Vector3& v1, const Vector3& v2) { return Add(v1, v2); }
 Vector3 operator-(const Vector3& v1, const Vector3& v2) { return Subtract(v1, v2); }
 Vector3 operator*(const Vector3& v1, const Vector3& v2){  return Multiply(v1,v2);}

@@ -20,9 +20,9 @@ public:
     void Create(const Texture::TEXTURE_HANDLE& textureHandle, const Vector2& position, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
 
     void Update();
-
+    void UpdateAnchorPoint();
     static void PreDraw(uint32_t blendMode = BlendMode::kBlendModeNormal);
-    void Draw(const LightMode& lightMode =LightMode::kLightModeNone
+    void Draw(const LightMode& lightMode = LightMode::kLightModeNone
     );
 
     void SetColor(const Vector4& color);
@@ -30,10 +30,16 @@ public:
     void SetSize(const Vector2& size) { size_ = size; };
     void SetPosition(const Vector2& position) { position_ = position; }
     void SetRotate(const float& rotate) { rotate_ = rotate; }
-    void SetScale(const Vector3& scale) { transform_.scale = scale; };
+    void SetScale(const Vector2& scale) { scale_ = scale; };
+    
+    void SetUVScale(const Vector3& scale) { uvTransform_.scale = scale; };
+    void SetUVRotate(const Vector3& rotate) { uvTransform_.rotate = rotate; };
+    void SetUVTranslate(const Vector3& translate) { uvTransform_.translate = translate; };
+
+
 
     Vector2& GetSize() { return size_; }
-    Vector3& GetScale() { return transform_.scale; };
+    Vector2& GetScale() { return scale_; };
     float& GetRotate() { return rotate_; };
     Vector2& GetPosition() { return position_; };
 
@@ -44,6 +50,8 @@ public:
     Vector4& GetColor() { return materialResource_.GetMaterial()->color; }
 
     Vector2& GetAnchorPoint() { return anchorPoint_; }
+    /// @brief アンカーポイント
+    /// @param anchorPoint 0.0f~1.0f
     void SetAnchorPoint(const Vector2& anchorPoint) { anchorPoint_ = anchorPoint; }
     void SetIsFlipX(const bool isFlipX) { isFlipX_ = isFlipX; };
     void SetIsFlipY(const bool isFlipY) { isFlipY_ = isFlipY; };
@@ -78,7 +86,7 @@ private:
     Vector2 position_ = { 0.0f,0.0f };
     float rotate_ = 0.0f;
     Vector2 size_ = { 0.0f,0.0f };
-
+    Vector2 scale_ = { 1.0f,1.0f };
     Transform transform_{};
     Matrix4x4 worldMatrix_{};
     TransformationMatrixFor2D* transformationMatrixData_ = nullptr;

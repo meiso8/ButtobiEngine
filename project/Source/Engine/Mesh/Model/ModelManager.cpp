@@ -14,30 +14,32 @@
 
 std::map<const uint32_t, std::unique_ptr< Model> >ModelManager::models_;
 
+void ModelManager::LoadAllModel()
+{
+    //モデルのファイルパスとタグを関連付けてください
+    LoadModel("Resource/Models/Box", "Box.obj", BOX);
+    LoadModel("Resource/Models/player", "player.obj", PLAYER_BODY);
+    LoadModel("Resource/Models/medjed", "medjed.obj", MEDJED);
+    LoadModel("Resource/Models/people", "people.obj", PEOPLE);
+    LoadModel("Resource/Models/mummy", "mummy.obj", MUMMY);
+    LoadModel("Resource/Models/locker", "locker.obj", LOCKER);
+    LoadModel("Resource/Models/building", "building.obj", BUILDING);
+    LoadModel("Resource/Models/world", "world.obj", WORLD);
+
+}
+
+// ========================================================================================================
+
 Model* ModelManager::GetModel(const uint32_t& handle)
 {
     assert(handle < models_.size());
-   
+
     if (models_.contains(handle)) {
         return models_.at(handle).get();
     }
     return nullptr;
 
 }
-
-void ModelManager::LoadAllModel()
-{
-    LoadModel("Resource/Models/world", "world.obj", WORLD);
-    LoadModel("Resource/Models/player", "player.obj", PLAYER);
-    LoadModel("Resource/Models/effect", "effect.obj", EFFECT);
-    LoadModel("Resource/Models", "locker.obj", LOCKER);
-    LoadModel("Resource/Models", "people.obj", PEOPLE);
-    LoadModel("Resource/Models/medjed", "medjed.obj", MEDJED);
-    LoadModel("Resource/Models/mummy", "mummy.obj", MUMMY);
-    LoadModel("Resource/Models/building", "building.obj", BUILDING);
-
-}
-
 void ModelManager::Finalize()
 {
     models_.clear();
@@ -56,7 +58,7 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
 
     //追加したテクスチャデータのポインタ
     std::unique_ptr<Model> model = std::make_unique<Model>();
-   
+
     std::unique_ptr<ModelData> modelData = std::make_unique<ModelData>();
 
     Assimp::Importer importer;

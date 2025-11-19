@@ -1,16 +1,23 @@
 #pragma once
-#include"Transform.h"
+#include"WorldTransform.h"
 #include<cstdint>
 #include<string>
 #include"Vector4.h"
+#include"BlendMode.h"
+#include"Particle.h"
+class Camera;
 
 struct Emitter
 {
-    Transform transform;//エミッタのTransfrom
+    WorldTransform transform;//エミッタのTransfrom
     uint32_t cont;//発生数
     float frequency;//発生頻度
     float frequencyTime;//頻度用時刻
-
+    bool isRandom;
+    Vector4 color;
+    BlendMode blendMode;
+    ParticleManager::Movements movement;
+    float lifeTime_;
 };
 
 class ParticleEmitter
@@ -18,9 +25,7 @@ class ParticleEmitter
 private:
 
     std::string name_ = "unknown";
-    bool isRandom_ = false;
-    Vector3 scale_ = { 1.0f,1.0f,1.0f };
-    Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
+    ParticleManager* particleManager_ = nullptr;
 public:
     Emitter emitter_{};
 public:
@@ -32,7 +37,8 @@ public:
 
     ParticleEmitter();
     void Initialize();
-    void Update();
+    void Update(Camera& camera);
     void Emit();
+    void Draw();
 };
 

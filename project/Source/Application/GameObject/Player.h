@@ -6,6 +6,7 @@
 #include"CharacterState.h"
 #include"AABB.h"
 
+
 class Model;
 class Camera;
 enum LightMode;
@@ -20,32 +21,41 @@ public:
     void Draw(Camera& camera, const LightMode& lightType);
     void Update();
     void Move();
+    void Zoom();
     Vector3& GetForward();
     void LookBack();
     void MouseLook();
     Matrix4x4& GetEyeMatrix() {
         return eyePos_.worldTransform_.matWorld_;
     };
-    Matrix4x4& GetBodyMatrix() {
-        return bodyPos_.worldTransform_.matWorld_;
+    Vector3& GetBodyPos() {
+        return bodyPos_.worldTransform_.translate_;
     };
 
     AABB GetWorldAABB();
     Circle& GetCircle() {
         return circle_;
     };
-
+    HPs* GetHpsPtr() {return &characterState_.hps; }
     void OnCollision(const Circle& circle);
+    void ResolveCollision(const AABB& wallAABB, const AABB& playerAABB);
+    void OnCollisionWall(const AABB& aabb);
     void OnCollisionEnemy();
 
+    float cameraSpeed_ = 4.0f;
+    bool isPressSpace_ = false;
+    float zoomTimer_ = 0.0f;
+    bool isZoom_ = false;
 private:
-
+    float hitTimer_ = 0.0f;
     float endRotateY_ = 0.0f;
     float startRotateY = 0.0f;
     float lookBackTime_ = 1.0f;
     bool isLookBackEnd_ = false;
 
     bool isLookBack_ = false;
+
+    bool isWallHit = false;
 
     //AABB
     AABB localAabb_;

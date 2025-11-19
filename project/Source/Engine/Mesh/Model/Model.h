@@ -14,10 +14,16 @@ public:
     ModelData* GetModelData() {
         return modelData_.get();
     }
-    void Draw(ID3D12GraphicsCommandList* commandList)override;
-    void UpdateUV();
-    Transform& GetUVTransform() { return uvTransform_; }
 
+    D3D12_VERTEX_BUFFER_VIEW& GetVBV() { return vertexBufferView_; };
+    void Draw(ID3D12GraphicsCommandList* commandList)override;
+    
+    /// @brief UVを更新する
+    void UpdateUV();
+    /// @brief UVのTransformを得る
+    /// @return Transform
+    Transform& GetUVTransform() { return uvTransform_; }
+    /// @brief テクスチャをモデルオリジナルのものに戻す
     void ResetTextureHandle() {
         textureHandle_ = modelData_->material.textureSrvIndex;
     };
