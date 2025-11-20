@@ -7,7 +7,7 @@
 #include"Collision.h"
 #include "Input.h"
 #include"CollisionConfig.h"
-
+#include"JsonFile.h"
 #include "MatsumotoObj/MY_Utility.h"
 
 FloorGamePlayer::FloorGamePlayer() {
@@ -43,30 +43,53 @@ FloorGamePlayer::FloorGamePlayer() {
 FloorGamePlayer::~FloorGamePlayer() {
 }
 
-void FloorGamePlayer::OnCollision(Collider* collider) {
-	if (collider->GetCollisionAttribute() == kCollisionEnemy) {
-		//デバック用
-		OnCollisionCollider();
-		//hpを減らす
-		if (hps_.hp > 0) {
-			hps_.hp--;
-		}
 
-	}
+
+void FloorGamePlayer::OnCollision(Collider* collider)
+{
+    if (collider->GetCollisionAttribute() == kCollisionEnemy) {
+        //デバック用
+        OnCollisionCollider();
+
+        if (damageStruct_.isHit) { return; }
+
+		damageStruct_.isHit = true;
+
+        damageStruct_.invincibilityTime;
+        //hpを減らす
+        if (damageStruct_.hps.hp > 0) {
+            damageStruct_.hps.hp-= damageStruct_.hps.hpDecrease;
+        }
+
+    }
 }
 
 void FloorGamePlayer::Initialize() {
-	body_.Initialize();
-	body_.worldTransform_.translate_.y = 0.5f;
-	// 移動
-	moveDir_ = { 0.0f,0.0f,0.0f };
-	isMove_ = false;
-	moveLimitMax_ = { 5.0f,5.0f,5.0f };
-	moveLimitMin_ = { -5.0f,0.0f,-5.0f };
-	moveSpeed_ = 0.1f;
-	// 方向
-	lookDir_ = moveDir_;
-	lookSpeed_ = 0.5f;
+
+    Json json = JsonFile::GetJsonFiles("player");
+    body_.Initialize();
+    body_.worldTransform_.translate_.y = 0.5f;
+    // 移動
+    moveDir_ = { 0.0f,0.0f,0.0f };
+    isMove_ = false;
+    moveLimitMax_ = { 5.0f,5.0f,5.0f };
+    moveLimitMin_ = { -5.0f,0.0f,-5.0f };
+
+    moveAcceleration_ = json["Speed"]["acceleration"];
+    moveSpeed_ = json["Speed"]["velocity"];
+
+    //HP
+    damageStruct_.cannotControlTime = json["Damage"]["cannotControlTime"];
+    damageStruct_.invincibilityTime = json["Damage"]["invincibilityTime"];
+    damageStruct_.flashTimer = json["Damage"]["flashTimer"];
+    damageStruct_.isHit = json["Damage"]["isHit"];
+    damageStruct_.hps.maxHp= json["Damage"]["maxHP"];
+    damageStruct_.hps.hp =  damageStruct_.hps.maxHp;
+    damageStruct_.hps.hpDecrease = json["Damage"]["hpDecrease"];
+
+    // 方向
+    lookDir_ = moveDir_;
+    lookSpeed_ = 0.5f;
 
 	// 床剥がし
 	isReqestStript_ = false;
@@ -75,17 +98,17 @@ void FloorGamePlayer::Initialize() {
 	striptDuration_ = 0.3f;
 	isOnStripedFloor_ = false;
 
-	// 床投げ
-	isReqestShot_ = false;
-	shotTimer_ = 0.0f;
-	shotDuration_ = 0.5f;
-	//HP
-	hps_.hp = hps_.maxHp;
+
+    // 床投げ
+    isReqestShot_ = false;
+    shotTimer_ = 0.0f;
+    shotDuration_ = 0.5f;
 
 	//べとべと床フラグ
 	isOnStickyFloor_ = false;
 	stickyFloorSlowRate_ = 0.1f;
 }
+
 
 void FloorGamePlayer::Update() {
 	Move();
@@ -103,12 +126,17 @@ void FloorGamePlayer::Update() {
 	ColliderUpdate();
 
 #ifdef USE_IMGUI
-	ImGui::Begin("FloorGamePlayer");
-	ImGui::Checkbox("isStriptting_", &isStriptting_);
-	ImGui::Checkbox("isReqestStript_", &isReqestStript_);
-	ImGui::Checkbox("isReqestShot_", &isReqestShot_);
-	ImGui::DragFloat3("LookDir", &lookDir_.x, 0.1f);
-	ImGui::End();
+
+    ImGui::Begin("FloorGamePlayer");
+    ImGui::Checkbox("isStriptting_", &isStriptting_);
+    ImGui::Checkbox("isReqestStript_", &isReqestStript_);
+    ImGui::Checkbox("isReqestShot_", &isReqestShot_);
+    ImGui::SliderFloat("moveAcceleration", &moveAcceleration_, 0.0f, 10.0f);
+    ImGui::SliderFloat("movepeed", &moveSpeed_, 0.0f, 10.0f);
+    DebugUI::CheckDamageStruct(damageStruct_,"playerDamage");
+
+    ImGui::End();
+
 #endif // USE_IMGUI
 
 }
@@ -131,6 +159,7 @@ void FloorGamePlayer::Draw(Camera& camera, const LightMode& lightType) {
 }
 
 void FloorGamePlayer::Move() {
+
 	// 移動方向決定
 	isMove_ = false;
 	moveDir_ = { 0.0f,0.0f,0.0f };
@@ -181,6 +210,7 @@ void FloorGamePlayer::Move() {
 	body_.worldTransform_.translate_.x = std::clamp(body_.worldTransform_.translate_.x, moveLimitMin_.x, moveLimitMax_.x);
 	body_.worldTransform_.translate_.y = std::clamp(body_.worldTransform_.translate_.y, moveLimitMin_.y, moveLimitMax_.y);
 	body_.worldTransform_.translate_.z = std::clamp(body_.worldTransform_.translate_.z, moveLimitMin_.z, moveLimitMax_.z);
+
 }
 
 void FloorGamePlayer::LookMoveDir() {

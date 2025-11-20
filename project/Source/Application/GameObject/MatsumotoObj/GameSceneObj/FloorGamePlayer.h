@@ -29,7 +29,7 @@ public:
 	void Draw(Camera& camera, const LightMode& lightType);
 
 	Vector3& GetLookDir() { return lookDir_; }
-	HPs* GetHpsPtr() { return &hps_; }
+	HPs* GetHpsPtr() { return &damageStruct_.hps; }
 	bool isStriptting_;
 	bool isReqestStript_;
 	int stripFloorPosX_;
@@ -51,7 +51,11 @@ private:
 	void LookMoveDir();
 	void StriptFloor();
 	void ShotFloor();
-	
+
+	Model* model_ = nullptr;
+	Damage damageStruct_;
+	float moveAcceleration_;
+
 	float moveSpeed_;
 	Vector3 moveDir_;
 	Vector3 moveLimitMax_;
@@ -68,5 +72,4 @@ private:
 
 	float stickyFloorSlowRate_;
 
-	HPs hps_ = { 100,100 };
 };

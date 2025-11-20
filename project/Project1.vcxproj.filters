@@ -264,9 +264,6 @@
     <ClCompile Include="Source\Engine\SceneManager\SceneManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Scene\SampleScene.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\Camera\SpriteCamera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -295,9 +292,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Particle\ParticleEmitter.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Player.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\World.cpp">
@@ -626,9 +620,6 @@
     <ClInclude Include="Source\Engine\SceneManager\SceneManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Scene\SampleScene.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Engine\Camera\SpriteCamera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -675,9 +666,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Particle\ParticleEmitter.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Player.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\World.h">
@@ -796,6 +784,7 @@
     </None>
     <None Include="Resource\JsonFiles\config.json" />
     <None Include="Resource\JsonFiles\Boss.json" />
+    <None Include="Resource\JsonFiles\player.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png">

@@ -39,10 +39,10 @@ void Enemy::Init()
 {
     Json file = JsonFile::GetJsonFiles("Boss");
     actionTime_ = file["First"]["ActionTimer"];
-    characterState_.hps.maxHp = file["First"]["HP"];
-    characterState_.hps.hp = characterState_.hps.maxHp;
-    characterState_.isAttack = false;
-    characterState_.isHit = false;
+    damageStruct_.hps.maxHp = file["First"]["HP"];
+    damageStruct_.hps.hp = damageStruct_.hps.maxHp;
+    damageStruct_.hps.hpDecrease = file["First"]["hpDecrease"];
+    damageStruct_.isHit = false;
     bodyPos_.SetColor({ 1.0f,0.0f,0.0f,1.0f });
     bodyPos_.worldTransform_.translate_.y = GetRadius();
     velocity_ = { 10.0f,10.0f,10.0f };
@@ -84,7 +84,7 @@ void Enemy::Update()
     bodyPos_.Update();
     ColliderUpdate();
 
-    DebugUI::CheckCharacterState(characterState_, "Boss");
+    DebugUI::CheckDamageStruct(damageStruct_, "Boss");
 }
 
 Vector3 Enemy::GetWorldPosition()const
@@ -98,17 +98,19 @@ void Enemy::OnCollision(Collider* collider)
     OnCollisionCollider();
 
     if (collider->GetCollisionAttribute() == kCollisionPlayerBullet) {
-        if (!characterState_.isHit) {
-            characterState_.isHit = true;
 
-
-            Sound::PlaySE(Sound::CRACKER);
-
-            if (characterState_.hps.hp > 0) {
-                characterState_.hps.hp--;
-            }
-            poyoAnimTimer_ = 0.0f;
+        if (damageStruct_.isHit) {
+            return;
         }
+
+        damageStruct_.isHit = true;
+        Sound::PlaySE(Sound::CRACKER);
+
+        if (damageStruct_.hps.hp > 0) {
+            damageStruct_.hps.hp-= damageStruct_.hps.hpDecrease;
+        }
+        poyoAnimTimer_ = 0.0f;
+
     }
 
     if (collider->GetCollisionAttribute() == kCollisionPlayer) {
@@ -146,7 +148,7 @@ void Enemy::Tackle()
 
 void Enemy::Knockback()
 {
-    if (timer_ <=  1.0f) {
+    if (timer_ <= 1.0f) {
         RotateY(timer_);
     }
 
@@ -155,7 +157,7 @@ void Enemy::Knockback()
     } else if (timer_ >= 0.25f && timer_ <= 2.0f) {
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(endPos_, startPos_, timer_ / 2.0f);
         LookTarget();
-    
+
     } else {
         SetPhase(ROUND);
     }
@@ -176,8 +178,8 @@ void Enemy::SetPhase(PHASE phase)
 void Enemy::Round()
 {
     sphericalPos_.radius = Lerp(sphericalPos_.radius, enemyRoundCircle_.radius, 0.5f);
-    sphericalPos_.polar += InverseFPS* roundSpeedY;
-    if (sphericalPos_.polar > std::numbers::pi_v<float>/2.0f|| sphericalPos_.polar < -std::numbers::pi_v<float>/2.0f) {
+    sphericalPos_.polar += InverseFPS * roundSpeedY;
+    if (sphericalPos_.polar > std::numbers::pi_v<float> / 2.0f || sphericalPos_.polar < -std::numbers::pi_v<float> / 2.0f) {
         roundSpeedY *= -1.0f;
     }
     LookTarget();
@@ -268,11 +270,11 @@ void Enemy::PoyoPoyo(const float& endTimer)
 
 void Enemy::HitUpdate()
 {
-    if (characterState_.isHit) {
+    if (damageStruct_.isHit) {
         PoyoPoyo();
 
         if (poyoAnimTimer_ == 0.25f) {
-            characterState_.isHit = false;
+            damageStruct_.isHit = false;
         }
     } else {
         LerpScale();
@@ -286,5 +288,5 @@ void Enemy::LerpScale()
 
 void Enemy::RotateY(const float& timer)
 {
-    bodyPos_.worldTransform_.rotate_.y = Easing::EaseInBack(startRotateY_, endRotateY_,timer);
+    bodyPos_.worldTransform_.rotate_.y = Easing::EaseInBack(startRotateY_, endRotateY_, timer);
 }

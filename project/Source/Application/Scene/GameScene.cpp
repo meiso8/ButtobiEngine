@@ -109,7 +109,13 @@ void GameScene::Update() {
 
 
     if (enemy_->GetHpsPtr()->hp <= 0.0f) {
-        sceneChange_->SetState(SceneChange::kFadeIn, 30);
+       
+#ifdef _DEBUG
+        Initialize();
+#endif
+
+
+       /* sceneChange_->SetState(SceneChange::kFadeIn, 30);*/
     }
 
     //仮に音声を鳴らす　全体のvolumeがあってオフセット分だけいじる
