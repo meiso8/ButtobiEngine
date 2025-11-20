@@ -7,7 +7,7 @@
 #include"Object3d.h"
 
 #pragma region//ゲームオブジェクト
-#include"Player.h"
+
 #include"World.h"
 #include"Field.h"
 #pragma endregion
@@ -44,7 +44,6 @@ public:
 
 
 #pragma region//ゲームオブジェクト
-    std::unique_ptr<Player>player_ = nullptr;
     std::unique_ptr<World>world_ = nullptr;
     std::unique_ptr<Field>filed_ = nullptr;
 #pragma endregion

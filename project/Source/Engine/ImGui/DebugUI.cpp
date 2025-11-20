@@ -205,16 +205,19 @@ void DebugUI::CheckJsonFile()
 #endif
 }
 
-void DebugUI::CheckCharacterState(CharacterState& state, const char* label)
+void DebugUI::CheckDamageStruct(Damage& damage, const char* label)
 {
 #ifdef USE_IMGUI
-    ImGui::Begin("CharacterState");
+    ImGui::Begin("Damage");
 
     if (ImGui::TreeNode(label)) {
-        ImGui::Checkbox("isAttack", &state.isAttack);
-        ImGui::Checkbox("isHit", &state.isHit);
-        ImGui::DragInt("HP", &state.hps.hp, 1, 0, 100);
-        ImGui::DragInt("MaxHP", &state.hps.maxHp, 1, 0, 100);
+        ImGui::SliderFloat("cannotControlTime", &damage.cannotControlTime, 0.0f, 10.0f);
+        ImGui::SliderFloat("flashTimer", &damage.flashTimer, 0.0f, 10.0f);
+        ImGui::SliderFloat("flashTimer", &damage.invincibilityTime, 0.0f, 10.0f);
+        ImGui::Checkbox("isHit", &damage.isHit);
+        ImGui::DragInt("HP", &damage.hps.hp, 1, 0, 100);
+        ImGui::DragInt("MaxHP", &damage.hps.maxHp, 1, 0, 100);
+        ImGui::DragInt("hpDecrease", &damage.hps.hpDecrease, 1, 0, 100);
         ImGui::TreePop();
     }
 
@@ -430,8 +433,8 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter)
             }
             ImGui::TreePop();
         }
-   
- 
+
+
     }
 
     ImGui::End();
