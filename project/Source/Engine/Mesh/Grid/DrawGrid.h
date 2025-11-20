@@ -14,7 +14,7 @@ private:
     static std::array<LineMesh*, 102> line_;
     static  std::array <CubeMesh*, 2> cube_;
 
-    static std::array<Object3d*, 104> lineTransforms_;
+    static std::array<Object3d*, 102> lineTransforms_;
 
 
 

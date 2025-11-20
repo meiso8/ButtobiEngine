@@ -6,7 +6,7 @@
 #include"commandList.h"  
 #include"Balloon.h"
 #include"Wave.h"
-#include"MaterialResource.h"  
+
 #include"Transform.h"
 #include"PSO.h"  
 #include"Light.h"
@@ -20,9 +20,6 @@ public:
     virtual void PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode& blendMode = BlendMode::kBlendModeNormal,const CullMode& cullMode = CullMode::kCullModeBack);
     virtual void Draw(ID3D12GraphicsCommandList* commandList) = 0;
 
-    void SetColor(const Vector4& color);
-    Material& GetMaterial() { return *materialResource_->GetMaterial(); };
-    Vector4& GetColor() { return materialResource_->GetMaterial()->color; };
     VertexData& GetVertexData(const uint32_t& index) {
         return vertexData_[index];
     }
@@ -36,12 +33,11 @@ public:
     void InitBalloonData();
     void InitPointLightData();
     void SetTextureHandle(const Texture::TEXTURE_HANDLE& textureHandle);
-    void SetLightMode(const int32_t& lightMode) { materialResource_->SetLightMode(lightMode); }
+
 protected:
     /// @brief テクスチャハンドル
     uint32_t textureHandle_ = 0;
-    //マテリアルリソース
-    MaterialResource* materialResource_ = nullptr;
+
     //rootSignatureとdirectionalLight
     static ModelConfig* modelConfig_;
 
@@ -66,7 +62,7 @@ protected:
 protected:
     virtual void CreateVertex() = 0;
     virtual void CreateIndexResource();
-    void CreateMaterial(const Vector4& color = { 1.0f,1.0f,1.0f,1.0f },const uint32_t& lightType = 0);
+
     void CreateWaveData();
     void CreateBalloonData();
     void CreatePointLightData();

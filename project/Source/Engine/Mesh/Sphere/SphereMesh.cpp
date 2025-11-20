@@ -19,32 +19,13 @@ void SphereMesh::Create(const Texture::TEXTURE_HANDLE& textureHandle)
     CreateVertex();
     //CreateIndexResource();
 
-    CreateMaterial();
     CreateWaveData();
     CreateBalloonData();
     CreatePointLightData();
-    //UVを作成
-    CreateUV();
-}
-
-void SphereMesh::CreateUV()
-{
-    uvTransform_ = {
-      {1.0f,1.0f,1.0f},
-      {0.0f,0.0f,0.0f},
-      {0.0f,0.0f,0.0f},
-    };
-
-    uvTransformMatrix_ = MakeIdentity4x4();
 
 }
-;
 
-void SphereMesh::UpdateUV() {
 
-    uvTransformMatrix_ = MakeAffineMatrix(uvTransform_.scale, uvTransform_.rotate, uvTransform_.translate);
-    materialResource_->SetUV(uvTransformMatrix_);
-}
 
 void SphereMesh::SetVertex(const Sphere& spehre)
 {
@@ -122,9 +103,6 @@ void SphereMesh::Draw(ID3D12GraphicsCommandList* commandList) {
 
     //頂点バッファビューを設定
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
-
-    //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-    commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
  //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
     SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
     //LightのCBufferの場所を設定

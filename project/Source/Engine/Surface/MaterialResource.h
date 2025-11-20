@@ -26,12 +26,9 @@ class MaterialResource {
 
 public:
 
-
-
     MaterialResource() = default;
     ~MaterialResource();
     void UnMap();
-
 
     void CreateMaterial(const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, uint32_t lightType = LightMode::kLightModeNone);
     Material* GetMaterial() {

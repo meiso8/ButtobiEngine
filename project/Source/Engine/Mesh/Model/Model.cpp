@@ -16,11 +16,8 @@ void Model::Create() {
 
     modelConfig_ = ModelConfig::GetInstance();
     textureHandle_ = modelData_->material.textureSrvIndex;
-
-    //マテリアルの作成 lightType halfLambert
-    CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, kLightModeHalfL);
     CreateVertex();
-    CreateUV();
+  
     CreateWaveData();
     CreateBalloonData();
     CreatePointLightData();
@@ -42,28 +39,10 @@ void Model::CreateVertex() {
 
 };
 
-
-void Model::CreateUV() {
-    uvTransform_ = {
-    {1.0f,1.0f,1.0f},
-    {0.0f,0.0f,0.0f},
-    {0.0f,0.0f,0.0f},
-    };
-
-    uvTransformMatrix_ = MakeIdentity4x4();
-}
-
-void Model::UpdateUV() {
-
-    uvTransformMatrix_ = MakeAffineMatrix(uvTransform_.scale, uvTransform_.rotate, uvTransform_.translate);
-    materialResource_->SetUV(uvTransformMatrix_);
-}
-
 void Model::Draw(ID3D12GraphicsCommandList* commandList) {
 
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
-    //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-    commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
+ 
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
     SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
  

@@ -234,8 +234,7 @@ void DebugUI::CheckMesh(MeshCommon& mesh, const char* label) {
         CheckWaveData(mesh.GetWaveData(0), "wave0");
         CheckWaveData(mesh.GetWaveData(1), "wave1");
         CheckBalloonData(mesh.GetBalloonData());
-        CheckMaterial(mesh.GetMaterial(), "material");
-        CheckColor(mesh.GetColor(), "modelColor");//一応マテリアルについている
+
         CheckPointLightData(mesh.GetPointLightData(), "pointLight");
         ImGui::TreePop();
     }
@@ -249,7 +248,7 @@ void DebugUI::CheckModel(Model& model, const char* label) {
     ImGui::Begin("Model");
 
     CheckMesh(model, label);
-    CheckTransform(model.GetUVTransform(), "uvTransfrom");
+
     ImGui::End();
 #endif
 }
@@ -384,6 +383,13 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
     ImGui::Begin("Object3d");
     CheckWorldTransform(object3d.worldTransform_, label);
     ShowMatrix4x4(object3d.worldTransform_.matWorld_);
+
+    CheckMaterial(object3d.GetMaterial(), "material");
+    CheckColor(object3d.GetColor(), "modelColor");//一応マテリアルについている
+    CheckTransform(object3d.GetUVTransform(), "uvTransfrom");
+    CheckLightMode(object3d.GetLightMode(), "GetLightMode");
+
+
     ImGui::End();
 #endif
 }

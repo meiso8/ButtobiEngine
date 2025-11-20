@@ -74,6 +74,11 @@ void FloorGamePlayer::Initialize() {
     Json json = JsonFile::GetJsonFiles("player");
     body_.Initialize();
     body_.worldTransform_.translate_.y = 0.5f;
+    Vector4 color = { 1.0f,1.0f,1.0f,1.0f }; 
+    SetBodyColor(color);
+
+
+
     // 移動
     moveDir_ = { 0.0f,0.0f,0.0f };
     isMove_ = false;
@@ -276,9 +281,39 @@ void FloorGamePlayer::HitAction()
         if (damageStruct_.flashTimer <= 0.0f) {
             damageStruct_.flashTimer = 0.0f;
             damageStruct_.isHit = false;
+  
         }
 
+        Flashing();
+    } else {
+        SetBodyColor({ 1.0f,1.0f,1.0f,1.0f });
     }
 
 
+}
+
+void FloorGamePlayer::Flashing()
+{
+    float progress = damageStruct_.flashTimer / damageStruct_.invincibilityTime;
+    float blinkSpeed = 10.0f + progress * 90.0f; // 最初は10Hz、最後は100Hzに近づく
+    float t = damageStruct_.flashTimer * blinkSpeed;
+
+    Vector4 color;
+    if (static_cast<int>(t) % 2 == 0) {
+       color = { 1.0f, 0.0f, 0.0f, 1.0f };
+    } else {
+        color = { 1.0f, 0.0f, 0.0f, 0.5f };
+    }
+
+    SetBodyColor(color);
+
+}
+
+void FloorGamePlayer::SetBodyColor(const Vector4& color )
+{
+    body_.SetColor(color);
+    rightArmObject_.SetColor(color);
+    leftArmObject_.SetColor(color);
+    rightLegObject_.SetColor(color);
+    leftLegObject_.SetColor(color);
 }

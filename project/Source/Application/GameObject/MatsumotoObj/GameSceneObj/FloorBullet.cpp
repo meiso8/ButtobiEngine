@@ -13,6 +13,9 @@
 
 FloorBullet::FloorBullet() {
     body_.Create();
+    body_.SetColor({ 1.0f,0.0f,0.0f,1.0f });
+    body_.SetMesh(cubeMesh_.get());
+
     models_ =
     {
       { FloorType::Normal, ModelManager::GetModel(ModelManager::FLOOR)},
@@ -21,6 +24,7 @@ FloorBullet::FloorBullet() {
     };
 
     body_.SetMesh(models_[FloorType::Normal]);
+
 
     SetRadius(0.5f);
     SetCollisionAttribute(kCollisionPlayerBullet);
