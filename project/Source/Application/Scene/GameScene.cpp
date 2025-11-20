@@ -50,8 +50,9 @@ GameScene::GameScene()
     collisionManager_ = std::make_unique<CollisionManager>();
 
     floorGamePlayer_ = std::make_unique<FloorGamePlayer>();
+    playerFloorStripManager_ = std::make_unique<PlayerFloorStripManager>(floorGamePlayer_.get());
     floorGameFloorManager_ = std::make_unique<FloorGameFloorManager>();
-    floorStripManager_ = std::make_unique<FloorStripManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
+    floorStripManager_ = std::make_unique<FloorStripManager>(floorGamePlayer_.get(), floorGameFloorManager_.get(), playerFloorStripManager_.get());
     floorBulletManager_ = std::make_unique<FloorBulletManager>();
     floorPlayerShotBulletManager_ = std::make_unique<FloorPlayerShotBulletManager>(floorGamePlayer_.get(), floorBulletManager_.get());
     floorPlayerStripTargetUI_ = std::make_unique<FloorPlayerStripTargetUI>(floorGamePlayer_.get());
@@ -90,6 +91,7 @@ void GameScene::Initialize() {
     floorPlayerShotBulletManager_->Initialize();
     floorPlayerStripTargetUI_->Initialize();
 	floorActionManager_->Initialize();
+	playerFloorStripManager_->Initialize();
   
     enemy_->Init();
     enemy_->SetTarget(floorGamePlayer_->body_.worldTransform_.translate_);
@@ -141,6 +143,7 @@ void GameScene::Draw() {
     floorGameFloorManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     floorBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     floorPlayerStripTargetUI_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+	playerFloorStripManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     enemy_->Draw(*currentCamera_, kLightModeHalfL);
     enemyBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
 #pragma endregion
@@ -188,6 +191,7 @@ void GameScene::UpdateGameObject()
 
     // オブジェクト同士の干渉
     floorStripManager_->Update();
+	playerFloorStripManager_->Update();
     floorPlayerShotBulletManager_->Update();
     enemyShotBulletManager_->Update();
     floorPlayerStripTargetUI_->Update();

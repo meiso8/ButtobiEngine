@@ -3,18 +3,12 @@
 #include"Object3d.h"
 #include <functional>
 #include <unordered_map>
+#include "Data/FloorData.h"
 
 class Model;
 class Camera;
 enum LightMode;
 class CubeMesh;
-
-enum class FloorType
-{
-	Normal,
-	Sticky,
-	Strong
-};
 
 class FloorGameFloor
 {

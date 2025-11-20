@@ -1,4 +1,6 @@
 #include "FloorGameFloorManager.h"
+#include "Data/MapData.h"
+
 #include <queue>
 #include <algorithm>
 

@@ -17,6 +17,7 @@
 #include "MatsumotoObj/GameSceneObj/FloorPlayerStripTargetUI.h"
 #include "MatsumotoObj/GameSceneObj/FloorActionManager.h"
 #include "MatsumotoObj/GameSceneObj/FloorGamePlayerAnimationManager.h"
+#include "MatsumotoObj/GameSceneObj/PlayerStripFloorManager.h"
 #include "Enemy/Enemy.h"
 #include "Enemy/EnemyBulletManager.h"
 #include "Enemy/EnemyShotBulletManager.h"
@@ -51,6 +52,7 @@ private:
     std::unique_ptr<FloorPlayerStripTargetUI>floorPlayerStripTargetUI_ = nullptr;
 	std::unique_ptr<FloorActionManager>floorActionManager_ = nullptr;
 	std::unique_ptr<FloorGamePlayerAnimationManager>floorGamePlayerAnimationManager_ = nullptr;
+	std::unique_ptr<PlayerFloorStripManager>playerFloorStripManager_ = nullptr;
 
     std::unique_ptr<Enemy>enemy_ = nullptr;
     std::unique_ptr<EnemyBulletManager>enemyBulletManager_ = nullptr;

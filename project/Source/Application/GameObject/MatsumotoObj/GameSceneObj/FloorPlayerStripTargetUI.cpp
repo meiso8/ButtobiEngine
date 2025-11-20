@@ -1,4 +1,5 @@
 #include "FloorPlayerStripTargetUI.h"
+#include "Data/MapData.h"
 #include "MatsumotoObj/GameSceneObj/FloorGamePlayer.h"
 #include "MatsumotoObj/GameSceneObj/FloorGameFloorManager.h"
 #include"ModelManager.h"
