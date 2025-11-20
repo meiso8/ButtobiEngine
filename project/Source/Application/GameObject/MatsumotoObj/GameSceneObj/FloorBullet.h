@@ -9,6 +9,7 @@ class Model;
 class Camera;
 enum LightMode;
 class CubeMesh;
+enum class FloorType;
 
 class FloorBullet :public Collider
 {
@@ -21,14 +22,19 @@ public:
     void InitFlagAndPosAndTimer();
     void Update();
     void Draw(Camera& camera, const LightMode& lightType);
-    void Shot(const Vector3& position, const Vector3& direction, const float& speed, const float& size);
+    void Shot(const Vector3& position, const Vector3& direction, const float& speed, const float& size,FloorType type);
     bool isActive_ = false;
     Object3d body_;
     float size_;
     void Flashing();
     void Move();
     bool isHit_ = false;
+
 private:
+    FloorType floorType_;
+    FloorType reqestFloorType_;
+
+    std::unordered_map<FloorType, Model*> models_;
     std::unique_ptr<CubeMesh>cubeMesh_ = nullptr;
     Vector3 moveDir_;
     float moveSpeed_;

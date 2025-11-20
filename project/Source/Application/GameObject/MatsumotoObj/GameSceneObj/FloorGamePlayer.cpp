@@ -97,7 +97,7 @@ void FloorGamePlayer::Initialize() {
 	striptTimer_ = 0.0f;
 	striptDuration_ = 0.3f;
 	isOnStripedFloor_ = false;
-
+	strippedFloorMap_.clear();
 
     // 床投げ
     isReqestShot_ = false;

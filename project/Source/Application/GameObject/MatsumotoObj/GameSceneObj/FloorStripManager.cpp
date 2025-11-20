@@ -60,4 +60,5 @@ void FloorStripManager::StrongStript() {
 		floorManager_->SwapFloorTypeAtPosition(position);
 	}
 	playerStripManager_->StripMapFloor(connectedFloors,FloorType::Strong);
+	player_->strippedFloorMap_ = playerStripManager_->GetRotetedFloorMap(connectedFloors);
 }

@@ -1,7 +1,7 @@
 #include "FloorBulletManager.h"
 
 namespace {
-	const int kMaxBullets = 5;
+	const int kMaxBullets = 100;
 }
 
 FloorBulletManager::FloorBulletManager() {
@@ -32,10 +32,10 @@ void FloorBulletManager::Draw(Camera& camera, const LightMode& lightType) {
 	}
 }
 
-void FloorBulletManager::ShotBullet(const Vector3& position, const Vector3& direction, const float& speed, const float& size) {
+void FloorBulletManager::ShotBullet(const Vector3& position, const Vector3& direction, const float& speed, const float& size, FloorType type) {
 	for (auto& bullet : bullets_) {
 		if (!bullet->isActive_) {
-			bullet->Shot(position, direction, speed, size);
+			bullet->Shot(position, direction, speed, size,type);
 			break;
 		}
 	}
