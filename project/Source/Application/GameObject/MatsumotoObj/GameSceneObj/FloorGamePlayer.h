@@ -52,6 +52,8 @@ private:
 	void LookMoveDir();
 	void StriptFloor();
 	void ShotFloor();
+	void HitAction();
+
 
 	Model* model_ = nullptr;
 	Damage damageStruct_;

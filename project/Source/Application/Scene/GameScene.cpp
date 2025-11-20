@@ -213,6 +213,10 @@ void GameScene::CheckAllCollision()
         if (bullet->isActive_) { collisionManager_->AddCollider(bullet.get()); }
     }
 
+    for (auto& bullet : enemyBulletManager_->GetBullets()) {
+        if (bullet->isActive_) { collisionManager_->AddCollider(bullet.get()); }
+    }
+
     collisionManager_->CheckAllCollisions();
 }
 
