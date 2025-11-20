@@ -18,6 +18,7 @@ public:
     void OnCollision(Collider* collider)override;
     Vector3 GetWorldPosition() const;
     void Initialize();
+    void InitFlagAndPosAndTimer();
     void Update();
     void Draw(Camera& camera, const LightMode& lightType);
     void Shot(const Vector3& position, const Vector3& direction, const float& speed, const float& size);

@@ -30,7 +30,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     scenes["Title"] = std::make_unique < TitleScene>();
     scenes["Game"] = std::make_unique < GameScene>();
     scenes["Result"] = std::make_unique < ResultScene>();
-    scenes["Sample"] = std::make_unique < SampleScene>();
 
     //最初の位置を保持
     auto currentIt = scenes.begin();
@@ -60,7 +59,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             currentScene->Initialize();
         }
 
-        if (Input::IsTriggerKey(DIK_R)) { currentScene->Initialize();; }
+        if (Input::IsTriggerKey(DIK_R)) { currentScene->Initialize(); }
 
         // エンジンの更新処理
         myEngine->Update();

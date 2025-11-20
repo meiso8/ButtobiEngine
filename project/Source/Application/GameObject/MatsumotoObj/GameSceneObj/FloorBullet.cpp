@@ -33,7 +33,21 @@ void FloorBullet::Initialize() {
     lifeDuration_ = 2.0f;
     isActive_ = false;
     isHit_ = false;
+    flashingTimer_ = kFlashingTime_;
     size_ = 1.0f;
+}
+void FloorBullet::InitFlagAndPosAndTimer()
+{
+    lifeTimer_ = 0.0f;
+    flashingTimer_ = 0.0f;
+
+    body_.worldTransform_.translate_ = { 0.0f,-10.0f,0.0f };
+
+
+
+
+    isHit_ = false;
+    isActive_ = false;
 }
 void FloorBullet::OnCollision(Collider* collider)
 {
@@ -42,14 +56,14 @@ void FloorBullet::OnCollision(Collider* collider)
     }
 
     if (collider->GetCollisionAttribute() == kCollisionEnemy) {
-        if (!isHit_ && flashingTimer_ == kFlashingTime_) {
-            flashingTimer_ = 0.0f;
+        if (!isHit_&& flashingTimer_ == kFlashingTime_) {
             isHit_ = true;
         }
     }
 
     //デバック用
     OnCollisionCollider();
+
 }
 Vector3 FloorBullet::GetWorldPosition() const
 {
@@ -58,9 +72,8 @@ Vector3 FloorBullet::GetWorldPosition() const
 void FloorBullet::Update() {
 
 #ifdef USE_IMGUI
-
-    DebugUI::CheckFlag(isHit_, "isHit_");
     DebugUI::CheckFlag(isActive_, "isActive");
+    DebugUI::CheckFlag(isHit_, "isHit_");
     ImGui::Text(" flashingTimer_ %f", flashingTimer_);
     ImGui::Text(" lifeTimer_ %f", lifeTimer_);
     DebugUI::CheckWorldTransform(body_.worldTransform_, "BulletTransform");
@@ -85,9 +98,11 @@ void FloorBullet::Update() {
 void FloorBullet::Draw(Camera& camera, const LightMode& lightType) {
 
 
+
     if (!isActive_) {
         return;
     }
+
     body_.SetLightMode(lightType);
     body_.Draw(camera, kBlendModeNormal);
     ColliderDraw(camera);
@@ -104,19 +119,18 @@ void FloorBullet::Shot(const Vector3& position, const Vector3& direction, const 
     lifeTimer_ = lifeDuration_;
     flashingTimer_ = kFlashingTime_;
     isActive_ = true;
+    isHit_ = false;
 }
 
 void FloorBullet::Flashing()
 {
-    flashingTimer_ += InverseFPS;
+    flashingTimer_ -= InverseFPS;
 
-    if (flashingTimer_ >= kFlashingTime_) {
-        flashingTimer_ = kFlashingTime_;
-        isHit_ = false;
-        isActive_ = false;
+    if (flashingTimer_ <= 0.0f) {
+        InitFlagAndPosAndTimer();
     }
 
-    float t = flashingTimer_ / kFlashingTime_*100.0f;
+    float t = flashingTimer_ / kFlashingTime_ * 100.0f;
 
     if (static_cast<int>(t) % 2 == 0) {
         body_.SetColor({ 1.0f, 0.0f, 0.0f, 1.0f });
@@ -129,8 +143,7 @@ void FloorBullet::Flashing()
 void FloorBullet::Move()
 {
     if (lifeTimer_ <= 0.0f) {
-        isActive_ = false;
-        isHit_ = false;
+        InitFlagAndPosAndTimer();
         return;
     } else {
         lifeTimer_ -= 0.016f;

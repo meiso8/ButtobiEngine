@@ -32,7 +32,7 @@ public:
     bool isShot_ = false;
     //体の位置
     Object3d bodyPos_;
-    HPs* GetHpsPtr() { return &characterState_.hps; }
+    HPs* GetHpsPtr() { return &damageStruct_.hps; }
 private:
     float timer_ = 0.0f;
     float actionTime_ = 0.0f;
@@ -44,7 +44,7 @@ private:
     Model* model_;
 
     //キャラクターの共通でもつ状態
-    CharacterState characterState_;
+    Damage damageStruct_;
 
     Circle enemyRoundCircle_ = { {0.0f,0.0f,0.0f} ,7.0f};
     Circle enemyFieldCircle_ = { {0.0f,0.0f,0.0f} ,9.0f };

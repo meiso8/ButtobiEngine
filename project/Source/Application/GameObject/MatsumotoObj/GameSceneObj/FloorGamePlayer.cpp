@@ -7,7 +7,7 @@
 #include"Collision.h"
 #include "Input.h"
 #include"CollisionConfig.h"
-
+#include"JsonFile.h"
 #include "MatsumotoObj/MY_Utility.h"
 
 FloorGamePlayer::FloorGamePlayer() {
@@ -30,15 +30,23 @@ void FloorGamePlayer::OnCollision(Collider* collider)
     if (collider->GetCollisionAttribute() == kCollisionEnemy) {
         //デバック用
         OnCollisionCollider();
+
+        if (isHit_) { return; }
+
+        isHit_ = true;
+
+        damageStruct_.invincibilityTime;
         //hpを減らす
-        if (hps_.hp > 0) {
-            hps_.hp--;
+        if (damageStruct_.hps.hp > 0) {
+            damageStruct_.hps.hp-= damageStruct_.hps.hpDecrease;
         }
-     
+
     }
 }
 
 void FloorGamePlayer::Initialize() {
+
+    Json json = JsonFile::GetJsonFiles("player");
     body_.Initialize();
     body_.worldTransform_.translate_.y = 0.5f;
     // 移動
@@ -46,7 +54,19 @@ void FloorGamePlayer::Initialize() {
     isMove_ = false;
     moveLimitMax_ = { 5.0f,5.0f,5.0f };
     moveLimitMin_ = { -5.0f,0.0f,-5.0f };
-    moveSpeed_ = 0.1f;
+
+    moveAcceleration_ = json["Speed"]["acceleration"];
+    moveSpeed_ = json["Speed"]["velocity"];
+
+    //HP
+    damageStruct_.cannotControlTime = json["Damage"]["cannotControlTime"];
+    damageStruct_.invincibilityTime = json["Damage"]["invincibilityTime"];
+    damageStruct_.flashTimer = json["Damage"]["flashTimer"];
+    damageStruct_.isHit = json["Damage"]["isHit"];
+    damageStruct_.hps.maxHp= json["Damage"]["maxHP"];
+    damageStruct_.hps.hp = json["Damage"]["HP"];
+    damageStruct_.hps.hpDecrease = json["Damage"]["hpDecrease"];
+
     // 方向
     lookDir_ = moveDir_;
     lookSpeed_ = 0.5f;
@@ -61,8 +81,7 @@ void FloorGamePlayer::Initialize() {
     isReqestShot_ = false;
     shotTimer_ = 0.0f;
     shotDuration_ = 0.5f;
-    //HP
-    hps_.hp = hps_.maxHp;
+
 }
 
 void FloorGamePlayer::Update() {
@@ -81,6 +100,10 @@ void FloorGamePlayer::Update() {
     ImGui::Checkbox("isStriptting_", &isStriptting_);
     ImGui::Checkbox("isReqestStript_", &isReqestStript_);
     ImGui::Checkbox("isReqestShot_", &isReqestShot_);
+    ImGui::SliderFloat("moveAcceleration", &moveAcceleration_, 0.0f, 10.0f);
+    ImGui::SliderFloat("movepeed", &moveSpeed_, 0.0f, 10.0f);
+    DebugUI::CheckDamageStruct(damageStruct_,"playerDamage");
+
     ImGui::End();
 #endif // USE_IMGUI
 
@@ -130,6 +153,7 @@ void FloorGamePlayer::Move() {
     if (isMove_) {
         moveDir_ = Normalize(moveDir_);
         lookDir_ = moveDir_;
+
         body_.worldTransform_.translate_ += moveDir_ * moveSpeed_;
     }
 

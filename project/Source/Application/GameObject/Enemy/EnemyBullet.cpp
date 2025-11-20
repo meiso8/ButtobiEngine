@@ -35,17 +35,21 @@ void EnemyBullet::Initialize() {
 }
 void EnemyBullet::OnCollision(Collider* collider)
 {
+    //デバック用
+    OnCollisionCollider();
+
     if (!isActive_) {
         return;
     }
-    //デバック用
-    OnCollisionCollider();
+
 }
 Vector3 EnemyBullet::GetWorldPosition() const
 {
     return body_.worldTransform_.GetWorldPosition();
 }
 void EnemyBullet::Update() {
+
+    ColliderUpdate();
 
     if (!isActive_) {
         return;
@@ -62,20 +66,20 @@ void EnemyBullet::Update() {
     body_.worldTransform_.translate_ += moveDir_ * moveSpeed_;
     body_.Update();
 
-    ColliderUpdate();
+
 
 }
 
 void EnemyBullet::Draw(Camera& camera, const LightMode& lightType) {
 
+    ColliderDraw(camera);
 
     if (!isActive_) {
         return;
     }
     body_.SetLightMode(lightType);
     body_.Draw(camera, kBlendModeNormal);
-    ColliderDraw(camera);
-
+ 
 
 }
 
