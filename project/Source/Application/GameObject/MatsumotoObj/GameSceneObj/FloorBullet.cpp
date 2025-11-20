@@ -8,13 +8,23 @@
 #include"CubeMesh.h"
 #include"CollisionConfig.h"
 
+#include"Data/FloorData.h"
+
 
 FloorBullet::FloorBullet() {
     body_.Create();
-    cubeMesh_ = std::make_unique<CubeMesh>();
-    cubeMesh_.get()->Create(Texture::WHITE_1X1);
     body_.SetColor({ 1.0f,0.0f,0.0f,1.0f });
     body_.SetMesh(cubeMesh_.get());
+
+    models_ =
+    {
+      { FloorType::Normal, ModelManager::GetModel(ModelManager::FLOOR)},
+      { FloorType::Sticky, ModelManager::GetModel(ModelManager::MELT_FLOOR) },
+      { FloorType::Strong, ModelManager::GetModel(ModelManager::PLAYER_ARM_L) }
+    };
+
+    body_.SetMesh(models_[FloorType::Normal]);
+
 
     SetRadius(0.5f);
     SetCollisionAttribute(kCollisionPlayerBullet);
@@ -35,6 +45,9 @@ void FloorBullet::Initialize() {
     isHit_ = false;
     flashingTimer_ = kFlashingTime_;
     size_ = 1.0f;
+
+	floorType_ = FloorType::Normal;
+	reqestFloorType_ = FloorType::Normal;
 }
 void FloorBullet::InitFlagAndPosAndTimer()
 {
@@ -93,12 +106,15 @@ void FloorBullet::Update() {
 }
 
 void FloorBullet::Draw(Camera& camera, const LightMode& lightType) {
-
-
-
     if (!isActive_) {
         return;
     }
+
+	if (floorType_ != reqestFloorType_)
+	{
+		floorType_ = reqestFloorType_;
+		body_.SetMesh(models_[floorType_]);
+	}
 
     body_.SetLightMode(lightType);
     body_.Draw(camera, kBlendModeNormal);
@@ -106,17 +122,16 @@ void FloorBullet::Draw(Camera& camera, const LightMode& lightType) {
 
 }
 
-void FloorBullet::Shot(const Vector3& position, const Vector3& direction, const float& speed, const float& size) {
-    body_.worldTransform_.translate_ = position;
-    moveDir_ = Normalize(direction);
-    moveSpeed_ = speed;
-    size_ = size;
-    body_.worldTransform_.rotate_ = moveDir_;
-    body_.worldTransform_.scale_ = { size_,size_,size_ };
-    lifeTimer_ = lifeDuration_;
-    flashingTimer_ = kFlashingTime_;
-    isActive_ = true;
-    isHit_ = false;
+void FloorBullet::Shot(const Vector3& position, const Vector3& direction, const float& speed, const float& size, FloorType type) {
+	body_.worldTransform_.translate_ = position;
+	moveDir_ = Normalize(direction);
+	moveSpeed_ = speed;
+	size_ = size;
+	lifeTimer_ = lifeDuration_;
+	flashingTimer_ = kFlashingTime_;
+	isActive_ = true;
+	isHit_ = false;
+	reqestFloorType_ = type;
 }
 
 void FloorBullet::Flashing()
@@ -146,7 +161,7 @@ void FloorBullet::Move()
         lifeTimer_ -= 0.016f;
     }
 
-    body_.worldTransform_.rotate_ = moveDir_;
+	body_.worldTransform_.rotate_.y = atan2f(moveDir_.x, moveDir_.z);
     body_.worldTransform_.translate_ += moveDir_ * moveSpeed_;
 
 }

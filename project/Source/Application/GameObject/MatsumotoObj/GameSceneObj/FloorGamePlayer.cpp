@@ -101,13 +101,13 @@ void FloorGamePlayer::Initialize() {
     lookDir_ = moveDir_;
     lookSpeed_ = 0.5f;
 
-    // 床剥がし
-    isReqestStript_ = false;
-    isStriptting_ = false;
-    striptTimer_ = 0.0f;
-    striptDuration_ = 0.3f;
-    isOnStripedFloor_ = false;
-
+	// 床剥がし
+	isReqestStript_ = false;
+	isStriptting_ = false;
+	striptTimer_ = 0.0f;
+	striptDuration_ = 0.3f;
+	isOnStripedFloor_ = false;
+	strippedFloorMap_.clear();
 
     // 床投げ
     isReqestShot_ = false;

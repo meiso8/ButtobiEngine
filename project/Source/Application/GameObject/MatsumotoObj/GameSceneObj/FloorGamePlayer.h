@@ -43,6 +43,7 @@ public:
 	Object3d rightLegObject_;
 	Object3d leftLegObject_;
 
+	std::vector<std::pair<int, int>> strippedFloorMap_;
 	PlayerAnimationState animationState_ = PlayerAnimationState::Idle;
 	bool isMove_;
 

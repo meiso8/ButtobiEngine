@@ -99,6 +99,42 @@ void PlayerFloorStripManager::StripMapFloor(const std::vector<std::pair<int, int
 
 	isSingle_ = false;
 	// プレイヤーの向きに合わせる
+	std::vector<std::pair<int, int>> tempFloorMap = GetRotetedFloorMap(floorMap);
+
+	// floorMapの範囲を取得
+	int maxIndexX = 0;
+	int maxIndexY = 0;
+	int minIndexX = kMapWidth - 1;
+	int minIndexY = kMapHeight - 1;
+	for (const auto& floorPos : tempFloorMap) {
+		int xIndex = floorPos.first;
+		int yIndex = floorPos.second;
+		if (xIndex > maxIndexX) { maxIndexX = xIndex; }
+		if (yIndex > maxIndexY) { maxIndexY = yIndex; }
+		if (xIndex < minIndexX) { minIndexX = xIndex; }
+		if (yIndex < minIndexY) { minIndexY = yIndex; }
+	}
+
+	// 配置する形状の幅・高さ
+	int shapeWidth = maxIndexX - minIndexX + 1;
+	int shapeHeight = maxIndexY - minIndexY + 1;
+
+	// floors_の中央に来るようにオフセットを計算
+	int offsetX = (kMapWidth - shapeWidth) / 2 - minIndexX;
+	int offsetY = (kMapHeight - shapeHeight) / 2 - minIndexY;
+
+	// 指定されたfloorMapの位置にだけアクティブ化＆タイプ設定
+	for (const auto& floorPos : tempFloorMap) {
+		int x = floorPos.first + offsetX;
+		int y = floorPos.second + offsetY;
+		if (x >= 0 && x < kMapWidth && y >= 0 && y < kMapHeight) {
+			floors_[y][x]->isActive_ = true;
+			floors_[y][x]->SwapType(type);
+		}
+	}
+}
+
+std::vector<std::pair<int, int>> PlayerFloorStripManager::GetRotetedFloorMap(const std::vector<std::pair<int, int>>& floorMap) {
 	std::vector<std::pair<int, int>> tempFloorMap = floorMap;
 	Vector3 tempLookDir = player_->GetLookDir();
 	// 下向き(上下左右反転)
@@ -158,35 +194,5 @@ void PlayerFloorStripManager::StripMapFloor(const std::vector<std::pair<int, int
 		}
 	}
 
-	// floorMapの範囲を取得
-	int maxIndexX = 0;
-	int maxIndexY = 0;
-	int minIndexX = kMapWidth - 1;
-	int minIndexY = kMapHeight - 1;
-	for (const auto& floorPos : tempFloorMap) {
-		int xIndex = floorPos.first;
-		int yIndex = floorPos.second;
-		if (xIndex > maxIndexX) { maxIndexX = xIndex; }
-		if (yIndex > maxIndexY) { maxIndexY = yIndex; }
-		if (xIndex < minIndexX) { minIndexX = xIndex; }
-		if (yIndex < minIndexY) { minIndexY = yIndex; }
-	}
-
-	// 配置する形状の幅・高さ
-	int shapeWidth = maxIndexX - minIndexX + 1;
-	int shapeHeight = maxIndexY - minIndexY + 1;
-
-	// floors_の中央に来るようにオフセットを計算
-	int offsetX = (kMapWidth - shapeWidth) / 2 - minIndexX;
-	int offsetY = (kMapHeight - shapeHeight) / 2 - minIndexY;
-
-	// 指定されたfloorMapの位置にだけアクティブ化＆タイプ設定
-	for (const auto& floorPos : tempFloorMap) {
-		int x = floorPos.first + offsetX;
-		int y = floorPos.second + offsetY;
-		if (x >= 0 && x < kMapWidth && y >= 0 && y < kMapHeight) {
-			floors_[y][x]->isActive_ = true;
-			floors_[y][x]->SwapType(type);
-		}
-	}
+	return tempFloorMap;
 }
