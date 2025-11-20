@@ -18,6 +18,8 @@ public:
 	void StripSingleFloor(FloorType type);
 	void StripMapFloor(const std::vector<std::pair<int, int>>& floorMap, FloorType type);
 
+	std::vector<std::pair<int, int>> GetRotetedFloorMap(const std::vector<std::pair<int, int>>& floorMap);
+
 	bool isActive_;
 	bool isSingle_;
 	Object3d floorPivot_;
