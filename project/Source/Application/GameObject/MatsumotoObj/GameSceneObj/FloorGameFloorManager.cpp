@@ -1,5 +1,6 @@
 #include "FloorGameFloorManager.h"
 #include <queue>
+#include <algorithm>
 
 FloorGameFloorManager::FloorGameFloorManager() {
 	for (int y = 0; y < kMapHeight; y++) {
@@ -39,25 +40,18 @@ void FloorGameFloorManager::Draw(Camera& camera, const LightMode& lightType) {
 }
 
 FloorType FloorGameFloorManager::GetFloorTypeAtPosition(const Vector3& position) const {
-	int xIndex = static_cast<int>(position.x + (static_cast<float>(kMapWidth) * kHalfFloorSize));
-	int yIndex = static_cast<int>(position.z + (static_cast<float>(kMapHeight) * kHalfFloorSize));
-	if (xIndex < 0 || xIndex >= kMapWidth || yIndex < 0 || yIndex >= kMapHeight) {
-		assert(false && "Position is out of bounds in GetFloorTypeAtPosition");
-		return FloorType::Normal; // 範囲外の場合はデフォルトの床タイプを返す
-	}
+	std::pair<int, int> floorIndex = GetFloorIndexAtPosition(position);
+	int xIndex = floorIndex.first;
+	int yIndex = floorIndex.second;
 	return floors_[yIndex][xIndex]->floorType_;
 }
 
 std::vector<std::pair<int, int>> FloorGameFloorManager::GetConnectedFloorsAtPosition(const Vector3& position) const {
 	std::vector<std::pair<int, int>> result;
 
-	// 範囲外チェック
-	int xIndex = static_cast<int>(position.x + (static_cast<float>(kMapWidth) * kHalfFloorSize));
-	int yIndex = static_cast<int>(position.z + (static_cast<float>(kMapHeight) * kHalfFloorSize));
-	if (xIndex < 0 || xIndex >= kMapWidth || yIndex < 0 || yIndex >= kMapHeight) {
-		assert(false && "Position is out of bounds in GetConnectedFloorsAtPosition");
-		return result;
-	}
+	std::pair<int, int> floorIndex = GetFloorIndexAtPosition(position);
+	int xIndex = floorIndex.first;
+	int yIndex = floorIndex.second;
 
 	FloorType targetType = floors_[yIndex][xIndex]->floorType_;
 	std::vector<std::vector<bool>> visited(kMapHeight, std::vector<bool>(kMapWidth, false));
@@ -91,18 +85,26 @@ std::vector<std::pair<int, int>> FloorGameFloorManager::GetConnectedFloorsAtPosi
 
 void FloorGameFloorManager::SwapFloorTypeAtPosition(const int& xIndex, const int& yIndex) {
 	if (xIndex < 0 || xIndex >= kMapWidth || yIndex < 0 || yIndex >= kMapHeight) {
-		assert(false && "Indices are out of bounds in SwapFloorTypeAtPosition");
-		return; // 範囲外の場合は何もしない
+		// 範囲外の場合は一番近い端に補正する
+		return floors_[std::clamp(yIndex, 0, kMapHeight - 1)][std::clamp(xIndex, 0, kMapWidth - 1)]->SwapNextFloorType();
 	}
 	floors_[yIndex][xIndex]->SwapNextFloorType();
 }
 
 void FloorGameFloorManager::SwapFloorTypeAtPosition(const Vector3& position) {
-	int xIndex = static_cast<int>(position.x + (static_cast<float>(kMapWidth) * kHalfFloorSize));
-	int yIndex = static_cast<int>(position.z + (static_cast<float>(kMapHeight) * kHalfFloorSize));
+	std::pair<int, int> floorIndex = GetFloorIndexAtPosition(position);
+	int xIndex = floorIndex.first;
+	int yIndex = floorIndex.second;
 	if (xIndex < 0 || xIndex >= kMapWidth || yIndex < 0 || yIndex >= kMapHeight) {
-		assert(false && "Position is out of bounds in SwapFloorTypeAtPosition");
-		return; // 範囲外の場合は何もしない
+		// 範囲外の場合は一番近い端に補正する
+		floors_[std::clamp(yIndex, 0, kMapHeight - 1)][std::clamp(xIndex, 0, kMapWidth - 1)]->SwapNextFloorType();
+		return;
 	}
 	floors_[yIndex][xIndex]->SwapNextFloorType();
+}
+
+std::pair<int, int> FloorGameFloorManager::GetFloorIndexAtPosition(const Vector3& position) const {
+	int xIndex = static_cast<int>(position.x + (static_cast<float>(kMapWidth) * kHalfFloorSize));
+	int yIndex = static_cast<int>(position.z + (static_cast<float>(kMapHeight) * kHalfFloorSize));
+	return std::pair<int, int>(std::clamp(xIndex, 0, kMapWidth - 1),std::clamp(yIndex, 0, kMapHeight - 1));
 }

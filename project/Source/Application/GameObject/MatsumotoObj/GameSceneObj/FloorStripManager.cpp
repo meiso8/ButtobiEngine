@@ -23,9 +23,15 @@ void FloorStripManager::Update() {
 	if (player_->isReqestStript_ && !player_->isStriptting_) {
 		player_->isStriptting_ = true;
 		player_->isReqestStript_ = false;
+		player_->body_.worldTransform_.scale_ = { 1.5f,0.1f,1.5f };
+		player_->animationState_ = PlayerAnimationState::Stript;
 
 		// プレイヤーの位置から床タイプを取得
 		FloorType currentFloorType = floorManager_->GetFloorTypeAtPosition(player_->body_.worldTransform_.translate_);
+		std::pair<int,int> tempFloorIndex = floorManager_->GetFloorIndexAtPosition(player_->body_.worldTransform_.translate_);
+		player_->stripFloorPosX_ = tempFloorIndex.first;
+		player_->stripFloorPosY_ = tempFloorIndex.second;
+		player_->isOnStripedFloor_ = true;
 		// 床タイプに応じた剥がし処理を実行
 		striptTypeAction_[currentFloorType]();
 	}

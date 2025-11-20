@@ -46,12 +46,9 @@ void Sound::PlayBGM(const TAG& tag, const float& volumeOffset, const bool& loop)
 {
     SetVol(bgmVolume_ + volumeOffset, tag);
 
-    if (!IsPlayingAll()) {
-
+    if (!IsPlaying(tag)) {
         Play(handles_[tag], bgmVolume_ + volumeOffset, loop);
     }
-
-
 }
 
 void Sound::PlaySE(const TAG& tag, const float& volumeOffset, const bool& loop)
