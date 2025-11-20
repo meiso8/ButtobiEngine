@@ -31,6 +31,7 @@ void MaterialResource::CreateMaterial(const Vector4& color, uint32_t lightType) 
     material_->shininess = 50.0f;
 };
 
+
 void MaterialResource::SetColor(const Vector4& color) {
     material_->color = color;
 }

@@ -15,7 +15,7 @@ FloorGameFloor::FloorGameFloor() {
     {
       { FloorType::Normal, ModelManager::GetModel(ModelManager::FLOOR)},
       { FloorType::Sticky, ModelManager::GetModel(ModelManager::MELT_FLOOR) },
-      { FloorType::Strong, ModelManager::GetModel(ModelManager::PLAYER_ARM_L) }
+      { FloorType::Strong, ModelManager::GetModel(ModelManager::FLOOR) }
     };
 
     body_.SetMesh(models_[FloorType::Normal]);

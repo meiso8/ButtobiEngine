@@ -56,6 +56,7 @@ private:
     };
 
     enum PHASE {
+        LERP_ROUND_POS,
         ROUND,
         FIREBALL,
         FLOORCHANGEATTACK,
@@ -80,6 +81,7 @@ private:
 private:
     void SetPhase(PHASE phase);
     void Round();
+    void LerpRoundPos();
     void Fireball();
     void FloorChangeAttack();
     void Tackle();

@@ -14,6 +14,7 @@
 Enemy::Enemy()
 {
     UpdateActions_ = {
+          {PHASE::LERP_ROUND_POS, std::bind(&Enemy::LerpRoundPos, this)},
          {PHASE::ROUND, std::bind(&Enemy::Round, this)},
          {PHASE::FIREBALL, std::bind(&Enemy::Fireball, this)},
          {PHASE::FLOORCHANGEATTACK, std::bind(&Enemy::FloorChangeAttack, this)},
@@ -64,16 +65,18 @@ void Enemy::Update()
         return;
     }
 
-
 #ifdef _DEBUG  
-
+    if (Input::IsTriggerKey(DIK_Z)) {
+        phase_ = LERP_ROUND_POS;
+    }
     if (Input::IsTriggerKey(DIK_C)) {
         phase_ = FIREBALL;
     }
 
     if (Input::IsTriggerKey(DIK_V)) {
-        phase_ = FLOORCHANGEATTACK;
+        phase_ = TACKLE;
     }
+
 
 #endif // _DEBUG  
 
@@ -107,7 +110,7 @@ void Enemy::OnCollision(Collider* collider)
         Sound::PlaySE(Sound::CRACKER);
 
         if (damageStruct_.hps.hp > 0) {
-            damageStruct_.hps.hp-= damageStruct_.hps.hpDecrease;
+            damageStruct_.hps.hp -= damageStruct_.hps.hpDecrease;
         }
         poyoAnimTimer_ = 0.0f;
 
@@ -140,7 +143,7 @@ void Enemy::Tackle()
         float localTimer = (timer_ - 3.7f) / 1.0f;
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(endPos_, startPos_, localTimer);
     } else {
-        SetPhase(ROUND);
+        SetPhase(LERP_ROUND_POS);
         return;
     }
 
@@ -148,26 +151,56 @@ void Enemy::Tackle()
 
 void Enemy::Knockback()
 {
-    if (timer_ <= 1.0f) {
-        RotateY(timer_);
+
+    if (timer_ == 0.0f) {
+        LookTarget();
     }
 
-    if (timer_ < 0.25f) {
 
-    } else if (timer_ >= 0.25f && timer_ <= 2.0f) {
-        bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(endPos_, startPos_, timer_ / 2.0f);
-        LookTarget();
-
+    if (timer_ <= 0.125f) {
+        bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(endPos_, startPos_, timer_);
     } else {
+      
+        if (timer_ <= 0.75f) {
+            float localTimer = (timer_ - 0.125f) / (0.75f - 0.125f);
+            float theta = std::numbers::pi_v<float>*3.0f * localTimer; // 回転の速さを調整
+            bodyPos_.worldTransform_.rotate_.z = sinf(theta);
+            bodyPos_.worldTransform_.rotate_.x = cosf(theta);
+        } else {
+
+            bodyPos_.worldTransform_.rotate_.z = Lerp(bodyPos_.worldTransform_.rotate_.z, 0.0f, 0.5f);
+            bodyPos_.worldTransform_.rotate_.x = Lerp(bodyPos_.worldTransform_.rotate_.x, 0.0f, 0.5f);
+            bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, startPos_, 0.05f);
+        } 
+    }
+
+    if (timer_ > 2.0f) {
+        SetPhase(LERP_ROUND_POS);
+    }
+
+
+}
+
+void Enemy::LerpRoundPos()
+{
+
+    sphericalPos_.polar = Lerp(sphericalPos_.polar, 0.0f, 0.1f);
+    bodyPos_.worldTransform_.translate_ = TransformCoordinate(sphericalPos_);
+    if (fabs(sphericalPos_.polar) <= std::numbers::pi_v<float>*0.25f) {
         SetPhase(ROUND);
     }
 }
+
 
 void Enemy::SetPhase(PHASE phase)
 {
     timer_ = 0.0f;
     phase_ = phase;
     poyoAnimTimer_ = 0.0f;
+
+    if (phase_ == LERP_ROUND_POS) {
+        sphericalPos_ = TransformCoordinate(bodyPos_.worldTransform_.translate_);
+    }
 
     if (phase_ == FIREBALL || phase_ == KNOCKBACK) {
         startRotateY_ = bodyPos_.worldTransform_.rotate_.y;
@@ -177,12 +210,18 @@ void Enemy::SetPhase(PHASE phase)
 
 void Enemy::Round()
 {
+
     sphericalPos_.radius = Lerp(sphericalPos_.radius, enemyRoundCircle_.radius, 0.5f);
+    float halfPi = std::numbers::pi_v<float>*0.5f;
+
     sphericalPos_.polar += InverseFPS * roundSpeedY;
-    if (sphericalPos_.polar > std::numbers::pi_v<float> / 2.0f || sphericalPos_.polar < -std::numbers::pi_v<float> / 2.0f) {
+
+    if (sphericalPos_.polar > halfPi || sphericalPos_.polar < -halfPi) {
         roundSpeedY *= -1.0f;
     }
+
     LookTarget();
+
     bodyPos_.worldTransform_.translate_ = TransformCoordinate(sphericalPos_);
     bodyPos_.worldTransform_.translate_.y = GetRadius();
 
@@ -196,6 +235,7 @@ void Enemy::Round()
 
     }
 }
+
 
 void Enemy::Fireball()
 {
@@ -215,7 +255,7 @@ void Enemy::Fireball()
     }
 
     if (timer_ >= actionTime_) {
-        SetPhase(ROUND);
+        SetPhase(LERP_ROUND_POS);
     }
 
 

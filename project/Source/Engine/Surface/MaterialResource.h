@@ -41,7 +41,6 @@ public:
 
     MaterialResource(const MaterialResource&) = delete;
     MaterialResource& operator=(const MaterialResource&) = delete;
-
     void SetColor(const Vector4& color);
     void SetUV(const Matrix4x4& transform);
     void SetLightMode(uint32_t lightType);
