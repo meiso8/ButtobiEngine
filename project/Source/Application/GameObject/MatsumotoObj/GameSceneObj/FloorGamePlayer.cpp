@@ -51,9 +51,9 @@ void FloorGamePlayer::OnCollision(Collider* collider)
         //デバック用
         OnCollisionCollider();
 
-        if (isHit_) { return; }
+        if (damageStruct_.isHit) { return; }
 
-        isHit_ = true;
+		damageStruct_.isHit = true;
 
         damageStruct_.invincibilityTime;
         //hpを減らす
