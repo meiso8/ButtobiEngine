@@ -7,7 +7,7 @@
 HPIcon::HPIcon()
 {
 
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < kMaxHPIcon_; ++i) {
         sprites_[SpriteTypes::layer1].emplace_back(std::make_unique<Sprite>());
         sprites_[SpriteTypes::MaxHp].emplace_back(std::make_unique<Sprite>());
     }
@@ -62,8 +62,8 @@ void HPIcon::Update()
             theta_ = 0.0f;
         }
 
-        drawHpNum_ = static_cast<size_t>(hps_->hp / (hps_->maxHp / static_cast<float>(sprites_[layer1].size())) + 1);
-        drawHpNum_ = static_cast<size_t>(std::clamp(static_cast<float>(drawHpNum_), 0.0f, 3.0f));
+        drawHpNum_ = static_cast<size_t>(hps_->hp / (hps_->maxHp / static_cast<float>(sprites_[layer1].size())) + 0.9f);
+        drawHpNum_ = static_cast<size_t>(std::clamp(static_cast<float>(drawHpNum_), 0.0f, static_cast<float>(kMaxHPIcon_)));
         float alpha = sinf(timer_) * 0.5f + 1.0f;
 
         for (auto& sprite : sprites_[layer1]) {

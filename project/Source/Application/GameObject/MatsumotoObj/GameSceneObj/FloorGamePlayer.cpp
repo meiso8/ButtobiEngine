@@ -9,6 +9,7 @@
 #include"CollisionConfig.h"
 #include"JsonFile.h"
 #include "MatsumotoObj/MY_Utility.h"
+#include"UI/HPIcon.h"
 
 FloorGamePlayer::FloorGamePlayer() {
 	body_.Create();
@@ -55,7 +56,7 @@ void FloorGamePlayer::OnCollision(Collider* collider)
 
 		damageStruct_.isHit = true;
 
-        damageStruct_.invincibilityTime;
+        damageStruct_.flashTimer = damageStruct_.invincibilityTime;
         //hpを減らす
         if (damageStruct_.hps.hp > 0) {
             damageStruct_.hps.hp-= damageStruct_.hps.hpDecrease;
@@ -85,7 +86,7 @@ void FloorGamePlayer::Initialize() {
     damageStruct_.isHit = json["Damage"]["isHit"];
     damageStruct_.hps.maxHp= json["Damage"]["maxHP"];
     damageStruct_.hps.hp =  damageStruct_.hps.maxHp;
-    damageStruct_.hps.hpDecrease = json["Damage"]["hpDecrease"];
+    damageStruct_.hps.hpDecrease = damageStruct_.hps.maxHp/ HPIcon::kMaxHPIcon_;
 
     // 方向
     lookDir_ = moveDir_;
@@ -115,6 +116,8 @@ void FloorGamePlayer::Update() {
 	LookMoveDir();
 	StriptFloor();
 	ShotFloor();
+	//無敵時間継続時間を更新する
+	HitAction();
 
 	// ワールドトランスフォーム更新
 	body_.Update();
@@ -254,4 +257,24 @@ void FloorGamePlayer::ShotFloor() {
 		isStriptting_ = false;
 		shotTimer_ = shotDuration_;
 	}
+}
+
+void FloorGamePlayer::HitAction()
+{
+	if (damageStruct_.isHit) {
+	
+		if (damageStruct_.flashTimer == 0.0f) {
+			return;
+		}
+
+		damageStruct_.flashTimer -= InverseFPS;
+
+		if (damageStruct_.flashTimer <= 0.0f) {
+			damageStruct_.flashTimer = 0.0f;
+			damageStruct_.isHit = false;
+		}
+	
+	}
+
+
 }
