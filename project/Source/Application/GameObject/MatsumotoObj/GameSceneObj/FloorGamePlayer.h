@@ -52,7 +52,8 @@ private:
 	void StriptFloor();
 	void ShotFloor();
 	void HitAction();
-
+	void Flashing();
+	void SetBodyColor(const Vector4& color);
 
 	Model* model_ = nullptr;
 	Damage damageStruct_;

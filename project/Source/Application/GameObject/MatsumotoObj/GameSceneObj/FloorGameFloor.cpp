@@ -74,12 +74,12 @@ void FloorGameFloor::SwapNextFloorType() {
 }
 
 void FloorGameFloor::NormalFloorUpdate() {
-    models_[floorType_]->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+    body_.SetColor({ 1.0f,1.0f,1.0f,1.0f });
 }
 
 void FloorGameFloor::StickyFloorUpdate() {
 
-    models_[floorType_]->SetColor({ 0.0f,0.0f,(autoSwapTimer_ / autoSwapDuration_),1.0f });
+    body_.SetColor({ 0.0f,0.0f,(autoSwapTimer_ / autoSwapDuration_),1.0f });
 
     if (autoSwapTimer_ > 0.0f) {
         autoSwapTimer_ -= 0.016f;
@@ -89,5 +89,5 @@ void FloorGameFloor::StickyFloorUpdate() {
 }
 
 void FloorGameFloor::StrongFloorUpdate() {
-    models_[floorType_]->SetColor({ 0.0f,1.0f,0.0f,1.0f });
+    body_ .SetColor({ 0.0f,1.0f,0.0f,1.0f });
 }

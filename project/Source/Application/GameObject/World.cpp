@@ -6,7 +6,7 @@
 
 World::World() {
     model_ = ModelManager::GetModel(ModelManager::WORLD);
-    model_->SetLightMode(kLightModeNone);
+    object3d_->SetLightMode(kLightModeNone);
     object3d_ = std::make_unique<Object3d>();
     object3d_->Create();
     object3d_->SetMesh(model_);
@@ -20,8 +20,8 @@ void World::Init()
 
 void World::Update()
 {
-    model_->GetUVTransform().translate.x += std::numbers::pi_v<float> *0.0625f*0.5f * InverseFPS;
-    model_->UpdateUV();
+    object3d_->GetUVTransform().translate.x += std::numbers::pi_v<float> *0.0625f*0.5f * InverseFPS;
+    object3d_->UpdateUV();
 
     if (Input::IsTriggerKey(DIK_SPACE)) {
         texture_++;

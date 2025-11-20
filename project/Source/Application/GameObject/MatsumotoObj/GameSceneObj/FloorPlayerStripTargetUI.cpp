@@ -16,7 +16,7 @@ FloorPlayerStripTargetUI::FloorPlayerStripTargetUI(FloorGamePlayer* player) : pl
 	body_.Create();
 	cubeMesh_ = std::make_unique<CubeMesh>();
 	cubeMesh_.get()->Create(Texture::WHITE_1X1);
-	cubeMesh_->SetColor({ 1.0f,0.0f,0.0f,0.8f });
+	body_.SetColor({ 1.0f,0.0f,0.0f,0.8f });
 	body_.SetMesh(cubeMesh_.get());
 }
 

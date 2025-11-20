@@ -13,7 +13,7 @@ FloorBullet::FloorBullet() {
     body_.Create();
     cubeMesh_ = std::make_unique<CubeMesh>();
     cubeMesh_.get()->Create(Texture::WHITE_1X1);
-    cubeMesh_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+    body_.SetColor({ 1.0f,0.0f,0.0f,1.0f });
     body_.SetMesh(cubeMesh_.get());
 
     SetRadius(0.5f);
@@ -42,9 +42,6 @@ void FloorBullet::InitFlagAndPosAndTimer()
     flashingTimer_ = 0.0f;
 
     body_.worldTransform_.translate_ = { 0.0f,-10.0f,0.0f };
-
-
-
 
     isHit_ = false;
     isActive_ = false;
