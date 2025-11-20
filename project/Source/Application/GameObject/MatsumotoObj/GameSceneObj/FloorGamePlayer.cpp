@@ -107,6 +107,7 @@ void FloorGamePlayer::Update() {
 	ImGui::Checkbox("isStriptting_", &isStriptting_);
 	ImGui::Checkbox("isReqestStript_", &isReqestStript_);
 	ImGui::Checkbox("isReqestShot_", &isReqestShot_);
+	ImGui::DragFloat3("LookDir", &lookDir_.x, 0.1f);
 	ImGui::End();
 #endif // USE_IMGUI
 

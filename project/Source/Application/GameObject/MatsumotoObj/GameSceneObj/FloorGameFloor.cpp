@@ -29,7 +29,7 @@ void FloorGameFloor::Initialize() {
     body_.Initialize();
     autoSwapTimer_ = 0.0f;
     floorType_ = FloorType::Normal;
-    autoSwapDuration_ = 3.0f;
+    autoSwapDuration_ = 0.5f;
     nextFloorType_ = FloorType::Sticky;
     floorTypeUpdate_ = {
         {FloorType::Normal, std::bind(&FloorGameFloor::NormalFloorUpdate, this)},

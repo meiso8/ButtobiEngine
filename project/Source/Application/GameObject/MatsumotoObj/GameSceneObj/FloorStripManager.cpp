@@ -1,9 +1,10 @@
 #include "FloorStripManager.h"
 #include "FloorGamePlayer.h"
 #include "FloorGameFloorManager.h"
+#include "PlayerStripFloorManager.h"
 
-FloorStripManager::FloorStripManager(FloorGamePlayer* player, FloorGameFloorManager* floorManager) :
-	player_(player),floorManager_(floorManager) {
+FloorStripManager::FloorStripManager(FloorGamePlayer* player, FloorGameFloorManager* floorManager, PlayerFloorStripManager* playerStripManager) :
+	player_(player), floorManager_(floorManager), playerStripManager_(playerStripManager) {
 	striptTypeAction_ = {
 		{FloorType::Normal, std::bind(&FloorStripManager::NormalStript, this)},
 		{FloorType::Sticky, std::bind(&FloorStripManager::StickyStript, this)},
@@ -39,6 +40,7 @@ void FloorStripManager::Update() {
 
 void FloorStripManager::NormalStript() {
 	floorManager_->SwapFloorTypeAtPosition(player_->body_.worldTransform_.translate_);
+	playerStripManager_->StripSingleFloor(FloorType::Normal);
 }
 
 void FloorStripManager::StickyStript() {
@@ -57,4 +59,5 @@ void FloorStripManager::StrongStript() {
 		};
 		floorManager_->SwapFloorTypeAtPosition(position);
 	}
+	playerStripManager_->StripMapFloor(connectedFloors,FloorType::Strong);
 }
