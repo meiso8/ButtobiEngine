@@ -12,6 +12,8 @@ public:
 	void Update();
 	void Draw(class Camera& camera, const LightMode& lightType);
 
+	void ResetAllFloorsToNormal();
+
 	FloorType GetFloorTypeAtPosition(const Vector3& position) const;
 	std::vector<std::pair<int, int>> GetConnectedFloorsAtPosition(const Vector3& position) const;
 	void SwapFloorTypeAtPosition(const int& xIndex, const int& yIndex);
