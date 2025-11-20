@@ -17,8 +17,10 @@ EnemyBullet::EnemyBullet() {
 
     SetRadius(0.5f);
     SetCollisionAttribute(kCollisionEnemyBullet);
-    // 弾は「Player」とだけ衝突したい
-    SetCollisionMask(kCollisionPlayer);
+    //// 弾は「PlayerとPlayerの弾」とだけ衝突したい
+    SetCollisionMask(kCollisionPlayer | kCollisionPlayerBullet);
+    ////全部と衝突したい時
+    //SetCollisionMask(~kCollisionEnemyBullet);
 }
 
 EnemyBullet::~EnemyBullet() {
@@ -31,17 +33,22 @@ void EnemyBullet::Initialize() {
     lifeTimer_ = 0.0f;
     lifeDuration_ = 2.0f;
     isActive_ = false;
+
+
     size_ = 1.0f;
 }
 void EnemyBullet::OnCollision(Collider* collider)
 {
-    //デバック用
-    OnCollisionCollider();
 
     if (!isActive_) {
         return;
     }
 
+    if (collider->GetCollisionAttribute() == kCollisionPlayer) {
+        //デバック用
+        OnCollisionCollider();
+
+    }
 }
 Vector3 EnemyBullet::GetWorldPosition() const
 {
@@ -49,7 +56,7 @@ Vector3 EnemyBullet::GetWorldPosition() const
 }
 void EnemyBullet::Update() {
 
-    ColliderUpdate();
+
 
     if (!isActive_) {
         return;
@@ -66,21 +73,21 @@ void EnemyBullet::Update() {
     body_.worldTransform_.translate_ += moveDir_ * moveSpeed_;
     body_.Update();
 
-
+    ColliderUpdate();
 
 }
 
 void EnemyBullet::Draw(Camera& camera, const LightMode& lightType) {
 
-    ColliderDraw(camera);
+
 
     if (!isActive_) {
         return;
     }
     body_.SetLightMode(lightType);
     body_.Draw(camera, kBlendModeNormal);
- 
 
+    ColliderDraw(camera);
 }
 
 void EnemyBullet::Shot(const Vector3& position, const Vector3& direction, const float& speed, const float& size) {

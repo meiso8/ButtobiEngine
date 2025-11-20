@@ -12,33 +12,33 @@
 #include"UI/HPIcon.h"
 
 FloorGamePlayer::FloorGamePlayer() {
-	body_.Create();
-	rightArmObject_.Create();
-	leftArmObject_.Create();
-	rightLegObject_.Create();
-	leftLegObject_.Create();
+    body_.Create();
+    rightArmObject_.Create();
+    leftArmObject_.Create();
+    rightLegObject_.Create();
+    leftLegObject_.Create();
 
-	body_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_BODY));
-	rightArmObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_ARM_R));
-	leftArmObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_ARM_L));
-	rightLegObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_LEG_R));
-	leftLegObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_LEG_L));
+    body_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_BODY));
+    rightArmObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_ARM_R));
+    leftArmObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_ARM_L));
+    rightLegObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_LEG_R));
+    leftLegObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_LEG_L));
 
-	rightArmObject_.worldTransform_.Parent(body_.worldTransform_);
-	leftArmObject_.worldTransform_.Parent(body_.worldTransform_);
-	rightLegObject_.worldTransform_.Parent(body_.worldTransform_);
-	leftLegObject_.worldTransform_.Parent(body_.worldTransform_);
+    rightArmObject_.worldTransform_.Parent(body_.worldTransform_);
+    leftArmObject_.worldTransform_.Parent(body_.worldTransform_);
+    rightLegObject_.worldTransform_.Parent(body_.worldTransform_);
+    leftLegObject_.worldTransform_.Parent(body_.worldTransform_);
 
-	rightArmObject_.worldTransform_.translate_ = { 0.5f,0.0f,0.0f };
-	leftArmObject_.worldTransform_.translate_ = { -0.5f,0.0f,0.0f };
-	rightLegObject_.worldTransform_.translate_ = { 0.3f,-0.5f,-0.3f };
-	leftLegObject_.worldTransform_.translate_ = { -0.3f,-0.5f,-0.3f };
+    rightArmObject_.worldTransform_.translate_ = { 0.5f,0.0f,0.0f };
+    leftArmObject_.worldTransform_.translate_ = { -0.5f,0.0f,0.0f };
+    rightLegObject_.worldTransform_.translate_ = { 0.3f,-0.5f,-0.3f };
+    leftLegObject_.worldTransform_.translate_ = { -0.3f,-0.5f,-0.3f };
 
-	SetRadius(0.5f);
+    SetRadius(0.5f);
 
-	SetCollisionAttribute(kCollisionPlayer);
-	//敵のみと衝突
-	SetCollisionMask(kCollisionEnemy);
+    SetCollisionAttribute(kCollisionPlayer);
+    //敵のみと衝突
+    SetCollisionMask(kCollisionEnemy| kCollisionEnemyBullet);
 }
 
 FloorGamePlayer::~FloorGamePlayer() {
@@ -48,18 +48,22 @@ FloorGamePlayer::~FloorGamePlayer() {
 
 void FloorGamePlayer::OnCollision(Collider* collider)
 {
-    if (collider->GetCollisionAttribute() == kCollisionEnemy) {
+
+    if (collider->GetCollisionAttribute() == kCollisionEnemy|| collider->GetCollisionAttribute() == kCollisionEnemyBullet) {
+
+
+
         //デバック用
         OnCollisionCollider();
 
         if (damageStruct_.isHit) { return; }
 
-		damageStruct_.isHit = true;
+        damageStruct_.isHit = true;
 
         damageStruct_.flashTimer = damageStruct_.invincibilityTime;
         //hpを減らす
         if (damageStruct_.hps.hp > 0) {
-            damageStruct_.hps.hp-= damageStruct_.hps.hpDecrease;
+            damageStruct_.hps.hp -= damageStruct_.hps.hpDecrease;
         }
 
     }
@@ -84,20 +88,20 @@ void FloorGamePlayer::Initialize() {
     damageStruct_.invincibilityTime = json["Damage"]["invincibilityTime"];
     damageStruct_.flashTimer = json["Damage"]["flashTimer"];
     damageStruct_.isHit = json["Damage"]["isHit"];
-    damageStruct_.hps.maxHp= json["Damage"]["maxHP"];
-    damageStruct_.hps.hp =  damageStruct_.hps.maxHp;
-    damageStruct_.hps.hpDecrease = damageStruct_.hps.maxHp/ HPIcon::kMaxHPIcon_;
+    damageStruct_.hps.maxHp = json["Damage"]["maxHP"];
+    damageStruct_.hps.hp = damageStruct_.hps.maxHp;
+    damageStruct_.hps.hpDecrease = damageStruct_.hps.maxHp / HPIcon::kMaxHPIcon_;
 
     // 方向
     lookDir_ = moveDir_;
     lookSpeed_ = 0.5f;
 
-	// 床剥がし
-	isReqestStript_ = false;
-	isStriptting_ = false;
-	striptTimer_ = 0.0f;
-	striptDuration_ = 0.3f;
-	isOnStripedFloor_ = false;
+    // 床剥がし
+    isReqestStript_ = false;
+    isStriptting_ = false;
+    striptTimer_ = 0.0f;
+    striptDuration_ = 0.3f;
+    isOnStripedFloor_ = false;
 
 
     // 床投げ
@@ -105,28 +109,28 @@ void FloorGamePlayer::Initialize() {
     shotTimer_ = 0.0f;
     shotDuration_ = 0.5f;
 
-	//べとべと床フラグ
-	isOnStickyFloor_ = false;
-	stickyFloorSlowRate_ = 0.1f;
+    //べとべと床フラグ
+    isOnStickyFloor_ = false;
+    stickyFloorSlowRate_ = 0.1f;
 }
 
 
 void FloorGamePlayer::Update() {
-	Move();
-	LookMoveDir();
-	StriptFloor();
-	ShotFloor();
-	//無敵時間継続時間を更新する
-	HitAction();
+    Move();
+    LookMoveDir();
+    StriptFloor();
+    ShotFloor();
+    //無敵時間継続時間を更新する
+    HitAction();
 
-	// ワールドトランスフォーム更新
-	body_.Update();
-	rightArmObject_.Update();
-	leftArmObject_.Update();
-	rightLegObject_.Update();
-	leftLegObject_.Update();
+    // ワールドトランスフォーム更新
+    body_.Update();
+    rightArmObject_.Update();
+    leftArmObject_.Update();
+    rightLegObject_.Update();
+    leftLegObject_.Update();
 
-	ColliderUpdate();
+    ColliderUpdate();
 
 #ifdef USE_IMGUI
 
@@ -136,7 +140,7 @@ void FloorGamePlayer::Update() {
     ImGui::Checkbox("isReqestShot_", &isReqestShot_);
     ImGui::SliderFloat("moveAcceleration", &moveAcceleration_, 0.0f, 10.0f);
     ImGui::SliderFloat("movepeed", &moveSpeed_, 0.0f, 10.0f);
-    DebugUI::CheckDamageStruct(damageStruct_,"playerDamage");
+    DebugUI::CheckDamageStruct(damageStruct_, "playerDamage");
 
     ImGui::End();
 
@@ -146,135 +150,135 @@ void FloorGamePlayer::Update() {
 
 void FloorGamePlayer::Draw(Camera& camera, const LightMode& lightType) {
 
-	body_.SetLightMode(lightType);
-	rightArmObject_.SetLightMode(lightType);
-	leftArmObject_.SetLightMode(lightType);
-	rightLegObject_.SetLightMode(lightType);
-	leftLegObject_.SetLightMode(lightType);
+    body_.SetLightMode(lightType);
+    rightArmObject_.SetLightMode(lightType);
+    leftArmObject_.SetLightMode(lightType);
+    rightLegObject_.SetLightMode(lightType);
+    leftLegObject_.SetLightMode(lightType);
 
-	body_.Draw(camera, kBlendModeNormal);
-	rightArmObject_.Draw(camera, kBlendModeNormal);
-	leftArmObject_.Draw(camera, kBlendModeNormal);
-	rightLegObject_.Draw(camera, kBlendModeNormal);
-	leftLegObject_.Draw(camera, kBlendModeNormal);
-	ColliderDraw(camera);
+    body_.Draw(camera, kBlendModeNormal);
+    rightArmObject_.Draw(camera, kBlendModeNormal);
+    leftArmObject_.Draw(camera, kBlendModeNormal);
+    rightLegObject_.Draw(camera, kBlendModeNormal);
+    leftLegObject_.Draw(camera, kBlendModeNormal);
+    ColliderDraw(camera);
 
 }
 
 void FloorGamePlayer::Move() {
 
-	// 移動方向決定
-	isMove_ = false;
-	moveDir_ = { 0.0f,0.0f,0.0f };
+    // 移動方向決定
+    isMove_ = false;
+    moveDir_ = { 0.0f,0.0f,0.0f };
 
-	//コントローラーの処理を追加しました。吉田
-	if (Input::IsControllerConnected(0)) {
-		Vector2 controllerStickPos = Input::GetControllerStickPos(BUTTON_LEFT, 0);
-		moveDir_.x = controllerStickPos.x;
-		moveDir_.z = controllerStickPos.y;
-		if (std::fabs(moveDir_.x) > 0.0f || std::fabs(moveDir_.z) > 0.0f) {
-			isMove_ = true;
-		}
-	}
+    //コントローラーの処理を追加しました。吉田
+    if (Input::IsControllerConnected(0)) {
+        Vector2 controllerStickPos = Input::GetControllerStickPos(BUTTON_LEFT, 0);
+        moveDir_.x = controllerStickPos.x;
+        moveDir_.z = controllerStickPos.y;
+        if (std::fabs(moveDir_.x) > 0.0f || std::fabs(moveDir_.z) > 0.0f) {
+            isMove_ = true;
+        }
+    }
 
-	if (Input::IsPushKey(DIK_W)) {
-		moveDir_.z = 1.0f;
-		isMove_ = true;
-	}
-	if (Input::IsPushKey(DIK_S)) {
-		moveDir_.z = -1.0f;
-		isMove_ = true;
-	}
-	if (Input::IsPushKey(DIK_A)) {
-		moveDir_.x = -1.0f;
-		isMove_ = true;
-	}
-	if (Input::IsPushKey(DIK_D)) {
-		moveDir_.x = 1.0f;
-		isMove_ = true;
-	}
+    if (Input::IsPushKey(DIK_W)) {
+        moveDir_.z = 1.0f;
+        isMove_ = true;
+    }
+    if (Input::IsPushKey(DIK_S)) {
+        moveDir_.z = -1.0f;
+        isMove_ = true;
+    }
+    if (Input::IsPushKey(DIK_A)) {
+        moveDir_.x = -1.0f;
+        isMove_ = true;
+    }
+    if (Input::IsPushKey(DIK_D)) {
+        moveDir_.x = 1.0f;
+        isMove_ = true;
+    }
 
-	// 移動
-	if (isMove_) {
-		animationState_ = PlayerAnimationState::Walk;
-		moveDir_ = Normalize(moveDir_);
-		lookDir_ = moveDir_;
-		//べとべと床にいるときは移動速度を落とす
-		if (isOnStickyFloor_) {
-			body_.worldTransform_.translate_ += moveDir_ * moveSpeed_ * stickyFloorSlowRate_;
-		} else {
-			body_.worldTransform_.translate_ += moveDir_ * moveSpeed_;
-		}
-	} else if(animationState_ != PlayerAnimationState::Stript && animationState_ != PlayerAnimationState::Shot) {
-		animationState_ = PlayerAnimationState::Idle;
-	}
+    // 移動
+    if (isMove_) {
+        animationState_ = PlayerAnimationState::Walk;
+        moveDir_ = Normalize(moveDir_);
+        lookDir_ = moveDir_;
+        //べとべと床にいるときは移動速度を落とす
+        if (isOnStickyFloor_) {
+            body_.worldTransform_.translate_ += moveDir_ * moveSpeed_ * stickyFloorSlowRate_;
+        } else {
+            body_.worldTransform_.translate_ += moveDir_ * moveSpeed_;
+        }
+    } else if (animationState_ != PlayerAnimationState::Stript && animationState_ != PlayerAnimationState::Shot) {
+        animationState_ = PlayerAnimationState::Idle;
+    }
 
-	// 移動制限
-	body_.worldTransform_.translate_.x = std::clamp(body_.worldTransform_.translate_.x, moveLimitMin_.x, moveLimitMax_.x);
-	body_.worldTransform_.translate_.y = std::clamp(body_.worldTransform_.translate_.y, moveLimitMin_.y, moveLimitMax_.y);
-	body_.worldTransform_.translate_.z = std::clamp(body_.worldTransform_.translate_.z, moveLimitMin_.z, moveLimitMax_.z);
+    // 移動制限
+    body_.worldTransform_.translate_.x = std::clamp(body_.worldTransform_.translate_.x, moveLimitMin_.x, moveLimitMax_.x);
+    body_.worldTransform_.translate_.y = std::clamp(body_.worldTransform_.translate_.y, moveLimitMin_.y, moveLimitMax_.y);
+    body_.worldTransform_.translate_.z = std::clamp(body_.worldTransform_.translate_.z, moveLimitMin_.z, moveLimitMax_.z);
 
 }
 
 void FloorGamePlayer::LookMoveDir() {
-	// 移動方向を見る
-	body_.worldTransform_.rotate_.y =
-		MY_Utility::SimpleEaseIn(body_.worldTransform_.rotate_.y, atan2f(lookDir_.x, lookDir_.z), lookSpeed_);
+    // 移動方向を見る
+    body_.worldTransform_.rotate_.y =
+        MY_Utility::SimpleEaseIn(body_.worldTransform_.rotate_.y, atan2f(lookDir_.x, lookDir_.z), lookSpeed_);
 }
 
 void FloorGamePlayer::StriptFloor() {
-	// 床剥がしクールダウン
-	if (striptTimer_ > 0.0f) {
-		striptTimer_ -= 0.016f;
-		return;
-	}
+    // 床剥がしクールダウン
+    if (striptTimer_ > 0.0f) {
+        striptTimer_ -= 0.016f;
+        return;
+    }
 
-	// 床剥がしできるか確認
-	if (isStriptting_ || isReqestStript_) {
-		return;
-	}
+    // 床剥がしできるか確認
+    if (isStriptting_ || isReqestStript_) {
+        return;
+    }
 
-	// 床剥がし入力 //コントローラーの処理を追加しました　吉田
-	if (Input::IsTriggerKey(DIK_SPACE) || Input::IsControllerTriggerButton(XINPUT_GAMEPAD_A, 0)) {
-		isReqestStript_ = true;
-		striptTimer_ = striptDuration_;
-	}
+    // 床剥がし入力 //コントローラーの処理を追加しました　吉田
+    if (Input::IsTriggerKey(DIK_SPACE) || Input::IsControllerTriggerButton(XINPUT_GAMEPAD_A, 0)) {
+        isReqestStript_ = true;
+        striptTimer_ = striptDuration_;
+    }
 }
 
 void FloorGamePlayer::ShotFloor() {
-	// 床投げクールダウン
-	if (shotTimer_ > 0.0f) {
-		shotTimer_ -= 0.016f;
-		return;
-	}
-	// 床投げできるか確認
-	if (!isStriptting_ || isReqestShot_) {
-		return;
-	}
-	// 床投げ入力
-	if (Input::IsTriggerKey(DIK_SPACE) || Input::IsControllerTriggerButton(XINPUT_GAMEPAD_A, 0)) {
-		isReqestShot_ = true;
-		isStriptting_ = false;
-		shotTimer_ = shotDuration_;
-	}
+    // 床投げクールダウン
+    if (shotTimer_ > 0.0f) {
+        shotTimer_ -= 0.016f;
+        return;
+    }
+    // 床投げできるか確認
+    if (!isStriptting_ || isReqestShot_) {
+        return;
+    }
+    // 床投げ入力
+    if (Input::IsTriggerKey(DIK_SPACE) || Input::IsControllerTriggerButton(XINPUT_GAMEPAD_A, 0)) {
+        isReqestShot_ = true;
+        isStriptting_ = false;
+        shotTimer_ = shotDuration_;
+    }
 }
 
 void FloorGamePlayer::HitAction()
 {
-	if (damageStruct_.isHit) {
-	
-		if (damageStruct_.flashTimer == 0.0f) {
-			return;
-		}
+    if (damageStruct_.isHit) {
 
-		damageStruct_.flashTimer -= InverseFPS;
+        if (damageStruct_.flashTimer == 0.0f) {
+            return;
+        }
 
-		if (damageStruct_.flashTimer <= 0.0f) {
-			damageStruct_.flashTimer = 0.0f;
-			damageStruct_.isHit = false;
-		}
-	
-	}
+        damageStruct_.flashTimer -= InverseFPS;
+
+        if (damageStruct_.flashTimer <= 0.0f) {
+            damageStruct_.flashTimer = 0.0f;
+            damageStruct_.isHit = false;
+        }
+
+    }
 
 
 }
