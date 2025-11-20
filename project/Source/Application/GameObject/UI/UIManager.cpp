@@ -6,6 +6,9 @@ UIManager::UIManager(HPs& enemyHp, HPs& playerHp)
     hpGages_[kEnemy]->SetHpPtr(&enemyHp);
     hpGages_[kEnemy]->Setting({ 640.0f,32.0f }, { 640.0f,64.0f }, { 0.5f,0.0f });
 
+#ifdef _DEBUG
+    isDrawPlayerGage_ = true;
+#endif
 
     if (isDrawPlayerGage_) {
         hpGages_.emplace(GageType::kPlayer, std::make_unique<HPGage>());

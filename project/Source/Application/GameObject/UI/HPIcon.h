@@ -20,6 +20,7 @@ public:
     void Initialize();
     void Update();
     void Draw();
+    static const int kMaxHPIcon_ = 5;
 private:
     HPs* hps_ = 0;
     std::map<SpriteTypes, std::vector<std::unique_ptr<Sprite>>> sprites_;
