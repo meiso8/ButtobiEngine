@@ -1,6 +1,6 @@
 #include"MyEngine.h"
 #include"SampleScene.h"
-#include"GameScene.h"
+
 #include"TitleScene.h"
 #include"ResultScene.h"
 #include<map>
@@ -29,7 +29,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // =============================================
 
     std::map<const std::string, std::unique_ptr<SceneManager>> scenes;
-    scenes["Title"] = std::make_unique < TitleScene>();
+    //scenes["Title"] = std::make_unique < TitleScene>();
     scenes["Sample"] = std::make_unique < SampleScene>();
     //scenes["Result"] = std::make_unique < ResultScene>();
     

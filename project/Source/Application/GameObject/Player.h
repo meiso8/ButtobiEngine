@@ -42,9 +42,9 @@ public:
     void OnCollisionWall(const AABB& aabb);
     void OnCollisionEnemy();
 
-    float cameraSpeed_ = 4.0f;
+    float cameraSpeed_ = 1.0f;
     bool isPressSpace_ = false;
-    float zoomTimer_ = 0.0f;
+    float zoomTimer_ = 1.0f;
     bool isZoom_ = false;
 private:
     float hitTimer_ = 0.0f;
@@ -67,6 +67,9 @@ private:
     Model* model_;
     Object3d eyePos_;
     Object3d bodyPos_;
+
+    float cameraRotateY_ = 0.0f;
+    float cameraRotateX_ = 0.0f;
 
     CharacterState characterState_;
     std::unique_ptr<CircleMesh>circleMesh_ = nullptr;

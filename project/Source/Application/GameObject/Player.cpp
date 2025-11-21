@@ -74,7 +74,7 @@ void Player::Update()
 {
 
     isWallHit = false;
-   
+
     if (characterState_.isHit) {
         if (hitTimer_ > 0.0f) {
             hitTimer_ -= InverseFPS;
@@ -85,14 +85,10 @@ void Player::Update()
     }
 
     Move();
-
     Zoom();
-
-    if (!isZoom_) {
-        LookBack();
-        MouseLook();
-    }
-
+    LookBack();
+    MouseLook();
+   
     bodyPos_.Update();
     eyePos_.Update();
     circle_.center = bodyPos_.worldTransform_.GetWorldPosition();
@@ -173,24 +169,23 @@ void Player::Zoom()
     if (Input::IsPushKey(DIK_SPACE)) {
 
         isZoom_ = true;
-        if (zoomTimer_ < 0.2f) {
-            zoomTimer_ += InverseFPS;
-    
+        if (zoomTimer_ < 1.0f) {
+            zoomTimer_ += InverseFPS*2.0f;
+
         } else {
-            zoomTimer_ = 0.2f;
+            zoomTimer_ = 1.0f;
             isPressSpace_ = true;
         }
 
-
-
     } else {
         if (zoomTimer_ > 0.0f) {
-            zoomTimer_ -= InverseFPS;
+            zoomTimer_ -= InverseFPS * 2.0f;
         } else {
             zoomTimer_ = 0.0f;
             isZoom_ = false;
         }
     }
+
 }
 
 Vector3& Player::GetForward()
@@ -264,11 +259,16 @@ void Player::MouseLook()
         return;
     }
 
-    bodyPos_.worldTransform_.rotate_.y += Input::GetControllerStickPos(BUTTON_RIGHT, 0).x * InverseFPS * cameraSpeed_;
-    bodyPos_.worldTransform_.rotate_.y += Input::GetMousePosFiltered().x * InverseFPS / cameraSpeed_;
-    eyePos_.worldTransform_.rotate_.x -= Input::GetControllerStickPos(BUTTON_RIGHT, 0).y * InverseFPS * cameraSpeed_;
 
-    eyePos_.worldTransform_.rotate_.x += Input::GetMousePosFiltered().y * InverseFPS / cameraSpeed_;
+       cameraRotateY_ += Input::GetControllerStickPos(BUTTON_RIGHT, 0).x * InverseFPS * cameraSpeed_;
+   cameraRotateY_ += Input::GetMousePosFiltered().x * InverseFPS / cameraSpeed_;
+   cameraRotateX_ -= Input::GetControllerStickPos(BUTTON_RIGHT, 0).y * InverseFPS * cameraSpeed_;
+
+   cameraRotateX_ += Input::GetMousePosFiltered().y * InverseFPS / cameraSpeed_;
+
+   bodyPos_.worldTransform_.rotate_.y = Lerp(bodyPos_.worldTransform_.rotate_.y, cameraRotateY_, 0.5f);
+   eyePos_.worldTransform_.rotate_.x = Lerp(eyePos_.worldTransform_.rotate_.y, cameraRotateX_, 0.5f);
+
 
     eyePos_.worldTransform_.rotate_.x = std::clamp(
         eyePos_.worldTransform_.rotate_.x,
@@ -361,7 +361,7 @@ void Player::OnCollisionEnemy()
     Sound::PlaySE(Sound::CRACKER);
     //衝突フラグを真に
     characterState_.isHit = true;
-    characterState_.hps.hp-=10;
+    characterState_.hps.hp -= 10;
     hitTimer_ = 1.0f;
 
 }

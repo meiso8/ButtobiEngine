@@ -38,6 +38,8 @@
 
 #include"Lerp.h"
 
+#include"Easing.h"
+
 SampleScene::SampleScene()
 {
     // 現在のカメラを設定
@@ -190,15 +192,8 @@ void SampleScene::Update() {
         currentCamera_->UpdateMatrix();
     } else {
         camera_->worldMat_ = player_->GetEyeMatrix();
-
-
-        Vector3 translate = player_->GetForward();
-        camera_->worldMat_.m[3][0] = Lerp(camera_->worldMat_.m[3][0], translate.x, player_->zoomTimer_);
-        camera_->worldMat_.m[3][1] = Lerp(camera_->worldMat_.m[3][1], translate.y, player_->zoomTimer_);
-        camera_->worldMat_.m[3][2] = Lerp(camera_->worldMat_.m[3][2], translate.z, player_->zoomTimer_);
-
+        camera_->fovAngleY_ =Easing::EaseOutBack(camera_->kFovAngleY, camera_->kFovAngleY*0.5f, player_->zoomTimer_);
         camera_->UpdateViewProjectionMatrix();
-
     }
 
     player_->Update();
@@ -251,9 +246,12 @@ void SampleScene::Debug()
     ImGui::Text("SwitchCamera : Q key");
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
     std::function<void()> func = [this]() { SwitchCamera(); };
+    DebugUI::CheckCamera(*currentCamera_);
+
     DebugUI::Button("ChangeCamera", func);
     DebugUI::CheckParticle(*particleEmitters_[0]);
     DebugUI::CheckSprite(*sprite_[0], "sprite0");
+
 
 #endif // !USE_IMGUI
 }
