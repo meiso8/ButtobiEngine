@@ -34,7 +34,7 @@ public:
     Object3d bodyPos_;
     HPs* GetHpsPtr() { return &damageStruct_.hps; }
 private:
-    float timer_ = 0.0f;
+    float phaseTimer_ = 0.0f;
     float actionTime_ = 0.0f;
     float fireBallCoolTime_ = 0.0f;
     //目標地点

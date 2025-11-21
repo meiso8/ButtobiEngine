@@ -80,6 +80,8 @@ void Enemy::Update()
 
 #endif // _DEBUG  
 
+    damageStruct_.isHit = false;
+
     UpdateTimer();
     // 呼び出す  
     UpdateActions_[phase_]();
@@ -126,21 +128,21 @@ void Enemy::OnCollision(Collider* collider)
 
 void Enemy::Tackle()
 {
-    if (timer_ <= 3.0f) {
+    if (phaseTimer_ <= 3.0f) {
 
-        if (timer_ <= 2.0f) {
+        if (phaseTimer_ <= 2.0f) {
             LookTarget();
         }
 
         PoyoPoyo(3.0f);
 
-    } else if (timer_ < 3.7f) {
-        float localTimer = (timer_ - 3.0f) / 0.7f;
+    } else if (phaseTimer_ < 3.7f) {
+        float localTimer = (phaseTimer_ - 3.0f) / 0.7f;
         LerpScale();
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(startPos_, endPos_, localTimer);
 
-    } else if (timer_ < 4.7f) {
-        float localTimer = (timer_ - 3.7f) / 1.0f;
+    } else if (phaseTimer_ < 4.7f) {
+        float localTimer = (phaseTimer_ - 3.7f) / 1.0f;
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(endPos_, startPos_, localTimer);
     } else {
         SetPhase(LERP_ROUND_POS);
@@ -152,17 +154,17 @@ void Enemy::Tackle()
 void Enemy::Knockback()
 {
 
-    if (timer_ == 0.0f) {
+    if (phaseTimer_ == 0.0f) {
         LookTarget();
     }
 
 
-    if (timer_ <= 0.125f) {
-        bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(endPos_, startPos_, timer_);
+    if (phaseTimer_ <= 0.125f) {
+        bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(endPos_, startPos_, phaseTimer_);
     } else {
       
-        if (timer_ <= 0.75f) {
-            float localTimer = (timer_ - 0.125f) / (0.75f - 0.125f);
+        if (phaseTimer_ <= 0.75f) {
+            float localTimer = (phaseTimer_ - 0.125f) / (0.75f - 0.125f);
             float theta = std::numbers::pi_v<float>*3.0f * localTimer; // 回転の速さを調整
             bodyPos_.worldTransform_.rotate_.z = sinf(theta);
             bodyPos_.worldTransform_.rotate_.x = cosf(theta);
@@ -174,7 +176,7 @@ void Enemy::Knockback()
         } 
     }
 
-    if (timer_ > 2.0f) {
+    if (phaseTimer_ > 2.0f) {
         SetPhase(LERP_ROUND_POS);
     }
 
@@ -194,7 +196,7 @@ void Enemy::LerpRoundPos()
 
 void Enemy::SetPhase(PHASE phase)
 {
-    timer_ = 0.0f;
+    phaseTimer_ = 0.0f;
     phase_ = phase;
     poyoAnimTimer_ = 0.0f;
 
@@ -225,7 +227,7 @@ void Enemy::Round()
     bodyPos_.worldTransform_.translate_ = TransformCoordinate(sphericalPos_);
     bodyPos_.worldTransform_.translate_.y = GetRadius();
 
-    if (timer_ >= actionTime_) {
+    if (phaseTimer_ >= actionTime_) {
         int randNum = rand() % 2;
         if (randNum == 0) {
             SetPhase(TACKLE);
@@ -239,8 +241,8 @@ void Enemy::Round()
 
 void Enemy::Fireball()
 {
-    if (timer_ <= 1.0f) {
-        RotateY(timer_);
+    if (phaseTimer_ <= 1.0f) {
+        RotateY(phaseTimer_);
         fireBallCoolTime_ = 0.0f;
     } else {
 
@@ -254,7 +256,7 @@ void Enemy::Fireball()
         }
     }
 
-    if (timer_ >= actionTime_) {
+    if (phaseTimer_ >= actionTime_) {
         SetPhase(LERP_ROUND_POS);
     }
 
@@ -280,10 +282,10 @@ void Enemy::Exit()
 
 void Enemy::UpdateTimer()
 {
-    if (timer_ < actionTime_) {
-        timer_ += InverseFPS;
+    if (phaseTimer_ < actionTime_) {
+        phaseTimer_ += InverseFPS;
     } else {
-        timer_ = actionTime_;
+        phaseTimer_ = actionTime_;
     }
 
 }
@@ -299,6 +301,7 @@ void Enemy::LookTarget()
 
 void Enemy::PoyoPoyo(const float& endTimer)
 {
+  
     poyoAnimTimer_ += InverseFPS;
     poyoAnimTimer_ = std::clamp(poyoAnimTimer_, 0.0f, endTimer);
 
@@ -310,12 +313,9 @@ void Enemy::PoyoPoyo(const float& endTimer)
 
 void Enemy::HitUpdate()
 {
-    if (damageStruct_.isHit) {
+    if (poyoAnimTimer_ < 0.25f) {
         PoyoPoyo();
 
-        if (poyoAnimTimer_ == 0.25f) {
-            damageStruct_.isHit = false;
-        }
     } else {
         LerpScale();
     }
