@@ -401,16 +401,22 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter)
 
     if (ImGui::TreeNode("Emitter")) {
 
+        int movement = static_cast<int>(emitter.movement);
+        ImGui::SliderInt("movement", &movement, 0, 2);
+        emitter.movement = static_cast<ParticleManager::Movements>(movement);
+        ImGui::SliderFloat("radius", &emitter.radius, 0.1f, 10.0f);
         ImGui::Checkbox("isRandom", &emitter.isRandom);
-        int count = emitter.cont;
+        int count = emitter.count;
         ImGui::SliderInt("createNum", &count, 0, particle.kNumMaxInstance);
-        emitter.cont = count;
-        CheckColor(emitter.color, "color");
+        emitter.count = count;
         CheckWorldTransform(emitter.transform, "EmitterTransform");
-        CheckBlendMode(emitter.blendMode);
         ImGui::SliderFloat("frequency", &emitter.frequency, 0.1f, 10.0f);
         ImGui::Text("frequencyTime : %f", emitter.frequencyTime);
-        ImGui::Text("lifeTime : %f", emitter.lifeTime_);
+        ImGui::SliderFloat("lifeTime", &emitter.lifeTime,-1.0f,50.0f);
+        CheckBlendMode(emitter.blendMode);
+        CheckColor(emitter.color, "color");
+
+
         ImGui::TreePop();
     }
 
@@ -423,7 +429,7 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter)
             ImGui::SliderFloat2("textureSize", &group->textureSize.x, 0.0f, static_cast<float>(Window::GetClientWidth()));
 
             if (ImGui::Button(name.c_str())) {
-                particle.EmitParticle(name, emitter.transform, emitter.cont, color);
+                particle.Emit(emitter);
             }
             for (std::list<Particle>::iterator itr = group->particles.begin(); itr != group->particles.end(); ++itr) {
                 CheckTransform((*itr).transform, name.c_str());

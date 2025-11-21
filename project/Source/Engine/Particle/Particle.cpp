@@ -8,6 +8,7 @@
 #include"SRVmanager/SrvManager.h"
 #include"Model.h"
 #include"SpriteCamera.h"
+#include"ParticleEmitter.h"
 
 using namespace  Microsoft::WRL;
 
@@ -62,27 +63,17 @@ Particle MakeNewParticle(const bool& isRandom, const WorldTransform& transform, 
     return particle;
 }
 
-SphericalCoordinate MakeNewSphericalCoordinate(const float& radius)
+SphericalCoordinate MakeNewSphericalCoordinate(const bool& isRandom, const float& radius)
 {
     SphericalCoordinate sphericalCoordinate;
     Random::SetMinMax(0.0f, 6.28f);
     sphericalCoordinate.azimuthal = 0.0f;
-    sphericalCoordinate.polar = Random::Get();
+    sphericalCoordinate.polar = (isRandom) ? Random::Get() : 0.0f;
     sphericalCoordinate.radius = radius;
     return sphericalCoordinate;
 }
 
-std::list<SphericalCoordinate> EmitCoordinate(const bool& isRandom, const Vector3& position, uint32_t count, const Vector3& scale, const Vector4& color)
-{
-    std::list<SphericalCoordinate>sphericalCoordinates;
 
-    for (uint32_t i = 0; i < count; ++i) {
-        sphericalCoordinates.push_back(MakeNewSphericalCoordinate());
-    }
-
-    return sphericalCoordinates;
-
-}
 
 void ParticleManager::CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle, const bool& useModel = false, const ModelManager::MODEL_HANDLE& modelHandle)
 {
@@ -122,7 +113,7 @@ void ParticleManager::CreateParticleGroup(const std::string name, const Texture:
 
 }
 
-void ParticleManager::Update(Camera& camera)
+void ParticleManager::Update(Camera& camera,Movements& movement )
 {
     camera_ = &camera;
 
@@ -134,11 +125,11 @@ void ParticleManager::Update(Camera& camera)
     if (useBillboard_) {
         UpdateBillBordMatrix(camera);
     }
-    UpdateFunctions[movements_]();
+    UpdateFunctions[movement]();
 }
 
 
-std::list<Particle> Emit(const bool& isRandom, const WorldTransform& transform, uint32_t count, const Vector4& color, const float& lifeTime)
+std::list<Particle> EmitParticles(const bool& isRandom, const WorldTransform& transform, uint32_t count, const Vector4& color, const float& lifeTime)
 {
     std::list<Particle>particles;
     for (uint32_t i = 0; i < count; ++i) {
@@ -147,10 +138,26 @@ std::list<Particle> Emit(const bool& isRandom, const WorldTransform& transform, 
     return particles;
 }
 
-void ParticleManager::EmitParticle(const std::string name, const WorldTransform& transform, uint32_t count, const Vector4& color, const bool& isRandom, const float& lifeTime)
+std::list<SphericalCoordinate> EmitCoordinate(const bool& isRandom, uint32_t count, const float& radius)
 {
-    assert(particleGroups.contains(name));
-    particleGroups[name]->particles.splice(particleGroups[name]->particles.end(), Emit(isRandom, transform, count, color, lifeTime));
+    std::list<SphericalCoordinate>sphericalCoordinates;
+
+    for (uint32_t i = 0; i < count; ++i) {
+        sphericalCoordinates.push_back(MakeNewSphericalCoordinate(isRandom,radius));
+    }
+
+    return sphericalCoordinates;
+
+}
+
+void ParticleManager::Emit(Emitter& emitter)
+{
+    assert(particleGroups.contains(emitter.name));
+    particleGroups[emitter.name]->particles.splice(particleGroups[emitter.name]->particles.end(), EmitParticles(emitter.isRandom, emitter.transform, emitter.count, emitter.color, emitter.lifeTime));
+
+    if (emitter.movement == kSphere) {
+        particleGroups[emitter.name]->sphericalCoordinates.splice(particleGroups[emitter.name]->sphericalCoordinates.end(), EmitCoordinate(emitter.isRandom, emitter.count,emitter.radius));
+    }
 }
 
 void ParticleManager::Draw(uint32_t blendMode)
@@ -223,13 +230,6 @@ void ParticleManager::CreateAll()
     CreateParticleGroup("people", Texture::WHITE_1X1, true, ModelManager::PEOPLE);
 }
 
-
-
-void ParticleManager::SetMovement(Movements& move)
-{
-    movements_ = move;
-}
-
 void ParticleManager::Normal()
 {
 
@@ -276,37 +276,34 @@ void ParticleManager::Sphere()
 
         group->numInstance = 0;
         auto particleIterator = group->particles.begin();
-        auto coordIterator = sphericalCoordinates.begin();
+        auto coordIterator = group->sphericalCoordinates.begin();
 
-        while (particleIterator != group->particles.end() && coordIterator != sphericalCoordinates.end()) {
+        while (particleIterator != group->particles.end() && coordIterator != group->sphericalCoordinates.end()) {
 
             if (group->numInstance < kNumMaxInstance) {
 
                 if ((*particleIterator).lifeTime <= (*particleIterator).currentTime) {
                     particleIterator = group->particles.erase(particleIterator);
+                    coordIterator = group->sphericalCoordinates.erase(coordIterator);
                     continue;
                 }
 
-                (*particleIterator).currentTime += kDeltaTime;
-
-                coordIterator->polar += std::numbers::pi_v<float> *kDeltaTime * 4.0f;
-
+                coordIterator->polar += std::numbers::pi_v<float> *InverseFPS;
                 if (coordIterator->radius > 0.0f) {
-                    coordIterator->radius -= kDeltaTime * 4.0f;
+                    coordIterator->radius -= InverseFPS;
                 } else {
-                    coordIterator->radius = 5.0f;
+                    particleIterator = group->particles.erase(particleIterator);
+                    coordIterator = group->sphericalCoordinates.erase(coordIterator);
+                    continue;
                 }
-
+               
+                Vector3 sphereCoordinate = TransformCoordinate(*coordIterator);
+               
+                particleIterator->transform.translate.x = sphereCoordinate.x;
+                particleIterator->transform.translate.z = sphereCoordinate.z;
+                (*particleIterator).currentTime += InverseFPS;
 
                 IsCollisionFieldArea(*particleIterator);
-
-                particleIterator->transform.translate += TransformCoordinate(*coordIterator);
-
-                float time = ((*particleIterator).currentTime / (*particleIterator).lifeTime);
-
-                particleIterator->transform.scale.x = time * 0.5f;
-                particleIterator->transform.scale.y = time * 0.5f;
-                particleIterator->transform.scale.z = time * 0.5f;
 
                 UpdateWorldMatrix(*particleIterator, *group);
 
