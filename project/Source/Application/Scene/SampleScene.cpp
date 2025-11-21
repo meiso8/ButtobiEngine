@@ -88,8 +88,6 @@ SampleScene::SampleScene()
 
     particleEmitters_[1]->SetName("people");
 
-
-
     hpGage_ = std::make_unique<HPGage>();
     hpGage_->SetHpPtr(player_->GetHpsPtr());
     hpGage_->Setting({ 640.0f,32.0f }, { 640.0f,720.0f - 64.0f }, { 0.5f,0.0f });
@@ -113,18 +111,20 @@ void SampleScene::Initialize() {
         particleEmitters_[i]->Initialize();
     }
 
-    particleEmitters_[0]->emitter_.cont = 16;
+    particleEmitters_[0]->emitter_.count = 16;
     particleEmitters_[0]->emitter_.color = { 1.0f,0.75f,0.75f,1.0f };
     particleEmitters_[0]->emitter_.frequencyTime = 0.25f;
-    particleEmitters_[0]->emitter_.lifeTime_ = -1.0f;
+    particleEmitters_[0]->emitter_.lifeTime = 6.0f;
     particleEmitters_[0]->emitter_.blendMode = kBlendModeAdd;
+    particleEmitters_[0]->emitter_.movement = ParticleManager::kSphere;
+    particleEmitters_[0]->emitter_.radius = 3.0f;
 
     particleEmitters_[1]->emitter_.transform.translate_.y = 30.0f;
     particleEmitters_[1]->emitter_.transform.scale_ = { 10.0f,10.0f,10.0f };
-    particleEmitters_[1]->emitter_.cont = 4;
+    particleEmitters_[1]->emitter_.count = 4;
     particleEmitters_[1]->emitter_.color = { 1.0f,0.75f,0.75f,1.0f };
     particleEmitters_[1]->emitter_.frequencyTime = 0.1f;
-    particleEmitters_[1]->emitter_.lifeTime_ = 10.0f;
+    particleEmitters_[1]->emitter_.lifeTime = 10.0f;
     particleEmitters_[1]->emitter_.blendMode = kBlendModeNormal;
 
     player_->Init();

@@ -19,7 +19,7 @@
 
 class Camera;
 class ShaderResourceView;
-
+struct Emitter;
 
 struct Particle {
     Transform transform;
@@ -39,6 +39,7 @@ struct ParticleForGPU {
 struct ParticleGroup {
     MaterialData materialData;
     std::list<Particle>particles;
+    std::list<SphericalCoordinate>sphericalCoordinates;
     uint32_t instanceSrvIndex;
     Microsoft::WRL::ComPtr<ID3D12Resource> instancingResource;
     uint32_t numInstance;//インスタンス数
@@ -50,11 +51,11 @@ struct ParticleGroup {
 
 
 
-std::list<SphericalCoordinate> EmitCoordinate(const bool& isRandom, const Vector3& position, uint32_t count, const Vector3& scale = { 1.0f,1.0f,1.0f }, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
+std::list<SphericalCoordinate> EmitCoordinate(const bool& isRandom, uint32_t count, const float& radius = 3.0f);
 
-std::list<Particle> Emit(const bool& isRandom, const WorldTransform& transform, uint32_t count, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f },const float& lifeTime = -1.0f);
+std::list<Particle> EmitParticles(const bool& isRandom, const WorldTransform& transform, uint32_t count, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f },const float& lifeTime = -1.0f);
 Particle MakeNewParticle(const bool& isRandom, const WorldTransform& transform, const Vector4& color, const float& lifeTime = -1.0f);
-SphericalCoordinate MakeNewSphericalCoordinate(const float& radius = 3.0f);
+SphericalCoordinate MakeNewSphericalCoordinate(const bool& isRandom = true,const float& radius = 3.0f);
 class ParticleManager
 {
 public:
@@ -68,7 +69,6 @@ public:
     AccelerationField accelerationField;
     bool useBillboard_ = true;
     bool useSpriteCamera_ = false;
-
 
     const uint32_t kNumMaxInstance = 100;//インスタンス数
     static const float kDeltaTime;
@@ -106,27 +106,22 @@ public:
     void Create();
     static ParticleManager* GetInstance();
 
-    static void EmitParticle(const std::string name, const WorldTransform& transform, uint32_t count, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, const bool& isRandom = true, const float& lifeTime = 1.0f);
+static void Emit(Emitter& emitter);
 
     std::unordered_map<std::string, std::unique_ptr <ParticleGroup>>& GetParticleGroups();
     void CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle, const bool& useModel, const ModelManager::MODEL_HANDLE& modelHandle = ModelManager::MODEL_HANDLE::BOX);
 
-    void Update(Camera& camera);
+    void Update(Camera& camera, Movements& movement);
     void Draw(uint32_t blendMode = BlendMode::kBlendModeAdd);
     void InitAccelerationField();
     void Finalize();
-
-    void SetMovement(Movements& move);
 
 protected:
     void UpdateBillBordMatrix(Camera& camera);
     void UpdateMatrix(Particle& particleItr, ParticleGroup& group);
 private:
-
-    std::list<SphericalCoordinate>sphericalCoordinates;
     //メンバ関数ポインタテーブル
     std::unordered_map<Movements, std::function<void()>> UpdateFunctions;
-    Movements movements_ = Movements::kNormal;
     void Normal();
     void Sphere();
     void Shock();
