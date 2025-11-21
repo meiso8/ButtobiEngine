@@ -157,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\UI\PauseScreen.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorActionManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGamePlayerAnimationManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\PlayerStripFloorManager.cpp" />
@@ -277,6 +278,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\UI\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\UI\PauseScreen.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\Data\FloorData.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\Data\MapData.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorActionManager.h" />

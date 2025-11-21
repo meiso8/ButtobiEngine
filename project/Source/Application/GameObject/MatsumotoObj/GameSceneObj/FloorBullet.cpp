@@ -56,8 +56,7 @@ void FloorBullet::InitFlagAndPosAndTimer()
 }
 void FloorBullet::OnCollision(Collider* collider)
 {
-    //デバック用
-    OnCollisionCollider();
+
 
     if (!isActive_) {
         return;
@@ -68,7 +67,8 @@ void FloorBullet::OnCollision(Collider* collider)
             isHit_ = true;
         }
     }
-
+    //デバック用
+    OnCollisionCollider();
 
 }
 Vector3 FloorBullet::GetWorldPosition() const
@@ -76,7 +76,6 @@ Vector3 FloorBullet::GetWorldPosition() const
     return body_.worldTransform_.GetWorldPosition();
 }
 void FloorBullet::Update() {
-    ColliderUpdate();
 
 #ifdef USE_IMGUI
     DebugUI::CheckFlag(isActive_, "isActive");
@@ -96,6 +95,7 @@ void FloorBullet::Update() {
 
     Move();
     body_.Update();
+    ColliderUpdate();
 
 }
 
