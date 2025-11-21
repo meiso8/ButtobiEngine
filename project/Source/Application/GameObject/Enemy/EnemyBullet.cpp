@@ -33,8 +33,6 @@ void EnemyBullet::Initialize() {
     lifeTimer_ = 0.0f;
     lifeDuration_ = 2.0f;
     isActive_ = false;
-
-
     size_ = 1.0f;
 }
 void EnemyBullet::OnCollision(Collider* collider)
@@ -44,11 +42,12 @@ void EnemyBullet::OnCollision(Collider* collider)
         return;
     }
 
-    if (collider->GetCollisionAttribute() == kCollisionPlayer) {
+    if (collider->GetCollisionAttribute() == kCollisionPlayer|| collider->GetCollisionAttribute() == kCollisionPlayerBullet) {
         //デバック用
         OnCollisionCollider();
-
     }
+
+
 }
 Vector3 EnemyBullet::GetWorldPosition() const
 {
