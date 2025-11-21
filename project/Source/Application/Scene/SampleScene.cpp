@@ -83,7 +83,7 @@ SampleScene::SampleScene()
         particleEmitters_[i] = std::make_unique<ParticleEmitter>();
     }
 
-    particleEmitters_[0]->SetName("white");
+    particleEmitters_[0]->SetName("medjedParticle");
     particleEmitters_[0]->emitter_.transform.Parent(medjed_->GetWorldTransform());
 
     particleEmitters_[1]->SetName("people");

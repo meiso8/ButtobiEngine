@@ -400,23 +400,21 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter)
     Emitter& emitter = particleEmitter.emitter_;
 
     if (ImGui::TreeNode("Emitter")) {
-
+        ImGui::Checkbox("isRandom", &emitter.isRandom);
         int movement = static_cast<int>(emitter.movement);
         ImGui::SliderInt("movement", &movement, 0, 2);
         emitter.movement = static_cast<ParticleManager::Movements>(movement);
         ImGui::SliderFloat("radius", &emitter.radius, 0.1f, 10.0f);
-        ImGui::Checkbox("isRandom", &emitter.isRandom);
-        int count = emitter.count;
-        ImGui::SliderInt("createNum", &count, 0, particle.kNumMaxInstance);
-        emitter.count = count;
-        CheckWorldTransform(emitter.transform, "EmitterTransform");
-        ImGui::SliderFloat("frequency", &emitter.frequency, 0.1f, 10.0f);
-        ImGui::Text("frequencyTime : %f", emitter.frequencyTime);
-        ImGui::SliderFloat("lifeTime", &emitter.lifeTime,-1.0f,50.0f);
+        ImGui::SliderFloat("lifeTime", &emitter.lifeTime, -1.0f, 50.0f);
         CheckBlendMode(emitter.blendMode);
         CheckColor(emitter.color, "color");
 
-
+        int count = emitter.count;
+        ImGui::SliderInt("createNum", &count, 0, particle.kNumMaxInstance);
+        emitter.count = count;
+        CheckWorldTransform(emitter.transform, "transform");
+        ImGui::Text("frequencyTime : %f", emitter.frequencyTime);
+        ImGui::SliderFloat("frequency", &emitter.frequency, 0.1f, 10.0f);
         ImGui::TreePop();
     }
 

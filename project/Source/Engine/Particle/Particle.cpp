@@ -225,9 +225,10 @@ void ParticleManager::IsCollisionFieldArea(Particle& particleItr)
 
 void ParticleManager::CreateAll()
 {
+
+    CreateParticleGroup("people", Texture::UV_CHECKER, true, ModelManager::PEOPLE);
     CreateParticleGroup("uvChecker", Texture::UV_CHECKER);
-    CreateParticleGroup("white", Texture::WHITE_1X1, true, ModelManager::PEOPLE);
-    CreateParticleGroup("people", Texture::WHITE_1X1, true, ModelManager::PEOPLE);
+    CreateParticleGroup("medjedParticle", Texture::UV_CHECKER, true, ModelManager::PEOPLE);
 }
 
 void ParticleManager::Normal()
