@@ -19,7 +19,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // ==============================================//↓基本いじらない↓//============================================
     //エンジンの生成
     std::unique_ptr<MyEngine> myEngine = std::make_unique<MyEngine>();
-    myEngine->Create(L"ぶっ飛びエンジン！", WIN_WIDTH, WIN_HEIGHT);
+    myEngine->Create(L"LE2A_19_ヨシダ_トモカ", WIN_WIDTH, WIN_HEIGHT);
     // ==============================================//↑基本いじらない↑//============================================
     //画面の色
     Vector4 screenColor = { 0.75f,0.5f,0.5f,1.0f };
