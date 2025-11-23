@@ -10,6 +10,7 @@
 #include"JsonFile.h"
 #include "MatsumotoObj/MY_Utility.h"
 #include"UI/HPIcon.h"
+#include"Enemy/EnemyBomb.h"
 
 FloorGamePlayer::FloorGamePlayer() {
     body_.Create();
@@ -38,7 +39,7 @@ FloorGamePlayer::FloorGamePlayer() {
 
     SetCollisionAttribute(kCollisionPlayer);
     //敵のみと衝突
-    SetCollisionMask(kCollisionEnemy| kCollisionEnemyBullet);
+    SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet | kCollisionEnemyBomb);
 }
 
 FloorGamePlayer::~FloorGamePlayer() {
@@ -49,32 +50,30 @@ FloorGamePlayer::~FloorGamePlayer() {
 void FloorGamePlayer::OnCollision(Collider* collider)
 {
 
-    if (collider->GetCollisionAttribute() == kCollisionEnemy|| collider->GetCollisionAttribute() == kCollisionEnemyBullet) {
-
-
-
+    if (collider->GetCollisionAttribute() == kCollisionEnemy ||
+        collider->GetCollisionAttribute() == kCollisionEnemyBullet) {
         //デバック用
         OnCollisionCollider();
-
-        if (damageStruct_.isHit) { return; }
-
-        damageStruct_.isHit = true;
-
-        damageStruct_.flashTimer = damageStruct_.invincibilityTime;
-        //hpを減らす
-        if (damageStruct_.hps.hp > 0) {
-            damageStruct_.hps.hp -= damageStruct_.hps.hpDecrease;
-        }
+        HitUpdate();
 
     }
+
+    if (EnemyBomb::isPlayerHit_) {
+        //デバック用
+        OnCollisionCollider();
+        HitUpdate();
+        EnemyBomb::isPlayerHit_ = false;
+    }
+
 }
+
 
 void FloorGamePlayer::Initialize() {
 
     Json json = JsonFile::GetJsonFiles("player");
     body_.Initialize();
     body_.worldTransform_.translate_.y = 0.5f;
-    Vector4 color = { 1.0f,1.0f,1.0f,1.0f }; 
+    Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
     SetBodyColor(color);
 
 
@@ -101,13 +100,13 @@ void FloorGamePlayer::Initialize() {
     lookDir_ = moveDir_;
     lookSpeed_ = 0.5f;
 
-	// 床剥がし
-	isReqestStript_ = false;
-	isStriptting_ = false;
-	striptTimer_ = 0.0f;
-	striptDuration_ = 0.3f;
-	isOnStripedFloor_ = false;
-	strippedFloorMap_.clear();
+    // 床剥がし
+    isReqestStript_ = false;
+    isStriptting_ = false;
+    striptTimer_ = 0.0f;
+    striptDuration_ = 0.3f;
+    isOnStripedFloor_ = false;
+    strippedFloorMap_.clear();
 
     // 床投げ
     isReqestShot_ = false;
@@ -281,7 +280,7 @@ void FloorGamePlayer::HitAction()
         if (damageStruct_.flashTimer <= 0.0f) {
             damageStruct_.flashTimer = 0.0f;
             damageStruct_.isHit = false;
-  
+
         }
 
         Flashing();
@@ -300,7 +299,7 @@ void FloorGamePlayer::Flashing()
 
     Vector4 color;
     if (static_cast<int>(t) % 2 == 0) {
-       color = { 1.0f, 0.0f, 0.0f, 1.0f };
+        color = { 1.0f, 0.0f, 0.0f, 1.0f };
     } else {
         color = { 1.0f, 0.0f, 0.0f, 0.5f };
     }
@@ -309,11 +308,25 @@ void FloorGamePlayer::Flashing()
 
 }
 
-void FloorGamePlayer::SetBodyColor(const Vector4& color )
+void FloorGamePlayer::SetBodyColor(const Vector4& color)
 {
     body_.SetColor(color);
     rightArmObject_.SetColor(color);
     leftArmObject_.SetColor(color);
     rightLegObject_.SetColor(color);
     leftLegObject_.SetColor(color);
+}
+
+void FloorGamePlayer::HitUpdate()
+{
+    if (damageStruct_.isHit) { return; }
+
+    damageStruct_.isHit = true;
+
+    damageStruct_.flashTimer = damageStruct_.invincibilityTime;
+    //hpを減らす
+    if (damageStruct_.hps.hp > 0) {
+        damageStruct_.hps.hp -= damageStruct_.hps.hpDecrease;
+    }
+
 }

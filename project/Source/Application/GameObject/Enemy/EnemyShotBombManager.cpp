@@ -35,7 +35,6 @@ void EnemyShotBombManager::Update() {
     } else {
         // 弾投げ
         if (enemy_->isBombShot_) {
-            Sound::PlaySE(Sound::PICO);
             enemy_->isBombShot_ = false;
 
             int randX, randY;

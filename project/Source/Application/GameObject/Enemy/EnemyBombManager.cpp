@@ -44,10 +44,12 @@ void EnemyBombManager::Draw(Camera& camera, const LightMode& lightType) {
 }
 
 void EnemyBombManager::ShotBomb(const Vector3& startPos, const Vector3& endPos, const float& size) {
+
     for (auto& bomb : bombs_) {
         if (!bomb->isActive_) {
             bomb->Shot(startPos, endPos, size);
             break;
         }
     }
+
 }

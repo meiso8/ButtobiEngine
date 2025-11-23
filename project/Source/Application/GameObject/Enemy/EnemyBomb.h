@@ -25,7 +25,10 @@ public:
     Object3d body_;
     float size_;
     bool isExplosion_ = false;
+    static bool isPlayerHit_;
 private:
+    int explosionFrame_ = 0;
+    float kRadius_ = {1.5f};
     Vector3 endPos_ = { 0.0f };
     std::unique_ptr<CubeMesh>cubeMesh_ = nullptr;
     Vector3 moveDir_;
