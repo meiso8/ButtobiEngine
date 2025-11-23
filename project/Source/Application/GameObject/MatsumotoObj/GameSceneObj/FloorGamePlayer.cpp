@@ -14,22 +14,27 @@
 
 FloorGamePlayer::FloorGamePlayer() {
     body_.Create();
+    headObject_.Create();
     rightArmObject_.Create();
     leftArmObject_.Create();
     rightLegObject_.Create();
     leftLegObject_.Create();
 
     body_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_BODY));
+    headObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_HEAD));
     rightArmObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_ARM_R));
     leftArmObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_ARM_L));
     rightLegObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_LEG_R));
     leftLegObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_LEG_L));
 
+
+    headObject_.worldTransform_.Parent(body_.worldTransform_);
     rightArmObject_.worldTransform_.Parent(body_.worldTransform_);
     leftArmObject_.worldTransform_.Parent(body_.worldTransform_);
     rightLegObject_.worldTransform_.Parent(body_.worldTransform_);
     leftLegObject_.worldTransform_.Parent(body_.worldTransform_);
 
+    headObject_.worldTransform_.translate_ = { 0.0f,0.5f,0.0f };
     rightArmObject_.worldTransform_.translate_ = { 0.5f,0.0f,0.0f };
     leftArmObject_.worldTransform_.translate_ = { -0.5f,0.0f,0.0f };
     rightLegObject_.worldTransform_.translate_ = { 0.3f,-0.5f,-0.3f };
@@ -129,6 +134,7 @@ void FloorGamePlayer::Update() {
 
     // ワールドトランスフォーム更新
     body_.Update();
+    headObject_.Update();
     rightArmObject_.Update();
     leftArmObject_.Update();
     rightLegObject_.Update();
@@ -155,12 +161,14 @@ void FloorGamePlayer::Update() {
 void FloorGamePlayer::Draw(Camera& camera, const LightMode& lightType) {
 
     body_.SetLightMode(lightType);
+    headObject_.SetLightMode(lightType);
     rightArmObject_.SetLightMode(lightType);
     leftArmObject_.SetLightMode(lightType);
     rightLegObject_.SetLightMode(lightType);
     leftLegObject_.SetLightMode(lightType);
 
     body_.Draw(camera, kBlendModeNormal);
+    headObject_.Draw(camera, kBlendModeNormal);
     rightArmObject_.Draw(camera, kBlendModeNormal);
     leftArmObject_.Draw(camera, kBlendModeNormal);
     rightLegObject_.Draw(camera, kBlendModeNormal);
@@ -311,6 +319,7 @@ void FloorGamePlayer::Flashing()
 void FloorGamePlayer::SetBodyColor(const Vector4& color)
 {
     body_.SetColor(color);
+    headObject_.SetColor(color);
     rightArmObject_.SetColor(color);
     leftArmObject_.SetColor(color);
     rightLegObject_.SetColor(color);

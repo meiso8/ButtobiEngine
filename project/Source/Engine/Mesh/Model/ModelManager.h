@@ -16,6 +16,7 @@ public:
         MELT_FLOOR,
 
         //プレイヤーそれぞれのパーツ
+        PLAYER_HEAD,
         PLAYER_ARM_L,
         PLAYER_ARM_R,
         PLAYER_BODY,

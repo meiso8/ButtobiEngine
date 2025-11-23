@@ -38,6 +38,7 @@ public:
 	bool isOnStickyFloor_;
 	bool isOnStripedFloor_;
 	Object3d body_;
+	Object3d headObject_;
 	Object3d rightArmObject_;
 	Object3d leftArmObject_;
 	Object3d rightLegObject_;
