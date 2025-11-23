@@ -22,7 +22,7 @@ void EnemyShotBulletManager::Update() {
 		Sound::PlaySE(Sound::FIRE_BALL);
 		enemy_->isShot_ = false;
 		// playerに向かって投げる
-		Vector3 shotDirection = enemy_->GetToTarget();
+		Vector3 shotDirection = enemy_->GetPlayerTarget();
 		Vector3 shotPosition = enemy_->GetWorldPosition() + shotDirection * 0.5f;
 		bulletManager_->ShotBullet(shotPosition, shotDirection, shotSpeed_, shotSize_);
 	}

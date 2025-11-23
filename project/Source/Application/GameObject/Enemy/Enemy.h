@@ -24,9 +24,9 @@ public:
     void OnCollision(Collider* collder)override;
     void SetTarget(Vector3& target) { target_ = &target; };
     void SetPlayerPos(Vector3& target) { playerPos_ = &target; };
-    Vector3 GetToTarget() {
-        if (target_ != nullptr) {
-            return Normalize(*target_ - bodyPos_.worldTransform_.GetWorldPosition());
+    Vector3 GetPlayerTarget() {
+        if (playerPos_ != nullptr) {
+            return Normalize(*playerPos_ - bodyPos_.worldTransform_.GetWorldPosition());
         }
         return { 0.0f };
     }
