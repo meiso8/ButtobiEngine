@@ -23,13 +23,17 @@ public:
     Vector3 GetWorldPosition()const override;
     void OnCollision(Collider* collder)override;
     void SetTarget(Vector3& target) { target_ = &target; };
+    void SetPlayerPos(Vector3& target) { playerPos_ = &target; };
     Vector3 GetToTarget() {
         if (target_ != nullptr) {
             return Normalize(*target_ - bodyPos_.worldTransform_.GetWorldPosition());
         }
         return { 0.0f };
     }
+
+
     bool isShot_ = false;
+    bool isBombShot_ = false;
     //体の位置
     Object3d bodyPos_;
     HPs* GetHpsPtr() { return &damageStruct_.hps; }
@@ -38,6 +42,7 @@ private:
     Model* model_;
     //目標地点
     Vector3* target_ = nullptr;
+    Vector3* playerPos_ = nullptr;
     //キャラクターの共通でもつ状態
     Damage damageStruct_;
 
@@ -77,6 +82,10 @@ private:
     const float kPoyoAnimeTime_ = 0.25f;
     //弾のクールタイム
     float fireBallCoolTimer_ = 0.0f;
+    //爆弾のクールタイム
+    float bombCoolTimer_ = 0.0f;
+
+
 
     float endRotateY_ = 0.0f;
     float startRotateY_ = 0.0f;
@@ -106,10 +115,12 @@ private:
     //回転移動
     void Round();
     void LerpRoundPos();
-    // 
+ 
     void SquareMove();
     void LerpSquarePos();
     void RandomWalk();
+
+    void LerpPos();
 
     //ファイアボール
     void Fireball();
@@ -123,7 +134,7 @@ private:
 
     void Exit();
 
-    void LookTarget();
+    void LookTarget(Vector3& target);
     void HitAnimation();
     void PoyoPoyo(const float& endTimer);
     void LerpScale();

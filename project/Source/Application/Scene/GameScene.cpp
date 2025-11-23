@@ -63,6 +63,8 @@ GameScene::GameScene()
     enemyBulletManager_ = std::make_unique<EnemyBulletManager>();
     enemyShotBulletManager_ = std::make_unique<EnemyShotBulletManager>(enemy_.get(), enemyBulletManager_.get());
 
+    enemyBombManager_ = std::make_unique<EnemyBombManager>();
+    enemyShotBombManager_ = std::make_unique<EnemyShotBombManager>(enemy_.get(), enemyBombManager_.get(),floorGameFloorManager_.get());
 
     uiManager_ = std::make_unique<UIManager>(*enemy_->GetHpsPtr(), *floorGamePlayer_->GetHpsPtr());
 
@@ -96,8 +98,12 @@ void GameScene::Initialize() {
   
     enemy_->Init();
     enemy_->SetTarget(floorGamePlayer_->body_.worldTransform_.translate_);
+    enemy_->SetPlayerPos(floorGamePlayer_->body_.worldTransform_.translate_);
     enemyBulletManager_->Initialize();
     enemyShotBulletManager_->Initialize();
+
+    enemyBombManager_->Initialize();
+    enemyShotBombManager_->Initialize();
 #pragma endregion
     collisionManager_->ClearColliders();
 
@@ -146,6 +152,8 @@ void GameScene::Draw() {
 	playerFloorStripManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     enemy_->Draw(*currentCamera_, kLightModeHalfL);
     enemyBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    enemyBombManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+
 #pragma endregion
 
     particleEmitter_->Draw();
@@ -188,12 +196,15 @@ void GameScene::UpdateGameObject()
     floorBulletManager_->Update();
     enemy_->Update();
     enemyBulletManager_->Update();
+    enemyBombManager_->Update();
+
 
     // オブジェクト同士の干渉
     floorStripManager_->Update();
 	playerFloorStripManager_->Update();
     floorPlayerShotBulletManager_->Update();
     enemyShotBulletManager_->Update();
+    enemyShotBombManager_->Update();
     floorPlayerStripTargetUI_->Update();
 	floorActionManager_->Update();
 
@@ -216,6 +227,11 @@ void GameScene::CheckAllCollision()
     for (auto& bullet : enemyBulletManager_->GetBullets()) {
         if (bullet->isActive_) { collisionManager_->AddCollider(bullet.get()); }
     }
+
+    for (auto& bomb : enemyBombManager_->GetBombs()) {
+        if (bomb->isActive_) { collisionManager_->AddCollider(bomb.get()); }
+    }
+
 
     collisionManager_->CheckAllCollisions();
 }

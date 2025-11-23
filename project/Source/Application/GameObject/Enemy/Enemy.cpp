@@ -80,7 +80,7 @@ void Enemy::Update()
     SwitchPhase();
 
     if (Input::IsTriggerKey(DIK_Z)) {
-        SetPhase(LERP_SQUARE_POS);
+        SetPhase(FLOORCHANGEATTACK);
     }
 
 
@@ -151,7 +151,7 @@ void Enemy::Tackle()
     if (phaseTimer_ <= 3.0f) {
 
         if (phaseTimer_ <= 2.0f) {
-            LookTarget();
+            LookTarget(*playerPos_);
         }
 
         PoyoPoyo(3.0f);
@@ -172,7 +172,7 @@ void Enemy::Knockback()
 {
 
     if (phaseTimer_ == 0.0f) {
-        LookTarget();
+        LookTarget(*playerPos_);
     }
 
     if (phaseTimer_ <= 0.125f) {
@@ -212,11 +212,10 @@ void Enemy::LerpSquarePos()
 {
 
     if (phaseTimer_ <= 1.0f) {
-        bodyPos_.worldTransform_.rotate_.y = Lerp(bodyPos_.worldTransform_.rotate_.y, 0.0f, 0.1f);
+        bodyPos_.worldTransform_.rotate_.y = Lerp(bodyPos_.worldTransform_.rotate_.y, std::numbers::pi_v<float>, 0.1f);
         bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, { 0.0f,kSize_,0.0f }, phaseTimer_);
     } else if (phaseTimer_ <= 2.0f) {
-        bodyPos_.worldTransform_.rotate_.y = Lerp(bodyPos_.worldTransform_.rotate_.y, std::numbers::pi_v<float>, 0.1f);
-        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, { 0.0f,kSize_,6.0f }, 0.05f);
+        LerpPos();
     } else {
         SetPhase(SQUARE);
     }
@@ -227,25 +226,33 @@ void Enemy::SquareMove()
 {
 
     float loopedTime = std::fmod(phaseTimer_, 4.0f);
-
+    Vector3 endPos = { 0.0f,0.0f,0.0f };
     if (loopedTime <= 1.0f) {
-        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, { 6.0f,kRadius_,6.0f }, 0.05f);
+        endPos = { 6.0f,kRadius_,6.0f };
+        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, 0.05f);
     } else if (loopedTime <= 2.0f) {
-        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, { 6.0f,kRadius_,-6.0f }, 0.05f);
+        endPos = { 6.0f,kRadius_,-6.0f };
+        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, 0.05f);
     } else if (loopedTime <= 3.0f) {
-        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, { -6.0f,kRadius_,-6.0f }, 0.05f);
+        endPos = { -6.0f,kRadius_,-6.0f };
+        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, 0.05f);
     } else if (loopedTime <= 4.0f) {
-
-        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, { -6.0f,kRadius_,6.0f }, 0.05f);
+        endPos = { -6.0f,kRadius_,6.0f };
+        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, 0.05f);
     }
 
-
-    LookTarget();
+    LookTarget(endPos);
 }
 
 
 void Enemy::RandomWalk()
 {
+}
+
+void Enemy::LerpPos()
+{
+    bodyPos_.worldTransform_.rotate_.y = Lerp(bodyPos_.worldTransform_.rotate_.y, std::numbers::pi_v<float>, 0.1f);
+    bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, { 0.0f,kSize_,6.0f }, 0.05f);
 }
 
 void Enemy::RandomMovePhase()
@@ -417,7 +424,7 @@ void Enemy::Round()
         roundSpeedY *= -1.0f;
     }
 
-    LookTarget();
+    LookTarget(*playerPos_);
 
     bodyPos_.worldTransform_.translate_ = TransformCoordinate(sphericalPos_);
     bodyPos_.worldTransform_.translate_.y = GetRadius();
@@ -431,7 +438,7 @@ void Enemy::Fireball()
         fireBallCoolTimer_ = 0.0f;
     } else {
 
-        LookTarget();
+        LookTarget(*playerPos_);
 
         fireBallCoolTimer_ += InverseFPS;
 
@@ -444,7 +451,24 @@ void Enemy::Fireball()
 
 void Enemy::FloorChangeAttack()
 {
+    LerpPos();
     LerpScale();
+
+    if (phaseTimer_ <= 1.0f) {
+        RotateY(phaseTimer_);
+        bombCoolTimer_ = 0.0f;
+    } else if(phaseTimer_ <= 3.0f){
+
+        LookTarget(*target_);
+
+        bombCoolTimer_ += InverseFPS;
+
+        if (bombCoolTimer_ > 0.1f) {
+            bombCoolTimer_ = 0.0f;
+            isBombShot_ = true;
+        }
+    } 
+ 
 
 }
 void Enemy::ShockWaveAttack()
@@ -469,10 +493,10 @@ void Enemy::UpdatePhaseTimer()
 
 }
 
-void Enemy::LookTarget()
+void Enemy::LookTarget(Vector3& target)
 {
     startPos_ = GetWorldPosition();
-    endPos_ = *target_;
+    endPos_ = target;
     Vector3 direction = endPos_ - startPos_;
     bodyPos_.worldTransform_.rotate_.y = std::atan2(direction.x, direction.z); // Y軸回転（ラジアン）
 
