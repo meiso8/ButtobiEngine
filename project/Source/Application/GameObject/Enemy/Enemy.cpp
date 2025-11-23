@@ -11,6 +11,11 @@
 #include"Easing.h"
 #include"DebugUI.h"
 
+#define PI std::numbers::pi_v<float>
+#define QUARTER_PI PI*0.25f
+#define HALF_PI PI*0.5f
+#define PI_2  PI*2.0f
+
 Enemy::Enemy()
 {
     //アクション
@@ -181,7 +186,7 @@ void Enemy::Knockback()
 
         if (phaseTimer_ <= 0.75f) {
             float localTimer = (phaseTimer_ - 0.125f) / (0.75f - 0.125f);
-            float theta = std::numbers::pi_v<float>*3.0f * localTimer; // 回転の速さを調整
+            float theta = PI*3.0f * localTimer; // 回転の速さを調整
             bodyPos_.worldTransform_.rotate_.z = sinf(theta);
             bodyPos_.worldTransform_.rotate_.x = cosf(theta);
         } else {
@@ -203,7 +208,7 @@ void Enemy::LerpRoundPos()
 {
     sphericalPos_.polar = Lerp(sphericalPos_.polar, 0.0f, 0.05f);
     bodyPos_.worldTransform_.translate_ = TransformCoordinate(sphericalPos_);
-    if (fabs(sphericalPos_.polar) <= std::numbers::pi_v<float>*0.25f) {
+    if (fabs(sphericalPos_.polar) <= QUARTER_PI) {
         SetPhase(ROUND);
     }
 }
@@ -212,9 +217,9 @@ void Enemy::LerpSquarePos()
 {
 
     if (phaseTimer_ <= 1.0f) {
-        bodyPos_.worldTransform_.rotate_.y = Lerp(bodyPos_.worldTransform_.rotate_.y, std::numbers::pi_v<float>, 0.1f);
+        bodyPos_.worldTransform_.rotate_.y = Lerp(bodyPos_.worldTransform_.rotate_.y, PI, 0.1f);
         bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, { 0.0f,kSize_,0.0f }, phaseTimer_);
-    } else if (phaseTimer_ <= 2.0f) {
+    } else if (phaseTimer_ <= kLerpSquareTime_) {
         LerpPos();
     } else {
         SetPhase(SQUARE);
@@ -229,16 +234,16 @@ void Enemy::SquareMove()
     Vector3 endPos = { 0.0f,0.0f,0.0f };
     if (loopedTime <= 1.0f) {
         endPos = { 6.0f,kRadius_,6.0f };
-        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, 0.05f);
+        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, kSquareMoveSpeed_);
     } else if (loopedTime <= 2.0f) {
         endPos = { 6.0f,kRadius_,-6.0f };
-        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, 0.05f);
+        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, kSquareMoveSpeed_);
     } else if (loopedTime <= 3.0f) {
         endPos = { -6.0f,kRadius_,-6.0f };
-        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, 0.05f);
+        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, kSquareMoveSpeed_);
     } else if (loopedTime <= 4.0f) {
         endPos = { -6.0f,kRadius_,6.0f };
-        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, 0.05f);
+        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, kSquareMoveSpeed_);
     }
 
     LookTarget(endPos);
@@ -251,8 +256,8 @@ void Enemy::RandomWalk()
 
 void Enemy::LerpPos()
 {
-    bodyPos_.worldTransform_.rotate_.y = Lerp(bodyPos_.worldTransform_.rotate_.y, std::numbers::pi_v<float>, 0.1f);
-    bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, { 0.0f,kSize_,6.0f }, 0.05f);
+    bodyPos_.worldTransform_.rotate_.y = Lerp(bodyPos_.worldTransform_.rotate_.y, PI, 0.1f);
+    bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, { 0.0f,0.0f,6.0f }, 0.05f);
 }
 
 void Enemy::RandomMovePhase()
@@ -371,7 +376,7 @@ void Enemy::SetPhase(PHASE phase)
 
     if (phase_ == FIREBALL || phase_ == KNOCKBACK) {
         startRotateY_ = bodyPos_.worldTransform_.rotate_.y;
-        endRotateY_ = startRotateY_ + std::numbers::pi_v<float>*2.0f;
+        endRotateY_ = startRotateY_ + PI_2;
     }
 
     //フェーズが攻撃かどうかを判断する
@@ -415,12 +420,12 @@ void Enemy::SwitchPhase()
 void Enemy::Round()
 {
 
-    sphericalPos_.radius = Lerp(sphericalPos_.radius, enemyRoundCircle_.radius, 0.5f);
-    float halfPi = std::numbers::pi_v<float>*0.5f;
+    sphericalPos_.radius = Lerp(sphericalPos_.radius, enemyRoundCircle_.radius, kSphericalLerpSpeed_);
+
 
     sphericalPos_.polar += InverseFPS * roundSpeedY;
 
-    if (sphericalPos_.polar > halfPi || sphericalPos_.polar < -halfPi) {
+    if (sphericalPos_.polar > HALF_PI || sphericalPos_.polar < -HALF_PI) {
         roundSpeedY *= -1.0f;
     }
 
@@ -507,7 +512,7 @@ void Enemy::PoyoPoyo(const float& endTimer)
     poyoAnimTimer_ += InverseFPS;
     poyoAnimTimer_ = std::clamp(poyoAnimTimer_, 0.0f, endTimer);
 
-    float theta = std::numbers::pi_v<float>*10.0f * poyoAnimTimer_;
+    float theta = PI*10.0f * poyoAnimTimer_;
     bodyPos_.worldTransform_.scale_.x = kSize_ + cos(theta) * 0.5f;
     bodyPos_.worldTransform_.scale_.y = kSize_ + sin(theta) * 0.5f;
 

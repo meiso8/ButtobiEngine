@@ -100,6 +100,9 @@ void EnemyBomb::Update() {
         }
     }
 
+    float color = lifeTimer_ / lifeDuration_;
+    body_.SetColor({ color,color,color,1.0f });
+
     if (lifeTimer_ <= 3.8f) {
         body_.worldTransform_.translate_ = Lerp(body_.worldTransform_.translate_, endPos_, speed_);
     } else {

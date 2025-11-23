@@ -85,8 +85,9 @@ private:
     //爆弾のカウント
     int bombCount_ = 0;
 
-
-
+    const float kLerpSquareTime_ = 2.0f;
+    const float kSquareMoveSpeed_ = 0.05f;
+    const float kSphericalLerpSpeed_ = 0.5f;
     float endRotateY_ = 0.0f;
     float startRotateY_ = 0.0f;
     float roundSpeedY = 1.0f;
