@@ -85,7 +85,7 @@ void Enemy::Update()
 
 
     HitAnimation();
-    model_->GetWaveData(0).time += InverseFPS*4.0f;
+    model_->GetWaveData(0).time += InverseFPS * 4.0f;
 
 
     bodyPos_.Update();
@@ -456,19 +456,18 @@ void Enemy::FloorChangeAttack()
 
     if (phaseTimer_ <= 1.0f) {
         RotateY(phaseTimer_);
-        bombCoolTimer_ = 0.0f;
-    } else if(phaseTimer_ <= 3.0f){
+        bombCount_ = 0;
+    } else if (phaseTimer_ <= 1.5f) {
 
         LookTarget(*target_);
-
-        bombCoolTimer_ += InverseFPS;
-
-        if (bombCoolTimer_ > 0.1f) {
-            bombCoolTimer_ = 0.0f;
+        bombCount_++;
+        if (bombCount_ <= 20) {
             isBombShot_ = true;
+        } else {
+            bombCount_ = 20;
         }
-    } 
- 
+    }
+
 
 }
 void Enemy::ShockWaveAttack()

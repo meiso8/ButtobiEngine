@@ -1,12 +1,15 @@
 #include "EnemyBomb.h"
 #include"ModelManager.h"
-#include"Model.h"
+
 #include"MyEngine.h"
 #include"Easing.h"
 #include<algorithm>
 
 #include"CubeMesh.h"
 #include"CollisionConfig.h"
+#include"Sound.h"
+
+bool EnemyBomb::isPlayerHit_ = false;
 
 EnemyBomb::EnemyBomb() {
     body_.Create();
@@ -15,9 +18,9 @@ EnemyBomb::EnemyBomb() {
     body_.SetColor({ 0.0f,0.0f,1.0f,1.0f });
     body_.SetMesh(cubeMesh_.get());
 
-    SetRadius(0.5f);
+    SetRadius(kRadius_);
     SetCollisionAttribute(kCollisionEnemyBomb);
-    //// 弾は「PlayerとPlayerの弾」とだけ衝突したい
+    // 弾は「PlayerとPlayerの弾」とだけ衝突したい
     SetCollisionMask(kCollisionPlayer | kCollisionPlayerBullet| kCollisionFloor);
     ////全部と衝突したい時
     //SetCollisionMask(~kCollisionEnemyBullet);
@@ -42,14 +45,21 @@ void EnemyBomb::OnCollision(Collider* collider)
         return;
     }
 
-    if (collider->GetCollisionAttribute() == kCollisionPlayer || collider->GetCollisionAttribute() == kCollisionPlayerBullet) {
+    if (collider->GetCollisionAttribute() == kCollisionPlayerBullet) {
         //デバック用
+        OnCollisionCollider();
+    }
+
+
+    if (collider->GetCollisionAttribute() == kCollisionPlayer&&isExplosion_) {
+        //デバック用
+        isPlayerHit_ = true;
         OnCollisionCollider();
     }
 
     if (collider->GetCollisionAttribute() == kCollisionFloor) {
         //デバック用
-        OnCollisionCollider();
+        //OnCollisionCollider();
     }
 
 
@@ -65,9 +75,12 @@ void EnemyBomb::Update() {
     }
 
     if (lifeTimer_ <= 0.0f) {
-        isExplosion_ = true;
-        isActive_ = false;
-        return;
+        if (!isExplosion_) {
+            Sound::PlaySE(Sound::PICO);
+            isExplosion_ = true;
+            explosionFrame_ = 0;
+            lifeTimer_ = 0.0f;
+        }
     } else {
         lifeTimer_ -= 0.016f;
     }
@@ -78,7 +91,13 @@ void EnemyBomb::Update() {
     ColliderUpdate();
 
     if (isExplosion_) {
-        return;
+        explosionFrame_++;
+       
+        if (explosionFrame_ >= 3) {
+            isExplosion_ = false;
+            isActive_ = false;
+            return;
+        }
     }
 
     if (lifeTimer_ <= 3.8f) {

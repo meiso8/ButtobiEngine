@@ -56,15 +56,15 @@ GameScene::GameScene()
     floorBulletManager_ = std::make_unique<FloorBulletManager>();
     floorPlayerShotBulletManager_ = std::make_unique<FloorPlayerShotBulletManager>(floorGamePlayer_.get(), floorBulletManager_.get());
     floorPlayerStripTargetUI_ = std::make_unique<FloorPlayerStripTargetUI>(floorGamePlayer_.get());
-	floorActionManager_ = std::make_unique<FloorActionManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
-	floorGamePlayerAnimationManager_ = std::make_unique<FloorGamePlayerAnimationManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
-    
+    floorActionManager_ = std::make_unique<FloorActionManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
+    floorGamePlayerAnimationManager_ = std::make_unique<FloorGamePlayerAnimationManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
+
     enemy_ = std::make_unique<Enemy>();
     enemyBulletManager_ = std::make_unique<EnemyBulletManager>();
     enemyShotBulletManager_ = std::make_unique<EnemyShotBulletManager>(enemy_.get(), enemyBulletManager_.get());
 
     enemyBombManager_ = std::make_unique<EnemyBombManager>();
-    enemyShotBombManager_ = std::make_unique<EnemyShotBombManager>(enemy_.get(), enemyBombManager_.get(),floorGameFloorManager_.get());
+    enemyShotBombManager_ = std::make_unique<EnemyShotBombManager>(enemy_.get(), enemyBombManager_.get(), floorGameFloorManager_.get());
 
     uiManager_ = std::make_unique<UIManager>(*enemy_->GetHpsPtr(), *floorGamePlayer_->GetHpsPtr());
 
@@ -93,9 +93,9 @@ void GameScene::Initialize() {
     floorBulletManager_->Initialize();
     floorPlayerShotBulletManager_->Initialize();
     floorPlayerStripTargetUI_->Initialize();
-	floorActionManager_->Initialize();
-	playerFloorStripManager_->Initialize();
-  
+    floorActionManager_->Initialize();
+    playerFloorStripManager_->Initialize();
+
     enemy_->Init();
     enemy_->SetTarget(floorGamePlayer_->body_.worldTransform_.translate_);
     enemy_->SetPlayerPos(floorGamePlayer_->body_.worldTransform_.translate_);
@@ -117,11 +117,11 @@ void GameScene::Update() {
 
 
     if (/*enemy_->GetHpsPtr()->hp <= 0.0f||*/floorGamePlayer_->GetHpsPtr()->hp <= 0.0f) {
-       
+
 #ifdef _DEBUG
         Initialize();
 #endif
-       /* sceneChange_->SetState(SceneChange::kFadeIn, 30);*/
+        /* sceneChange_->SetState(SceneChange::kFadeIn, 30);*/
     }
 
     //仮に音声を鳴らす　全体のvolumeがあってオフセット分だけいじる
@@ -149,7 +149,7 @@ void GameScene::Draw() {
     floorGameFloorManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     floorBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     floorPlayerStripTargetUI_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
-	playerFloorStripManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    playerFloorStripManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     enemy_->Draw(*currentCamera_, kLightModeHalfL);
     enemyBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     enemyBombManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
@@ -201,14 +201,14 @@ void GameScene::UpdateGameObject()
 
     // オブジェクト同士の干渉
     floorStripManager_->Update();
-	playerFloorStripManager_->Update();
+    playerFloorStripManager_->Update();
     floorPlayerShotBulletManager_->Update();
     enemyShotBulletManager_->Update();
     enemyShotBombManager_->Update();
     floorPlayerStripTargetUI_->Update();
-	floorActionManager_->Update();
+    floorActionManager_->Update();
 
-	// アニメーション更新
+    // アニメーション更新
     floorGamePlayerAnimationManager_->Update();
 }
 
@@ -232,8 +232,8 @@ void GameScene::CheckAllCollision()
         if (bomb->isActive_) { collisionManager_->AddCollider(bomb.get()); }
     }
 
-
     collisionManager_->CheckAllCollisions();
+
 }
 
 GameScene::~GameScene()

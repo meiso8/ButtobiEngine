@@ -6,7 +6,7 @@
 class Model;
 class Camera;
 enum LightMode;
-
+class EnemyBomb;
 enum class PlayerAnimationState
 {
 	Idle,
@@ -55,6 +55,7 @@ private:
 	void HitAction();
 	void Flashing();
 	void SetBodyColor(const Vector4& color);
+	void HitUpdate();
 
 	Model* model_ = nullptr;
 	Damage damageStruct_;
