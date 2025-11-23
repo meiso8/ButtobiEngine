@@ -77,8 +77,9 @@ void FloorGameFloor::NormalFloorUpdate() {
 }
 
 void FloorGameFloor::StickyFloorUpdate() {
-
-    body_.SetColor({ 0.0f,0.0f,(autoSwapTimer_ / autoSwapDuration_),1.0f });
+    
+    float color = autoSwapTimer_ / autoSwapDuration_;
+    body_.SetColor({ color,color,color,1.0f });
 
     if (autoSwapTimer_ > 0.0f) {
         autoSwapTimer_ -= 0.016f;
