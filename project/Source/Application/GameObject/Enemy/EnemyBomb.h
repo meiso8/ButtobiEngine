@@ -1,0 +1,35 @@
+#pragma once
+#include"WorldTransform.h"
+#include"Object3d.h"
+#include <functional>
+#include <unordered_map>
+#include"Collider.h"
+
+class Model;
+class Camera;
+enum LightMode;
+class CubeMesh;
+
+class EnemyBomb :public Collider
+{
+public:
+    EnemyBomb();
+    ~EnemyBomb();
+    void OnCollision(Collider* collider)override;
+    Vector3 GetWorldPosition() const;
+    void Initialize();
+    void Update();
+    void Draw(Camera& camera, const LightMode& lightType);
+    void Shot(const Vector3& startPos, const Vector3& endPos, const float& size);
+    bool isActive_ = false;
+    Object3d body_;
+    float size_;
+    bool isExplosion_ = false;
+private:
+    Vector3 endPos_ = { 0.0f };
+    std::unique_ptr<CubeMesh>cubeMesh_ = nullptr;
+    Vector3 moveDir_;
+    float speed_;
+    float lifeTimer_;
+    float lifeDuration_;
+};
