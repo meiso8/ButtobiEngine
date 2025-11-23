@@ -208,7 +208,7 @@ void DebugUI::CheckJsonFile()
 void DebugUI::CheckDamageStruct(Damage& damage, const char* label)
 {
 #ifdef USE_IMGUI
-    ImGui::Begin("Damage");
+
 
     if (ImGui::TreeNode(label)) {
         ImGui::SliderFloat("cannotControlTime", &damage.cannotControlTime, 0.0f, 10.0f);
@@ -221,7 +221,6 @@ void DebugUI::CheckDamageStruct(Damage& damage, const char* label)
         ImGui::TreePop();
     }
 
-    ImGui::End();
 #endif
 }
 

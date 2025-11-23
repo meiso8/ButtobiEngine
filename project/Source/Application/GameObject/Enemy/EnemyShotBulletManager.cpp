@@ -23,7 +23,7 @@ void EnemyShotBulletManager::Update() {
 		enemy_->isShot_ = false;
 		// playerに向かって投げる
 		Vector3 shotDirection = enemy_->GetToTarget();
-		Vector3 shotPosition = enemy_->bodyPos_.worldTransform_.translate_ + shotDirection * 0.5f;
+		Vector3 shotPosition = enemy_->GetWorldPosition() + shotDirection * 0.5f;
 		bulletManager_->ShotBullet(shotPosition, shotDirection, shotSpeed_, shotSize_);
 	}
 }

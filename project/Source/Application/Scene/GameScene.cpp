@@ -69,6 +69,7 @@ GameScene::GameScene()
     particleEmitter_ = std::make_unique<ParticleEmitter>();
 
     particleEmitter_->SetName("white");
+    particleEmitter_->emitter_.transform.Parent(enemy_->bodyPos_.worldTransform_);
 #pragma endregion
 }
 
@@ -108,13 +109,12 @@ void GameScene::Initialize() {
 void GameScene::Update() {
 
 
-    if (enemy_->GetHpsPtr()->hp <= 0.0f|| floorGamePlayer_->GetHpsPtr()->hp <= 0.0f) {
+
+    if (/*enemy_->GetHpsPtr()->hp <= 0.0f||*/floorGamePlayer_->GetHpsPtr()->hp <= 0.0f) {
        
 #ifdef _DEBUG
         Initialize();
 #endif
-
-
        /* sceneChange_->SetState(SceneChange::kFadeIn, 30);*/
     }
 
