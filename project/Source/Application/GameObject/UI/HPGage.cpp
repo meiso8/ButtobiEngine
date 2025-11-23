@@ -34,7 +34,6 @@ void HPGage::Initialize()
 
 void HPGage::Update()
 {
-
     if (hps_->hp < preHP_) {
         preHP_ = hps_->hp;
         timer_ = 0.0f;

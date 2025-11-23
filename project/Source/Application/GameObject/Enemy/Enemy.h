@@ -49,6 +49,7 @@ private:
         FLOORCHANGEATTACK,
         SHOCKWAVEATTACK,
 
+        LERP_SQUARE_POS,
         LERP_ROUND_POS,
         KNOCKBACK,
         ROUND,
@@ -75,7 +76,7 @@ private:
     float poyoAnimTimer_ = 0.0f;
     const float kPoyoAnimeTime_ = 0.25f;
     //弾のクールタイム
-    float fireBallCoolTime_ = 0.0f;
+    float fireBallCoolTimer_ = 0.0f;
 
     float endRotateY_ = 0.0f;
     float startRotateY_ = 0.0f;
@@ -107,6 +108,7 @@ private:
     void LerpRoundPos();
     // 
     void SquareMove();
+    void LerpSquarePos();
     void RandomWalk();
 
     //ファイアボール

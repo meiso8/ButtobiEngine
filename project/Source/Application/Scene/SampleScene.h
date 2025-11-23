@@ -9,7 +9,7 @@
 #pragma region//ゲームオブジェクト
 
 #include"World.h"
-#include"Field.h"
+//#include"Field.h"
 #pragma endregion
 
 class Sprite;
@@ -45,7 +45,7 @@ public:
 
 #pragma region//ゲームオブジェクト
     std::unique_ptr<World>world_ = nullptr;
-    std::unique_ptr<Field>filed_ = nullptr;
+    //std::unique_ptr<Field>filed_ = nullptr;
 #pragma endregion
 
     std::array< std::unique_ptr < Object3d>, 2> object3ds_;

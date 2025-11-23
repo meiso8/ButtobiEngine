@@ -108,6 +108,8 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 
+
+
     if (/*enemy_->GetHpsPtr()->hp <= 0.0f||*/floorGamePlayer_->GetHpsPtr()->hp <= 0.0f) {
        
 #ifdef _DEBUG
