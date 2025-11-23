@@ -349,6 +349,7 @@ void Enemy::InitState()
 
 void Enemy::SwitchState()
 {
+    Sound::PlaySE(Sound::FIRE_BALL);
 
     if (currentState_ == "First") {
         currentState_ = "Second";

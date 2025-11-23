@@ -57,13 +57,14 @@ void FloorGamePlayer::OnCollision(Collider* collider)
 
     if (collider->GetCollisionAttribute() == kCollisionEnemy ||
         collider->GetCollisionAttribute() == kCollisionEnemyBullet) {
+        Sound::PlaySE(Sound::CRACKER);
         //デバック用
         OnCollisionCollider();
         HitUpdate();
-
     }
 
     if (EnemyBomb::isPlayerHit_) {
+        Sound::PlaySE(Sound::CRACKER);
         //デバック用
         OnCollisionCollider();
         HitUpdate();
@@ -212,6 +213,7 @@ void FloorGamePlayer::Move() {
 
     // 移動
     if (isMove_) {
+        Sound::PlayOriginSE(Sound::FOOT_STEP);
         animationState_ = PlayerAnimationState::Walk;
         moveDir_ = Normalize(moveDir_);
         lookDir_ = moveDir_;
