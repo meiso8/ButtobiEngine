@@ -45,7 +45,7 @@ EnemyShockWave::~EnemyShockWave() {
 void EnemyShockWave::Initialize() {
     body_.Initialize();
 
-    speed_ = 0.01f;
+    speed_ = 0.02f;
     lifeTimer_ = 0.0f;
     lifeDuration_ = 6.0f;
     isActive_ = false;
@@ -88,7 +88,6 @@ void EnemyShockWave::Update() {
 
     if (lifeTimer_ <= 0.0f) {
         lifeTimer_ = 0.0f;
-
         isActive_ = false;
        
         return;

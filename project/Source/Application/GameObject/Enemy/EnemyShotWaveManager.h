@@ -1,5 +1,6 @@
 #pragma once
 #include "MatsumotoObj/GameSceneObj/Data/MapData.h"
+#include<unordered_map>
 
 #include"Vector3.h"
 typedef void(Pfunc)();
@@ -38,7 +39,7 @@ private:
 	void Back(int& randX, int& randY);
 	static void (EnemyShotWaveManager::* spFuncTable[])(int& randX, int& randY);
 	Direction direction_ = Direction::LEFT;
-
+	std::unordered_map<Direction, Vector3> enemyPoses_;
 	Vector3 startPos_ = { 0.0f };
 	Vector3 endPos_ = { 0.0f };
 	float offset_ = 4.0f;
