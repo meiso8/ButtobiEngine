@@ -69,7 +69,8 @@ void FloorBullet::OnCollision(Collider* collider)
             OnCollisionCollider();
         }
     }
-
+    //デバック用
+    OnCollisionCollider();
 
 }
 Vector3 FloorBullet::GetWorldPosition() const
