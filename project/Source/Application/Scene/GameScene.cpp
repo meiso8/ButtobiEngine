@@ -56,19 +56,23 @@ GameScene::GameScene()
     floorBulletManager_ = std::make_unique<FloorBulletManager>();
     floorPlayerShotBulletManager_ = std::make_unique<FloorPlayerShotBulletManager>(floorGamePlayer_.get(), floorBulletManager_.get());
     floorPlayerStripTargetUI_ = std::make_unique<FloorPlayerStripTargetUI>(floorGamePlayer_.get());
-	floorActionManager_ = std::make_unique<FloorActionManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
-	floorGamePlayerAnimationManager_ = std::make_unique<FloorGamePlayerAnimationManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
-    
+    floorActionManager_ = std::make_unique<FloorActionManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
+    floorGamePlayerAnimationManager_ = std::make_unique<FloorGamePlayerAnimationManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
+
     enemy_ = std::make_unique<Enemy>();
     enemyBulletManager_ = std::make_unique<EnemyBulletManager>();
     enemyShotBulletManager_ = std::make_unique<EnemyShotBulletManager>(enemy_.get(), enemyBulletManager_.get());
-
+    enemyBombManager_ = std::make_unique<EnemyBombManager>();
+    enemyShotBombManager_ = std::make_unique<EnemyShotBombManager>(enemy_.get(), enemyBombManager_.get(), floorGameFloorManager_.get());
+    enemyShockWaveManager_ = std::make_unique<EnemyShockWaveManager>();
+    enemyShotWaveManager_ = std::make_unique<EnemyShotWaveManager>(enemy_.get(), enemyShockWaveManager_.get(), floorGameFloorManager_.get());
 
     uiManager_ = std::make_unique<UIManager>(*enemy_->GetHpsPtr(), *floorGamePlayer_->GetHpsPtr());
 
     particleEmitter_ = std::make_unique<ParticleEmitter>();
 
     particleEmitter_->SetName("white");
+    particleEmitter_->emitter_.transform.Parent(enemy_->bodyPos_.worldTransform_);
 #pragma endregion
 }
 
@@ -90,13 +94,20 @@ void GameScene::Initialize() {
     floorBulletManager_->Initialize();
     floorPlayerShotBulletManager_->Initialize();
     floorPlayerStripTargetUI_->Initialize();
-	floorActionManager_->Initialize();
-	playerFloorStripManager_->Initialize();
-  
+    floorActionManager_->Initialize();
+    playerFloorStripManager_->Initialize();
+
     enemy_->Init();
     enemy_->SetTarget(floorGamePlayer_->body_.worldTransform_.translate_);
+    enemy_->SetPlayerPos(floorGamePlayer_->body_.worldTransform_.translate_);
     enemyBulletManager_->Initialize();
     enemyShotBulletManager_->Initialize();
+    enemyBombManager_->Initialize();
+    enemyShotBombManager_->Initialize();
+    enemyShockWaveManager_->Initialize();
+    enemyShotWaveManager_->Initialize();
+
+
 #pragma endregion
     collisionManager_->ClearColliders();
 
@@ -108,14 +119,13 @@ void GameScene::Initialize() {
 void GameScene::Update() {
 
 
-    if (enemy_->GetHpsPtr()->hp <= 0.0f|| floorGamePlayer_->GetHpsPtr()->hp <= 0.0f) {
-       
+
+    if (/*enemy_->GetHpsPtr()->hp <= 0.0f||*/floorGamePlayer_->GetHpsPtr()->hp <= 0.0f) {
+
 #ifdef _DEBUG
         Initialize();
 #endif
-
-
-       /* sceneChange_->SetState(SceneChange::kFadeIn, 30);*/
+        /* sceneChange_->SetState(SceneChange::kFadeIn, 30);*/
     }
 
     //仮に音声を鳴らす　全体のvolumeがあってオフセット分だけいじる
@@ -145,9 +155,12 @@ void GameScene::Draw() {
     floorGameFloorManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     floorBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     floorPlayerStripTargetUI_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
-	playerFloorStripManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    playerFloorStripManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     enemy_->Draw(*currentCamera_, kLightModeHalfL);
     enemyBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    enemyBombManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    enemyShockWaveManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+
 #pragma endregion
 
     particleEmitter_->Draw();
@@ -190,16 +203,20 @@ void GameScene::UpdateGameObject()
     floorBulletManager_->Update();
     enemy_->Update();
     enemyBulletManager_->Update();
+    enemyBombManager_->Update();
+    enemyShockWaveManager_->Update();
 
     // オブジェクト同士の干渉
     floorStripManager_->Update();
-	playerFloorStripManager_->Update();
+    playerFloorStripManager_->Update();
     floorPlayerShotBulletManager_->Update();
     enemyShotBulletManager_->Update();
+    enemyShotBombManager_->Update();
+    enemyShotWaveManager_->Update();
     floorPlayerStripTargetUI_->Update();
-	floorActionManager_->Update();
+    floorActionManager_->Update();
 
-	// アニメーション更新
+    // アニメーション更新
     floorGamePlayerAnimationManager_->Update();
 }
 
@@ -219,7 +236,16 @@ void GameScene::CheckAllCollision()
         if (bullet->isActive_) { collisionManager_->AddCollider(bullet.get()); }
     }
 
+    for (auto& bomb : enemyBombManager_->GetBombs()) {
+        if (bomb->isActive_) { collisionManager_->AddCollider(bomb.get()); }
+    }
+
+    for (auto& wave : enemyShockWaveManager_->GetWaves()) {
+        if (wave->isActive_) { collisionManager_->AddCollider(wave.get()); }
+    }
+
     collisionManager_->CheckAllCollisions();
+
 }
 
 GameScene::~GameScene()

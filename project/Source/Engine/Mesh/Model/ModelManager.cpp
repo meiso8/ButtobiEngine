@@ -25,11 +25,12 @@ void ModelManager::LoadAllModel()
     LoadModel("Resource/Models/Floor", "Floor.obj", FLOOR);
     LoadModel("Resource/Models/MeltFloor", "MeltFloor.obj", MELT_FLOOR);
 
-    LoadModel("Resource/Models/Player", "PlayerArmL.obj", PLAYER_ARM_L);
-    LoadModel("Resource/Models/Player", "PlayerArmR.obj", PLAYER_ARM_R);
-    LoadModel("Resource/Models/Player", "PlayerBody.obj", PLAYER_BODY);
-    LoadModel("Resource/Models/Player", "PlayerLegL.obj", PLAYER_LEG_L);
-    LoadModel("Resource/Models/Player", "PlayerLegR.obj", PLAYER_LEG_R);
+    LoadModel("Resource/Models/Player", "Head.obj", PLAYER_HEAD);
+    LoadModel("Resource/Models/Player", "Hand_L.obj", PLAYER_ARM_L);
+    LoadModel("Resource/Models/Player", "Hand_R.obj", PLAYER_ARM_R);
+    LoadModel("Resource/Models/Player", "Body.obj", PLAYER_BODY);
+    LoadModel("Resource/Models/Player", "Leg_L.obj", PLAYER_LEG_L);
+    LoadModel("Resource/Models/Player", "Leg_R.obj", PLAYER_LEG_R);
     LoadModel("Resource/Models/Player", "PlayerModel.obj", PLAYER_MODEL);
 
 }

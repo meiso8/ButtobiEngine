@@ -6,7 +6,7 @@
 class Model;
 class Camera;
 enum LightMode;
-
+class EnemyBomb;
 enum class PlayerAnimationState
 {
 	Idle,
@@ -38,6 +38,7 @@ public:
 	bool isOnStickyFloor_;
 	bool isOnStripedFloor_;
 	Object3d body_;
+	Object3d headObject_;
 	Object3d rightArmObject_;
 	Object3d leftArmObject_;
 	Object3d rightLegObject_;
@@ -55,12 +56,16 @@ private:
 	void HitAction();
 	void Flashing();
 	void SetBodyColor(const Vector4& color);
+	void HitUpdate();
 
+	float kRadius_ = 0.4f;
 	Model* model_ = nullptr;
 	Damage damageStruct_;
 	float moveAcceleration_;
 
 	float moveSpeed_;
+	const float kMinMoveSpeed_ = 0.05f;
+	const float kMaxMoveSpeed_ = 0.2f;
 	Vector3 moveDir_;
 	Vector3 moveLimitMax_;
 	Vector3 moveLimitMin_;

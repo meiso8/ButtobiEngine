@@ -3,10 +3,31 @@
 Collider::Collider()
 {
 #ifdef _DEBUG
+    object3d_.Create();
+
     sphereMesh_ = std::make_unique<SphereMesh>();
     sphereMesh_->Create(Texture::WHITE_1X1);
-    object3d_.Create();
     object3d_.SetMesh(sphereMesh_.get());
+
+    cubeMesh_ = std::make_unique<CubeMesh>();
+    cubeMesh_->Create(Texture::WHITE_1X1);
+
+#endif // _DEBUG
+}
+
+void Collider::SetType(const ColliderType& type)
+{
+
+    type_ = type;
+
+#ifdef _DEBUG
+
+    if (type == kSphere) {
+        object3d_.SetMesh(sphereMesh_.get());
+    } else if (type == kAABB) {
+        object3d_.SetMesh(cubeMesh_.get());
+    }
+
 #endif // _DEBUG
 }
 

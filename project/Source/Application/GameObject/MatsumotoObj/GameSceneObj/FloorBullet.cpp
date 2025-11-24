@@ -65,6 +65,8 @@ void FloorBullet::OnCollision(Collider* collider)
     if (collider->GetCollisionAttribute() == kCollisionEnemy || collider->GetCollisionAttribute() == kCollisionEnemyBullet) {
         if (!isHit_) {
             isHit_ = true;
+            //デバック用
+            OnCollisionCollider();
         }
     }
     //デバック用
@@ -101,8 +103,6 @@ void FloorBullet::Update() {
 
 void FloorBullet::Draw(Camera& camera, const LightMode& lightType) {
   
-    ColliderDraw(camera);
-
     if (!isActive_) {
         return;
     }
@@ -115,7 +115,7 @@ void FloorBullet::Draw(Camera& camera, const LightMode& lightType) {
 
     body_.SetLightMode(lightType);
     body_.Draw(camera, kBlendModeNormal);
-
+    ColliderDraw(camera);
 
 }
 

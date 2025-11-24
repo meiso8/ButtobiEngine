@@ -10,25 +10,29 @@ class Camera;
 enum LightMode;
 class CubeMesh;
 
-class EnemyBullet :public Collider
+class EnemyBomb :public Collider
 {
 public:
-    EnemyBullet();
-    ~EnemyBullet();
+    EnemyBomb();
+    ~EnemyBomb();
     void OnCollision(Collider* collider)override;
     Vector3 GetWorldPosition() const;
     void Initialize();
     void Update();
     void Draw(Camera& camera, const LightMode& lightType);
-    void Shot(const Vector3& position, const Vector3& direction, const float& speed, const float& size);
+    void Shot(const Vector3& startPos, const Vector3& endPos, const float& size);
     bool isActive_ = false;
     Object3d body_;
     float size_;
+    bool isExplosion_ = false;
+    static bool isPlayerHit_;
 private:
-    void InitFlagAndPosAndTimer();
+    int explosionFrame_ = 0;
+    float kRadius_ = {1.5f};
+    Vector3 endPos_ = { 0.0f };
     std::unique_ptr<CubeMesh>cubeMesh_ = nullptr;
     Vector3 moveDir_;
-    float moveSpeed_;
+    float speed_;
     float lifeTimer_;
     float lifeDuration_;
 };

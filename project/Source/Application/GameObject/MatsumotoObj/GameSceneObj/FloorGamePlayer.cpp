@@ -10,35 +10,41 @@
 #include"JsonFile.h"
 #include "MatsumotoObj/MY_Utility.h"
 #include"UI/HPIcon.h"
+#include"Enemy/EnemyBomb.h"
 
 FloorGamePlayer::FloorGamePlayer() {
     body_.Create();
+    headObject_.Create();
     rightArmObject_.Create();
     leftArmObject_.Create();
     rightLegObject_.Create();
     leftLegObject_.Create();
 
     body_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_BODY));
+    headObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_HEAD));
     rightArmObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_ARM_R));
     leftArmObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_ARM_L));
     rightLegObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_LEG_R));
     leftLegObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_LEG_L));
 
+
+    headObject_.worldTransform_.Parent(body_.worldTransform_);
     rightArmObject_.worldTransform_.Parent(body_.worldTransform_);
     leftArmObject_.worldTransform_.Parent(body_.worldTransform_);
     rightLegObject_.worldTransform_.Parent(body_.worldTransform_);
     leftLegObject_.worldTransform_.Parent(body_.worldTransform_);
 
+    headObject_.worldTransform_.translate_ = { 0.0f,0.5f,0.0f };
     rightArmObject_.worldTransform_.translate_ = { 0.5f,0.0f,0.0f };
     leftArmObject_.worldTransform_.translate_ = { -0.5f,0.0f,0.0f };
     rightLegObject_.worldTransform_.translate_ = { 0.3f,-0.5f,-0.3f };
     leftLegObject_.worldTransform_.translate_ = { -0.3f,-0.5f,-0.3f };
 
-    SetRadius(0.5f);
+    SetRadius(kRadius_);
 
     SetCollisionAttribute(kCollisionPlayer);
     //敵のみと衝突
-    SetCollisionMask(kCollisionEnemy| kCollisionEnemyBullet);
+    SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet | kCollisionEnemyBomb| kCollisionEnemyWave);
 }
 
 FloorGamePlayer::~FloorGamePlayer() {
@@ -49,32 +55,30 @@ FloorGamePlayer::~FloorGamePlayer() {
 void FloorGamePlayer::OnCollision(Collider* collider)
 {
 
-    if (collider->GetCollisionAttribute() == kCollisionEnemy|| collider->GetCollisionAttribute() == kCollisionEnemyBullet) {
-
-
+    if (collider->GetCollisionAttribute() == kCollisionEnemy ||
+        collider->GetCollisionAttribute() == kCollisionEnemyBullet|| collider->GetCollisionAttribute() == kCollisionEnemyWave) {
 
         //デバック用
         OnCollisionCollider();
-
-        if (damageStruct_.isHit) { return; }
-
-        damageStruct_.isHit = true;
-
-        damageStruct_.flashTimer = damageStruct_.invincibilityTime;
-        //hpを減らす
-        if (damageStruct_.hps.hp > 0) {
-            damageStruct_.hps.hp -= damageStruct_.hps.hpDecrease;
-        }
-
+        HitUpdate();
     }
+
+    if (EnemyBomb::isPlayerHit_) {
+        //デバック用
+        OnCollisionCollider();
+        HitUpdate();
+        EnemyBomb::isPlayerHit_ = false;
+    }
+
 }
+
 
 void FloorGamePlayer::Initialize() {
 
     Json json = JsonFile::GetJsonFiles("player");
     body_.Initialize();
     body_.worldTransform_.translate_.y = 0.5f;
-    Vector4 color = { 1.0f,1.0f,1.0f,1.0f }; 
+    Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
     SetBodyColor(color);
 
 
@@ -101,13 +105,13 @@ void FloorGamePlayer::Initialize() {
     lookDir_ = moveDir_;
     lookSpeed_ = 0.5f;
 
-	// 床剥がし
-	isReqestStript_ = false;
-	isStriptting_ = false;
-	striptTimer_ = 0.0f;
-	striptDuration_ = 0.3f;
-	isOnStripedFloor_ = false;
-	strippedFloorMap_.clear();
+    // 床剥がし
+    isReqestStript_ = false;
+    isStriptting_ = false;
+    striptTimer_ = 0.0f;
+    striptDuration_ = 0.3f;
+    isOnStripedFloor_ = false;
+    strippedFloorMap_.clear();
 
     // 床投げ
     isReqestShot_ = false;
@@ -130,6 +134,7 @@ void FloorGamePlayer::Update() {
 
     // ワールドトランスフォーム更新
     body_.Update();
+    headObject_.Update();
     rightArmObject_.Update();
     leftArmObject_.Update();
     rightLegObject_.Update();
@@ -156,12 +161,14 @@ void FloorGamePlayer::Update() {
 void FloorGamePlayer::Draw(Camera& camera, const LightMode& lightType) {
 
     body_.SetLightMode(lightType);
+    headObject_.SetLightMode(lightType);
     rightArmObject_.SetLightMode(lightType);
     leftArmObject_.SetLightMode(lightType);
     rightLegObject_.SetLightMode(lightType);
     leftLegObject_.SetLightMode(lightType);
 
     body_.Draw(camera, kBlendModeNormal);
+    headObject_.Draw(camera, kBlendModeNormal);
     rightArmObject_.Draw(camera, kBlendModeNormal);
     leftArmObject_.Draw(camera, kBlendModeNormal);
     rightLegObject_.Draw(camera, kBlendModeNormal);
@@ -205,17 +212,24 @@ void FloorGamePlayer::Move() {
 
     // 移動
     if (isMove_) {
+        Sound::PlayOriginSE(Sound::FOOT_STEP);
         animationState_ = PlayerAnimationState::Walk;
         moveDir_ = Normalize(moveDir_);
         lookDir_ = moveDir_;
+
+        moveSpeed_ += moveAcceleration_;
+
+        moveSpeed_ = std::clamp(moveSpeed_, kMinMoveSpeed_, kMaxMoveSpeed_);
         //べとべと床にいるときは移動速度を落とす
         if (isOnStickyFloor_) {
+          
             body_.worldTransform_.translate_ += moveDir_ * moveSpeed_ * stickyFloorSlowRate_;
         } else {
             body_.worldTransform_.translate_ += moveDir_ * moveSpeed_;
         }
     } else if (animationState_ != PlayerAnimationState::Stript && animationState_ != PlayerAnimationState::Shot) {
         animationState_ = PlayerAnimationState::Idle;
+        moveSpeed_ = kMinMoveSpeed_;
     }
 
     // 移動制限
@@ -281,7 +295,7 @@ void FloorGamePlayer::HitAction()
         if (damageStruct_.flashTimer <= 0.0f) {
             damageStruct_.flashTimer = 0.0f;
             damageStruct_.isHit = false;
-  
+
         }
 
         Flashing();
@@ -300,7 +314,7 @@ void FloorGamePlayer::Flashing()
 
     Vector4 color;
     if (static_cast<int>(t) % 2 == 0) {
-       color = { 1.0f, 0.0f, 0.0f, 1.0f };
+        color = { 1.0f, 0.0f, 0.0f, 1.0f };
     } else {
         color = { 1.0f, 0.0f, 0.0f, 0.5f };
     }
@@ -309,11 +323,27 @@ void FloorGamePlayer::Flashing()
 
 }
 
-void FloorGamePlayer::SetBodyColor(const Vector4& color )
+void FloorGamePlayer::SetBodyColor(const Vector4& color)
 {
     body_.SetColor(color);
+    headObject_.SetColor(color);
     rightArmObject_.SetColor(color);
     leftArmObject_.SetColor(color);
     rightLegObject_.SetColor(color);
     leftLegObject_.SetColor(color);
+}
+
+void FloorGamePlayer::HitUpdate()
+{
+    if (damageStruct_.isHit) { return; }
+
+    damageStruct_.isHit = true;
+    Sound::PlaySE(Sound::CRACKER);
+
+    damageStruct_.flashTimer = damageStruct_.invincibilityTime;
+    //hpを減らす
+    if (damageStruct_.hps.hp > 0) {
+        damageStruct_.hps.hp -= damageStruct_.hps.hpDecrease;
+    }
+
 }
