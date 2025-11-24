@@ -58,11 +58,14 @@ private:
 	void SetBodyColor(const Vector4& color);
 	void HitUpdate();
 
+	float kRadius_ = 0.4f;
 	Model* model_ = nullptr;
 	Damage damageStruct_;
 	float moveAcceleration_;
 
 	float moveSpeed_;
+	const float kMinMoveSpeed_ = 0.05f;
+	const float kMaxMoveSpeed_ = 0.2f;
 	Vector3 moveDir_;
 	Vector3 moveLimitMax_;
 	Vector3 moveLimitMin_;

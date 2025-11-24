@@ -40,7 +40,7 @@ FloorGamePlayer::FloorGamePlayer() {
     rightLegObject_.worldTransform_.translate_ = { 0.3f,-0.5f,-0.3f };
     leftLegObject_.worldTransform_.translate_ = { -0.3f,-0.5f,-0.3f };
 
-    SetRadius(0.5f);
+    SetRadius(kRadius_);
 
     SetCollisionAttribute(kCollisionPlayer);
     //敵のみと衝突
@@ -216,14 +216,20 @@ void FloorGamePlayer::Move() {
         animationState_ = PlayerAnimationState::Walk;
         moveDir_ = Normalize(moveDir_);
         lookDir_ = moveDir_;
+
+        moveSpeed_ += moveAcceleration_;
+
+        moveSpeed_ = std::clamp(moveSpeed_, kMinMoveSpeed_, kMaxMoveSpeed_);
         //べとべと床にいるときは移動速度を落とす
         if (isOnStickyFloor_) {
+          
             body_.worldTransform_.translate_ += moveDir_ * moveSpeed_ * stickyFloorSlowRate_;
         } else {
             body_.worldTransform_.translate_ += moveDir_ * moveSpeed_;
         }
     } else if (animationState_ != PlayerAnimationState::Stript && animationState_ != PlayerAnimationState::Shot) {
         animationState_ = PlayerAnimationState::Idle;
+        moveSpeed_ = kMinMoveSpeed_;
     }
 
     // 移動制限
