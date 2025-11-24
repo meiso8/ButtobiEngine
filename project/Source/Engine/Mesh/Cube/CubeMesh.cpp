@@ -265,8 +265,8 @@ void CubeMesh::SetMinMax(const AABB& aabb) {
     vertexData[3] = { aabb.min.x,aabb.min.y,aabb.max.z };  //底面奥左
     vertexData[4] = { aabb.max.x,aabb.max.y,aabb.min.z };  //上面手前右
     vertexData[5] = { aabb.min.x,aabb.max.y,aabb.min.z };     //上面手前左
-    vertexData[6] = { aabb.max.x,aabb.min.y,aabb.min.y };    //底面手前右
-    vertexData[7] = { aabb.min.x,aabb.min.y,aabb.min.y };        //底面手前左
+    vertexData[6] = { aabb.max.x,aabb.min.y,aabb.min.z };    //底面手前右
+    vertexData[7] = { aabb.min.x,aabb.min.y,aabb.min.z };        //底面手前左
 
     SetVertex(vertexData);
 }
