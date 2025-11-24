@@ -84,12 +84,22 @@ void Enemy::Update()
     //フェーズごとに呼び出す関数をカエル
     SwitchPhase();
 
+
     if (Input::IsTriggerKey(DIK_Z)) {
         SetPhase(FLOORCHANGEATTACK);
     }
 
     if (Input::IsTriggerKey(DIK_X)) {
         SetPhase(SHOCKWAVEATTACK);
+    }
+
+
+    if (Input::IsTriggerKey(DIK_C)) {
+        SetPhase(TACKLE);
+    }
+
+    if (Input::IsTriggerKey(DIK_V)) {
+        SetPhase(FIREBALL);
     }
 
     HitAnimation();
@@ -164,14 +174,17 @@ void Enemy::Tackle()
 
         PoyoPoyo(3.0f);
 
-    } else if (phaseTimer_ < 3.7f) {
+    } else if (phaseTimer_ <=3.7f) {
         float localTimer = (phaseTimer_ - 3.0f) / 0.7f;
         LerpScale();
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(startPos_, endPos_, localTimer);
-
-    } else if (phaseTimer_ < 4.7f) {
-        float localTimer = (phaseTimer_ - 3.7f) / 1.0f;
+    } else if (phaseTimer_ <= 4.7f){
+        float localTimer = (phaseTimer_ - 3.7f) *0.5f;
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(endPos_, startPos_, localTimer);
+    } else if(phaseTimer_ <= 5.7f){
+        bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(bodyPos_.worldTransform_.translate_, startPos_, 0.5f);
+    } else {
+        phaseTimer_ = phaseTime_;
     }
 
 }
@@ -193,7 +206,6 @@ void Enemy::Knockback()
             bodyPos_.worldTransform_.rotate_.z = sinf(theta);
             bodyPos_.worldTransform_.rotate_.x = cosf(theta);
         } else {
-
             bodyPos_.worldTransform_.rotate_.z = Lerp(bodyPos_.worldTransform_.rotate_.z, 0.0f, 0.5f);
             bodyPos_.worldTransform_.rotate_.x = Lerp(bodyPos_.worldTransform_.rotate_.x, 0.0f, 0.5f);
             bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, startPos_, 0.05f);
@@ -201,7 +213,8 @@ void Enemy::Knockback()
     }
 
     if (phaseTimer_ > 2.0f) {
-        SetPhase(LERP_ROUND_POS);
+        phaseTimer_ = phaseTime_;
+      /*  SetPhase(LERP_ROUND_POS);*/
     }
 
 
@@ -266,7 +279,10 @@ void Enemy::LerpPos()
 void Enemy::RandomMovePhase()
 {
 
-    int randNum = rand() % 4;
+    //int randNum = rand() % 4;
+
+    int randNum = rand() % 2;
+
     switch (randNum)
     {
     case 0:
@@ -277,6 +293,7 @@ void Enemy::RandomMovePhase()
         break;
     }
 }
+
 void Enemy::RandomAttackPhaseFirst()
 {
     int randNum = rand() % 2;
@@ -481,12 +498,15 @@ void Enemy::FloorChangeAttack()
 }
 void Enemy::ShockWaveAttack()
 {
-
-    isWaveShot_ = true;
-
-    //bodyPos_.worldTransform_.rotate_.y += std::numbers::pi_v<float> *InverseFPS;
-  /*  bodyPos_.SetColor({ 0.0f,1.0f,0.0f,1.0f });*/
-
+    if (phaseTimer_ <= 1.0f) {
+        LookTarget(*playerPos_);
+        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, *target_, 0.05f);
+    } else if(phaseTimer_ <= 2.0f){
+        if (!isWaveShot_) {
+            isWaveShot_ = true;
+        }
+     
+    }
 }
 void Enemy::Exit()
 {
