@@ -14,8 +14,8 @@ bool EnemyShockWave::isPlayerHit_ = false;
 
 EnemyShockWave::EnemyShockWave() {
 
-    localAABBs_[kHorizontal] = {.min = {-2.0f,-0.5f,-0.5f},.max = {2.0f,0.5f,0.5f}};
-    localAABBs_[kVertical] = { .min = {-0.5f,-2.0f,-0.5f},.max = {0.5f,2.0f,0.5f} };
+    localAABBs_[kHorizontal] = {.min = {-2.0f,-0.5f,-aabbWidth_},.max = {2.0f,0.5f,aabbWidth_}};
+    localAABBs_[kVertical] = { .min = {-aabbWidth_,-0.5f,-2.0f},.max = {aabbWidth_,0.5f,2.0f} };
 
     body_.Create();
     cubeMesh_ = std::make_unique<CubeMesh>();
@@ -48,8 +48,6 @@ void EnemyShockWave::Initialize() {
     speed_ = 0.01f;
     lifeTimer_ = 0.0f;
     lifeDuration_ = 6.0f;
-    localAABBs_[kHorizontal] = { .min = {-2.0f,-0.5f,-0.5f},.max = {2.0f,0.5f,0.5f} };
-    localAABBs_[kVertical] = { .min = {-0.5f,-0.5f,-2.0f},.max = {0.5f,0.5f,2.0f} };
     isActive_ = false;
 }
 void EnemyShockWave::OnCollision(Collider* collider)

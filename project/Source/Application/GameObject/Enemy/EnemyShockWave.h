@@ -32,6 +32,7 @@ public:
     static bool isPlayerHit_;
 private:
     std::array<AABB, kMaxAABB> localAABBs_;
+    const float aabbWidth_ = 0.4f;
     Vector3 endPos_ = { 0.0f };
     std::unique_ptr<CubeMesh>cubeMesh_ = nullptr;
     Vector3 moveDir_;
