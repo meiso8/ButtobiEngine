@@ -88,6 +88,9 @@ void Enemy::Update()
         SetPhase(FLOORCHANGEATTACK);
     }
 
+    if (Input::IsTriggerKey(DIK_X)) {
+        SetPhase(SHOCKWAVEATTACK);
+    }
 
     HitAnimation();
     model_->GetWaveData(0).time += InverseFPS * 4.0f;
@@ -478,6 +481,9 @@ void Enemy::FloorChangeAttack()
 }
 void Enemy::ShockWaveAttack()
 {
+
+    isWaveShot_ = true;
+
     //bodyPos_.worldTransform_.rotate_.y += std::numbers::pi_v<float> *InverseFPS;
   /*  bodyPos_.SetColor({ 0.0f,1.0f,0.0f,1.0f });*/
 

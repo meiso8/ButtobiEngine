@@ -44,7 +44,7 @@ FloorGamePlayer::FloorGamePlayer() {
 
     SetCollisionAttribute(kCollisionPlayer);
     //敵のみと衝突
-    SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet | kCollisionEnemyBomb);
+    SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet | kCollisionEnemyBomb| kCollisionEnemyWave);
 }
 
 FloorGamePlayer::~FloorGamePlayer() {
@@ -57,14 +57,13 @@ void FloorGamePlayer::OnCollision(Collider* collider)
 
     if (collider->GetCollisionAttribute() == kCollisionEnemy ||
         collider->GetCollisionAttribute() == kCollisionEnemyBullet) {
-        Sound::PlaySE(Sound::CRACKER);
+
         //デバック用
         OnCollisionCollider();
         HitUpdate();
     }
 
     if (EnemyBomb::isPlayerHit_) {
-        Sound::PlaySE(Sound::CRACKER);
         //デバック用
         OnCollisionCollider();
         HitUpdate();
@@ -333,6 +332,7 @@ void FloorGamePlayer::HitUpdate()
     if (damageStruct_.isHit) { return; }
 
     damageStruct_.isHit = true;
+    Sound::PlaySE(Sound::CRACKER);
 
     damageStruct_.flashTimer = damageStruct_.invincibilityTime;
     //hpを減らす

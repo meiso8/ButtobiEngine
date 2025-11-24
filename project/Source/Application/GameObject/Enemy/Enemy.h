@@ -34,6 +34,7 @@ public:
 
     bool isShot_ = false;
     bool isBombShot_ = false;
+    bool isWaveShot_ = false;
     //体の位置
     Object3d bodyPos_;
     HPs* GetHpsPtr() { return &damageStruct_.hps; }
@@ -45,7 +46,6 @@ private:
     Vector3* playerPos_ = nullptr;
     //キャラクターの共通でもつ状態
     Damage damageStruct_;
-
     Circle enemyRoundCircle_ = { {0.0f,0.0f,0.0f} ,7.0f };
 
     enum PHASE {

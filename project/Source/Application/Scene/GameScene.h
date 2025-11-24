@@ -23,6 +23,8 @@
 #include "Enemy/EnemyShotBulletManager.h"
 #include "Enemy/EnemyBombManager.h"
 #include "Enemy/EnemyShotBombManager.h"
+#include "Enemy/EnemyShockWaveManager.h"
+#include "Enemy/EnemyShotWaveManager.h"
 #include"UI/UIManager.h"
 #include"ParticleEmitter.h"
 #pragma endregion
@@ -61,6 +63,11 @@ private:
     std::unique_ptr<EnemyShotBulletManager>enemyShotBulletManager_ = nullptr;
     std::unique_ptr<EnemyBombManager>enemyBombManager_ = nullptr;
     std::unique_ptr<EnemyShotBombManager>enemyShotBombManager_ = nullptr;
+
+    std::unique_ptr<EnemyShockWaveManager>enemyShockWaveManager_ = nullptr;
+    std::unique_ptr<EnemyShotWaveManager>enemyShotWaveManager_ = nullptr;
+
+
 
     std::unique_ptr<UIManager>uiManager_ = nullptr;
     std::unique_ptr<ParticleEmitter>particleEmitter_ = nullptr;

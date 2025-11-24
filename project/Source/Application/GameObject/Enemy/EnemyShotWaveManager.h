@@ -1,0 +1,46 @@
+#pragma once
+#include "MatsumotoObj/GameSceneObj/Data/MapData.h"
+
+#include"Vector3.h"
+typedef void(Pfunc)();
+
+class Enemy;
+class EnemyShockWaveManager;
+class FloorGameFloorManager;
+class EnemyShotWaveManager
+{
+public:
+
+	enum Direction {
+		LEFT,
+		RIGHT,
+		BACK,
+	};
+
+	EnemyShotWaveManager() = delete;
+	EnemyShotWaveManager(Enemy* enemy, EnemyShockWaveManager* bombManager, FloorGameFloorManager* floorGameFloorManager);
+	void Initialize();
+	void Update();
+private:
+	Enemy* enemy_ = nullptr;
+	EnemyShockWaveManager* shockWaveManager_ = nullptr;
+	FloorGameFloorManager* floorGameFloorManager_ = nullptr;
+	float shotSpeed_ = 0.3f;
+	float shotSize_ = 0.5f;
+
+	bool IsOccupied(int x, int y) {
+		return used[x][y];
+	}
+	bool used[kMapWidth][kMapHeight] = {};
+
+	void Left(int& randX, int& randY);
+	void Right(int& randX, int& randY);
+	void Back(int& randX, int& randY);
+	static void (EnemyShotWaveManager::* spFuncTable[])(int& randX, int& randY);
+	Direction direction_ = Direction::LEFT;
+
+	Vector3 startPos_ = { 0.0f };
+	Vector3 endPos_ = { 0.0f };
+	float offset_ = 4.0f;
+};
+
