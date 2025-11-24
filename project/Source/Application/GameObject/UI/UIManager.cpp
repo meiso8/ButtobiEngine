@@ -20,6 +20,11 @@ UIManager::UIManager(HPs& enemyHp, HPs& playerHp)
     playerHpIcon_->SetHpPtr(&playerHp);
     playerHpIcon_->Setting({ 64.0f,64.0f }, { 64.0f,static_cast<float>(Window::GetClientHeight() - 96) });
 
+
+    pauseScreen_ = std::make_unique<PauseScreen>();
+
+
+
 }
 
 void UIManager::Initialize()
@@ -39,6 +44,8 @@ void UIManager::Update()
     }
 
     playerHpIcon_->Update();
+
+    pauseScreen_->Update();
 }
 
 void UIManager::Draw()
@@ -48,4 +55,6 @@ void UIManager::Draw()
     }
 
     playerHpIcon_->Draw();
+
+    pauseScreen_->Draw();
 }

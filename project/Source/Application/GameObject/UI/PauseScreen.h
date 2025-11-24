@@ -5,8 +5,9 @@
 class PauseScreen
 {
 public:
-    bool isPause_ = false;
+    static bool isPause_;
     float pauseTimer_ = 0.0f;
+    PauseScreen();
     void Update();
     void Draw();
     enum Layer {

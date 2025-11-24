@@ -39,7 +39,7 @@
 #include"Circle.h"
 
 #include"MyEngine.h"
-
+#include"UI/PauseScreen.h"
 GameScene::GameScene()
 {
     // 現在のカメラを設定
@@ -123,13 +123,15 @@ void GameScene::Update() {
 
     UpdateCamera();
 
-    UpdateGameObject();
-
-    CheckAllCollision();
+    if (!PauseScreen::isPause_) {
+        UpdateGameObject();
+        CheckAllCollision();
+        particleEmitter_->Update(*currentCamera_);
+    }
 
     uiManager_->Update();
 
-    particleEmitter_->Update(*currentCamera_);
+
 }
 
 void GameScene::Draw() {
