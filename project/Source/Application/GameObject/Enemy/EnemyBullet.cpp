@@ -26,6 +26,14 @@ EnemyBullet::EnemyBullet() {
 EnemyBullet::~EnemyBullet() {
 }
 
+
+void EnemyBullet::InitFlagAndPosAndTimer()
+{
+    lifeTimer_ = 0.0f;
+    body_.worldTransform_.translate_ = { 0.0f,-10.0f,0.0f };
+    isActive_ = false;
+}
+
 void EnemyBullet::Initialize() {
     body_.Initialize();
     moveDir_ = { 0.0f,0.0f,1.0f };
@@ -44,6 +52,7 @@ void EnemyBullet::OnCollision(Collider* collider)
 
     if (collider->GetCollisionAttribute() == kCollisionPlayer|| collider->GetCollisionAttribute() == kCollisionPlayerBullet) {
         //デバック用
+        InitFlagAndPosAndTimer();
         OnCollisionCollider();
     }
 
@@ -55,14 +64,12 @@ Vector3 EnemyBullet::GetWorldPosition() const
 }
 void EnemyBullet::Update() {
 
-
-
     if (!isActive_) {
         return;
     }
 
     if (lifeTimer_ <= 0.0f) {
-        isActive_ = false;
+        InitFlagAndPosAndTimer();
         return;
     } else {
         lifeTimer_ -= 0.016f;
@@ -77,8 +84,6 @@ void EnemyBullet::Update() {
 }
 
 void EnemyBullet::Draw(Camera& camera, const LightMode& lightType) {
-
-
 
     if (!isActive_) {
         return;

@@ -25,16 +25,6 @@ void EnemyBombManager::Update() {
     for (auto& bomb : bombs_) {
         bomb->Update();
     }
-
-    isBombReset_ = true;
-
-    for (auto& bomb : bombs_) {
-        if (!bomb->isActive_) {
-            isBombReset_ = false;
-            break;
-        }
-    }
-
 }
 
 void EnemyBombManager::Draw(Camera& camera, const LightMode& lightType) {
@@ -45,9 +35,11 @@ void EnemyBombManager::Draw(Camera& camera, const LightMode& lightType) {
 
 void EnemyBombManager::ShotBomb(const Vector3& startPos, const Vector3& endPos, const float& size) {
 
+    isBombReset_ = true;
     for (auto& bomb : bombs_) {
         if (!bomb->isActive_) {
             bomb->Shot(startPos, endPos, size);
+            isBombReset_ = false;
             break;
         }
     }

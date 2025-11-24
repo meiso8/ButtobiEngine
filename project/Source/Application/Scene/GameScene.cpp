@@ -62,9 +62,10 @@ GameScene::GameScene()
     enemy_ = std::make_unique<Enemy>();
     enemyBulletManager_ = std::make_unique<EnemyBulletManager>();
     enemyShotBulletManager_ = std::make_unique<EnemyShotBulletManager>(enemy_.get(), enemyBulletManager_.get());
-
     enemyBombManager_ = std::make_unique<EnemyBombManager>();
     enemyShotBombManager_ = std::make_unique<EnemyShotBombManager>(enemy_.get(), enemyBombManager_.get(), floorGameFloorManager_.get());
+    enemyShockWaveManager_ = std::make_unique<EnemyShockWaveManager>();
+    enemyShotWaveManager_ = std::make_unique<EnemyShotWaveManager>(enemy_.get(), enemyShockWaveManager_.get(), floorGameFloorManager_.get());
 
     uiManager_ = std::make_unique<UIManager>(*enemy_->GetHpsPtr(), *floorGamePlayer_->GetHpsPtr());
 
@@ -101,9 +102,12 @@ void GameScene::Initialize() {
     enemy_->SetPlayerPos(floorGamePlayer_->body_.worldTransform_.translate_);
     enemyBulletManager_->Initialize();
     enemyShotBulletManager_->Initialize();
-
     enemyBombManager_->Initialize();
     enemyShotBombManager_->Initialize();
+    enemyShockWaveManager_->Initialize();
+    enemyShotWaveManager_->Initialize();
+
+
 #pragma endregion
     collisionManager_->ClearColliders();
 
@@ -153,6 +157,7 @@ void GameScene::Draw() {
     enemy_->Draw(*currentCamera_, kLightModeHalfL);
     enemyBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     enemyBombManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    enemyShockWaveManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
 
 #pragma endregion
 
@@ -197,7 +202,7 @@ void GameScene::UpdateGameObject()
     enemy_->Update();
     enemyBulletManager_->Update();
     enemyBombManager_->Update();
-
+    enemyShockWaveManager_->Update();
 
     // オブジェクト同士の干渉
     floorStripManager_->Update();
@@ -205,6 +210,7 @@ void GameScene::UpdateGameObject()
     floorPlayerShotBulletManager_->Update();
     enemyShotBulletManager_->Update();
     enemyShotBombManager_->Update();
+    enemyShotWaveManager_->Update();
     floorPlayerStripTargetUI_->Update();
     floorActionManager_->Update();
 
@@ -230,6 +236,10 @@ void GameScene::CheckAllCollision()
 
     for (auto& bomb : enemyBombManager_->GetBombs()) {
         if (bomb->isActive_) { collisionManager_->AddCollider(bomb.get()); }
+    }
+
+    for (auto& wave : enemyShockWaveManager_->GetWaves()) {
+        if (wave->isActive_) { collisionManager_->AddCollider(wave.get()); }
     }
 
     collisionManager_->CheckAllCollisions();
