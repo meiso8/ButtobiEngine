@@ -42,13 +42,13 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     input = std::make_unique<Input>();
     //入力
     input->Initialize(*wc);
-
+    LogFile::Log("CreateInput");
     directXCommon = std::make_unique<DirectXCommon>();
     directXCommon->Initialize(*wc);
-
+    LogFile::Log("CreateDirectXCommon");
     srvManager = std::make_unique<SrvManager>();
     srvManager->Initialize();
-
+    LogFile::Log("CreateSrvManager");
 #ifdef USE_IMGUI
     //ImGuiの初期化。
     imGuiClass.Initialize(*wc, directXCommon->GetDevice().Get(), directXCommon->GetSwapChain(), directXCommon->GetSwapChainRtv());
@@ -57,7 +57,6 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
 
     pso = std::make_unique<PSO>();
     pso->CreateALLPSO();
-
     LogFile::Log("CreatePSO");
 
     //平行光源用のResourceを作成する
@@ -70,36 +69,47 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     directionalLightData->intensity = 1.0f;
     //書き込み終了！
     directionalLightResource->Unmap(0, nullptr);
+    LogFile::Log("CreateDirectionalLightResource");
 
     modelConfig_ = std::make_unique<ModelConfig>();
     modelConfig_->Initialize(PSO::rootSignature.get(), directionalLightResource.Get());
+    LogFile::Log("CreatemodelConfig");
 
     ////共通のスプライト
     SpriteCommon::Initialize();
+    LogFile::Log("InitializeSpriteCommon");
     //スプライト用カメラ
     SpriteCamera::Initialize(static_cast<float>(wc->GetClientWidth()), static_cast<float>(wc->GetClientHeight()));
+    LogFile::Log("InitializeSpriteCamera");
     //サウンド管理
     Sound::Initialize();
+    LogFile::Log("InitializeSound");
     //テクスチャ管理
     Texture::Initialize();
-
+    LogFile::Log("InitializeTexture");
     //テスクチャ読み込み
     Texture::LoadAllTexture();
+    LogFile::Log("LoadAllTexture");
     //音声の読み込み
     Sound::LoadAllSound();
+    LogFile::Log("LoadAllSound");
     //モデル読み込み
     ModelManager::LoadAllModel();
+    LogFile::Log("LoadAllModel");
     //JsonFileの読み込み
     JsonFile::LoadAllJsonFile();
+    LogFile::Log("LoadAllJsonFile");
 
 #ifdef _DEBUG
     //グリット描画
     DrawGrid::Create();
+    LogFile::Log("CreateDrawGrid");
 #endif
 
     particleManager_ = std::make_unique <ParticleManager>();
     particleManager_->Create();
     particleManager_->CreateAll();
+    LogFile::Log("CreateparticleManager");
     //ファイルへのログ出力
     LogFile::Log("LoopStart");
 
@@ -139,9 +149,9 @@ void MyEngine::Run()
 
     Initialize();
 
-// =============================================
-// ウィンドウのxボタンが押されるまでループ メインループ
-// =============================================
+    // =============================================
+    // ウィンドウのxボタンが押されるまでループ メインループ
+    // =============================================
     while (true) {
 
         //ループを抜ける
