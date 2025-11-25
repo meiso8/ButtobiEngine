@@ -8,13 +8,8 @@
 
 void Game::Initialize()
 {
-    // ==============================================//↓基本いじらない↓//============================================
     //エンジンの生成
-    myEngine = std::make_unique<MyEngine>();
-    myEngine->Create(L"LE2A_19_ヨシダ_トモカ", WIN_WIDTH, WIN_HEIGHT);
-    // ==============================================//↑基本いじらない↑//============================================
-    //画面の色
-    screenColor = { 0.75f,0.5f,0.5f,1.0f };
+    MyEngine::Create(L"LE2A_19_ヨシダ_トモカ", WIN_WIDTH, WIN_HEIGHT);
 
     // =============================================
     // シーンの生成
@@ -33,11 +28,13 @@ void Game::Initialize()
 void Game::Finalize()
 {
     // エンジンの終了
-    myEngine->Finalize();
+    MyEngine::Finalize();
 }
 
 void Game::Update()
 {
+    // エンジンの更新処理
+    MyEngine::Update();
 
     currentScene->SceneChangeUpdate();
 
@@ -52,23 +49,19 @@ void Game::Update()
         currentScene->Initialize();
     }
 
-    // エンジンの更新処理
-    myEngine->Update();
-
-
-
     // シーンの更新処理
     currentScene->Update();
+
 }
 
 void Game::Draw()
 {
     // エンジンの描画前処理
-    myEngine->PreCommandSet(screenColor);
+    MyEngine::PreCommandSet();
     // シーンの描画
     currentScene->Draw();
     // エンジンの描画後処理
-    myEngine->PostCommandSet();
+    MyEngine::PostCommandSet();
 }
 
 void Game::Debug()
@@ -76,17 +69,16 @@ void Game::Debug()
 
 #ifdef _DEBUG
     // デバック用
-    myEngine->Debug();
+    MyEngine::Debug();
 
 #ifdef USE_IMGUI
-    DebugUI::CheckColor(screenColor, "screenColor");
+
     for (const auto& [sceneName, scenePtr] : scenes) {
         if (scenePtr.get() == currentScene) {
             ImGui::Text("%s", sceneName.c_str());
             break;
         }
     }
-
 #endif // USE_IMGUI
 
     currentScene->Debug();

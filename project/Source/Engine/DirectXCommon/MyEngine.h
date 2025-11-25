@@ -24,40 +24,42 @@
 #pragma endregion
 
 class MyEngine {
-public:
-    MyEngine() = default;
-    MyEngine(MyEngine&) = delete;
-    MyEngine& operator=(MyEngine&) = delete;
-
-    void Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight);
-    void Update();
-    void Debug();
-    void PreCommandSet(Vector4& screenColor);
-    void PostCommandSet();
-    void Finalize();
-
-    static Window& GetWC() { return *wc; };
-    static PSO* GetPSO() { return pso.get(); }
-    static DirectionalLight* GetDirectionalLightData() { return directionalLightData; }
 private:
-
+    D3DResourceLeakChecker leakCheck;
     static std::unique_ptr<DirectXCommon> directXCommon;
 #ifdef USE_IMGUI
     ImGuiClass imGuiClass = {};
 #endif // USE_IMGUI
-
-
     static std::unique_ptr<LogFile> logFile;
     static std::unique_ptr<Window> wc;
+
     static std::unique_ptr<ModelConfig> modelConfig_;
-
-   static std::unique_ptr <Input> input;
-
+    static std::unique_ptr <Input> input;
     static Microsoft::WRL::ComPtr <ID3D12Resource> directionalLightResource;
     static DirectionalLight* directionalLightData;
 
     static std::unique_ptr<PSO> pso;
     static std::unique_ptr<SrvManager> srvManager;
     static std::unique_ptr<ParticleManager> particleManager_;
+    bool endRequest_ = false;
+protected:
+    void Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight);
+    void PreCommandSet(Vector4 screenColor = { 0.5f, 0.5f, 0.5f, 1.0f });
+    void PostCommandSet();
+
+    virtual void Initialize() = 0;
+    virtual void Draw() = 0;
+    virtual void Finalize();
+    virtual void Update();
+    virtual void Debug();
+    bool IsEndRequest() { return endRequest_; }
+public:
+    MyEngine() = default;
+    MyEngine(MyEngine&) = delete;
+    MyEngine& operator=(MyEngine&) = delete;
+    virtual ~MyEngine() = default;
+    void Run();
+    static DirectionalLight* GetDirectionalLightData() { return directionalLightData; }
+
 };
 

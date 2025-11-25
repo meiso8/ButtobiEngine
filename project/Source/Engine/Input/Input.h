@@ -7,7 +7,7 @@
 #include"Window.h"
 
 #include<memory>
-#define InverseFPS 1.0f/60.0f
+
 
 #include <Xinput.h>
 #pragma comment(lib, "xinput.lib")

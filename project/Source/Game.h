@@ -3,18 +3,15 @@
 #include<map>
 #include<unordered_map>
 #include"SceneManager.h"
-class Game
+class Game:public MyEngine
 {
 public:
-    void Initialize();
-    void Finalize();
-    void Update();
-    void Draw();
-    void Debug();
+    void Initialize()override;
+    void Finalize()override;
+    void Update()override;
+    void Draw()override;
+    void Debug()override;
 private:
-    D3DResourceLeakChecker leakCheck;
-    std::unique_ptr<MyEngine> myEngine;
-    Vector4 screenColor;
     std::map<const std::string, std::unique_ptr<SceneManager>> scenes;
     SceneManager* currentScene = nullptr;
     std::map<std::string, std::unique_ptr<SceneManager>>::iterator currentIt;

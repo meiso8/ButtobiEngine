@@ -2,7 +2,7 @@
 #include"DirectXCommon.h"
 #include"Camera.h"
 #include"MakeMatrix.h"
-#include"MyEngine.h"
+#include"PSO.h"
 #include"Random.h"
 #include"Collision.h"
 #include"SRVmanager/SrvManager.h"
@@ -167,7 +167,7 @@ void ParticleManager::Draw(uint32_t blendMode)
         if (group->numInstance > 0) {
             //rootSignatureの設定
             commandList_->SetGraphicsRootSignature(rootSignature_->GetRootSignature(RootSignature::PARTICLE));
-            commandList_->SetPipelineState(MyEngine::GetPSO()->GetGraphicsPipelineStateParticle(blendMode).Get());
+            commandList_->SetPipelineState(PSO::GetGraphicsPipelineStateParticle(blendMode).Get());
             //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
             commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 

@@ -14,7 +14,6 @@ DirectionalLight* MyEngine::directionalLightData = nullptr;
 std::unique_ptr<ModelConfig> MyEngine::modelConfig_ = nullptr;
 std::unique_ptr<Window> MyEngine::wc = nullptr;
 
-
 std::unique_ptr<DirectXCommon> MyEngine::directXCommon = nullptr;
 std::unique_ptr<SrvManager> MyEngine::srvManager = nullptr;
 std::unique_ptr<ParticleManager>  MyEngine::particleManager_ = nullptr;
@@ -22,11 +21,9 @@ std::unique_ptr<LogFile> MyEngine::logFile = nullptr;
 
 std::unique_ptr<ModelConfig> modelConfig_ = nullptr;
 
-
 Microsoft::WRL::ComPtr <ID3D12Resource> MyEngine::directionalLightResource = nullptr;
 
 void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight) {
-
 
     //誰も捕捉しなかった場合に(Unhandled),補足する関数を登録
     //main関数始まってすぐに登録すると良い
@@ -58,9 +55,6 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     LogFile::Log("InitImGui");
 #endif
 
-
-
-
     pso = std::make_unique<PSO>();
     pso->CreateALLPSO();
 
@@ -72,7 +66,6 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     directionalLightResource->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData));
     //デフォルト値はとりあえず以下のようにしておく   
     directionalLightData->color = { 1.0f,230.0f / 255.0f,200.0f / 255.0f,1.0f };
-
     directionalLightData->direction = { 0.0f,-1.0f,0.0f };//向きは正規化する
     directionalLightData->intensity = 1.0f;
     //書き込み終了！
@@ -114,12 +107,20 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
 
 void MyEngine::Update() {
 
+
+    if (Window::ProcessMassage()) {
+        endRequest_ = true;
+    }
+
     //キーボード情報の取得開始
     input->Update();
 #ifdef USE_IMGUI
     //ImGuiにここからフレームが始まる旨を伝える
     imGuiClass.FrameStart();
 #endif
+
+    //エスケープボタンを押したら終了
+    if (Input::IsTriggerKey(DIK_ESCAPE)) { MyEngine::endRequest_ = true; }
 }
 
 void MyEngine::Debug()
@@ -127,15 +128,40 @@ void MyEngine::Debug()
 #ifdef USE_IMGUI
     DebugUI::CheckJsonFile();
     DebugUI::CheckFPS();
-    DebugUI::CheckInput(*input);
+    DebugUI::CheckInput();
     DebugUI::CheckDirectionalLight();
     DebugUI::CheckSound();
 #endif // USE_IMGUI
+}
 
+void MyEngine::Run()
+{
+
+    Initialize();
+
+// =============================================
+// ウィンドウのxボタンが押されるまでループ メインループ
+// =============================================
+    while (true) {
+
+        //ループを抜ける
+        if (IsEndRequest()) {
+            break;
+        }
+
+        Update();
+
+        Debug();
+
+        Draw();
+
+    }
+
+    Finalize();
 
 }
 
-void MyEngine::PreCommandSet(Vector4& screenColor) {
+void MyEngine::PreCommandSet(Vector4 screenColor) {
 
 #ifdef USE_IMGUI
     //ImGuiの内部コマンドを生成する
@@ -163,7 +189,6 @@ void MyEngine::Finalize() {
 #ifdef _DEBUG
     //グリットを解放
     DrawGrid::Finalize();
-
 #endif
 
     Texture::Finalize();

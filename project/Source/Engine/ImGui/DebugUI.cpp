@@ -252,31 +252,31 @@ void DebugUI::CheckModel(Model& model, const char* label) {
 }
 
 
-void DebugUI::CheckInput(Input& input) {
+void DebugUI::CheckInput() {
 #ifdef USE_IMGUI
     ImGui::Begin("Input");
-    ImGui::SliderFloat2("mousePos", &input.GetMousePos().x, 0.0f, 1280.0f);
+    ImGui::SliderFloat2("mousePos", &Input::GetMousePos().x, 0.0f, 1280.0f);
 
-    ImGui::Text("Controller %s", input.IsControllerConnected(0) ? "Connected" : "Unkown");
-    ImGui::Text("left %d", input.GetControllerTriggerCount(BUTTON_LEFT, 0));
-    ImGui::Text("right %d", input.GetControllerTriggerCount(BUTTON_RIGHT, 0));
+    ImGui::Text("Controller %s", Input::IsControllerConnected(0) ? "Connected" : "Unkown");
+    ImGui::Text("left %d", Input::GetControllerTriggerCount(BUTTON_LEFT, 0));
+    ImGui::Text("right %d", Input::GetControllerTriggerCount(BUTTON_RIGHT, 0));
 
-    ImGui::Text("DPAD_UP %d", input.IsControllerPressButton(XINPUT_GAMEPAD_DPAD_UP, 0));
-    ImGui::Text("DPAD_DOWN %d", input.IsControllerPressButton(XINPUT_GAMEPAD_DPAD_DOWN, 0));
-    ImGui::Text("DPAD_LEFT %d", input.IsControllerPressButton(XINPUT_GAMEPAD_DPAD_LEFT, 0));
-    ImGui::Text("DPAD_RIGHT %d", input.IsControllerPressButton(XINPUT_GAMEPAD_DPAD_RIGHT, 0));
-    ImGui::Text("START %d", input.IsControllerPressButton(XINPUT_GAMEPAD_START, 0));
-    ImGui::Text("BACK %d", input.IsControllerPressButton(XINPUT_GAMEPAD_BACK, 0));
-    ImGui::Text("LEFT_THUMB %d", input.IsControllerPressButton(XINPUT_GAMEPAD_LEFT_THUMB, 0));
-    ImGui::Text("RIGHT_THUMB %d", input.IsControllerPressButton(XINPUT_GAMEPAD_RIGHT_THUMB, 0));
-    ImGui::Text("LEFT_SHOULDER %d", input.IsControllerPressButton(XINPUT_GAMEPAD_LEFT_SHOULDER, 0));
-    ImGui::Text("RIGHT_SHOULDER %d", input.IsControllerPressButton(XINPUT_GAMEPAD_RIGHT_SHOULDER, 0));
-    ImGui::Text("A %d", input.IsControllerPressButton(XINPUT_GAMEPAD_A, 0));
-    ImGui::Text("B %d", input.IsControllerPressButton(XINPUT_GAMEPAD_B, 0));
-    ImGui::Text("X %d", input.IsControllerPressButton(XINPUT_GAMEPAD_X, 0));
-    ImGui::Text("Y %d", input.IsControllerPressButton(XINPUT_GAMEPAD_Y, 0));
-    Vector2 L = input.GetControllerStickPos(BUTTON_LEFT, 0);
-    Vector2 R = input.GetControllerStickPos(BUTTON_RIGHT, 0);
+    ImGui::Text("DPAD_UP %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_UP, 0));
+    ImGui::Text("DPAD_DOWN %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_DOWN, 0));
+    ImGui::Text("DPAD_LEFT %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_LEFT, 0));
+    ImGui::Text("DPAD_RIGHT %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_RIGHT, 0));
+    ImGui::Text("START %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_START, 0));
+    ImGui::Text("BACK %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_BACK, 0));
+    ImGui::Text("LEFT_THUMB %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_LEFT_THUMB, 0));
+    ImGui::Text("RIGHT_THUMB %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_RIGHT_THUMB, 0));
+    ImGui::Text("LEFT_SHOULDER %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_LEFT_SHOULDER, 0));
+    ImGui::Text("RIGHT_SHOULDER %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_RIGHT_SHOULDER, 0));
+    ImGui::Text("A %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_A, 0));
+    ImGui::Text("B %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_B, 0));
+    ImGui::Text("X %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_X, 0));
+    ImGui::Text("Y %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_Y, 0));
+    Vector2 L =  Input::GetControllerStickPos(BUTTON_LEFT, 0);
+    Vector2 R =  Input::GetControllerStickPos(BUTTON_RIGHT, 0);
     ImGui::SliderFloat2("BUTTON_LEFT", &L.x, -32768.0f, 32768.0f);
     ImGui::SliderFloat2("BUTTON_RIGHT", &R.x, -32768.0f, 32768.0f);
     ImGui::End();

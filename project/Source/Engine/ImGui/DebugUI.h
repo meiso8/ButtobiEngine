@@ -13,7 +13,7 @@
 #include<unordered_map>
 
 enum BlendMode;
-class Input;
+
 class Sprite;
 class SphereMesh;
 class Camera;
@@ -35,7 +35,7 @@ public:
     static void CheckCharacterState(CharacterState& state, const char* label);
     /// @brief 入力
     /// @param input 
-    static void CheckInput(Input& input);
+    static void CheckInput();
     /// @brief 光源
    /// @param directionalLights 
    /// @param lightType 

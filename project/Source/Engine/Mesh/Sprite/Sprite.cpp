@@ -2,8 +2,8 @@
 #include"DirectXCommon.h"
 #include"TransformationMatrix.h"
 #include"MakeMatrix.h"
-#include"MyEngine.h"
-
+#include"PSO.h"
+#include"SRVmanager/SrvManager.h"
 #include"SpriteCamera.h"  
 #include"ImGuiClass.h"
 
@@ -91,7 +91,7 @@ void Sprite::SetTexture(const Texture::TEXTURE_HANDLE& textureHandle)
 
 void Sprite::PreDraw(uint32_t blendMode) {
     SpriteCommon::PreDraw(commandList);
-    commandList->SetPipelineState(MyEngine::GetPSO()->GetGraphicsPipelineStateSprite(blendMode).Get());//PSOを設定
+    commandList->SetPipelineState(PSO::GetGraphicsPipelineStateSprite(blendMode).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
