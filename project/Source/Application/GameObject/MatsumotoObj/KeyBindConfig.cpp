@@ -21,6 +21,18 @@ KeyBindConfig::KeyBindConfig() {
 	keyBinds_["Shot"].controllerButtons.push_back(XINPUT_GAMEPAD_A);
 }
 
+void KeyBindConfig::Update() {
+	bool isControll = false;
+	for (auto& [actionName, inputDevice] : keyBinds_) {
+		isControll |= IsPress(actionName);
+	}
+	if (isControll) {
+		noControllTimer_ = 0.0f;
+	} else {
+		noControllTimer_ += 0.016f;
+	}
+}
+
 bool KeyBindConfig::IsPress(const std::string& actionName) {
 	for (const auto& keyBind : keyBinds_[actionName].keyboardKeys) {
 		if (Input::IsPushKey(keyBind)) {
