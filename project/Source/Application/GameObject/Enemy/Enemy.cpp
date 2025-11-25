@@ -482,7 +482,7 @@ void Enemy::Fireball()
 
         fireBallCoolTimer_ += InverseFPS;
 
-        if (fireBallCoolTimer_ > 1.0f) {
+        if (fireBallCoolTimer_ > 1.5f) {
             fireBallCoolTimer_ = 0.0f;
             isShot_ = true;
         }

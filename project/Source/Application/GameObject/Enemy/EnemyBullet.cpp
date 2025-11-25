@@ -37,7 +37,7 @@ void EnemyBullet::InitFlagAndPosAndTimer()
 void EnemyBullet::Initialize() {
     body_.Initialize();
     moveDir_ = { 0.0f,0.0f,1.0f };
-    moveSpeed_ = 0.2f;
+    moveSpeed_ = 0.15f;
     lifeTimer_ = 0.0f;
     lifeDuration_ = 2.0f;
     isActive_ = false;

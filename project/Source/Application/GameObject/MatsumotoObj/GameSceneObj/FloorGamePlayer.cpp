@@ -111,18 +111,18 @@ void FloorGamePlayer::Initialize() {
     isReqestStript_ = false;
     isStriptting_ = false;
     striptTimer_ = 0.0f;
-    striptDuration_ = 0.3f;
+    striptDuration_ = 0.5f;
     isOnStripedFloor_ = false;
     strippedFloorMap_.clear();
 
     // 床投げ
     isReqestShot_ = false;
     shotTimer_ = 0.0f;
-    shotDuration_ = 0.5f;
+    shotDuration_ = 0.3f;
 
     //べとべと床フラグ
     isOnStickyFloor_ = false;
-    stickyFloorSlowRate_ = 0.1f;
+    stickyFloorSlowRate_ = 0.9f;
 }
 
 
