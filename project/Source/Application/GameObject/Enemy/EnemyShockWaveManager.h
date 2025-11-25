@@ -14,7 +14,6 @@ public:
 	const std::vector<std::unique_ptr<EnemyShockWave>>& GetWaves() const {
 		return waves_;
 	};
-	bool isWaveReset_ = false;
 private:
 	std::vector<std::unique_ptr<EnemyShockWave>> waves_;
 };

@@ -36,12 +36,9 @@ void EnemyShockWaveManager::Draw(Camera& camera, const LightMode& lightType) {
 
 void EnemyShockWaveManager::ShotWave(const Vector3& startPos, const Vector3& endPos, const EnemyShockWave::AABBType& type) {
 
-    isWaveReset_ = true;
-
     for (auto& wave : waves_) {
         if (!wave->isActive_) {
             wave->Shot(startPos, endPos, type);
-            isWaveReset_ = false;
             break;
         }
     }
