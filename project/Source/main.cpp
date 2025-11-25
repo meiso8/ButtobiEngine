@@ -60,6 +60,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
         currentScene->SceneChangeUpdate();
 
+		// 一定時間操作が無かったらタイトルへ戻る
+		KeyBindConfig::Instance().Update();
+        if (currentScene != scenes["Title"].get()) {
+            if (KeyBindConfig::Instance().noControllTimer_ >= 30.0f) {
+                currentIt = scenes.find("Title");
+                currentScene = currentIt->second.get();
+                currentScene->Initialize();
+                KeyBindConfig::Instance().noControllTimer_ = 0.0f;
+            }
+        }
+
+		// シーンが終了していたら次のシーンへ
         if (currentScene->GetIsEndScene()) {
             ++currentIt; // 次のシーンへ
 
