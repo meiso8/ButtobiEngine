@@ -17,7 +17,7 @@ void Texture::LoadAllTexture() {
     handles[WHITE_1X1] = Load("Resource/Textures/white1x1.png");
     handles[UV_CHECKER] = Load("Resource/Textures/uvChecker.png");
     handles[NUMBERS] = Load("Resource/Textures/numbers.png");
-    handles[TEST] = Load("Resource/Textures/test.png");
+
     handles[HART] = Load("Resource/Textures/hart.png");
     handles[PLAYER_WALK_PARTICLE] = Load("Resource/Textures/playerWalkParticle.png");
 
