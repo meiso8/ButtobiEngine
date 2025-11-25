@@ -35,7 +35,7 @@ public:
     static void CheckDamageStruct(Damage& damage, const char* label);
     /// @brief 入力
     /// @param input 
-    static void CheckInput(Input& input);
+    static void CheckInput();
     /// @brief 光源
    /// @param directionalLights 
    /// @param lightType 
@@ -75,7 +75,7 @@ public:
     /// @param camera 
     static void CheckCamera(Camera& camera);
 
-    static void CheckParticle(ParticleEmitter& particleEmitter);
+    static void CheckParticle(ParticleEmitter& particleEmitter, const char* label);
     /// @brief 色
     /// @param color 
     static void CheckColor(Vector4& color, const char* label);

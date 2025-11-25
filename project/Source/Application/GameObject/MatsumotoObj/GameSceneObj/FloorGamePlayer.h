@@ -24,6 +24,9 @@ public:
 	Vector3 GetWorldPosition() const override {
 		return body_.worldTransform_.GetWorldPosition();
 	}
+	WorldTransform& GetWorldBodyTransform() {
+		return body_.worldTransform_;
+	}
 	void Initialize();
 	void Update();
 	void Draw(Camera& camera, const LightMode& lightType);

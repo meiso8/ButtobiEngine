@@ -69,10 +69,15 @@ GameScene::GameScene()
 
     uiManager_ = std::make_unique<UIManager>(*enemy_->GetHpsPtr(), *floorGamePlayer_->GetHpsPtr());
 
-    particleEmitter_ = std::make_unique<ParticleEmitter>();
+    for (auto& particleEmitter : particleEmitters_) {
+        particleEmitter = std::make_unique<ParticleEmitter>();
+    }
 
-    particleEmitter_->SetName("white");
-    particleEmitter_->emitter_.transform.Parent(enemy_->bodyPos_.worldTransform_);
+    particleEmitters_[kPlayerEmitter]->SetName("white");
+    particleEmitters_[kPlayerEmitter]->emitter_.transform.Parent(floorGamePlayer_->GetWorldBodyTransform());
+
+    particleEmitters_[kEnemyEmitter]->SetName("box");
+    particleEmitters_[kEnemyEmitter]->emitter_.transform.Parent(enemy_->bodyPos_.worldTransform_);
 #pragma endregion
 }
 
@@ -113,7 +118,17 @@ void GameScene::Initialize() {
 
     uiManager_->Initialize();
 
-    particleEmitter_->Initialize();
+    for (auto& particleEmitter : particleEmitters_) {
+        particleEmitter->Initialize();
+    }
+
+    particleEmitters_[kPlayerEmitter]->emitter_.count = 10;
+    particleEmitters_[kPlayerEmitter]->emitter_.movement = ParticleMovements::kParticleNormal;
+
+    particleEmitters_[kEnemyEmitter]->emitter_.transform.translate_.y = -0.75f;
+    particleEmitters_[kEnemyEmitter]->emitter_.count = 5;
+    particleEmitters_[kEnemyEmitter]->emitter_.movement = ParticleMovements::kParticleSphere;
+    particleEmitters_[kEnemyEmitter]->emitter_.radius = 2.0f;
 }
 
 void GameScene::Update() {
@@ -136,7 +151,12 @@ void GameScene::Update() {
     if (!PauseScreen::isPause_) {
         UpdateGameObject();
         CheckAllCollision();
-        particleEmitter_->Update(*currentCamera_);
+
+        for (auto& particleEmitter : particleEmitters_) {
+            particleEmitter->Update(*currentCamera_);
+        }
+
+
     }
 
     uiManager_->Update();
@@ -163,7 +183,9 @@ void GameScene::Draw() {
 
 #pragma endregion
 
-    particleEmitter_->Draw();
+    for (auto& particleEmitter : particleEmitters_) {
+        particleEmitter->Draw();
+    }
 
     uiManager_->Draw();
 
@@ -183,6 +205,8 @@ void GameScene::Debug()
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
     std::function<void()> func = [this]() { SwitchCamera(); };
     DebugUI::Button("ChangeCamera", func);
+    DebugUI::CheckParticle(*particleEmitters_[kEnemyEmitter],"Enemy");
+    DebugUI::CheckParticle(*particleEmitters_[kPlayerEmitter],"Player");
 #endif // !USE_IMGUI
 }
 
