@@ -20,7 +20,7 @@ void ParticleEmitter::Initialize()
     emitter_.isRandom = true;
     emitter_.color = { 1.0f,1.0f,1.0f,1.0f };
     emitter_.blendMode = kBlendModeAdd;
-    emitter_.movement = ParticleManager::kNormal;
+    emitter_.movement = ParticleMovements::kParticleNormal;
     emitter_.lifeTime = -1.0f;
     emitter_.radius = 5.0f;
 }
@@ -35,7 +35,7 @@ void ParticleEmitter::Update(Camera& camera)
 
     WorldTransformUpdate(emitter_.transform);
 
-    particleManager_->Update(camera, emitter_.movement);
+    particleManager_->Update(camera);
 
 }
 
@@ -47,4 +47,10 @@ void ParticleEmitter::Emit()
 void ParticleEmitter::Draw()
 {
     particleManager_->Draw(emitter_.blendMode);
+}
+
+void ParticleEmitter::SetParent(WorldTransform& parent)
+{
+    emitter_.transform.Parent(parent);
+
 }

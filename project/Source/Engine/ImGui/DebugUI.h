@@ -75,7 +75,7 @@ public:
     /// @param camera 
     static void CheckCamera(Camera& camera);
 
-    static void CheckParticle(ParticleEmitter& particleEmitter);
+    static void CheckParticle(ParticleEmitter& particleEmitter, const char* label);
     /// @brief 色
     /// @param color 
     static void CheckColor(Vector4& color, const char* label);

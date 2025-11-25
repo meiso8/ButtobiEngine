@@ -18,7 +18,7 @@ struct Emitter
     bool isRandom;
     Vector4 color;
     BlendMode blendMode;
-    ParticleManager::Movements movement;
+    ParticleMovements movement;
     float lifeTime;
     float radius;
 };
@@ -36,6 +36,7 @@ public:
     void Emit();
     void Draw();
     void SetName(const std::string name) { emitter_.name = name ; }
-    void SetMovement(ParticleManager::Movements& movement) { emitter_.movement; }
+    void SetMovement(ParticleMovements& movement) { emitter_.movement; }
+    void SetParent(WorldTransform& parent);
 };
 

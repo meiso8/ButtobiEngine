@@ -54,9 +54,9 @@ private:
     std::unique_ptr<FloorBulletManager>floorBulletManager_ = nullptr;
     std::unique_ptr<FloorPlayerShotBulletManager>floorPlayerShotBulletManager_ = nullptr;
     std::unique_ptr<FloorPlayerStripTargetUI>floorPlayerStripTargetUI_ = nullptr;
-	std::unique_ptr<FloorActionManager>floorActionManager_ = nullptr;
-	std::unique_ptr<FloorGamePlayerAnimationManager>floorGamePlayerAnimationManager_ = nullptr;
-	std::unique_ptr<PlayerFloorStripManager>playerFloorStripManager_ = nullptr;
+    std::unique_ptr<FloorActionManager>floorActionManager_ = nullptr;
+    std::unique_ptr<FloorGamePlayerAnimationManager>floorGamePlayerAnimationManager_ = nullptr;
+    std::unique_ptr<PlayerFloorStripManager>playerFloorStripManager_ = nullptr;
 
     std::unique_ptr<Enemy>enemy_ = nullptr;
     std::unique_ptr<EnemyBulletManager>enemyBulletManager_ = nullptr;
@@ -70,7 +70,14 @@ private:
 
 
     std::unique_ptr<UIManager>uiManager_ = nullptr;
-    std::unique_ptr<ParticleEmitter>particleEmitter_ = nullptr;
+
+    enum EmitterType {
+        kPlayerEmitter,
+        kEnemyEmitter,
+        kMaxEmitter
+    };
+
+    std::array< std::unique_ptr<ParticleEmitter>, kMaxEmitter>particleEmitters_;
 #pragma endregion
     std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
 };
