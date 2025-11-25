@@ -19,7 +19,7 @@ public:
     }
     
     //メッセージを受け取る処理
-    bool ProcessMassage();
+    static bool ProcessMassage();
 
     void Finalize();
 private:
