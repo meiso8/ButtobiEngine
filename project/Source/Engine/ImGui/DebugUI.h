@@ -35,7 +35,7 @@ public:
     static void CheckDamageStruct(Damage& damage, const char* label);
     /// @brief 入力
     /// @param input 
-    static void CheckInput(Input& input);
+    static void CheckInput();
     /// @brief 光源
    /// @param directionalLights 
    /// @param lightType 
