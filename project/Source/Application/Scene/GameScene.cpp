@@ -124,6 +124,7 @@ void GameScene::Initialize() {
 
     particleEmitters_[kPlayerEmitter]->emitter_.count = 10;
     particleEmitters_[kPlayerEmitter]->emitter_.movement = ParticleMovements::kParticleNormal;
+    particleEmitters_[kPlayerEmitter]->emitter_.isRandom = false;
 
     particleEmitters_[kEnemyEmitter]->emitter_.transform.translate_.y = -0.75f;
     particleEmitters_[kEnemyEmitter]->emitter_.count = 5;
