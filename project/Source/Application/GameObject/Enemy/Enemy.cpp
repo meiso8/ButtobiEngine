@@ -118,6 +118,7 @@ void Enemy::Update()
     ImGui::Begin("Enemy");
     DebugUI::CheckDamageStruct(damageStruct_, "Boss");
     ImGui::Text("%s", currentState_.c_str());
+    
     ImGui::Checkbox("isAttack", &isAttack_);
     ImGui::Checkbox("isPreAttack", &isPreAttack_);
     ImGui::SliderInt("actionCount", &actionCount_, 0, 3);
@@ -174,14 +175,14 @@ void Enemy::Tackle()
 
         PoyoPoyo(3.0f);
 
-    } else if (phaseTimer_ <=3.7f) {
+    } else if (phaseTimer_ <= 3.7f) {
         float localTimer = (phaseTimer_ - 3.0f) / 0.7f;
         LerpScale();
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(startPos_, endPos_, localTimer);
-    } else if (phaseTimer_ <= 4.7f){
-        float localTimer = (phaseTimer_ - 3.7f) *0.5f;
+    } else if (phaseTimer_ <= 4.7f) {
+        float localTimer = (phaseTimer_ - 3.7f) * 0.5f;
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(endPos_, startPos_, localTimer);
-    } else if(phaseTimer_ <= 5.7f){
+    } else if (phaseTimer_ <= 5.7f) {
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(bodyPos_.worldTransform_.translate_, startPos_, 0.5f);
     } else {
         phaseTimer_ = phaseTime_;
@@ -202,7 +203,7 @@ void Enemy::Knockback()
 
         if (phaseTimer_ <= 0.75f) {
             float localTimer = (phaseTimer_ - 0.125f) / (0.75f - 0.125f);
-            float theta = PI*3.0f * localTimer; // 回転の速さを調整
+            float theta = PI * 3.0f * localTimer; // 回転の速さを調整
             bodyPos_.worldTransform_.rotate_.z = sinf(theta);
             bodyPos_.worldTransform_.rotate_.x = cosf(theta);
         } else {
@@ -214,7 +215,7 @@ void Enemy::Knockback()
 
     if (phaseTimer_ > 2.0f) {
         phaseTimer_ = phaseTime_;
-      /*  SetPhase(LERP_ROUND_POS);*/
+        /*  SetPhase(LERP_ROUND_POS);*/
     }
 
 
@@ -310,7 +311,7 @@ void Enemy::RandomAttackPhaseFirst()
 
 void Enemy::RandomAttackPhaseSecond()
 {
-    int randNum = rand() % 3;
+    int randNum = rand() % 2;
     switch (randNum)
     {
     case 0:
@@ -327,22 +328,33 @@ void Enemy::RandomAttackPhaseSecond()
 
 void Enemy::RandomAttackPhaseEnd()
 {
-    int randNum = rand() % 4;
+    int randNum = rand() % 2;
+
     switch (randNum)
     {
     case 0:
-        SetPhase(TACKLE);
+        RandomAttackPhaseSecond();
         break;
     case 1:
-        SetPhase(FIREBALL);
-        break;
-    case 2:
-        SetPhase(FLOORCHANGEATTACK);
-        break;
-    case 3:
         SetPhase(SHOCKWAVEATTACK);
         break;
     }
+
+    //switch (randNum)
+    //{
+    //case 0:
+    //    SetPhase(TACKLE);
+    //    break;
+    //case 1:
+    //    SetPhase(FIREBALL);
+    //    break;
+    //case 2:
+    //    SetPhase(FLOORCHANGEATTACK);
+    //    break;
+    //case 3:
+    // 
+    //    break;
+    //}
 }
 
 
@@ -482,16 +494,12 @@ void Enemy::FloorChangeAttack()
 
     if (phaseTimer_ <= 1.0f) {
         RotateY(phaseTimer_);
-        bombCount_ = 0;
+  
     } else if (phaseTimer_ <= 1.5f) {
-
-        LookTarget(*target_);
-        bombCount_++;
-        if (bombCount_ <= 20) {
+        if (!isBombShot_) {
             isBombShot_ = true;
-        } else {
-            bombCount_ = 20;
         }
+        LookTarget(*target_);
     }
 
 
@@ -501,11 +509,11 @@ void Enemy::ShockWaveAttack()
     if (phaseTimer_ <= 1.0f) {
         LookTarget(*playerPos_);
         bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, *target_, 0.05f);
-    } else if(phaseTimer_ <= 2.0f){
+    } else if (phaseTimer_ <= 2.0f) {
         if (!isWaveShot_) {
             isWaveShot_ = true;
         }
-     
+
     }
 }
 void Enemy::Exit()
@@ -539,7 +547,7 @@ void Enemy::PoyoPoyo(const float& endTimer)
     poyoAnimTimer_ += InverseFPS;
     poyoAnimTimer_ = std::clamp(poyoAnimTimer_, 0.0f, endTimer);
 
-    float theta = PI*10.0f * poyoAnimTimer_;
+    float theta = PI * 10.0f * poyoAnimTimer_;
     bodyPos_.worldTransform_.scale_.x = kSize_ + cos(theta) * 0.5f;
     bodyPos_.worldTransform_.scale_.y = kSize_ + sin(theta) * 0.5f;
 

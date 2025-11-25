@@ -82,8 +82,6 @@ private:
     const float kPoyoAnimeTime_ = 0.25f;
     //弾のクールタイム
     float fireBallCoolTimer_ = 0.0f;
-    //爆弾のカウント
-    int bombCount_ = 0;
 
     const float kLerpSquareTime_ = 2.0f;
     const float kSquareMoveSpeed_ = 0.05f;
