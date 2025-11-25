@@ -519,11 +519,10 @@ void Enemy::ShockWaveAttack()
     if (phaseTimer_ <= 1.0f) {
         LookTarget(*playerPos_);
         bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, *target_, 0.05f);
-    } else if (phaseTimer_ <= 2.0f) {
+    } else if (phaseTimer_ <= 1.2f) {
         if (!isWaveShot_) {
             isWaveShot_ = true;
         }
-
     }
 }
 void Enemy::Exit()
