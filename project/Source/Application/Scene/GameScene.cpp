@@ -215,6 +215,10 @@ void GameScene::UpdateGameObject()
     enemyShotWaveManager_->Update();
     floorPlayerStripTargetUI_->Update();
     floorActionManager_->Update();
+    if (enemy_->isReqestClearFloor_) {
+		floorGameFloorManager_->Initialize();
+		enemy_->isReqestClearFloor_ = false;
+    }
 
     // アニメーション更新
     floorGamePlayerAnimationManager_->Update();

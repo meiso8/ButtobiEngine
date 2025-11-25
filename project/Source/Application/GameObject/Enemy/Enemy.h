@@ -35,6 +35,7 @@ public:
     bool isShot_ = false;
     bool isBombShot_ = false;
     bool isWaveShot_ = false;
+    bool isReqestClearFloor_ = false;
     //体の位置
     Object3d bodyPos_;
     HPs* GetHpsPtr() { return &damageStruct_.hps; }

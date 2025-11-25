@@ -23,6 +23,16 @@ FloorGameFloorManager::~FloorGameFloorManager() {
 }
 
 void FloorGameFloorManager::Initialize() {
+	for (int y = 0; y < kMapHeight; y++) {
+		for (int x = 0; x < kMapWidth; x++) {
+			floors_[y][x]->Initialize();
+            floors_[y][x]->body_.worldTransform_.translate_ = {
+                static_cast<float>(x) - (static_cast<float>(kMapWidth) * kHalfFloorSize) + kHalfFloorSize,
+                -kHalfFloorSize,
+                static_cast<float>(y) - (static_cast<float>(kMapHeight) * kHalfFloorSize) + kHalfFloorSize
+            };
+		}
+	}
 }
 
 void FloorGameFloorManager::Update() {

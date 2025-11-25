@@ -58,6 +58,7 @@ Enemy::Enemy()
 
 void Enemy::Init() {
     InitState();
+	isReqestClearFloor_ = false;
     model_->GetWaveData(0).time = 0.0f;
 }
 
@@ -382,6 +383,7 @@ void Enemy::InitState()
 void Enemy::SwitchState()
 {
     Sound::PlaySE(Sound::FIRE_BALL);
+	isReqestClearFloor_ = true;
 
     if (currentState_ == "First") {
         currentState_ = "Second";
