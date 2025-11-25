@@ -13,7 +13,6 @@ public:
 	const std::vector<std::unique_ptr<EnemyBomb>>& GetBombs() const {
 		return bombs_;
 	};
-	bool isBombReset_ = false;
 private:
 	std::vector<std::unique_ptr<EnemyBomb>> bombs_;
 };
