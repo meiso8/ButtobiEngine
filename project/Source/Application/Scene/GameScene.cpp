@@ -71,7 +71,7 @@ GameScene::GameScene()
 
     particleEmitter_ = std::make_unique<ParticleEmitter>();
 
-    particleEmitter_->SetName("white");
+    particleEmitter_->SetName("box");
     particleEmitter_->emitter_.transform.Parent(enemy_->bodyPos_.worldTransform_);
 #pragma endregion
 }

@@ -7,11 +7,10 @@ ParticleEmitter::ParticleEmitter()
     Initialize();
     particleManager_ = ParticleManager::GetInstance();
     particleManager_->Create();
-    particleManager_->SetMovement(emitter_.movement);
 }
 void ParticleEmitter::Initialize()
 {
-    emitter_.cont = 3;
+    emitter_.count = 3;
     emitter_.frequency = 0.5f;
     emitter_.frequencyTime = 0.0f;
     emitter_.transform.rotate_ = { 0.0f,0.0f,0.0f };
@@ -22,8 +21,8 @@ void ParticleEmitter::Initialize()
     emitter_.color = { 1.0f,1.0f,1.0f,1.0f };
     emitter_.blendMode = kBlendModeAdd;
     emitter_.movement = ParticleManager::kNormal;
-    emitter_.lifeTime_ = -1.0f;
-
+    emitter_.lifeTime = -1.0f;
+    emitter_.radius = 5.0f;
 }
 void ParticleEmitter::Update(Camera& camera)
 {
@@ -36,13 +35,13 @@ void ParticleEmitter::Update(Camera& camera)
 
     WorldTransformUpdate(emitter_.transform);
 
-    particleManager_->Update(camera);
+    particleManager_->Update(camera, emitter_.movement);
 
 }
 
 void ParticleEmitter::Emit()
 {
-    particleManager_->EmitParticle(name_, emitter_.transform, emitter_.cont, emitter_.color, emitter_.isRandom, emitter_.lifeTime_);
+    particleManager_->Emit(emitter_);
 }
 
 void ParticleEmitter::Draw()
