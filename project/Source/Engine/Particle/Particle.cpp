@@ -18,6 +18,21 @@ ID3D12GraphicsCommandList* ParticleManager::commandList_ = nullptr;
 std::unordered_map<std::string, std::unique_ptr <ParticleGroup> >ParticleManager::particleGroups;
 const float ParticleManager::kDeltaTime = 1.0f / 60.0f;
 
+
+// ==========================================================================================================
+
+void ParticleManager::CreateAll()
+{
+
+    CreateParticleGroup("enemyHitParticle", Texture::PLAYER_WALK_PARTICLE);
+    CreateParticleGroup("uvChecker", Texture::UV_CHECKER);
+    //CreateParticleGroup("box", Texture::UV_CHECKER, true, ModelManager::BOX);
+    CreateParticleGroup("playerWalkParticle", Texture::PLAYER_WALK_PARTICLE);
+}
+
+// ==========================================================================================================
+
+
 ParticleManager::ParticleManager()
 {
 
@@ -44,18 +59,19 @@ void ParticleManager::Create()
     CreateVertexBufferResource();
 }
 
-Particle MakeNewParticle(const bool& isRandom, const WorldTransform& transform, const Vector4& color, const float& lifeTime)
+Particle MakeNewParticle(const bool& isRandomTranslate, const bool& isRandomRotate, const WorldTransform& transform, const Vector4& color, const float& lifeTime)
 {
     Particle particle;
     Random::SetMinMax(-1.0f, 1.0f);
-    particle.transform.scale = transform.scale_;
-    particle.transform.translate = (isRandom) ? Vector3{ Random::Get(), Random::Get(), Random::Get() } + transform.GetWorldPosition() : transform.GetWorldPosition();
     particle.lifeTime = (lifeTime == -1.0f) ? Random::Get() : lifeTime;
-    Random::SetMinMax(0.0f, 2.28f);
-    particle.transform.rotate = (isRandom) ? Vector3{ Random::Get(), Random::Get(), Random::Get() } : transform.rotate_;
-
-    Random::SetMinMax(-transform.scale_.x, transform.scale_.y);
     particle.velocity = { Random::Get(), Random::Get(), Random::Get() };
+
+    particle.transform.scale = transform.scale_;
+    Random::SetMinMax(-0.5f, 0.5f);
+    particle.transform.translate = (isRandomTranslate) ? Vector3{ Random::Get(), Random::Get(), Random::Get() } + transform.GetWorldPosition() : transform.GetWorldPosition();
+    Random::SetMinMax(0.0f, 2.28f);
+    particle.transform.rotate = (isRandomRotate) ? Vector3{ Random::Get(), Random::Get(), Random::Get() } : transform.rotate_;
+    Random::SetMinMax(-transform.scale_.x, transform.scale_.y);
 
     particle.currentTime = 0;
     particle.color = color;
@@ -73,7 +89,7 @@ SphericalCoordinate MakeNewSphericalCoordinate(const bool& isRandom, const float
     return sphericalCoordinate;
 }
 
-void ParticleManager::CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle, const bool& useModel = false, const ModelManager::MODEL_HANDLE& modelHandle)
+void ParticleManager::CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle, const bool& useModel, const ModelManager::MODEL_HANDLE& modelHandle)
 {
 
     assert(!particleGroups.contains(name));
@@ -130,11 +146,11 @@ void ParticleManager::Update(Camera& camera)
 }
 
 
-std::list<Particle> EmitParticles(const bool& isRandom, const WorldTransform& transform, uint32_t count, const Vector4& color, const float& lifeTime)
+std::list<Particle> EmitParticles(const bool& isRandomTranslate, const bool& isRandomRotate, const WorldTransform& transform, uint32_t count, const Vector4& color, const float& lifeTime)
 {
     std::list<Particle>particles;
     for (uint32_t i = 0; i < count; ++i) {
-        particles.push_back(MakeNewParticle(isRandom, transform, color, lifeTime));
+        particles.push_back(MakeNewParticle(isRandomTranslate, isRandomRotate, transform, color, lifeTime));
     }
     return particles;
 }
@@ -154,7 +170,7 @@ std::list<SphericalCoordinate> EmitCoordinate(const bool& isRandom, uint32_t cou
 void ParticleManager::Emit(Emitter& emitter)
 {
     assert(particleGroups.contains(emitter.name));
-    particleGroups[emitter.name]->particles.splice(particleGroups[emitter.name]->particles.end(), EmitParticles(emitter.isRandom, emitter.transform, emitter.count, emitter.color, emitter.lifeTime));
+    particleGroups[emitter.name]->particles.splice(particleGroups[emitter.name]->particles.end(), EmitParticles(emitter.isRandomTranslate, emitter.isRandomRotate,emitter.transform, emitter.count, emitter.color, emitter.lifeTime));
 
     if (emitter.transform.parent_ != nullptr) {
         particleGroups[emitter.name]->parentPos_ = emitter.transform.parent_;
@@ -163,7 +179,7 @@ void ParticleManager::Emit(Emitter& emitter)
     }
 
     if (emitter.movement == kParticleSphere) {
-        particleGroups[emitter.name]->sphericalCoordinates.splice(particleGroups[emitter.name]->sphericalCoordinates.end(), EmitCoordinate(emitter.isRandom, emitter.count, emitter.radius));
+        particleGroups[emitter.name]->sphericalCoordinates.splice(particleGroups[emitter.name]->sphericalCoordinates.end(), EmitCoordinate(emitter.isRandomTranslate, emitter.count, emitter.radius));
     }
 
     particleGroups[emitter.name]->movement = emitter.movement;
@@ -231,15 +247,8 @@ void ParticleManager::IsCollisionFieldArea(Particle& particleItr)
     }
 }
 
-// ==========================================================================================================
 
-void ParticleManager::CreateAll()
-{
 
-    CreateParticleGroup("white", Texture::WHITE_1X1);
-    CreateParticleGroup("uvChecker", Texture::UV_CHECKER);
-    CreateParticleGroup("box", Texture::UV_CHECKER, true, ModelManager::BOX);
-}
 
 void ParticleManager::Normal(ParticleGroup& group)
 {

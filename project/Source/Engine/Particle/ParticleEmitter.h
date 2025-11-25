@@ -15,7 +15,8 @@ struct Emitter
     uint32_t count;//発生数
     float frequency;//発生頻度
     float frequencyTime;//頻度用時刻
-    bool isRandom;
+    bool isRandomTranslate;
+    bool isRandomRotate;
     Vector4 color;
     BlendMode blendMode;
     ParticleMovements movement;
@@ -32,6 +33,7 @@ public:
 public:
     ParticleEmitter();
     void Initialize();
+    void UpdateTimer();
     void Update(Camera& camera);
     void Emit();
     void Draw();

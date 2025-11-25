@@ -16,15 +16,15 @@ void ParticleEmitter::Initialize()
     emitter_.transform.rotate_ = { 0.0f,0.0f,0.0f };
     emitter_.transform.scale_ = { 1.0f,1.0f,1.0f };
     emitter_.transform.translate_ = { 0.0f,0.0f,0.0f };
-
-    emitter_.isRandom = true;
+    emitter_.isRandomTranslate = true;
+    emitter_.isRandomRotate = true;
     emitter_.color = { 1.0f,1.0f,1.0f,1.0f };
     emitter_.blendMode = kBlendModeAdd;
     emitter_.movement = ParticleMovements::kParticleNormal;
     emitter_.lifeTime = -1.0f;
     emitter_.radius = 5.0f;
 }
-void ParticleEmitter::Update(Camera& camera)
+void ParticleEmitter::UpdateTimer()
 {
     emitter_.frequencyTime += ParticleManager::kDeltaTime;
 
@@ -32,11 +32,11 @@ void ParticleEmitter::Update(Camera& camera)
         emitter_.frequencyTime -= emitter_.frequency;
         Emit();
     }
-
+}
+void ParticleEmitter::Update(Camera& camera)
+{
     WorldTransformUpdate(emitter_.transform);
-
     particleManager_->Update(camera);
-
 }
 
 void ParticleEmitter::Emit()

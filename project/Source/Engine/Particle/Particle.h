@@ -60,8 +60,8 @@ struct ParticleGroup {
 
 std::list<SphericalCoordinate> EmitCoordinate(const bool& isRandom, uint32_t count, const float& radius = 3.0f);
 
-std::list<Particle> EmitParticles(const bool& isRandom, const WorldTransform& transform, uint32_t count, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f },const float& lifeTime = -1.0f);
-Particle MakeNewParticle(const bool& isRandom, const WorldTransform& transform, const Vector4& color, const float& lifeTime = -1.0f);
+std::list<Particle> EmitParticles(const bool& isRandomTranslate, const bool& isRandomRotate, const WorldTransform& transform, uint32_t count, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f },const float& lifeTime = -1.0f);
+Particle MakeNewParticle(const bool& isRandomTranslate, const bool& isRandomRotate, const WorldTransform& transform, const Vector4& color, const float& lifeTime = -1.0f);
 SphericalCoordinate MakeNewSphericalCoordinate(const bool& isRandom = true,const float& radius = 3.0f);
 class ParticleManager
 {
@@ -110,7 +110,7 @@ public:
 static void Emit(Emitter& emitter);
 
     std::unordered_map<std::string, std::unique_ptr <ParticleGroup>>& GetParticleGroups();
-    void CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle, const bool& useModel, const ModelManager::MODEL_HANDLE& modelHandle = ModelManager::MODEL_HANDLE::BOX);
+    void CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle, const bool& useModel = false, const ModelManager::MODEL_HANDLE& modelHandle = ModelManager::MODEL_HANDLE::BOX);
 
     void Update(Camera& camera);
     void Draw(uint32_t blendMode = BlendMode::kBlendModeAdd);

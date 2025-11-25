@@ -73,10 +73,10 @@ GameScene::GameScene()
         particleEmitter = std::make_unique<ParticleEmitter>();
     }
 
-    particleEmitters_[kPlayerEmitter]->SetName("white");
+    particleEmitters_[kPlayerEmitter]->SetName("playerWalkParticle");
     particleEmitters_[kPlayerEmitter]->emitter_.transform.Parent(floorGamePlayer_->GetWorldBodyTransform());
 
-    particleEmitters_[kEnemyEmitter]->SetName("box");
+    particleEmitters_[kEnemyEmitter]->SetName("enemyHitParticle");
     particleEmitters_[kEnemyEmitter]->emitter_.transform.Parent(enemy_->bodyPos_.worldTransform_);
 #pragma endregion
 }
@@ -124,12 +124,17 @@ void GameScene::Initialize() {
 
     particleEmitters_[kPlayerEmitter]->emitter_.count = 10;
     particleEmitters_[kPlayerEmitter]->emitter_.movement = ParticleMovements::kParticleNormal;
-    particleEmitters_[kPlayerEmitter]->emitter_.isRandom = false;
+    particleEmitters_[kPlayerEmitter]->emitter_.isRandomTranslate = true;
+    particleEmitters_[kPlayerEmitter]->emitter_.isRandomRotate= false;
+    particleEmitters_[kPlayerEmitter]->emitter_.frequencyTime = 0.3f;
+    particleEmitters_[kPlayerEmitter]->emitter_.blendMode = kBlendModeSubtract;
+    particleEmitters_[kPlayerEmitter]->emitter_.transform.scale_ = {0.5f,0.5f,0.5f};
 
     particleEmitters_[kEnemyEmitter]->emitter_.transform.translate_.y = -0.75f;
     particleEmitters_[kEnemyEmitter]->emitter_.count = 5;
     particleEmitters_[kEnemyEmitter]->emitter_.movement = ParticleMovements::kParticleSphere;
     particleEmitters_[kEnemyEmitter]->emitter_.radius = 2.0f;
+    //particleEmitters_[kEnemyEmitter]->emitter_.isRandomRotate = false;
 }
 
 void GameScene::Update() {
@@ -152,6 +157,17 @@ void GameScene::Update() {
     if (!PauseScreen::isPause_) {
         UpdateGameObject();
         CheckAllCollision();
+
+   
+        if (floorGamePlayer_->isMove_) {
+            particleEmitters_[kPlayerEmitter]->UpdateTimer();
+        }
+
+        if (enemy_->IsHit()) {
+            particleEmitters_[kEnemyEmitter]->Emit();
+          /*  particleEmitters_[kEnemyEmitter]->UpdateTimer();*/
+
+        }
 
         for (auto& particleEmitter : particleEmitters_) {
             particleEmitter->Update(*currentCamera_);

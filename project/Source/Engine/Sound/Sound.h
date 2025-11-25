@@ -30,13 +30,15 @@ public:
     enum TAG {
         BGM1,
 
-        PICO,
-        CRACKER,
-        FOOT_STEP,
-
         FIRE_BALL,
         THROW_FLOOR,
 
+        BOSS_HEAL,
+        BOSS_TACKLE,
+        DAMAGE,
+        DEFEAT_BOSS,
+        PLAYER_WALK,
+        STUN,
 
         SOUNDS
     };
