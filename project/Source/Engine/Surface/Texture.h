@@ -24,7 +24,10 @@ public:
         TEST,
         HART,
         HP_GAGE_EFFECCT,
-        TEXTURES
+        ACTION_UI_MOVE,
+		ACTION_UI_STRIP,
+		ACTION_UI_SHOT,
+        TEXTURES,
     };
     static void LoadAllTexture();
 

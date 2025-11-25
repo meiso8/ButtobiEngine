@@ -12,6 +12,8 @@
 #include"UI/HPIcon.h"
 #include"Enemy/EnemyBomb.h"
 
+#include "MatsumotoObj/KeyBindConfig.h"
+
 FloorGamePlayer::FloorGamePlayer() {
     body_.Create();
     headObject_.Create();
@@ -56,7 +58,7 @@ void FloorGamePlayer::OnCollision(Collider* collider)
 {
 
     if (collider->GetCollisionAttribute() == kCollisionEnemy ||
-        collider->GetCollisionAttribute() == kCollisionEnemyBullet|| collider->GetCollisionAttribute() == kCollisionEnemyWave) {
+        collider->GetCollisionAttribute() == kCollisionEnemyBullet) {
 
         //デバック用
         OnCollisionCollider();
@@ -84,7 +86,7 @@ void FloorGamePlayer::Initialize() {
 
 
     // 移動
-    moveDir_ = { 0.0f,0.0f,0.0f };
+    moveDir_ = { 0.0f,0.0f,1.0f };
     isMove_ = false;
     moveLimitMax_ = { 5.0f,5.0f,5.0f };
     moveLimitMin_ = { -5.0f,0.0f,-5.0f };
@@ -193,19 +195,19 @@ void FloorGamePlayer::Move() {
         }
     }
 
-    if (Input::IsPushKey(DIK_W)) {
+    if (KeyBindConfig::Instance().IsPress("MoveForward")) {
         moveDir_.z = 1.0f;
         isMove_ = true;
     }
-    if (Input::IsPushKey(DIK_S)) {
+    if (KeyBindConfig::Instance().IsPress("MoveBack")) {
         moveDir_.z = -1.0f;
         isMove_ = true;
     }
-    if (Input::IsPushKey(DIK_A)) {
+    if (KeyBindConfig::Instance().IsPress("MoveLeft")) {
         moveDir_.x = -1.0f;
         isMove_ = true;
     }
-    if (Input::IsPushKey(DIK_D)) {
+    if (KeyBindConfig::Instance().IsPress("MoveRight")) {
         moveDir_.x = 1.0f;
         isMove_ = true;
     }
@@ -258,7 +260,7 @@ void FloorGamePlayer::StriptFloor() {
     }
 
     // 床剥がし入力 //コントローラーの処理を追加しました　吉田
-    if (Input::IsTriggerKey(DIK_SPACE) || Input::IsControllerTriggerButton(XINPUT_GAMEPAD_A, 0)) {
+    if (KeyBindConfig::Instance().IsTrigger("Stript")) {
         isReqestStript_ = true;
         striptTimer_ = striptDuration_;
     }
@@ -275,7 +277,7 @@ void FloorGamePlayer::ShotFloor() {
         return;
     }
     // 床投げ入力
-    if (Input::IsTriggerKey(DIK_SPACE) || Input::IsControllerTriggerButton(XINPUT_GAMEPAD_A, 0)) {
+    if (KeyBindConfig::Instance().IsTrigger("Shot")) {
         isReqestShot_ = true;
         isStriptting_ = false;
         shotTimer_ = shotDuration_;

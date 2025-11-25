@@ -1,841 +1,275 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="ソース ファイル">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="ヘッダー ファイル">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="リソース ファイル">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine">
-      <UniqueIdentifier>{afd23ada-1f51-4906-bb55-1b1ed2f7530d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="リソース ファイル\shader">
-      <UniqueIdentifier>{66325673-9c99-4c39-9144-6b6cbc23b9c6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Camera">
-      <UniqueIdentifier>{0010a3ef-ddf2-4b75-a9ce-ce0d6163d96f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\ImGui">
-      <UniqueIdentifier>{95e5a33f-6312-490d-945e-1cab2568b816}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Input">
-      <UniqueIdentifier>{e853f721-fc20-495f-9190-45daa3667727}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Math">
-      <UniqueIdentifier>{9cdc9c56-48a7-4afb-945f-6c4291a8e35d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Mesh">
-      <UniqueIdentifier>{a1489622-4c41-4755-a1f8-f4900ed81e00}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Sound">
-      <UniqueIdentifier>{83114ccc-c1a8-4ce7-80f1-c8fdf7f10d0c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Surface">
-      <UniqueIdentifier>{86ced6e7-7b82-45ba-bb4c-b0688d563d41}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine">
-      <UniqueIdentifier>{1217db73-8387-4b00-a8b9-0a1149d3af91}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Camera">
-      <UniqueIdentifier>{dce5997f-3303-47ce-b789-1187212793ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\ImGui">
-      <UniqueIdentifier>{236f6dbc-2e8a-4f4d-a16e-756c1c9ec0a8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Input">
-      <UniqueIdentifier>{78879df8-3218-454b-a408-45803bb287b7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Math">
-      <UniqueIdentifier>{e9cd372d-1399-4a32-a041-fd0c208aadbc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Mesh">
-      <UniqueIdentifier>{52938834-a39b-4cd5-b3eb-c967d9ce1e68}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Sound">
-      <UniqueIdentifier>{940ceed2-3004-492d-acd3-24f7a1497a5a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Surface">
-      <UniqueIdentifier>{f066c38b-7dff-46c7-9969-12767b54d776}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="externals">
-      <UniqueIdentifier>{ecbcd98e-d2d0-4428-8720-5f12c490ba62}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="externals\imgui">
-      <UniqueIdentifier>{e7196278-88b7-4671-bfc6-3bc9800a56db}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="externals\assimp">
-      <UniqueIdentifier>{00c9f943-af76-4b6c-acad-e01d7dccd3dc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\DirectXCommon">
-      <UniqueIdentifier>{5489f04e-d69c-4b24-aeb7-e892d983ca96}</UniqueIdentifier>
-    </Filter>
+    <ClCompile Include="Source\Application\GameObject\UI\PauseScreen.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyShotWaveManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyShockWaveManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyShockWave.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBomb.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBombManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyShotBombManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorActionManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGamePlayerAnimationManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\PlayerStripFloorManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\StrippedFloor.cpp" />
+    <ClCompile Include="Source\Application\GameObject\UI\HPIcon.cpp" />
+    <ClCompile Include="Source\Application\GameObject\UI\HPGage.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyShotBulletManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBulletManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBullet.cpp" />
+    <ClCompile Include="Source\Application\Scene\ResultScene.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorBullet.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorBulletManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGameFloor.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGameFloorManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGamePlayer.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorPlayerShotBulletManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorPlayerStripTargetUI.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorStripManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\MY_Utility.cpp" />
+    <ClCompile Include="Source\Application\Scene\GameScene.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Enemy\Enemy.cpp" />
+    <ClCompile Include="externals\imgui\imgui.cpp" />
+    <ClCompile Include="Source\Application\System\Collider.cpp" />
+    <ClCompile Include="Source\Engine\JsonFile\JsonFile.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\Circle\CircleMesh.cpp" />
+    <ClCompile Include="Source\Engine\Particle\ParticleEmitter.cpp" />
+    <ClCompile Include="Source\Engine\Object3d\Object3d.cpp" />
+    <ClCompile Include="Source\Engine\SceneManager\SceneChange.cpp" />
+    <ClCompile Include="Source\Application\System\CollisionManager.cpp" />
+    <ClCompile Include="Source\Engine\Math\Matrix\Matrix3x3.cpp" />
+    <ClCompile Include="Source\Engine\Math\Random\Random.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\MeshCommon\MeshCommon.cpp" />
+    <ClCompile Include="Source\Engine\SceneManager\SceneManager.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\Model\ModelManager.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\Plane\PlaneMesh.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\DirectXCommon.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\ModelConfig.cpp" />
+    <ClCompile Include="Source\Engine\Particle\Particle.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\MyEngine.cpp" />
+    <ClCompile Include="Source\Engine\ImGui\DebugUI.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\Cube\CubeMesh.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\Line\LineMesh.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\Grid\DrawGrid.cpp" />
+    <ClCompile Include="Source\Engine\Math\Collision\Collision.cpp" />
+    <ClCompile Include="Source\Engine\Math\Vector\Vector2.cpp" />
+    <ClCompile Include="Source\Engine\Math\Vector\Vector4.cpp" />
+    <ClCompile Include="Source\Engine\PSO\RootSignature.cpp" />
+    <ClCompile Include="Source\Engine\PSO\InputLayout.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\GPU.cpp" />
+    <ClCompile Include="Source\Engine\ImGui\ImGuiClass.cpp" />
+    <ClCompile Include="Source\Engine\Surface\MaterialResource.cpp" />
+    <ClCompile Include="Source\Engine\Math\Lerp\Easing.cpp" />
+    <ClCompile Include="Source\Engine\Math\Lerp\Lerp.cpp" />
+    <ClCompile Include="Source\Engine\Math\Matrix\Matrix4x4.cpp" />
+    <ClCompile Include="Source\Engine\Math\Vector\Vector3.cpp" />
+    <ClCompile Include="Source\Engine\Math\WorldTransform\WorldTransform.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\Model\Model.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\ScissorRect.cpp" />
+    <ClCompile Include="Source\Engine\PSO\BlendState.cpp" />
+    <ClCompile Include="Source\Engine\PSO\CompileShader.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\Log.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\Fence.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\DebugError.cpp" />
+    <ClCompile Include="Source\Engine\PSO\PSO.cpp" />
+    <ClCompile Include="Source\Engine\PSO\RasterizerState.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\RenderTargetView.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\CommandList.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\CommandQueue.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\DXGIFactory.cpp" />
+    <ClCompile Include="Source\Engine\Camera\Camera.cpp" />
+    <ClCompile Include="Source\Engine\Camera\DebugCamera.cpp" />
+    <ClCompile Include="externals\imgui\imgui_demo.cpp" />
+    <ClCompile Include="externals\imgui\imgui_draw.cpp" />
+    <ClCompile Include="externals\imgui\imgui_impl_dx12.cpp" />
+    <ClCompile Include="externals\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="externals\imgui\imgui_tables.cpp" />
+    <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\Engine\Math\Cotangent\cotangent.cpp" />
+    <ClCompile Include="Source\Engine\PSO\Depth.cpp" />
+    <ClCompile Include="Source\Engine\Input\Input.cpp" />
+    <ClCompile Include="Source\Engine\Math\Matrix\MakeMatrix.cpp" />
+    <ClCompile Include="Source\Engine\Surface\MaterialData.cpp" />
+    <ClCompile Include="Source\Engine\Math\SphericalCoordinate\SphericalCoordinate.cpp" />
+    <ClCompile Include="Source\Engine\Sound\Sound.cpp" />
+    <ClCompile Include="Source\Engine\Math\CoordinateTransform\CoordinateTransform.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\Window.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\SwapChain.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\TransitionBarrier.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\Viewport.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\Sprite\Sprite.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\Sphere\SphereMesh.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\StringUtility.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\Sprite\SpriteCommon.cpp" />
+    <ClCompile Include="Source\Engine\Surface\Texture.cpp" />
+    <ClCompile Include="Source\Engine\Camera\SpriteCamera.cpp" />
+    <ClCompile Include="Source\Engine\SRVmanager\SrvManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\World.cpp" />
+    <ClCompile Include="Source\Application\GameObject\UI\UIManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\KeyBindConfig.cpp" />
+    <ClCompile Include="Source\Application\Scene\TitleScene.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\ActionUI.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\BossDummy.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\LetterboxBars.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\TitleText.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui\imgui_demo.cpp">
-      <Filter>externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui\imgui_draw.cpp">
-      <Filter>externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui\imgui_impl_dx12.cpp">
-      <Filter>externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui\imgui_impl_win32.cpp">
-      <Filter>externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui\imgui_tables.cpp">
-      <Filter>externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui\imgui_widgets.cpp">
-      <Filter>externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Camera\Camera.cpp">
-      <Filter>ソース ファイル\Engine\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Camera\DebugCamera.cpp">
-      <Filter>ソース ファイル\Engine\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Math\Collision\Collision.cpp">
-      <Filter>ソース ファイル\Engine\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\DirectXCommon\CommandList.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\DirectXCommon\CommandQueue.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\PSO\CompileShader.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\PSO\BlendState.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Math\CoordinateTransform\CoordinateTransform.cpp">
-      <Filter>ソース ファイル\Engine\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Math\Cotangent\cotangent.cpp">
-      <Filter>ソース ファイル\Engine\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\PSO\Depth.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Math\Lerp\Easing.cpp">
-      <Filter>ソース ファイル\Engine\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\DirectXCommon\Fence.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\DirectXCommon\GPU.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Math\Lerp\Lerp.cpp">
-      <Filter>ソース ファイル\Engine\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\Cube\CubeMesh.cpp">
-      <Filter>ソース ファイル\Engine\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\DirectXCommon\DebugError.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\ImGui\DebugUI.cpp">
-      <Filter>ソース ファイル\Engine\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\ImGui\ImGuiClass.cpp">
-      <Filter>ソース ファイル\Engine\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\Grid\DrawGrid.cpp">
-      <Filter>ソース ファイル\Engine\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\DirectXCommon\DXGIFactory.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Input\Input.cpp">
-      <Filter>ソース ファイル\Engine\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\Line\LineMesh.cpp">
-      <Filter>ソース ファイル\Engine\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Math\Matrix\MakeMatrix.cpp">
-      <Filter>ソース ファイル\Engine\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\PSO\InputLayout.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\DirectXCommon\Log.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Surface\MaterialData.cpp">
-      <Filter>ソース ファイル\Engine\Surface</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Surface\MaterialResource.cpp">
-      <Filter>ソース ファイル\Engine\Surface</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Math\Matrix\Matrix4x4.cpp">
-      <Filter>ソース ファイル\Engine\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\DirectXCommon\MyEngine.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\PSO\PSO.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\PSO\RasterizerState.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\DirectXCommon\RenderTargetView.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\PSO\RootSignature.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\DirectXCommon\ScissorRect.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Math\Vector\Vector2.cpp">
-      <Filter>ソース ファイル\Engine\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Math\Vector\Vector3.cpp">
-      <Filter>ソース ファイル\Engine\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Math\Vector\Vector4.cpp">
-      <Filter>ソース ファイル\Engine\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\DirectXCommon\Viewport.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Math\SphericalCoordinate\SphericalCoordinate.cpp">
-      <Filter>ソース ファイル\Engine\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Sound\Sound.cpp">
-      <Filter>ソース ファイル\Engine\Sound</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\Sprite\Sprite.cpp">
-      <Filter>ソース ファイル\Engine\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\Sphere\SphereMesh.cpp">
-      <Filter>ソース ファイル\Engine\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\Model\Model.cpp">
-      <Filter>ソース ファイル\Engine\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Math\WorldTransform\WorldTransform.cpp">
-      <Filter>ソース ファイル\Engine\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\DirectXCommon\SwapChain.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\DirectXCommon\TransitionBarrier.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\DirectXCommon\Window.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Particle\Particle.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\DirectXCommon\DirectXCommon.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\DirectXCommon\StringUtility.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\Sprite\SpriteCommon.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\DirectXCommon\ModelConfig.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Surface\Texture.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\Model\ModelManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\SceneManager\SceneManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Camera\SpriteCamera.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\MeshCommon\MeshCommon.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\Plane\PlaneMesh.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Math\Random\Random.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\System\CollisionManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Math\Matrix\Matrix3x3.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\SceneManager\SceneChange.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Object3d\Object3d.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\SRVmanager\SrvManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Particle\ParticleEmitter.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\World.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui\imgui.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\Circle\CircleMesh.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Enemy\Enemy.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\Scene\GameScene.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGamePlayer.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\MY_Utility.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGameFloor.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGameFloorManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorStripManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorBullet.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorBulletManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorPlayerShotBulletManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorPlayerStripTargetUI.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\Scene\TitleScene.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\Scene\ResultScene.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\JsonFile\JsonFile.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\System\Collider.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBullet.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBulletManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyShotBulletManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\UI\HPGage.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\UI\UIManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\UI\HPIcon.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorActionManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGamePlayerAnimationManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\StrippedFloor.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\PlayerStripFloorManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-
-    <ClCompile Include="Source\Application\GameObject\UI\PauseScreen.cpp">
-
-    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyShotBombManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBomb.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBombManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyShockWave.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyShockWaveManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyShotWaveManager.cpp">
-
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
+    <ClInclude Include="Source\Application\GameObject\UI\PauseScreen.h" />
+    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyShotWaveManager.h" />
+    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyShockWaveManager.h" />
+    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyShockWave.h" />
+    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBomb.h" />
+    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBombManager.h" />
+    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyShotBombManager.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\Data\FloorData.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\Data\MapData.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorActionManager.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGamePlayerAnimationManager.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\PlayerStripFloorManager.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\StrippedFloor.h" />
+    <ClInclude Include="Source\Application\GameObject\UI\HPIcon.h" />
+    <ClInclude Include="Source\Application\GameObject\UI\HPGage.h" />
+    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyShotBulletManager.h" />
+    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBulletManager.h" />
+    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBullet.h" />
+    <ClInclude Include="Source\Application\Scene\ResultScene.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorBullet.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorBulletManager.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGameFloor.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGameFloorManager.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGamePlayer.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorPlayerShotBulletManager.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorPlayerStripTargetUI.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorStripManager.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\KeyBindConfig.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\MY_Utility.h" />
+    <ClInclude Include="Source\Application\Scene\GameScene.h" />
+    <ClInclude Include="Source\Application\GameObject\Enemy\Enemy.h" />
+    <ClInclude Include="Source\Application\GameObject\CharacterState.h" />
+    <ClInclude Include="Source\Engine\JsonFile\JsonFile.h" />
+    <ClInclude Include="Source\Engine\Math\Structs\Circle.h" />
+    <ClInclude Include="Source\Engine\Mesh\Circle\CircleMesh.h" />
+    <ClInclude Include="Source\Engine\Particle\ParticleEmitter.h" />
+    <ClInclude Include="Source\Engine\Object3d\Object3d.h" />
+    <ClInclude Include="Source\Engine\SceneManager\SceneChange.h" />
+    <ClInclude Include="Source\Engine\Mesh\MeshCommon\VertexData.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\BlendMode.h" />
+    <ClInclude Include="Source\Application\System\Collider.h" />
+    <ClInclude Include="Source\Application\System\CollisionConfig.h" />
+    <ClInclude Include="Source\Application\System\CollisionManager.h" />
+    <ClInclude Include="Source\Engine\Math\Random\Random.h" />
+    <ClInclude Include="Source\Engine\Mesh\MeshCommon\MeshCommon.h" />
+    <ClInclude Include="Source\Engine\SceneManager\SceneManager.h" />
+    <ClInclude Include="Source\Engine\Mesh\Model\ModelManager.h" />
+    <ClInclude Include="Source\Engine\Mesh\Plane\PlaneMesh.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\DirectXCommon.h" />
+    <ClInclude Include="externals\imgui\imconfig.h" />
+    <ClInclude Include="externals\imgui\imgui.h" />
+    <ClInclude Include="externals\imgui\imgui_impl_dx12.h" />
+    <ClInclude Include="externals\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="externals\imgui\imgui_internal.h" />
+    <ClInclude Include="externals\imgui\imstb_rectpack.h" />
+    <ClInclude Include="externals\imgui\imstb_textedit.h" />
+    <ClInclude Include="externals\imgui\imstb_truetype.h" />
+    <ClInclude Include="Source\Engine\hlslTypeToCpp.h" />
+    <ClInclude Include="Source\Engine\Particle\Particle.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\MyEngine.h" />
+    <ClInclude Include="Source\Engine\Mesh\MeshCommon\Balloon.h" />
+    <ClInclude Include="Source\Engine\PSO\BlendState.h" />
+    <ClInclude Include="Source\Engine\Camera\Camera.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\CommandList.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\CommandQueue.h" />
+    <ClInclude Include="Source\Engine\PSO\CompileShader.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\ModelConfig.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\CrashHandler.h" />
+    <ClInclude Include="Source\Engine\Mesh\Cube\CubeMesh.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\D3DResourceLeakChecker.h" />
+    <ClInclude Include="Source\Engine\Camera\DebugCamera.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\DebugError.h" />
+    <ClInclude Include="Source\Engine\ImGui\DebugUI.h" />
+    <ClInclude Include="Source\Engine\PSO\Depth.h" />
+    <ClInclude Include="Source\Engine\Surface\Light.h" />
+    <ClInclude Include="Source\Engine\Mesh\Grid\DrawGrid.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\DXGIFactory.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\Fence.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\GPU.h" />
+    <ClInclude Include="Source\Engine\ImGui\ImGuiClass.h" />
+    <ClInclude Include="Source\Engine\Input\Input.h" />
+    <ClInclude Include="Source\Engine\PSO\InputLayout.h" />
+    <ClInclude Include="Source\Engine\Mesh\Line\LineMesh.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\Log.h" />
+    <ClInclude Include="Source\Engine\Surface\MaterialData.h" />
+    <ClInclude Include="Source\Engine\Surface\MaterialResource.h" />
+    <ClInclude Include="Source\Engine\Math\Structs\AABB.h" />
+    <ClInclude Include="Source\Engine\Math\Collision\Collision.h" />
+    <ClInclude Include="Source\Engine\Math\CoordinateTransform\CoordinateTransform.h" />
+    <ClInclude Include="Source\Engine\Math\Cotangent\cotangent.h" />
+    <ClInclude Include="Source\Engine\Math\Lerp\Easing.h" />
+    <ClInclude Include="Source\Engine\Math\Lerp\Lerp.h" />
+    <ClInclude Include="Source\Engine\Math\Structs\Line.h" />
+    <ClInclude Include="Source\Engine\Math\Matrix\MakeMatrix.h" />
+    <ClInclude Include="Source\Engine\Math\Matrix\Matrix3x3.h" />
+    <ClInclude Include="Source\Engine\Math\Matrix\Matrix4x4.h" />
+    <ClInclude Include="Source\Engine\Math\Structs\Pendulum.h" />
+    <ClInclude Include="Source\Engine\Math\Structs\Plane.h" />
+    <ClInclude Include="Source\Engine\Math\Ray.h" />
+    <ClInclude Include="Source\Engine\Math\Segment.h" />
+    <ClInclude Include="Source\Engine\Math\Project.h" />
+    <ClInclude Include="Source\Engine\Math\Structs\Sphere.h" />
+    <ClInclude Include="Source\Engine\Math\SphericalCoordinate\SphericalCoordinate.h" />
+    <ClInclude Include="Source\Engine\Math\Structs\Transform.h" />
+    <ClInclude Include="Source\Engine\Math\Structs\Triangle.h" />
+    <ClInclude Include="Source\Engine\Math\Vector\Vector2.h" />
+    <ClInclude Include="Source\Engine\Math\Vector\Vector3.h" />
+    <ClInclude Include="Source\Engine\Math\Vector\Vector4.h" />
+    <ClInclude Include="Source\Engine\Math\WorldTransform\WorldTransform.h" />
+    <ClInclude Include="Source\Engine\Mesh\Model\Model.h" />
+    <ClInclude Include="Source\Engine\Mesh\Model\ModelData.h" />
+    <ClInclude Include="Source\Engine\PSO\PSO.h" />
+    <ClInclude Include="Source\Engine\PSO\RasterizerState.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\RenderTargetView.h" />
+    <ClInclude Include="Source\Engine\PSO\RootSignature.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\ScissorRect.h" />
+    <ClInclude Include="Source\Engine\Sound\Sound.h" />
+    <ClInclude Include="Source\Engine\Mesh\Sphere\SphereMesh.h" />
+    <ClInclude Include="Source\Engine\Mesh\Sprite\Sprite.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\SwapChain.h" />
+    <ClInclude Include="Source\Engine\Math\Matrix\TransformationMatrix.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\TransitionBarrier.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\Viewport.h" />
+    <ClInclude Include="Source\Engine\Mesh\MeshCommon\Wave.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\Window.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\StringUtility.h" />
+    <ClInclude Include="Source\Engine\Mesh\Sprite\SpriteCommon.h" />
+    <ClInclude Include="Source\Engine\Surface\Texture.h" />
+    <ClInclude Include="Source\Engine\Camera\SpriteCamera.h" />
+    <ClInclude Include="Source\Engine\SRVmanager\SrvManager.h" />
+    <ClInclude Include="Source\Application\GameObject\World.h" />
+    <ClInclude Include="Source\Application\GameObject\UI\UIManager.h" />
+    <ClInclude Include="Source\Application\Scene\TitleScene.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\ActionUI.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\BossDummy.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\LetterboxBars.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\TitleText.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="externals\imgui\imconfig.h">
-      <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui\imgui.h">
-      <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui\imgui_impl_dx12.h">
-      <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui\imgui_impl_win32.h">
-      <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui\imgui_internal.h">
-      <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui\imstb_rectpack.h">
-      <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui\imstb_textedit.h">
-      <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui\imstb_truetype.h">
-      <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Structs\AABB.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\MeshCommon\Balloon.h">
-      <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Camera\Camera.h">
-      <Filter>ヘッダー ファイル\Engine\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Collision\Collision.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\CoordinateTransform\CoordinateTransform.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Cotangent\cotangent.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\Cube\CubeMesh.h">
-      <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Camera\DebugCamera.h">
-      <Filter>ヘッダー ファイル\Engine\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\ImGui\DebugUI.h">
-      <Filter>ヘッダー ファイル\Engine\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\Grid\DrawGrid.h">
-      <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Lerp\Easing.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Surface\Light.h">
-      <Filter>ヘッダー ファイル\Engine\Surface</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\ImGui\ImGuiClass.h">
-      <Filter>ヘッダー ファイル\Engine\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Input\Input.h">
-      <Filter>ヘッダー ファイル\Engine\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Lerp\Lerp.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Structs\Line.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\Line\LineMesh.h">
-      <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Matrix\MakeMatrix.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Surface\MaterialData.h">
-      <Filter>ヘッダー ファイル\Engine\Surface</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Surface\MaterialResource.h">
-      <Filter>ヘッダー ファイル\Engine\Surface</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\Model\Model.h">
-      <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\Model\ModelData.h">
-      <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Matrix\Matrix3x3.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Matrix\Matrix4x4.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Structs\Plane.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Structs\Triangle.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Vector\Vector2.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Vector\Vector3.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Vector\Vector4.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\WorldTransform\WorldTransform.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\MeshCommon\Wave.h">
-      <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Sound\Sound.h">
-      <Filter>ヘッダー ファイル\Engine\Sound</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Structs\Pendulum.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Structs\Transform.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Matrix\TransformationMatrix.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\Sphere\SphereMesh.h">
-      <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\Sprite\Sprite.h">
-      <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Structs\Sphere.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\SphericalCoordinate\SphericalCoordinate.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\PSO\BlendState.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\CommandList.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\CommandQueue.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\PSO\CompileShader.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\CrashHandler.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\D3DResourceLeakChecker.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\DebugError.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\PSO\Depth.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\DirectXCommon.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\DXGIFactory.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\Fence.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\GPU.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\PSO\InputLayout.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\Log.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\ModelConfig.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\MyEngine.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Particle\Particle.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\PSO\PSO.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\PSO\RasterizerState.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\RenderTargetView.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\PSO\RootSignature.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\ScissorRect.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\StringUtility.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\SwapChain.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\TransitionBarrier.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\Viewport.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\Window.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\Sprite\SpriteCommon.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Surface\Texture.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\hlslTypeToCpp.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\Model\ModelManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\SceneManager\SceneManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Camera\SpriteCamera.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\MeshCommon\MeshCommon.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\Plane\PlaneMesh.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Random\Random.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Ray.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Segment.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Project.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\System\Collider.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\System\CollisionConfig.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\System\CollisionManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\BlendMode.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\SceneManager\SceneChange.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Object3d\Object3d.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\MeshCommon\VertexData.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\SRVmanager\SrvManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Particle\ParticleEmitter.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\World.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\Circle\CircleMesh.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Structs\Circle.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\CharacterState.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Enemy\Enemy.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\Scene\GameScene.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGamePlayer.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\KeyBindConfig.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\MY_Utility.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGameFloor.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGameFloorManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorStripManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorBullet.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorBulletManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorPlayerShotBulletManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorPlayerStripTargetUI.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\Scene\TitleScene.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\Scene\ResultScene.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\JsonFile\JsonFile.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBullet.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBulletManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyShotBulletManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\UI\HPGage.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\UI\UIManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\UI\HPIcon.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorActionManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGamePlayerAnimationManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\PlayerStripFloorManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\StrippedFloor.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\Data\FloorData.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\Data\MapData.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-
-    <ClInclude Include="Source\Application\GameObject\UI\PauseScreen.h">
-
-    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyShotBombManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBomb.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBombManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyShockWave.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyShockWaveManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyShotWaveManager.h">
-
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
+    <Library Include="externals\assimp\lib\Debug\assimp-vc143-mdd.lib" />
+    <Library Include="externals\assimp\lib\Debug\assimp-vc143-mtd.lib" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="externals\imgui\LICENSE.txt">
-      <Filter>externals\imgui</Filter>
-    </Text>
+    <Image Include="Resources\numbers.png" />
+    <Image Include="Resources\player.png" />
+    <Image Include="Resources\uvChecker.png" />
+    <Image Include="Resources\white1x1.png" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="externals\assimp\lib\Debug\assimp-vc143-mdd.lib">
-      <Filter>externals\assimp</Filter>
-    </Library>
-    <Library Include="externals\assimp\lib\Debug\assimp-vc143-mtd.lib">
-      <Filter>externals\assimp</Filter>
-    </Library>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="externals\assimp\lib\Debug\assimp-vc143-mtd.pdb">
-      <Filter>externals\assimp</Filter>
-    </None>
-    <None Include="Resource\JsonFiles\config.json" />
+    <None Include="externals\assimp\lib\Debug\assimp-vc143-mtd.pdb" />
     <None Include="Resource\JsonFiles\Boss.json" />
+    <None Include="Resource\JsonFiles\config.json" />
     <None Include="Resource\JsonFiles\player.json" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Resources\numbers.png">
-      <Filter>リソース ファイル</Filter>
-    </Image>
-    <Image Include="Resources\player.png">
-      <Filter>リソース ファイル</Filter>
-    </Image>
-    <Image Include="Resources\uvChecker.png">
-      <Filter>リソース ファイル</Filter>
-    </Image>
-    <Image Include="Resources\white1x1.png">
-      <Filter>リソース ファイル</Filter>
-    </Image>
+    <Text Include="externals\imgui\LICENSE.txt" />
   </ItemGroup>
 </Project>

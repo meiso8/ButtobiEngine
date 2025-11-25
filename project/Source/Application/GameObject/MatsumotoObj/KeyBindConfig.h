@@ -1,21 +1,33 @@
 #pragma once
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
+#include <stdint.h>
+#include <unordered_map>
+#include <vector>
+#include <string>
 
-enum FloorGameKeyBind
+struct InputDevice {
+	std::vector<uint8_t> keyboardKeys;
+	std::vector<UINT16> controllerButtons;
+};
+
+class KeyBindConfig
 {
-	// キーボード
-	K_MoveLeft = DIK_A,
-	K_MoveRight = DIK_D,
-	K_MoveForward = DIK_W,
-	K_MoveBackward = DIK_S,
-	K_Stript = DIK_SPACE,
-	K_Shot = DIK_SPACE,
-	// コントローラー
-	C_MoveLeft = 14,
-	C_MoveRight = 15,
-	C_MoveForward = 12,
-	C_MoveBackward = 13,
-	C_Stript = 0,
-	C_Shot = 0,
+public:
+	static KeyBindConfig& Instance() {
+		static KeyBindConfig instance;
+		return instance;
+	}
+
+	KeyBindConfig(const KeyBindConfig&) = delete;
+	KeyBindConfig& operator=(const KeyBindConfig&) = delete;
+
+	bool IsPress(const std::string& actionName);
+	bool IsTrigger(const std::string& actionName);
+	bool IsRelease(const std::string& actionName);
+
+private:
+	std::unordered_map<std::string, InputDevice> keyBinds_;
+	KeyBindConfig();
+	~KeyBindConfig() = default;
 };

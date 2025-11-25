@@ -157,16 +157,18 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\KeyBindConfig.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\ActionUI.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\BossDummy.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\LetterboxBars.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\TitleText.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\PauseScreen.cpp" />
-
     <ClCompile Include="Source\Application\GameObject\Enemy\EnemyShotWaveManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\Enemy\EnemyShockWaveManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\Enemy\EnemyShockWave.cpp" />
     <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBomb.cpp" />
     <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBombManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\Enemy\EnemyShotBombManager.cpp" />
-
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorActionManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGamePlayerAnimationManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\PlayerStripFloorManager.cpp" />
@@ -191,6 +193,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="Source\Application\Scene\TitleScene.cpp" />
     <ClCompile Include="Source\Application\System\Collider.cpp" />
     <ClCompile Include="Source\Engine\JsonFile\JsonFile.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Circle\CircleMesh.cpp" />
@@ -282,20 +285,20 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Camera\SpriteCamera.cpp" />
     <ClCompile Include="Source\Engine\SRVmanager\SrvManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\World.cpp" />
-    <ClCompile Include="Source\Application\Scene\TitleScene.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\ActionUI.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\BossDummy.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\LetterboxBars.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\TitleText.h" />
     <ClInclude Include="Source\Application\GameObject\UI\PauseScreen.h" />
-
     <ClInclude Include="Source\Application\GameObject\Enemy\EnemyShotWaveManager.h" />
     <ClInclude Include="Source\Application\GameObject\Enemy\EnemyShockWaveManager.h" />
     <ClInclude Include="Source\Application\GameObject\Enemy\EnemyShockWave.h" />
     <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBomb.h" />
     <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBombManager.h" />
     <ClInclude Include="Source\Application\GameObject\Enemy\EnemyShotBombManager.h" />
-
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\Data\FloorData.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\Data\MapData.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorActionManager.h" />
@@ -321,6 +324,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\Scene\GameScene.h" />
     <ClInclude Include="Source\Application\GameObject\Enemy\Enemy.h" />
     <ClInclude Include="Source\Application\GameObject\CharacterState.h" />
+    <ClInclude Include="Source\Application\Scene\TitleScene.h" />
     <ClInclude Include="Source\Engine\JsonFile\JsonFile.h" />
     <ClInclude Include="Source\Engine\Math\Structs\Circle.h" />
     <ClInclude Include="Source\Engine\Mesh\Circle\CircleMesh.h" />
@@ -420,7 +424,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Camera\SpriteCamera.h" />
     <ClInclude Include="Source\Engine\SRVmanager\SrvManager.h" />
     <ClInclude Include="Source\Application\GameObject\World.h" />
-    <ClInclude Include="Source\Application\Scene\TitleScene.h" />
     <ClInclude Include="Source\Application\GameObject\UI\UIManager.h" />
   </ItemGroup>
   <ItemGroup>

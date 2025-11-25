@@ -1,9 +1,74 @@
 #include "TitleScene.h"
-#include"Input.h"
+#define NOMINMAX
+//入力処理に必要なもの
+#include "Input.h"
+
+//Debug用のImGui表示セット
+#include"DebugUI.h"
+
+//グリッド表示
+#include"DrawGrid.h"
+
+//モデル読み込みに必要なもの
+#include"Model.h"
+#include"ModelManager.h"
+//スプライトに必要なもの
+#include"Texture.h"
+#include"Sprite.h"
+//音を鳴らすのに必要なもの
+#include"Sound.h"
+
+//球体のメッシュ
+#include"SphereMesh.h"
+//平面のメッシュ
+#include"PlaneMesh.h"
+
+
+//円のメッシュ
+#include"CircleMesh.h"
+//立方体のメッシュ（AABBでセットするか8頂点でセット);
+#include"CubeMesh.h"
+
+#include "ParticleEmitter.h"
+#include"Particle.h"
+
+#include"Random.h"
+#include"MakeMatrix.h"
+
+#include"Collision.h"
+#include"Circle.h"
+
+#include"MyEngine.h"
+
+#include "MatsumotoObj/MY_Utility.h"
 
 
 TitleScene::TitleScene()
 {
+    // 現在のカメラを設定
+    currentCamera_ = camera_.get();
+
+#pragma region // オブジェクト生成
+    //衝突判定管理
+    collisionManager_ = std::make_unique<CollisionManager>();
+
+    floorGamePlayer_ = std::make_unique<FloorGamePlayer>();
+    playerFloorStripManager_ = std::make_unique<PlayerFloorStripManager>(floorGamePlayer_.get());
+    floorGameFloorManager_ = std::make_unique<FloorGameFloorManager>();
+    floorStripManager_ = std::make_unique<FloorStripManager>(floorGamePlayer_.get(), floorGameFloorManager_.get(), playerFloorStripManager_.get());
+    floorBulletManager_ = std::make_unique<FloorBulletManager>();
+    floorPlayerShotBulletManager_ = std::make_unique<FloorPlayerShotBulletManager>(floorGamePlayer_.get(), floorBulletManager_.get());
+    floorPlayerStripTargetUI_ = std::make_unique<FloorPlayerStripTargetUI>(floorGamePlayer_.get());
+    floorActionManager_ = std::make_unique<FloorActionManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
+    floorGamePlayerAnimationManager_ = std::make_unique<FloorGamePlayerAnimationManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
+
+	titleText_ = std::make_unique<TitleText>();
+	bossDummy_ = std::make_unique<BossDummy>();
+	letterboxBars_ = std::make_unique<LetterboxBars>();
+	actionUI_ = std::make_unique<ActionUI>(floorGamePlayer_.get());
+#pragma endregion
+
+	eventTimer_ = 0.0f;
 }
 
 TitleScene::~TitleScene()
@@ -14,16 +79,61 @@ void TitleScene::Initialize()
 {
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 60);
+
+    MyEngine::GetDirectionalLightData()->direction = { 0.0f,0.0f,1.0f };
+
+    camera_->Initialize();
+    camera_->translate_ = { 0.0f, 12.0f,-14.0f };
+    camera_->rotate_ = { 0.6f,0.0f,0.0f };
+    camera_->UpdateMatrix();
+
+#pragma region // オブジェクト初期化
+    floorGamePlayer_->Initialize();
+    floorGameFloorManager_->Initialize();
+    floorStripManager_->Initialize();
+    floorBulletManager_->Initialize();
+    floorPlayerShotBulletManager_->Initialize();
+    floorPlayerStripTargetUI_->Initialize();
+    floorActionManager_->Initialize();
+    playerFloorStripManager_->Initialize();
+
+	titleText_->Initialize();
+	bossDummy_->Initialize();
+	letterboxBars_->Initialize();
+	actionUI_->Initialize();
+#pragma endregion
+
+	eventTimer_ = 0.0f;
 }
 
 void TitleScene::Update()
 {
+    UpdateCamera();
 
+    UpdateGameObject();
 
+    CheckAllCollision();
 }
 
 void TitleScene::Draw()
 {
+#pragma region // オブジェクト描画    
+    floorGameFloorManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+
+    if (titleText_->GetIsBreak()) {
+        bossDummy_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    } else {
+        titleText_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+        floorGamePlayer_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+        floorBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+        floorPlayerStripTargetUI_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+        playerFloorStripManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    }
+	letterboxBars_->Draw();
+	actionUI_->Draw();
+
+#pragma endregion
+
     sceneChange_->Draw();
 }
 
@@ -33,10 +143,14 @@ void TitleScene::Debug()
 
 void TitleScene::SceneChangeUpdate()
 {
-    // 何かをしたらシーン遷移
-    if (Input::IsTriggerKey(DIK_SPACE)) {
-        sceneChange_->SetState(SceneChange::kFadeIn, 30);
+    if (titleText_->GetIsBreak()) {
+		camera_->rotate_ = MY_Utility::SimpleEaseIn(camera_->rotate_, { 0.0f,0.0f,0.0f }, 0.1f);
+		camera_->translate_ = MY_Utility::SimpleEaseIn(camera_->translate_, { 0.0f,1.5f,0.0f }, 0.1f);
+		if (bossDummy_->isAnimEnd_) {
+			sceneChange_->SetState(SceneChange::kFadeIn, 30);
+		}
     }
+
 #ifdef _DEBUG
     // 何かをしたらシーン遷移
     if (Input::IsTriggerKey(DIK_I)) {
@@ -44,4 +158,51 @@ void TitleScene::SceneChangeUpdate()
     }
 #endif
     sceneChange_->Update();
+}
+
+void TitleScene::UpdateCamera() {
+    if (isDebugCameraActive_) {
+        currentCamera_->UpdateMatrix();
+    } else {
+        camera_->UpdateMatrix();
+    }
+}
+
+void TitleScene::UpdateGameObject() {
+    // オブジェクト個人の更新
+    if (titleText_->GetIsBreak()) {
+        bossDummy_->Update();
+		actionUI_->isHide_ = true;
+    } else {
+        floorGamePlayer_->Update();
+        floorGameFloorManager_->Update();
+        floorBulletManager_->Update();
+        titleText_->Update();
+    }
+	letterboxBars_->isOpen_ = titleText_->GetIsBreak();
+	letterboxBars_->Update();
+	actionUI_->Update();
+
+    // オブジェクト同士の干渉
+    floorStripManager_->Update();
+    playerFloorStripManager_->Update();
+    floorPlayerShotBulletManager_->Update();
+    floorPlayerStripTargetUI_->Update();
+    floorActionManager_->Update();
+
+    // アニメーション更新
+    floorGamePlayerAnimationManager_->Update();
+}
+
+void TitleScene::CheckAllCollision() {
+    collisionManager_->ClearColliders();
+
+    collisionManager_->AddCollider(floorGamePlayer_.get());
+	collisionManager_->AddCollider(titleText_.get());
+
+    for (auto& bullet : floorBulletManager_->GetBullets()) {
+        if (bullet->isActive_) { collisionManager_->AddCollider(bullet.get()); }
+    }
+
+    collisionManager_->CheckAllCollisions();
 }

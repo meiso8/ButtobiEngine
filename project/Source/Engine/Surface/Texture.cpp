@@ -20,6 +20,10 @@ void Texture::LoadAllTexture() {
     handles[TEST] = Load("Resource/Textures/test.png");
     handles[HART] = Load("Resource/Textures/hart.png");
     handles[HP_GAGE_EFFECCT] = Load("Resource/Textures/hpGageEffect.png");
+
+	handles[ACTION_UI_MOVE] = Load("Resource/Textures/ActionUi_Move.png");
+	handles[ACTION_UI_STRIP] = Load("Resource/Textures/ActionUi_Strip.png");
+	handles[ACTION_UI_SHOT] = Load("Resource/Textures/ActionUi_Shot.png");
 }
 
 uint32_t Texture::Load(const std::string& filePath)
@@ -66,8 +70,6 @@ void Texture::LoadTexture(const std::string& filePath)
 
     //テクスチャ枚数上限チェック
     assert(SrvManager::IsMaxCount());
-
-
 
     //テクスチャファイルを読んでプログラムで扱えるようにする
     DirectX::ScratchImage image{};

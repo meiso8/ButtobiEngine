@@ -11,6 +11,10 @@
 #define WIN_WIDTH 1280
 #define WIN_HEIGHT 720
 
+// * エンジンとInGameの間のラッパークラス勝手に追加しました(マツモト) * //
+#include "MatsumotoObj/KeyBindConfig.h"
+// * ラッパークラスここまで * //
+
 // Windowsアプリでのエントリーポイント(main関数)
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -24,6 +28,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     //画面の色
     Vector4 screenColor = { 0.373f,0.804f,0.894f,1.0f };
 
+	// * ラッパークラスここから * //
+	// キーバインドの初期化
+    KeyBindConfig::Instance();
+	// * ラッパークラスここまで * //
+
     // =============================================
     // シーンの生成
     // =============================================
@@ -34,8 +43,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     scenes["Result"] = std::make_unique < ResultScene>();
 
     //最初の位置を保持
-    auto currentIt = scenes.begin();
-    SceneManager* currentScene = currentIt->second.get();
+	std::string startSceneName = "Title";
+	SceneManager* currentScene = scenes[startSceneName].get();
+	auto currentIt = scenes.find(startSceneName);
     currentScene->Initialize();
 
     // =============================================
