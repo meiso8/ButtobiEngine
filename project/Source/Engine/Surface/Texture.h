@@ -23,7 +23,7 @@ public:
         NUMBERS,
         TEST,
         HART,
-        HP_GAGE_EFFECCT,
+        PLAYER_WALK_PARTICLE,
         ACTION_UI_MOVE,
 		ACTION_UI_STRIP,
 		ACTION_UI_SHOT,

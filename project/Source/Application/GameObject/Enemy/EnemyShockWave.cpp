@@ -117,7 +117,7 @@ void EnemyShockWave::Draw(Camera& camera, const LightMode& lightType) {
 
 
 void EnemyShockWave::Shot(const Vector3& startPos, const Vector3& endPos, const AABBType&aabbType) {
-    Sound::PlaySE(Sound::PICO);
+    Sound::PlaySE(Sound::DEFEAT_BOSS);
     body_.worldTransform_.translate_ = startPos;
     endPos_ = endPos;
     SetAABB(localAABBs_[aabbType]);

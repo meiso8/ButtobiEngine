@@ -149,7 +149,7 @@ void Enemy::OnCollision(Collider* collider)
         }
 
         damageStruct_.isHit = true;
-        Sound::PlaySE(Sound::CRACKER);
+        Sound::PlaySE(Sound::DEFEAT_BOSS);
 
         if (damageStruct_.hps.hp > 0) {
             damageStruct_.hps.hp -= damageStruct_.hps.hpDecrease;
@@ -160,6 +160,7 @@ void Enemy::OnCollision(Collider* collider)
 
     if (collider->GetCollisionAttribute() == kCollisionPlayer) {
         if (phase_ == TACKLE) {
+            Sound::PlayOriginSE(Sound::BOSS_TACKLE);
             SetPhase(KNOCKBACK);
         }
     }
@@ -207,6 +208,9 @@ void Enemy::Knockback()
             float theta = PI * 3.0f * localTimer; // 回転の速さを調整
             bodyPos_.worldTransform_.rotate_.z = sinf(theta);
             bodyPos_.worldTransform_.rotate_.x = cosf(theta);
+
+            Sound::PlayOriginSE(Sound::STUN);
+
         } else {
             bodyPos_.worldTransform_.rotate_.z = Lerp(bodyPos_.worldTransform_.rotate_.z, 0.0f, 0.5f);
             bodyPos_.worldTransform_.rotate_.x = Lerp(bodyPos_.worldTransform_.rotate_.x, 0.0f, 0.5f);
@@ -341,6 +345,9 @@ void Enemy::RandomAttackPhaseEnd()
         break;
     }
 
+
+
+
     //switch (randNum)
     //{
     //case 0:
@@ -382,7 +389,8 @@ void Enemy::InitState()
 
 void Enemy::SwitchState()
 {
-    Sound::PlaySE(Sound::FIRE_BALL);
+
+    Sound::PlaySE(Sound::BOSS_HEAL);
 	isReqestClearFloor_ = true;
 
     if (currentState_ == "First") {

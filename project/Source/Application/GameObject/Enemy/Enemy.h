@@ -38,6 +38,7 @@ public:
     bool isReqestClearFloor_ = false;
     //体の位置
     Object3d bodyPos_;
+    bool IsHit() { return damageStruct_.isHit; }
     HPs* GetHpsPtr() { return &damageStruct_.hps; }
 private:
     //モデル

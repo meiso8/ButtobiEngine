@@ -19,7 +19,7 @@ void Texture::LoadAllTexture() {
     handles[NUMBERS] = Load("Resource/Textures/numbers.png");
     handles[TEST] = Load("Resource/Textures/test.png");
     handles[HART] = Load("Resource/Textures/hart.png");
-    handles[HP_GAGE_EFFECCT] = Load("Resource/Textures/hpGageEffect.png");
+    handles[PLAYER_WALK_PARTICLE] = Load("Resource/Textures/playerWalkParticle.png");
 
 	handles[ACTION_UI_MOVE] = Load("Resource/Textures/ActionUi_Move.png");
 	handles[ACTION_UI_STRIP] = Load("Resource/Textures/ActionUi_Strip.png");

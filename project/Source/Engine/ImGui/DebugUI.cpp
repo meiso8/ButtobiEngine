@@ -408,7 +408,8 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter, const char* label)
     Emitter& emitter = particleEmitter.emitter_;
 
     if (ImGui::TreeNode(label)) {
-        ImGui::Checkbox("isRandom", &emitter.isRandom);
+        ImGui::Checkbox("isRandomTranslate", &emitter.isRandomTranslate);
+        ImGui::Checkbox("isRandomRotate", &emitter.isRandomRotate);
         int movement = static_cast<int>(emitter.movement);
         ImGui::SliderInt("movement", &movement, 0, 2);
         emitter.movement = static_cast<ParticleMovements>(movement);
