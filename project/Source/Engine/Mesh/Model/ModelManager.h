@@ -11,7 +11,11 @@ public:
     /// @brief モデルのハンドルを宣言します
     enum MODEL_HANDLE {
         BOX,
-        ENEMY,
+
+        ENEMY_BODY,
+        ENEMY_WING_L,
+        ENEMY_WING_R,
+
         FLOOR,
         MELT_FLOOR,
 

@@ -21,6 +21,10 @@ public:
 	Object3d body_;
 	bool isAnimEnd_;
 private:
+	Object3d wingLPos_;
+	Object3d wingRPos_;
+	void Winging(const float& speed);
+
 	float timer_ = 0.0f;
 	Model* model_ = nullptr;
 };

@@ -39,10 +39,23 @@ Enemy::Enemy()
          {"Third", std::bind(&Enemy::RandomAttackPhaseEnd, this)},
     };
 
-    model_ = ModelManager::GetModel(ModelManager::ENEMY);
+
     bodyPos_.Create();
+    wingLPos_.Create();
+    wingRPos_.Create();
+
+    model_ = ModelManager::GetModel(ModelManager::ENEMY_BODY);
+
     bodyPos_.SetMesh(model_);
+    wingLPos_.SetMesh(ModelManager::GetModel(ModelManager::ENEMY_WING_L));
+    wingRPos_.SetMesh(ModelManager::GetModel(ModelManager::ENEMY_WING_R));
+    wingLPos_.worldTransform_.Parent(bodyPos_.worldTransform_);
+    wingRPos_.worldTransform_.Parent(bodyPos_.worldTransform_);
+
     bodyPos_.worldTransform_.scale_ = { kSize_,kSize_,kSize_ };
+
+    wingLPos_.worldTransform_.translate_.x = -1.0f;
+    wingRPos_.worldTransform_.translate_.x = 1.0f;
 
     model_->GetWaveData(0).direction = { 0.0f,0.0f,1.0f };
     model_->GetWaveData(0).amplitude = 0.05f;
@@ -58,7 +71,7 @@ Enemy::Enemy()
 
 void Enemy::Init() {
     InitState();
-	isReqestClearFloor_ = false;
+    isReqestClearFloor_ = false;
     model_->GetWaveData(0).time = 0.0f;
 }
 
@@ -66,7 +79,13 @@ void Enemy::Init() {
 void Enemy::Draw(Camera& camera, const LightMode& lightMode)
 {
     bodyPos_.SetLightMode(lightMode);
+    wingLPos_.SetLightMode(lightMode);
+    wingRPos_.SetLightMode(lightMode);
+
     bodyPos_.Draw(camera, kBlendModeNormal);
+    wingLPos_.Draw(camera, kBlendModeNormal);
+    wingRPos_.Draw(camera, kBlendModeNormal);
+
     ColliderDraw(camera);
 }
 
@@ -105,9 +124,12 @@ void Enemy::Update()
 
     HitAnimation();
     model_->GetWaveData(0).time += InverseFPS * 4.0f;
-
+    Winging(2.0f);
 
     bodyPos_.Update();
+    wingLPos_.Update();
+    wingRPos_.Update();
+
     ColliderUpdate();
 
     if (damageStruct_.hps.hp <= 0.0f) {
@@ -118,8 +140,12 @@ void Enemy::Update()
 
     ImGui::Begin("Enemy");
     DebugUI::CheckDamageStruct(damageStruct_, "Boss");
+    DebugUI::CheckObject3d(bodyPos_, "bodyPos");
+    DebugUI::CheckObject3d(wingLPos_, "wingLPos");
+    DebugUI::CheckObject3d(wingRPos_, "wingRPos");
+
     ImGui::Text("%s", currentState_.c_str());
-    
+
     ImGui::Checkbox("isAttack", &isAttack_);
     ImGui::Checkbox("isPreAttack", &isPreAttack_);
     ImGui::SliderInt("actionCount", &actionCount_, 0, 3);
@@ -139,6 +165,8 @@ Vector3 Enemy::GetWorldPosition()const
 
 void Enemy::OnCollision(Collider* collider)
 {
+
+
     //デバック用
     OnCollisionCollider();
 
@@ -383,7 +411,7 @@ void Enemy::InitState()
     //球面座標系
     sphericalPos_ = { .radius = 0.0f,.azimuthal = 0.0f ,.polar = 0.0f };
     //体についての項目
-    bodyPos_.SetColor({ 1.0f,0.0f,0.0f,1.0f });
+
     bodyPos_.worldTransform_.translate_.y = GetRadius();
 }
 
@@ -391,7 +419,7 @@ void Enemy::SwitchState()
 {
 
     Sound::PlaySE(Sound::BOSS_HEAL);
-	isReqestClearFloor_ = true;
+    isReqestClearFloor_ = true;
 
     if (currentState_ == "First") {
         currentState_ = "Second";
@@ -504,7 +532,7 @@ void Enemy::FloorChangeAttack()
 
     if (phaseTimer_ <= 1.0f) {
         RotateY(phaseTimer_);
-  
+
     } else if (phaseTimer_ <= 1.5f) {
         if (!isBombShot_) {
             isBombShot_ = true;
@@ -573,11 +601,18 @@ void Enemy::HitAnimation()
 
 void Enemy::LerpScale()
 {
-    bodyPos_.worldTransform_.scale_ = Lerp(Vector3{ bodyPos_.worldTransform_.scale_ }, { 3.0f,3.0f,3.0f }, 0.5f);
+    bodyPos_.worldTransform_.scale_ = Lerp(Vector3{ bodyPos_.worldTransform_.scale_ }, { kSize_,kSize_,kSize_ }, 0.5f);
 }
 
 void Enemy::RotateY(const float& timer)
 {
     bodyPos_.worldTransform_.rotate_.y = Easing::EaseInBack(startRotateY_, endRotateY_, timer);
 
+}
+
+void Enemy::Winging(const float& speed)
+{
+    wingTheta_ += std::numbers::pi_v<float>*InverseFPS * speed;
+    wingLPos_.worldTransform_.rotate_.z = sinf(wingTheta_);
+    wingRPos_.worldTransform_.rotate_.z = -sinf(wingTheta_);
 }
