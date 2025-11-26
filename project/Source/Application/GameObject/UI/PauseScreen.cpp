@@ -60,9 +60,7 @@ PauseScreen::PauseScreen()
     sprites_[kReTry]->SetAnchorPoint({ 0.5f,0.5f });
     sprites_[kBackToTitle]->SetAnchorPoint({ 0.5f,0.5f });
 
-    for (int i = kPauseBG; i < sprites_.size(); ++i) {
-        sprites_[i]->SetPosition(startPos_[i]);
-    }
+
 
 }
 void PauseScreen::Initialize()
@@ -73,6 +71,16 @@ void PauseScreen::Initialize()
     isActive_ = false;
     pauseTimer_ = 0.0f;
     scaleTheta_ = 0.0f;
+
+    for (int i = kPauseBG; i < sprites_.size(); ++i) {
+        sprites_[i]->SetPosition(startPos_[i]);
+    }
+
+    selectButtonNum_ = kBackToGameButton;
+
+    for (int i = 0; i < kButtonMax; ++i) {
+        sprites_[i + kBackToGame]->SetScale({ 1.0f,1.0f });
+    }
 }
 void PauseScreen::Update()
 {
@@ -81,6 +89,7 @@ void PauseScreen::Update()
         isPause_ = (isPause_) ? false : true;
         pauseTimer_ = 0.0f;
         isActive_ = true;
+        selectButtonNum_ = kBackToGameButton;
     }
 
     for (int i = 0; i < sprites_.size(); ++i) {

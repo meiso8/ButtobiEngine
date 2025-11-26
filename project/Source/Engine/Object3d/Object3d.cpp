@@ -22,8 +22,8 @@ void Object3d::CreateUV()
 
     uvTransformMatrix_ = MakeIdentity4x4();
 
-}
-;
+};
+
 void Object3d::UpdateUV() {
 
     uvTransformMatrix_ = MakeAffineMatrix(uvTransform_.scale, uvTransform_.rotate, uvTransform_.translate);
