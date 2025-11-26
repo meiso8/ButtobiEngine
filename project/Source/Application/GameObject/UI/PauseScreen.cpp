@@ -34,7 +34,7 @@ PauseScreen::PauseScreen()
     startPos_[kPauseBG] = { width,0.0f };
     endPos_[kPauseBG] = { width - sprites_[kPauseBG]->GetSize().x,0.0f };
 
-    startPos_[kPausing] = { width,64.0f };
+    startPos_[kPausing] = { width+128.0f,64.0f };
     endPos_[kPausing] = { width - sprites_[kPausing]->GetSize().x - 24.0f,startPos_[kPausing].y };
 
     startPos_[kBackToGame] = { width + 256.0f,height * 0.5f - 32.0f };
