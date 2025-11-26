@@ -34,6 +34,7 @@ void UIManager::Initialize()
     }
 
     playerHpIcon_->Initialize();
+    pauseScreen_->Initialize();
 }
 
 void UIManager::Update()
