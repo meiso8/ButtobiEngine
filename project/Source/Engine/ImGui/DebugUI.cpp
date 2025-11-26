@@ -205,23 +205,6 @@ void DebugUI::CheckJsonFile()
 #endif
 }
 
-void DebugUI::CheckCharacterState(CharacterState& state, const char* label)
-{
-#ifdef USE_IMGUI
-    ImGui::Begin("CharacterState");
-
-    if (ImGui::TreeNode(label)) {
-        ImGui::Checkbox("isAttack", &state.isAttack);
-        ImGui::Checkbox("isHit", &state.isHit);
-        ImGui::DragInt("HP", &state.hps.hp, 1, 0, 100);
-        ImGui::DragInt("MaxHP", &state.hps.maxHp, 1, 0, 100);
-        ImGui::TreePop();
-    }
-
-    ImGui::End();
-#endif
-}
-
 void DebugUI::CheckMesh(MeshCommon& mesh, const char* label) {
 #ifdef USE_IMGUI
     ImGui::Begin("Mesh");
@@ -231,8 +214,7 @@ void DebugUI::CheckMesh(MeshCommon& mesh, const char* label) {
         CheckWaveData(mesh.GetWaveData(0), "wave0");
         CheckWaveData(mesh.GetWaveData(1), "wave1");
         CheckBalloonData(mesh.GetBalloonData());
-        CheckMaterial(mesh.GetMaterial(), "material");
-        CheckColor(mesh.GetColor(), "modelColor");//一応マテリアルについている
+
         CheckPointLightData(mesh.GetPointLightData(), "pointLight");
         ImGui::TreePop();
     }
@@ -246,7 +228,7 @@ void DebugUI::CheckModel(Model& model, const char* label) {
     ImGui::Begin("Model");
 
     CheckMesh(model, label);
-    CheckTransform(model.GetUVTransform(), "uvTransfrom");
+
     ImGui::End();
 #endif
 }
@@ -275,8 +257,8 @@ void DebugUI::CheckInput() {
     ImGui::Text("B %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_B, 0));
     ImGui::Text("X %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_X, 0));
     ImGui::Text("Y %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_Y, 0));
-    Vector2 L =  Input::GetControllerStickPos(BUTTON_LEFT, 0);
-    Vector2 R =  Input::GetControllerStickPos(BUTTON_RIGHT, 0);
+    Vector2 L = Input::GetControllerStickPos(BUTTON_LEFT, 0);
+    Vector2 R = Input::GetControllerStickPos(BUTTON_RIGHT, 0);
     ImGui::SliderFloat2("BUTTON_LEFT", &L.x, -32768.0f, 32768.0f);
     ImGui::SliderFloat2("BUTTON_RIGHT", &R.x, -32768.0f, 32768.0f);
     ImGui::End();
@@ -379,12 +361,21 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
 {
 #ifdef USE_IMGUI
     ImGui::Begin("Object3d");
+
+    if (ImGui::TreeNode(label)) {
     CheckWorldTransform(object3d.worldTransform_, label);
     ShowMatrix4x4(object3d.worldTransform_.matWorld_);
+    CheckMaterial(object3d.GetMaterial(), "material");
+    CheckColor(object3d.GetColor(), "modelColor");//一応マテリアルについている
+    CheckTransform(object3d.GetUVTransform(), "uvTransfrom");
+    CheckLightMode(object3d.GetLightMode(), "GetLightMode");
+
+    ImGui::TreePop();
+    }
     ImGui::End();
 #endif
 }
-void DebugUI::CheckParticle(ParticleEmitter& particleEmitter)
+void DebugUI::CheckParticle(ParticleEmitter& particleEmitter, const char* label)
 {
 #ifdef USE_IMGUI
 
@@ -399,11 +390,12 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter)
 
     Emitter& emitter = particleEmitter.emitter_;
 
-    if (ImGui::TreeNode("Emitter")) {
-        ImGui::Checkbox("isRandom", &emitter.isRandom);
+    if (ImGui::TreeNode(label)) {
+        ImGui::Checkbox("isRandomTranslate", &emitter.isRandomTranslate);
+        ImGui::Checkbox("isRandomRotate", &emitter.isRandomRotate);
         int movement = static_cast<int>(emitter.movement);
         ImGui::SliderInt("movement", &movement, 0, 2);
-        emitter.movement = static_cast<ParticleManager::Movements>(movement);
+        emitter.movement = static_cast<ParticleMovements>(movement);
         ImGui::SliderFloat("radius", &emitter.radius, 0.1f, 10.0f);
         ImGui::SliderFloat("lifeTime", &emitter.lifeTime, -1.0f, 50.0f);
         CheckBlendMode(emitter.blendMode);
@@ -412,6 +404,7 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter)
         int count = emitter.count;
         ImGui::SliderInt("createNum", &count, 0, particle.kNumMaxInstance);
         emitter.count = count;
+        
         CheckWorldTransform(emitter.transform, "transform");
         ImGui::Text("frequencyTime : %f", emitter.frequencyTime);
         ImGui::SliderFloat("frequency", &emitter.frequency, 0.1f, 10.0f);
@@ -434,8 +427,8 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter)
             }
             ImGui::TreePop();
         }
-   
- 
+
+
     }
 
     ImGui::End();

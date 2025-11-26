@@ -16,12 +16,10 @@ void PlaneMesh::Create(const Texture::TEXTURE_HANDLE& textureHandle)
 
     CreateVertex();
     CreateIndexResource();
-    CreateUVTransformationMatrix();
-    CreateMaterial();
+
     CreateWaveData();
     CreateBalloonData();
     CreatePointLightData();
-    SetLightMode(kLightModeHalfL);
 }
 
 void PlaneMesh::CreateVertex() {
@@ -59,23 +57,6 @@ void PlaneMesh::CreateVertex() {
 
 }
 
-void PlaneMesh::CreateUVTransformationMatrix()
-{
-    uvTransform_ = {
-     {1.0f,1.0f,1.0f},
-     {0.0f,0.0f,0.0f},
-     {0.0f,0.0f,0.0f},
-    };
-
-    uvTransformMatrix_ = MakeIdentity4x4();
-}
-
-
-void PlaneMesh::UpdateUV() {
-    uvTransformMatrix_ = MakeAffineMatrix(uvTransform_.scale, uvTransform_.rotate, uvTransform_.translate);
-    materialResource_->SetUV(uvTransformMatrix_);
-}
-
 void PlaneMesh::ResetSize(const Vector2& size) {
     size_ = size;
     Vector2 halfSize = size_ * 0.5f;
@@ -93,8 +74,6 @@ void PlaneMesh::Draw(ID3D12GraphicsCommandList* commandList)
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
     //IBVを設定new
     commandList->IASetIndexBuffer(&indexBufferView_);//IBVを設定
-    //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-    commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
 
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
     SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);

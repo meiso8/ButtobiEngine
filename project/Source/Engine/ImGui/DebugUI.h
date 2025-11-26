@@ -24,7 +24,7 @@ class Object3d;
 struct Material;
 struct PointLight;
 class MeshCommon;
-struct CharacterState;
+
 
 class DebugUI
 {
@@ -32,7 +32,6 @@ public:
     static void CheckFPS();
     static void CheckSound();
     static void CheckJsonFile();
-    static void CheckCharacterState(CharacterState& state, const char* label);
     /// @brief 入力
     /// @param input 
     static void CheckInput();
@@ -75,7 +74,7 @@ public:
     /// @param camera 
     static void CheckCamera(Camera& camera);
 
-    static void CheckParticle(ParticleEmitter& particleEmitter);
+    static void CheckParticle(ParticleEmitter& particleEmitter, const char* label);
     /// @brief 色
     /// @param color 
     static void CheckColor(Vector4& color, const char* label);

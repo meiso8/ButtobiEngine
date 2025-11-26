@@ -8,11 +8,11 @@
 Building::Building() {
 
     model_ = ModelManager::GetModel(ModelManager::BUILDING);
-    model_->SetLightMode(kLightModeNone);
+
     buildingPos = std::make_unique<Object3d>();
     buildingPos->Create();
     buildingPos->SetMesh(model_);
-
+    buildingPos->SetLightMode(kLightModeNone);
 
     cubes_[Wall0] = std::make_unique<CubeMesh>();
     cubes_[Wall1] = std::make_unique<CubeMesh>();
@@ -55,13 +55,9 @@ Building::Building() {
             mesh->Create(Texture::WHITE_1X1);
         } else {
             mesh->Create(Texture::TEST3);
-            mesh->SetLightMode(kLightModeHalfL);
+     
         }
-
         mesh->SetMinMax(aabbs_[type]);
-
-        mesh->GetUVTransform().scale.y = {2.0f};
- 
     }
 
     wallPos_[Wall0] = std::make_unique<Object3d>();
@@ -70,10 +66,11 @@ Building::Building() {
     wallPos_[Wall3] = std::make_unique<Object3d>();
     wallPos_[Floor] = std::make_unique<Object3d>();
 
-
     for (const auto& [type, pos] : wallPos_) {
         pos->Create();
         pos->SetMesh(cubes_[type].get());
+        pos->SetLightMode(kLightModeHalfL);
+        pos->GetUVTransform().scale.y = { 2.0f };
     }
 }
 
@@ -98,15 +95,10 @@ void Building::Update()
 {
 
     for (const auto& [type, pos] : wallPos_) {
+        pos->GetUVTransform().translate.x -= std::numbers::pi_v<float> *0.0625f * 0.5f * InverseFPS;
+        pos->GetUVTransform().scale.x = sinf(pos->GetUVTransform().translate.x);
+        pos->UpdateUV();
         pos->Update();
-    }
-
-    for (const auto& [type, mesh] : cubes_) {
-
-        mesh->GetUVTransform().translate.x -= std::numbers::pi_v<float> *0.0625f * 0.5f * InverseFPS;
-        mesh->GetUVTransform().scale.x = sinf(mesh->GetUVTransform().translate.x);
-
-        mesh->UpdateUV();
     }
 }
 

@@ -118,7 +118,7 @@ void SampleScene::Initialize() {
     particleEmitters_[0]->emitter_.frequencyTime = 0.25f;
     particleEmitters_[0]->emitter_.lifeTime = 6.0f;
     particleEmitters_[0]->emitter_.blendMode = kBlendModeAdd;
-    particleEmitters_[0]->emitter_.movement = ParticleManager::kSphere;
+    particleEmitters_[0]->emitter_.movement = ParticleMovements::kParticleSphere;
     particleEmitters_[0]->emitter_.radius = 3.0f;
 
     particleEmitters_[1]->emitter_.transform.translate_.y = 30.0f;
@@ -204,6 +204,7 @@ void SampleScene::Update() {
 
     if (enemy_->isApper_) {
         for (int i = 0; i < particleEmitters_.size(); ++i) {
+            particleEmitters_[i]->UpdateTimer();
             particleEmitters_[i]->Update(*currentCamera_);
         }
         hpGage_->Update();
@@ -249,7 +250,7 @@ void SampleScene::Debug()
     DebugUI::CheckCamera(*currentCamera_);
 
     DebugUI::Button("ChangeCamera", func);
-    DebugUI::CheckParticle(*particleEmitters_[0]);
+    DebugUI::CheckParticle(*particleEmitters_[0],"Emitter0");
     DebugUI::CheckSprite(*sprite_[0], "sprite0");
 
 

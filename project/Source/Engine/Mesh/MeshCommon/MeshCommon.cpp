@@ -7,10 +7,6 @@ ModelConfig* MeshCommon::modelConfig_ = nullptr;
 
 void MeshCommon::Finalize() {
 
-    if (materialResource_) {
-        materialResource_->UnMap();
-        delete materialResource_;
-    }
 
     if (waveResource_) {
         waveResource_->Unmap(0, nullptr);
@@ -35,9 +31,7 @@ void MeshCommon::PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode
 
 }
 
-void MeshCommon::SetColor(const Vector4& color) {
-    materialResource_->SetColor(color);
-}
+
 
 void MeshCommon::InitWaveData()
 {
@@ -80,12 +74,6 @@ void MeshCommon::CreateIndexResource()
 {
 }
 
-
-void MeshCommon::CreateMaterial(const Vector4& color, const uint32_t& lightType) {
-    //マテリアルリソースを作成
-    materialResource_ = new MaterialResource();
-    materialResource_->CreateMaterial(color, lightType);
-}
 
 void MeshCommon::CreateWaveData()
 {

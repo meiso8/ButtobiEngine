@@ -65,7 +65,7 @@ void Player::Init()
 
 void Player::Draw(Camera& camera, const LightMode& lightType)
 {
-    model_->SetLightMode(lightType);
+    bodyPos_.SetLightMode(lightType);
     bodyPos_.Draw(camera, kBlendModeNormal);
     eyePos_.Draw(camera, kBlendModeNormal);
 }
@@ -204,7 +204,6 @@ void Player::LookBack()
     DebugUI::CheckFlag(isLookBack_, "isLookBack_");
     DebugUI::CheckFlag(isLookBackEnd_, "isEnd_");
     ImGui::SliderFloat3("forward", &GetForward().x, 0.0f, 100.0f);
-    DebugUI::CheckCharacterState(characterState_, "player");
     DebugUI::CheckMesh(*cubeMesh_, "PlayerCube");
     DebugUI::CheckMesh(*model_, "PlayerModel");
 #endif // USE_IMGUI

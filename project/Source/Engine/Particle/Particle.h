@@ -36,6 +36,13 @@ struct ParticleForGPU {
     Vector4 color;
 };
 
+
+enum ParticleMovements {
+    kParticleNormal,
+    kParticleSphere,
+    kParticleShock
+};
+
 struct ParticleGroup {
     MaterialData materialData;
     std::list<Particle>particles;
@@ -47,24 +54,18 @@ struct ParticleGroup {
     Vector3 textureSize;
     bool useModel;
     Model* model = nullptr;
+    const WorldTransform* parentPos_ = nullptr;
+    ParticleMovements movement;
 };
-
-
 
 std::list<SphericalCoordinate> EmitCoordinate(const bool& isRandom, uint32_t count, const float& radius = 3.0f);
 
-std::list<Particle> EmitParticles(const bool& isRandom, const WorldTransform& transform, uint32_t count, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f },const float& lifeTime = -1.0f);
-Particle MakeNewParticle(const bool& isRandom, const WorldTransform& transform, const Vector4& color, const float& lifeTime = -1.0f);
+std::list<Particle> EmitParticles(const bool& isRandomTranslate, const bool& isRandomRotate, const WorldTransform& transform, uint32_t count, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f },const float& lifeTime = -1.0f);
+Particle MakeNewParticle(const bool& isRandomTranslate, const bool& isRandomRotate, const WorldTransform& transform, const Vector4& color, const float& lifeTime = -1.0f);
 SphericalCoordinate MakeNewSphericalCoordinate(const bool& isRandom = true,const float& radius = 3.0f);
 class ParticleManager
 {
 public:
-
-    enum Movements {
-        kNormal,
-        kSphere,
-        kShock
-    };
 
     AccelerationField accelerationField;
     bool useBillboard_ = true;
@@ -109,9 +110,9 @@ public:
 static void Emit(Emitter& emitter);
 
     std::unordered_map<std::string, std::unique_ptr <ParticleGroup>>& GetParticleGroups();
-    void CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle, const bool& useModel, const ModelManager::MODEL_HANDLE& modelHandle = ModelManager::MODEL_HANDLE::BOX);
+    void CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle, const bool& useModel = false, const ModelManager::MODEL_HANDLE& modelHandle = ModelManager::MODEL_HANDLE::BOX);
 
-    void Update(Camera& camera, Movements& movement);
+    void Update(Camera& camera);
     void Draw(uint32_t blendMode = BlendMode::kBlendModeAdd);
     void InitAccelerationField();
     void Finalize();
@@ -121,10 +122,10 @@ protected:
     void UpdateMatrix(Particle& particleItr, ParticleGroup& group);
 private:
     //メンバ関数ポインタテーブル
-    std::unordered_map<Movements, std::function<void()>> UpdateFunctions;
-    void Normal();
-    void Sphere();
-    void Shock();
+    std::unordered_map<ParticleMovements, std::function<void(ParticleGroup&)>> UpdateFunctions;
+    void Normal(ParticleGroup& group);
+    void Sphere(ParticleGroup& group);
+    void Shock(ParticleGroup& group);
 
     void CreateModelData();
     void CreateVertexBufferResource();

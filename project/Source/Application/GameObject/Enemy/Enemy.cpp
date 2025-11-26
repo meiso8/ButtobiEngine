@@ -87,8 +87,6 @@ void Enemy::Update()
     HitUpdate();
     bodyPos_.Update();
     ColliderUpdate();
-
-    DebugUI::CheckCharacterState(characterState_, "Boss");
 }
 
 Vector3 Enemy::GetWorldPosition()const

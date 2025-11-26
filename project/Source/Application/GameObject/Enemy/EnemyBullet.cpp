@@ -11,10 +11,8 @@
 EnemyBullet::EnemyBullet() {
     model_ = ModelManager::GetModel(ModelManager::PEOPLE);
     body_.Create();
-    cubeMesh_ = std::make_unique<CubeMesh>();
-    cubeMesh_.get()->Create(Texture::WHITE_1X1);
-    cubeMesh_->SetColor({ 0.0f,1.0f,0.0f,1.0f });
     body_.SetMesh(model_);
+    body_.SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
 
     SetRadius(1.5f);
     SetCollisionAttribute(kCollisionEnemyBullet);

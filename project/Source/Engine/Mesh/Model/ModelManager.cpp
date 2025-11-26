@@ -17,6 +17,7 @@ std::map<const uint32_t, std::unique_ptr< Model> >ModelManager::models_;
 void ModelManager::LoadAllModel()
 {
     //モデルのファイルパスとタグを関連付けてください
+
     LoadModel("Resource/Models/Box", "Box.obj", BOX);
     LoadModel("Resource/Models/player", "player.obj", PLAYER_BODY);
     LoadModel("Resource/Models/medjed", "medjed.obj", MEDJED);
@@ -58,7 +59,7 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
 
     //追加したテクスチャデータのポインタ
     std::unique_ptr<Model> model = std::make_unique<Model>();
-
+   
     std::unique_ptr<ModelData> modelData = std::make_unique<ModelData>();
 
     Assimp::Importer importer;

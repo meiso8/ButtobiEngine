@@ -1,16 +1,16 @@
 #include "Field.h"
 #include"Input.h"
-
+#include"DebugUI.h"
 Field::Field()
 {
-    object3d_ = std::make_unique<Object3d>();
-    object3d_->Create();
 
+    circle_ = { {0.0f,0.0f,0.0f},25.0f };
     circleMesh_ = std::make_unique<CircleMesh>();
     circleMesh_->Create(Texture::NUMBERS);
-    circle_ = { {0.0f,0.0f,0.0f},25.0f };
     circleMesh_->SetVertex(circle_);
 
+    object3d_ = std::make_unique<Object3d>();
+    object3d_->Create();
     object3d_->SetMesh(circleMesh_.get());
 
 }
@@ -23,9 +23,11 @@ void Field::Init()
 void Field::Update()
 {
     uvTranslate_ += InverseFPS;
-    circleMesh_->SetUVTranslate({ 0.0f,uvTranslate_ ,0.0f });
+    object3d_->GetUVTransform().translate.y = uvTranslate_;
+    object3d_->UpdateUV();
     object3d_->Update();
-    circleMesh_->UpdateUV();
+    DebugUI::CheckMesh(*circleMesh_, "fieldMesh");
+    DebugUI::CheckObject3d(*object3d_, "fieldObject");
 }
 
 void Field::Draw(Camera& camera)

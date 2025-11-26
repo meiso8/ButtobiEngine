@@ -26,7 +26,6 @@ public:
     float size_;
 private:
     Model* model_ = nullptr;
-    std::unique_ptr<CubeMesh>cubeMesh_ = nullptr;
     Vector3 moveDir_;
     float moveSpeed_;
     float lifeTimer_;
