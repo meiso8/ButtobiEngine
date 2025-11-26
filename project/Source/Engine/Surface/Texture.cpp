@@ -24,6 +24,15 @@ void Texture::LoadAllTexture() {
 	handles[ACTION_UI_MOVE] = Load("Resource/Textures/ActionUi_Move.png");
 	handles[ACTION_UI_STRIP] = Load("Resource/Textures/ActionUi_Strip.png");
 	handles[ACTION_UI_SHOT] = Load("Resource/Textures/ActionUi_Shot.png");
+
+    handles[PAUSING_BG] = Load("Resource/Textures/pausingBG.png");
+    handles[PAUSING] = Load("Resource/Textures/pauseUI.png");
+
+    handles[BUTTON_BACK_TO_TITL] = Load("Resource/Textures/backToTitle.png");
+    handles[BUTTON_BACK_TO_GAME] = Load("Resource/Textures/backToGame.png");
+    handles[BUTTON_RETRY] = Load("Resource/Textures/retry.png");
+    handles[BUTTON_A] = Load("Resource/Textures/button_A.png");
+    handles[CONFIRM_UI] = Load("Resource/Textures/confirmUI.png");
 }
 
 uint32_t Texture::Load(const std::string& filePath)

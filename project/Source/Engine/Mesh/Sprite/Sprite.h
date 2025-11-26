@@ -52,7 +52,7 @@ public:
     Vector2& GetAnchorPoint() { return anchorPoint_; }
     /// @brief アンカーポイント
     /// @param anchorPoint 0.0f~1.0f
-    void SetAnchorPoint(const Vector2& anchorPoint) { anchorPoint_ = anchorPoint; }
+    void SetAnchorPoint(const Vector2& anchorPoint) { anchorPoint_ = anchorPoint; UpdateAnchorPoint(); }
     void SetIsFlipX(const bool isFlipX) { isFlipX_ = isFlipX; };
     void SetIsFlipY(const bool isFlipY) { isFlipY_ = isFlipY; };
     bool& GetIsFlipX() { return isFlipX_; };

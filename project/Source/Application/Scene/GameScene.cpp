@@ -125,10 +125,10 @@ void GameScene::Initialize() {
     particleEmitters_[kPlayerEmitter]->emitter_.count = 10;
     particleEmitters_[kPlayerEmitter]->emitter_.movement = ParticleMovements::kParticleNormal;
     particleEmitters_[kPlayerEmitter]->emitter_.isRandomTranslate = true;
-    particleEmitters_[kPlayerEmitter]->emitter_.isRandomRotate= false;
+    particleEmitters_[kPlayerEmitter]->emitter_.isRandomRotate = false;
     particleEmitters_[kPlayerEmitter]->emitter_.frequencyTime = 0.3f;
     particleEmitters_[kPlayerEmitter]->emitter_.blendMode = kBlendModeSubtract;
-    particleEmitters_[kPlayerEmitter]->emitter_.transform.scale_ = {0.5f,0.5f,0.5f};
+    particleEmitters_[kPlayerEmitter]->emitter_.transform.scale_ = { 0.5f,0.5f,0.5f };
 
     particleEmitters_[kEnemyEmitter]->emitter_.transform.translate_.y = -0.75f;
     particleEmitters_[kEnemyEmitter]->emitter_.count = 5;
@@ -139,14 +139,16 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 
-
-
-    if (/*enemy_->GetHpsPtr()->hp <= 0.0f||*/floorGamePlayer_->GetHpsPtr()->hp <= 0.0f) {
-
+    if (PauseScreen::isRetry || floorGamePlayer_->GetHpsPtr()->hp <= 0.0f) {
+        PauseScreen::isRetry = false;
 #ifdef _DEBUG
         Initialize();
 #endif
         /* sceneChange_->SetState(SceneChange::kFadeIn, 30);*/
+    }
+
+    if (PauseScreen::isBackToTitle) {
+        sceneChange_->SetState(SceneChange::kFadeIn, 30);
     }
 
     //仮に音声を鳴らす　全体のvolumeがあってオフセット分だけいじる
@@ -158,14 +160,13 @@ void GameScene::Update() {
         UpdateGameObject();
         CheckAllCollision();
 
-   
         if (floorGamePlayer_->isMove_) {
             particleEmitters_[kPlayerEmitter]->UpdateTimer();
         }
 
         if (enemy_->IsHit()) {
             particleEmitters_[kEnemyEmitter]->Emit();
-          /*  particleEmitters_[kEnemyEmitter]->UpdateTimer();*/
+            /*  particleEmitters_[kEnemyEmitter]->UpdateTimer();*/
 
         }
 
@@ -222,8 +223,8 @@ void GameScene::Debug()
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
     std::function<void()> func = [this]() { SwitchCamera(); };
     DebugUI::Button("ChangeCamera", func);
-    DebugUI::CheckParticle(*particleEmitters_[kEnemyEmitter],"Enemy");
-    DebugUI::CheckParticle(*particleEmitters_[kPlayerEmitter],"Player");
+    DebugUI::CheckParticle(*particleEmitters_[kEnemyEmitter], "Enemy");
+    DebugUI::CheckParticle(*particleEmitters_[kPlayerEmitter], "Player");
 #endif // !USE_IMGUI
 }
 
@@ -257,8 +258,8 @@ void GameScene::UpdateGameObject()
     floorPlayerStripTargetUI_->Update();
     floorActionManager_->Update();
     if (enemy_->isReqestClearFloor_) {
-		floorGameFloorManager_->Initialize();
-		enemy_->isReqestClearFloor_ = false;
+        floorGameFloorManager_->Initialize();
+        enemy_->isReqestClearFloor_ = false;
     }
 
     // アニメーション更新
