@@ -126,7 +126,7 @@ void GameScene::Initialize() {
     particleEmitters_[kPlayerEmitter]->emitter_.movement = ParticleMovements::kParticleNormal;
     particleEmitters_[kPlayerEmitter]->emitter_.isRandomTranslate = true;
     particleEmitters_[kPlayerEmitter]->emitter_.isRandomRotate = false;
-    particleEmitters_[kPlayerEmitter]->emitter_.frequencyTime = 0.3f;
+    particleEmitters_[kPlayerEmitter]->emitter_.frequency = 0.3f;
     particleEmitters_[kPlayerEmitter]->emitter_.blendMode = kBlendModeSubtract;
     particleEmitters_[kPlayerEmitter]->emitter_.transform.scale_ = { 0.5f,0.5f,0.5f };
 
@@ -162,6 +162,8 @@ void GameScene::Update() {
 
         if (floorGamePlayer_->isMove_) {
             particleEmitters_[kPlayerEmitter]->UpdateTimer();
+        } else {
+            particleEmitters_[kPlayerEmitter]->InitTimer();
         }
 
         if (enemy_->IsHit()) {
