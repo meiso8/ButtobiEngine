@@ -380,6 +380,8 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
 {
 #ifdef USE_IMGUI
     ImGui::Begin("Object3d");
+
+    if (ImGui::TreeNode(label)) {
     CheckWorldTransform(object3d.worldTransform_, label);
     ShowMatrix4x4(object3d.worldTransform_.matWorld_);
 
@@ -388,7 +390,8 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
     CheckTransform(object3d.GetUVTransform(), "uvTransfrom");
     CheckLightMode(object3d.GetLightMode(), "GetLightMode");
 
-
+    ImGui::TreePop();
+    }
     ImGui::End();
 #endif
 }
