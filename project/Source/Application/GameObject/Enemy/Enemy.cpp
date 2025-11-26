@@ -104,23 +104,12 @@ void Enemy::Update()
     //フェーズごとに呼び出す関数をカエル
     SwitchPhase();
 
-
-    if (Input::IsTriggerKey(DIK_Z)) {
-        SetPhase(FLOORCHANGEATTACK);
-    }
-
-    if (Input::IsTriggerKey(DIK_X)) {
-        SetPhase(SHOCKWAVEATTACK);
-    }
-
-
-    if (Input::IsTriggerKey(DIK_C)) {
-        SetPhase(TACKLE);
-    }
-
-    if (Input::IsTriggerKey(DIK_V)) {
-        SetPhase(FIREBALL);
-    }
+#ifdef _DEBUG
+    if (Input::IsTriggerKey(DIK_Z)) { SetPhase(FLOORCHANGEATTACK); }
+    if (Input::IsTriggerKey(DIK_X)) { SetPhase(SHOCKWAVEATTACK); }
+    if (Input::IsTriggerKey(DIK_C)) { SetPhase(TACKLE); }
+    if (Input::IsTriggerKey(DIK_V)) { SetPhase(FIREBALL); }
+#endif
 
     HitAnimation();
     model_->GetWaveData(0).time += InverseFPS * 4.0f;

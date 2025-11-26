@@ -152,6 +152,12 @@ void FloorGamePlayer::Update() {
     ImGui::SliderFloat("moveAcceleration", &moveAcceleration_, 0.0f, 10.0f);
     ImGui::SliderFloat("movepeed", &moveSpeed_, 0.0f, 10.0f);
     DebugUI::CheckDamageStruct(damageStruct_, "playerDamage");
+    DebugUI::CheckObject3d(body_,"body");
+    DebugUI::CheckObject3d(headObject_, "head");
+    DebugUI::CheckObject3d(rightArmObject_, "rightArmObject");
+    DebugUI::CheckObject3d(leftArmObject_, "leftArmObject");
+    DebugUI::CheckObject3d(rightLegObject_, "rightLegObject");
+    DebugUI::CheckObject3d(leftLegObject_, "leftLegObject");
 
     ImGui::End();
 

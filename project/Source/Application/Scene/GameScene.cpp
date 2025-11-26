@@ -83,8 +83,6 @@ GameScene::GameScene()
 
 void GameScene::Initialize() {
 
-    MyEngine::GetDirectionalLightData()->direction = { 0.0f,0.0f,1.0f };
-
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 60);
     camera_->Initialize();
