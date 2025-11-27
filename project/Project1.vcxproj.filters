@@ -113,6 +113,7 @@
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\BossDummy.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\LetterboxBars.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\TitleText.cpp" />
+    <ClCompile Include="Source\Application\System\CameraController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\GameObject\UI\PauseScreen.h" />
@@ -252,6 +253,7 @@
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\BossDummy.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\LetterboxBars.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\TitleText.h" />
+    <ClInclude Include="Source\Application\System\CameraController.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="externals\assimp\lib\Debug\assimp-vc143-mdd.lib" />

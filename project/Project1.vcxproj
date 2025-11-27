@@ -157,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\System\CameraController.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\KeyBindConfig.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\ActionUI.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\BossDummy.cpp" />
@@ -288,6 +289,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\UI\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\System\CameraController.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\ActionUI.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\BossDummy.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\LetterboxBars.h" />

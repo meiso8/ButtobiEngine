@@ -11,6 +11,7 @@
 
 #include <Xinput.h>
 #pragma comment(lib, "xinput.lib")
+#include<array>
 
 class Camera;
 
@@ -58,10 +59,7 @@ public:
     /// @brief マウスのホイール値を得る
     /// @return マウスのホイール値
     static float GetMouseWheel();
-    /// @brief コントローラーが接続されているかどうか
-    /// @param dwUserIndex コントローラーのインデックス
-    /// @return コントローラー接続判定
-    static bool IsControllerConnected(DWORD dwUserIndex);
+    static bool GetIsControllerConnected(DWORD dwUserIndex) { return isControllerConnected_[dwUserIndex]; }
     /// @brief コントローラーの正規化されたスティックの座標(-1~1)を得る
     /// @param type BUTTON_LEFTかBUTTON_RIGHTをいれる
     /// @param dwUserIndex コントローラーのインデックス
@@ -112,12 +110,15 @@ private:
 
     //ゲームパッド
     static float deadZone_;
-    static WORD preWButtons_;
-    static BYTE  preBLeftTrigger_;
-    static BYTE  preBRightTrigger_;
-    static XINPUT_STATE xinputState_;
+    static std::array <bool ,4>isControllerConnected_;
 
+    static std::array <XINPUT_STATE, 4>xinputState_;
+    static std::array <XINPUT_STATE, 4>preXinputState_;
 private:
     static Vector2 NormalizeButtonCount(SHORT& buttonLX, SHORT& buttonLY);
-    static XINPUT_STATE& GetControllerState(DWORD& dwUserIndex);
+    //static XINPUT_STATE& GetControllerState(DWORD& dwUserIndex);
+    /// @brief コントローラーが接続されているかどうか
+/// @param dwUserIndex コントローラーのインデックス
+/// @return コントローラー接続判定
+    static bool IsControllerConnected(DWORD dwUserIndex);
 };
