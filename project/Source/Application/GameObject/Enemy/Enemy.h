@@ -28,7 +28,8 @@ public:
     Vector3 GetWorldPosition()const override;
     void OnCollision(Collider* collder)override;
     void SetTarget(Vector3& target) { target_ = &target; };
-    void SetPlayerPos(Vector3& target) { playerPos_ = &target; };
+    void SetPlayerPos(Vector3& target) { playerPos_ = &target; };    
+    void SetPlayerLookDirPos(Vector3& moveDir) { playerLookDir_ = &moveDir; };
     Vector3 GetPlayerTarget() {
         if (playerPos_ != nullptr) {
             return Normalize(*playerPos_ - bodyPos_.worldTransform_.GetWorldPosition());
@@ -53,6 +54,7 @@ private:
     //目標地点
     Vector3* target_ = nullptr;
     Vector3* playerPos_ = nullptr;
+    Vector3* playerLookDir_ = nullptr;
     //キャラクターの共通でもつ状態
     Damage damageStruct_;
     Circle enemyRoundCircle_ = { {0.0f,0.0f,0.0f} ,7.0f };

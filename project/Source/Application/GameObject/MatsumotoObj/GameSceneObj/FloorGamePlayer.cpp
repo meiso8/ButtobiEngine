@@ -11,7 +11,7 @@
 #include "MatsumotoObj/MY_Utility.h"
 #include"UI/HPIcon.h"
 #include"Enemy/EnemyBomb.h"
-
+#include"VibrateManager.h"
 #include "MatsumotoObj/KeyBindConfig.h"
 
 FloorGamePlayer::FloorGamePlayer() {
@@ -46,7 +46,7 @@ FloorGamePlayer::FloorGamePlayer() {
 
     SetCollisionAttribute(kCollisionPlayer);
     //敵のみと衝突
-    SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet | kCollisionEnemyBomb| kCollisionEnemyWave | kCollisionPlayerHealItem);
+    SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet | kCollisionEnemyBomb | kCollisionEnemyWave | kCollisionPlayerHealItem);
 }
 
 FloorGamePlayer::~FloorGamePlayer() {
@@ -111,6 +111,7 @@ void FloorGamePlayer::Initialize() {
     damageStruct_.hps.maxHp = json["Damage"]["maxHP"];
     damageStruct_.hps.hp = damageStruct_.hps.maxHp;
     damageStruct_.hps.hpDecrease = damageStruct_.hps.maxHp / HPIcon::kMaxHPIcon_;
+    damageStruct_.isDead = false;
 
     // 方向
     lookDir_ = moveDir_;
@@ -162,7 +163,7 @@ void FloorGamePlayer::Update() {
     ImGui::SliderFloat("moveAcceleration", &moveAcceleration_, 0.0f, 10.0f);
     ImGui::SliderFloat("movepeed", &moveSpeed_, 0.0f, 10.0f);
     DebugUI::CheckDamageStruct(damageStruct_, "playerDamage");
-    DebugUI::CheckObject3d(body_,"body");
+    DebugUI::CheckObject3d(body_, "body");
     DebugUI::CheckObject3d(headObject_, "head");
     DebugUI::CheckObject3d(rightArmObject_, "rightArmObject");
     DebugUI::CheckObject3d(leftArmObject_, "leftArmObject");
@@ -195,8 +196,8 @@ void FloorGamePlayer::Draw(Camera& camera, const LightMode& lightType) {
 }
 
 void FloorGamePlayer::ForceDamage() {
-	OnCollisionCollider();
-	HitUpdate();
+    OnCollisionCollider();
+    HitUpdate();
 }
 
 void FloorGamePlayer::Move() {
@@ -206,13 +207,11 @@ void FloorGamePlayer::Move() {
     moveDir_ = { 0.0f,0.0f,0.0f };
 
     //コントローラーの処理を追加しました。吉田
-    if (Input::GetIsControllerConnected(0)) {
-        Vector2 controllerStickPos = Input::GetControllerStickPos(BUTTON_LEFT, 0);
+    Vector2 controllerStickPos = { moveDir_.x,moveDir_.y };
+    if (Input::IsControllerStickPosMove(BUTTON_LEFT, 0, &controllerStickPos)) {
         moveDir_.x = controllerStickPos.x;
         moveDir_.z = controllerStickPos.y;
-        if (std::fabs(moveDir_.x) > 0.0f || std::fabs(moveDir_.z) > 0.0f) {
-            isMove_ = true;
-        }
+        isMove_ = true;
     }
 
     if (KeyBindConfig::Instance().IsPress("MoveForward")) {
@@ -244,7 +243,7 @@ void FloorGamePlayer::Move() {
         moveSpeed_ = std::clamp(moveSpeed_, kMinMoveSpeed_, kMaxMoveSpeed_);
         //べとべと床にいるときは移動速度を落とす
         if (isOnStickyFloor_) {
-          
+
             body_.worldTransform_.translate_ += moveDir_ * moveSpeed_ * stickyFloorSlowRate_;
         } else {
             body_.worldTransform_.translate_ += moveDir_ * moveSpeed_;
@@ -317,12 +316,15 @@ void FloorGamePlayer::HitAction()
         if (damageStruct_.flashTimer <= 0.0f) {
             damageStruct_.flashTimer = 0.0f;
             damageStruct_.isHit = false;
-
+            if (damageStruct_.hps.hp < 0.0f) {
+                damageStruct_.isDead = true;
+            }
         }
 
         Flashing();
     } else {
         SetBodyColor({ 1.0f,1.0f,1.0f,1.0f });
+
     }
 
 
@@ -361,11 +363,12 @@ void FloorGamePlayer::HitUpdate()
 
     damageStruct_.isHit = true;
     Sound::PlaySE(Sound::DAMAGE);
-
+    VibrateManager::SetTime(1.0f,1000,1000);
     damageStruct_.flashTimer = damageStruct_.invincibilityTime;
     //hpを減らす
     if (damageStruct_.hps.hp > 0) {
         damageStruct_.hps.hp -= damageStruct_.hps.hpDecrease;
     }
+
 
 }

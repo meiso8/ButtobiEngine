@@ -40,6 +40,8 @@
 
 #include"MyEngine.h"
 #include"UI/PauseScreen.h"
+#include"VibrateManager.h"
+
 GameScene::GameScene()
 {
     // 現在のカメラを設定
@@ -69,6 +71,9 @@ GameScene::GameScene()
     enemyShotBombManager_ = std::make_unique<EnemyShotBombManager>(enemy_.get(), enemyBombManager_.get(), floorGameFloorManager_.get());
     enemyShockWaveManager_ = std::make_unique<EnemyShockWaveManager>();
     enemyShotWaveManager_ = std::make_unique<EnemyShotWaveManager>(enemy_.get(), enemyShockWaveManager_.get(), floorGameFloorManager_.get());
+
+
+    VibrateManager::Initialize();
 
 #pragma endregion
 
@@ -110,6 +115,7 @@ void GameScene::Initialize() {
     enemy_->Init();
     enemy_->SetTarget(floorGamePlayer_->body_.worldTransform_.translate_);
     enemy_->SetPlayerPos(floorGamePlayer_->body_.worldTransform_.translate_);
+    enemy_->SetPlayerLookDirPos(floorGamePlayer_->GetLookDir());
     enemyBulletManager_->Initialize();
     enemyShotBulletManager_->Initialize();
     enemyBombManager_->Initialize();
@@ -149,18 +155,15 @@ void GameScene::Update() {
         Initialize();
     }
 
-    if (floorGamePlayer_->GetHpsPtr()->hp <= 0.0f) {
-        /* sceneChange_->SetState(SceneChange::kFadeIn, 30);*/
-    }
-
-    if (PauseScreen::isBackToTitle) {
-        sceneChange_->SetState(SceneChange::kFadeIn, 30);
+    if (PauseScreen::isBackToTitle||floorGamePlayer_->IsDead()) {
+       sceneChange_->SetState(SceneChange::kFadeIn, 30);
     }
 
     //仮に音声を鳴らす　全体のvolumeがあってオフセット分だけいじる
     Sound::PlayBGM(Sound::BGM1, 0.0f);
 
     UpdateCamera();
+
 
     if (!PauseScreen::isActive_) {
         UpdateGameObject();
@@ -234,6 +237,7 @@ void GameScene::UpdateCamera()
         }
         cameraController_->Update();
     }
+
 }
 
 void GameScene::UpdateGameObject()
@@ -265,6 +269,8 @@ void GameScene::UpdateGameObject()
 
     // アニメーション更新
     floorGamePlayerAnimationManager_->Update();
+
+    VibrateManager::Update();
 }
 
 void GameScene::UpdateEmitter()

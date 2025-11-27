@@ -118,6 +118,7 @@
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\HealItemSpawner.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\ResultSceneObj\ResultSprite.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\Data\FloorData.cpp" />
+    <ClCompile Include="Source\Application\System\VibrateManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\GameObject\UI\PauseScreen.h" />
@@ -262,6 +263,7 @@
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\HealItemSpawner.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\SceneStaticValue.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\ResultSceneObj\ResultSprite.h" />
+    <ClInclude Include="Source\Application\System\VibrateManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="externals\assimp\lib\Debug\assimp-vc143-mdd.lib" />
