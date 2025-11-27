@@ -36,6 +36,7 @@ public:
     /// @brief 入力
     /// @param input 
     static void CheckInput();
+    static void CheckXinput(const int& num);
     /// @brief 光源
    /// @param directionalLights 
    /// @param lightType 

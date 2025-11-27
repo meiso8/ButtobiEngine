@@ -44,6 +44,7 @@ GameScene::GameScene()
 {
     // 現在のカメラを設定
     currentCamera_ = camera_.get();
+    cameraController_ = std::make_unique<CameraController>(*camera_);
 
 #pragma region // オブジェクト生成
     //衝突判定管理
@@ -69,6 +70,8 @@ GameScene::GameScene()
     enemyShockWaveManager_ = std::make_unique<EnemyShockWaveManager>();
     enemyShotWaveManager_ = std::make_unique<EnemyShotWaveManager>(enemy_.get(), enemyShockWaveManager_.get(), floorGameFloorManager_.get());
 
+#pragma endregion
+
     uiManager_ = std::make_unique<UIManager>(*enemy_->GetHpsPtr(), *floorGamePlayer_->GetHpsPtr());
 
     for (auto& particleEmitter : particleEmitters_) {
@@ -80,17 +83,15 @@ GameScene::GameScene()
 
     particleEmitters_[kEnemyEmitter]->SetName("enemyHitParticle");
     particleEmitters_[kEnemyEmitter]->emitter_.transform.Parent(enemy_->bodyPos_.worldTransform_);
-#pragma endregion
+
 }
 
 void GameScene::Initialize() {
 
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 60);
-    camera_->Initialize();
-    camera_->translate_ = { 0.0f, 14.0f,-6.0f };
-    camera_->rotate_ = { 1.2f,0.0f,0.0f };
-    camera_->UpdateMatrix();
+
+    cameraController_->Initialize();
 
 #pragma region // オブジェクト初期化
     floorGamePlayer_->Initialize();
@@ -143,11 +144,12 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 
-    if (PauseScreen::isRetry || floorGamePlayer_->GetHpsPtr()->hp <= 0.0f) {
+    if (PauseScreen::isRetry) {
         PauseScreen::isRetry = false;
-#ifdef _DEBUG
         Initialize();
-#endif
+    }
+
+    if (floorGamePlayer_->GetHpsPtr()->hp <= 0.0f) {
         /* sceneChange_->SetState(SceneChange::kFadeIn, 30);*/
     }
 
@@ -163,28 +165,10 @@ void GameScene::Update() {
     if (!PauseScreen::isPause_) {
         UpdateGameObject();
         CheckAllCollision();
-
-        if (floorGamePlayer_->isMove_) {
-            particleEmitters_[kPlayerEmitter]->UpdateTimer();
-        } else {
-            particleEmitters_[kPlayerEmitter]->InitTimer();
-        }
-
-        if (enemy_->IsHit()) {
-            particleEmitters_[kEnemyEmitter]->Emit();
-            /*  particleEmitters_[kEnemyEmitter]->UpdateTimer();*/
-
-        }
-
-        for (auto& particleEmitter : particleEmitters_) {
-            particleEmitter->Update(*currentCamera_);
-        }
-
-
+        UpdateEmitter();
     }
 
     uiManager_->Update();
-
 
 }
 
@@ -238,10 +222,15 @@ void GameScene::Debug()
 
 void GameScene::UpdateCamera()
 {
+
     if (isDebugCameraActive_) {
-        currentCamera_->UpdateMatrix();
+        debugCamera_->UpdateMatrix();
     } else {
-        camera_->UpdateMatrix();
+
+        if (floorGamePlayer_->IsHit()) {
+            cameraController_->StartShake(2.0f,60);
+        }
+        cameraController_->Update();
     }
 }
 
@@ -274,6 +263,26 @@ void GameScene::UpdateGameObject()
 
     // アニメーション更新
     floorGamePlayerAnimationManager_->Update();
+}
+
+void GameScene::UpdateEmitter()
+{
+    if (floorGamePlayer_->isMove_) {
+        particleEmitters_[kPlayerEmitter]->UpdateTimer();
+    } else {
+        particleEmitters_[kPlayerEmitter]->InitTimer();
+    }
+
+    if (enemy_->IsHit()) {
+        particleEmitters_[kEnemyEmitter]->Emit();
+        /*  particleEmitters_[kEnemyEmitter]->UpdateTimer();*/
+
+    }
+
+    for (auto& particleEmitter : particleEmitters_) {
+        particleEmitter->Update(*currentCamera_);
+    }
+
 }
 
 void GameScene::CheckAllCollision()
