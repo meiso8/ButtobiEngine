@@ -46,7 +46,7 @@ FloorGamePlayer::FloorGamePlayer() {
 
     SetCollisionAttribute(kCollisionPlayer);
     //敵のみと衝突
-    SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet | kCollisionEnemyBomb| kCollisionEnemyWave);
+    SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet | kCollisionEnemyBomb| kCollisionEnemyWave | kCollisionPlayerHealItem);
 }
 
 FloorGamePlayer::~FloorGamePlayer() {
@@ -56,6 +56,9 @@ FloorGamePlayer::~FloorGamePlayer() {
 
 void FloorGamePlayer::OnCollision(Collider* collider)
 {
+    if (collider->GetCollisionAttribute() == kCollisionPlayerHealItem) {
+        damageStruct_.hps.hp += 1;
+    }
 
     if (collider->GetCollisionAttribute() == kCollisionEnemy ||
         collider->GetCollisionAttribute() == kCollisionEnemyBullet) {

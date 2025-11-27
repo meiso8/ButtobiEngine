@@ -25,6 +25,7 @@ public:
 
         PLAYER_MODEL,//プレイヤーの全体
 
+		HEAL_ITEM,
         WORLD,
         MODELS,
     };

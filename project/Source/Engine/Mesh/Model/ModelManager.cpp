@@ -33,6 +33,8 @@ void ModelManager::LoadAllModel()
     LoadModel("Resource/Models/Player", "Leg_R.obj", PLAYER_LEG_R);
     LoadModel("Resource/Models/Player", "PlayerModel.obj", PLAYER_MODEL);
 
+	LoadModel("Resource/Models/HealItem", "HealItem.obj", HEAL_ITEM);
+
 }
 
 // ========================================================================================================
