@@ -19,6 +19,7 @@ public:
 	void ShotAnimation();
 
 private:
+
 	const float deltaTime_ = 0.016f;
 	float animationTimer_ = 0.0f;
 	FloorGamePlayer* player_ = nullptr;

@@ -10,12 +10,12 @@ PlayerFloorStripManager::PlayerFloorStripManager(FloorGamePlayer* player) {
 	floorPivot_.Create();
 	floorPivot_.Initialize();
 	floorPivot_.worldTransform_.Parent(player->body_.worldTransform_);
-	floorPivot_.worldTransform_.translate_ = { 0.0f,1.5f,0.0f };
+	floorPivot_.worldTransform_.translate_ = { 0.0f,1.3f,0.0f };
 
 	singleFloor_ = std::make_unique<StrippedFloor>();
 	singleFloor_->Initialize();
 	singleFloor_->body_.worldTransform_.Parent(floorPivot_.worldTransform_);
-	singleFloor_->body_.worldTransform_.translate_ = { 0.0f,-0.0f,0.0f };
+	singleFloor_->body_.worldTransform_.translate_ = { 0.0f,-0.5f,0.0f };
 
 	for (int y = 0; y < kMapHeight; y++) {
 		floors_.emplace_back();

@@ -81,7 +81,7 @@ void FloorGamePlayer::Initialize() {
 
     Json json = JsonFile::GetJsonFiles("player");
     body_.Initialize();
-    body_.worldTransform_.translate_.y = 0.5f;
+    body_.worldTransform_.translate_.y = 0.2f;
     Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
     SetBodyColor(color);
 
