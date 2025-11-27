@@ -162,7 +162,7 @@ void GameScene::Update() {
 
     UpdateCamera();
 
-    if (!PauseScreen::isPause_) {
+    if (!PauseScreen::isActive_) {
         UpdateGameObject();
         CheckAllCollision();
         UpdateEmitter();

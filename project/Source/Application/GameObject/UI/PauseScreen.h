@@ -5,6 +5,7 @@
 class PauseScreen
 {
 public:
+    static bool isActive_;
     static bool isPause_;
     static bool isRetry;
     static bool isBackToTitle;
@@ -40,7 +41,7 @@ private:
 
     float pauseTimer_ = 0.0f;
     int selectButtonNum_ = kBackToGameButton;
-    bool isActive_ = false;
+
     float scaleTheta_ = 0.0f;
 
     std::array < Vector2, kMaxLayer> startPos_;
