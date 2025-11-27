@@ -1,11 +1,12 @@
 #include "FloorActionManager.h"
 #include "FloorGamePlayer.h"
 #include "FloorGameFloorManager.h"
+#include "MatsumotoObj/MY_Utility.h"
 
 FloorActionManager::FloorActionManager(FloorGamePlayer* player, FloorGameFloorManager* floorManager) :
 	player_(player),
-	floorManager_(floorManager)
-{}
+	floorManager_(floorManager) {
+}
 
 void FloorActionManager::Initialize() {
 
@@ -24,13 +25,21 @@ void FloorActionManager::Update() {
 			player_->isOnStripedFloor_ = false;
 		}
 	}
-	
+
 	// プレイヤーがべとべと床にいるときの処理
 	if (!player_->isOnStripedFloor_) {
 		if (floorManager_->GetFloorTypeAtPosition(player_->body_.worldTransform_.translate_) == FloorType::Sticky) {
 			player_->isOnStickyFloor_ = true;
 		} else {
 			player_->isOnStickyFloor_ = false;
+		}
+	}
+
+	// 爆破床が爆発して、プレイヤーが1.5m以内にいるとき、ダメージを与える
+	for (Vector2& ex : floorManager_->GetExprodedFloorMap()) {
+		Vector3 floorPos = { ex.x,player_->body_.worldTransform_.translate_.y,ex.y };
+		if (fabsf(Length(player_->body_.worldTransform_.translate_ - floorPos)) < 1.5f) {
+			player_->ForceDamage();
 		}
 	}
 }

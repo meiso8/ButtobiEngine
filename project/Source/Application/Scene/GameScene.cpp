@@ -284,6 +284,7 @@ void GameScene::CheckAllCollision()
     collisionManager_->AddCollider(floorGamePlayer_.get());
     collisionManager_->AddCollider(enemy_.get());
 	healItemSpawner_->AddCollider(collisionManager_.get());
+	floorGameFloorManager_->AddCollider(collisionManager_.get());
 
     for (auto& bullet : floorBulletManager_->GetBullets()) {
         if (bullet->isActive_) { collisionManager_->AddCollider(bullet.get()); }

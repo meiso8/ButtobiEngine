@@ -9,6 +9,8 @@ FloorStripManager::FloorStripManager(FloorGamePlayer* player, FloorGameFloorMana
 		{FloorType::Normal, std::bind(&FloorStripManager::NormalStript, this)},
 		{FloorType::Sticky, std::bind(&FloorStripManager::StickyStript, this)},
 		{FloorType::Strong, std::bind(&FloorStripManager::StrongStript, this)},
+		{FloorType::Bomb, std::bind(&FloorStripManager::BombStript, this)}
+
 	};
 }
 
@@ -61,4 +63,9 @@ void FloorStripManager::StrongStript() {
 	}
 	playerStripManager_->StripMapFloor(connectedFloors,FloorType::Strong);
 	player_->strippedFloorMap_ = playerStripManager_->GetRotetedFloorMap(connectedFloors);
+}
+
+void FloorStripManager::BombStript() {
+	floorManager_->SwapFloorTypeAtPosition(player_->body_.worldTransform_.translate_);
+	playerStripManager_->StripSingleFloor(FloorType::Bomb);
 }

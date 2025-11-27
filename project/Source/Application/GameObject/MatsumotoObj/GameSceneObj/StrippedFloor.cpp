@@ -12,7 +12,8 @@ StrippedFloor::StrippedFloor() {
 	{
 	  { FloorType::Normal, ModelManager::GetModel(ModelManager::FLOOR)},
 	  { FloorType::Sticky, ModelManager::GetModel(ModelManager::MELT_FLOOR) },
-	  { FloorType::Strong, ModelManager::GetModel(ModelManager::FLOOR) }
+	  { FloorType::Strong, ModelManager::GetModel(ModelManager::FLOOR) },
+	  { FloorType::Bomb, ModelManager::GetModel(ModelManager::FLOOR)}
 	};
 	type_ = FloorType::Normal;
 	requestType_ = FloorType::Normal;

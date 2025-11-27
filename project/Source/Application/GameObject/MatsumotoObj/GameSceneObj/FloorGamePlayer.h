@@ -31,6 +31,8 @@ public:
 	void Update();
 	void Draw(Camera& camera, const LightMode& lightType);
 
+	void ForceDamage();
+
 	Vector3& GetLookDir() { return lookDir_; }
 	HPs* GetHpsPtr() { return &damageStruct_.hps; }
 	bool isStriptting_;

@@ -6,6 +6,8 @@
 #include<algorithm>
 #include"Collision.h"
 #include"CubeMesh.h"
+#include"Collision.h"
+#include"CollisionConfig.h"
 #include "Input.h"
 
 FloorGameFloor::FloorGameFloor() {
@@ -15,10 +17,17 @@ FloorGameFloor::FloorGameFloor() {
 	{
 	  { FloorType::Normal, ModelManager::GetModel(ModelManager::FLOOR)},
 	  { FloorType::Sticky, ModelManager::GetModel(ModelManager::MELT_FLOOR) },
-	  { FloorType::Strong, ModelManager::GetModel(ModelManager::FLOOR) }
+	  { FloorType::Strong, ModelManager::GetModel(ModelManager::FLOOR) },
+	  { FloorType::Bomb, ModelManager::GetModel(ModelManager::FLOOR) }
 	};
 
 	body_.SetMesh(models_[FloorType::Normal]);
+
+	SetCollisionAttribute(kCollisionFloor);
+	SetCollisionMask(kCollisionEnemyBomb);
+	SetRadius(0.5f);
+
+	isExploded_ = false;
 }
 
 FloorGameFloor::~FloorGameFloor() {
@@ -28,13 +37,17 @@ void FloorGameFloor::Initialize() {
 	body_.Initialize();
 	autoSwapTimer_ = 0.0f;
 	floorType_ = FloorType::Normal;
+	prevFloorType_ = FloorType::Normal;
 	autoSwapDuration_ = 3.0f;
 	nextFloorType_ = FloorType::Sticky;
 	floorTypeUpdate_ = {
 		{FloorType::Normal, std::bind(&FloorGameFloor::NormalFloorUpdate, this)},
 		{FloorType::Sticky, std::bind(&FloorGameFloor::StickyFloorUpdate, this)},
 		{FloorType::Strong, std::bind(&FloorGameFloor::StrongFloorUpdate, this)},
+		{FloorType::Bomb, std::bind(&FloorGameFloor::BombFloorUpdate, this)}
 	};
+
+	isExploded_ = false;
 }
 
 void FloorGameFloor::Update() {
@@ -42,14 +55,18 @@ void FloorGameFloor::Update() {
 	//メッシュをセットする
 	body_.SetMesh(models_[floorType_]);
 	floorTypeUpdate_[floorType_]();
+
+	ColliderUpdate();
 }
 
 void FloorGameFloor::Draw(Camera& camera, const LightMode& lightType) {
 	body_.SetLightMode(lightType);
 	body_.Draw(camera, kBlendModeNormal);
+	ColliderDraw(camera);
 }
 
 void FloorGameFloor::SwapFloorType(FloorType type) {
+	prevFloorType_ = floorType_;
 	floorType_ = type;
 	switch (floorType_)
 	{
@@ -63,6 +80,10 @@ void FloorGameFloor::SwapFloorType(FloorType type) {
 	case FloorType::Strong:
 		nextFloorType_ = FloorType::Normal;
 		break;
+	case FloorType::Bomb:
+		autoSwapTimer_ = autoSwapDuration_;
+		nextFloorType_ = prevFloorType_;
+		break;
 	default:
 		break;
 	}
@@ -70,6 +91,15 @@ void FloorGameFloor::SwapFloorType(FloorType type) {
 
 void FloorGameFloor::SwapNextFloorType() {
 	SwapFloorType(nextFloorType_);
+}
+
+void FloorGameFloor::OnCollision(Collider* collider) {
+	if (floorType_ == FloorType::Bomb || floorType_ == FloorType::Strong) {
+		return;
+	}
+	if (collider->GetCollisionAttribute() == kCollisionEnemyBomb) {
+		SwapFloorType(FloorType::Bomb);
+	}
 }
 
 void FloorGameFloor::NormalFloorUpdate() {
@@ -90,4 +120,16 @@ void FloorGameFloor::StickyFloorUpdate() {
 
 void FloorGameFloor::StrongFloorUpdate() {
 	body_.SetColor({ 0.0f,1.0f,0.0f,1.0f });
+}
+
+void FloorGameFloor::BombFloorUpdate() {
+	float color = autoSwapTimer_ / autoSwapDuration_;
+	body_.SetColor({ color,0.0f,0.0f,1.0f });
+
+	if (autoSwapTimer_ > 0.0f) {
+		autoSwapTimer_ -= 0.016f;
+	} else {
+		SwapFloorType(nextFloorType_);
+		isExploded_ = true;
+	}
 }

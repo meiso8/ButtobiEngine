@@ -1,5 +1,6 @@
 #include "FloorGameFloorManager.h"
 #include "Data/MapData.h"
+#include "CollisionManager.h"
 
 #include <queue>
 #include <algorithm>
@@ -49,6 +50,14 @@ void FloorGameFloorManager::Draw(Camera& camera, const LightMode& lightType) {
             floors_[y][x]->Draw(camera, lightType);
         }
     }
+}
+
+void FloorGameFloorManager::AddCollider(CollisionManager* collisionManager) {
+	for (int y = 0; y < kMapHeight; y++) {
+		for (int x = 0; x < kMapWidth; x++) {
+			collisionManager->AddCollider(floors_[y][x].get());
+		}
+	}
 }
 
 FloorType FloorGameFloorManager::GetFloorTypeAtPosition(const Vector3& position) const {
@@ -132,4 +141,17 @@ Vector3& FloorGameFloorManager::GetFloorPos(const int& xIndex, const int& yIndex
 
     return floors_[yIndex][xIndex]->body_.worldTransform_.translate_;
 
+}
+
+std::vector<Vector2> FloorGameFloorManager::GetExprodedFloorMap() const {
+	std::vector<Vector2> exprodedFloorPositions;
+	for (int y = 0; y < kMapHeight; y++) {
+		for (int x = 0; x < kMapWidth; x++) {
+			if (floors_[y][x]->isExploded_) {
+                exprodedFloorPositions.push_back({ static_cast<float>(x) - (static_cast<float>(kMapWidth) * 0.5f),static_cast<float>(y) - (static_cast<float>(kMapHeight) * 0.5f) });
+				floors_[y][x]->isExploded_ = false;
+			}
+		}
+	}
+    return exprodedFloorPositions;
 }

@@ -280,6 +280,21 @@ void DebugUI::CheckInput() {
     Vector2 R = Input::GetControllerStickPos(BUTTON_RIGHT, 0);
     ImGui::SliderFloat2("BUTTON_LEFT", &L.x, -32768.0f, 32768.0f);
     ImGui::SliderFloat2("BUTTON_RIGHT", &R.x, -32768.0f, 32768.0f);
+
+    ImGui::Text("Trigger:DPAD_UP %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_DPAD_UP, 0));
+    ImGui::Text("Trigger:DPAD_DOWN %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_DPAD_DOWN, 0));
+    ImGui::Text("Trigger:DPAD_LEFT %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_DPAD_LEFT, 0));
+    ImGui::Text("Trigger:DPAD_RIGHT %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_DPAD_RIGHT, 0));
+    ImGui::Text("Trigger:START %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_START, 0));
+    ImGui::Text("Trigger:BACK %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_BACK, 0));
+    ImGui::Text("Trigger:LEFT_THUMB %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_LEFT_THUMB, 0));
+    ImGui::Text("Trigger:RIGHT_THUMB %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_RIGHT_THUMB, 0));
+    ImGui::Text("Trigger:LEFT_SHOULDER %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_LEFT_SHOULDER, 0));
+    ImGui::Text("Trigger:RIGHT_SHOULDER %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_RIGHT_SHOULDER, 0));
+    ImGui::Text("Trigger:A %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_A, 0));
+    ImGui::Text("Trigger:B %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_B, 0));
+    ImGui::Text("Trigger:X %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_X, 0));
+    ImGui::Text("Trigger:Y %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_Y, 0));
     ImGui::End();
 #endif
 
