@@ -229,6 +229,8 @@ void GameScene::UpdateCamera()
 
         if (floorGamePlayer_->IsHit()) {
             cameraController_->StartShake(2.0f,60);
+        } else {
+            cameraController_-> SetShakeFalse();
         }
         cameraController_->Update();
     }
