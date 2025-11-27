@@ -19,6 +19,7 @@
 #include "MatsumotoObj/GameSceneObj/FloorGamePlayerAnimationManager.h"
 #include "MatsumotoObj/GameSceneObj/PlayerStripFloorManager.h"
 #include "MatsumotoObj/GameSceneObj/HealItemSpawner.h"
+#include "MatsumotoObj/TitleSceneObj/ActionUI.h"
 #include "Enemy/Enemy.h"
 #include "Enemy/EnemyBulletManager.h"
 #include "Enemy/EnemyShotBulletManager.h"
@@ -59,6 +60,7 @@ private:
 	std::unique_ptr<FloorGamePlayerAnimationManager>floorGamePlayerAnimationManager_ = nullptr;
 	std::unique_ptr<PlayerFloorStripManager>playerFloorStripManager_ = nullptr;
 	std::unique_ptr<HealItemSpawner>healItemSpawner_ = nullptr;
+	std::unique_ptr<ActionUI>actionUI_ = nullptr;
 
     std::unique_ptr<Enemy>enemy_ = nullptr;
     std::unique_ptr<EnemyBulletManager>enemyBulletManager_ = nullptr;

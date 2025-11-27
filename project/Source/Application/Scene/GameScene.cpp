@@ -59,6 +59,7 @@ GameScene::GameScene()
     floorActionManager_ = std::make_unique<FloorActionManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
     floorGamePlayerAnimationManager_ = std::make_unique<FloorGamePlayerAnimationManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
 	healItemSpawner_ = std::make_unique<HealItemSpawner>();
+	actionUI_ = std::make_unique<ActionUI>(floorGamePlayer_.get());
 
     enemy_ = std::make_unique<Enemy>();
     enemyBulletManager_ = std::make_unique<EnemyBulletManager>();
@@ -101,6 +102,7 @@ void GameScene::Initialize() {
     floorActionManager_->Initialize();
     playerFloorStripManager_->Initialize();
 	healItemSpawner_->Initialize();
+	actionUI_->Initialize();
 
 	healItemSpawner_->SpawnHealItem({ 2.0f,1.0f,2.0f });
 
@@ -199,6 +201,7 @@ void GameScene::Draw() {
     floorPlayerStripTargetUI_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     playerFloorStripManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
 	healItemSpawner_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+	actionUI_->Draw();
     enemy_->Draw(*currentCamera_, kLightModeHalfL);
     enemyBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     enemyBombManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
@@ -255,6 +258,7 @@ void GameScene::UpdateGameObject()
     enemyShockWaveManager_->Update();
 
     // オブジェクト同士の干渉
+	actionUI_->Update();
     floorStripManager_->Update();
     playerFloorStripManager_->Update();
     floorPlayerShotBulletManager_->Update();
