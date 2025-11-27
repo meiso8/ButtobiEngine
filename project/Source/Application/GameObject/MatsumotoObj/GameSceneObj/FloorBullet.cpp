@@ -79,10 +79,18 @@ Vector3 FloorBullet::GetWorldPosition() const
 void FloorBullet::Update() {
 
 #ifdef USE_IMGUI
-    DebugUI::CheckFlag(isActive_, "isActive");
-    DebugUI::CheckFlag(isHit_, "isHit_");
-    ImGui::Text(" lifeTimer_ %f", lifeTimer_);
-    DebugUI::CheckWorldTransform(body_.worldTransform_, "BulletTransform");
+
+    ImGui::Begin("bullet");
+    if (ImGui::TreeNode("Floorbullet")) {
+        DebugUI::CheckFlag(isActive_, "isActive");
+        DebugUI::CheckFlag(isHit_, "isHit_");
+        ImGui::Text(" lifeTimer_ %f", lifeTimer_);
+        DebugUI::CheckWorldTransform(body_.worldTransform_, "BulletTransform");
+        ImGui::TreePop();
+    }
+    ImGui::End();
+
+
 #endif
 
     if (!isActive_) {
@@ -101,7 +109,7 @@ void FloorBullet::Update() {
 }
 
 void FloorBullet::Draw(Camera& camera, const LightMode& lightType) {
-  
+
     if (!isActive_) {
         return;
     }
