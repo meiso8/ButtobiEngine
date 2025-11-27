@@ -12,6 +12,8 @@ KeyBindConfig::KeyBindConfig() {
 	keyBinds_["MoveBack"].keyboardKeys.push_back(DIK_DOWN);
 	keyBinds_["Stript"].keyboardKeys.push_back(DIK_SPACE);
 	keyBinds_["Shot"].keyboardKeys.push_back(DIK_SPACE);
+	keyBinds_["Menu"].keyboardKeys.push_back(DIK_ESCAPE);
+	keyBinds_["Menu"].keyboardKeys.push_back(DIK_E);
 
 	keyBinds_["MoveLeft"].controllerButtons.push_back(XINPUT_GAMEPAD_DPAD_LEFT);
 	keyBinds_["MoveRight"].controllerButtons.push_back(XINPUT_GAMEPAD_DPAD_RIGHT);
@@ -19,6 +21,7 @@ KeyBindConfig::KeyBindConfig() {
 	keyBinds_["MoveBack"].controllerButtons.push_back(XINPUT_GAMEPAD_DPAD_DOWN);
 	keyBinds_["Stript"].controllerButtons.push_back(XINPUT_GAMEPAD_A);
 	keyBinds_["Shot"].controllerButtons.push_back(XINPUT_GAMEPAD_A);
+	keyBinds_["Menu"].controllerButtons.push_back(XINPUT_GAMEPAD_START);
 }
 
 void KeyBindConfig::Update() {
