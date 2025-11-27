@@ -23,11 +23,14 @@ public:
     void Update();
     void Draw(Camera& camera, const LightMode& lightType);
     void Shot(const Vector3& position, const Vector3& direction, const float& speed, const float& size,FloorType type);
+	void SetHoming(Object3d* target, float stayTime);
     bool isActive_ = false;
     Object3d body_;
     float size_;
     void Move();
+	void HomingMove();
     bool isHit_ = false;
+    bool isHoming_ = false;
 
 private:
     FloorType floorType_;
@@ -39,4 +42,7 @@ private:
     float moveSpeed_;
     float lifeTimer_;
     float lifeDuration_;
+
+    float homingStayTime_;
+	Object3d* homingTarget_ = nullptr;
 };

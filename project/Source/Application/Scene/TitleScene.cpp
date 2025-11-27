@@ -56,7 +56,7 @@ TitleScene::TitleScene()
     playerFloorStripManager_ = std::make_unique<PlayerFloorStripManager>(floorGamePlayer_.get());
     floorGameFloorManager_ = std::make_unique<FloorGameFloorManager>();
     floorStripManager_ = std::make_unique<FloorStripManager>(floorGamePlayer_.get(), floorGameFloorManager_.get(), playerFloorStripManager_.get());
-    floorBulletManager_ = std::make_unique<FloorBulletManager>();
+    floorBulletManager_ = std::make_unique<FloorBulletManager>(nullptr);
     floorPlayerShotBulletManager_ = std::make_unique<FloorPlayerShotBulletManager>(floorGamePlayer_.get(), floorBulletManager_.get());
     floorPlayerStripTargetUI_ = std::make_unique<FloorPlayerStripTargetUI>(floorGamePlayer_.get());
     floorActionManager_ = std::make_unique<FloorActionManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
