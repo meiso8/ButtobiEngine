@@ -30,7 +30,7 @@ void ActionUI::Initialize() {
 
 void ActionUI::Update() {
 	if (player_->isMove_) {
-		moveSprite_->GetScale().x = MY_Utility::SimpleEaseIn(moveSprite_->GetScale().x, 0.8f, 0.01f);
+		moveSprite_->GetScale().x = MY_Utility::SimpleEaseIn(moveSprite_->GetScale().x, 0.8f, 0.1f);
 	} else {
 		moveSprite_->GetScale().x = MY_Utility::SimpleEaseIn(moveSprite_->GetScale().x, 1.0f, 0.5f);
 	}
