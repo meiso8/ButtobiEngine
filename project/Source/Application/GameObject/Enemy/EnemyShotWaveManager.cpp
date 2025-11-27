@@ -88,6 +88,9 @@ void EnemyShotWaveManager::Update() {
 
             used[randX][randY] = true;
 
+            startPos_.y += 1.0f;
+            endPos_.y += 1.0f;
+
             if (direction_ != BACK) {
                 shockWaveManager_->ShotWave(startPos_, endPos_, EnemyShockWave::kHorizontal);
             } else {

@@ -413,7 +413,3 @@ bool IsCollision(const AABB &aabb, const Segment &segment) {
 bool IsCollision(const Sphere &sphere, const Plane &plane) {
 	return Distance(sphere.center, plane) <= sphere.radius;
 }
-
-bool IsCollision(const Sphere &sphere, const AABB &aabb) {
-	return Distance(sphere.center, aabb) <= sphere.radius;
-}

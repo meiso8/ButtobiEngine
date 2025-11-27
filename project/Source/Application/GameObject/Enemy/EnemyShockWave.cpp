@@ -10,8 +10,6 @@
 #include"CollisionConfig.h"
 #include"Sound.h"
 
-bool EnemyShockWave::isPlayerHit_ = false;
-
 EnemyShockWave::EnemyShockWave() {
 
     localAABBs_[kHorizontal] = {.min = {-2.0f,-0.5f,-aabbWidth_},.max = {2.0f,0.5f,aabbWidth_}};
@@ -44,7 +42,6 @@ EnemyShockWave::~EnemyShockWave() {
 
 void EnemyShockWave::Initialize() {
     body_.Initialize();
-
     speed_ = 0.02f;
     lifeTimer_ = 0.0f;
     lifeDuration_ = 6.0f;
@@ -65,7 +62,6 @@ void EnemyShockWave::OnCollision(Collider* collider)
 
     if (collider->GetCollisionAttribute() == kCollisionPlayer) {
         //デバック用
-        isPlayerHit_ = true;
         OnCollisionCollider();
     }
 
@@ -89,7 +85,6 @@ void EnemyShockWave::Update() {
     if (lifeTimer_ <= 0.0f) {
         lifeTimer_ = 0.0f;
         isActive_ = false;
-       
         return;
     } else {
         lifeTimer_ -= 0.016f;

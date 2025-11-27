@@ -15,7 +15,7 @@ void CollisionManager::CheckAllCollisions() {
                 continue; // 衝突しない
             }
 
-            CheckCollisionPair(*itrA,*itrB);
+            CheckCollisionPair(*itrA, *itrB);
 
         }
     }
@@ -73,7 +73,7 @@ void CollisionManager::CheckCollisionSphereAABBPair(Collider* sphereC, Collider*
     aabb.max += pos;
 
     // 衝突判定
-    if (IsCollision(sphere, aabb)) {
+    if (IsCollision(aabb, sphere)) {
         sphereC->OnCollision(aabbC);
         aabbC->OnCollision(sphereC);
     }

@@ -70,9 +70,66 @@ Enemy::Enemy()
 }
 
 void Enemy::Init() {
-    InitState();
+
+    isShot_ = false;
+    isBombShot_ = false;
+    isWaveShot_ = false;
     isReqestClearFloor_ = false;
+    isAttack_ = false;
+    isPreAttack_ = false;
+
+    isReqestClearFloor_ = false;
+
+    actionCount_ = 0;
+
+    currentState_ = "First";
+    phase_ = PHASE::ROUND;
+
+    //体についての項目
+    bodyPos_.worldTransform_.Initialize();
+    bodyPos_.worldTransform_.translate_.y = GetRadius();
+    wingLPos_.worldTransform_.Initialize();
+    wingRPos_.worldTransform_.Initialize();
+    wingLPos_.worldTransform_.translate_.x = -1.0f;
+    wingRPos_.worldTransform_.translate_.x = 1.0f;
+
+    //球面座標系
+    sphericalPos_ = { .radius = 0.0f,.azimuthal = 0.0f ,.polar = 0.0f };
+
+    startPos_ = { 0.0f };
+    endPos_ = { 0.0f };
+
+    phaseTimer_ = 0.0f;
+    poyoAnimTimer_ = 0.0f;
+
+    //弾のクールタイム
+    fireBallCoolTimer_ = 0.0f;
+
+    endRotateY_ = 0.0f;
+    startRotateY_ = 0.0f;
+    roundSpeedY = 1.0f;
+
+    wingTheta_ = 0.0f;
+
+    InitState();
+
     model_->GetWaveData(0).time = 0.0f;
+}
+
+void Enemy::InitState()
+{
+    Json file = JsonFile::GetJsonFiles("Boss");
+    //アニメーションタイマー
+    phaseTime_ = file[currentState_]["phaseTime"];
+    //ダメージ構造体
+    damageStruct_.hps.maxHp = file[currentState_]["HP"];
+    damageStruct_.hps.hp = damageStruct_.hps.maxHp;
+    damageStruct_.hps.hpDecrease = file[currentState_]["hpDecrease"];
+    damageStruct_.isHit = false;
+    //速度
+    float velocity = file[currentState_]["velocity"];
+    velocity_ = { velocity ,velocity ,velocity };
+
 }
 
 
@@ -393,26 +450,6 @@ void Enemy::RandomAttackPhaseEnd()
 }
 
 
-void Enemy::InitState()
-{
-    Json file = JsonFile::GetJsonFiles("Boss");
-    //アニメーションタイマー
-    phaseTime_ = file[currentState_]["phaseTime"];
-    //ダメージ構造体
-    damageStruct_.hps.maxHp = file[currentState_]["HP"];
-    damageStruct_.hps.hp = damageStruct_.hps.maxHp;
-    damageStruct_.hps.hpDecrease = file[currentState_]["hpDecrease"];
-    damageStruct_.isHit = false;
-    //速度
-    float velocity = file[currentState_]["velocity"];
-    velocity_ = { velocity ,velocity ,velocity };
-
-    //球面座標系
-    sphericalPos_ = { .radius = 0.0f,.azimuthal = 0.0f ,.polar = 0.0f };
-    //体についての項目
-
-    bodyPos_.worldTransform_.translate_.y = GetRadius();
-}
 
 void Enemy::SwitchState()
 {

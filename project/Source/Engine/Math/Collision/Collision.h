@@ -173,11 +173,6 @@ bool IsCollision(const AABB& aabb, const Segment& segment);
 /// @return 当たったかどうか
 bool IsCollision(const Sphere& sphere, const Plane& plane);
 
-/// @brief 球とAABBの衝突判定
-/// @param sphere 球
-/// @param aabb AABB
-/// @return 判定結果
-bool IsCollision(const Sphere& sphere, const AABB& aabb);
 
 /// @brief 円が円から出たときの判定
 /// @param smallCircle 

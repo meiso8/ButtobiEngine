@@ -29,7 +29,6 @@ public:
     void Shot(const Vector3& startPos, const Vector3& endPos, const AABBType& aabbType);
     bool isActive_ = false;
     Object3d body_;
-    static bool isPlayerHit_;
 private:
     std::array<AABB, kMaxAABB> localAABBs_;
     const float aabbWidth_ = 0.4f;

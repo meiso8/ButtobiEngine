@@ -67,6 +67,13 @@ void FloorGamePlayer::OnCollision(Collider* collider)
         HitUpdate();
     }
 
+    if (collider->GetCollisionAttribute() == kCollisionEnemyWave) {
+        //デバック用
+        OnCollisionCollider();
+        HitUpdate();
+    }
+
+
     if (EnemyBomb::isPlayerHit_) {
         //デバック用
         OnCollisionCollider();
