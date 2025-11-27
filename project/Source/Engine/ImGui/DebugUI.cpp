@@ -258,45 +258,46 @@ void DebugUI::CheckInput() {
     ImGui::Begin("Input");
     ImGui::SliderFloat2("mousePos", &Input::GetMousePos().x, 0.0f, 1280.0f);
 
-    ImGui::Text("Controller %s", Input::IsControllerConnected(0) ? "Connected" : "Unkown");
-    ImGui::Text("left %d", Input::GetControllerTriggerCount(BUTTON_LEFT, 0));
-    ImGui::Text("right %d", Input::GetControllerTriggerCount(BUTTON_RIGHT, 0));
+    for (int i = 0; i < 4; ++i) {
+        CheckXinput(i);
+    }
 
-    ImGui::Text("DPAD_UP %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_UP, 0));
-    ImGui::Text("DPAD_DOWN %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_DOWN, 0));
-    ImGui::Text("DPAD_LEFT %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_LEFT, 0));
-    ImGui::Text("DPAD_RIGHT %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_RIGHT, 0));
-    ImGui::Text("START %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_START, 0));
-    ImGui::Text("BACK %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_BACK, 0));
-    ImGui::Text("LEFT_THUMB %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_LEFT_THUMB, 0));
-    ImGui::Text("RIGHT_THUMB %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_RIGHT_THUMB, 0));
-    ImGui::Text("LEFT_SHOULDER %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_LEFT_SHOULDER, 0));
-    ImGui::Text("RIGHT_SHOULDER %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_RIGHT_SHOULDER, 0));
-    ImGui::Text("A %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_A, 0));
-    ImGui::Text("B %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_B, 0));
-    ImGui::Text("X %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_X, 0));
-    ImGui::Text("Y %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_Y, 0));
-    Vector2 L = Input::GetControllerStickPos(BUTTON_LEFT, 0);
-    Vector2 R = Input::GetControllerStickPos(BUTTON_RIGHT, 0);
-    ImGui::SliderFloat2("BUTTON_LEFT", &L.x, -32768.0f, 32768.0f);
-    ImGui::SliderFloat2("BUTTON_RIGHT", &R.x, -32768.0f, 32768.0f);
-
-    ImGui::Text("Trigger:DPAD_UP %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_DPAD_UP, 0));
-    ImGui::Text("Trigger:DPAD_DOWN %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_DPAD_DOWN, 0));
-    ImGui::Text("Trigger:DPAD_LEFT %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_DPAD_LEFT, 0));
-    ImGui::Text("Trigger:DPAD_RIGHT %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_DPAD_RIGHT, 0));
-    ImGui::Text("Trigger:START %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_START, 0));
-    ImGui::Text("Trigger:BACK %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_BACK, 0));
-    ImGui::Text("Trigger:LEFT_THUMB %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_LEFT_THUMB, 0));
-    ImGui::Text("Trigger:RIGHT_THUMB %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_RIGHT_THUMB, 0));
-    ImGui::Text("Trigger:LEFT_SHOULDER %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_LEFT_SHOULDER, 0));
-    ImGui::Text("Trigger:RIGHT_SHOULDER %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_RIGHT_SHOULDER, 0));
-    ImGui::Text("Trigger:A %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_A, 0));
-    ImGui::Text("Trigger:B %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_B, 0));
-    ImGui::Text("Trigger:X %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_X, 0));
-    ImGui::Text("Trigger:Y %d", Input::IsControllerTriggerButton(XINPUT_GAMEPAD_Y, 0));
     ImGui::End();
 #endif
+
+}
+
+void DebugUI::CheckXinput(const int& num)
+{
+
+    std::string numOK = std::to_string(num);
+    if (ImGui::TreeNode(numOK.c_str())) {
+
+        ImGui::Text("Controller %s", Input::GetIsControllerConnected(num) ? "Connected" : "Unkown");
+        ImGui::Text("left %d", Input::GetControllerTriggerCount(BUTTON_LEFT, num));
+        ImGui::Text("right %d", Input::GetControllerTriggerCount(BUTTON_RIGHT, num));
+
+        ImGui::Text("DPAD_UP %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_UP, num));
+        ImGui::Text("DPAD_DOWN %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_DOWN, num));
+        ImGui::Text("DPAD_LEFT %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_LEFT, num));
+        ImGui::Text("DPAD_RIGHT %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_RIGHT, num));
+        ImGui::Text("START %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_START, num));
+        ImGui::Text("BACK %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_BACK, num));
+        ImGui::Text("LEFT_THUMB %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_LEFT_THUMB, num));
+        ImGui::Text("RIGHT_THUMB %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_RIGHT_THUMB, num));
+        ImGui::Text("LEFT_SHOULDER %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_LEFT_SHOULDER, num));
+        ImGui::Text("RIGHT_SHOULDER %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_RIGHT_SHOULDER, num));
+        ImGui::Text("A %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_A, num));
+        ImGui::Text("B %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_B, num));
+        ImGui::Text("X %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_X, num));
+        ImGui::Text("Y %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_Y, num));
+        Vector2 L = Input::GetControllerStickPos(BUTTON_LEFT, num);
+        Vector2 R = Input::GetControllerStickPos(BUTTON_RIGHT, num);
+        ImGui::SliderFloat2("BUTTON_LEFT", &L.x, -32768.0f, 32768.0f);
+        ImGui::SliderFloat2("BUTTON_RIGHT", &R.x, -32768.0f, 32768.0f);
+
+        ImGui::TreePop();
+    }
 
 }
 
@@ -397,15 +398,15 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
     ImGui::Begin("Object3d");
 
     if (ImGui::TreeNode(label)) {
-    CheckWorldTransform(object3d.worldTransform_, label);
-    ShowMatrix4x4(object3d.worldTransform_.matWorld_);
+        CheckWorldTransform(object3d.worldTransform_, label);
+        ShowMatrix4x4(object3d.worldTransform_.matWorld_);
 
-    CheckMaterial(object3d.GetMaterial(), "material");
-    CheckColor(object3d.GetColor(), "modelColor");//一応マテリアルについている
-    CheckTransform(object3d.GetUVTransform(), "uvTransfrom");
-    CheckLightMode(object3d.GetLightMode(), "GetLightMode");
+        CheckMaterial(object3d.GetMaterial(), "material");
+        CheckColor(object3d.GetColor(), "modelColor");//一応マテリアルについている
+        CheckTransform(object3d.GetUVTransform(), "uvTransfrom");
+        CheckLightMode(object3d.GetLightMode(), "GetLightMode");
 
-    ImGui::TreePop();
+        ImGui::TreePop();
     }
     ImGui::End();
 #endif
@@ -439,7 +440,7 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter, const char* label)
         int count = emitter.count;
         ImGui::SliderInt("createNum", &count, 0, particle.kNumMaxInstance);
         emitter.count = count;
-        
+
         CheckWorldTransform(emitter.transform, "transform");
         ImGui::Text("frequencyTime : %f", emitter.frequencyTime);
         ImGui::SliderFloat("frequency", &emitter.frequency, 0.1f, 10.0f);

@@ -29,6 +29,7 @@
 #include "Enemy/EnemyShotWaveManager.h"
 #include"UI/UIManager.h"
 #include"ParticleEmitter.h"
+#include"CameraController.h"
 #pragma endregion
 
 #include"CollisionManager.h"
@@ -46,9 +47,13 @@ public:
 private:
     void UpdateCamera();
     void UpdateGameObject();
+    void UpdateEmitter();
     //全衝突判定
     void CheckAllCollision();
 private:
+
+    std::unique_ptr<CameraController>cameraController_ = nullptr;
+
 #pragma region//ゲームオブジェクト
     std::unique_ptr<FloorGamePlayer>floorGamePlayer_ = nullptr;
     std::unique_ptr<FloorGameFloorManager>floorGameFloorManager_ = nullptr;
@@ -71,10 +76,13 @@ private:
     std::unique_ptr<EnemyShockWaveManager>enemyShockWaveManager_ = nullptr;
     std::unique_ptr<EnemyShotWaveManager>enemyShotWaveManager_ = nullptr;
 
+#pragma endregion
 
-
+#pragma region//UI
     std::unique_ptr<UIManager>uiManager_ = nullptr;
+#pragma endregion
 
+#pragma region//Emitter
     enum EmitterType {
         kPlayerEmitter,
         kEnemyEmitter,
@@ -84,4 +92,5 @@ private:
     std::array< std::unique_ptr<ParticleEmitter>, kMaxEmitter>particleEmitters_;
 #pragma endregion
     std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
+
 };

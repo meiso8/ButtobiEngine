@@ -35,6 +35,7 @@ public:
 
 	Vector3& GetLookDir() { return lookDir_; }
 	HPs* GetHpsPtr() { return &damageStruct_.hps; }
+	bool& IsHit() { return damageStruct_.isHit; }
 	bool isStriptting_;
 	bool isReqestStript_;
 	int stripFloorPosX_;

@@ -199,7 +199,7 @@ void FloorGamePlayer::Move() {
     moveDir_ = { 0.0f,0.0f,0.0f };
 
     //コントローラーの処理を追加しました。吉田
-    if (Input::IsControllerConnected(0)) {
+    if (Input::GetIsControllerConnected(0)) {
         Vector2 controllerStickPos = Input::GetControllerStickPos(BUTTON_LEFT, 0);
         moveDir_.x = controllerStickPos.x;
         moveDir_.z = controllerStickPos.y;
