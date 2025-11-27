@@ -18,8 +18,8 @@ void Texture::LoadAllTexture() {
     handles[UV_CHECKER] = Load("Resource/Textures/uvChecker.png");
     handles[NUMBERS] = Load("Resource/Textures/numbers.png");
 
-    handles[HART] = Load("Resource/Textures/hart.png");
-    handles[PLAYER_WALK_PARTICLE] = Load("Resource/Textures/playerWalkParticle.png");
+    handles[HART] = Load("Resource/Textures/PlayerHPIcon.png");
+    handles[PLAYER_WALK_PARTICLE] = Load("Resource/Textures/PlayerWalkParticle_Pop.png");
 
 	handles[ACTION_UI_MOVE] = Load("Resource/Textures/ActionUi_Move.png");
 	handles[ACTION_UI_STRIP] = Load("Resource/Textures/ActionUi_Strip.png");
