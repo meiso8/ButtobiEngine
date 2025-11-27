@@ -24,4 +24,5 @@ private:
 	void NormalStript();
 	void StickyStript();
 	void StrongStript();
+	void BombStript();
 };

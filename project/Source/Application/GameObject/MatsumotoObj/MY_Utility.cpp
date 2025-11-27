@@ -70,3 +70,7 @@ Vector4 MY_Utility::SimpleEaseOut(const Vector4& from, const Vector4& to, float 
 bool MY_Utility::IsActiveForTimerSwitch(float& timer, float interval) {
 	return  (fmod(timer, interval * 2) < interval);
 }
+
+float MY_Utility::Length(const Vector2& vec) {
+	return sqrtf(vec.x * vec.x + vec.y * vec.y);
+}

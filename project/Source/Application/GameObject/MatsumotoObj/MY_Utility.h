@@ -17,4 +17,6 @@ namespace MY_Utility {
 	Vector4 SimpleEaseOut(const Vector4& from, const Vector4& to, float transitionSpeed);
 
 	bool IsActiveForTimerSwitch(float& timer, float interval);
+
+	float Length(const Vector2& vec);
 } 

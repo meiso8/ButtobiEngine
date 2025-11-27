@@ -7,7 +7,8 @@ enum class FloorType
 {
 	Normal,
 	Sticky,
-	Strong
+	Strong,
+	Bomb
 };
 
 struct FloorData

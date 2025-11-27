@@ -187,6 +187,11 @@ void FloorGamePlayer::Draw(Camera& camera, const LightMode& lightType) {
 
 }
 
+void FloorGamePlayer::ForceDamage() {
+	OnCollisionCollider();
+	HitUpdate();
+}
+
 void FloorGamePlayer::Move() {
 
     // 移動方向決定

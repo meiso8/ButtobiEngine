@@ -19,7 +19,7 @@ EnemyBomb::EnemyBomb() {
     body_.SetMesh(cubeMesh_.get());
 
     SetRadius(kRadius_);
-    SetCollisionAttribute(kCollisionEnemyBomb);
+    SetCollisionAttribute(kCollisionNone);
     // 弾は「PlayerとPlayerの弾」とだけ衝突したい
     SetCollisionMask(kCollisionPlayer | kCollisionPlayerBullet| kCollisionFloor);
     ////全部と衝突したい時
@@ -36,6 +36,7 @@ void EnemyBomb::Initialize() {
     lifeTimer_ = 0.0f;
     lifeDuration_ = 6.0f;
     isActive_ = false;
+	isGroundHit_ = false;
     size_ = 1.0f;
 }
 void EnemyBomb::OnCollision(Collider* collider)
@@ -58,11 +59,12 @@ void EnemyBomb::OnCollision(Collider* collider)
     }
 
     if (collider->GetCollisionAttribute() == kCollisionFloor) {
-        //デバック用
-        //OnCollisionCollider();
+        if (lifeTimer_ <= 3.8f) {
+            isActive_ = false;
+            isExplosion_ = false;
+            isGroundHit_ = false;
+        }
     }
-
-
 }
 Vector3 EnemyBomb::GetWorldPosition() const
 {
@@ -104,8 +106,10 @@ void EnemyBomb::Update() {
     body_.SetColor({ color,color,color,1.0f });
 
     if (lifeTimer_ <= 3.8f) {
+        SetCollisionAttribute(kCollisionEnemyBomb);
         body_.worldTransform_.translate_ = Lerp(body_.worldTransform_.translate_, endPos_, speed_);
     } else {
+        SetCollisionAttribute(kCollisionNone);
         Vector3 endPos = endPos_;
         endPos.y += 2.0f;
         body_.worldTransform_.translate_ = Lerp(body_.worldTransform_.translate_, endPos, speed_);
@@ -133,4 +137,7 @@ void EnemyBomb::Shot(const Vector3& startPos, const Vector3& endPos, const float
     lifeTimer_ = lifeDuration_;
     isActive_ = true;
     isExplosion_ = false;
+	isGroundHit_ = false;
+	body_.Update();
+	ColliderUpdate();
 }
