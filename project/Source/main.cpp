@@ -90,8 +90,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             currentScene->Initialize();
         }
 
-        if (Input::IsTriggerKey(DIK_R)) { currentScene->Initialize(); }
-
         // エンジンの更新処理
         myEngine->Update();
         //エスケープボタンを押したら終了
@@ -102,6 +100,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         myEngine->Debug();
 
 #ifdef USE_IMGUI
+
         DebugUI::CheckColor(screenColor, "screenColor");
         for (const auto& [sceneName, scenePtr] : scenes) { 
             if (scenePtr.get() == currentScene) {
@@ -109,7 +108,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
                 break;
             }
         }
-     
+
+        ImGui::Begin("Command");
+        ImGui::Text("I : SceneChange");
+        ImGui::Text("R : Initialize");
+        ImGui::Text("ESCAPE : WindowEnd");
+        ImGui::End();
+
+ 
 #endif // USE_IMGUI
 
         currentScene->Debug();
