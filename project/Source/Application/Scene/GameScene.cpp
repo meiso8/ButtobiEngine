@@ -50,19 +50,19 @@ GameScene::GameScene()
     //衝突判定管理
     collisionManager_ = std::make_unique<CollisionManager>();
 
+    enemy_ = std::make_unique<Enemy>();
     floorGamePlayer_ = std::make_unique<FloorGamePlayer>();
     playerFloorStripManager_ = std::make_unique<PlayerFloorStripManager>(floorGamePlayer_.get());
     floorGameFloorManager_ = std::make_unique<FloorGameFloorManager>();
     floorStripManager_ = std::make_unique<FloorStripManager>(floorGamePlayer_.get(), floorGameFloorManager_.get(), playerFloorStripManager_.get());
-    floorBulletManager_ = std::make_unique<FloorBulletManager>();
+    floorBulletManager_ = std::make_unique<FloorBulletManager>(enemy_.get());
     floorPlayerShotBulletManager_ = std::make_unique<FloorPlayerShotBulletManager>(floorGamePlayer_.get(), floorBulletManager_.get());
     floorPlayerStripTargetUI_ = std::make_unique<FloorPlayerStripTargetUI>(floorGamePlayer_.get());
     floorActionManager_ = std::make_unique<FloorActionManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
     floorGamePlayerAnimationManager_ = std::make_unique<FloorGamePlayerAnimationManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
 	healItemSpawner_ = std::make_unique<HealItemSpawner>();
 	actionUI_ = std::make_unique<ActionUI>(floorGamePlayer_.get());
-
-    enemy_ = std::make_unique<Enemy>();
+    
     enemyBulletManager_ = std::make_unique<EnemyBulletManager>();
     enemyShotBulletManager_ = std::make_unique<EnemyShotBulletManager>(enemy_.get(), enemyBulletManager_.get());
     enemyBombManager_ = std::make_unique<EnemyBombManager>();

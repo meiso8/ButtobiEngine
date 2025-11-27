@@ -157,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\Data\FloorData.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\ResultSceneObj\ResultSprite.cpp" />
     <ClCompile Include="Source\Application\System\CameraController.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\HealItem.cpp" />

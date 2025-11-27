@@ -2,10 +2,12 @@
 #include"FloorBullet.h"
 #include"Data/FloorData.h" 
 #include <vector>
+class Enemy;
 class FloorBulletManager
 {
 public:
-	FloorBulletManager();
+	FloorBulletManager() = delete;
+	FloorBulletManager(Enemy* enemy);
 	~FloorBulletManager();
 	void Initialize();
 	void Update();
@@ -16,5 +18,6 @@ public:
 	};
 
 private:
+	Enemy* enemy_;
 	std::vector<std::unique_ptr<FloorBullet>> bullets_;
 };

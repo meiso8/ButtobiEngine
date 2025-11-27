@@ -117,6 +117,7 @@
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\HealItem.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\HealItemSpawner.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\ResultSceneObj\ResultSprite.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\Data\FloorData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\GameObject\UI\PauseScreen.h" />
