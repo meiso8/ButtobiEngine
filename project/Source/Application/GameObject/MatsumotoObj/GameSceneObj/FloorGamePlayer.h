@@ -71,7 +71,7 @@ private:
 
 	float moveSpeed_;
 	const float kMinMoveSpeed_ = 0.01f;
-	const float kMaxMoveSpeed_ = 0.15f;
+	const float kMaxMoveSpeed_ = 0.1f;
 	Vector3 moveDir_;
 	Vector3 moveLimitMax_;
 	Vector3 moveLimitMin_;

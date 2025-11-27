@@ -131,7 +131,7 @@ void FloorGamePlayer::Initialize() {
 
     //べとべと床フラグ
     isOnStickyFloor_ = false;
-    stickyFloorSlowRate_ = 0.9f;
+    stickyFloorSlowRate_ = 0.5f;
 }
 
 

@@ -1,7 +1,7 @@
 {
     "Speed": {
         "acceleration": 0.01,
-        "velocity": 0.1
+        "velocity": 0.0
     },
 
     "Damage": {
