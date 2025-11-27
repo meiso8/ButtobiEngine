@@ -269,7 +269,7 @@ void DebugUI::CheckInput() {
 
 void DebugUI::CheckXinput(const int& num)
 {
-
+#ifdef USE_IMGUI
     std::string numOK = std::to_string(num);
     if (ImGui::TreeNode(numOK.c_str())) {
 
@@ -298,7 +298,7 @@ void DebugUI::CheckXinput(const int& num)
 
         ImGui::TreePop();
     }
-
+#endif
 }
 
 void DebugUI::CheckSprite(Sprite& sprite, const char* label) {
