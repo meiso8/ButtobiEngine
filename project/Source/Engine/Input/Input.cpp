@@ -5,6 +5,7 @@
 
 #include"Camera/Camera.h"
 #include<cmath>
+#include"Vector2.h"
 
 BYTE Input::key_[256];
 BYTE Input::preKey_[256];
@@ -202,18 +203,18 @@ Vector2 Input::NormalizeButtonCount(SHORT& buttonLX, SHORT& buttonLY)
         normY = -1.0f;
     }
 
-    float absX = std::fabsf(normX);
-    float absY = std::fabsf(normY);
 
-    if (absX == 1.0f || absY < deadZone_) {
-        normY = 0.0f;
-    }
+    Vector2 normalize = Normalize(Vector2{ normX,normY });
 
-    if (absY == 1.0f || absX < deadZone_) {
-        normX = 0.0f;
-    }
+    //if (absX == 1.0f || absY < deadZone_) {
+    //    normY = 0.0f;
+    //}
 
-    return { normX,normY };
+    //if (absY == 1.0f || absX < deadZone_) {
+    //    normX = 0.0f;
+    //}
+
+    return normalize;
 
 }
 
