@@ -6,6 +6,7 @@
 #include"DebugUI.h"
 #include "MatsumotoObj/KeyBindConfig.h"
 
+bool PauseScreen::isActive_ = false;
 bool PauseScreen::isPause_ = false;
 bool PauseScreen::isRetry = false;
 bool PauseScreen::isBackToTitle = false;
