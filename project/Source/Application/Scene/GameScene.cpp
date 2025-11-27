@@ -59,6 +59,8 @@ GameScene::GameScene()
     floorPlayerStripTargetUI_ = std::make_unique<FloorPlayerStripTargetUI>(floorGamePlayer_.get());
     floorActionManager_ = std::make_unique<FloorActionManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
     floorGamePlayerAnimationManager_ = std::make_unique<FloorGamePlayerAnimationManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
+	healItemSpawner_ = std::make_unique<HealItemSpawner>();
+	actionUI_ = std::make_unique<ActionUI>(floorGamePlayer_.get());
 
     enemy_ = std::make_unique<Enemy>();
     enemyBulletManager_ = std::make_unique<EnemyBulletManager>();
@@ -100,6 +102,10 @@ void GameScene::Initialize() {
     floorPlayerStripTargetUI_->Initialize();
     floorActionManager_->Initialize();
     playerFloorStripManager_->Initialize();
+	healItemSpawner_->Initialize();
+	actionUI_->Initialize();
+
+	healItemSpawner_->SpawnHealItem({ 2.0f,1.0f,2.0f });
 
     enemy_->Init();
     enemy_->SetTarget(floorGamePlayer_->body_.worldTransform_.translate_);
@@ -178,6 +184,8 @@ void GameScene::Draw() {
     floorBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     floorPlayerStripTargetUI_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     playerFloorStripManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+	healItemSpawner_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+	actionUI_->Draw();
     enemy_->Draw(*currentCamera_, kLightModeHalfL);
     enemyBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     enemyBombManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
@@ -232,12 +240,14 @@ void GameScene::UpdateGameObject()
     floorGamePlayer_->Update();
     floorGameFloorManager_->Update();
     floorBulletManager_->Update();
+	healItemSpawner_->Update();
     enemy_->Update();
     enemyBulletManager_->Update();
     enemyBombManager_->Update();
     enemyShockWaveManager_->Update();
 
     // オブジェクト同士の干渉
+	actionUI_->Update();
     floorStripManager_->Update();
     playerFloorStripManager_->Update();
     floorPlayerShotBulletManager_->Update();
@@ -282,6 +292,7 @@ void GameScene::CheckAllCollision()
 
     collisionManager_->AddCollider(floorGamePlayer_.get());
     collisionManager_->AddCollider(enemy_.get());
+	healItemSpawner_->AddCollider(collisionManager_.get());
 
     for (auto& bullet : floorBulletManager_->GetBullets()) {
         if (bullet->isActive_) { collisionManager_->AddCollider(bullet.get()); }
