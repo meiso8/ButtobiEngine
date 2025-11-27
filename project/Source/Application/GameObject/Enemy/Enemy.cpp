@@ -28,7 +28,8 @@ Enemy::Enemy()
          {PHASE::FIREBALL, std::bind(&Enemy::Fireball, this)},
          {PHASE::FLOORCHANGEATTACK, std::bind(&Enemy::FloorChangeAttack, this)},
          {PHASE::TACKLE, std::bind(&Enemy::Tackle, this)},
-         {PHASE::KNOCKBACK, std::bind(&Enemy::Knockback, this)},
+         {PHASE::KNOCKBACK, std::bind(&Enemy::KnockBack, this)},
+         {PHASE::PLAYER_HIT_BACK, std::bind(&Enemy::PlayerHitBack, this)},
          {PHASE::SHOCKWAVEATTACK, std::bind(&Enemy::ShockWaveAttack, this)},
          {PHASE::EXIT, std::bind(&Enemy::Exit, this)},
     };
@@ -153,7 +154,7 @@ void Enemy::Update()
         return;
     }
 
-    damageStruct_.isHit = false;
+
 
     UpdatePhaseTimer();
     // 呼び出す  
@@ -167,6 +168,8 @@ void Enemy::Update()
     if (Input::IsTriggerKey(DIK_C)) { SetPhase(TACKLE); }
     if (Input::IsTriggerKey(DIK_V)) { SetPhase(FIREBALL); }
 #endif
+
+    damageStruct_.isHit = false;
 
     HitAnimation();
     model_->GetWaveData(0).time += InverseFPS * 4.0f;
@@ -197,8 +200,11 @@ void Enemy::Update()
     ImGui::SliderInt("actionCount", &actionCount_, 0, 3);
     ImGui::SliderFloat("phaseTimer", &phaseTimer_, 0.0f, 15.0f);
     ImGui::SliderFloat("phaseTime", &phaseTime_, 0.0f, 15.0f);
-
     DebugUI::CheckWaveData(model_->GetWaveData(0), "EnemyWaveData");
+
+    float dot = Dot(*playerPos_, bodyPos_.worldTransform_.GetWorldPosition());
+    ImGui::Text("Dot : %f", dot);
+    ImGui::Text("%s",dot > 0.0f? "true":"false");
     ImGui::End();
 
     ImGui::Begin("Command");
@@ -239,13 +245,11 @@ void Enemy::OnCollision(Collider* collider)
             damageStruct_.hps.hp -= damageStruct_.hps.hpDecrease;
         }
         poyoAnimTimer_ = 0.0f;
-
     }
 
     if (collider->GetCollisionAttribute() == kCollisionPlayer) {
         if (phase_ == TACKLE) {
-            Sound::PlayOriginSE(Sound::BOSS_TACKLE);
-            SetPhase(KNOCKBACK);
+            SetPhase(PLAYER_HIT_BACK);
         }
     }
 
@@ -265,6 +269,17 @@ void Enemy::Tackle()
         float localTimer = (phaseTimer_ - 3.0f) / 0.7f;
         LerpScale();
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(startPos_, endPos_, localTimer);
+
+
+        Vector3 bodyPos = bodyPos_.worldTransform_.GetWorldPosition();
+        Vector3 toPlayer = Normalize(*playerPos_ - bodyPos);
+        Vector3 toBoss = -toPlayer;
+        if (Length(toPlayer) <= 4.0f&& Dot(toPlayer, toBoss) >= 0.0f) {
+            if (damageStruct_.isHit) {
+                Sound::PlayOriginSE(Sound::BOSS_TACKLE);
+                SetPhase(KNOCKBACK);
+            }
+        }
     } else if (phaseTimer_ <= 4.7f) {
         float localTimer = (phaseTimer_ - 3.7f) * 0.5f;
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(endPos_, startPos_, localTimer);
@@ -276,7 +291,7 @@ void Enemy::Tackle()
 
 }
 
-void Enemy::Knockback()
+void Enemy::PlayerHitBack()
 {
 
     if (phaseTimer_ == 0.0f) {
@@ -285,19 +300,30 @@ void Enemy::Knockback()
 
     if (phaseTimer_ <= 0.125f) {
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(endPos_, startPos_, phaseTimer_);
+    } else if (phaseTimer_ <= 2.0f) {
+        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, startPos_, 0.05f);
+
+    } else {
+        phaseTimer_ = phaseTime_;
+    }
+}
+
+void Enemy::KnockBack()
+{
+
+    if (phaseTimer_ == 0.0f) {
+        LookTarget(*playerPos_);
+    }
+
+    if (phaseTimer_ <= 0.125f) {
+        bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(bodyPos_.worldTransform_.translate_, startPos_, 0.05f);
     } else {
 
         if (phaseTimer_ <= 0.75f) {
-            float localTimer = (phaseTimer_ - 0.125f) / (0.75f - 0.125f);
-            float theta = PI * 3.0f * localTimer; // 回転の速さを調整
-            bodyPos_.worldTransform_.rotate_.z = sinf(theta);
-            bodyPos_.worldTransform_.rotate_.x = cosf(theta);
-
+            SpinBody();
             Sound::PlayOriginSE(Sound::STUN);
-
         } else {
-            bodyPos_.worldTransform_.rotate_.z = Lerp(bodyPos_.worldTransform_.rotate_.z, 0.0f, 0.5f);
-            bodyPos_.worldTransform_.rotate_.x = Lerp(bodyPos_.worldTransform_.rotate_.x, 0.0f, 0.5f);
+            LerpSpinOriginBody();
             bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, startPos_, 0.05f);
         }
     }
@@ -309,6 +335,7 @@ void Enemy::Knockback()
 
 
 }
+
 
 void Enemy::LerpRoundPos()
 {
@@ -429,24 +456,6 @@ void Enemy::RandomAttackPhaseEnd()
         break;
     }
 
-
-
-
-    //switch (randNum)
-    //{
-    //case 0:
-    //    SetPhase(TACKLE);
-    //    break;
-    //case 1:
-    //    SetPhase(FIREBALL);
-    //    break;
-    //case 2:
-    //    SetPhase(FLOORCHANGEATTACK);
-    //    break;
-    //case 3:
-    // 
-    //    break;
-    //}
 }
 
 
@@ -476,7 +485,7 @@ void Enemy::SetPhase(PHASE phase)
     poyoAnimTimer_ = 0.0f;
 
     //フェーズがーLERP_ROUND_POSだったらここでreturn
-    if (phase_ == LERP_ROUND_POS || phase_ == LERP_SQUARE_POS) {
+    if (phase_ == LERP_ROUND_POS || phase_ == LERP_SQUARE_POS || phase_ == KNOCKBACK || phase_ == PLAYER_HIT_BACK) {
         sphericalPos_ = TransformCoordinate(bodyPos_.worldTransform_.translate_);
         return;
     }
@@ -591,7 +600,11 @@ void Enemy::ShockWaveAttack()
 }
 void Enemy::Exit()
 {
-
+    if (phaseTimer_ <= 4.0f) {
+        SpinBody();
+    } else {
+        LerpSpinOriginBody();
+    }
 }
 
 
@@ -644,6 +657,20 @@ void Enemy::RotateY(const float& timer)
 {
     bodyPos_.worldTransform_.rotate_.y = Easing::EaseInBack(startRotateY_, endRotateY_, timer);
 
+}
+
+void Enemy::SpinBody()
+{
+    float localTimer = (phaseTimer_ - 0.125f) / (0.75f - 0.125f);
+    float theta = PI * 3.0f * localTimer; // 回転の速さを調整
+    bodyPos_.worldTransform_.rotate_.z = sinf(theta);
+    bodyPos_.worldTransform_.rotate_.x = cosf(theta);
+}
+
+void Enemy::LerpSpinOriginBody()
+{
+    bodyPos_.worldTransform_.rotate_.z = Lerp(bodyPos_.worldTransform_.rotate_.z, 0.0f, 0.5f);
+    bodyPos_.worldTransform_.rotate_.x = Lerp(bodyPos_.worldTransform_.rotate_.x, 0.0f, 0.5f);
 }
 
 void Enemy::Winging(const float& speed)

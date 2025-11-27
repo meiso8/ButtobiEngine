@@ -3,6 +3,7 @@
 #include"Object3d.h"
 #include"Collider.h"
 #include"CharacterState.h"
+
 class Model;
 class Camera;
 enum LightMode;
@@ -36,6 +37,7 @@ public:
 	Vector3& GetLookDir() { return lookDir_; }
 	HPs* GetHpsPtr() { return &damageStruct_.hps; }
 	bool& IsHit() { return damageStruct_.isHit; }
+	float& InvincibilityTime(){ return damageStruct_.invincibilityTime; }
 	bool isStriptting_;
 	bool isReqestStript_;
 	int stripFloorPosX_;

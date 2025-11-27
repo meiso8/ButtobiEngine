@@ -63,9 +63,11 @@ private:
         FLOORCHANGEATTACK,
         SHOCKWAVEATTACK,
 
-        LERP_SQUARE_POS,
         LERP_ROUND_POS,
+        LERP_SQUARE_POS,
+ 
         KNOCKBACK,
+        PLAYER_HIT_BACK,
         ROUND,
         SQUARE,
         RANDOM_WALK,
@@ -87,6 +89,7 @@ private:
 
     float phaseTimer_ = 0.0f;
     float phaseTime_ = 0.0f;
+
     float poyoAnimTimer_ = 0.0f;
     const float kPoyoAnimeTime_ = 0.25f;
     //弾のクールタイム
@@ -137,7 +140,8 @@ private:
     void FloorChangeAttack();
     //タックル
     void Tackle();
-    void Knockback();
+    void PlayerHitBack();
+    void KnockBack();
     //衝撃波攻撃
     void ShockWaveAttack();
 
@@ -148,6 +152,9 @@ private:
     void PoyoPoyo(const float& endTimer);
     void LerpScale();
     void RotateY(const float& timer);
+
+    void SpinBody();
+    void LerpSpinOriginBody();
 
     void Winging(const float& speed);
 };
