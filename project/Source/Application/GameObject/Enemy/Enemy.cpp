@@ -94,6 +94,9 @@ void Enemy::Init() {
     wingLPos_.worldTransform_.translate_.x = -1.0f;
     wingRPos_.worldTransform_.translate_.x = 1.0f;
 
+    wingLPos_.worldTransform_.translate_.y = 0.3f;
+    wingRPos_.worldTransform_.translate_.y = 0.3f;
+
     //球面座標系
     sphericalPos_ = { .radius = 0.0f,.azimuthal = 0.0f ,.polar = 0.0f };
 
