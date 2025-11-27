@@ -5,38 +5,41 @@
 #include"Vector4.h"
 #include"BlendMode.h"
 #include"Particle.h"
+
 class Camera;
 
 struct Emitter
 {
+    std::string name = "unknown";
     WorldTransform transform;//エミッタのTransfrom
-    uint32_t cont;//発生数
+    uint32_t count;//発生数
     float frequency;//発生頻度
     float frequencyTime;//頻度用時刻
-    bool isRandom;
+    bool isRandomTranslate;
+    bool isRandomRotate;
     Vector4 color;
     BlendMode blendMode;
-    ParticleManager::Movements movement;
-    float lifeTime_;
+    ParticleMovements movement;
+    float lifeTime;
+    float radius;
 };
 
 class ParticleEmitter
 {
 private:
-
-    std::string name_ = "unknown";
     ParticleManager* particleManager_ = nullptr;
 public:
     Emitter emitter_{};
 public:
     ParticleEmitter();
-
-    void SetName(const std::string name) {
-        name_ = name;
-    }
     void Initialize();
+    void UpdateTimer();
+    void InitTimer();
     void Update(Camera& camera);
     void Emit();
     void Draw();
+    void SetName(const std::string name) { emitter_.name = name ; }
+    void SetMovement(ParticleMovements& movement) { emitter_.movement; }
+    void SetParent(WorldTransform& parent);
 };
 

@@ -19,7 +19,7 @@
 
 class Camera;
 class ShaderResourceView;
-
+struct Emitter;
 
 struct Particle {
     Transform transform;
@@ -36,9 +36,17 @@ struct ParticleForGPU {
     Vector4 color;
 };
 
+
+enum ParticleMovements {
+    kParticleNormal,
+    kParticleSphere,
+    kParticleShock
+};
+
 struct ParticleGroup {
     MaterialData materialData;
     std::list<Particle>particles;
+    std::list<SphericalCoordinate>sphericalCoordinates;
     uint32_t instanceSrvIndex;
     Microsoft::WRL::ComPtr<ID3D12Resource> instancingResource;
     uint32_t numInstance;//インスタンス数
@@ -46,29 +54,22 @@ struct ParticleGroup {
     Vector3 textureSize;
     bool useModel;
     Model* model = nullptr;
+    const WorldTransform* parentPos_ = nullptr;
+    ParticleMovements movement;
 };
 
+std::list<SphericalCoordinate> EmitCoordinate(const bool& isRandom, uint32_t count, const float& radius = 3.0f);
 
-
-std::list<SphericalCoordinate> EmitCoordinate(const bool& isRandom, const Vector3& position, uint32_t count, const Vector3& scale = { 1.0f,1.0f,1.0f }, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
-
-std::list<Particle> Emit(const bool& isRandom, const WorldTransform& transform, uint32_t count, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, const float& lifeTime = -1.0f);
-Particle MakeNewParticle(const bool& isRandom, const WorldTransform& transform, const Vector4& color, const float& lifeTime = -1.0f);
-SphericalCoordinate MakeNewSphericalCoordinate(const float& radius = 3.0f);
+std::list<Particle> EmitParticles(const bool& isRandomTranslate, const bool& isRandomRotate, const WorldTransform& transform, uint32_t count, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f },const float& lifeTime = -1.0f);
+Particle MakeNewParticle(const bool& isRandomTranslate, const bool& isRandomRotate, const WorldTransform& transform, const Vector4& color, const float& lifeTime = -1.0f);
+SphericalCoordinate MakeNewSphericalCoordinate(const bool& isRandom = true,const float& radius = 3.0f);
 class ParticleManager
 {
 public:
 
-    enum Movements {
-        kNormal,
-        kSphere,
-        kShock
-    };
-
     AccelerationField accelerationField;
     bool useBillboard_ = true;
     bool useSpriteCamera_ = false;
-
 
     const uint32_t kNumMaxInstance = 100;//インスタンス数
     static const float kDeltaTime;
@@ -93,7 +94,7 @@ private:
     static ParticleManager* instance_;
     Camera* camera_ = nullptr;
 public:
-    //全てのパーティクルグループを作成する
+
     void CreateAll();
 
     //コンストラク・タデストラクタの隠ぺい
@@ -106,37 +107,25 @@ public:
     void Create();
     static ParticleManager* GetInstance();
 
-    static void EmitParticle(const std::string name, const WorldTransform& transform, uint32_t count, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, const bool& isRandom = true, const float& lifeTime = 1.0f);
+static void Emit(Emitter& emitter);
 
     std::unordered_map<std::string, std::unique_ptr <ParticleGroup>>& GetParticleGroups();
-    /// @brief パーティクルグループの生成
-    /// @param name 名前
-    /// @param textureHandle　テクスチャハンドル 
-    /// @param useModel モデルを使うかどうか
-    /// @param modelHandle モデルハンドル
-    void CreateParticleGroup(
-        const std::string name, const Texture::TEXTURE_HANDLE& textureHandle, 
-        const bool& useModel, const ModelManager::MODEL_HANDLE& modelHandle = ModelManager::MODEL_HANDLE::BOX);
+    void CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle, const bool& useModel = false, const ModelManager::MODEL_HANDLE& modelHandle = ModelManager::MODEL_HANDLE::BOX);
 
     void Update(Camera& camera);
     void Draw(uint32_t blendMode = BlendMode::kBlendModeAdd);
     void InitAccelerationField();
     void Finalize();
 
-    void SetMovement(Movements& move);
-
 protected:
     void UpdateBillBordMatrix(Camera& camera);
     void UpdateMatrix(Particle& particleItr, ParticleGroup& group);
 private:
-
-    std::list<SphericalCoordinate>sphericalCoordinates;
     //メンバ関数ポインタテーブル
-    std::unordered_map<Movements, std::function<void()>> UpdateFunctions;
-    Movements movements_ = Movements::kNormal;
-    void Normal();
-    void Sphere();
-    void Shock();
+    std::unordered_map<ParticleMovements, std::function<void(ParticleGroup&)>> UpdateFunctions;
+    void Normal(ParticleGroup& group);
+    void Sphere(ParticleGroup& group);
+    void Shock(ParticleGroup& group);
 
     void CreateModelData();
     void CreateVertexBufferResource();

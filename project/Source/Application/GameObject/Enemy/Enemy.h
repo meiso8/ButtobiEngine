@@ -6,7 +6,7 @@
 #include"Circle.h"
 #include"Collider.h"
 #include<memory>
-
+#include<unordered_map>
 class Model;
 class Camera;
 enum LightMode;
@@ -14,6 +14,11 @@ enum LightMode;
 class Enemy :public Collider
 {
 public:
+    enum Parts {
+        BODY,
+        WING_L,
+        WING_R
+    };
 
     Enemy();
     void Init();
@@ -31,17 +36,20 @@ public:
         return { 0.0f };
     }
 
-
     bool isShot_ = false;
     bool isBombShot_ = false;
     bool isWaveShot_ = false;
     bool isReqestClearFloor_ = false;
     //体の位置
     Object3d bodyPos_;
+
+    bool IsHit() { return damageStruct_.isHit; }
     HPs* GetHpsPtr() { return &damageStruct_.hps; }
 private:
-    //モデル
-    Model* model_;
+    Model* model_ = nullptr;
+    Object3d wingLPos_;
+    Object3d wingRPos_;
+
     //目標地点
     Vector3* target_ = nullptr;
     Vector3* playerPos_ = nullptr;
@@ -91,10 +99,11 @@ private:
     float startRotateY_ = 0.0f;
     float roundSpeedY = 1.0f;
     const float kRadius_ = 1.5f;
-    const float kSize_ = kRadius_ * 2.0f;
+    const float kSize_ = 1.0f;
     int actionCount_ = 0;
     bool isAttack_ = false;
     bool isPreAttack_ = false;
+    float wingTheta_ = 0.0f;
 private:
     //状態を初期化
     void InitState();
@@ -115,7 +124,7 @@ private:
     //回転移動
     void Round();
     void LerpRoundPos();
- 
+
     void SquareMove();
     void LerpSquarePos();
     void RandomWalk();
@@ -139,5 +148,7 @@ private:
     void PoyoPoyo(const float& endTimer);
     void LerpScale();
     void RotateY(const float& timer);
+
+    void Winging(const float& speed);
 };
 

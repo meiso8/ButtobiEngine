@@ -253,31 +253,31 @@ void DebugUI::CheckModel(Model& model, const char* label) {
 }
 
 
-void DebugUI::CheckInput(Input& input) {
+void DebugUI::CheckInput() {
 #ifdef USE_IMGUI
     ImGui::Begin("Input");
-    ImGui::SliderFloat2("mousePos", &input.GetMousePos().x, 0.0f, 1280.0f);
+    ImGui::SliderFloat2("mousePos", &Input::GetMousePos().x, 0.0f, 1280.0f);
 
-    ImGui::Text("Controller %s", input.IsControllerConnected(0) ? "Connected" : "Unkown");
-    ImGui::Text("left %d", input.GetControllerTriggerCount(BUTTON_LEFT, 0));
-    ImGui::Text("right %d", input.GetControllerTriggerCount(BUTTON_RIGHT, 0));
+    ImGui::Text("Controller %s", Input::IsControllerConnected(0) ? "Connected" : "Unkown");
+    ImGui::Text("left %d", Input::GetControllerTriggerCount(BUTTON_LEFT, 0));
+    ImGui::Text("right %d", Input::GetControllerTriggerCount(BUTTON_RIGHT, 0));
 
-    ImGui::Text("DPAD_UP %d", input.IsControllerPressButton(XINPUT_GAMEPAD_DPAD_UP, 0));
-    ImGui::Text("DPAD_DOWN %d", input.IsControllerPressButton(XINPUT_GAMEPAD_DPAD_DOWN, 0));
-    ImGui::Text("DPAD_LEFT %d", input.IsControllerPressButton(XINPUT_GAMEPAD_DPAD_LEFT, 0));
-    ImGui::Text("DPAD_RIGHT %d", input.IsControllerPressButton(XINPUT_GAMEPAD_DPAD_RIGHT, 0));
-    ImGui::Text("START %d", input.IsControllerPressButton(XINPUT_GAMEPAD_START, 0));
-    ImGui::Text("BACK %d", input.IsControllerPressButton(XINPUT_GAMEPAD_BACK, 0));
-    ImGui::Text("LEFT_THUMB %d", input.IsControllerPressButton(XINPUT_GAMEPAD_LEFT_THUMB, 0));
-    ImGui::Text("RIGHT_THUMB %d", input.IsControllerPressButton(XINPUT_GAMEPAD_RIGHT_THUMB, 0));
-    ImGui::Text("LEFT_SHOULDER %d", input.IsControllerPressButton(XINPUT_GAMEPAD_LEFT_SHOULDER, 0));
-    ImGui::Text("RIGHT_SHOULDER %d", input.IsControllerPressButton(XINPUT_GAMEPAD_RIGHT_SHOULDER, 0));
-    ImGui::Text("A %d", input.IsControllerPressButton(XINPUT_GAMEPAD_A, 0));
-    ImGui::Text("B %d", input.IsControllerPressButton(XINPUT_GAMEPAD_B, 0));
-    ImGui::Text("X %d", input.IsControllerPressButton(XINPUT_GAMEPAD_X, 0));
-    ImGui::Text("Y %d", input.IsControllerPressButton(XINPUT_GAMEPAD_Y, 0));
-    Vector2 L = input.GetControllerStickPos(BUTTON_LEFT, 0);
-    Vector2 R = input.GetControllerStickPos(BUTTON_RIGHT, 0);
+    ImGui::Text("DPAD_UP %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_UP, 0));
+    ImGui::Text("DPAD_DOWN %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_DOWN, 0));
+    ImGui::Text("DPAD_LEFT %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_LEFT, 0));
+    ImGui::Text("DPAD_RIGHT %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_RIGHT, 0));
+    ImGui::Text("START %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_START, 0));
+    ImGui::Text("BACK %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_BACK, 0));
+    ImGui::Text("LEFT_THUMB %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_LEFT_THUMB, 0));
+    ImGui::Text("RIGHT_THUMB %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_RIGHT_THUMB, 0));
+    ImGui::Text("LEFT_SHOULDER %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_LEFT_SHOULDER, 0));
+    ImGui::Text("RIGHT_SHOULDER %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_RIGHT_SHOULDER, 0));
+    ImGui::Text("A %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_A, 0));
+    ImGui::Text("B %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_B, 0));
+    ImGui::Text("X %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_X, 0));
+    ImGui::Text("Y %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_Y, 0));
+    Vector2 L = Input::GetControllerStickPos(BUTTON_LEFT, 0);
+    Vector2 R = Input::GetControllerStickPos(BUTTON_RIGHT, 0);
     ImGui::SliderFloat2("BUTTON_LEFT", &L.x, -32768.0f, 32768.0f);
     ImGui::SliderFloat2("BUTTON_RIGHT", &R.x, -32768.0f, 32768.0f);
     ImGui::End();
@@ -380,6 +380,8 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
 {
 #ifdef USE_IMGUI
     ImGui::Begin("Object3d");
+
+    if (ImGui::TreeNode(label)) {
     CheckWorldTransform(object3d.worldTransform_, label);
     ShowMatrix4x4(object3d.worldTransform_.matWorld_);
 
@@ -388,11 +390,12 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
     CheckTransform(object3d.GetUVTransform(), "uvTransfrom");
     CheckLightMode(object3d.GetLightMode(), "GetLightMode");
 
-
+    ImGui::TreePop();
+    }
     ImGui::End();
 #endif
 }
-void DebugUI::CheckParticle(ParticleEmitter& particleEmitter)
+void DebugUI::CheckParticle(ParticleEmitter& particleEmitter, const char* label)
 {
 #ifdef USE_IMGUI
 
@@ -407,18 +410,24 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter)
 
     Emitter& emitter = particleEmitter.emitter_;
 
-    if (ImGui::TreeNode("Emitter")) {
-
-        ImGui::Checkbox("isRandom", &emitter.isRandom);
-        int count = emitter.cont;
-        ImGui::SliderInt("createNum", &count, 0, particle.kNumMaxInstance);
-        emitter.cont = count;
-        CheckColor(emitter.color, "color");
-        CheckWorldTransform(emitter.transform, "EmitterTransform");
+    if (ImGui::TreeNode(label)) {
+        ImGui::Checkbox("isRandomTranslate", &emitter.isRandomTranslate);
+        ImGui::Checkbox("isRandomRotate", &emitter.isRandomRotate);
+        int movement = static_cast<int>(emitter.movement);
+        ImGui::SliderInt("movement", &movement, 0, 2);
+        emitter.movement = static_cast<ParticleMovements>(movement);
+        ImGui::SliderFloat("radius", &emitter.radius, 0.1f, 10.0f);
+        ImGui::SliderFloat("lifeTime", &emitter.lifeTime, -1.0f, 50.0f);
         CheckBlendMode(emitter.blendMode);
-        ImGui::SliderFloat("frequency", &emitter.frequency, 0.1f, 10.0f);
+        CheckColor(emitter.color, "color");
+
+        int count = emitter.count;
+        ImGui::SliderInt("createNum", &count, 0, particle.kNumMaxInstance);
+        emitter.count = count;
+        
+        CheckWorldTransform(emitter.transform, "transform");
         ImGui::Text("frequencyTime : %f", emitter.frequencyTime);
-        ImGui::Text("lifeTime : %f", emitter.lifeTime_);
+        ImGui::SliderFloat("frequency", &emitter.frequency, 0.1f, 10.0f);
         ImGui::TreePop();
     }
 
@@ -431,7 +440,7 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter)
             ImGui::SliderFloat2("textureSize", &group->textureSize.x, 0.0f, static_cast<float>(Window::GetClientWidth()));
 
             if (ImGui::Button(name.c_str())) {
-                particle.EmitParticle(name, emitter.transform, emitter.cont, color);
+                particle.Emit(emitter);
             }
             for (std::list<Particle>::iterator itr = group->particles.begin(); itr != group->particles.end(); ++itr) {
                 CheckTransform((*itr).transform, name.c_str());

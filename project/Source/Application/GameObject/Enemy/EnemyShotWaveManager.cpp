@@ -72,8 +72,8 @@ void EnemyShotWaveManager::Update() {
     enemy_->SetTarget(enemyPoses_[direction_]);
     // 弾投げ
     if (enemy_->isWaveShot_) {
-
-        enemy_->isWaveShot_ = false;
+        
+        Sound::PlayOriginSE(Sound::DEFEAT_BOSS);
 
         for (auto& wave : shockWaveManager_->GetWaves()) {
 
@@ -98,6 +98,7 @@ void EnemyShotWaveManager::Update() {
 
         Initialize();
 
+        enemy_->isWaveShot_ = false;
     }
 
 }

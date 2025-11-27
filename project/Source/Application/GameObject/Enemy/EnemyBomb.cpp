@@ -76,7 +76,7 @@ void EnemyBomb::Update() {
 
     if (lifeTimer_ <= 0.0f) {
         if (!isExplosion_) {
-            Sound::PlaySE(Sound::PICO);
+            Sound::PlaySE(Sound::DEFEAT_BOSS);
             isExplosion_ = true;
             explosionFrame_ = 0;
             lifeTimer_ = 0.0f;

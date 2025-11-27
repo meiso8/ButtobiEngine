@@ -35,11 +35,17 @@ void Sound::LoadAllSound()
 
     //サウンドの読み込み
     handles_[BGM1] = Load("Resource/Sounds/externals/sea.mp3");
-    handles_[PICO] = Load("Resource/Sounds/pico.mp3");
-    handles_[CRACKER] = Load("Resource/Sounds/cracker_short.mp3");
-    handles_[FOOT_STEP] = Load("Resource/Sounds/externals/maou_se_sound_footstep02.mp3");
+
     handles_[FIRE_BALL] = Load("Resource/Sounds/externals/fireBall.mp3");
     handles_[THROW_FLOOR] = Load("Resource/Sounds/externals/throwFloor.mp3");
+
+    handles_[BOSS_HEAL] = Load("Resource/Sounds/JamesSound/bossHeal.mp3");
+    handles_[BOSS_TACKLE] = Load("Resource/Sounds/JamesSound/bossTackle.mp3");
+    handles_[DAMAGE] = Load("Resource/Sounds/JamesSound/damage.mp3");
+    handles_[DEFEAT_BOSS] = Load("Resource/Sounds/JamesSound/defeatBoss.mp3");
+    handles_[PLAYER_WALK] = Load("Resource/Sounds/JamesSound/playerWalk.mp3");
+    handles_[STUN] = Load("Resource/Sounds/JamesSound/stun.mp3");
+
 }
 
 void Sound::PlayBGM(const TAG& tag, const float& volumeOffset, const bool& loop)

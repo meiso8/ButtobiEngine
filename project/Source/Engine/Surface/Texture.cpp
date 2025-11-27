@@ -16,14 +16,23 @@ void Texture::LoadAllTexture() {
     handles.resize(TEXTURES);
     handles[WHITE_1X1] = Load("Resource/Textures/white1x1.png");
     handles[UV_CHECKER] = Load("Resource/Textures/uvChecker.png");
-    handles[NUMBERS] = Load("Resource/Textures/numbers.png");
-    handles[TEST] = Load("Resource/Textures/test.png");
-    handles[HART] = Load("Resource/Textures/hart.png");
-    handles[HP_GAGE_EFFECCT] = Load("Resource/Textures/hpGageEffect.png");
+    handles[NUMBERS] = Load("Resource/Textures/Numbers_Pop.png");
 
-	handles[ACTION_UI_MOVE] = Load("Resource/Textures/ActionUi_Move.png");
-	handles[ACTION_UI_STRIP] = Load("Resource/Textures/ActionUi_Strip.png");
-	handles[ACTION_UI_SHOT] = Load("Resource/Textures/ActionUi_Shot.png");
+    handles[HART] = Load("Resource/Textures/PlayerHPIcon.png");
+    handles[PLAYER_WALK_PARTICLE] = Load("Resource/Textures/PlayerWalkParticle_Pop.png");
+
+	handles[ACTION_UI_MOVE] = Load("Resource/Textures/ActionUI_Move_Pop.png");
+	handles[ACTION_UI_STRIP] = Load("Resource/Textures/ActionUI_Strip_Pop.png");
+	handles[ACTION_UI_SHOT] = Load("Resource/Textures/ActionUI_Shot_Pop.png");
+
+    handles[PAUSING_BG] = Load("Resource/Textures/PausingBG_02.png");
+    handles[PAUSING] = Load("Resource/Textures/PauseUI_Pop.png");
+
+    handles[BUTTON_BACK_TO_TITL] = Load("Resource/Textures/BackToTitleUI_Pop.png");
+    handles[BUTTON_BACK_TO_GAME] = Load("Resource/Textures/BackToGameUI_Pop.png");
+    handles[BUTTON_RETRY] = Load("Resource/Textures/RetryUI_Pop.png");
+    handles[BUTTON_A] = Load("Resource/Textures/Button_A_Pop.png");
+    handles[CONFIRM_UI] = Load("Resource/Textures/ConfirmUI_Pop.png");
 }
 
 uint32_t Texture::Load(const std::string& filePath)

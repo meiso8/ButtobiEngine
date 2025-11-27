@@ -127,9 +127,10 @@ void MyEngine::Debug()
 #ifdef USE_IMGUI
     DebugUI::CheckJsonFile();
     DebugUI::CheckFPS();
-    DebugUI::CheckInput(*input);
+    DebugUI::CheckInput();
     DebugUI::CheckDirectionalLight();
     DebugUI::CheckSound();
+
 #endif // USE_IMGUI
 
 

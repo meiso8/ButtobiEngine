@@ -6,24 +6,45 @@ class PauseScreen
 {
 public:
     static bool isPause_;
-    float pauseTimer_ = 0.0f;
+    static bool isRetry;
+    static bool isBackToTitle;
+
     PauseScreen();
+    void Initialize();
     void Update();
     void Draw();
+
+private:
     enum Layer {
         kBlackScreen,
         kPauseBG,
         kPausing,
         kBackToGame,
-        kReset,
+        kReTry,
         kBackToTitle,
-        kConfirm,
         kButton,
+        kConfirm,
         kMaxLayer,
     };
-private:
-    Vector2 startPos_ = { 0.0f,0.0f };
-    Vector2 endPos_ = { 0.0f,0.0f };
+    enum Button {
+        kBackToGameButton,
+        kReTryButton,
+        kBackToTitleButton,
+        kButtonMax,
+    };
+
+    void TimerUpdate();
+    void TimerDown();
+    void SelectButton();
+    void ScalingButton();
+
+    float pauseTimer_ = 0.0f;
+    int selectButtonNum_ = kBackToGameButton;
+    bool isActive_ = false;
+    float scaleTheta_ = 0.0f;
+
+    std::array < Vector2, kMaxLayer> startPos_;
+    std::array < Vector2, kMaxLayer> endPos_;
     std::array<std::unique_ptr<Sprite>, kMaxLayer> sprites_;
 };
 

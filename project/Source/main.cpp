@@ -13,6 +13,7 @@
 
 // * エンジンとInGameの間のラッパークラス勝手に追加しました(マツモト) * //
 #include "MatsumotoObj/KeyBindConfig.h"
+#include"UI/PauseScreen.h"//ポーズ中の処理を自分も追加しました吉田
 // * ラッパークラスここまで * //
 
 // Windowsアプリでのエントリーポイント(main関数)
@@ -27,6 +28,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // ==============================================//↑基本いじらない↑//============================================
     //画面の色
     Vector4 screenColor = { 0.373f,0.804f,0.894f,1.0f };
+    MyEngine::GetDirectionalLightData()->direction = Normalize({ 0.7f,-0.24f,-0.64f });
 
 	// * ラッパークラスここから * //
 	// キーバインドの初期化
@@ -73,12 +75,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		// シーンが終了していたら次のシーンへ
         if (currentScene->GetIsEndScene()) {
-            ++currentIt; // 次のシーンへ
-
-            if (currentIt == scenes.end()) {
-                currentIt = scenes.begin(); // 最初に戻る
+            
+            if (PauseScreen::isBackToTitle) {
+                currentIt = scenes.find("Title");
+                PauseScreen::isBackToTitle = false;
+            } else {
+                ++currentIt; // 次のシーンへ
+                if (currentIt == scenes.end()) {
+                    currentIt = scenes.begin(); // 最初に戻る
+                }
             }
-
+         
             currentScene = currentIt->second.get();
             currentScene->Initialize();
         }

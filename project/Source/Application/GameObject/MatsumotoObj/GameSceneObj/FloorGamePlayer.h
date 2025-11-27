@@ -24,6 +24,9 @@ public:
 	Vector3 GetWorldPosition() const override {
 		return body_.worldTransform_.GetWorldPosition();
 	}
+	WorldTransform& GetWorldBodyTransform() {
+		return body_.worldTransform_;
+	}
 	void Initialize();
 	void Update();
 	void Draw(Camera& camera, const LightMode& lightType);
@@ -64,8 +67,8 @@ private:
 	float moveAcceleration_;
 
 	float moveSpeed_;
-	const float kMinMoveSpeed_ = 0.05f;
-	const float kMaxMoveSpeed_ = 0.2f;
+	const float kMinMoveSpeed_ = 0.01f;
+	const float kMaxMoveSpeed_ = 0.15f;
 	Vector3 moveDir_;
 	Vector3 moveLimitMax_;
 	Vector3 moveLimitMin_;

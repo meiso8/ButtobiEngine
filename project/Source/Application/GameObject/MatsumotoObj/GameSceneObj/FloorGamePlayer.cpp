@@ -62,7 +62,6 @@ void FloorGamePlayer::OnCollision(Collider* collider)
 
     if (collider->GetCollisionAttribute() == kCollisionEnemy ||
         collider->GetCollisionAttribute() == kCollisionEnemyBullet) {
-
         //デバック用
         OnCollisionCollider();
         HitUpdate();
@@ -114,18 +113,18 @@ void FloorGamePlayer::Initialize() {
     isReqestStript_ = false;
     isStriptting_ = false;
     striptTimer_ = 0.0f;
-    striptDuration_ = 0.3f;
+    striptDuration_ = 0.5f;
     isOnStripedFloor_ = false;
     strippedFloorMap_.clear();
 
     // 床投げ
     isReqestShot_ = false;
     shotTimer_ = 0.0f;
-    shotDuration_ = 0.5f;
+    shotDuration_ = 0.3f;
 
     //べとべと床フラグ
     isOnStickyFloor_ = false;
-    stickyFloorSlowRate_ = 0.1f;
+    stickyFloorSlowRate_ = 0.9f;
 }
 
 
@@ -156,6 +155,12 @@ void FloorGamePlayer::Update() {
     ImGui::SliderFloat("moveAcceleration", &moveAcceleration_, 0.0f, 10.0f);
     ImGui::SliderFloat("movepeed", &moveSpeed_, 0.0f, 10.0f);
     DebugUI::CheckDamageStruct(damageStruct_, "playerDamage");
+    DebugUI::CheckObject3d(body_,"body");
+    DebugUI::CheckObject3d(headObject_, "head");
+    DebugUI::CheckObject3d(rightArmObject_, "rightArmObject");
+    DebugUI::CheckObject3d(leftArmObject_, "leftArmObject");
+    DebugUI::CheckObject3d(rightLegObject_, "rightLegObject");
+    DebugUI::CheckObject3d(leftLegObject_, "leftLegObject");
 
     ImGui::End();
 
@@ -217,7 +222,7 @@ void FloorGamePlayer::Move() {
 
     // 移動
     if (isMove_) {
-        Sound::PlayOriginSE(Sound::FOOT_STEP);
+        Sound::PlayOriginSE(Sound::PLAYER_WALK);
         animationState_ = PlayerAnimationState::Walk;
         moveDir_ = Normalize(moveDir_);
         lookDir_ = moveDir_;
@@ -343,7 +348,7 @@ void FloorGamePlayer::HitUpdate()
     if (damageStruct_.isHit) { return; }
 
     damageStruct_.isHit = true;
-    Sound::PlaySE(Sound::CRACKER);
+    Sound::PlaySE(Sound::DAMAGE);
 
     damageStruct_.flashTimer = damageStruct_.invincibilityTime;
     //hpを減らす

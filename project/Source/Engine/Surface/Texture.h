@@ -21,12 +21,21 @@ public:
         WHITE_1X1,
         UV_CHECKER,
         NUMBERS,
-        TEST,
+
         HART,
-        HP_GAGE_EFFECCT,
+        PLAYER_WALK_PARTICLE,
         ACTION_UI_MOVE,
 		ACTION_UI_STRIP,
 		ACTION_UI_SHOT,
+
+        PAUSING_BG,
+        PAUSING,
+        BUTTON_BACK_TO_TITL,
+        BUTTON_BACK_TO_GAME,
+        BUTTON_RETRY,
+        BUTTON_A,
+        CONFIRM_UI,
+
         TEXTURES,
     };
     static void LoadAllTexture();

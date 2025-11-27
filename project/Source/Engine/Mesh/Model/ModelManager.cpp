@@ -20,7 +20,9 @@ void ModelManager::LoadAllModel()
     LoadModel("Resource/Models/Box", "Box.obj", BOX);
     LoadModel("Resource/Models/world", "world.obj", WORLD);
 
-    LoadModel("Resource/Models/Enemy", "Enemy.obj", ENEMY);
+    LoadModel("Resource/Models/Enemy", "Body.obj", ENEMY_BODY);
+    LoadModel("Resource/Models/Enemy", "WingL.obj", ENEMY_WING_L);
+    LoadModel("Resource/Models/Enemy", "WingR.obj", ENEMY_WING_R);
 
     LoadModel("Resource/Models/Floor", "Floor.obj", FLOOR);
     LoadModel("Resource/Models/MeltFloor", "MeltFloor.obj", MELT_FLOOR);

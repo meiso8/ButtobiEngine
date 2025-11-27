@@ -80,8 +80,6 @@ void TitleScene::Initialize()
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 60);
 
-    MyEngine::GetDirectionalLightData()->direction = { 0.0f,0.0f,1.0f };
-
     camera_->Initialize();
     camera_->translate_ = { 0.0f, 12.0f,-14.0f };
     camera_->rotate_ = { 0.6f,0.0f,0.0f };

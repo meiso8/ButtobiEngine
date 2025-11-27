@@ -39,36 +39,37 @@ void HPIcon::Setting(const Vector2& size, const Vector2& pos)
 
 void HPIcon::Initialize()
 {
-
     timer_ = 0.0f;
+    preHP = hps_->hp;
 
+    for (auto& sprite : sprites_[layer1]) {
+        sprite->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+    }
+    drawHpNum_ = kMaxHPIcon_;
 }
 
 void HPIcon::Update()
 {
-
-
     if (hps_->hp > 0) {
 
-        if (hps_->hp < hps_->maxHp) {
-            timer_ = 0.0f;
+        if (hps_->hp < preHP) {
+            timer_ = maxTime_;
         }
 
-        if (timer_ < 3.0f) {
-            timer_ += InverseFPS;
-            theta_ += timer_ * std::numbers::phi_v<float>*2.0f;
+        preHP = hps_->hp;
+
+        if (timer_ > 0.0f) {
+            timer_ -= InverseFPS;
+            theta_ += std::numbers::phi_v<float>*InverseFPS * 12.0f;
+            float alpha = cosf(theta_) * 0.5f + 1.0f;
+            sprites_[layer1][(drawHpNum_ - 1) % kMaxHPIcon_]->SetColor({ 1.0f,1.0f,1.0f,alpha });
         } else {
-            timer_ = 3.0f;
+            timer_ = 0.0f;
             theta_ = 0.0f;
+            drawHpNum_ = static_cast<size_t>(hps_->hp / (hps_->maxHp / static_cast<float>(sprites_[layer1].size())) + 0.9f);
+            drawHpNum_ = static_cast<size_t>(std::clamp(static_cast<float>(drawHpNum_), 0.0f, static_cast<float>(kMaxHPIcon_)));
         }
 
-        drawHpNum_ = static_cast<size_t>(hps_->hp / (hps_->maxHp / static_cast<float>(sprites_[layer1].size())) + 0.9f);
-        drawHpNum_ = static_cast<size_t>(std::clamp(static_cast<float>(drawHpNum_), 0.0f, static_cast<float>(kMaxHPIcon_)));
-        float alpha = sinf(timer_) * 0.5f + 1.0f;
-
-        for (auto& sprite : sprites_[layer1]) {
-            sprite->SetColor({ 1.0f,1.0f,1.0f,alpha });
-        }
     } else {
 
         drawHpNum_ = 0;
