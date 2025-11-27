@@ -22,9 +22,8 @@ BossDummy::BossDummy() {
     wingRPos_.SetMesh(ModelManager::GetModel(ModelManager::ENEMY_WING_R));
     wingLPos_.worldTransform_.Parent(body_.worldTransform_);
     wingRPos_.worldTransform_.Parent(body_.worldTransform_);
-    wingLPos_.worldTransform_.translate_.x = -1.0f;
-    wingRPos_.worldTransform_.translate_.x = 1.0f;
-
+    wingLPos_.worldTransform_.translate_ = { -1.0f,0.3f,0.0f };
+    wingRPos_.worldTransform_.translate_ = { 1.0f,0.3f,0.0f };
     // ==========================================================================
 }
 
