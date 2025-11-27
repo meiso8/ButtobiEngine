@@ -316,7 +316,7 @@ void FloorGamePlayer::HitAction()
         if (damageStruct_.flashTimer <= 0.0f) {
             damageStruct_.flashTimer = 0.0f;
             damageStruct_.isHit = false;
-            if (damageStruct_.hps.hp < 0.0f) {
+            if (damageStruct_.hps.hp <= 0.0f) {
                 damageStruct_.isDead = true;
             }
         }

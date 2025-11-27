@@ -467,6 +467,8 @@ void Enemy::RandomAttackPhaseEnd()
 void Enemy::SwitchState()
 {
 
+
+
     Sound::PlaySE(Sound::BOSS_HEAL);
     isReqestClearFloor_ = true;
 
@@ -481,9 +483,7 @@ void Enemy::SwitchState()
         //currentState_ = "First";
     }
 
-    if (damageStruct_.isDead) {
-        return;
-    }
+
     InitState();
 }
 
