@@ -144,6 +144,16 @@ void Enemy::Update()
     DebugUI::CheckWaveData(model_->GetWaveData(0), "EnemyWaveData");
     ImGui::End();
 
+    ImGui::Begin("Command");
+    if (ImGui::TreeNode("EnemyCommand")) {
+        ImGui::Text("Z : FloorChangeAttack");
+        ImGui::Text("X : ShockWaveAttack");
+        ImGui::Text("C : Rackle");
+        ImGui::Text("V : FireBall");
+        ImGui::TreePop();
+    }
+    ImGui::End();
+
 #endif
 }
 
