@@ -162,34 +162,41 @@ void Input::Update() {
     }
 }
 
-Vector2 Input::GetControllerStickPos(ButtonType index, DWORD dwUserIndex)
+bool Input::IsControllerStickPosMove(ButtonType index, DWORD dwUserIndex,Vector2* pos)
 {
     if (isControllerConnected_[dwUserIndex])
     {
         if (index == ButtonType::BUTTON_LEFT) {
             SHORT lx = xinputState_[dwUserIndex].Gamepad.sThumbLX; // 左スティックX軸
             SHORT ly = xinputState_[dwUserIndex].Gamepad.sThumbLY; // 左スティックY軸
-            if (abs(lx) > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || abs(ly) > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+            if (IsControllerStickMove(lx, ly))
             {
-                return NormalizeButtonCount(xinputState_[dwUserIndex].Gamepad.sThumbLX, xinputState_[dwUserIndex].Gamepad.sThumbLY);
+                *pos = NormalizeButtonCount(xinputState_[dwUserIndex].Gamepad.sThumbLX, xinputState_[dwUserIndex].Gamepad.sThumbLY);
+                return true;
             }
         } else if (index == ButtonType::BUTTON_RIGHT) {
             SHORT rx = xinputState_[dwUserIndex].Gamepad.sThumbRX; // 右スティックX軸
             SHORT ry = xinputState_[dwUserIndex].Gamepad.sThumbRY; // 右スティックY軸
-            if (abs(rx) > XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE || abs(ry) > XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
+            if (IsControllerStickMove(rx,ry))
             {
-                return NormalizeButtonCount(xinputState_[dwUserIndex].Gamepad.sThumbRX, xinputState_[dwUserIndex].Gamepad.sThumbRY);
+                *pos = NormalizeButtonCount(xinputState_[dwUserIndex].Gamepad.sThumbRX, xinputState_[dwUserIndex].Gamepad.sThumbRY);
+                return true;
             }
         }
     }
 
-
-    return { 0.0f,0.0f };
+    *pos = { 0.0f,0.0f };
+    return false;
 }
-Vector2 Input::NormalizeButtonCount(SHORT& buttonLX, SHORT& buttonLY)
+bool Input::IsControllerStickMove(SHORT& buttonX, SHORT& buttonY)
 {
-    float normX = (static_cast<float>(buttonLX) / SHRT_MAX);
-    float normY = (static_cast<float>(buttonLY) / SHRT_MAX);
+    return abs(buttonX) > XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE || abs(buttonY) > XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE;
+}
+Vector2 Input::NormalizeButtonCount(SHORT& buttonX, SHORT& buttonY)
+{
+
+    float normX = (static_cast<float>(buttonX) / SHRT_MAX);
+    float normY = (static_cast<float>(buttonY) / SHRT_MAX);
 
     if (normX > 1.0f - deadZone_) {
         normX = 1.0f;
@@ -202,7 +209,6 @@ Vector2 Input::NormalizeButtonCount(SHORT& buttonLX, SHORT& buttonLY)
     } else if (normY < -1.0f + deadZone_) {
         normY = -1.0f;
     }
-
 
     Vector2 normalize = Normalize(Vector2{ normX,normY });
 

@@ -17,4 +17,5 @@ struct Damage {
     float flashTimer;
     bool isHit;
     HPs hps;
+    bool isDead;
 };

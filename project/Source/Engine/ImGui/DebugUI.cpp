@@ -291,8 +291,11 @@ void DebugUI::CheckXinput(const int& num)
         ImGui::Text("B %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_B, num));
         ImGui::Text("X %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_X, num));
         ImGui::Text("Y %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_Y, num));
-        Vector2 L = Input::GetControllerStickPos(BUTTON_LEFT, num);
-        Vector2 R = Input::GetControllerStickPos(BUTTON_RIGHT, num);
+        Vector2 L = { 0.0f };
+        Vector2 R = { 0.0f };
+
+        ImGui::Text("L %d", Input::IsControllerStickPosMove(BUTTON_LEFT, num, &L));
+        ImGui::Text("R %d", Input::IsControllerStickPosMove(BUTTON_RIGHT, num, &R));
         ImGui::SliderFloat2("BUTTON_LEFT", &L.x, -32768.0f, 32768.0f);
         ImGui::SliderFloat2("BUTTON_RIGHT", &R.x, -32768.0f, 32768.0f);
 

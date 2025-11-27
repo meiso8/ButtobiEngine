@@ -10,7 +10,7 @@
 #include"Collision.h"
 #include"Easing.h"
 #include"DebugUI.h"
-
+#include"VibrateManager.h"
 #define PI std::numbers::pi_v<float>
 #define QUARTER_PI PI*0.25f
 #define HALF_PI PI*0.5f
@@ -130,6 +130,7 @@ void Enemy::InitState()
     damageStruct_.hps.hp = damageStruct_.hps.maxHp;
     damageStruct_.hps.hpDecrease = file[currentState_]["hpDecrease"];
     damageStruct_.isHit = false;
+    damageStruct_.isDead = false;
     //速度
     float velocity = file[currentState_]["velocity"];
     velocity_ = { velocity ,velocity ,velocity };
@@ -156,8 +157,6 @@ void Enemy::Update()
     if (phase_ >= MAX_PHASE || phase_ < 0) {
         return;
     }
-
-
 
     UpdatePhaseTimer();
     // 呼び出す  
@@ -205,9 +204,12 @@ void Enemy::Update()
     ImGui::SliderFloat("phaseTime", &phaseTime_, 0.0f, 15.0f);
     DebugUI::CheckWaveData(model_->GetWaveData(0), "EnemyWaveData");
 
-    float dot = Dot(*playerPos_, bodyPos_.worldTransform_.GetWorldPosition());
+    ImGui::Text("toPlayer %f %f %f", playerLookDir_->x, playerLookDir_->y, playerLookDir_->z);
+    Vector3 direction = endPos_ - startPos_;
+    ImGui::Text("direction  %f %f %f", direction.x, direction.y, direction.z);
+    float dot = Dot(*playerLookDir_, endPos_ - startPos_);
     ImGui::Text("Dot : %f", dot);
-    ImGui::Text("%s",dot > 0.0f? "true":"false");
+    ImGui::Text("%s",dot < 0.0f? "true":"false");
     ImGui::End();
 
     ImGui::Begin("Command");
@@ -230,8 +232,6 @@ Vector3 Enemy::GetWorldPosition()const
 
 void Enemy::OnCollision(Collider* collider)
 {
-
-
     //デバック用
     OnCollisionCollider();
 
@@ -243,6 +243,8 @@ void Enemy::OnCollision(Collider* collider)
 
         damageStruct_.isHit = true;
         Sound::PlaySE(Sound::DEFEAT_BOSS);
+        
+        VibrateManager::SetTime(0.5f, 2000, 2000);
 
         if (damageStruct_.hps.hp > 0) {
             damageStruct_.hps.hp -= damageStruct_.hps.hpDecrease;
@@ -260,6 +262,7 @@ void Enemy::OnCollision(Collider* collider)
 
 void Enemy::Tackle()
 {
+
     if (phaseTimer_ <= 3.0f) {
 
         if (phaseTimer_ <= 2.0f) {
@@ -272,17 +275,15 @@ void Enemy::Tackle()
         float localTimer = (phaseTimer_ - 3.0f) / 0.7f;
         LerpScale();
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(startPos_, endPos_, localTimer);
-
-
-        Vector3 bodyPos = bodyPos_.worldTransform_.GetWorldPosition();
-        Vector3 toPlayer = Normalize(*playerPos_ - bodyPos);
-        Vector3 toBoss = -toPlayer;
-        if (Length(toPlayer) <= 4.0f&& Dot(toPlayer, toBoss) >= 0.0f) {
+        if (/*phaseTimer_ >= 6.0f && */Dot(*playerLookDir_, endPos_ - startPos_)<0.0f) {
             if (damageStruct_.isHit) {
                 Sound::PlayOriginSE(Sound::BOSS_TACKLE);
+                VibrateManager::SetTime(1.0f, 2000, 2000);
                 SetPhase(KNOCKBACK);
             }
         }
+
+
     } else if (phaseTimer_ <= 4.7f) {
         float localTimer = (phaseTimer_ - 3.7f) * 0.5f;
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(endPos_, startPos_, localTimer);
@@ -466,6 +467,8 @@ void Enemy::RandomAttackPhaseEnd()
 void Enemy::SwitchState()
 {
 
+
+
     Sound::PlaySE(Sound::BOSS_HEAL);
     isReqestClearFloor_ = true;
 
@@ -474,8 +477,12 @@ void Enemy::SwitchState()
     } else if (currentState_ == "Second") {
         currentState_ = "Third";
     } else if (currentState_ == "Third") {
-        currentState_ = "First";
+        
+        damageStruct_.isDead = true;
+        
+        //currentState_ = "First";
     }
+
 
     InitState();
 }
