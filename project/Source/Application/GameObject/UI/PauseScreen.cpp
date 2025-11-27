@@ -4,6 +4,8 @@
 #include"Window.h"
 #include<algorithm>
 #include"DebugUI.h"
+#include "MatsumotoObj/KeyBindConfig.h"
+
 bool PauseScreen::isPause_ = false;
 bool PauseScreen::isRetry = false;
 bool PauseScreen::isBackToTitle = false;
@@ -85,7 +87,7 @@ void PauseScreen::Initialize()
 void PauseScreen::Update()
 {
 
-    if (Input::IsTriggerKey(DIK_E)) {
+    if (KeyBindConfig::Instance().IsTrigger("Menu")) {
         isPause_ = (isPause_) ? false : true;
         pauseTimer_ = 0.0f;
         isActive_ = true;
@@ -143,7 +145,8 @@ void PauseScreen::TimerUpdate()
 
 void PauseScreen::SelectButton()
 {
-    if (Input::IsTriggerKey(DIK_W)) {
+	KeyBindConfig* key = &KeyBindConfig::Instance();
+    if (key->IsTrigger("MoveForward")) {
         selectButtonNum_--;
         if (selectButtonNum_ < 0) {
             selectButtonNum_ = kButtonMax - 1;
@@ -151,14 +154,14 @@ void PauseScreen::SelectButton()
         scaleTheta_ = 0.0f;
     }
 
-    if (Input::IsTriggerKey(DIK_S)) {
+    if (key->IsTrigger("MoveBack")) {
         selectButtonNum_++;
         selectButtonNum_ %= kButtonMax;
         scaleTheta_ = 0.0f;
     }
 
 
-    if (Input::IsTriggerKey(DIK_SPACE)) {
+    if (key->IsTrigger("Shot")) {
 
         switch (selectButtonNum_)
         {

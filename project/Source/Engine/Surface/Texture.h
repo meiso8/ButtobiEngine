@@ -36,6 +36,9 @@ public:
         BUTTON_A,
         CONFIRM_UI,
 
+		RESULT_CLEAR,
+		RESULT_GAMEOVER,
+
         TEXTURES,
     };
     static void LoadAllTexture();
