@@ -85,6 +85,17 @@ SphericalCoordinate MakeNewSphericalCoordinate(const bool& isRandom, const float
     return sphericalCoordinate;
 }
 
+
+SphericalCoordinate MakeNewSphericalCoordinateForShock(const bool& isHorizontal, const float& radius, const int& count, const int& maxCount)
+{
+    SphericalCoordinate sphericalCoordinate;
+    sphericalCoordinate.azimuthal = (!isHorizontal) ? std::numbers::pi_v<float>*2.0f / maxCount * count : 0.0f;
+    sphericalCoordinate.polar = (isHorizontal) ? std::numbers::pi_v<float>*2.0f / maxCount * count : 0.0f;
+    sphericalCoordinate.radius = radius;
+    return sphericalCoordinate;
+}
+
+
 void ParticleManager::CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle, const bool& useModel, const ModelManager::MODEL_HANDLE& modelHandle)
 {
 
@@ -167,6 +178,19 @@ std::list<SphericalCoordinate> EmitCoordinate(const bool& isRandom, uint32_t cou
 
 }
 
+
+std::list<SphericalCoordinate> EmitCoordinateForShock(const bool& isHorizontal, uint32_t count, const float& radius)
+{
+    std::list<SphericalCoordinate>sphericalCoordinates;
+
+    for (uint32_t i = 0; i < count; ++i) {
+        sphericalCoordinates.push_back(MakeNewSphericalCoordinateForShock(isHorizontal, radius, i, count));
+    }
+    return sphericalCoordinates;
+
+}
+
+
 void ParticleManager::Emit(Emitter& emitter)
 {
     assert(particleGroups.contains(emitter.name));
@@ -174,12 +198,15 @@ void ParticleManager::Emit(Emitter& emitter)
 
     particleGroups[emitter.name]->parentPos_ = &emitter.transform;
 
-    if (emitter.movement == kParticleSphere) {
-        particleGroups[emitter.name]->sphericalCoordinates.splice(particleGroups[emitter.name]->sphericalCoordinates.end(), EmitCoordinate(emitter.isRandomTranslate, emitter.count, emitter.radius));
-    }
-
     particleGroups[emitter.name]->movement = emitter.movement;
 
+    if (emitter.movement == kParticleSphere) {
+        particleGroups[emitter.name]->sphericalCoordinates.splice(particleGroups[emitter.name]->sphericalCoordinates.end(), EmitCoordinate(emitter.isRandomRotate, emitter.count, emitter.radius));
+    }
+
+    if (emitter.movement == kParticleShock) {
+        particleGroups[emitter.name]->sphericalCoordinates.splice(particleGroups[emitter.name]->sphericalCoordinates.end(), EmitCoordinateForShock(true, emitter.count, emitter.radius));
+    }
 }
 
 void ParticleManager::Draw(uint32_t blendMode)
@@ -332,6 +359,50 @@ void ParticleManager::Sphere(ParticleGroup& group)
 void ParticleManager::Shock(ParticleGroup& group)
 {
 
+    group.numInstance = 0;
+    auto particleIterator = group.particles.begin();
+    auto coordIterator = group.sphericalCoordinates.begin();
+
+    while (particleIterator != group.particles.end() && coordIterator != group.sphericalCoordinates.end()) {
+
+        if (group.numInstance < kNumMaxInstance) {
+
+            if ((*particleIterator).lifeTime <= (*particleIterator).currentTime) {
+                particleIterator = group.particles.erase(particleIterator);
+                coordIterator = group.sphericalCoordinates.erase(coordIterator);
+                continue;
+            }
+
+
+            if (coordIterator->radius > 8.0f) {
+                particleIterator = group.particles.erase(particleIterator);
+                coordIterator = group.sphericalCoordinates.erase(coordIterator);
+                continue;
+            } else {
+                coordIterator->radius += InverseFPS * 2.0f;
+            }
+
+        
+
+            Vector3 sphereCoordinate = TransformCoordinate(*coordIterator);
+
+            particleIterator->transform.translate = group.parentPos_->GetWorldPosition() + particleIterator->velocity + sphereCoordinate;
+
+            (*particleIterator).currentTime += InverseFPS;
+
+            IsCollisionFieldArea(*particleIterator, group);
+
+            UpdateWorldMatrix(*particleIterator, group);
+
+            UpdateWVPMatrix(*camera_, group);
+
+            UpdateInstancingData(group, *particleIterator);
+
+        }
+
+        ++particleIterator;
+        ++coordIterator;
+    }
 
 
 }

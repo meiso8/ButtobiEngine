@@ -62,10 +62,13 @@ struct ParticleGroup {
 };
 
 std::list<SphericalCoordinate> EmitCoordinate(const bool& isRandom, uint32_t count, const float& radius = 3.0f);
+std::list<SphericalCoordinate> EmitCoordinateForShock(const bool& isHorizontal, uint32_t count, const float& radius);
 
 std::list<Particle> EmitParticles(const bool& isRandomTranslate, const bool& isRandomRotate, const WorldTransform& transform, uint32_t count, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f },const float& lifeTime = -1.0f);
 Particle MakeNewParticle(const bool& isRandomTranslate, const bool& isRandomRotate, const WorldTransform& transform, const Vector4& color, const float& lifeTime = -1.0f);
 SphericalCoordinate MakeNewSphericalCoordinate(const bool& isRandom = true,const float& radius = 3.0f);
+SphericalCoordinate MakeNewSphericalCoordinateForShock(const bool& isHorizontal, const float& radius, const int& count, const int& maxCount);
+
 class ParticleManager
 {
 public:
