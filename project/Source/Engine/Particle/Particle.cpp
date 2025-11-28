@@ -415,7 +415,11 @@ void ParticleManager::UpdateWorldMatrix(Particle& particleItr, ParticleGroup& gr
 {
 
     if (group.useSpriteCamera) {
-        worldMatrix = MakeAffineMatrix(particleItr.transform.scale * group.textureSize, particleItr.transform.rotate, particleItr.transform.translate);
+        Vector3 translate = particleItr.transform.translate;
+        translate = translate * group.textureSize;
+        translate.x *= -1.0f;
+
+        worldMatrix = MakeAffineMatrix(particleItr.transform.scale * group.textureSize, particleItr.transform.rotate, translate);
     } else {
         worldMatrix = MakeAffineMatrix(particleItr.transform.scale, particleItr.transform.rotate, particleItr.transform.translate);
     }
