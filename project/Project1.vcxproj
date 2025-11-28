@@ -157,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\EmitterManager\EmitterManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\Data\FloorData.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\ResultSceneObj\ResultSprite.cpp" />
     <ClCompile Include="Source\Application\System\CameraController.cpp" />
@@ -294,6 +295,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\System\VibrateManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\EmitterManager\EmitterManager.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\ResultSceneObj\ResultSprite.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\SceneStaticValue.h" />
     <ClInclude Include="Source\Application\System\CameraController.h" />

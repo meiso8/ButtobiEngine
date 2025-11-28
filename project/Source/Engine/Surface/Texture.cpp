@@ -20,6 +20,9 @@ void Texture::LoadAllTexture() {
 
     handles[HART] = Load("Resource/Textures/PlayerHPIcon.png");
     handles[PLAYER_WALK_PARTICLE] = Load("Resource/Textures/PlayerWalkParticle_Pop.png");
+    handles[PLAYER_DAMAGE_PARTICLE] = Load("Resource/Textures/PlayerDamageParticle.png");
+    handles[ENEMY_ACTION_PARTICLE] = Load("Resource/Textures/EnemyActionParticle.png");
+
 
 	handles[ACTION_UI_MOVE] = Load("Resource/Textures/ActionUI_Move_Pop.png");
 	handles[ACTION_UI_STRIP] = Load("Resource/Textures/ActionUI_Strip_Pop.png");
