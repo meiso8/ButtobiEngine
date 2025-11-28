@@ -16,7 +16,6 @@ using namespace  Microsoft::WRL;
 ParticleManager* ParticleManager::instance_ = nullptr;
 ID3D12GraphicsCommandList* ParticleManager::commandList_ = nullptr;
 std::unordered_map<std::string, std::unique_ptr <ParticleGroup> >ParticleManager::particleGroups;
-const float ParticleManager::kDeltaTime = 1.0f / 60.0f;
 
 
 // ==========================================================================================================
@@ -24,7 +23,7 @@ const float ParticleManager::kDeltaTime = 1.0f / 60.0f;
 void ParticleManager::CreateAll()
 {
 
-    CreateParticleGroup("enemyHitParticle", Texture::PLAYER_WALK_PARTICLE);
+    CreateParticleGroup("enemyHitParticle", Texture::PLAYER_WALK_PARTICLE/*, true, ModelManager::BOX*/);
     CreateParticleGroup("uvChecker", Texture::UV_CHECKER);
     //CreateParticleGroup("box", Texture::UV_CHECKER, true, ModelManager::BOX);
     CreateParticleGroup("playerWalkParticle", Texture::PLAYER_WALK_PARTICLE);
@@ -49,8 +48,6 @@ void ParticleManager::Create()
         {kParticleShock, [this](ParticleGroup& group) { Shock(group); }},
     };
 
-    InitAccelerationField();
-
     //マテリアルリソースを作成 //ライトなし
     materialResource = std::make_unique<MaterialResource>();
     materialResource->CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, LightMode::kLightModeNone);
@@ -61,6 +58,7 @@ void ParticleManager::Create()
 
 Particle MakeNewParticle(const bool& isRandomTranslate, const bool& isRandomRotate, const WorldTransform& transform, const Vector4& color, const float& lifeTime)
 {
+
     Particle particle;
     Random::SetMinMax(-1.0f, 1.0f);
     particle.lifeTime = (lifeTime == -1.0f) ? Random::Get() : lifeTime;
@@ -69,7 +67,7 @@ Particle MakeNewParticle(const bool& isRandomTranslate, const bool& isRandomRota
     particle.transform.scale = transform.scale_;
     Random::SetMinMax(-0.5f, 0.5f);
     particle.transform.translate = (isRandomTranslate) ? Vector3{ Random::Get(), Random::Get(), Random::Get() } + transform.GetWorldPosition() : transform.GetWorldPosition();
-    Random::SetMinMax(0.0f, 2.28f);
+    Random::SetMinMax(0.0f, 6.28f);
     particle.transform.rotate = (isRandomRotate) ? Vector3{ Random::Get(), Random::Get(), Random::Get() } : transform.rotate_;
     Random::SetMinMax(-transform.scale_.x, transform.scale_.y);
 
@@ -89,11 +87,28 @@ SphericalCoordinate MakeNewSphericalCoordinate(const bool& isRandom, const float
     return sphericalCoordinate;
 }
 
+
+SphericalCoordinate MakeNewSphericalCoordinateForShock(const float& radius, const int& count, const int& maxCount)
+{
+    SphericalCoordinate sphericalCoordinate;
+    sphericalCoordinate.azimuthal = 0.0f;
+    sphericalCoordinate.polar = std::numbers::pi_v<float>*2.0f / maxCount * count;
+    sphericalCoordinate.radius = radius;
+    return sphericalCoordinate;
+}
+
+
 void ParticleManager::CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle, const bool& useModel, const ModelManager::MODEL_HANDLE& modelHandle)
 {
 
     assert(!particleGroups.contains(name));
     std::unique_ptr<ParticleGroup> newParticleGroup = std::make_unique<ParticleGroup>();
+
+    InitAccelerationField(*newParticleGroup);
+
+    newParticleGroup->useBillboard = true;
+    newParticleGroup->useSpriteCamera = false;
+
     newParticleGroup->useModel = useModel;
     newParticleGroup->textureSize = { 100.0f,100.0f };
     if (newParticleGroup->useModel) {
@@ -131,20 +146,18 @@ void ParticleManager::Update(Camera& camera)
 {
     camera_ = &camera;
 
-    if (useSpriteCamera_) {
-        //ビルボードをしない
-        useBillboard_ = false;
-    }
-
-    if (useBillboard_) {
-        UpdateBillBordMatrix(camera);
-    }
-
     for (auto& [name, group] : particleGroups) {
+
+        if (group->useSpriteCamera) {
+            //ビルボードをしない
+            group->useBillboard = false;
+        }
+
+        UpdateBillBordMatrix(camera, *group);
+
         UpdateFunctions[group->movement](*group); // ← それぞれの動きに応じて更新！
     }
 }
-
 
 std::list<Particle> EmitParticles(const bool& isRandomTranslate, const bool& isRandomRotate, const WorldTransform& transform, uint32_t count, const Vector4& color, const float& lifeTime)
 {
@@ -167,87 +180,36 @@ std::list<SphericalCoordinate> EmitCoordinate(const bool& isRandom, uint32_t cou
 
 }
 
+
+std::list<SphericalCoordinate> EmitCoordinateForShock(uint32_t count, const float& radius)
+{
+    std::list<SphericalCoordinate>sphericalCoordinates;
+
+    for (uint32_t i = 0; i < count; ++i) {
+        sphericalCoordinates.push_back(MakeNewSphericalCoordinateForShock(radius, i, count));
+    }
+    return sphericalCoordinates;
+
+}
+
+
 void ParticleManager::Emit(Emitter& emitter)
 {
     assert(particleGroups.contains(emitter.name));
-    particleGroups[emitter.name]->particles.splice(particleGroups[emitter.name]->particles.end(), EmitParticles(emitter.isRandomTranslate, emitter.isRandomRotate,emitter.transform, emitter.count, emitter.color, emitter.lifeTime));
 
-    if (emitter.transform.parent_ != nullptr) {
-        particleGroups[emitter.name]->parentPos_ = emitter.transform.parent_;
-    } else {
-        particleGroups[emitter.name]->parentPos_ = &emitter.transform;
-    }
-
-    if (emitter.movement == kParticleSphere) {
-        particleGroups[emitter.name]->sphericalCoordinates.splice(particleGroups[emitter.name]->sphericalCoordinates.end(), EmitCoordinate(emitter.isRandomTranslate, emitter.count, emitter.radius));
-    }
+    particleGroups[emitter.name]->particles.splice(particleGroups[emitter.name]->particles.end(), EmitParticles(emitter.isRandomTranslate, emitter.isRandomRotate, emitter.transform, emitter.count, emitter.color, emitter.lifeTime));
 
     particleGroups[emitter.name]->movement = emitter.movement;
+    particleGroups[emitter.name]->parentPos_ = &emitter.transform;
 
-}
-
-void ParticleManager::Draw(uint32_t blendMode)
-{
-    for (const auto& [name, group] : particleGroups) {
-
-        if (group->numInstance > 0) {
-            //rootSignatureの設定
-            commandList_->SetGraphicsRootSignature(rootSignature_->GetRootSignature(RootSignature::PARTICLE));
-            commandList_->SetPipelineState(PSO::GetGraphicsPipelineStateParticle(blendMode).Get());
-            //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
-            commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-            //マテリアルの設定
-            commandList_->SetGraphicsRootConstantBufferView(0, materialResource->GetMaterialResource()->GetGPUVirtualAddress());
-            //粒ごとのトランスフォーム
-            SrvManager::SetGraphicsRootDescriptorTable(1, group->instanceSrvIndex);
-            //テスクチャ
-            SrvManager::SetGraphicsRootDescriptorTable(2, group->materialData.textureSrvIndex);
-            //描画!（DrawCall/ドローコール）6個のインデックスを使用しインスタンスを描画。
-
-            if (group->model != nullptr && group->useModel) {
-                commandList_->IASetVertexBuffers(0, 1, &group->model->GetVBV());
-                commandList_->DrawInstanced(UINT(group->model->GetModelData()->vertices.size()), group->numInstance, 0, 0);
-            } else {
-                commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);
-                commandList_->DrawInstanced(UINT(modelData_->vertices.size()), group->numInstance, 0, 0);
-            }
-
-
-        }
-
-    }
-}
-
-void ParticleManager::InitAccelerationField()
-{
-    accelerationField.acceleration = { 0.0f,0.0f,0.0f };
-    accelerationField.area.min = { -1.0f,-1.0f,-1.0f };
-    accelerationField.area.max = { 1.0f,1.0f,1.0f };
-}
-
-void ParticleManager::Finalize()
-{
-    for (auto& [name, group] : particleGroups) {
-        if (group->instancingResource != nullptr) {
-            group->instancingResource = nullptr;
-        }
+    if (emitter.movement == kParticleSphere) {
+        particleGroups[emitter.name]->sphericalCoordinates.splice(particleGroups[emitter.name]->sphericalCoordinates.end(), EmitCoordinate(emitter.isRandomRotate, emitter.count, emitter.radius));
     }
 
-    if (instance_ != nullptr) {
-        delete instance_;
-        instance_ = nullptr;
+    if (emitter.movement == kParticleShock) {
+        particleGroups[emitter.name]->sphericalCoordinates.splice(particleGroups[emitter.name]->sphericalCoordinates.end(), EmitCoordinateForShock(emitter.count, emitter.radius));
     }
 }
-
-void ParticleManager::IsCollisionFieldArea(Particle& particleItr)
-{
-    if (IsCollision(accelerationField.area, particleItr.transform.translate)) {
-        particleItr.velocity += accelerationField.acceleration * kDeltaTime;
-    }
-}
-
-
 
 
 void ParticleManager::Normal(ParticleGroup& group)
@@ -265,16 +227,16 @@ void ParticleManager::Normal(ParticleGroup& group)
             }
 
             //場の処理
-            IsCollisionFieldArea(*particleIterator);
+            IsCollisionFieldArea(*particleIterator, group);
             //移動処理
-            (*particleIterator).transform.translate += (*particleIterator).velocity * kDeltaTime;
+            (*particleIterator).transform.translate += (*particleIterator).velocity * InverseFPS;
             //経過時間を加算
-            (*particleIterator).currentTime += kDeltaTime;
+            (*particleIterator).currentTime += InverseFPS;
 
             UpdateMatrix(*particleIterator, group);
 
             //ビュープロジェクション行列
-            UpdateWVPMatrix(*camera_);
+            UpdateWVPMatrix(*camera_, group);
 
             //データの更新
             UpdateInstancingData(group, *particleIterator);
@@ -315,15 +277,15 @@ void ParticleManager::Sphere(ParticleGroup& group)
 
             Vector3 sphereCoordinate = TransformCoordinate(*coordIterator);
 
-            particleIterator->transform.translate = group.parentPos_->GetWorldPosition() + sphereCoordinate;
+            particleIterator->transform.translate = group.parentPos_->GetWorldPosition() + particleIterator->velocity + sphereCoordinate;
 
             (*particleIterator).currentTime += InverseFPS;
 
-            IsCollisionFieldArea(*particleIterator);
+            IsCollisionFieldArea(*particleIterator, group);
 
-            UpdateWorldMatrix(*particleIterator, group);
+            UpdateMatrix(*particleIterator, group);
 
-            UpdateWVPMatrix(*camera_);
+            UpdateWVPMatrix(*camera_, group);
 
             UpdateInstancingData(group, *particleIterator);
 
@@ -339,9 +301,121 @@ void ParticleManager::Sphere(ParticleGroup& group)
 void ParticleManager::Shock(ParticleGroup& group)
 {
 
+    group.numInstance = 0;
+    auto particleIterator = group.particles.begin();
+    auto coordIterator = group.sphericalCoordinates.begin();
+
+    while (particleIterator != group.particles.end() && coordIterator != group.sphericalCoordinates.end()) {
+
+        if (group.numInstance < kNumMaxInstance) {
+
+            if ((*particleIterator).lifeTime <= (*particleIterator).currentTime) {
+                particleIterator = group.particles.erase(particleIterator);
+                coordIterator = group.sphericalCoordinates.erase(coordIterator);
+                continue;
+            }
+
+
+            if (coordIterator->radius > 8.0f) {
+                particleIterator = group.particles.erase(particleIterator);
+                coordIterator = group.sphericalCoordinates.erase(coordIterator);
+                continue;
+            } else {
+                coordIterator->radius += InverseFPS * 2.0f;
+            }
+
+
+
+            Vector3 sphereCoordinate = TransformCoordinate(*coordIterator);
+
+            particleIterator->transform.translate = group.parentPos_->GetWorldPosition() + particleIterator->velocity + sphereCoordinate;
+
+            (*particleIterator).currentTime += InverseFPS;
+
+            IsCollisionFieldArea(*particleIterator, group);
+
+            UpdateMatrix(*particleIterator, group);
+
+            UpdateWVPMatrix(*camera_, group);
+
+            UpdateInstancingData(group, *particleIterator);
+
+        }
+
+        ++particleIterator;
+        ++coordIterator;
+    }
 
 
 }
+
+
+// ==========================================================================================================
+
+
+void ParticleManager::IsCollisionFieldArea(Particle& particleItr, ParticleGroup& group)
+{
+    if (IsCollision(group.accelerationField.area, particleItr.transform.translate)) {
+        particleItr.velocity += group.accelerationField.acceleration * InverseFPS;
+    }
+}
+
+
+void ParticleManager::Draw(uint32_t blendMode)
+{
+    for (const auto& [name, group] : particleGroups) {
+
+        if (group->numInstance > 0) {
+            //rootSignatureの設定
+            commandList_->SetGraphicsRootSignature(rootSignature_->GetRootSignature(RootSignature::PARTICLE));
+            commandList_->SetPipelineState(PSO::GetGraphicsPipelineStateParticle(blendMode).Get());
+            //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
+            commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+            //マテリアルの設定
+            commandList_->SetGraphicsRootConstantBufferView(0, materialResource->GetMaterialResource()->GetGPUVirtualAddress());
+            //粒ごとのトランスフォーム
+            SrvManager::SetGraphicsRootDescriptorTable(1, group->instanceSrvIndex);
+            //テスクチャ
+            SrvManager::SetGraphicsRootDescriptorTable(2, group->materialData.textureSrvIndex);
+            //描画!（DrawCall/ドローコール）6個のインデックスを使用しインスタンスを描画。
+
+            if (group->model != nullptr && group->useModel) {
+                commandList_->IASetVertexBuffers(0, 1, &group->model->GetVBV());
+                commandList_->DrawInstanced(UINT(group->model->GetModelData()->vertices.size()), group->numInstance, 0, 0);
+            } else {
+                commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);
+                commandList_->DrawInstanced(UINT(modelData_->vertices.size()), group->numInstance, 0, 0);
+            }
+
+
+        }
+
+    }
+}
+
+void ParticleManager::InitAccelerationField(ParticleGroup& group)
+{
+    group.accelerationField.acceleration = { 0.0f,0.0f,0.0f };
+    group.accelerationField.area.min = { -1.0f,-1.0f,-1.0f };
+    group.accelerationField.area.max = { 1.0f,1.0f,1.0f };
+}
+
+void ParticleManager::Finalize()
+{
+    for (auto& [name, group] : particleGroups) {
+        if (group->instancingResource != nullptr) {
+            group->instancingResource = nullptr;
+        }
+    }
+
+    if (instance_ != nullptr) {
+        delete instance_;
+        instance_ = nullptr;
+    }
+}
+
+
 
 // ==========================================================================================================
 
@@ -379,21 +453,22 @@ std::unordered_map<std::string, std::unique_ptr<ParticleGroup>>& ParticleManager
 
 // ==========================================================================================================
 
-void ParticleManager::UpdateBillBordMatrix(Camera& camera)
+void ParticleManager::UpdateBillBordMatrix(Camera& camera, ParticleGroup& group)
 {
-    if (useBillboard_) {
-        backToFrontMatrix = MakeRotateYMatrix(std::numbers::pi_v<float>);
-        billboardMatrix = Multiply(backToFrontMatrix, camera.worldMat_);
-        billboardMatrix.m[3][0] = 0.0f;
-        billboardMatrix.m[3][1] = 0.0f;
-        billboardMatrix.m[3][2] = 0.0f;
-    }
+
+    backToFrontMatrix = MakeRotateYMatrix(std::numbers::pi_v<float>);
+
+    billboardMatrix = Multiply(backToFrontMatrix, camera.worldMat_);
+    billboardMatrix.m[3][0] = 0.0f;
+    billboardMatrix.m[3][1] = 0.0f;
+    billboardMatrix.m[3][2] = 0.0f;
+
 }
 
-void ParticleManager::UpdateWVPMatrix(Camera& camera)
+void ParticleManager::UpdateWVPMatrix(Camera& camera, ParticleGroup& group)
 {
 
-    if (useSpriteCamera_) {
+    if (group.useSpriteCamera) {
         worldViewProjectionMatrix = Multiply(worldMatrix, SpriteCamera::GetViewProjectionMatrix());
     } else {
         worldViewProjectionMatrix = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
@@ -404,13 +479,13 @@ void ParticleManager::UpdateWVPMatrix(Camera& camera)
 void ParticleManager::UpdateMatrix(Particle& particleItr, ParticleGroup& group)
 {
     //ビルボード処理
-    if (useBillboard_) {
-        UpdateWorldMatrixForBillBord(particleItr);
+    if (group.useBillboard) {
+        UpdateWorldMatrixForBillBord(particleItr, group);
     } else {
         UpdateWorldMatrix(particleItr, group);
     }
 }
-void ParticleManager::UpdateWorldMatrixForBillBord(Particle& particleItr)
+void ParticleManager::UpdateWorldMatrixForBillBord(Particle& particleItr, ParticleGroup& group)
 {
     Matrix4x4 scaleMatrix = MakeScaleMatrix(particleItr.transform.scale);
     Matrix4x4 translateMatrix = MakeTranslateMatrix(particleItr.transform.translate);
@@ -421,8 +496,12 @@ void ParticleManager::UpdateWorldMatrixForBillBord(Particle& particleItr)
 void ParticleManager::UpdateWorldMatrix(Particle& particleItr, ParticleGroup& group)
 {
 
-    if (useSpriteCamera_) {
-        worldMatrix = MakeAffineMatrix(particleItr.transform.scale * group.textureSize, particleItr.transform.rotate, particleItr.transform.translate * group.textureSize);
+    if (group.useSpriteCamera) {
+        Vector3 translate = particleItr.transform.translate;
+        translate = translate * group.textureSize;
+        translate.x *= -1.0f;
+
+        worldMatrix = MakeAffineMatrix(particleItr.transform.scale * group.textureSize, particleItr.transform.rotate, translate);
     } else {
         worldMatrix = MakeAffineMatrix(particleItr.transform.scale, particleItr.transform.rotate, particleItr.transform.translate);
     }

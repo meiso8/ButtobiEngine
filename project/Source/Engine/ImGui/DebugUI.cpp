@@ -421,12 +421,9 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter, const char* label)
     ParticleManager& particle = *ParticleManager::GetInstance();
     ImGui::Begin("Particle");
 
-    ImGui::Checkbox("useBillboard", &particle.useBillboard_);
-    ImGui::Checkbox("useSpriteCamera", &particle.useSpriteCamera_);
+
 
     static  Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
-
-
     Emitter& emitter = particleEmitter.emitter_;
 
     if (ImGui::TreeNode(label)) {
@@ -456,6 +453,12 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter, const char* label)
         if (ImGui::TreeNode(name.c_str())) {
 
             ImGui::Checkbox("useModel", &group->useModel);
+            ImGui::Checkbox("useBillboard", &group->useBillboard);
+            ImGui::Checkbox("useSpriteCamera", &group->useSpriteCamera);
+
+            ImGui::SliderFloat3("acceleration", &group->accelerationField.acceleration.x, -100.0f, 100.0f);
+            ImGui::SliderFloat3("area.min", &group->accelerationField.area.min.x, -100.0f, 0.0f);
+            ImGui::SliderFloat3("area.max", &group->accelerationField.area.max.x, 0.0f, 100.0f);
             ImGui::SliderFloat2("textureSize", &group->textureSize.x, 0.0f, static_cast<float>(Window::GetClientWidth()));
 
             if (ImGui::Button(name.c_str())) {
