@@ -1,5 +1,5 @@
 #include "ParticleEmitter.h"
-
+#include"Input.h"
 #include"Camera.h"
 
 ParticleEmitter::ParticleEmitter()
@@ -26,7 +26,7 @@ void ParticleEmitter::Initialize()
 }
 void ParticleEmitter::UpdateTimer()
 {
-    emitter_.frequencyTime += ParticleManager::kDeltaTime;
+    emitter_.frequencyTime +=InverseFPS;
 
     if (emitter_.frequency <= emitter_.frequencyTime) {
         emitter_.frequencyTime -= emitter_.frequency;

@@ -363,14 +363,14 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
     ImGui::Begin("Object3d");
 
     if (ImGui::TreeNode(label)) {
-    CheckWorldTransform(object3d.worldTransform_, label);
-    ShowMatrix4x4(object3d.worldTransform_.matWorld_);
-    CheckMaterial(object3d.GetMaterial(), "material");
-    CheckColor(object3d.GetColor(), "modelColor");//一応マテリアルについている
-    CheckTransform(object3d.GetUVTransform(), "uvTransfrom");
-    CheckLightMode(object3d.GetLightMode(), "GetLightMode");
+        CheckWorldTransform(object3d.worldTransform_, label);
+        ShowMatrix4x4(object3d.worldTransform_.matWorld_);
+        CheckMaterial(object3d.GetMaterial(), "material");
+        CheckColor(object3d.GetColor(), "modelColor");//一応マテリアルについている
+        CheckTransform(object3d.GetUVTransform(), "uvTransfrom");
+        CheckLightMode(object3d.GetLightMode(), "GetLightMode");
 
-    ImGui::TreePop();
+        ImGui::TreePop();
     }
     ImGui::End();
 #endif
@@ -382,12 +382,7 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter, const char* label)
     ParticleManager& particle = *ParticleManager::GetInstance();
     ImGui::Begin("Particle");
 
-    ImGui::Checkbox("useBillboard", &particle.useBillboard_);
-    ImGui::Checkbox("useSpriteCamera", &particle.useSpriteCamera_);
 
-    ImGui::SliderFloat3("useBillboard", &particle.accelerationField.acceleration.x,-10.0f,10.0f);
-    ImGui::SliderFloat3("area.min", &particle.accelerationField.area.min.x, -100.0f, 0.0f);
-    ImGui::SliderFloat3("area.max", &particle.accelerationField.area.max.x, 0.0f, 100.0f);
 
     static  Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
     Emitter& emitter = particleEmitter.emitter_;
@@ -406,7 +401,7 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter, const char* label)
         int count = emitter.count;
         ImGui::SliderInt("createNum", &count, 0, particle.kNumMaxInstance);
         emitter.count = count;
-        
+
         CheckWorldTransform(emitter.transform, "transform");
         ImGui::Text("frequencyTime : %f", emitter.frequencyTime);
         ImGui::SliderFloat("frequency", &emitter.frequency, 0.1f, 10.0f);
@@ -419,6 +414,12 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter, const char* label)
         if (ImGui::TreeNode(name.c_str())) {
 
             ImGui::Checkbox("useModel", &group->useModel);
+            ImGui::Checkbox("useBillboard", &group->useBillboard);
+            ImGui::Checkbox("useSpriteCamera", &group->useSpriteCamera);
+
+            ImGui::SliderFloat3("acceleration", &group->accelerationField.acceleration.x, -100.0f, 100.0f);
+            ImGui::SliderFloat3("area.min", &group->accelerationField.area.min.x, -100.0f, 0.0f);
+            ImGui::SliderFloat3("area.max", &group->accelerationField.area.max.x, 0.0f, 100.0f);
             ImGui::SliderFloat2("textureSize", &group->textureSize.x, 0.0f, static_cast<float>(Window::GetClientWidth()));
 
             if (ImGui::Button(name.c_str())) {
