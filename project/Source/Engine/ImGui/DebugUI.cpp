@@ -385,9 +385,11 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter, const char* label)
     ImGui::Checkbox("useBillboard", &particle.useBillboard_);
     ImGui::Checkbox("useSpriteCamera", &particle.useSpriteCamera_);
 
+    ImGui::SliderFloat3("useBillboard", &particle.accelerationField.acceleration.x,-10.0f,10.0f);
+    ImGui::SliderFloat3("area.min", &particle.accelerationField.area.min.x, -100.0f, 0.0f);
+    ImGui::SliderFloat3("area.max", &particle.accelerationField.area.max.x, 0.0f, 100.0f);
+
     static  Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
-
-
     Emitter& emitter = particleEmitter.emitter_;
 
     if (ImGui::TreeNode(label)) {

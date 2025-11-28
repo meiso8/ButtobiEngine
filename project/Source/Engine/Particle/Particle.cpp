@@ -170,11 +170,7 @@ void ParticleManager::Emit(Emitter& emitter)
     assert(particleGroups.contains(emitter.name));
     particleGroups[emitter.name]->particles.splice(particleGroups[emitter.name]->particles.end(), EmitParticles(emitter.isRandomTranslate, emitter.isRandomRotate,emitter.transform, emitter.count, emitter.color, emitter.lifeTime));
 
-    if (emitter.transform.parent_ != nullptr) {
-        particleGroups[emitter.name]->parentPos_ = emitter.transform.parent_;
-    } else {
-        particleGroups[emitter.name]->parentPos_ = &emitter.transform;
-    }
+    particleGroups[emitter.name]->parentPos_ = &emitter.transform;
 
     if (emitter.movement == kParticleSphere) {
         particleGroups[emitter.name]->sphericalCoordinates.splice(particleGroups[emitter.name]->sphericalCoordinates.end(), EmitCoordinate(emitter.isRandomTranslate, emitter.count, emitter.radius));
@@ -313,7 +309,7 @@ void ParticleManager::Sphere(ParticleGroup& group)
 
             Vector3 sphereCoordinate = TransformCoordinate(*coordIterator);
 
-            particleIterator->transform.translate = group.parentPos_->GetWorldPosition() + sphereCoordinate;
+            particleIterator->transform.translate = group.parentPos_->GetWorldPosition()+particleIterator->velocity + sphereCoordinate;
 
             (*particleIterator).currentTime += InverseFPS;
 
