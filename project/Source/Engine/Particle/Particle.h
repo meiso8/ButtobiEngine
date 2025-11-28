@@ -53,26 +53,26 @@ struct ParticleGroup {
     ParticleForGPU* instancingData;
     Vector3 textureSize;
     bool useModel;
+    bool useBillboard = true;
+    bool useSpriteCamera = false;
     Model* model = nullptr;
     const WorldTransform* parentPos_ = nullptr;
     ParticleMovements movement;
+    AccelerationField accelerationField;
 };
 
 std::list<SphericalCoordinate> EmitCoordinate(const bool& isRandom, uint32_t count, const float& radius = 3.0f);
+std::list<SphericalCoordinate> EmitCoordinateForShock(uint32_t count, const float& radius);
 
 std::list<Particle> EmitParticles(const bool& isRandomTranslate, const bool& isRandomRotate, const WorldTransform& transform, uint32_t count, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f },const float& lifeTime = -1.0f);
 Particle MakeNewParticle(const bool& isRandomTranslate, const bool& isRandomRotate, const WorldTransform& transform, const Vector4& color, const float& lifeTime = -1.0f);
 SphericalCoordinate MakeNewSphericalCoordinate(const bool& isRandom = true,const float& radius = 3.0f);
+SphericalCoordinate MakeNewSphericalCoordinateForShock( const float& radius, const int& count, const int& maxCount);
+
 class ParticleManager
 {
 public:
-
-    AccelerationField accelerationField;
-    bool useBillboard_ = true;
-    bool useSpriteCamera_ = false;
-
     const uint32_t kNumMaxInstance = 100;//インスタンス数
-    static const float kDeltaTime;
 private:
     RootSignature* rootSignature_ = nullptr;
     static ID3D12GraphicsCommandList* commandList_;
@@ -114,11 +114,11 @@ static void Emit(Emitter& emitter);
 
     void Update(Camera& camera);
     void Draw(uint32_t blendMode = BlendMode::kBlendModeAdd);
-    void InitAccelerationField();
+    void InitAccelerationField(ParticleGroup& group);
     void Finalize();
 
 protected:
-    void UpdateBillBordMatrix(Camera& camera);
+    void UpdateBillBordMatrix(Camera& camera, ParticleGroup& group);
     void UpdateMatrix(Particle& particleItr, ParticleGroup& group);
 private:
     //メンバ関数ポインタテーブル
@@ -130,10 +130,10 @@ private:
     void CreateModelData();
     void CreateVertexBufferResource();
 
-    void IsCollisionFieldArea(Particle& particleItr);
-    void UpdateWorldMatrixForBillBord(Particle& particleItr);
+    void IsCollisionFieldArea(Particle& particleItr ,ParticleGroup& group);
+    void UpdateWorldMatrixForBillBord(Particle& particleItr, ParticleGroup& group);
     void UpdateWorldMatrix(Particle& particleItr, ParticleGroup& group);
-    void UpdateWVPMatrix(Camera& camera);
+    void UpdateWVPMatrix(Camera& camera, ParticleGroup& group);
     void UpdateInstancingData(ParticleGroup& group, Particle& particleItr);
 
 };

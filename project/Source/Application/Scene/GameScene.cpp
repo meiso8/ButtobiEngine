@@ -142,10 +142,13 @@ void GameScene::Initialize() {
     particleEmitters_[kPlayerEmitter]->emitter_.transform.scale_ = { 0.5f,0.5f,0.5f };
 
     particleEmitters_[kEnemyEmitter]->emitter_.transform.translate_.y = -0.75f;
-    particleEmitters_[kEnemyEmitter]->emitter_.count = 5;
-    particleEmitters_[kEnemyEmitter]->emitter_.movement = ParticleMovements::kParticleSphere;
+    particleEmitters_[kEnemyEmitter]->emitter_.count = 16;
+    particleEmitters_[kEnemyEmitter]->emitter_.movement = ParticleMovements::kParticleShock;
     particleEmitters_[kEnemyEmitter]->emitter_.radius = 2.0f;
-    //particleEmitters_[kEnemyEmitter]->emitter_.isRandomRotate = false;
+    particleEmitters_[kEnemyEmitter]->emitter_.isRandomRotate = false;
+    particleEmitters_[kPlayerEmitter]->emitter_.frequency = 0.3f;
+    particleEmitters_[kPlayerEmitter]->emitter_.blendMode = kBlendModeNormal;
+
 }
 
 void GameScene::Update() {
@@ -283,7 +286,6 @@ void GameScene::UpdateEmitter()
 
     if (enemy_->IsHit()) {
         particleEmitters_[kEnemyEmitter]->Emit();
-        /*  particleEmitters_[kEnemyEmitter]->UpdateTimer();*/
 
     }
 
