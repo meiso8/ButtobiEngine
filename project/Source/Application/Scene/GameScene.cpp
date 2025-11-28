@@ -62,9 +62,9 @@ GameScene::GameScene()
     floorPlayerStripTargetUI_ = std::make_unique<FloorPlayerStripTargetUI>(floorGamePlayer_.get());
     floorActionManager_ = std::make_unique<FloorActionManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
     floorGamePlayerAnimationManager_ = std::make_unique<FloorGamePlayerAnimationManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
-	healItemSpawner_ = std::make_unique<HealItemSpawner>();
-	actionUI_ = std::make_unique<ActionUI>(floorGamePlayer_.get());
-    
+    healItemSpawner_ = std::make_unique<HealItemSpawner>();
+    actionUI_ = std::make_unique<ActionUI>(floorGamePlayer_.get());
+
     enemyBulletManager_ = std::make_unique<EnemyBulletManager>();
     enemyShotBulletManager_ = std::make_unique<EnemyShotBulletManager>(enemy_.get(), enemyBulletManager_.get());
     enemyBombManager_ = std::make_unique<EnemyBombManager>();
@@ -79,16 +79,7 @@ GameScene::GameScene()
 
     uiManager_ = std::make_unique<UIManager>(*enemy_->GetHpsPtr(), *floorGamePlayer_->GetHpsPtr());
 
-    for (auto& particleEmitter : particleEmitters_) {
-        particleEmitter = std::make_unique<ParticleEmitter>();
-    }
-
-    particleEmitters_[kPlayerEmitter]->SetName("playerWalkParticle");
-    particleEmitters_[kPlayerEmitter]->emitter_.transform.Parent(floorGamePlayer_->GetWorldBodyTransform());
-
-    particleEmitters_[kEnemyEmitter]->SetName("enemyHitParticle");
-    particleEmitters_[kEnemyEmitter]->emitter_.transform.Parent(enemy_->bodyPos_.worldTransform_);
-
+    emitterManager_ = std::make_unique<EmitterManager>(*floorGamePlayer_,*enemy_);
 }
 
 void GameScene::Initialize() {
@@ -107,10 +98,10 @@ void GameScene::Initialize() {
     floorPlayerStripTargetUI_->Initialize();
     floorActionManager_->Initialize();
     playerFloorStripManager_->Initialize();
-	healItemSpawner_->Initialize();
-	actionUI_->Initialize();
+    healItemSpawner_->Initialize();
+    actionUI_->Initialize();
 
-	healItemSpawner_->SpawnHealItem({ 2.0f,1.0f,2.0f });
+    healItemSpawner_->SpawnHealItem({ 2.0f,1.0f,2.0f });
 
     enemy_->Init();
     enemy_->SetTarget(floorGamePlayer_->body_.worldTransform_.translate_);
@@ -129,25 +120,7 @@ void GameScene::Initialize() {
 
     uiManager_->Initialize();
 
-    for (auto& particleEmitter : particleEmitters_) {
-        particleEmitter->Initialize();
-    }
-
-    particleEmitters_[kPlayerEmitter]->emitter_.count = 10;
-    particleEmitters_[kPlayerEmitter]->emitter_.movement = ParticleMovements::kParticleNormal;
-    particleEmitters_[kPlayerEmitter]->emitter_.isRandomTranslate = true;
-    particleEmitters_[kPlayerEmitter]->emitter_.isRandomRotate = false;
-    particleEmitters_[kPlayerEmitter]->emitter_.frequency = 0.3f;
-    particleEmitters_[kPlayerEmitter]->emitter_.blendMode = kBlendModeSubtract;
-    particleEmitters_[kPlayerEmitter]->emitter_.transform.scale_ = { 0.5f,0.5f,0.5f };
-
-    particleEmitters_[kEnemyEmitter]->emitter_.transform.translate_.y = -0.75f;
-    particleEmitters_[kEnemyEmitter]->emitter_.count = 16;
-    particleEmitters_[kEnemyEmitter]->emitter_.movement = ParticleMovements::kParticleShock;
-    particleEmitters_[kEnemyEmitter]->emitter_.radius = 2.0f;
-    particleEmitters_[kEnemyEmitter]->emitter_.isRandomRotate = false;
-    particleEmitters_[kPlayerEmitter]->emitter_.frequency = 0.3f;
-    particleEmitters_[kPlayerEmitter]->emitter_.blendMode = kBlendModeNormal;
+    emitterManager_->Initialize();
 
 }
 
@@ -158,20 +131,19 @@ void GameScene::Update() {
         Initialize();
     }
 
-    if (PauseScreen::isBackToTitle||floorGamePlayer_->IsDead()) {
-       sceneChange_->SetState(SceneChange::kFadeIn, 30);
+    if (PauseScreen::isBackToTitle || floorGamePlayer_->IsDead()) {
+        sceneChange_->SetState(SceneChange::kFadeIn, 30);
     }
 
     //仮に音声を鳴らす　全体のvolumeがあってオフセット分だけいじる
     Sound::PlayBGM(Sound::BGM1, 0.0f);
 
-    UpdateCamera();
-
-
     if (!PauseScreen::isActive_) {
+        UpdateCamera();
         UpdateGameObject();
         CheckAllCollision();
-        UpdateEmitter();
+        //エミッター
+        emitterManager_->Update(*currentCamera_);
     }
 
     uiManager_->Update();
@@ -190,18 +162,16 @@ void GameScene::Draw() {
     floorBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     floorPlayerStripTargetUI_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     playerFloorStripManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
-	healItemSpawner_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
-	actionUI_->Draw();
+    healItemSpawner_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    actionUI_->Draw();
     enemy_->Draw(*currentCamera_, kLightModeHalfL);
     enemyBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     enemyBombManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     enemyShockWaveManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
 
 #pragma endregion
-
-    for (auto& particleEmitter : particleEmitters_) {
-        particleEmitter->Draw();
-    }
+    //エミッター
+    emitterManager_->Draw();
 
     uiManager_->Draw();
 
@@ -221,8 +191,7 @@ void GameScene::Debug()
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
     std::function<void()> func = [this]() { SwitchCamera(); };
     DebugUI::Button("ChangeCamera", func);
-    DebugUI::CheckParticle(*particleEmitters_[kEnemyEmitter], "Enemy");
-    DebugUI::CheckParticle(*particleEmitters_[kPlayerEmitter], "Player");
+    emitterManager_->Debug();
 #endif // !USE_IMGUI
 }
 
@@ -234,9 +203,9 @@ void GameScene::UpdateCamera()
     } else {
 
         if (floorGamePlayer_->IsHit()) {
-            cameraController_->StartShake(2.0f,60);
+            cameraController_->StartShake(2.0f, 60);
         } else {
-            cameraController_-> SetShakeFalse();
+            cameraController_->SetShakeFalse();
         }
         cameraController_->Update();
     }
@@ -249,14 +218,14 @@ void GameScene::UpdateGameObject()
     floorGamePlayer_->Update();
     floorGameFloorManager_->Update();
     floorBulletManager_->Update();
-	healItemSpawner_->Update();
+    healItemSpawner_->Update();
     enemy_->Update();
     enemyBulletManager_->Update();
     enemyBombManager_->Update();
     enemyShockWaveManager_->Update();
 
     // オブジェクト同士の干渉
-	actionUI_->Update();
+    actionUI_->Update();
     floorStripManager_->Update();
     playerFloorStripManager_->Update();
     floorPlayerShotBulletManager_->Update();
@@ -274,24 +243,6 @@ void GameScene::UpdateGameObject()
     floorGamePlayerAnimationManager_->Update();
 
     VibrateManager::Update();
-}
-
-void GameScene::UpdateEmitter()
-{
-    if (floorGamePlayer_->isMove_) {
-        particleEmitters_[kPlayerEmitter]->UpdateTimer();
-    } else {
-        particleEmitters_[kPlayerEmitter]->InitTimer();
-    }
-
-    if (enemy_->IsHit()) {
-        particleEmitters_[kEnemyEmitter]->Emit();
-
-    }
-
-    for (auto& particleEmitter : particleEmitters_) {
-        particleEmitter->Update(*currentCamera_);
-    }
 
 }
 
@@ -302,8 +253,8 @@ void GameScene::CheckAllCollision()
 
     collisionManager_->AddCollider(floorGamePlayer_.get());
     collisionManager_->AddCollider(enemy_.get());
-	healItemSpawner_->AddCollider(collisionManager_.get());
-	floorGameFloorManager_->AddCollider(collisionManager_.get());
+    healItemSpawner_->AddCollider(collisionManager_.get());
+    floorGameFloorManager_->AddCollider(collisionManager_.get());
 
     for (auto& bullet : floorBulletManager_->GetBullets()) {
         if (bullet->isActive_) { collisionManager_->AddCollider(bullet.get()); }

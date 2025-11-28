@@ -3,10 +3,12 @@
 #include"DebugUI.h"
 #include"Input.h"
 #include "MatsumotoObj/SceneStaticValue.h"
-
+#include"Window.h"//画面サイズを取得するためにインクルードしています。
 ResultSprite::ResultSprite() {
 	sprite_ = std::make_unique<Sprite>();
 	sprite_->Create(Texture::RESULT_CLEAR, { 640.0f,360.0f });
+	//サイズを画面サイズと合わせます。ヨシダ
+	sprite_->SetSize({ static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()) });
 	sprite_->SetAnchorPoint({ 0.5f,0.5f });
 }
 

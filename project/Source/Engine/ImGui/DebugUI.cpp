@@ -421,8 +421,6 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter, const char* label)
     ParticleManager& particle = *ParticleManager::GetInstance();
     ImGui::Begin("Particle");
 
-
-
     static  Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
     Emitter& emitter = particleEmitter.emitter_;
 
@@ -447,30 +445,34 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter, const char* label)
         ImGui::TreePop();
     }
 
-    for (const auto& [name, group] : particle.GetParticleGroups()) {
 
+    if (ImGui::TreeNode("Particles")) {
 
-        if (ImGui::TreeNode(name.c_str())) {
+        for (const auto& [name, group] : particle.GetParticleGroups()) {
 
-            ImGui::Checkbox("useModel", &group->useModel);
-            ImGui::Checkbox("useBillboard", &group->useBillboard);
-            ImGui::Checkbox("useSpriteCamera", &group->useSpriteCamera);
+            if (ImGui::TreeNode(name.c_str())) {
 
-            ImGui::SliderFloat3("acceleration", &group->accelerationField.acceleration.x, -100.0f, 100.0f);
-            ImGui::SliderFloat3("area.min", &group->accelerationField.area.min.x, -100.0f, 0.0f);
-            ImGui::SliderFloat3("area.max", &group->accelerationField.area.max.x, 0.0f, 100.0f);
-            ImGui::SliderFloat2("textureSize", &group->textureSize.x, 0.0f, static_cast<float>(Window::GetClientWidth()));
+                ImGui::Checkbox("useModel", &group->useModel);
+                ImGui::Checkbox("useBillboard", &group->useBillboard);
+                ImGui::Checkbox("useSpriteCamera", &group->useSpriteCamera);
 
-            if (ImGui::Button(name.c_str())) {
-                particle.Emit(emitter);
+                ImGui::SliderFloat3("acceleration", &group->accelerationField.acceleration.x, -100.0f, 100.0f);
+                ImGui::SliderFloat3("area.min", &group->accelerationField.area.min.x, -100.0f, 0.0f);
+                ImGui::SliderFloat3("area.max", &group->accelerationField.area.max.x, 0.0f, 100.0f);
+                ImGui::SliderFloat2("textureSize", &group->textureSize.x, 0.0f, static_cast<float>(Window::GetClientWidth()));
+
+                if (ImGui::Button(name.c_str())) {
+                    particle.Emit(emitter);
+                }
+                for (std::list<Particle>::iterator itr = group->particles.begin(); itr != group->particles.end(); ++itr) {
+                    CheckTransform((*itr).transform, name.c_str());
+                }
+                ImGui::TreePop();
             }
-            for (std::list<Particle>::iterator itr = group->particles.begin(); itr != group->particles.end(); ++itr) {
-                CheckTransform((*itr).transform, name.c_str());
-            }
-            ImGui::TreePop();
+
+
         }
-
-
+        ImGui::TreePop();
     }
 
     ImGui::End();
