@@ -292,7 +292,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\SRVmanager\SrvManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\World.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\UIManager.cpp" />
-    <ClCompile Include="Source\Application\System\VibrateManager.cpp" />
+    <ClCompile Include="Source\Engine\Input\VibrateManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\GameObject\EmitterManager\EmitterManager.h" />
@@ -438,7 +438,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\SRVmanager\SrvManager.h" />
     <ClInclude Include="Source\Application\GameObject\World.h" />
     <ClInclude Include="Source\Application\GameObject\UI\UIManager.h" />
-    <ClInclude Include="Source\Application\System\VibrateManager.h" />
+    <ClInclude Include="Source\Engine\Input\VibrateManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />

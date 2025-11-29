@@ -4,6 +4,7 @@
 #include"Input.h"
 #include "MatsumotoObj/SceneStaticValue.h"
 #include"Window.h"//画面サイズを取得するためにインクルードしています。
+
 ResultSprite::ResultSprite() {
 	sprite_ = std::make_unique<Sprite>();
 	sprite_->Create(Texture::RESULT_CLEAR, { 640.0f,360.0f });
@@ -13,6 +14,7 @@ ResultSprite::ResultSprite() {
 }
 
 void ResultSprite::Initialize() {
+
 	if (SceneStaticValue::isClear) {
 		sprite_->SetTexture(Texture::RESULT_CLEAR);
 	} else {
@@ -21,6 +23,8 @@ void ResultSprite::Initialize() {
 }
 
 void ResultSprite::Update() {
+	
+
 	sprite_->Update();
 }
 

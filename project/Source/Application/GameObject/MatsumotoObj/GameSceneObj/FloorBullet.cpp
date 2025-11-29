@@ -142,6 +142,11 @@ void FloorBullet::Shot(const Vector3& position, const Vector3& direction, const 
 	isHit_ = false;
 	isHoming_ = false;
 	reqestFloorType_ = type;
+
+
+	//一フレーム分遅れているためここで更新しました。　ヨシダ
+	body_.Update();
+	ColliderUpdate();
 }
 
 void FloorBullet::SetHoming(Object3d* target, float stayTime) {
