@@ -25,6 +25,8 @@ public:
         HOUSE_WALL_BACK,
         HOUSE_DOOR,
 
+        TREE,
+
         //プレイヤーそれぞれのパーツ
         PLAYER_HEAD,
         PLAYER_ARM_L,

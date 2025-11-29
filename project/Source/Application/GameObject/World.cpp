@@ -9,7 +9,7 @@ World::World() {
     object3d_->SetLightMode(kLightModeNone);
     object3d_ = std::make_unique<Object3d>();
     object3d_->Create();
-    object3d_->SetMesh(model_);
+    object3d_->SetMesh(ModelManager::GetModel(ModelManager::WORLD));
 };
 
 void World::Init()
@@ -22,13 +22,6 @@ void World::Update()
 {
     object3d_->GetUVTransform().translate.x += std::numbers::pi_v<float> *0.0625f*0.5f * InverseFPS;
     object3d_->UpdateUV();
-
-    if (Input::IsTriggerKey(DIK_SPACE)) {
-        texture_++;
-        texture_ %= Texture::TEXTURES;
-        SetTexture(texture_);
-    }
-
 }
 
 void World::Draw(Camera& camera)
