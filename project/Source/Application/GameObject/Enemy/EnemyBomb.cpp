@@ -9,7 +9,6 @@
 #include"CollisionConfig.h"
 #include"Sound.h"
 
-bool EnemyBomb::isPlayerHit_ = false;
 
 EnemyBomb::EnemyBomb() {
     body_.Create();
@@ -38,6 +37,7 @@ void EnemyBomb::Initialize() {
     isActive_ = false;
 	isGroundHit_ = false;
     size_ = 1.0f;
+
 }
 void EnemyBomb::OnCollision(Collider* collider)
 {
@@ -51,17 +51,9 @@ void EnemyBomb::OnCollision(Collider* collider)
         OnCollisionCollider();
     }
 
-
-    if (collider->GetCollisionAttribute() == kCollisionPlayer&&isExplosion_) {
-        //デバック用
-        isPlayerHit_ = true;
-        OnCollisionCollider();
-    }
-
     if (collider->GetCollisionAttribute() == kCollisionFloor) {
         if (lifeTimer_ <= 3.8f) {
             isActive_ = false;
-            isExplosion_ = false;
             isGroundHit_ = false;
         }
     }
@@ -77,12 +69,9 @@ void EnemyBomb::Update() {
     }
 
     if (lifeTimer_ <= 0.0f) {
-        if (!isExplosion_) {
-            Sound::PlaySE(Sound::DEFEAT_BOSS);
-            isExplosion_ = true;
-            explosionFrame_ = 0;
-            lifeTimer_ = 0.0f;
-        }
+
+     lifeTimer_ = 0.0f;
+     
     } else {
         lifeTimer_ -= 0.016f;
     }
@@ -91,16 +80,6 @@ void EnemyBomb::Update() {
 
     body_.Update();
     ColliderUpdate();
-
-    if (isExplosion_) {
-        explosionFrame_++;
-       
-        if (explosionFrame_ >= 3) {
-            isExplosion_ = false;
-            isActive_ = false;
-            return;
-        }
-    }
 
     float color = lifeTimer_ / lifeDuration_;
     body_.SetColor({ color,color,color,1.0f });
@@ -128,7 +107,6 @@ void EnemyBomb::Draw(Camera& camera, const LightMode& lightType) {
     ColliderDraw(camera);
 }
 
-
 void EnemyBomb::Shot(const Vector3& startPos, const Vector3& endPos, const float& size) {
     body_.worldTransform_.translate_ = startPos;
     endPos_ = endPos;
@@ -136,7 +114,6 @@ void EnemyBomb::Shot(const Vector3& startPos, const Vector3& endPos, const float
     body_.worldTransform_.scale_ = { size_,size_,size_ };
     lifeTimer_ = lifeDuration_;
     isActive_ = true;
-    isExplosion_ = false;
 	isGroundHit_ = false;
 	body_.Update();
 	ColliderUpdate();

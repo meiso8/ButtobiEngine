@@ -34,44 +34,46 @@ Enemy::Enemy()
          {PHASE::EXIT, std::bind(&Enemy::Exit, this)},
     };
 
+    //フェーズ抽選の関数を入れる
     SwitchRandomAttackPhase_ = {
          {"First", std::bind(&Enemy::RandomAttackPhaseFirst, this)},
          {"Second", std::bind(&Enemy::RandomAttackPhaseSecond, this)},
          {"Third", std::bind(&Enemy::RandomAttackPhaseEnd, this)},
     };
 
-
-    bodyPos_.Create();
-    wingLPos_.Create();
-    wingRPos_.Create();
-
-    model_ = ModelManager::GetModel(ModelManager::ENEMY_BODY);
-
-    bodyPos_.SetMesh(model_);
-    wingLPos_.SetMesh(ModelManager::GetModel(ModelManager::ENEMY_WING_L));
-    wingRPos_.SetMesh(ModelManager::GetModel(ModelManager::ENEMY_WING_R));
-    wingLPos_.worldTransform_.Parent(bodyPos_.worldTransform_);
-    wingRPos_.worldTransform_.Parent(bodyPos_.worldTransform_);
-
-    bodyPos_.worldTransform_.scale_ = { kSize_,kSize_,kSize_ };
-
-    wingLPos_.worldTransform_.translate_.x = -1.0f;
-    wingRPos_.worldTransform_.translate_.x = 1.0f;
-
-    model_->GetWaveData(0).direction = { 0.0f,0.0f,1.0f };
-    model_->GetWaveData(0).amplitude = 0.05f;
-    model_->GetWaveData(0).frequency = 8.0f;
-    Init();
-
     //コライダーの設定
     SetRadius(kRadius_);
     SetCollisionAttribute(kCollisionEnemy);
     // 敵は「プレイヤー」と「プレイヤーの弾」と衝突したい
     SetCollisionMask(kCollisionPlayer | kCollisionPlayerBullet);
+
+    //それぞれのオブジェクト座標を入れる
+    bodyPos_.Create();
+    wingLPos_.Create();
+    wingRPos_.Create();
+
+    //体のモデルを取得する
+    model_ = ModelManager::GetModel(ModelManager::ENEMY_BODY);
+    model_->GetWaveData(0).direction = { 0.0f,0.0f,1.0f };
+    model_->GetWaveData(0).amplitude = 0.05f;
+    model_->GetWaveData(0).frequency = 8.0f;
+
+    //各々のトランスフォームにメッシュを入れる
+    bodyPos_.SetMesh(model_);
+    wingLPos_.SetMesh(ModelManager::GetModel(ModelManager::ENEMY_WING_L));
+    wingRPos_.SetMesh(ModelManager::GetModel(ModelManager::ENEMY_WING_R));
+    //体の位置にペアレント化する
+    wingLPos_.worldTransform_.Parent(bodyPos_.worldTransform_);
+    wingRPos_.worldTransform_.Parent(bodyPos_.worldTransform_);
+
+    //初期化
+    Init();
+
 }
 
 void Enemy::Init() {
 
+    //フラグの初期化
     isShot_ = false;
     isBombShot_ = false;
     isWaveShot_ = false;
@@ -81,6 +83,7 @@ void Enemy::Init() {
 
     isReqestClearFloor_ = false;
 
+    //アクションカウントの初期化　何回同じタイプの行動をしたかを記録
     actionCount_ = 0;
 
     currentState_ = "First";
@@ -93,7 +96,6 @@ void Enemy::Init() {
     wingRPos_.worldTransform_.Initialize();
     wingLPos_.worldTransform_.translate_.x = -1.0f;
     wingRPos_.worldTransform_.translate_.x = 1.0f;
-
     wingLPos_.worldTransform_.translate_.y = 0.3f;
     wingRPos_.worldTransform_.translate_.y = 0.3f;
 
@@ -109,8 +111,8 @@ void Enemy::Init() {
     //弾のクールタイム
     fireBallCoolTimer_ = 0.0f;
 
-    endRotateY_ = 0.0f;
     startRotateY_ = 0.0f;
+    endRotateY_ = 0.0f;
     roundSpeedY = 1.0f;
 
     wingTheta_ = 0.0f;
@@ -118,6 +120,7 @@ void Enemy::Init() {
     InitState();
 
     model_->GetWaveData(0).time = 0.0f;
+
 }
 
 void Enemy::InitState()
@@ -169,6 +172,11 @@ void Enemy::Update()
     if (Input::IsTriggerKey(DIK_X)) { SetPhase(SHOCKWAVEATTACK); }
     if (Input::IsTriggerKey(DIK_C)) { SetPhase(TACKLE); }
     if (Input::IsTriggerKey(DIK_V)) { SetPhase(FIREBALL); }
+
+    if (Input::IsTriggerKey(DIK_B)) { SetPhase(LERP_ROUND_POS); }
+    if (Input::IsTriggerKey(DIK_N)) { SetPhase(LERP_SQUARE_POS); }
+    if (Input::IsTriggerKey(DIK_M)) { SetPhase(RANDOM_WALK); }
+
 #endif
 
     damageStruct_.isHit = false;
@@ -195,21 +203,36 @@ void Enemy::Update()
     DebugUI::CheckObject3d(wingLPos_, "wingLPos");
     DebugUI::CheckObject3d(wingRPos_, "wingRPos");
 
+    ImGui::SliderFloat3("sphericalPos_", &sphericalPos_.radius, -10.0f, 10.0f);
+    DebugUI::CheckWaveData(model_->GetWaveData(0), "EnemyWaveData");
+
     ImGui::Text("%s", currentState_.c_str());
+
+    if (ImGui::TreeNode("SelectBossState")) {
+
+        const char* states[] = { "First", "Second", "Third" };
+        int current = 0;
+
+        if (ImGui::Combo("BossState", &current, states, IM_ARRAYSIZE(states))) {
+            currentState_ = states[current % 3];
+        };
+
+        ImGui::TreePop();
+    }
+    ImGui::Checkbox("isSelectRandomPhase", &isSelectRandomPhase_);
+    ImGui::SliderFloat("phaseTimer", &phaseTimer_, 0.0f, 15.0f);
+    ImGui::SliderFloat("phaseTime", &phaseTime_, 0.0f, 15.0f);
 
     ImGui::Checkbox("isAttack", &isAttack_);
     ImGui::Checkbox("isPreAttack", &isPreAttack_);
     ImGui::SliderInt("actionCount", &actionCount_, 0, 3);
-    ImGui::SliderFloat("phaseTimer", &phaseTimer_, 0.0f, 15.0f);
-    ImGui::SliderFloat("phaseTime", &phaseTime_, 0.0f, 15.0f);
-    DebugUI::CheckWaveData(model_->GetWaveData(0), "EnemyWaveData");
 
     ImGui::Text("toPlayer %f %f %f", playerLookDir_->x, playerLookDir_->y, playerLookDir_->z);
     Vector3 direction = endPos_ - startPos_;
     ImGui::Text("direction  %f %f %f", direction.x, direction.y, direction.z);
     float dot = Dot(*playerLookDir_, endPos_ - startPos_);
     ImGui::Text("Dot : %f", dot);
-    ImGui::Text("%s",dot < 0.0f? "true":"false");
+    ImGui::Text("%s", dot < 0.0f ? "true" : "false");
     ImGui::End();
 
     ImGui::Begin("Command");
@@ -218,8 +241,16 @@ void Enemy::Update()
         ImGui::Text("X : ShockWaveAttack");
         ImGui::Text("C : Rackle");
         ImGui::Text("V : FireBall");
+
+        ImGui::Text("B : ROUND_WALK");
+        ImGui::Text("N : SQUARE_WALK");
+        ImGui::Text("M : RANDOM_WALK");
+
         ImGui::TreePop();
     }
+
+
+
     ImGui::End();
 
 #endif
@@ -243,7 +274,7 @@ void Enemy::OnCollision(Collider* collider)
 
         damageStruct_.isHit = true;
         Sound::PlaySE(Sound::DEFEAT_BOSS);
-        
+
         VibrateManager::SetTime(0.5f, 2000, 2000);
 
         if (damageStruct_.hps.hp > 0) {
@@ -268,14 +299,24 @@ void Enemy::Tackle()
         if (phaseTimer_ <= 2.0f) {
             LookTarget(*playerPos_);
         }
-
         PoyoPoyo(3.0f);
 
     } else if (phaseTimer_ <= 3.7f) {
+
+        if (phaseTimer_ <= 3.2f) {
+            if (damageStruct_.hps.hp > 30.0f) {
+                int random = rand() % 3;
+                //1/3の確率でタックルしない
+                if (random == 0) {
+                    isSelectRandomPhase_ = true;
+                }
+            }
+        }
+
         float localTimer = (phaseTimer_ - 3.0f) / 0.7f;
         LerpScale();
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(startPos_, endPos_, localTimer);
-        if (/*phaseTimer_ >= 6.0f && */Dot(*playerLookDir_, endPos_ - startPos_)<0.0f) {
+        if (/*phaseTimer_ >= 6.0f && */ Dot(*playerLookDir_, endPos_ - startPos_) < 0.0f) {
             if (damageStruct_.isHit) {
                 Sound::PlayOriginSE(Sound::BOSS_TACKLE);
                 VibrateManager::SetTime(1.0f, 2000, 2000);
@@ -290,7 +331,9 @@ void Enemy::Tackle()
     } else if (phaseTimer_ <= 5.7f) {
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(bodyPos_.worldTransform_.translate_, startPos_, 0.5f);
     } else {
-        phaseTimer_ = phaseTime_;
+
+        isSelectRandomPhase_ = true;
+        //phaseTimer_ = phaseTime_;
     }
 
 }
@@ -308,7 +351,8 @@ void Enemy::PlayerHitBack()
         bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, startPos_, 0.05f);
 
     } else {
-        phaseTimer_ = phaseTime_;
+        isSelectRandomPhase_ = true;
+        /*  phaseTimer_ = phaseTime_;*/
     }
 }
 
@@ -333,8 +377,8 @@ void Enemy::KnockBack()
     }
 
     if (phaseTimer_ > 2.0f) {
-        phaseTimer_ = phaseTime_;
-        /*  SetPhase(LERP_ROUND_POS);*/
+        isSelectRandomPhase_ = true;
+        //phaseTimer_ = phaseTime_;
     }
 
 
@@ -343,9 +387,12 @@ void Enemy::KnockBack()
 
 void Enemy::LerpRoundPos()
 {
+
     sphericalPos_.polar = Lerp(sphericalPos_.polar, 0.0f, 0.05f);
+    sphericalPos_.radius = Lerp(sphericalPos_.radius, kRoundRadius_, 0.05f);
+     
     bodyPos_.worldTransform_.translate_ = TransformCoordinate(sphericalPos_);
-    if (fabs(sphericalPos_.polar) <= QUARTER_PI) {
+    if (fabs(sphericalPos_.polar) <= QUARTER_PI && sphericalPos_.radius >= kRoundRadius_-2.0f) {
         SetPhase(ROUND);
     }
 }
@@ -354,10 +401,10 @@ void Enemy::LerpSquarePos()
 {
 
     if (phaseTimer_ <= 1.0f) {
-        bodyPos_.worldTransform_.rotate_.y = Lerp(bodyPos_.worldTransform_.rotate_.y, PI, 0.1f);
-        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, { 0.0f,kSize_,0.0f }, phaseTimer_);
+        LerpPos({ 0.0f,kLerpSquareStartPosY_,0.0f }, 0.1f);
+        LerpRotateY(PI, 0.1f);
     } else if (phaseTimer_ <= kLerpSquareTime_) {
-        LerpPos();
+        LerpPos({ 0.0f,kLerpSquareEndPosY_,6.0f }, 0.1f);
     } else {
         SetPhase(SQUARE);
     }
@@ -384,6 +431,10 @@ void Enemy::SquareMove()
     }
 
     LookTarget(endPos);
+
+    if (phaseTimer_ >= phaseTime_) {
+        isSelectRandomPhase_ = true;
+    }
 }
 
 
@@ -391,83 +442,18 @@ void Enemy::RandomWalk()
 {
 }
 
-void Enemy::LerpPos()
+void Enemy::LerpRotateY(const float& endRadius, const float& lerRotateSpeed)
 {
-    bodyPos_.worldTransform_.rotate_.y = Lerp(bodyPos_.worldTransform_.rotate_.y, PI, 0.1f);
-    bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, { 0.0f,0.0f,6.0f }, 0.05f);
+    bodyPos_.worldTransform_.rotate_.y = Lerp(bodyPos_.worldTransform_.rotate_.y, endRadius, lerRotateSpeed);
 }
 
-void Enemy::RandomMovePhase()
+void Enemy::LerpPos(const Vector3& endPos, const float& lerpPosSpeed)
 {
-
-    //int randNum = rand() % 4;
-
-    int randNum = rand() % 2;
-
-    switch (randNum)
-    {
-    case 0:
-        SetPhase(LERP_ROUND_POS);
-        break;
-    case 1:
-        SetPhase(LERP_SQUARE_POS);
-        break;
-    }
+    bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, lerpPosSpeed);
 }
-
-void Enemy::RandomAttackPhaseFirst()
-{
-    int randNum = rand() % 2;
-    switch (randNum)
-    {
-    case 0:
-        SetPhase(TACKLE);
-        break;
-    case 1:
-        SetPhase(FIREBALL);
-        break;
-    }
-}
-
-void Enemy::RandomAttackPhaseSecond()
-{
-    int randNum = rand() % 2;
-    switch (randNum)
-    {
-    case 0:
-        SetPhase(TACKLE);
-        break;
-    case 1:
-        SetPhase(FIREBALL);
-        break;
-    case 2:
-        SetPhase(FLOORCHANGEATTACK);
-        break;
-    }
-}
-
-void Enemy::RandomAttackPhaseEnd()
-{
-    int randNum = rand() % 2;
-
-    switch (randNum)
-    {
-    case 0:
-        RandomAttackPhaseSecond();
-        break;
-    case 1:
-        SetPhase(SHOCKWAVEATTACK);
-        break;
-    }
-
-}
-
-
 
 void Enemy::SwitchState()
 {
-
-
 
     Sound::PlaySE(Sound::BOSS_HEAL);
     isReqestClearFloor_ = true;
@@ -477,13 +463,11 @@ void Enemy::SwitchState()
     } else if (currentState_ == "Second") {
         currentState_ = "Third";
     } else if (currentState_ == "Third") {
-        
+
         damageStruct_.isDead = true;
-        
+
         //currentState_ = "First";
     }
-
-
     InitState();
 }
 
@@ -495,7 +479,8 @@ void Enemy::SetPhase(PHASE phase)
     poyoAnimTimer_ = 0.0f;
 
     //フェーズがーLERP_ROUND_POSだったらここでreturn
-    if (phase_ == LERP_ROUND_POS || phase_ == LERP_SQUARE_POS || phase_ == KNOCKBACK || phase_ == PLAYER_HIT_BACK) {
+    if (phase_ == LERP_ROUND_POS || phase_ == LERP_SQUARE_POS
+        || phase_ == KNOCKBACK || phase_ == PLAYER_HIT_BACK) {
         sphericalPos_ = TransformCoordinate(bodyPos_.worldTransform_.translate_);
         return;
     }
@@ -522,7 +507,10 @@ void Enemy::SetPhase(PHASE phase)
 
 void Enemy::SwitchPhase()
 {
-    if (phaseTimer_ == phaseTime_) {
+    if (isSelectRandomPhase_) {
+
+        isSelectRandomPhase_ = false;
+
         if (actionCount_ < 1) {
             int randNum = rand() % 2;
             if (randNum == 0) {
@@ -546,7 +534,8 @@ void Enemy::SwitchPhase()
 void Enemy::Round()
 {
 
-    sphericalPos_.radius = Lerp(sphericalPos_.radius, enemyRoundCircle_.radius, kSphericalLerpSpeed_);
+    sphericalPos_.radius = Lerp(sphericalPos_.radius, kRoundRadius_, kSphericalLerpSpeed_);
+    sphericalPos_.azimuthal = Lerp(sphericalPos_.azimuthal, 0.0f, 0.01f);
 
 
     sphericalPos_.polar += InverseFPS * roundSpeedY;
@@ -559,6 +548,10 @@ void Enemy::Round()
 
     bodyPos_.worldTransform_.translate_ = TransformCoordinate(sphericalPos_);
     bodyPos_.worldTransform_.translate_.y = GetRadius();
+
+    if (phaseTimer_ >= phaseTime_) {
+        isSelectRandomPhase_ = true;
+    }
 }
 
 
@@ -573,28 +566,39 @@ void Enemy::Fireball()
 
         fireBallCoolTimer_ += InverseFPS;
 
-        if (fireBallCoolTimer_ > 1.5f) {
+        if (fireBallCoolTimer_ > kFireBallMaxCoolTime_) {
             fireBallCoolTimer_ = 0.0f;
             isShot_ = true;
         }
     }
+
+    if (phaseTimer_ >= kFireBallPhaseMaxTime_) {
+        isSelectRandomPhase_ = true;
+    }
+
 }
 
 void Enemy::FloorChangeAttack()
 {
-    LerpPos();
-    LerpScale();
-
     if (phaseTimer_ <= 1.0f) {
-        RotateY(phaseTimer_);
-
+        LerpScale();
+        LerpPos({ 0.0f,kRadius_,6.0f }, 0.1f);
+        LerpRotateY(PI, 0.3f);
     } else if (phaseTimer_ <= 1.5f) {
+
         if (!isBombShot_) {
             isBombShot_ = true;
         }
-        LookTarget(*target_);
-    }
+        LerpRotateY(0.0f, 0.3f);
 
+    } else if(phaseTimer_ <= 9.0f){
+        LerpRotateY(PI, 0.3f);
+        RotateLR(2.0f);
+    } else if(phaseTimer_ <= 10.0f){
+        LerpRotateZ(0.5f);
+    } else {
+        isSelectRandomPhase_ = true;
+    }
 
 }
 void Enemy::ShockWaveAttack()
@@ -602,10 +606,15 @@ void Enemy::ShockWaveAttack()
     if (phaseTimer_ <= 1.0f) {
         LookTarget(*playerPos_);
         bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, *target_, 0.05f);
-    } else if (phaseTimer_ <= 1.2f) {
+
+    } else if (phaseTimer_ <= 1.5f) {
         if (!isWaveShot_) {
             isWaveShot_ = true;
         }
+    }
+
+    if (phaseTimer_ >= kWavePhaseMaxTime_) {
+        isSelectRandomPhase_ = true;
     }
 }
 void Enemy::Exit()
@@ -620,13 +629,15 @@ void Enemy::Exit()
 
 void Enemy::UpdatePhaseTimer()
 {
-    if (phaseTimer_ < phaseTime_) {
-        phaseTimer_ += InverseFPS;
-    } else {
+    //if (phaseTimer_ < phaseTime_) {
+    phaseTimer_ += InverseFPS;
+    /*}*//* else {
         phaseTimer_ = phaseTime_;
-    }
+    }*/
 
 }
+
+// =============================//アニメーション//============================================================
 
 void Enemy::LookTarget(Vector3& target)
 {
@@ -689,3 +700,79 @@ void Enemy::Winging(const float& speed)
     wingLPos_.worldTransform_.rotate_.z = sinf(wingTheta_);
     wingRPos_.worldTransform_.rotate_.z = -sinf(wingTheta_);
 }
+
+void Enemy::RotateLR(const float& speed)
+{
+    rotateLRTheta_ += std::numbers::pi_v<float>*InverseFPS * speed;
+    bodyPos_.worldTransform_.rotate_.z = sinf(rotateLRTheta_)*0.5f;
+}
+
+void Enemy::LerpRotateZ(const float& speed)
+{
+    bodyPos_.worldTransform_.rotate_.z = Lerp(bodyPos_.worldTransform_.rotate_.z, 0.0f, speed);
+}
+
+// =============================//フェーズ抽選//============================================================
+
+void Enemy::RandomMovePhase()
+{
+
+    //int randNum = rand() % 4;
+
+    int randNum = rand() % 2;
+
+    switch (randNum)
+    {
+    case 0:
+        SetPhase(LERP_ROUND_POS);
+        break;
+    case 1:
+        SetPhase(LERP_SQUARE_POS);
+        break;
+    }
+}
+
+void Enemy::RandomAttackPhaseFirst()
+{
+    int randNum = rand() % 2;
+    switch (randNum)
+    {
+    case 0:
+        SetPhase(TACKLE);
+        break;
+    case 1:
+        SetPhase(FIREBALL);
+        break;
+    }
+}
+
+void Enemy::RandomAttackPhaseSecond()
+{
+    int randNum = rand() % 2;
+    switch (randNum)
+    {
+    case 0:
+        RandomAttackPhaseFirst();
+        break;
+    case 1:
+        SetPhase(FLOORCHANGEATTACK);
+        break;
+    }
+}
+
+void Enemy::RandomAttackPhaseEnd()
+{
+    int randNum = rand() % 2;
+
+    switch (randNum)
+    {
+    case 0:
+        RandomAttackPhaseSecond();
+        break;
+    case 1:
+        SetPhase(SHOCKWAVEATTACK);
+        break;
+    }
+
+}
+

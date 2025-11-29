@@ -24,8 +24,6 @@ public:
     bool isActive_ = false;
     Object3d body_;
     float size_;
-    bool isExplosion_ = false;
-    static bool isPlayerHit_;
 	bool isGroundHit_ = false;
 private:
     int explosionFrame_ = 0;
