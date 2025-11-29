@@ -6,6 +6,7 @@
 #include"DrawGrid.h"
 #include"Particle.h"
 #include"JsonFile.h"
+#include"VibrateManager.h"
 
 std::unique_ptr<PSO> MyEngine::pso = nullptr;
 
@@ -45,6 +46,8 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     input = std::make_unique<Input>();
     //入力
     input->Initialize(*wc);
+    //コントローラー
+    VibrateManager::Initialize();
 
     directXCommon = std::make_unique<DirectXCommon>();
     directXCommon->Initialize(*wc);
@@ -110,6 +113,7 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     //ファイルへのログ出力
     LogFile::Log("LoopStart");
 
+
 }
 
 void MyEngine::Update() {
@@ -120,6 +124,7 @@ void MyEngine::Update() {
     //ImGuiにここからフレームが始まる旨を伝える
     imGuiClass.FrameStart();
 #endif
+    VibrateManager::Update();
 }
 
 void MyEngine::Debug()

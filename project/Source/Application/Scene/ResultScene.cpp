@@ -40,6 +40,7 @@
 #include"Circle.h"
 
 #include"MyEngine.h"
+#include "MatsumotoObj/KeyBindConfig.h"
 
 ResultScene::ResultScene() {
 	// 現在のカメラを設定
@@ -66,8 +67,13 @@ void ResultScene::Initialize() {
 }
 
 void ResultScene::Update() {
-	UpdateCamera();
 
+
+    if (KeyBindConfig::Instance().IsTrigger("Shot")) {
+        sceneChange_->SetState(SceneChange::kFadeIn, 60);
+    }
+
+	UpdateCamera();
 	UpdateGameObject();
 	CheckAllCollision();
 	UpdateEmitter();

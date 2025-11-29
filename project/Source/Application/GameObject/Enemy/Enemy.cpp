@@ -137,7 +137,6 @@ void Enemy::InitState()
     //速度
     float velocity = file[currentState_]["velocity"];
     velocity_ = { velocity ,velocity ,velocity };
-
 }
 
 
@@ -454,25 +453,26 @@ void Enemy::LerpPos(const Vector3& endPos, const float& lerpPosSpeed)
 
 void Enemy::SwitchState()
 {
-    isReqestClearFloor_ = true;
 
     if (currentState_ == "First") {
         currentState_ = "Second";
     } else if (currentState_ == "Second") {
         currentState_ = "Third";
     } else if (currentState_ == "Third") {
-
         damageStruct_.isDead = true;
-
-        //currentState_ = "First";
     }
 
- 
     if (damageStruct_.isDead) {
         return;
     }
 
+    isReqestClearFloor_ = true;
+    
+    //回転を初期化
+    bodyPos_.worldTransform_.rotate_.z = 0.0f;
+
     Sound::PlaySE(Sound::BOSS_HEAL);
+    SetPhase(LERP_SQUARE_POS);
 
     InitState();
 }

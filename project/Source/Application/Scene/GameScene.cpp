@@ -41,6 +41,7 @@
 #include"MyEngine.h"
 #include"UI/PauseScreen.h"
 #include"VibrateManager.h"
+#include"MatsumotoObj/SceneStaticValue.h"
 
 GameScene::GameScene()
 {
@@ -72,14 +73,11 @@ GameScene::GameScene()
     enemyShockWaveManager_ = std::make_unique<EnemyShockWaveManager>();
     enemyShotWaveManager_ = std::make_unique<EnemyShotWaveManager>(enemy_.get(), enemyShockWaveManager_.get(), floorGameFloorManager_.get());
 
-
-    VibrateManager::Initialize();
-
 #pragma endregion
 
     uiManager_ = std::make_unique<UIManager>(*enemy_->GetHpsPtr(), *floorGamePlayer_->GetHpsPtr());
 
-    emitterManager_ = std::make_unique<EmitterManager>(*floorGamePlayer_,*enemy_);
+    emitterManager_ = std::make_unique<EmitterManager>(*floorGamePlayer_, *enemy_);
 }
 
 void GameScene::Initialize() {
@@ -131,9 +129,16 @@ void GameScene::Update() {
         Initialize();
     }
 
-    if (PauseScreen::isBackToTitle || floorGamePlayer_->IsDead()||enemy_->IsDead()) {
+    if (PauseScreen::isBackToTitle || floorGamePlayer_->IsDead() || enemy_->IsDead()) {
+
+        //if (enemy_->IsDead()) {
+        //    SceneStaticValue::isClear = true;
+        //}
+
         sceneChange_->SetState(SceneChange::kFadeIn, 30);
     }
+
+
 
     //仮に音声を鳴らす　全体のvolumeがあってオフセット分だけいじる
     Sound::PlayBGM(Sound::BGM1, 0.0f);
@@ -241,8 +246,6 @@ void GameScene::UpdateGameObject()
 
     // アニメーション更新
     floorGamePlayerAnimationManager_->Update();
-
-    VibrateManager::Update();
 
 }
 

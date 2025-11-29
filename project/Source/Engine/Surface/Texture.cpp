@@ -37,8 +37,8 @@ void Texture::LoadAllTexture() {
     handles[BUTTON_A] = Load("Resource/Textures/Button_A_Pop.png");
     handles[CONFIRM_UI] = Load("Resource/Textures/ConfirmUI_Pop.png");
 
-	handles[RESULT_CLEAR] = Load("Resource/Textures/GameOver.png");
-	handles[RESULT_GAMEOVER] = Load("Resource/Textures/GameClear.png");
+	handles[RESULT_CLEAR] = Load("Resource/Textures/GameClear.png");
+	handles[RESULT_GAMEOVER] = Load("Resource/Textures/GameOver.png");
 }
 
 uint32_t Texture::Load(const std::string& filePath)

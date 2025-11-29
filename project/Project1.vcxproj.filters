@@ -118,7 +118,7 @@
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\HealItemSpawner.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\ResultSceneObj\ResultSprite.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\Data\FloorData.cpp" />
-    <ClCompile Include="Source\Application\System\VibrateManager.cpp" />
+    <ClCompile Include="Source\Engine\Input\VibrateManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\EmitterManager\EmitterManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -264,7 +264,7 @@
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\HealItemSpawner.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\SceneStaticValue.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\ResultSceneObj\ResultSprite.h" />
-    <ClInclude Include="Source\Application\System\VibrateManager.h" />
+    <ClInclude Include="Source\Engine\Input\VibrateManager.h" />
     <ClInclude Include="Source\Application\GameObject\EmitterManager\EmitterManager.h" />
   </ItemGroup>
   <ItemGroup>
