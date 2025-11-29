@@ -24,13 +24,14 @@
 #include "Enemy/EnemyShotBombManager.h"
 #include "Enemy/EnemyShockWaveManager.h"
 #include "Enemy/EnemyShotWaveManager.h"
-
+#include"Tree/Tree.h"
 #pragma endregion
 
 #include"CollisionManager.h"
 #include"UI/UIManager.h"
 #include"EmitterManager/EmitterManager.h"
 #include"CameraController.h"
+
 
 class GameScene :public SceneManager {
 
@@ -71,6 +72,8 @@ private:
     std::unique_ptr<EnemyShotBombManager>enemyShotBombManager_ = nullptr;
     std::unique_ptr<EnemyShockWaveManager>enemyShockWaveManager_ = nullptr;
     std::unique_ptr<EnemyShotWaveManager>enemyShotWaveManager_ = nullptr;
+
+    std::unique_ptr<Tree>tree_ = nullptr;
 
 
 #pragma endregion

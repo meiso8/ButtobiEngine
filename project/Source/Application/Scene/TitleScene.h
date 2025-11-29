@@ -24,7 +24,7 @@
 
 
 #include"House/House.h"   
-
+#include"Tree/Tree.h"
 
 #pragma endregion
 
@@ -62,7 +62,7 @@ private:
 	std::unique_ptr<ActionUI> actionUI_ = nullptr;
     //家追加しましたヨシダ
     std::unique_ptr<House>house_ = nullptr;
-
+    std::unique_ptr<Tree>tree_ = nullptr;
 #pragma endregion
 	float eventTimer_ = 0.0f;
 

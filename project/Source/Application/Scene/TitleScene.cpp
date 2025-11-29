@@ -70,7 +70,7 @@ TitleScene::TitleScene()
     house_ = std::make_unique<House>();
 
     house_->SetHitCounts(titleText_->GetHitCount(), titleText_->GetMaxHitCount());
-
+    tree_ = std::make_unique<Tree>();
 
 #pragma endregion
 
@@ -106,6 +106,7 @@ void TitleScene::Initialize()
 	letterboxBars_->Initialize();
 	actionUI_->Initialize();
     house_->Initialize();
+    tree_->Initialize();
 #pragma endregion
 
 	eventTimer_ = 0.0f;
@@ -127,6 +128,7 @@ void TitleScene::Draw()
 
     //家
     house_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    tree_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
 
     if (titleText_->GetIsBreak()) {
         bossDummy_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
@@ -191,6 +193,7 @@ void TitleScene::UpdateGameObject() {
 
     //家の更新
     house_->Update();
+    tree_->Update();
 
 	letterboxBars_->isOpen_ = titleText_->GetIsBreak();
 	letterboxBars_->Update();

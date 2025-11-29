@@ -25,6 +25,7 @@ public:
         HOUSE_WALL_BACK,
         HOUSE_DOOR,
 
+        LEAVES,
         TREE,
 
         //プレイヤーそれぞれのパーツ
