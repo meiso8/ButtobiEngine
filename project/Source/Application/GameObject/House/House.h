@@ -1,8 +1,6 @@
 
 #pragma once
-#include"WorldTransform.h"
 #include"Object3d.h"
-#include <functional>
 #include <unordered_map>
 #include"Collider.h"
 
