@@ -73,14 +73,6 @@ void FloorGamePlayer::OnCollision(Collider* collider)
         HitUpdate();
     }
 
-
-    if (EnemyBomb::isPlayerHit_) {
-        //デバック用
-        OnCollisionCollider();
-        HitUpdate();
-        EnemyBomb::isPlayerHit_ = false;
-    }
-
 }
 
 

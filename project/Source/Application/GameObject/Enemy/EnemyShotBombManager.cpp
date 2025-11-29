@@ -25,7 +25,6 @@ void EnemyShotBombManager::Update() {
     // 弾投げ
     if (enemy_->isBombShot_) {
        
-
         int randX, randY;
         static Vector3 endPos;
 
@@ -39,7 +38,6 @@ void EnemyShotBombManager::Update() {
 
             // 使ったらマーク
             used[randX][randY] = true;
-            enemy_->SetTarget(endPos);
             Vector3 shotPosition = enemy_->GetWorldPosition() + Vector3{ 0.0f,0.0f,-1.0f } *0.5f;
             bombManager_->ShotBomb(shotPosition, endPos, shotSize_);
 

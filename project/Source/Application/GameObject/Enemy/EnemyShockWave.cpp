@@ -12,8 +12,8 @@
 
 EnemyShockWave::EnemyShockWave() {
 
-    localAABBs_[kHorizontal] = {.min = {-2.0f,-0.5f,-aabbWidth_},.max = {2.0f,0.5f,aabbWidth_}};
-    localAABBs_[kVertical] = { .min = {-aabbWidth_,-0.5f,-2.0f},.max = {aabbWidth_,0.5f,2.0f} };
+    localAABBs_[kHorizontal] = {.min = {-2.0f,-0.5f,-kAabbWidth_},.max = {2.0f,0.5f,kAabbWidth_}};
+    localAABBs_[kVertical] = { .min = {-kAabbWidth_,-0.5f,-2.0f},.max = {kAabbWidth_,0.5f,2.0f} };
 
     body_.Create();
     cubeMesh_ = std::make_unique<CubeMesh>();
@@ -78,9 +78,15 @@ Vector3 EnemyShockWave::GetWorldPosition() const
 }
 void EnemyShockWave::Update() {
 
+
+
     if (!isActive_) {
         return;
     }
+
+    body_.Update();
+    ColliderUpdate();
+
 
     if (lifeTimer_ <= 0.0f) {
         lifeTimer_ = 0.0f;
@@ -90,12 +96,14 @@ void EnemyShockWave::Update() {
         lifeTimer_ -= 0.016f;
     }
 
-    body_.Update();
-    ColliderUpdate();
+
 
     float color = lifeTimer_ / lifeDuration_;
     body_.SetColor({ color,color,color,1.0f });
-    body_.worldTransform_.translate_ = Lerp(body_.worldTransform_.translate_, endPos_, speed_);
+
+    if (lifeTimer_ <= kMoveTime_) {
+        body_.worldTransform_.translate_ = Lerp(body_.worldTransform_.translate_, endPos_, speed_);
+    }
 
 }
 
@@ -117,4 +125,6 @@ void EnemyShockWave::Shot(const Vector3& startPos, const Vector3& endPos, const 
     SetAABB(localAABBs_[aabbType]);
     lifeTimer_ = lifeDuration_;
     isActive_ = true;
+    body_.Update();
+    ColliderUpdate();
 }
