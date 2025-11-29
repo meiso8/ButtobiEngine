@@ -73,6 +73,8 @@ GameScene::GameScene()
     enemyShockWaveManager_ = std::make_unique<EnemyShockWaveManager>();
     enemyShotWaveManager_ = std::make_unique<EnemyShotWaveManager>(enemy_.get(), enemyShockWaveManager_.get(), floorGameFloorManager_.get());
 
+    tree_ = std::make_unique<Tree>();
+
 #pragma endregion
 
     uiManager_ = std::make_unique<UIManager>(*enemy_->GetHpsPtr(), *floorGamePlayer_->GetHpsPtr());
@@ -112,6 +114,7 @@ void GameScene::Initialize() {
     enemyShockWaveManager_->Initialize();
     enemyShotWaveManager_->Initialize();
 
+    tree_->Initialize();
 
 #pragma endregion
     collisionManager_->ClearColliders();
@@ -173,7 +176,7 @@ void GameScene::Draw() {
     enemyBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     enemyBombManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     enemyShockWaveManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
-
+    tree_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
 #pragma endregion
     //エミッター
     emitterManager_->Draw();
@@ -228,6 +231,8 @@ void GameScene::UpdateGameObject()
     enemyBulletManager_->Update();
     enemyBombManager_->Update();
     enemyShockWaveManager_->Update();
+    tree_->Update();
+
 
     // オブジェクト同士の干渉
     actionUI_->Update();

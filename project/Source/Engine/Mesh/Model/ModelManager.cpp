@@ -34,6 +34,7 @@ void ModelManager::LoadAllModel()
     LoadModel("Resource/Models/House", "Wall_Back.obj", HOUSE_WALL_BACK);
     LoadModel("Resource/Models/House", "Door.obj", HOUSE_DOOR);
 
+    LoadModel("Resource/Models/Tree", "Leaves.obj", LEAVES);
     LoadModel("Resource/Models/Tree", "Tree.obj", TREE);
 
     LoadModel("Resource/Models/Player", "Head.obj", PLAYER_HEAD);
