@@ -17,8 +17,6 @@ void CubeMesh::Create(const Texture::TEXTURE_HANDLE& textureHandle) {
     SetMinMax(aabb);
     CreateIndexResource();
 
-    CreateWaveData();
-    CreateBalloonData();
     CreatePointLightData();
 
 };
@@ -242,10 +240,6 @@ void CubeMesh::Draw(ID3D12GraphicsCommandList* commandList)
     SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
     //LightのCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
-    //timeのSRVの場所を設定
-    commandList->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
-    //expansionのCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
 
     //expansionのCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(7, pointLightResource_->GetGPUVirtualAddress());

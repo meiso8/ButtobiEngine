@@ -17,6 +17,11 @@ void VibrateManager::Initialize()
    rightMotor_ = 0;
 }
 
+void VibrateManager::Finalize()
+{
+    Input::VibrateController(0, 0, 0);
+}
+
 void VibrateManager::Update()
 {
 

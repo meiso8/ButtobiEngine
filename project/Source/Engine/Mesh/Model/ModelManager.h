@@ -19,6 +19,12 @@ public:
         FLOOR,
         MELT_FLOOR,
 
+        HOUSE_FLOOR,
+        HOUSE_WALL_L,
+        HOUSE_WALL_R,
+        HOUSE_WALL_BACK,
+        HOUSE_DOOR,
+
         //プレイヤーそれぞれのパーツ
         PLAYER_HEAD,
         PLAYER_ARM_L,

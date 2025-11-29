@@ -42,8 +42,11 @@ float WaveUpdate(VertexShaderInput input)
     float Dot1 = dot(input.position, normalize(gWave[0].direction) * gWave[0].frequency);
     float Wave1 = cos(gWave[0].time + Dot1) * gWave[0].amplitude;
     
-    float Dot2 = dot(pow(input.position, 2), normalize(gWave[1].direction));
-    float Wave2 = sin(gWave[1].time + Dot2) * gWave[1].amplitude;
+    float Dot2 = dot(input.position, normalize(gWave[1].direction) * gWave[1].frequency);
+    float Wave2 = cos(gWave[1].time + Dot2) * gWave[1].amplitude;
+    
+    //float Dot2 = dot(pow(input.position, 2), normalize(gWave[1].direction));
+    //float Wave2 = sin(gWave[1].time + Dot2) * gWave[1].amplitude;
     
     return Wave1 + Wave2;
 }

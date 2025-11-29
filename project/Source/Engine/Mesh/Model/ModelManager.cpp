@@ -27,6 +27,13 @@ void ModelManager::LoadAllModel()
     LoadModel("Resource/Models/Floor", "Floor.obj", FLOOR);
     LoadModel("Resource/Models/MeltFloor", "MeltFloor.obj", MELT_FLOOR);
 
+    //家
+    LoadModel("Resource/Models/House", "Floor.obj", HOUSE_FLOOR);
+    LoadModel("Resource/Models/House", "Wall_R.obj", HOUSE_WALL_R);
+    LoadModel("Resource/Models/House", "Wall_L.obj", HOUSE_WALL_L);
+    LoadModel("Resource/Models/House", "Wall_Back.obj", HOUSE_WALL_BACK);
+    LoadModel("Resource/Models/House", "Door.obj", HOUSE_DOOR);
+
     LoadModel("Resource/Models/Player", "Head.obj", PLAYER_HEAD);
     LoadModel("Resource/Models/Player", "Hand_L.obj", PLAYER_ARM_L);
     LoadModel("Resource/Models/Player", "Hand_R.obj", PLAYER_ARM_R);

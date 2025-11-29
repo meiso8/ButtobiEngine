@@ -21,6 +21,8 @@ public:
 		return body_.worldTransform_.GetWorldPosition();
 	}
 	bool GetIsBreak() const { return isBreak_; }
+	int& GetHitCount(){ return hitCount_; }
+	int GetMaxHitCount() { return maxHitCount_; }
 	void Initialize();
 	void Update();
 	void Draw(Camera& camera, const LightMode& lightType);
@@ -35,6 +37,7 @@ private:
 	Force force_;
 
 	int hitCount_;
+	const int maxHitCount_ = 10;
 	bool isBreak_;
 
 	float timer_;

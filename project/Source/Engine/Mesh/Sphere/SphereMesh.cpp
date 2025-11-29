@@ -19,8 +19,6 @@ void SphereMesh::Create(const Texture::TEXTURE_HANDLE& textureHandle)
     CreateVertex();
     //CreateIndexResource();
 
-    CreateWaveData();
-    CreateBalloonData();
     CreatePointLightData();
 
 }
@@ -107,10 +105,6 @@ void SphereMesh::Draw(ID3D12GraphicsCommandList* commandList) {
     SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
     //LightのCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
-    //timeのSRVの場所を設定
-    commandList->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
-    //expansionのCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
     //pointLightのCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(7, pointLightResource_->GetGPUVirtualAddress());
     //描画!(DrawCall/ドローコール)。

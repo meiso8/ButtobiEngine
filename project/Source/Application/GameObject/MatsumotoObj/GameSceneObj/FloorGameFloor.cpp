@@ -47,7 +47,11 @@ void FloorGameFloor::Initialize() {
 		{FloorType::Bomb, std::bind(&FloorGameFloor::BombFloorUpdate, this)}
 	};
 
+
+
 	isExploded_ = false;
+
+	body_.InitWaveData();
 }
 
 void FloorGameFloor::Update() {
@@ -103,10 +107,21 @@ void FloorGameFloor::OnCollision(Collider* collider) {
 }
 
 void FloorGameFloor::NormalFloorUpdate() {
+	body_.InitWaveData();
 	body_.SetColor({ 1.0f,1.0f,1.0f,1.0f });
 }
 
 void FloorGameFloor::StickyFloorUpdate() {
+
+	body_.GetWaveData(0).amplitude = 0.1f;
+	body_.GetWaveData(0).frequency = 10;
+	body_.GetWaveData(0).time += InverseFPS;
+	body_.GetWaveData(0).direction = { 1.0f,0.0f,0.0f };
+
+	body_.GetWaveData(1).amplitude = 0.2f;
+	body_.GetWaveData(1).frequency = 5;
+	body_.GetWaveData(1).time += InverseFPS;
+	body_.GetWaveData(1).direction = { 0.0f,0.0f,1.0f };
 
 	float color = autoSwapTimer_ / autoSwapDuration_;
 	body_.SetColor({ color,color,color,1.0f });
@@ -119,10 +134,12 @@ void FloorGameFloor::StickyFloorUpdate() {
 }
 
 void FloorGameFloor::StrongFloorUpdate() {
+	body_.InitWaveData();
 	body_.SetColor({ 0.0f,1.0f,0.0f,1.0f });
 }
 
 void FloorGameFloor::BombFloorUpdate() {
+	body_.InitWaveData();
 	float color = autoSwapTimer_ / autoSwapDuration_;
 	body_.SetColor({ color,0.0f,0.0f,1.0f });
 
