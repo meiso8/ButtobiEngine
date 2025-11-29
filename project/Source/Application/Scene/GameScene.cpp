@@ -131,7 +131,7 @@ void GameScene::Update() {
         Initialize();
     }
 
-    if (PauseScreen::isBackToTitle || floorGamePlayer_->IsDead()) {
+    if (PauseScreen::isBackToTitle || floorGamePlayer_->IsDead()||enemy_->IsDead()) {
         sceneChange_->SetState(SceneChange::kFadeIn, 30);
     }
 
