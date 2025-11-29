@@ -84,8 +84,6 @@ void FloorGamePlayer::Initialize() {
     Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
     SetBodyColor(color);
 
-
-
     // 移動
     moveDir_ = { 0.0f,0.0f,1.0f };
     isMove_ = false;
@@ -355,7 +353,7 @@ void FloorGamePlayer::HitUpdate()
 
     damageStruct_.isHit = true;
     Sound::PlaySE(Sound::DAMAGE);
-    VibrateManager::SetTime(1.0f,1000,1000);
+    VibrateManager::SetTime(1.0f, 1000, 1000);
     damageStruct_.flashTimer = damageStruct_.invincibilityTime;
     //hpを減らす
     if (damageStruct_.hps.hp > 0) {

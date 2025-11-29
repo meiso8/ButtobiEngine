@@ -21,6 +21,11 @@
 #include "MatsumotoObj/TitleSceneObj/BossDummy.h"
 #include "MatsumotoObj/TitleSceneObj/LetterboxBars.h"
 #include "MatsumotoObj/TitleSceneObj/ActionUI.h"
+
+
+#include"House/House.h"   
+
+
 #pragma endregion
 
 class TitleScene :public SceneManager
@@ -55,6 +60,9 @@ private:
 	std::unique_ptr<BossDummy> bossDummy_ = nullptr;
 	std::unique_ptr<LetterboxBars> letterboxBars_ = nullptr;
 	std::unique_ptr<ActionUI> actionUI_ = nullptr;
+    //家追加しましたヨシダ
+    std::unique_ptr<House>house_ = nullptr;
+
 #pragma endregion
 	float eventTimer_ = 0.0f;
 

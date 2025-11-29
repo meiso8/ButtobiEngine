@@ -229,11 +229,6 @@ void DebugUI::CheckMesh(MeshCommon& mesh, const char* label) {
     ImGui::Begin("Mesh");
 
     if (ImGui::TreeNode(label)) {
-
-        CheckWaveData(mesh.GetWaveData(0), "wave0");
-        CheckWaveData(mesh.GetWaveData(1), "wave1");
-        CheckBalloonData(mesh.GetBalloonData());
-
         CheckPointLightData(mesh.GetPointLightData(), "pointLight");
         ImGui::TreePop();
     }
@@ -408,6 +403,10 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
         CheckColor(object3d.GetColor(), "modelColor");//一応マテリアルについている
         CheckTransform(object3d.GetUVTransform(), "uvTransfrom");
         CheckLightMode(object3d.GetLightMode(), "GetLightMode");
+
+        CheckWaveData(object3d.GetWaveData(0), "wave0");
+        CheckWaveData(object3d.GetWaveData(1), "wave1");
+        CheckBalloonData(object3d.GetBalloonData());
 
         ImGui::TreePop();
     }

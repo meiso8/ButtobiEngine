@@ -5,9 +5,6 @@
 #include<memory>
 #include<array>
 
-//Transformなどの情報が入っている
-#include"Object3d.h"
-
 #pragma region //ゲームオブジェクト
 #include "MatsumotoObj/GameSceneObj/FloorGamePlayer.h"
 #include "MatsumotoObj/GameSceneObj/FloorGameFloorManager.h"
@@ -27,12 +24,13 @@
 #include "Enemy/EnemyShotBombManager.h"
 #include "Enemy/EnemyShockWaveManager.h"
 #include "Enemy/EnemyShotWaveManager.h"
-#include"UI/UIManager.h"
-#include"EmitterManager/EmitterManager.h"
-#include"CameraController.h"
+
 #pragma endregion
 
 #include"CollisionManager.h"
+#include"UI/UIManager.h"
+#include"EmitterManager/EmitterManager.h"
+#include"CameraController.h"
 
 class GameScene :public SceneManager {
 
@@ -71,9 +69,9 @@ private:
     std::unique_ptr<EnemyShotBulletManager>enemyShotBulletManager_ = nullptr;
     std::unique_ptr<EnemyBombManager>enemyBombManager_ = nullptr;
     std::unique_ptr<EnemyShotBombManager>enemyShotBombManager_ = nullptr;
-
     std::unique_ptr<EnemyShockWaveManager>enemyShockWaveManager_ = nullptr;
     std::unique_ptr<EnemyShotWaveManager>enemyShotWaveManager_ = nullptr;
+
 
 #pragma endregion
 

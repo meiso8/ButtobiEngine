@@ -54,9 +54,9 @@ Enemy::Enemy()
 
     //体のモデルを取得する
     model_ = ModelManager::GetModel(ModelManager::ENEMY_BODY);
-    model_->GetWaveData(0).direction = { 0.0f,0.0f,1.0f };
-    model_->GetWaveData(0).amplitude = 0.05f;
-    model_->GetWaveData(0).frequency = 8.0f;
+    bodyPos_.GetWaveData(0).direction = { 0.0f,0.0f,1.0f };
+    bodyPos_.GetWaveData(0).amplitude = 0.05f;
+    bodyPos_.GetWaveData(0).frequency = 8.0f;
 
     //各々のトランスフォームにメッシュを入れる
     bodyPos_.SetMesh(model_);
@@ -119,7 +119,7 @@ void Enemy::Init() {
 
     InitState();
 
-    model_->GetWaveData(0).time = 0.0f;
+    bodyPos_.GetWaveData(0).time = 0.0f;
 
 }
 
@@ -181,7 +181,7 @@ void Enemy::Update()
     damageStruct_.isHit = false;
 
     HitAnimation();
-    model_->GetWaveData(0).time += InverseFPS * 4.0f;
+    bodyPos_.GetWaveData(0).time += InverseFPS * 4.0f;
     Winging(2.0f);
 
     bodyPos_.Update();
@@ -203,7 +203,7 @@ void Enemy::Update()
     DebugUI::CheckObject3d(wingRPos_, "wingRPos");
 
     ImGui::SliderFloat3("sphericalPos_", &sphericalPos_.radius, -10.0f, 10.0f);
-    DebugUI::CheckWaveData(model_->GetWaveData(0), "EnemyWaveData");
+    DebugUI::CheckWaveData(bodyPos_.GetWaveData(0), "EnemyWaveData");
 
     ImGui::Text("%s", currentState_.c_str());
 

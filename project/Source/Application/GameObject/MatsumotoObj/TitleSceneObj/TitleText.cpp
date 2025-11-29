@@ -57,7 +57,7 @@ void TitleText::Initialize() {
 
 void TitleText::Update() {
 	if (isBreak_) { return; }
-	if (hitCount_ >= 10) {
+	if (hitCount_ >= maxHitCount_) {
 		isBreak_ = true;
 		return;
 	}

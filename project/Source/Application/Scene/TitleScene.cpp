@@ -66,6 +66,12 @@ TitleScene::TitleScene()
 	bossDummy_ = std::make_unique<BossDummy>();
 	letterboxBars_ = std::make_unique<LetterboxBars>();
 	actionUI_ = std::make_unique<ActionUI>(floorGamePlayer_.get());
+    //家追加
+    house_ = std::make_unique<House>();
+
+    house_->SetHitCounts(titleText_->GetHitCount(), titleText_->GetMaxHitCount());
+
+
 #pragma endregion
 
 	eventTimer_ = 0.0f;
@@ -99,6 +105,7 @@ void TitleScene::Initialize()
 	bossDummy_->Initialize();
 	letterboxBars_->Initialize();
 	actionUI_->Initialize();
+    house_->Initialize();
 #pragma endregion
 
 	eventTimer_ = 0.0f;
@@ -118,6 +125,9 @@ void TitleScene::Draw()
 #pragma region // オブジェクト描画    
     floorGameFloorManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
 
+    //家
+    house_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+
     if (titleText_->GetIsBreak()) {
         bossDummy_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     } else {
@@ -127,6 +137,7 @@ void TitleScene::Draw()
         floorPlayerStripTargetUI_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
         playerFloorStripManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     }
+  
 	letterboxBars_->Draw();
 	actionUI_->Draw();
 
@@ -177,6 +188,10 @@ void TitleScene::UpdateGameObject() {
         floorBulletManager_->Update();
         titleText_->Update();
     }
+
+    //家の更新
+    house_->Update();
+
 	letterboxBars_->isOpen_ = titleText_->GetIsBreak();
 	letterboxBars_->Update();
 	actionUI_->Update();

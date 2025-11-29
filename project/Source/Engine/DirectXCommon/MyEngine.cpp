@@ -161,6 +161,8 @@ void MyEngine::PostCommandSet() {
 
 void MyEngine::Finalize() {
 
+
+
     particleManager_->Finalize();
     particleManager_.reset();
 
@@ -196,6 +198,7 @@ void MyEngine::Finalize() {
 
     srvManager.reset();
 
+    VibrateManager::Finalize();
     input.reset();
 
     wc->Finalize();
