@@ -454,8 +454,6 @@ void Enemy::LerpPos(const Vector3& endPos, const float& lerpPosSpeed)
 
 void Enemy::SwitchState()
 {
-
-    Sound::PlaySE(Sound::BOSS_HEAL);
     isReqestClearFloor_ = true;
 
     if (currentState_ == "First") {
@@ -468,6 +466,14 @@ void Enemy::SwitchState()
 
         //currentState_ = "First";
     }
+
+ 
+    if (damageStruct_.isDead) {
+        return;
+    }
+
+    Sound::PlaySE(Sound::BOSS_HEAL);
+
     InitState();
 }
 

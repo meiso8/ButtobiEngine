@@ -53,6 +53,7 @@ public:
     Object3d bodyPos_;
     //弾と当たったかどうかを得る
     bool IsHit() { return damageStruct_.isHit; }
+    bool IsDead() { return damageStruct_.isDead; }
     //HPを得る
     HPs* GetHpsPtr() { return &damageStruct_.hps; }
 private:
