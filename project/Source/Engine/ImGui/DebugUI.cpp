@@ -13,7 +13,7 @@
 #include"Sound.h"
 
 #include"SphereMesh.h"
-#include"Light.h"
+#include"Lights/Light.h"
 #include"PSO.h"
 #include"Camera.h"
 #include"JsonFile.h"
@@ -228,11 +228,6 @@ void DebugUI::CheckMesh(MeshCommon& mesh, const char* label) {
 #ifdef USE_IMGUI
     ImGui::Begin("Mesh");
 
-    if (ImGui::TreeNode(label)) {
-        CheckPointLightData(mesh.GetPointLightData(), "pointLight");
-        ImGui::TreePop();
-    }
-
     ImGui::End();
 #endif
 }
@@ -383,7 +378,7 @@ void DebugUI::CheckPointLightData(PointLight& pointLight, const char* label)
 {
 #ifdef USE_IMGUI
     if (ImGui::TreeNode(label)) {
-        CheckColor(pointLight.color, "PointLightcolor");
+        CheckColor(pointLight.color, "color");
         ImGui::DragFloat("intensity", &pointLight.intensity, 0.03f);
         ImGui::DragFloat3("position", &pointLight.position.x, 0.03f, -10000.0f, 10000.0f);
         ImGui::TreePop();

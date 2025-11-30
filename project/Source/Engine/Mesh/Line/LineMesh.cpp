@@ -17,7 +17,6 @@ void LineMesh::Create(const Texture::TEXTURE_HANDLE& textureHandle)
     CreateVertex();
     //CreateIndexResource();
 
-    CreatePointLightData();
 }
 
 void LineMesh::CreateVertex() {
@@ -73,16 +72,11 @@ void LineMesh::Draw(ID3D12GraphicsCommandList* commandList)
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
    
 //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
-    SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
-    
+    SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);  
     
     //LightのCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
  
-    //expansionのCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(7, pointLightResource_->GetGPUVirtualAddress());
-
-
     //描画!（DrawCall/ドローコール）
     commandList->DrawInstanced(2, 1, 0, 0);
 };

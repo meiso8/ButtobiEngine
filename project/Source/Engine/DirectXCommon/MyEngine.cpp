@@ -7,6 +7,7 @@
 #include"Particle.h"
 #include"JsonFile.h"
 #include"VibrateManager.h"
+#include"Lights/PointLightManager.h"
 
 std::unique_ptr<PSO> MyEngine::pso = nullptr;
 
@@ -60,10 +61,6 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     imGuiClass.Initialize(*wc, directXCommon->GetDevice().Get(), directXCommon->GetSwapChain(), directXCommon->GetSwapChainRtv());
     LogFile::Log("InitImGui");
 #endif
-
-
-
-
     pso = std::make_unique<PSO>();
     pso->CreateALLPSO();
 
@@ -80,6 +77,9 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     directionalLightData->intensity = 1.0f;
     //書き込み終了！
     directionalLightResource->Unmap(0, nullptr);
+
+    PointLightManager::CreateData();
+
 
     modelConfig_ = std::make_unique<ModelConfig>();
     modelConfig_->Initialize(PSO::rootSignature.get(), directionalLightResource.Get());
@@ -135,7 +135,8 @@ void MyEngine::Debug()
     DebugUI::CheckInput();
     DebugUI::CheckDirectionalLight();
     DebugUI::CheckSound();
- 
+    DebugUI::CheckPointLightData(PointLightManager::GetPointLightData(0),"pointLight0");
+    DebugUI::CheckPointLightData(PointLightManager::GetPointLightData(1), "pointLight1");
 #endif // USE_IMGUI
 
 
@@ -181,6 +182,8 @@ void MyEngine::Finalize() {
 
     modelConfig_->Finalize();
     modelConfig_.reset();
+
+    PointLightManager::Finalize();
 
     if (directionalLightResource) {
         directionalLightResource.Reset();
