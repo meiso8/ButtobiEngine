@@ -1,7 +1,7 @@
 #include "Object3d.h"
 #include"DirectXCommon.h"
 #include"MakeMatrix.h"
-
+#include"Lights/PointLightManager.h"
 ID3D12GraphicsCommandList* Object3d::commandList_ = nullptr;
 
 
@@ -76,7 +76,8 @@ void Object3d::InitWaveDataIndex(const uint32_t& index)
 void Object3d::CreateWaveData()
 {
     int waveCount = 2;
-    //waveResource_ = DirectXCommon::CreateBufferResource(sizeof(Wave) * waveCount);
+    //waveResource_ = DirectXCommon::CreateBufferResource(sizeof(
+    // ) * waveCount);
     size_t bufferSize = (sizeof(Wave) * waveCount + 255) & ~255;
     waveResource_ = DirectXCommon::CreateBufferResource(bufferSize);
     //書き込むためのアドレスを取得
@@ -120,6 +121,9 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
         commandList_->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
         //cameraのCBufferの場所を設定
         commandList_->SetGraphicsRootConstantBufferView(6, camera.GetResource()->GetGPUVirtualAddress());
+       
+        PointLightManager::SetGraphicsRootConstantBufferView();
+        
         meshCommon_->Draw(commandList_);
     }
 }

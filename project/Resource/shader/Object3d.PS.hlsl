@@ -9,7 +9,7 @@ struct Material
     float32_t4 color;
     int32_t lightType;
     float32_t4x4 uvTransform;
-    float32_t shininess;
+    float32_t shininess;//てかり
 };
 
 //ConstantBufferを定義する
@@ -33,10 +33,7 @@ PixelShaderOutput main(VertexShaderOutput input)
  
     float4 transformedUV = mul(float32_t4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
     float32_t4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
-
     
-
-
     //textureのα値ガ0.2以下の時にpixleを棄却
     if (textureColor.a <= 0.2)
     {
@@ -46,12 +43,6 @@ PixelShaderOutput main(VertexShaderOutput input)
 
     PixelShaderOutput output;
 
-    if (gMaterial.lightType != 0)
-    {
-   
-    
-    }
-    
     if (gMaterial.lightType == 0)
     {
         //Lightingしない場合。前回までと同じ演算
@@ -60,22 +51,25 @@ PixelShaderOutput main(VertexShaderOutput input)
     }
     else
     {
-
-        //ポイントライトの方向とコサインを求める
-        float32_t3 pointLightDirection = normalize(input.worldPosition - gPointLight.position);
+  
+        float32_t3 diffusegDirectionalLight;
+        float32_t3 diffusegPointLight;
         
         //ライトのコサイン
-        float directionalLightCos;
         float pointLightCos;
+        float directionalLightCos;
         
         //ポイントライトと方向ライトのカラーを求める
         float32_t3 pointLightColor;
         float32_t3 directionalLightColor;
       
+        //ポイントライトの方向を求める
+        float32_t3 pointLightDirection = normalize(input.worldPosition - gPointLight.position);
         
-        float32_t3 diffusegPointLight ;
-        float32_t3 diffusegDirectionalLight;
-        
+         //ポイントライトの減衰率を求める
+        float pointLightDistance = length(input.worldPosition - gPointLight.position);
+        //float factor = 1.0f / (pointLightDistance * pointLightDistance);
+        float factor = pow(saturate(-pointLightDistance / gPointLight.radius + 1.0f), gPointLight.decay);
         
         if (gMaterial.lightType == 1)
         {
@@ -86,7 +80,7 @@ PixelShaderOutput main(VertexShaderOutput input)
             pointLightCos = saturate(dot(normalize(input.normal), -pointLightDirection));
         
         //ポイントライトと方向ライトのカラーを求める
-            pointLightColor = gPointLight.color.rgb * pointLightCos * gPointLight.intensity;
+            pointLightColor = gPointLight.color.rgb * pointLightCos * gPointLight.intensity*factor;
             directionalLightColor = gDirectionalLight.color.rgb * directionalLightCos * gDirectionalLight.intensity;
             
             //カメラに向かうベクトル
@@ -117,7 +111,7 @@ PixelShaderOutput main(VertexShaderOutput input)
 
      
             output.color.rgb = diffusegDirectionalLight + speculargDirectionalLight + diffusegPointLight + speculargPointLight;
-            output.color.a = gMaterial.color.a * textureColor.a;
+      
         }
         else if (gMaterial.lightType == 2)
         {
@@ -125,13 +119,13 @@ PixelShaderOutput main(VertexShaderOutput input)
         
         //法線とライトの方向の内積
             float NdotDirectionalLight = dot(normalize(input.normal), -gDirectionalLight.direction);
-            float NdotPointLight = dot(normalize(input.normal), -gDirectionalLight.direction);
+            float NdotPointLight = dot(normalize(input.normal), -pointLightDirection);
            // コサインを求める
             directionalLightCos = pow(NdotDirectionalLight * 0.5f + 0.5f, 2.0f);
             pointLightCos = pow(NdotPointLight * 0.5f + 0.5f, 2.0f);
 
             //ポイントライトと方向ライトのカラーを求める
-            pointLightColor = gPointLight.color.rgb * pointLightCos * gPointLight.intensity;
+            pointLightColor = gPointLight.color.rgb * pointLightCos * gPointLight.intensity*factor;
             directionalLightColor = gDirectionalLight.color.rgb * directionalLightCos * gDirectionalLight.intensity;
              //diffuseを求める
             diffusegPointLight = gMaterial.color.rgb * textureColor.rgb * pointLightColor;
@@ -141,6 +135,7 @@ PixelShaderOutput main(VertexShaderOutput input)
 
         }
         
+        //ライトモード共通
         output.color.a = gMaterial.color.a * textureColor.a;
 
     }

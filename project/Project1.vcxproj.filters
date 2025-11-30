@@ -122,6 +122,7 @@
     <ClCompile Include="Source\Application\GameObject\EmitterManager\EmitterManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\House\House.cpp" />
     <ClCompile Include="Source\Application\GameObject\Tree\Tree.cpp" />
+    <ClCompile Include="Source\Engine\Lights\PointLightManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\GameObject\UI\PauseScreen.h" />
@@ -198,7 +199,7 @@
     <ClInclude Include="Source\Engine\DirectXCommon\DebugError.h" />
     <ClInclude Include="Source\Engine\ImGui\DebugUI.h" />
     <ClInclude Include="Source\Engine\PSO\Depth.h" />
-    <ClInclude Include="Source\Engine\Surface\Light.h" />
+    <ClInclude Include="Source\Engine\Lights\Light.h" />
     <ClInclude Include="Source\Engine\Mesh\Grid\DrawGrid.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\DXGIFactory.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\Fence.h" />
@@ -270,6 +271,7 @@
     <ClInclude Include="Source\Application\GameObject\EmitterManager\EmitterManager.h" />
     <ClInclude Include="Source\Application\GameObject\House\House.h" />
     <ClInclude Include="Source\Application\GameObject\Tree\Tree.h" />
+    <ClInclude Include="Source\Engine\Lights\PointLightManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="externals\assimp\lib\Debug\assimp-vc143-mdd.lib" />

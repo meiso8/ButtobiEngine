@@ -16,8 +16,6 @@ void PlaneMesh::Create(const Texture::TEXTURE_HANDLE& textureHandle)
 
     CreateVertex();
     CreateIndexResource();
-
-    CreatePointLightData();
 }
 
 void PlaneMesh::CreateVertex() {
@@ -77,9 +75,7 @@ void PlaneMesh::Draw(ID3D12GraphicsCommandList* commandList)
     SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
     //LightのCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
-    //pointLightのCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(7, pointLightResource_->GetGPUVirtualAddress());
-    //描画!（DrawCall/ドローコール）6個のインデックスを使用し1つのインスタンスを描画。その他は当面0で良い。
+ //描画!（DrawCall/ドローコール）6個のインデックスを使用し1つのインスタンスを描画。その他は当面0で良い。
     commandList->DrawIndexedInstanced(6, 1, 0, 0, 0);
 };
 

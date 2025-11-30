@@ -7,7 +7,6 @@
 
 #include"Transform.h"
 #include"PSO.h"  
-#include"Light.h"
 #include"Texture.h"
 
 class MeshCommon
@@ -21,13 +20,8 @@ public:
     VertexData& GetVertexData(const uint32_t& index) {
         return vertexData_[index];
     }
-
-    PointLight& GetPointLightData() { return *pointLightData_; };
-
-
-    void InitPointLightData();
     void SetTextureHandle(const Texture::TEXTURE_HANDLE& textureHandle);
-
+    uint32_t GetTextureHandle() { return textureHandle_; }
 protected:
     /// @brief テクスチャハンドル
     uint32_t textureHandle_ = 0;
@@ -44,14 +38,8 @@ protected:
     Microsoft::WRL::ComPtr <ID3D12Resource> indexResource_{};
     uint32_t* indexData_ = nullptr;
 
-    Microsoft::WRL::ComPtr <ID3D12Resource> pointLightResource_;
-    PointLight* pointLightData_ = nullptr;
-
 protected:
     virtual void CreateVertex() = 0;
     virtual void CreateIndexResource();
-
-
-    void CreatePointLightData();
 };
 

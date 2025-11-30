@@ -22,7 +22,6 @@ void CircleMesh::Create(const Texture::TEXTURE_HANDLE& textureHandle)
     CreateVertex();
     CreateIndexResource();
 
-    CreatePointLightData();
 }
 
 
@@ -54,7 +53,7 @@ void CircleMesh::SetVertex(const Circle& circle)
     vertexData_[kSubdivision_].position.z = circle.center.z;
     vertexData_[kSubdivision_].position.w = 1.0f;
     vertexData_[kSubdivision_].texcoord = { 0.0f,0.0f };
-    for (uint32_t index = 0; index < kSubdivision_+1; ++index) {
+    for (uint32_t index = 0; index < kSubdivision_ + 1; ++index) {
 
         vertexData_[index].normal = {
             vertexData_[index].position.x ,
@@ -81,8 +80,6 @@ void CircleMesh::Draw(ID3D12GraphicsCommandList* commandList) {
     //LightのCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
 
-    //pointLightのCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(7, pointLightResource_->GetGPUVirtualAddress());
     //描画!（DrawCall/ドローコール）6個のインデックスを使用し1つのインスタンスを描画。その他は当面0で良い。
     commandList->DrawIndexedInstanced(3 * kSubdivision_, 1, 0, 0, 0);
 }
@@ -127,9 +124,9 @@ void CircleMesh::CreateIndexResource() {
     uint32_t index = 0;
 
     for (uint32_t i = 0; i < kSubdivision_ * 3; i += 3) {
-       
-    
-        indexData_[i] = index+1;
+
+
+        indexData_[i] = index + 1;
         indexData_[i + 1] = index;
 
         if (index == kSubdivision_ - 1) {

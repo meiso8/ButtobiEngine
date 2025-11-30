@@ -13,7 +13,7 @@
 #include"Sound.h"
 
 #include"SphereMesh.h"
-#include"Light.h"
+#include"Lights/Light.h"
 #include"PSO.h"
 #include"Camera.h"
 #include"JsonFile.h"
@@ -228,11 +228,6 @@ void DebugUI::CheckMesh(MeshCommon& mesh, const char* label) {
 #ifdef USE_IMGUI
     ImGui::Begin("Mesh");
 
-    if (ImGui::TreeNode(label)) {
-        CheckPointLightData(mesh.GetPointLightData(), "pointLight");
-        ImGui::TreePop();
-    }
-
     ImGui::End();
 #endif
 }
@@ -254,7 +249,7 @@ void DebugUI::CheckInput() {
     ImGui::SliderFloat2("mousePos", &Input::GetMousePos().x, 0.0f, 1280.0f);
 
     for (int i = 0; i < 4; ++i) {
-        CheckXinput(i);
+        CheckXInput(i);
     }
 
     ImGui::End();
@@ -262,7 +257,7 @@ void DebugUI::CheckInput() {
 
 }
 
-void DebugUI::CheckXinput(const int& num)
+void DebugUI::CheckXInput(const int& num)
 {
 #ifdef USE_IMGUI
     std::string numOK = std::to_string(num);
@@ -383,9 +378,11 @@ void DebugUI::CheckPointLightData(PointLight& pointLight, const char* label)
 {
 #ifdef USE_IMGUI
     if (ImGui::TreeNode(label)) {
-        CheckColor(pointLight.color, "PointLightcolor");
-        ImGui::DragFloat("intensity", &pointLight.intensity, 0.03f);
+        CheckColor(pointLight.color, "color");
+        ImGui::SliderFloat("intensity", &pointLight.intensity, 0.0f, 100.0f);
         ImGui::DragFloat3("position", &pointLight.position.x, 0.03f, -10000.0f, 10000.0f);
+        ImGui::SliderFloat("radius", &pointLight.radius, 0.0f, 100.0f);
+        ImGui::SliderFloat("decay", &pointLight.decay, 0.0f, 100.0f);
         ImGui::TreePop();
     }
 #endif
