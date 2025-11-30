@@ -9,7 +9,7 @@ struct Material
     float32_t4 color;
     int32_t lightType;
     float32_t4x4 uvTransform;
-    float32_t shininess;//てかり
+    float32_t shininess; //てかり
 };
 
 //ConstantBufferを定義する
@@ -28,6 +28,69 @@ struct PixelShaderOutput
 };
 
 
+float GetCosin(float NdotL, int lightType)
+{
+    //コサインを求める
+    return (lightType == 1) ? saturate(NdotL) : pow(NdotL * 0.5f + 0.5f, 2.0f);
+}
+
+float3 CalculatePointLightDiffuse(float3 normal, float3 worldPos, PointLight light, int lightType)
+{
+  
+     //ポイントライトの方向を求める
+    float3 toWorldPos = worldPos - light.position;
+    //方向を求める
+    float3 dir = normalize(toWorldPos);
+    //距離を求める
+    float distance = length(toWorldPos);
+     //減衰率を求める
+    float factor = pow(saturate(-distance / light.radius + 1.0f), light.decay);
+    //内積を求める
+    float NdotL = dot(normal, -dir);
+    //コサインを求める
+    float cos = GetCosin(NdotL, lightType);
+    //カラーを求める    //ポイントライトのみの色
+    return light.color.rgb * cos * light.intensity * factor;
+    
+}
+
+float3 CalculatePointLightSpecular(float3 normal, float3 worldPos, float3 toEye, PointLight light, float shininess)
+{
+    //ポイントライトの方向を求める
+    float3 toWorldPos = worldPos - light.position;
+    //方向を求める
+    float3 dir = normalize(toWorldPos);
+    //反射
+    //float3 reflect = reflect(dir, normal);
+    //float NDotR = dot(normal, reflect);
+    //float specularPow = pow(saturate(NDotR), shininess);
+    float3 halfVector = normalize(-dir + toEye);
+    float NDotH = dot(normal, halfVector);
+    float spec = pow(saturate(NDotH), shininess);
+    ////カラーを求める    //ポイントライトのみの色
+    //return light.color.rgb * cos * light.intensity * factor;
+    //色と後で付け足す
+    return /*light.color.rgb **/spec * float3(1.0f, 1.0f, 1.0f); //反射色をここで設定
+    
+}
+
+
+float3 CalculateDirectionalDiffuse(float3 normal, float3 dir, float3 color, float intensity, int lightType)
+{
+    float NdotL = dot(normal, -dir);
+    float cos = GetCosin(NdotL, lightType);
+    return color.rgb * cos * intensity; 
+}
+
+float3 CalculateDirectionalSpecular(float3 normal, float3 dir, float3 toEye, float3 color, float intensity, float shininess)
+{
+    float3 reflectLight = reflect(dir, normal);
+    float3 halfVector = normalize(-dir + toEye);
+    float NDotH = dot(normal, halfVector);
+    float spec = pow(saturate(NDotH), shininess);
+    return spec * float3(1.0f, 1.0f, 1.0f); //反射色をここで設定
+}
+
 PixelShaderOutput main(VertexShaderOutput input)
 {
  
@@ -40,7 +103,6 @@ PixelShaderOutput main(VertexShaderOutput input)
         discard;
     }
     
-
     PixelShaderOutput output;
 
     if (gMaterial.lightType == 0)
@@ -52,95 +114,33 @@ PixelShaderOutput main(VertexShaderOutput input)
     else
     {
   
-        float32_t3 diffusegDirectionalLight;
-        float32_t3 diffusegPointLight;
+        //法線情報 
+        float32_t3 normalInput = normalize(input.normal);
+        //ベースカラー
+        float32_t3 baseColor = gMaterial.color.rgb * textureColor.rgb;
+         //カメラに向かうベクトル
+        float32_t3 toEye = normalize(gCamera.worldPosition - input.worldPosition);
+
         
-        //ライトのコサイン
-        float pointLightCos;
-        float directionalLightCos;
-        
-        //ポイントライトと方向ライトのカラーを求める
-        float32_t3 pointLightColor;
-        float32_t3 directionalLightColor;
-      
-        //ポイントライトの方向を求める
-        float32_t3 pointLightDirection = normalize(input.worldPosition - gPointLight.position);
-        
-         //ポイントライトの減衰率を求める
-        float pointLightDistance = length(input.worldPosition - gPointLight.position);
-        //float factor = 1.0f / (pointLightDistance * pointLightDistance);
-        float factor = pow(saturate(-pointLightDistance / gPointLight.radius + 1.0f), gPointLight.decay);
-        
-        if (gMaterial.lightType == 1)
-        {
+        //ポイントライトについて
+        float32_t3 PointLightDiffuse = CalculatePointLightDiffuse(normalInput, input.worldPosition, gPointLight, gMaterial.lightType);
+        float32_t3 PointLightSpecular = CalculatePointLightSpecular(normalInput, input.worldPosition, toEye, gPointLight, gMaterial.shininess);
+
+        float32_t3 DirectionalLightDiffuse = CalculateDirectionalDiffuse(normalInput, gDirectionalLight.direction, gDirectionalLight.color.rgb, gDirectionalLight.intensity, gMaterial.lightType);
+        float32_t3 DirectionalLightSpecular = CalculateDirectionalSpecular(normalInput, gDirectionalLight.direction, toEye, gDirectionalLight.color.rgb, gDirectionalLight.intensity, gMaterial.shininess);
+         
+          //ディフューズ結果
+        float32_t3 diffusegPointLight = baseColor * PointLightDiffuse;
+        float32_t3 diffusegDirectionalLight = baseColor * DirectionalLightDiffuse;
             
+        float32_t3 speculargPointLight = PointLightDiffuse * PointLightSpecular;
+        float32_t3 speculargDirectionalLight = DirectionalLightDiffuse * DirectionalLightSpecular;
             
-          //ライトのコサイン
-            directionalLightCos = saturate(dot(normalize(input.normal), -gDirectionalLight.direction));
-            pointLightCos = saturate(dot(normalize(input.normal), -pointLightDirection));
-        
-        //ポイントライトと方向ライトのカラーを求める
-            pointLightColor = gPointLight.color.rgb * pointLightCos * gPointLight.intensity*factor;
-            directionalLightColor = gDirectionalLight.color.rgb * directionalLightCos * gDirectionalLight.intensity;
-            
-            //カメラに向かうベクトル
-            float32_t3 toEye = normalize(gCamera.worldPosition - input.worldPosition);
-            
-            //ポイントライトの設定
-            float32_t3 reflectPointLight = reflect(pointLightDirection, normalize(input.normal));
-            float NDotLPointLight = dot(normalize(input.normal), reflectPointLight);
-            float specularPowPointLight = pow(saturate(NDotLPointLight), gMaterial.shininess);
-
-           
-            float32_t3 reflectDirectionalLight = reflect(gDirectionalLight.direction, normalize(input.normal));
-            float32_t3 halfDirectionalLightVector = normalize(-gDirectionalLight.direction + toEye);
-            float NDotHDirectionalLight = dot(normalize(input.normal), halfDirectionalLightVector);
-        //float RdotE = dot(reflectLight, toEye);
-            float specularPowDirectionalLight = pow(saturate(NDotHDirectionalLight), gMaterial.shininess);
-
-            diffusegPointLight = gMaterial.color.rgb * textureColor.rgb * pointLightColor;
-            diffusegDirectionalLight = gMaterial.color.rgb * textureColor.rgb * directionalLightColor;
-            
-            float32_t3 speculargPointLight =
-        pointLightColor * specularPowPointLight * float32_t3(1.0f, 1.0f, 1.0f); //反射色をここで設定
-
-
-    
-            float32_t3 speculargDirectionalLight =
-      directionalLightColor * specularPowDirectionalLight * float32_t3(1.0f, 1.0f, 1.0f); //反射色をここで設定
-
-     
-            output.color.rgb = diffusegDirectionalLight + speculargDirectionalLight + diffusegPointLight + speculargPointLight;
-      
-        }
-        else if (gMaterial.lightType == 2)
-        {
-         //half lambert
-        
-        //法線とライトの方向の内積
-            float NdotDirectionalLight = dot(normalize(input.normal), -gDirectionalLight.direction);
-            float NdotPointLight = dot(normalize(input.normal), -pointLightDirection);
-           // コサインを求める
-            directionalLightCos = pow(NdotDirectionalLight * 0.5f + 0.5f, 2.0f);
-            pointLightCos = pow(NdotPointLight * 0.5f + 0.5f, 2.0f);
-
-            //ポイントライトと方向ライトのカラーを求める
-            pointLightColor = gPointLight.color.rgb * pointLightCos * gPointLight.intensity*factor;
-            directionalLightColor = gDirectionalLight.color.rgb * directionalLightCos * gDirectionalLight.intensity;
-             //diffuseを求める
-            diffusegPointLight = gMaterial.color.rgb * textureColor.rgb * pointLightColor;
-            diffusegDirectionalLight = gMaterial.color.rgb * textureColor.rgb * directionalLightColor;
-
-            output.color.rgb = diffusegPointLight + diffusegDirectionalLight;
-
-        }
-        
+        output.color.rgb = diffusegDirectionalLight + speculargDirectionalLight + diffusegPointLight + speculargPointLight;
         //ライトモード共通
         output.color.a = gMaterial.color.a * textureColor.a;
 
     }
-
-    
 
     //output.colorのαの値が0の時にPixelを棄却
     if (output.color.a == 0.0)
