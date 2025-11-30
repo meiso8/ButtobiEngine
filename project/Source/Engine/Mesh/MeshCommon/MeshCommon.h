@@ -2,7 +2,6 @@
 #include"VertexData.h"
 #include<wrl.h>
 #include<d3d12.h>
-#include"ModelConfig.h"
 #include"commandList.h"  
 
 #include"Transform.h"

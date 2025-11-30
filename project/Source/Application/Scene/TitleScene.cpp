@@ -41,7 +41,7 @@
 #include"MyEngine.h"
 
 #include "MatsumotoObj/MY_Utility.h"
-
+#include"Lights/PointLightManager.h"
 
 TitleScene::TitleScene()
 {
@@ -71,6 +71,11 @@ TitleScene::TitleScene()
 
     house_->SetHitCounts(titleText_->GetHitCount(), titleText_->GetMaxHitCount());
     tree_ = std::make_unique<Tree>();
+
+    PointLightManager::GetPointLightData(0).color = { 17.0f / 255.0f,34.0f / 255.0f,55.0f / 255.0f };
+    PointLightManager::GetPointLightData(0).intensity = 11.5f;
+    PointLightManager::GetPointLightData(0).radius = 94.0f;
+    PointLightManager::GetPointLightData(0).decay = 3.0f;
 
 #pragma endregion
 
@@ -119,6 +124,8 @@ void TitleScene::Update()
     UpdateGameObject();
 
     CheckAllCollision();
+
+
 }
 
 void TitleScene::Draw()
@@ -128,7 +135,7 @@ void TitleScene::Draw()
 
     //家
     house_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
-    tree_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    tree_->Draw(*currentCamera_);
 
     if (titleText_->GetIsBreak()) {
         bossDummy_->Draw(*currentCamera_, LightMode::kLightModeHalfL);

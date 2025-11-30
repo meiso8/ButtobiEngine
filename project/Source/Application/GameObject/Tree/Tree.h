@@ -19,7 +19,7 @@ public:
     Tree();
     void Initialize();
     void Update();
-    void Draw(Camera& camera, const LightMode& lightType);
+    void Draw(Camera& camera);
 private:
     std::unordered_map<Parts, Object3d> positions_;
 };

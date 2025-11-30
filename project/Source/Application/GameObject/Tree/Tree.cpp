@@ -38,10 +38,10 @@ void Tree::Update()
     DebugUI::CheckObject3d(positions_[kLeaves], "LeavePos");
 }
 
-void Tree::Draw(Camera& camera, const LightMode& lightType)
+void Tree::Draw(Camera& camera)
 {
-    positions_[kTree].SetLightMode(lightType);
-    positions_[kLeaves].SetLightMode(lightType);
+    positions_[kTree].SetLightMode(kLightModeLReflectance);
+    positions_[kLeaves].SetLightMode(kLightModeHalfL);
 
     positions_[kTree].Draw(camera);
     positions_[kLeaves].Draw(camera,kBlendModeNormal, kCullModeNone);

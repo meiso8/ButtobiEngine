@@ -10,7 +10,6 @@
 #include"PSO.h"
 
 #include"ModelManager.h"
-#include"ModelConfig.h"
 
 #include"Sound.h"
 

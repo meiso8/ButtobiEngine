@@ -44,7 +44,6 @@
     <ClCompile Include="Source\Engine\Mesh\Model\ModelManager.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Plane\PlaneMesh.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\DirectXCommon.cpp" />
-    <ClCompile Include="Source\Engine\DirectXCommon\ModelConfig.cpp" />
     <ClCompile Include="Source\Engine\Particle\Particle.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\MyEngine.cpp" />
     <ClCompile Include="Source\Engine\ImGui\DebugUI.cpp" />
@@ -192,7 +191,6 @@
     <ClInclude Include="Source\Engine\DirectXCommon\CommandList.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\CommandQueue.h" />
     <ClInclude Include="Source\Engine\PSO\CompileShader.h" />
-    <ClInclude Include="Source\Engine\DirectXCommon\ModelConfig.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\CrashHandler.h" />
     <ClInclude Include="Source\Engine\Mesh\Cube\CubeMesh.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\D3DResourceLeakChecker.h" />
