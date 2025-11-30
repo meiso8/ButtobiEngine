@@ -40,8 +40,8 @@ void Tree::Update()
 
 void Tree::Draw(Camera& camera, const LightMode& lightType)
 {
-    //positions_[kTree].SetLightMode(lightType);
-    //positions_[kLeaves].SetLightMode(lightType);
+    positions_[kTree].SetLightMode(lightType);
+    positions_[kLeaves].SetLightMode(lightType);
 
     positions_[kTree].Draw(camera);
     positions_[kLeaves].Draw(camera,kBlendModeNormal, kCullModeNone);

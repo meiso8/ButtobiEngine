@@ -117,7 +117,7 @@ PixelShaderOutput main(VertexShaderOutput input)
 
      
             output.color.rgb = diffusegDirectionalLight + speculargDirectionalLight + diffusegPointLight + speculargPointLight;
-            output.color.a = gMaterial.color.a * textureColor.a;
+      
         }
         else if (gMaterial.lightType == 2)
         {
@@ -125,7 +125,7 @@ PixelShaderOutput main(VertexShaderOutput input)
         
         //法線とライトの方向の内積
             float NdotDirectionalLight = dot(normalize(input.normal), -gDirectionalLight.direction);
-            float NdotPointLight = dot(normalize(input.normal), -gDirectionalLight.direction);
+            float NdotPointLight = dot(normalize(input.normal), -pointLightDirection);
            // コサインを求める
             directionalLightCos = pow(NdotDirectionalLight * 0.5f + 0.5f, 2.0f);
             pointLightCos = pow(NdotPointLight * 0.5f + 0.5f, 2.0f);
@@ -141,6 +141,7 @@ PixelShaderOutput main(VertexShaderOutput input)
 
         }
         
+        //ライトモード共通
         output.color.a = gMaterial.color.a * textureColor.a;
 
     }

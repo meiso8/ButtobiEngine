@@ -249,7 +249,7 @@ void DebugUI::CheckInput() {
     ImGui::SliderFloat2("mousePos", &Input::GetMousePos().x, 0.0f, 1280.0f);
 
     for (int i = 0; i < 4; ++i) {
-        CheckXinput(i);
+        CheckXInput(i);
     }
 
     ImGui::End();
@@ -257,7 +257,7 @@ void DebugUI::CheckInput() {
 
 }
 
-void DebugUI::CheckXinput(const int& num)
+void DebugUI::CheckXInput(const int& num)
 {
 #ifdef USE_IMGUI
     std::string numOK = std::to_string(num);
@@ -379,7 +379,7 @@ void DebugUI::CheckPointLightData(PointLight& pointLight, const char* label)
 #ifdef USE_IMGUI
     if (ImGui::TreeNode(label)) {
         CheckColor(pointLight.color, "color");
-        ImGui::DragFloat("intensity", &pointLight.intensity, 0.03f);
+        ImGui::SliderFloat("intensity", &pointLight.intensity, 0.0f,100.0f);
         ImGui::DragFloat3("position", &pointLight.position.x, 0.03f, -10000.0f, 10000.0f);
         ImGui::TreePop();
     }
