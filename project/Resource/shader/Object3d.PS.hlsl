@@ -19,6 +19,15 @@ ConstantBuffer<Material> gMaterial : register(b0);
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
 ConstantBuffer<Camera> gCamera : register(b2);
 ConstantBuffer<PointLight> gPointLight : register(b3);
+
+// ポイントライトの最大数
+#define MAX_POINT_LIGHTS 20
+//// ポイントライトの定数バッファ
+//cbuffer PointLightCB : register(b3)
+//{
+//    PointLight gPointLights[MAX_POINT_LIGHTS];
+//}
+
 Texture2D<float32_t4> gTexture : register(t2); //SRVはt
 SamplerState gSampler : register(s0); //Samplerはs これを介してtextureを読む
 
@@ -37,7 +46,7 @@ float GetCosin(float NdotL, int lightType)
 float3 CalculatePointLightDiffuse(float3 normal, float3 worldPos, PointLight light, int lightType)
 {
   
-     //ポイントライトの方向を求める
+    //ポイントライトの方向を求める
     float3 toWorldPos = worldPos - light.position;
     //方向を求める
     float3 dir = normalize(toWorldPos);
@@ -67,10 +76,8 @@ float3 CalculatePointLightSpecular(float3 normal, float3 worldPos, float3 toEye,
     float3 halfVector = normalize(-dir + toEye);
     float NDotH = dot(normal, halfVector);
     float spec = pow(saturate(NDotH), shininess);
-    ////カラーを求める    //ポイントライトのみの色
-    //return light.color.rgb * cos * light.intensity * factor;
     //色と後で付け足す
-    return /*light.color.rgb **/spec * float3(1.0f, 1.0f, 1.0f); //反射色をここで設定
+    return spec * float3(1.0f, 1.0f, 1.0f); //反射色をここで設定
     
 }
 
@@ -79,7 +86,7 @@ float3 CalculateDirectionalDiffuse(float3 normal, float3 dir, float3 color, floa
 {
     float NdotL = dot(normal, -dir);
     float cos = GetCosin(NdotL, lightType);
-    return color.rgb * cos * intensity; 
+    return color.rgb * cos * intensity;
 }
 
 float3 CalculateDirectionalSpecular(float3 normal, float3 dir, float3 toEye, float3 color, float intensity, float shininess)
@@ -114,32 +121,52 @@ PixelShaderOutput main(VertexShaderOutput input)
     else
     {
   
+        // ==========================//共通//====================================
         //法線情報 
         float32_t3 normalInput = normalize(input.normal);
         //ベースカラー
         float32_t3 baseColor = gMaterial.color.rgb * textureColor.rgb;
          //カメラに向かうベクトル
         float32_t3 toEye = normalize(gCamera.worldPosition - input.worldPosition);
+        // ======================================================================
+  
+        // ポイントライトの合計
+        float3 pointLightTotalDiffuse = float3(0, 0, 0);
+        float3 pointLightTotalSpecular = float3(0, 0, 0);
 
+        // ポイントライトの合計
+        [unroll]
+        for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
+        {
+            pointLightTotalDiffuse += CalculatePointLightDiffuse(normalInput, input.worldPosition, gPointLight, gMaterial.lightType);
+            pointLightTotalSpecular += CalculatePointLightSpecular(normalInput, input.worldPosition, toEye, gPointLight, gMaterial.shininess);
+        }
         
-        //ポイントライトについて
-        float32_t3 PointLightDiffuse = CalculatePointLightDiffuse(normalInput, input.worldPosition, gPointLight, gMaterial.lightType);
-        float32_t3 PointLightSpecular = CalculatePointLightSpecular(normalInput, input.worldPosition, toEye, gPointLight, gMaterial.shininess);
-
+     
         float32_t3 DirectionalLightDiffuse = CalculateDirectionalDiffuse(normalInput, gDirectionalLight.direction, gDirectionalLight.color.rgb, gDirectionalLight.intensity, gMaterial.lightType);
-        float32_t3 DirectionalLightSpecular = CalculateDirectionalSpecular(normalInput, gDirectionalLight.direction, toEye, gDirectionalLight.color.rgb, gDirectionalLight.intensity, gMaterial.shininess);
-         
-          //ディフューズ結果
-        float32_t3 diffusegPointLight = baseColor * PointLightDiffuse;
-        float32_t3 diffusegDirectionalLight = baseColor * DirectionalLightDiffuse;
-            
-        float32_t3 speculargPointLight = PointLightDiffuse * PointLightSpecular;
-        float32_t3 speculargDirectionalLight = DirectionalLightDiffuse * DirectionalLightSpecular;
-            
-        output.color.rgb = diffusegDirectionalLight + speculargDirectionalLight + diffusegPointLight + speculargPointLight;
-        //ライトモード共通
-        output.color.a = gMaterial.color.a * textureColor.a;
 
+
+        if (gMaterial.lightType == 1)
+        {
+            //方向ライトの反射
+            float32_t3 speculargDirectionalLight =
+            DirectionalLightDiffuse *
+            CalculateDirectionalSpecular(normalInput, gDirectionalLight.direction, toEye, gDirectionalLight.color.rgb, gDirectionalLight.intensity, gMaterial.shininess);
+         
+            output.color.rgb =
+            baseColor * (DirectionalLightDiffuse + pointLightTotalDiffuse) +
+            (speculargDirectionalLight + pointLightTotalDiffuse * pointLightTotalSpecular);
+            
+        }
+        else
+        {
+            //反射光なし
+            output.color.rgb = baseColor * (DirectionalLightDiffuse + pointLightTotalDiffuse);
+
+        }
+        
+          //ライトモード共通
+        output.color.a = gMaterial.color.a * textureColor.a;
     }
 
     //output.colorのαの値が0の時にPixelを棄却
