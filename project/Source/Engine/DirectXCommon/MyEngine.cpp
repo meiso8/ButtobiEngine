@@ -8,24 +8,16 @@
 #include"JsonFile.h"
 #include"VibrateManager.h"
 #include"Lights/PointLightManager.h"
+#include"Lights/DirectionalLightManager.h"
 
 std::unique_ptr<PSO> MyEngine::pso = nullptr;
-
 std::unique_ptr <Input> MyEngine::input = nullptr;
-DirectionalLight* MyEngine::directionalLightData = nullptr;
-std::unique_ptr<ModelConfig> MyEngine::modelConfig_ = nullptr;
 std::unique_ptr<Window> MyEngine::wc = nullptr;
-
 
 std::unique_ptr<DirectXCommon> MyEngine::directXCommon = nullptr;
 std::unique_ptr<SrvManager> MyEngine::srvManager = nullptr;
 std::unique_ptr<ParticleManager>  MyEngine::particleManager_ = nullptr;
 std::unique_ptr<LogFile> MyEngine::logFile = nullptr;
-
-std::unique_ptr<ModelConfig> modelConfig_ = nullptr;
-
-
-Microsoft::WRL::ComPtr <ID3D12Resource> MyEngine::directionalLightResource = nullptr;
 
 void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight) {
 
@@ -66,23 +58,9 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
 
     LogFile::Log("CreatePSO");
 
-    //平行光源用のResourceを作成する
-    directionalLightResource = DirectXCommon::CreateBufferResource(sizeof(DirectionalLight));
-    //書き込むためのアドレスを取得
-    directionalLightResource->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData));
-    //デフォルト値はとりあえず以下のようにしておく   
-    directionalLightData->color = { 1.0f,230.0f / 255.0f,200.0f / 255.0f,1.0f };
 
-    directionalLightData->direction = { 0.0f,-1.0f,0.0f };//向きは正規化する
-    directionalLightData->intensity = 1.0f;
-    //書き込み終了！
-    directionalLightResource->Unmap(0, nullptr);
-
+    DirectionalLightManager::Create();
     PointLightManager::CreateData();
-
-
-    modelConfig_ = std::make_unique<ModelConfig>();
-    modelConfig_->Initialize(PSO::rootSignature.get(), directionalLightResource.Get());
 
     ////共通のスプライト
     SpriteCommon::Initialize();
@@ -180,14 +158,8 @@ void MyEngine::Finalize() {
 
     SpriteCommon::Finalize();
 
-    modelConfig_->Finalize();
-    modelConfig_.reset();
-
     PointLightManager::Finalize();
-
-    if (directionalLightResource) {
-        directionalLightResource.Reset();
-    }
+    DirectionalLightManager::Finalize();
 
     pso.reset();
 

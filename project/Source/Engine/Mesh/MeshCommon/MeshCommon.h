@@ -26,9 +26,6 @@ protected:
     /// @brief テクスチャハンドル
     uint32_t textureHandle_ = 0;
 
-    //rootSignatureとdirectionalLight
-    static ModelConfig* modelConfig_;
-
     //頂点データ
     Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};

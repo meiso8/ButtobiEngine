@@ -2,6 +2,7 @@
 #include"DirectXCommon.h"
 #include"MakeMatrix.h"
 #include"Lights/PointLightManager.h"
+#include"Lights/DirectionalLightManager.h"
 ID3D12GraphicsCommandList* Object3d::commandList_ = nullptr;
 
 
@@ -121,7 +122,8 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
         commandList_->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
         //cameraのCBufferの場所を設定
         commandList_->SetGraphicsRootConstantBufferView(6, camera.GetResource()->GetGPUVirtualAddress());
-       
+        //ライトのCBufferの場所を設定
+        DirectionalLightManager::SetGraphicsRootConstantBufferView();
         PointLightManager::SetGraphicsRootDescriptorTable();
         
         meshCommon_->Draw(commandList_);

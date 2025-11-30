@@ -2,8 +2,7 @@
 #include"DirectXCommon.h"
 #include"MyEngine.h"
 #include"Texture.h"
-
-ModelConfig* MeshCommon::modelConfig_ = nullptr;
+#include"PSO.h"
 
 void MeshCommon::Finalize() {
 
@@ -12,7 +11,7 @@ void MeshCommon::Finalize() {
 }
 
 void MeshCommon::PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode& blendMode, const CullMode& cullMode) {
-    commandList->SetGraphicsRootSignature(modelConfig_->rootSignature->GetRootSignature(RootSignature::NORMAL));
+    commandList->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::NORMAL));
     commandList->SetPipelineState(PSO::GetGraphicsPipelineState(blendMode, cullMode).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

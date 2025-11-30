@@ -157,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\Lights\DirectionalLightManager.cpp" />
     <ClCompile Include="Source\Engine\Lights\PointLightManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\House\House.cpp" />
     <ClCompile Include="Source\Application\GameObject\EmitterManager\EmitterManager.cpp" />
@@ -298,6 +299,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\Tree\Tree.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\Lights\DirectionalLightManager.h" />
     <ClInclude Include="Source\Engine\Lights\PointLightManager.h" />
     <ClInclude Include="Source\Application\GameObject\House\House.h" />
     <ClInclude Include="Source\Application\GameObject\EmitterManager\EmitterManager.h" />

@@ -3,6 +3,7 @@
 #include"DirectXCommon.h"
 #include"MyEngine.h"
 
+#include"PSO.h"
 
 LineMesh::~LineMesh() {
     Finalize();
@@ -11,7 +12,7 @@ LineMesh::~LineMesh() {
 void LineMesh::Create(const Texture::TEXTURE_HANDLE& textureHandle)
 {
 
-    modelConfig_ = ModelConfig::GetInstance();
+
     textureHandle_ = Texture::GetHandle(textureHandle);
 
     CreateVertex();
@@ -55,8 +56,8 @@ void LineMesh::SetVertexData(const Vector3& start, const Vector3& end) {
 
 void LineMesh::PreDraw(ID3D12GraphicsCommandList* commandList,  const BlendMode& blendMode,const CullMode& cullMode) {
 
-    commandList->SetGraphicsRootSignature(modelConfig_->rootSignature->GetRootSignature(0));
-    commandList->SetPipelineState(MyEngine::GetPSO()->GetGraphicsPipelineStateLine().Get());//PSOを設定
+    commandList->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::NORMAL));
+    commandList->SetPipelineState(PSO::GetGraphicsPipelineStateLine().Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 
@@ -74,9 +75,6 @@ void LineMesh::Draw(ID3D12GraphicsCommandList* commandList)
 //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
     SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);  
     
-    //LightのCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
- 
     //描画!（DrawCall/ドローコール）
     commandList->DrawInstanced(2, 1, 0, 0);
 };
