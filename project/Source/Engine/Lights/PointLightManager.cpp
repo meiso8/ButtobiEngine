@@ -27,6 +27,10 @@ void PointLightManager::InitData(const uint32_t& index)
     pointLightData_[index].color = { 1.0f,0.0f,0.0f,1.0f };
     pointLightData_[index].intensity = 1.0f;
     pointLightData_[index].position = { 0.0f,0.0f,0.0f };
+
+    pointLightData_[index].radius = 3.0f;
+    pointLightData_[index].decay = 0.5f;
+
 }
 
 void PointLightManager::InitDatas()

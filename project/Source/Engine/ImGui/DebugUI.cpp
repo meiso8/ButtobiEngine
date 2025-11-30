@@ -379,8 +379,10 @@ void DebugUI::CheckPointLightData(PointLight& pointLight, const char* label)
 #ifdef USE_IMGUI
     if (ImGui::TreeNode(label)) {
         CheckColor(pointLight.color, "color");
-        ImGui::SliderFloat("intensity", &pointLight.intensity, 0.0f,100.0f);
+        ImGui::SliderFloat("intensity", &pointLight.intensity, 0.0f, 100.0f);
         ImGui::DragFloat3("position", &pointLight.position.x, 0.03f, -10000.0f, 10000.0f);
+        ImGui::SliderFloat("radius", &pointLight.radius, 0.0f, 100.0f);
+        ImGui::SliderFloat("decay", &pointLight.decay, 0.0f, 100.0f);
         ImGui::TreePop();
     }
 #endif
