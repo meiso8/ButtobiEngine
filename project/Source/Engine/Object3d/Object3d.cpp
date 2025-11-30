@@ -122,7 +122,7 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
         //cameraのCBufferの場所を設定
         commandList_->SetGraphicsRootConstantBufferView(6, camera.GetResource()->GetGPUVirtualAddress());
        
-        PointLightManager::SetGraphicsRootConstantBufferView();
+        PointLightManager::SetGraphicsRootDescriptorTable();
         
         meshCommon_->Draw(commandList_);
     }

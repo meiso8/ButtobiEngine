@@ -18,18 +18,12 @@ struct Material
 ConstantBuffer<Material> gMaterial : register(b0);
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
 ConstantBuffer<Camera> gCamera : register(b2);
-ConstantBuffer<PointLight> gPointLight : register(b3);
-
-// ポイントライトの最大数
-#define MAX_POINT_LIGHTS 20
-//// ポイントライトの定数バッファ
-//cbuffer PointLightCB : register(b3)
-//{
-//    PointLight gPointLights[MAX_POINT_LIGHTS];
-//}
+//ConstantBuffer<PointLight> gPointLight : register(b3);
 
 Texture2D<float32_t4> gTexture : register(t2); //SRVはt
 SamplerState gSampler : register(s0); //Samplerはs これを介してtextureを読む
+
+StructuredBuffer<PointLight> gPointLights : register(t4);
 
 struct PixelShaderOutput
 {
@@ -135,19 +129,24 @@ PixelShaderOutput main(VertexShaderOutput input)
         float3 pointLightTotalSpecular = float3(0, 0, 0);
 
         // ポイントライトの合計
-        [unroll]
-        for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
+        [loop]
+        for (int i = 0; i < 20; ++i)
         {
-            pointLightTotalDiffuse += CalculatePointLightDiffuse(normalInput, input.worldPosition, gPointLight, gMaterial.lightType);
-            pointLightTotalSpecular += CalculatePointLightSpecular(normalInput, input.worldPosition, toEye, gPointLight, gMaterial.shininess);
+            pointLightTotalDiffuse += CalculatePointLightDiffuse(normalInput, input.worldPosition, gPointLights[i], gMaterial.lightType); 
         }
         
-     
         float32_t3 DirectionalLightDiffuse = CalculateDirectionalDiffuse(normalInput, gDirectionalLight.direction, gDirectionalLight.color.rgb, gDirectionalLight.intensity, gMaterial.lightType);
 
 
         if (gMaterial.lightType == 1)
         {
+            
+            [loop]
+            for (int i = 0; i < 20; ++i)
+            {
+                pointLightTotalSpecular += CalculatePointLightSpecular(normalInput, input.worldPosition, toEye, gPointLights[i], gMaterial.shininess);
+            }
+        
             //方向ライトの反射
             float32_t3 speculargDirectionalLight =
             DirectionalLightDiffuse *
@@ -155,7 +154,7 @@ PixelShaderOutput main(VertexShaderOutput input)
          
             output.color.rgb =
             baseColor * (DirectionalLightDiffuse + pointLightTotalDiffuse) +
-            (speculargDirectionalLight + pointLightTotalDiffuse * pointLightTotalSpecular);
+            (speculargDirectionalLight + pointLightTotalSpecular);
             
         }
         else
