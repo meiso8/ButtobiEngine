@@ -10,7 +10,6 @@
 #include"PSO.h"
 
 #include"ModelManager.h"
-#include"ModelConfig.h"
 
 #include"Sound.h"
 
@@ -18,7 +17,7 @@
 #include"Log.h"
 #include"DebugUI.h"
 
-#include"Lights/Light.h"
+
 #include<memory>
 
 #pragma endregion
@@ -36,25 +35,15 @@ public:
     void PostCommandSet();
     void Finalize();
 
-    static Window& GetWC() { return *wc; };
-    static PSO* GetPSO() { return pso.get(); }
-    static DirectionalLight* GetDirectionalLightData() { return directionalLightData; }
 private:
-
     static std::unique_ptr<DirectXCommon> directXCommon;
 #ifdef USE_IMGUI
     ImGuiClass imGuiClass = {};
 #endif // USE_IMGUI
 
-
     static std::unique_ptr<LogFile> logFile;
     static std::unique_ptr<Window> wc;
-    static std::unique_ptr<ModelConfig> modelConfig_;
-
    static std::unique_ptr <Input> input;
-
-    static Microsoft::WRL::ComPtr <ID3D12Resource> directionalLightResource;
-    static DirectionalLight* directionalLightData;
 
     static std::unique_ptr<PSO> pso;
     static std::unique_ptr<SrvManager> srvManager;

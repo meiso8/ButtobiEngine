@@ -2,7 +2,6 @@
 #include"VertexData.h"
 #include<wrl.h>
 #include<d3d12.h>
-#include"ModelConfig.h"
 #include"commandList.h"  
 
 #include"Transform.h"
@@ -25,9 +24,6 @@ public:
 protected:
     /// @brief テクスチャハンドル
     uint32_t textureHandle_ = 0;
-
-    //rootSignatureとdirectionalLight
-    static ModelConfig* modelConfig_;
 
     //頂点データ
     Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};

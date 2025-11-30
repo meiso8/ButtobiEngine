@@ -13,7 +13,7 @@ SphereMesh::~SphereMesh()
 
 void SphereMesh::Create(const Texture::TEXTURE_HANDLE& textureHandle)
 {
-  modelConfig_ = ModelConfig::GetInstance();
+
   textureHandle_ = Texture::GetHandle(textureHandle);
 
     CreateVertex();
@@ -100,8 +100,6 @@ void SphereMesh::Draw(ID3D12GraphicsCommandList* commandList) {
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
  //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
     SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
-    //LightのCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
   //描画!(DrawCall/ドローコール)。
     commandList->DrawInstanced(6 * kSubdivision_ * kSubdivision_, 1, 0, 0);
 

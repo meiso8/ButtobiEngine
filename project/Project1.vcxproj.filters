@@ -44,7 +44,6 @@
     <ClCompile Include="Source\Engine\Mesh\Model\ModelManager.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Plane\PlaneMesh.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\DirectXCommon.cpp" />
-    <ClCompile Include="Source\Engine\DirectXCommon\ModelConfig.cpp" />
     <ClCompile Include="Source\Engine\Particle\Particle.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\MyEngine.cpp" />
     <ClCompile Include="Source\Engine\ImGui\DebugUI.cpp" />
@@ -123,6 +122,7 @@
     <ClCompile Include="Source\Application\GameObject\House\House.cpp" />
     <ClCompile Include="Source\Application\GameObject\Tree\Tree.cpp" />
     <ClCompile Include="Source\Engine\Lights\PointLightManager.cpp" />
+    <ClCompile Include="Source\Engine\Lights\DirectionalLightManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\GameObject\UI\PauseScreen.h" />
@@ -191,7 +191,6 @@
     <ClInclude Include="Source\Engine\DirectXCommon\CommandList.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\CommandQueue.h" />
     <ClInclude Include="Source\Engine\PSO\CompileShader.h" />
-    <ClInclude Include="Source\Engine\DirectXCommon\ModelConfig.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\CrashHandler.h" />
     <ClInclude Include="Source\Engine\Mesh\Cube\CubeMesh.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\D3DResourceLeakChecker.h" />
@@ -272,6 +271,7 @@
     <ClInclude Include="Source\Application\GameObject\House\House.h" />
     <ClInclude Include="Source\Application\GameObject\Tree\Tree.h" />
     <ClInclude Include="Source\Engine\Lights\PointLightManager.h" />
+    <ClInclude Include="Source\Engine\Lights\DirectionalLightManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="externals\assimp\lib\Debug\assimp-vc143-mdd.lib" />

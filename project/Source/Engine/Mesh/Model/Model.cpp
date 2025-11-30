@@ -14,7 +14,6 @@ Model::~Model()
 
 void Model::Create() {
 
-    modelConfig_ = ModelConfig::GetInstance();
     textureHandle_ = modelData_->material.textureSrvIndex;
     CreateVertex();
 }
@@ -41,9 +40,6 @@ void Model::Draw(ID3D12GraphicsCommandList* commandList) {
  
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
     SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
- 
-    //LightのCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
 
 //描画!(DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
     commandList->DrawInstanced(UINT(modelData_->vertices.size()), 1, 0, 0);

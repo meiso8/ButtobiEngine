@@ -71,7 +71,7 @@ float3 CalculatePointLightSpecular(float3 normal, float3 worldPos, float3 toEye,
     float NDotH = dot(normal, halfVector);
     float spec = pow(saturate(NDotH), shininess);
     //色と後で付け足す
-    return spec * float3(1.0f, 1.0f, 1.0f); //反射色をここで設定
+    return spec * light.color.rgb; //反射色をここで設定
     
 }
 
@@ -83,13 +83,13 @@ float3 CalculateDirectionalDiffuse(float3 normal, float3 dir, float3 color, floa
     return color.rgb * cos * intensity;
 }
 
-float3 CalculateDirectionalSpecular(float3 normal, float3 dir, float3 toEye, float3 color, float intensity, float shininess)
+float3 CalculateDirectionalSpecular(float3 normal, float3 dir, float3 toEye, float3 color, float shininess)
 {
     float3 reflectLight = reflect(dir, normal);
     float3 halfVector = normalize(-dir + toEye);
     float NDotH = dot(normal, halfVector);
     float spec = pow(saturate(NDotH), shininess);
-    return spec * float3(1.0f, 1.0f, 1.0f); //反射色をここで設定
+    return spec * color; //反射色をここで設定
 }
 
 PixelShaderOutput main(VertexShaderOutput input)
@@ -150,7 +150,7 @@ PixelShaderOutput main(VertexShaderOutput input)
             //方向ライトの反射
             float32_t3 speculargDirectionalLight =
             DirectionalLightDiffuse *
-            CalculateDirectionalSpecular(normalInput, gDirectionalLight.direction, toEye, gDirectionalLight.color.rgb, gDirectionalLight.intensity, gMaterial.shininess);
+            CalculateDirectionalSpecular(normalInput, gDirectionalLight.direction, toEye, gDirectionalLight.color.rgb, gMaterial.shininess);
          
             output.color.rgb =
             baseColor * (DirectionalLightDiffuse + pointLightTotalDiffuse) +

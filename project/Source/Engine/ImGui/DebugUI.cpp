@@ -14,12 +14,14 @@
 
 #include"SphereMesh.h"
 #include"Lights/Light.h"
+#include"Lights/DirectionalLightManager.h"
 #include"PSO.h"
 #include"Camera.h"
 #include"JsonFile.h"
 
 #include<numbers>
 #include<algorithm>
+
 
 struct Param {
     char name[128];
@@ -521,7 +523,7 @@ void DebugUI::CheckWorldTransform(WorldTransform& worldTransform, const char* la
 void DebugUI::CheckDirectionalLight() {
 #ifdef USE_IMGUI
     if (ImGui::TreeNode("DirectionalLight")) {
-        DirectionalLight* directionalLight = MyEngine::GetDirectionalLightData();
+        DirectionalLight* directionalLight = DirectionalLightManager::GetDirectionalLightData();
         Vector3 direction = directionalLight->direction;
 
         ImGui::ColorEdit4("color", &directionalLight->color.x);

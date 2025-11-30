@@ -176,7 +176,7 @@ void GameScene::Draw() {
     enemyBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     enemyBombManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     enemyShockWaveManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
-    tree_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    tree_->Draw(*currentCamera_);
 #pragma endregion
     //エミッター
     emitterManager_->Draw();

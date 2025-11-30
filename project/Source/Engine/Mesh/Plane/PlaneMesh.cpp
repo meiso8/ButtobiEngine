@@ -11,7 +11,6 @@ PlaneMesh::~PlaneMesh() {
 
 void PlaneMesh::Create(const Texture::TEXTURE_HANDLE& textureHandle)
 {
-    modelConfig_ = ModelConfig::GetInstance();
     textureHandle_ = Texture::GetHandle(textureHandle);
 
     CreateVertex();
@@ -73,8 +72,7 @@ void PlaneMesh::Draw(ID3D12GraphicsCommandList* commandList)
 
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
     SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
-    //LightのCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
+
  //描画!（DrawCall/ドローコール）6個のインデックスを使用し1つのインスタンスを描画。その他は当面0で良い。
     commandList->DrawIndexedInstanced(6, 1, 0, 0, 0);
 };

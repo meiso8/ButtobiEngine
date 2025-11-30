@@ -5,7 +5,7 @@
 #include"ResultScene.h"
 #include<map>
 #include<unordered_map>
-
+#include"Lights/DirectionalLightManager.h"
 #include"MakeMatrix.h"
 
 #define WIN_WIDTH 1280
@@ -28,7 +28,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // ==============================================//↑基本いじらない↑//============================================
     //画面の色
     Vector4 screenColor = { 0.373f,0.804f,0.894f,1.0f };
-    MyEngine::GetDirectionalLightData()->direction = Normalize({ 0.7f,-0.24f,-0.64f });
+    DirectionalLightManager::GetDirectionalLightData()->direction = Normalize({ 0.7f,-0.24f,-0.64f });
 
 	// * ラッパークラスここから * //
 	// キーバインドの初期化
@@ -56,7 +56,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     while (true) {
 
         // メッセージが来たらループを抜ける
-        if (myEngine->GetWC().ProcessMassage()) {
+        if (Window::ProcessMassage()) {
             break;
         }
 
