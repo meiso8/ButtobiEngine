@@ -56,6 +56,7 @@ public:
     bool IsDead() { return damageStruct_.isDead; }
     //HPを得る
     HPs* GetHpsPtr() { return &damageStruct_.hps; }
+    bool IsOverKill() { return(overKillCount >= kMaxOverKillCount); }
 private:
     Model* model_ = nullptr;
     Object3d wingLPos_;
@@ -67,7 +68,7 @@ private:
     Vector3* playerLookDir_ = nullptr;
     //キャラクターの共通でもつ状態
     Damage damageStruct_;
-    const float kRoundRadius_ = 7.0f ;
+    const float kRoundRadius_ = 7.0f;
 
     enum PHASE {
         //攻撃
@@ -124,8 +125,8 @@ private:
     const float kLerpSquareTime_ = 2.0f;
     //四角移動する際のスピー
     const float kSquareMoveSpeed_ = 0.05f;
-    const float kLerpSquareStartPosY_ = 4.0f+kRadius_;   
-    const float kLerpSquareEndPosY_ = 1.0f + kRadius_*2.0f;
+    const float kLerpSquareStartPosY_ = 4.0f + kRadius_;
+    const float kLerpSquareEndPosY_ = 1.0f + kRadius_ * 2.0f;
     //球面移動に移行する時のスピード
     const float kSphericalLerpSpeed_ = 0.5f;
 
@@ -151,6 +152,10 @@ private:
 
     // 左右に揺れるときのもの
     float rotateLRTheta_ = 0.0f;
+    //オーバーキルカウント
+    int overKillCount = 0;
+    //オーバーキルカウント最大値
+    int kMaxOverKillCount = 5;
 private:
     //状態を初期化
     void InitState();
@@ -163,7 +168,7 @@ private:
 
     //フェーズ切り替え
     void SwitchPhase();
-    
+
     //移動フェーズ内で抽選
     void RandomMovePhase();
     //攻撃フェーズ内で抽選　第一形態時　
