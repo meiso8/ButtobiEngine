@@ -65,7 +65,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		// 一定時間操作が無かったらタイトルへ戻る
 		KeyBindConfig::Instance().Update();
-        if (currentScene != scenes["Title"].get()|| currentScene == scenes["Game"].get()&& !PauseScreen::isPause_) {
+        if (currentScene == scenes["Result"].get() || currentScene == scenes["Game"].get()&& !PauseScreen::isPause_) {
             if (KeyBindConfig::Instance().noControllTimer_ >= 30.0f) {
                 currentIt = scenes.find("Title");
                 currentScene = currentIt->second.get();
