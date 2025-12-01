@@ -3,8 +3,9 @@
 #include"MakeMatrix.h"
 #include"Lights/PointLightManager.h"
 #include"Lights/DirectionalLightManager.h"
-ID3D12GraphicsCommandList* Object3d::commandList_ = nullptr;
+#include"Lights/SpotLightManager.h"
 
+ID3D12GraphicsCommandList* Object3d::commandList_ = nullptr;
 
 void Object3d::CreateMaterial(const Vector4& color, const uint32_t& lightType) {
     //マテリアルリソースを作成
@@ -125,7 +126,7 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
         //ライトのCBufferの場所を設定
         DirectionalLightManager::SetGraphicsRootConstantBufferView();
         PointLightManager::SetGraphicsRootDescriptorTable();
-        
+        SpotLightManager::SetGraphicsRootConstantBufferView();
         meshCommon_->Draw(commandList_);
     }
 }

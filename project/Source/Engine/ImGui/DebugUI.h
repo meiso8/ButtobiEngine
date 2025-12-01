@@ -41,6 +41,10 @@ public:
    /// @param directionalLights 
    /// @param lightType 
     static void CheckDirectionalLight();
+    /// @brief 光源
+/// @param CheckSpotLight 
+/// @param lightType 
+    static void CheckSpotLight();
     /// @brief メッシュ
     /// @param mesh 
     static void CheckMesh(MeshCommon& mesh, const char* label);

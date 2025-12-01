@@ -9,6 +9,7 @@
 #include"VibrateManager.h"
 #include"Lights/PointLightManager.h"
 #include"Lights/DirectionalLightManager.h"
+#include"Lights/SpotLightManager.h"
 
 std::unique_ptr<PSO> MyEngine::pso = nullptr;
 std::unique_ptr <Input> MyEngine::input = nullptr;
@@ -61,7 +62,7 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
 
     DirectionalLightManager::Create();
     PointLightManager::CreateData();
-
+    SpotLightManager::Create();
     ////共通のスプライト
     SpriteCommon::Initialize();
     //スプライト用カメラ
@@ -111,8 +112,10 @@ void MyEngine::Debug()
     DebugUI::CheckJsonFile();
     DebugUI::CheckFPS();
     DebugUI::CheckInput();
-    DebugUI::CheckDirectionalLight();
+
     DebugUI::CheckSound();
+    DebugUI::CheckDirectionalLight();
+    DebugUI::CheckSpotLight();
     DebugUI::CheckPointLightData(PointLightManager::GetPointLightData(0),"pointLight0");
     DebugUI::CheckPointLightData(PointLightManager::GetPointLightData(1), "pointLight1");
 #endif // USE_IMGUI
@@ -158,6 +161,7 @@ void MyEngine::Finalize() {
 
     SpriteCommon::Finalize();
 
+    SpotLightManager::Finalize();
     PointLightManager::Finalize();
     DirectionalLightManager::Finalize();
 

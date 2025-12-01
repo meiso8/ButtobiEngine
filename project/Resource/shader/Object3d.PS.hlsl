@@ -18,7 +18,7 @@ struct Material
 ConstantBuffer<Material> gMaterial : register(b0);
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
 ConstantBuffer<Camera> gCamera : register(b2);
-//ConstantBuffer<PointLight> gPointLight : register(b3);
+ConstantBuffer<SpotLight> gSpotLight : register(b3);
 
 Texture2D<float32_t4> gTexture : register(t2); //SRVはt
 SamplerState gSampler : register(s0); //Samplerはs これを介してtextureを読む
@@ -54,6 +54,28 @@ float3 CalculatePointLightDiffuse(float3 normal, float3 worldPos, PointLight lig
     float cos = GetCosin(NdotL, lightType);
     //カラーを求める    //ポイントライトのみの色
     return light.color.rgb * cos * light.intensity * factor;
+    
+}
+
+
+float3 CalculateSpotLightDiffuse(float3 normal, float3 worldPos, SpotLight light, int lightType)
+{
+  
+    //ポイントライトの方向を求める
+    float3 toWorldPos = worldPos - light.position;
+    //方向を求める
+    float3 dir = normalize(toWorldPos);
+
+    //コサインを求める
+    float cosAngle = dot(dir, normalize(light.direction));
+    
+     //減衰率を求める
+    float falloffFactor = saturate((cosAngle - light.cosAngle) / (1.0f - light.cosAngle));
+        //距離による減衰
+    float attenuationFactor = pow(saturate(light.distance / 1.0f), light.decay);
+    
+    //カラーを求める 
+    return light.color.rgb * light.intensity * falloffFactor * attenuationFactor;
     
 }
 
@@ -98,6 +120,9 @@ PixelShaderOutput main(VertexShaderOutput input)
     float4 transformedUV = mul(float32_t4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
     float32_t4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
     
+
+    
+    
     //textureのα値ガ0.2以下の時にpixleを棄却
     if (textureColor.a <= 0.2)
     {
@@ -114,7 +139,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     }
     else
     {
-  
+ 
         // ==========================//共通//====================================
         //法線情報 
         float32_t3 normalInput = normalize(input.normal);
@@ -132,11 +157,13 @@ PixelShaderOutput main(VertexShaderOutput input)
         [loop]
         for (int i = 0; i < 20; ++i)
         {
-            pointLightTotalDiffuse += CalculatePointLightDiffuse(normalInput, input.worldPosition, gPointLights[i], gMaterial.lightType); 
+            pointLightTotalDiffuse += CalculatePointLightDiffuse(normalInput, input.worldPosition, gPointLights[i], gMaterial.lightType);
         }
         
         float32_t3 DirectionalLightDiffuse = CalculateDirectionalDiffuse(normalInput, gDirectionalLight.direction, gDirectionalLight.color.rgb, gDirectionalLight.intensity, gMaterial.lightType);
 
+        
+        float32_t3 spotLightDiffuse = CalculateSpotLightDiffuse(normalInput,input.worldPosition,gSpotLight,gMaterial.lightType);
 
         if (gMaterial.lightType == 1)
         {
@@ -153,14 +180,14 @@ PixelShaderOutput main(VertexShaderOutput input)
             CalculateDirectionalSpecular(normalInput, gDirectionalLight.direction, toEye, gDirectionalLight.color.rgb, gMaterial.shininess);
          
             output.color.rgb =
-            baseColor * (DirectionalLightDiffuse + pointLightTotalDiffuse) +
+            baseColor * (DirectionalLightDiffuse + pointLightTotalDiffuse + spotLightDiffuse) +
             (speculargDirectionalLight + pointLightTotalSpecular);
             
         }
         else
         {
             //反射光なし
-            output.color.rgb = baseColor * (DirectionalLightDiffuse + pointLightTotalDiffuse);
+            output.color.rgb = baseColor * (DirectionalLightDiffuse + pointLightTotalDiffuse + spotLightDiffuse);
 
         }
         
