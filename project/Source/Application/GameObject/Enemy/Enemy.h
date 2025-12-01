@@ -58,17 +58,6 @@ public:
     HPs* GetHpsPtr() { return &damageStruct_.hps; }
     bool IsOverKill() { return(overKillCount >= kMaxOverKillCount); }
 private:
-    Model* model_ = nullptr;
-    Object3d wingLPos_;
-    Object3d wingRPos_;
-
-    //目標地点
-    Vector3* target_ = nullptr;
-    Vector3* playerPos_ = nullptr;
-    Vector3* playerLookDir_ = nullptr;
-    //キャラクターの共通でもつ状態
-    Damage damageStruct_;
-    const float kRoundRadius_ = 7.0f;
 
     enum PHASE {
         //攻撃
@@ -99,6 +88,21 @@ private:
     //メンバ関数ポインタテーブル　ランダムアクションに切り替わる
     std::unordered_map<std::string, std::function<void()>> SwitchRandomAttackPhase_;
 
+    //モデル
+    Model* model_ = nullptr;
+    //翼の位置
+    Object3d wingLPos_;
+    //翼の位置
+    Object3d wingRPos_;
+
+    //目標地点
+    Vector3* target_ = nullptr;
+    Vector3* playerPos_ = nullptr;
+    Vector3* playerLookDir_ = nullptr;
+
+    //キャラクターの共通でもつ状態
+    Damage damageStruct_;
+
     //速度
     Vector3 velocity_ = { 0.0f };
     //球面座標
@@ -110,25 +114,107 @@ private:
     //フェーズタイマー
     float phaseTimer_ = 0.0f;
     float phaseTime_ = 0.0f;
-    const float kWavePhaseMaxTime_ = 5.0f;
-    const float kFireBallPhaseMaxTime_ = 8.0f;
+    //ランダムフェーズを呼び出すかどうか
     bool isSelectRandomPhase_ = false;
 
-    //ぽよぽよアニメタイマー
-    float poyoAnimTimer_ = 0.0f;
-    const float kPoyoAnimeTime_ = 0.25f;
+    //何回同じタイプの行動をしたかを記録
+    int actionCount_ = 0;
+    //攻撃したかどうか
+    bool isAttack_ = false;
+    //前回のフェーズで攻撃したか
+    bool isPreAttack_ = false;
+
+#pragma region //円移動
+    //球面移動に移行する時のスピード
+    const float kSphericalLerpSpeed_ = 0.5f;
+    //円移動時の半径
+    const float kRoundRadius_ = 7.0f;
+#pragma endregion
+
+#pragma region //タックル
+    //タックル中にプレイヤーに向くタイム
+    const float kTackleLookTime_ = 2.0f;
+    //タックル中にぽよぽよするタイム
+    const float kTacklePoyoTime_ = kTackleLookTime_ + 1.0f;
+    //フェイントするかどうか
+    bool isFeint_ = false;
+    //プレイヤーに向けてタックルするタイム
+    const float kTackleGoPlayerTime_ = kTacklePoyoTime_ + 0.7f;
+    //タックル終了後ちょっと戻るタイム
+    const float kTackleBackTime_ = kTackleGoPlayerTime_ + 1.0f;
+    //タックル終了後初期地点に戻るタイム
+    const float kTackleInitStartTime_ = kTackleGoPlayerTime_ + 1.0f;
+    //タックル終了後　後隙
+    const float kTackleEndingLagTime_ = kTackleInitStartTime_ + 1.0f;
+#pragma endregion
+
+#pragma region//HitBack
+    //当たった後ちょっと戻るタイム
+    const float kHitBackTime_ = 0.125f;
+    //プレイヤーに当たった後初期地点に戻るタイム
+    const float kPlayerHitBackTime_ = 2.0f;
+    //KnockBack中初期地点に戻るタイム
+    const float kKnockBackSpinTime_ = 0.75f;
+    //KnockBack最大タイム
+    const float kKnockBackMaxTime_ = 2.0f;
+#pragma endregion
+
+#pragma region //波攻撃
+
+    //波攻撃地点まで移動するタイム
+    const float kWavePhaseMovePosTime_ =1.0f;
+    //波攻撃地点まで移動するタイム
+    const float kWaveShotTime_ = kWavePhaseMovePosTime_+0.5f;
+    //波攻撃最大タイム
+    const float kWavePhaseMaxTime_ = 5.0f;
+#pragma endregion
+
+#pragma region //ファイアボール
+    //一回転する時間
+    const float kFireBallRotateTime_ = 1.0f;
+    //ファイアボール最大タイム
+    const float kFireBallPhaseMaxTime_ = 8.0f;
     //ファイアボールのクールタイム
     float fireBallCoolTimer_ = 0.0f;
     //ファイアボールのクールタイム
     float kFireBallMaxCoolTime_ = 1.5f;
+#pragma endregion
+
+#pragma region //四角移動
+    //四角移動の初期地点の移動時間
+    const float kLerpSquareInitPosTime_ = 1.0f;
     //四角移動に移行する際のタイム
     const float kLerpSquareTime_ = 2.0f;
-    //四角移動する際のスピー
-    const float kSquareMoveSpeed_ = 0.05f;
+
     const float kLerpSquareStartPosY_ = 4.0f + kRadius_;
     const float kLerpSquareEndPosY_ = 1.0f + kRadius_ * 2.0f;
-    //球面移動に移行する時のスピード
-    const float kSphericalLerpSpeed_ = 0.5f;
+    //四角移動する際の速度
+    const float kSquareMoveSpeed_ = 0.05f;
+    //一つの移動についての間隔
+    const float kSquareMoveInterval_ = 2.0f;
+    const float kSquareMoveMaxTime_ = 8.0f;
+#pragma endregion
+
+#pragma region //床攻撃
+    //攻撃地点移動タイム
+    const float kFloorAttackPosMoveTime_ = 1.0f;
+    //ボムを投げる時間
+    const float kFloorBombShotTime_ = kFloorAttackPosMoveTime_ + 0.5f;
+    //ボム爆発まで待つ時間
+    const float kFloorBombWaitTime_ = 9.0f;
+    //ボム爆発後隙
+    const float kFloorAttackEndingLagTime_ = kFloorBombWaitTime_ + 1.0f;
+#pragma endregion
+
+#pragma region //最後の撃破アニメーション
+
+    //波攻撃地点まで移動するタイム
+    const float kExitSpinTime_ = 1.0f;
+    //ひっくり返るタイム
+    const float kFlipOverTime_ = kExitSpinTime_ + 1.0f;
+
+#pragma endregion
+
 
     //開始時Y軸回転
     float startRotateY_ = 0.0f;
@@ -137,21 +223,20 @@ private:
     //回転速度Y
     float roundSpeedY = 1.0f;
 
-    //半径
+    //半径　コライダーの大きさ
     const float kRadius_ = 1.5f;
     //サイズ
     const float kSize_ = 1.0f;
-    //何回同じタイプの行動をしたかを記録
-    int actionCount_ = 0;
-    //攻撃したかどうか
-    bool isAttack_ = false;
-    //前回のフェーズで攻撃したか
-    bool isPreAttack_ = false;
+
+    //ぽよぽよアニメタイマー
+    float poyoAnimTimer_ = 0.0f;
+    const float kPoyoAnimeTime_ = 0.25f;
+
     //翼を動かすときのもの
     float wingTheta_ = 0.0f;
-
     // 左右に揺れるときのもの
     float rotateLRTheta_ = 0.0f;
+
     //オーバーキルカウント
     int overKillCount = 0;
     //オーバーキルカウント最大値

@@ -80,6 +80,7 @@ void Enemy::Init() {
     isReqestClearFloor_ = false;
     isAttack_ = false;
     isPreAttack_ = false;
+    isFeint_ = false;
 
     isReqestClearFloor_ = false;
 
@@ -163,8 +164,6 @@ void Enemy::Update()
     }
 
     UpdatePhaseTimer();
-    // 呼び出す  
-    UpdateActions_[phase_]();
     //フェーズごとに呼び出す関数をカエル
     SwitchPhase();
 
@@ -179,6 +178,10 @@ void Enemy::Update()
     if (Input::IsTriggerKey(DIK_M)) { SetPhase(RANDOM_WALK); }
     if (Input::IsTriggerKey(DIK_L)) { SetPhase(EXIT); }
 #endif
+    // 呼び出す  
+    UpdateActions_[phase_]();
+
+
 
     damageStruct_.isHit = false;
 
@@ -302,29 +305,45 @@ void Enemy::OnCollision(Collider* collider)
 void Enemy::Tackle()
 {
 
-    if (phaseTimer_ <= 3.0f) {
+    if (phaseTimer_ == 0.0f) {
+        if (damageStruct_.hps.hp > 10.0f) {
+            int random = rand() % 3;
+            //1/3の確率でタックルしない
+            if (random == 0) {
 
-        if (phaseTimer_ <= 2.0f) {
+                isFeint_ = true;
+            } else {
+                isFeint_ = false;
+            }
+        }
+    }
+
+    if (phaseTimer_ <= kTacklePoyoTime_) {
+
+
+      
+
+        if (phaseTimer_ <= kTackleLookTime_) {
             LookTarget(*playerPos_);
         }
-        PoyoPoyo(3.0f);
 
-    } else if (phaseTimer_ <= 3.7f) {
+        PoyoPoyo(kTacklePoyoTime_);
 
-        if (phaseTimer_ <= 3.2f) {
-            if (damageStruct_.hps.hp > 30.0f) {
-                int random = rand() % 3;
-                //1/3の確率でタックルしない
-                if (random == 0) {
-                    isSelectRandomPhase_ = true;
-                }
+    } else if (phaseTimer_ <= kTackleGoPlayerTime_) {
+
+        float localTimer = (phaseTimer_ - kTacklePoyoTime_) / (kTackleGoPlayerTime_ - kTacklePoyoTime_);
+
+        if (localTimer > 0.1f) {
+            if (isFeint_) {
+                endPos_ = bodyPos_.worldTransform_.translate_;
             }
         }
 
-        float localTimer = (phaseTimer_ - 3.0f) / 0.7f;
         LerpScale();
+
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(startPos_, endPos_, localTimer);
-        if (/*phaseTimer_ >= 6.0f && */ Dot(*playerLookDir_, endPos_ - startPos_) < 0.0f) {
+      
+        if (Dot(*playerLookDir_, endPos_ - startPos_) < 0.0f) {
             if (damageStruct_.isHit) {
                 Sound::PlayOriginSE(Sound::BOSS_TACKLE);
                 VibrateManager::SetTime(1.0f, 2000, 2000);
@@ -332,16 +351,15 @@ void Enemy::Tackle()
             }
         }
 
-
-    } else if (phaseTimer_ <= 4.7f) {
-        float localTimer = (phaseTimer_ - 3.7f) * 0.5f;
+    } else if (phaseTimer_ <= kTackleBackTime_) {
+        float localTimer = (phaseTimer_ - kTackleGoPlayerTime_) * 0.5f;//半減した速さで行う
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(endPos_, startPos_, localTimer);
-    } else if (phaseTimer_ <= 5.7f) {
+    } else if (phaseTimer_ <= kTackleInitStartTime_) {
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(bodyPos_.worldTransform_.translate_, startPos_, 0.5f);
-    } else {
+    } else if(phaseTimer_ <= kTackleEndingLagTime_){
 
+    } else {
         isSelectRandomPhase_ = true;
-        //phaseTimer_ = phaseTime_;
     }
 
 }
@@ -353,14 +371,12 @@ void Enemy::PlayerHitBack()
         LookTarget(*playerPos_);
     }
 
-    if (phaseTimer_ <= 0.125f) {
+    if (phaseTimer_ <= kHitBackTime_) {
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(endPos_, startPos_, phaseTimer_);
-    } else if (phaseTimer_ <= 2.0f) {
+    } else if (phaseTimer_ <= kPlayerHitBackTime_) {
         bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, startPos_, 0.05f);
-
     } else {
         isSelectRandomPhase_ = true;
-        /*  phaseTimer_ = phaseTime_;*/
     }
 }
 
@@ -371,11 +387,11 @@ void Enemy::KnockBack()
         LookTarget(*playerPos_);
     }
 
-    if (phaseTimer_ <= 0.125f) {
+    if (phaseTimer_ <= kHitBackTime_) {
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(bodyPos_.worldTransform_.translate_, startPos_, 0.05f);
     } else {
 
-        if (phaseTimer_ <= 0.75f) {
+        if (phaseTimer_ <= kKnockBackSpinTime_) {
             SpinBody();
            
         } else {
@@ -384,11 +400,9 @@ void Enemy::KnockBack()
         }
     }
 
-    if (phaseTimer_ > 2.0f) {
+    if (phaseTimer_ > kKnockBackMaxTime_) {
         isSelectRandomPhase_ = true;
-        //phaseTimer_ = phaseTime_;
     }
-
 
 }
 
@@ -408,7 +422,7 @@ void Enemy::LerpRoundPos()
 void Enemy::LerpSquarePos()
 {
 
-    if (phaseTimer_ <= 1.0f) {
+    if (phaseTimer_ <= kLerpSquareInitPosTime_) {
         LerpPos({ 0.0f,kLerpSquareStartPosY_,0.0f }, 0.1f);
         LerpRotateY(PI, 0.1f);
     } else if (phaseTimer_ <= kLerpSquareTime_) {
@@ -422,25 +436,26 @@ void Enemy::LerpSquarePos()
 void Enemy::SquareMove()
 {
 
-    float loopedTime = std::fmod(phaseTimer_, 4.0f);
+    float loopedTime = std::fmod(phaseTimer_, 4.0f* kSquareMoveInterval_);
+
     Vector3 endPos = { 0.0f,0.0f,0.0f };
-    if (loopedTime <= 1.0f) {
+    if (loopedTime <= 1.0f* kSquareMoveInterval_) {
         endPos = { 6.0f,kRadius_,6.0f };
         bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, kSquareMoveSpeed_);
-    } else if (loopedTime <= 2.0f) {
+    } else if (loopedTime <= 2.0f * kSquareMoveInterval_) {
         endPos = { 6.0f,kRadius_,-6.0f };
         bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, kSquareMoveSpeed_);
-    } else if (loopedTime <= 3.0f) {
+    } else if (loopedTime <= 3.0f * kSquareMoveInterval_) {
         endPos = { -6.0f,kRadius_,-6.0f };
         bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, kSquareMoveSpeed_);
-    } else if (loopedTime <= 4.0f) {
+    } else if (loopedTime <= 4.0f * kSquareMoveInterval_) {
         endPos = { -6.0f,kRadius_,6.0f };
         bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, kSquareMoveSpeed_);
     }
 
     LookTarget(endPos);
 
-    if (phaseTimer_ >= phaseTime_) {
+    if (phaseTimer_ >= kSquareMoveMaxTime_) {
         isSelectRandomPhase_ = true;
     }
 }
@@ -576,7 +591,7 @@ void Enemy::Round()
 
 void Enemy::Fireball()
 {
-    if (phaseTimer_ <= 1.0f) {
+    if (phaseTimer_ <= kFireBallRotateTime_) {
         RotateY(phaseTimer_);
         fireBallCoolTimer_ = 0.0f;
     } else {
@@ -599,21 +614,21 @@ void Enemy::Fireball()
 
 void Enemy::FloorChangeAttack()
 {
-    if (phaseTimer_ <= 1.0f) {
+    if (phaseTimer_ <= kFloorAttackPosMoveTime_) {
         LerpScale();
         LerpPos({ 0.0f,kRadius_,6.0f }, 0.1f);
         LerpRotateY(PI, 0.3f);
-    } else if (phaseTimer_ <= 1.5f) {
+    } else if (phaseTimer_ <= kFloorBombShotTime_) {
 
         if (!isBombShot_) {
             isBombShot_ = true;
         }
         LerpRotateY(0.0f, 0.3f);
 
-    } else if(phaseTimer_ <= 9.0f){
+    } else if(phaseTimer_ <= kFloorBombWaitTime_){
         LerpRotateY(PI, 0.3f);
         RotateLR(2.0f);
-    } else if(phaseTimer_ <= 10.0f){
+    } else if(phaseTimer_ <= kFloorAttackEndingLagTime_){
         LerpRotateZ(0.5f);
     } else {
         isSelectRandomPhase_ = true;
@@ -622,11 +637,11 @@ void Enemy::FloorChangeAttack()
 }
 void Enemy::ShockWaveAttack()
 {
-    if (phaseTimer_ <= 1.0f) {
+    if (phaseTimer_ <= kWavePhaseMovePosTime_) {
         LookTarget(*playerPos_);
         bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, *target_, 0.05f);
 
-    } else if (phaseTimer_ <= 1.5f) {
+    } else if (phaseTimer_ <= kWaveShotTime_) {
         if (!isWaveShot_) {
             isWaveShot_ = true;
         }
@@ -638,12 +653,11 @@ void Enemy::ShockWaveAttack()
 }
 void Enemy::Exit()
 {
-
     LerpPos({ 0.0f,kLerpSquareEndPosY_,6.0f }, 0.05f);
-    if (phaseTimer_ <= 1.0f) {
+    if (phaseTimer_ <= kExitSpinTime_) {
         SpinBody();
     } else {
-        if (phaseTimer_ <= 2.0f) {
+        if (phaseTimer_ <= kFlipOverTime_) {
             float localTimer = phaseTimer_ - 1.0f;
             bodyPos_.worldTransform_.rotate_.x = Easing::EaseInOutBack(0.0f, -QUARTER_PI*3.0f, localTimer);
         }
@@ -655,12 +669,7 @@ void Enemy::Exit()
 
 void Enemy::UpdatePhaseTimer()
 {
-    //if (phaseTimer_ < phaseTime_) {
     phaseTimer_ += InverseFPS;
-    /*}*//* else {
-        phaseTimer_ = phaseTime_;
-    }*/
-
 }
 
 // =============================//アニメーション//============================================================
