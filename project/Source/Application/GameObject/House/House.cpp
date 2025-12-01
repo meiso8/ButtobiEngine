@@ -34,7 +34,7 @@ void House::Initialize()
     positions_[kHouse_door].Initialize();
 
     positions_[kHouse_floor].worldTransform_.scale_ = { 4.0f,4.0f,4.0f };
-    positions_[kHouse_floor].worldTransform_.translate_.y = -0.45f;
+    positions_[kHouse_floor].worldTransform_.translate_.y = -0.6f;
     positions_[kHouse_wall_back].worldTransform_.translate_.z = 2.0f;
     positions_[kHouse_wall_L].worldTransform_.translate_.x = -2.0f;
     positions_[kHouse_wall_R].worldTransform_.translate_.x = 2.0f;
