@@ -92,9 +92,8 @@ void TitleScene::Initialize()
     sceneChange_->SetState(SceneChange::kFadeOut, 60);
 
     camera_->Initialize();
-    camera_->translate_ = { 0.0f, 8.0f,-15.0f };
-    camera_->rotate_ = { 0.4f,0.0f,0.0f };
-    camera_->fovAngleY_ = 0.5f;
+    camera_->translate_ = { 0.0f, 12.0f,-14.0f };
+    camera_->rotate_ = { 0.6f,0.0f,0.0f };
     camera_->UpdateMatrix();
 
 #pragma region // オブジェクト初期化
@@ -167,9 +166,7 @@ void TitleScene::SceneChangeUpdate()
     if (titleText_->GetIsBreak()) {
 		camera_->rotate_ = MY_Utility::SimpleEaseIn(camera_->rotate_, { 0.0f,0.0f,0.0f }, 0.1f);
 		camera_->translate_ = MY_Utility::SimpleEaseIn(camera_->translate_, { 0.0f,1.5f,0.0f }, 0.1f);
-		
-        camera_->fovAngleY_ = MY_Utility::SimpleEaseIn(camera_->fovAngleY_, camera_->kFovAngle_, 0.1f);
-        
+
         if (bossDummy_->isAnimEnd_) {
 			sceneChange_->SetState(SceneChange::kFadeIn, 30);
 		}
