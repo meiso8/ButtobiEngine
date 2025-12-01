@@ -1,11 +1,11 @@
 #include "EnemyBulletManager.h"
 
 namespace {
-	const int kMaxBullets = 10;
+	const int kMaxBombs = 10;
 }
 
 EnemyBulletManager::EnemyBulletManager() {
-	for (int i = 0; i < kMaxBullets; i++) {
+	for (int i = 0; i < kMaxBombs; i++) {
 		bullets_.emplace_back(std::make_unique<EnemyBullet>());
 		bullets_[i]->Initialize();
 	}

@@ -2,6 +2,8 @@
 #include"DebugUI.h"
 #include"../MatsumotoObj/GameSceneObj/FloorGamePlayer.h"
 #include"Enemy/Enemy.h"
+//#include"Enemy/EnemyBombManager.h"
+
 EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy):player_(&player),enemy_(&enemy)
 {
 
@@ -20,6 +22,12 @@ EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy):player_(&p
 
     particleEmitters_[kEnemyWingEmitter]->SetName("enemyWingParticle");
     particleEmitters_[kEnemyWingEmitter]->emitter_.transform.Parent(enemy_->bodyPos_.worldTransform_);
+
+    //for (int i = 0; i < EnemyBombManager::kMaxBombs; ++i) {
+    //    std::unique_ptr<ParticleEmitter> newEmitter = std::make_unique<ParticleEmitter>();
+    //    newEmitter->SetName("floorBombBlastParticle");
+    //    bombEmitter_.push_back(std::move(newEmitter));
+    //}
 
 }
 
@@ -55,6 +63,9 @@ void EmitterManager::Initialize()
     particleEmitters_[kPlayerHitEmitter]->emitter_.frequency = 0.5f;
     particleEmitters_[kPlayerHitEmitter]->emitter_.blendMode = kBlendModeNormal;
 
+   /* for (const auto& bomb :bombEmitter_) {
+        bomb->Initialize();
+    }*/
 }
 
 void EmitterManager::Update(Camera& camera)
@@ -78,6 +89,11 @@ void EmitterManager::Update(Camera& camera)
     for (auto& particleEmitter : particleEmitters_) {
         particleEmitter->Update(camera);
     }
+
+    //for (const auto& bomb : bombEmitter_) {
+    //    bomb->UpdateTimer();
+    //    bomb->Update(camera);
+    //}
 }
 
 void EmitterManager::Draw()
@@ -85,6 +101,10 @@ void EmitterManager::Draw()
     for (auto& particleEmitter : particleEmitters_) {
         particleEmitter->Draw();
     }
+
+ /*   for (const auto& bomb : bombEmitter_) {
+        bomb->Draw();
+    }*/
 }
 
 void EmitterManager::Debug()

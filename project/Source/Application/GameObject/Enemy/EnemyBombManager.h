@@ -1,9 +1,11 @@
 #pragma once
 #include"EnemyBomb.h"
 #include <vector>
+
 class EnemyBombManager
 {
 public:
+	static const int kMaxBombs = 20;
 	EnemyBombManager();
 	~EnemyBombManager();
 	void Initialize();

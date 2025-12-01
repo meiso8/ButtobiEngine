@@ -2,6 +2,7 @@
 #include<array>
 #include"ParticleEmitter.h"
 #include<memory>
+#include<vector>
 class Camera;
 class FloorGamePlayer;
 class Enemy;
@@ -17,7 +18,7 @@ private:
 
     FloorGamePlayer* player_ = nullptr;
     Enemy* enemy_ = nullptr;
-    
+
     enum EmitterType {
         kPlayerWalkEmitter,
         kPlayerHitEmitter,
@@ -25,7 +26,7 @@ private:
         kEnemyWingEmitter,
         kMaxEmitter
     };
-
+    //std::vector <std::unique_ptr<ParticleEmitter>> bombEmitter_;
     std::array< std::unique_ptr<ParticleEmitter>, kMaxEmitter>particleEmitters_;
 };
 
