@@ -29,36 +29,36 @@ PixelShaderOutput main(VertexShaderOutput input)
     float32_t4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
     
      //textureのα値ガ0.0以下の時にpixleを棄却
-    if (textureColor.a == 0.0)
+    if (textureColor.a <= 0.2)
     {
         discard;
     }
     
     
-    float3 color = { 60.0f / 255.0f, 40.0f / 255.0f, 40.0f / 255.0f };
+    //float3 color = { 60.0f / 255.0f, 40.0f / 255.0f, 40.0f / 255.0f };
     
-    if (textureColor.r > 0.5f){
-        textureColor.r = 1.0f - 2.0f * (1.0f - textureColor.r) * (1.0f - color.r);
-    } else {
-        textureColor.r = 2.0f * textureColor.r * color.r;
-    }
+    //if (textureColor.r > 0.5f){
+    //    textureColor.r = 1.0f - 2.0f * (1.0f - textureColor.r) * (1.0f - color.r);
+    //} else {
+    //    textureColor.r = 2.0f * textureColor.r * color.r;
+    //}
     
-    if (textureColor.g > 0.5f)
-    {
-        textureColor.g = 1.0f - 2.0f * (1.0f - textureColor.g) * (1.0f - color.g);
-    }
-    else
-    {
-        textureColor.g = 2.0f * textureColor.g * color.g;
-    }
-    if (textureColor.b > 0.5f)
-    {
-        textureColor.b = 1.0f - 2.0f * (1.0f - textureColor.b) * (1 - color.b);
-    }
-    else
-    {
-        textureColor.b = 2.0f * textureColor.b * color.b;
-    }
+    //if (textureColor.g > 0.5f)
+    //{
+    //    textureColor.g = 1.0f - 2.0f * (1.0f - textureColor.g) * (1.0f - color.g);
+    //}
+    //else
+    //{
+    //    textureColor.g = 2.0f * textureColor.g * color.g;
+    //}
+    //if (textureColor.b > 0.5f)
+    //{
+    //    textureColor.b = 1.0f - 2.0f * (1.0f - textureColor.b) * (1 - color.b);
+    //}
+    //else
+    //{
+    //    textureColor.b = 2.0f * textureColor.b * color.b;
+    //}
       
     output.color = gMaterial.color * textureColor; //ベクトル*ベクトルと記述すると乗算が行われる
 

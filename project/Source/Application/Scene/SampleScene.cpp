@@ -100,7 +100,7 @@ SampleScene::SampleScene()
 void SampleScene::Initialize() {
 
     DirectionalLightManager::GetDirectionalLightData()->direction = { 0.0f,-1.0f,0.0f };
-    DirectionalLightManager::GetDirectionalLightData()->intensity = -2.0f;
+    DirectionalLightManager::GetDirectionalLightData()->intensity = -1.0f;
     Sound::bgmVolume_ = 0.1f;
 
 
@@ -168,10 +168,10 @@ void SampleScene::Update() {
 
         Locker::isSetMesh_ = true;
 
-        if (DirectionalLightManager::GetDirectionalLightData()->intensity < 0.0f) {
+        if (DirectionalLightManager::GetDirectionalLightData()->intensity < 1.0f) {
             DirectionalLightManager::GetDirectionalLightData()->intensity += InverseFPS * 2.0f;
         } else {
-            DirectionalLightManager::GetDirectionalLightData()->intensity = 0.0f;
+            DirectionalLightManager::GetDirectionalLightData()->intensity = 1.0f;
         }
 
 
