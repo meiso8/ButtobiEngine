@@ -103,4 +103,7 @@ void EnemyBullet::Shot(const Vector3& position, const Vector3& direction, const 
     body_.worldTransform_.scale_ = { size_,size_,size_ };
     lifeTimer_ = lifeDuration_;
     isActive_ = true;
+    body_.Update();
+
+    ColliderUpdate();
 }
