@@ -296,6 +296,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\UI\UIManager.cpp" />
     <ClCompile Include="Source\Engine\Input\VibrateManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\Tree\Tree.cpp" />
+    <ClCompile Include="Source\Engine\Lights\SpotLightManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\Lights\DirectionalLightManager.h" />
@@ -445,6 +446,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\GameObject\UI\UIManager.h" />
     <ClInclude Include="Source\Engine\Input\VibrateManager.h" />
     <ClInclude Include="Source\Application\GameObject\Tree\Tree.h" />
+    <ClInclude Include="Source\Engine\Lights\SpotLightManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />

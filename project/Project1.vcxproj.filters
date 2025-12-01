@@ -123,6 +123,7 @@
     <ClCompile Include="Source\Application\GameObject\Tree\Tree.cpp" />
     <ClCompile Include="Source\Engine\Lights\PointLightManager.cpp" />
     <ClCompile Include="Source\Engine\Lights\DirectionalLightManager.cpp" />
+    <ClCompile Include="Source\Engine\Lights\SpotLightManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\GameObject\UI\PauseScreen.h" />
@@ -272,6 +273,7 @@
     <ClInclude Include="Source\Application\GameObject\Tree\Tree.h" />
     <ClInclude Include="Source\Engine\Lights\PointLightManager.h" />
     <ClInclude Include="Source\Engine\Lights\DirectionalLightManager.h" />
+    <ClInclude Include="Source\Engine\Lights\SpotLightManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="externals\assimp\lib\Debug\assimp-vc143-mdd.lib" />
