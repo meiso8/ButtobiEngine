@@ -39,7 +39,7 @@
 #include"Lerp.h"
 
 #include"Easing.h"
-#include"Lights/DirectionalLightManager.h"
+
 
 SampleScene::SampleScene()
 {
@@ -95,12 +95,16 @@ SampleScene::SampleScene()
     hpGage_->SetHpPtr(player_->GetHpsPtr());
     hpGage_->Setting({ 640.0f,32.0f }, { 640.0f,720.0f - 64.0f }, { 0.5f,0.0f });
 
+
+    lightingManager_ = std::make_unique<LightingManager>();
+    lightingManager_->playerHandPos_.Parent(player_->GetBodyWorldTransform());
 }
 
 void SampleScene::Initialize() {
 
-    DirectionalLightManager::GetDirectionalLightData()->direction = { 0.0f,-1.0f,0.0f };
-    DirectionalLightManager::GetDirectionalLightData()->intensity = -1.0f;
+
+    lightingManager_->Initialize();
+    
     Sound::bgmVolume_ = 0.1f;
 
 
@@ -164,16 +168,13 @@ void SampleScene::Update() {
         sceneChange_->SetState(SceneChange::kFadeIn, 60);
     }
 
+
+    lightingManager_->UpdatePointLight();
     if (enemy_->isApper_) {
+        lightingManager_->DirectionalLightUpdate();
+    
 
         Locker::isSetMesh_ = true;
-
-        if (DirectionalLightManager::GetDirectionalLightData()->intensity < 1.0f) {
-            DirectionalLightManager::GetDirectionalLightData()->intensity += InverseFPS * 2.0f;
-        } else {
-            DirectionalLightManager::GetDirectionalLightData()->intensity = 1.0f;
-        }
-
 
         if (Sound::bgmVolume_ < 1.0f) {
             Sound::bgmVolume_ += InverseFPS * 0.25f;
@@ -239,11 +240,11 @@ SampleScene::~SampleScene()
 void SampleScene::Debug()
 {
 
+#ifdef USE_IMGUI
+
     if (Input::IsTriggerKey(DIK_Q)) {
         SwitchCamera();
     }
-
-#ifdef USE_IMGUI
 
     ImGui::Text("SwitchCamera : Q key");
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
@@ -342,13 +343,13 @@ void SampleScene::Draw() {
 
     if (!player_->isPressSpace_ && !enemy_->isApper_) {
         for (int i = 0; i < sprite_.size() - 1; ++i) {
-            sprite_[i]->PreDraw();
+            Sprite::PreDraw();
             sprite_[i]->Draw();
         }
     }
 
 
-    sprite_[2]->PreDraw(kBlendModeMultiply);
+    Sprite::PreDraw(kBlendModeMultiply);
     sprite_[2]->Draw();
 
     sceneChange_->Draw();

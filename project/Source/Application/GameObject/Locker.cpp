@@ -20,7 +20,7 @@ void Locker::Init()
 
 void Locker::Draw(Camera& camera)
 {
-    object3d_->SetLightMode(kLightModeNone);
+    object3d_->SetLightMode(kLightModeHalfL);
     object3d_->Draw(camera);
 }
 

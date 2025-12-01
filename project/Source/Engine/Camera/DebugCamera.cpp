@@ -13,7 +13,7 @@ void DebugCamera::Initialize(const PROJECTION_TYPE& type)
     farZ_ = 1000.0f;
     nearZ_ = 0.1f;
     offset_ = { 0.0f };
-
+    fovAngleY_ = kFovAngleY;
     rotateSpeed_ = std::numbers::pi_v<float> / 20.0f * InverseFPS;
     speed_ = 1.0f;
 
