@@ -229,7 +229,7 @@ void DebugUI::CheckDamageStruct(Damage& damage, const char* label)
 
 void DebugUI::CheckSpotLight()
 {
-
+#ifdef USE_IMGUI
     SpotLight& spotLight = *SpotLightManager::GetData();
     Vector3& direction = spotLight.direction;
 
@@ -244,7 +244,7 @@ void DebugUI::CheckSpotLight()
         ImGui::SliderFloat("cosAngle", &spotLight.cosAngle, -6.28f, 6.28f);
         ImGui::TreePop();
     }
-
+#endif
 }
 
 void DebugUI::CheckMesh(MeshCommon& mesh, const char* label) {
