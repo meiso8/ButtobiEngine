@@ -132,12 +132,12 @@ private:
 #pragma endregion
 
 #pragma region //タックル
+    //フェイントするかどうか
+    bool isFeint_ = false;
     //タックル中にプレイヤーに向くタイム
     const float kTackleLookTime_ = 2.0f;
     //タックル中にぽよぽよするタイム
     const float kTacklePoyoTime_ = kTackleLookTime_ + 1.0f;
-    //フェイントするかどうか
-    bool isFeint_ = false;
     //プレイヤーに向けてタックルするタイム
     const float kTackleGoPlayerTime_ = kTacklePoyoTime_ + 0.7f;
     //タックル終了後ちょっと戻るタイム
