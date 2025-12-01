@@ -17,7 +17,6 @@ std::map<const uint32_t, std::unique_ptr< Model> >ModelManager::models_;
 void ModelManager::LoadAllModel()
 {
     //モデルのファイルパスとタグを関連付けてください
-
     LoadModel("Resource/Models/Box", "Box.obj", BOX);
     LoadModel("Resource/Models/player", "player.obj", PLAYER_BODY);
     LoadModel("Resource/Models/medjed", "medjed.obj", MEDJED);

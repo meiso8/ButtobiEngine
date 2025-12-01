@@ -119,8 +119,8 @@ void Player::Move()
 
     bodyPos_.worldTransform_.translate_.y = Lerp(0.0f, bodyPos_.worldTransform_.translate_.y, 0.5f);
 
-    if (Input::IsControllerConnected(0)) {
-        Vector2 controllerPos = Input::GetControllerStickPos(BUTTON_LEFT, 0);
+    Vector2 controllerPos = { velocity_.x ,velocity_.z };
+    if (Input::IsControllerStickPosMove(BUTTON_LEFT, 0, &controllerPos)) {
         velocity_.x = controllerPos.x;
         velocity_.z = controllerPos.y;
     }
@@ -258,11 +258,14 @@ void Player::MouseLook()
         return;
     }
 
-
-       cameraRotateY_ += Input::GetControllerStickPos(BUTTON_RIGHT, 0).x * InverseFPS * cameraSpeed_;
+    Vector2 controllerPos = { cameraRotateY_ ,cameraRotateX_ };
+   
+    if (Input::IsControllerStickPosMove(BUTTON_RIGHT, 0, &controllerPos)) {
+        cameraRotateY_ += controllerPos.x * InverseFPS * cameraSpeed_;
+        cameraRotateX_ -= controllerPos.y * InverseFPS * cameraSpeed_;
+    }
+ 
    cameraRotateY_ += Input::GetMousePosFiltered().x * InverseFPS / cameraSpeed_;
-   cameraRotateX_ -= Input::GetControllerStickPos(BUTTON_RIGHT, 0).y * InverseFPS * cameraSpeed_;
-
    cameraRotateX_ += Input::GetMousePosFiltered().y * InverseFPS / cameraSpeed_;
 
    bodyPos_.worldTransform_.rotate_.y = Lerp(bodyPos_.worldTransform_.rotate_.y, cameraRotateY_, 0.5f);

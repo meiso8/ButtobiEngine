@@ -13,7 +13,7 @@
 #include<unordered_map>
 
 enum BlendMode;
-
+class Input;
 class Sprite;
 class SphereMesh;
 class Camera;
@@ -25,7 +25,6 @@ struct Material;
 struct PointLight;
 class MeshCommon;
 
-
 class DebugUI
 {
 public:
@@ -33,8 +32,9 @@ public:
     static void CheckSound();
     static void CheckJsonFile();
     /// @brief 入力
-    /// @param input 
+       /// @param input 
     static void CheckInput();
+    static void CheckXInput(const int& num);
     /// @brief 光源
    /// @param directionalLights 
    /// @param lightType 

@@ -157,6 +157,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\Input\VibrateManager.cpp" />
+    <ClCompile Include="Source\Engine\Lights\DirectionalLightManager.cpp" />
+    <ClCompile Include="Source\Engine\Lights\PointLightManager.cpp" />
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\Application\GameObject\Building.cpp" />
     <ClCompile Include="Source\Application\GameObject\Locker.cpp" />
@@ -269,6 +272,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\UI\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\Input\VibrateManager.h" />
+    <ClInclude Include="Source\Engine\Lights\DirectionalLightManager.h" />
+    <ClInclude Include="Source\Engine\Lights\Light.h" />
+    <ClInclude Include="Source\Engine\Lights\PointLightManager.h" />
     <ClInclude Include="Source\Game.h" />
     <ClInclude Include="Source\Application\GameObject\Building.h" />
     <ClInclude Include="Source\Application\GameObject\Locker.h" />
@@ -326,7 +333,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\DirectXCommon\DebugError.h" />
     <ClInclude Include="Source\Engine\ImGui\DebugUI.h" />
     <ClInclude Include="Source\Engine\PSO\Depth.h" />
-    <ClInclude Include="Source\Engine\Surface\Light.h" />
     <ClInclude Include="Source\Engine\Mesh\Grid\DrawGrid.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\DXGIFactory.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\Fence.h" />

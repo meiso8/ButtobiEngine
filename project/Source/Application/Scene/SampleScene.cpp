@@ -39,6 +39,7 @@
 #include"Lerp.h"
 
 #include"Easing.h"
+#include"Lights/DirectionalLightManager.h"
 
 SampleScene::SampleScene()
 {
@@ -98,8 +99,8 @@ SampleScene::SampleScene()
 
 void SampleScene::Initialize() {
 
-    MyEngine::GetDirectionalLightData()->direction = { 0.0f,-1.0f,0.0f };
-    MyEngine::GetDirectionalLightData()->intensity = -2.0f;
+    DirectionalLightManager::GetDirectionalLightData()->direction = { 0.0f,-1.0f,0.0f };
+    DirectionalLightManager::GetDirectionalLightData()->intensity = -1.0f;
     Sound::bgmVolume_ = 0.1f;
 
 
@@ -167,10 +168,10 @@ void SampleScene::Update() {
 
         Locker::isSetMesh_ = true;
 
-        if (MyEngine::GetDirectionalLightData()->intensity < 0.0f) {
-            MyEngine::GetDirectionalLightData()->intensity += InverseFPS * 2.0f;
+        if (DirectionalLightManager::GetDirectionalLightData()->intensity < 1.0f) {
+            DirectionalLightManager::GetDirectionalLightData()->intensity += InverseFPS * 2.0f;
         } else {
-            MyEngine::GetDirectionalLightData()->intensity = 0.0f;
+            DirectionalLightManager::GetDirectionalLightData()->intensity = 1.0f;
         }
 
 

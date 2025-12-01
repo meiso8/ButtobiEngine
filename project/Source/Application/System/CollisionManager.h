@@ -18,9 +18,24 @@ public:
 
 private:
     std::list<Collider*> colliders_; // コライダーのリスト
+
+    void  CheckCollisionPair(Collider* a, Collider* b);
+
     /// @brief コライダー2つの衝突判定と応答
     /// @param colliderA コライダーA
     /// @param colliderB コライダーB
     /// @param score スコアポインタ
-    void CheckCollisionPair(Collider* colliderA, Collider* colliderB);
+    void CheckCollisionSpherePair(Collider* colliderA, Collider* colliderB);
+
+    /// @brief コライダー2つの衝突判定と応答
+/// @param colliderA コライダーA
+/// @param colliderB コライダーB
+/// @param score スコアポインタ
+    void CheckCollisionAABBPair(Collider* colliderA, Collider* colliderB);
+
+    /// @brief コライダー2つの衝突判定と応答
+/// @param colliderA コライダーA
+/// @param colliderB コライダーB
+/// @param score スコアポインタ
+    void CheckCollisionSphereAABBPair(Collider* colliderA, Collider* colliderB);
 };

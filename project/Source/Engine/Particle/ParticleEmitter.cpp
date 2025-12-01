@@ -33,6 +33,10 @@ void ParticleEmitter::UpdateTimer()
         Emit();
     }
 }
+void ParticleEmitter::InitTimer()
+{
+    emitter_.frequencyTime = 0.0f;
+}
 void ParticleEmitter::Update(Camera& camera)
 {
     WorldTransformUpdate(emitter_.transform);

@@ -9,7 +9,6 @@ void Camera::Initialize(const PROJECTION_TYPE& type) {
 
     projectionType_ = type;
 
-    fovAngleY_ = kFovAngleY;
     farZ_ = 1000.0f;
     offset_ = { 0.0f };
     InitializeTransform();

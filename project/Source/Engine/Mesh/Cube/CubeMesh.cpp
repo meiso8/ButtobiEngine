@@ -10,17 +10,11 @@ CubeMesh::~CubeMesh()
 
 void CubeMesh::Create(const Texture::TEXTURE_HANDLE& textureHandle) {
 
-    modelConfig_ = ModelConfig::GetInstance();
     textureHandle_ = Texture::GetHandle(textureHandle);
     CreateVertex();
     AABB aabb = { { -0.5f,-0.5f,-0.5f },{ 0.5f,0.5f,0.5f } };
     SetMinMax(aabb);
     CreateIndexResource();
-
-    CreateWaveData();
-    CreateBalloonData();
-    CreatePointLightData();
-
 };
 
 void CubeMesh::CreateVertex()
@@ -240,15 +234,6 @@ void CubeMesh::Draw(ID3D12GraphicsCommandList* commandList)
  
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
     SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
-    //LightのCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
-    //timeのSRVの場所を設定
-    commandList->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
-    //expansionのCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
-
-    //expansionのCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(7, pointLightResource_->GetGPUVirtualAddress());
 
     //描画!（DrawCall/ドローコール）6個のインデックスを使用し1つのインスタンスを描画。その他は当面0で良い。
     commandList->DrawIndexedInstanced(36, 1, 0, 0, 0);

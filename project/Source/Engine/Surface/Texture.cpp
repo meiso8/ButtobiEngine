@@ -68,8 +68,6 @@ void Texture::LoadTexture(const std::string& filePath)
     //テクスチャ枚数上限チェック
     assert(SrvManager::IsMaxCount());
 
-
-
     //テクスチャファイルを読んでプログラムで扱えるようにする
     DirectX::ScratchImage image{};
     std::wstring filePathW = ConvertString(filePath);

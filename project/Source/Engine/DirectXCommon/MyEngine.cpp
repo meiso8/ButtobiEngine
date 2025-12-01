@@ -6,12 +6,14 @@
 #include"DrawGrid.h"
 #include"Particle.h"
 #include"JsonFile.h"
+#include"VibrateManager.h"
+#include"Lights/PointLightManager.h"
+#include"Lights/DirectionalLightManager.h"
+
+
 
 std::unique_ptr<PSO> MyEngine::pso = nullptr;
-
 std::unique_ptr <Input> MyEngine::input = nullptr;
-DirectionalLight* MyEngine::directionalLightData = nullptr;
-std::unique_ptr<ModelConfig> MyEngine::modelConfig_ = nullptr;
 std::unique_ptr<Window> MyEngine::wc = nullptr;
 
 std::unique_ptr<DirectXCommon> MyEngine::directXCommon = nullptr;
@@ -19,11 +21,8 @@ std::unique_ptr<SrvManager> MyEngine::srvManager = nullptr;
 std::unique_ptr<ParticleManager>  MyEngine::particleManager_ = nullptr;
 std::unique_ptr<LogFile> MyEngine::logFile = nullptr;
 
-std::unique_ptr<ModelConfig> modelConfig_ = nullptr;
-
-Microsoft::WRL::ComPtr <ID3D12Resource> MyEngine::directionalLightResource = nullptr;
-
 void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight) {
+
 
     //誰も捕捉しなかった場合に(Unhandled),補足する関数を登録
     //main関数始まってすぐに登録すると良い
@@ -43,6 +42,9 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     //入力
     input->Initialize(*wc);
     LogFile::Log("CreateInput");
+    //コントローラー
+    VibrateManager::Initialize();
+
     directXCommon = std::make_unique<DirectXCommon>();
     directXCommon->Initialize(*wc);
     LogFile::Log("CreateDirectXCommon");
@@ -54,26 +56,15 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     imGuiClass.Initialize(*wc, directXCommon->GetDevice().Get(), directXCommon->GetSwapChain(), directXCommon->GetSwapChainRtv());
     LogFile::Log("InitImGui");
 #endif
-
     pso = std::make_unique<PSO>();
     pso->CreateALLPSO();
+
     LogFile::Log("CreatePSO");
 
-    //平行光源用のResourceを作成する
-    directionalLightResource = DirectXCommon::CreateBufferResource(sizeof(DirectionalLight));
-    //書き込むためのアドレスを取得
-    directionalLightResource->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData));
-    //デフォルト値はとりあえず以下のようにしておく   
-    directionalLightData->color = { 1.0f,230.0f / 255.0f,200.0f / 255.0f,1.0f };
-    directionalLightData->direction = { 0.0f,-1.0f,0.0f };//向きは正規化する
-    directionalLightData->intensity = 1.0f;
-    //書き込み終了！
-    directionalLightResource->Unmap(0, nullptr);
-    LogFile::Log("CreateDirectionalLightResource");
 
-    modelConfig_ = std::make_unique<ModelConfig>();
-    modelConfig_->Initialize(PSO::rootSignature.get(), directionalLightResource.Get());
-    LogFile::Log("CreatemodelConfig");
+    DirectionalLightManager::Create();
+    LogFile::Log("CreateDirectionalLightResource");
+    PointLightManager::CreateData();
 
     ////共通のスプライト
     SpriteCommon::Initialize();
@@ -113,6 +104,7 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     //ファイルへのログ出力
     LogFile::Log("LoopStart");
 
+
 }
 
 void MyEngine::Update() {
@@ -128,8 +120,7 @@ void MyEngine::Update() {
     //ImGuiにここからフレームが始まる旨を伝える
     imGuiClass.FrameStart();
 #endif
-
-    //エスケープボタンを押したら終了
+    VibrateManager::Update(); //エスケープボタンを押したら終了
     if (Input::IsTriggerKey(DIK_ESCAPE)) { MyEngine::endRequest_ = true; }
 }
 
@@ -141,11 +132,12 @@ void MyEngine::Debug()
     DebugUI::CheckInput();
     DebugUI::CheckDirectionalLight();
     DebugUI::CheckSound();
+    DebugUI::CheckPointLightData(PointLightManager::GetPointLightData(0),"pointLight0");
+    DebugUI::CheckPointLightData(PointLightManager::GetPointLightData(1), "pointLight1");
 #endif // USE_IMGUI
 }
 
-void MyEngine::Run()
-{
+void MyEngine::Run() {
 
     Initialize();
 
@@ -166,7 +158,6 @@ void MyEngine::Run()
         Draw();
 
     }
-
     Finalize();
 
 }
@@ -191,6 +182,8 @@ void MyEngine::PostCommandSet() {
 
 void MyEngine::Finalize() {
 
+
+
     particleManager_->Finalize();
     particleManager_.reset();
 
@@ -199,6 +192,7 @@ void MyEngine::Finalize() {
 #ifdef _DEBUG
     //グリットを解放
     DrawGrid::Finalize();
+
 #endif
 
     Texture::Finalize();
@@ -206,12 +200,8 @@ void MyEngine::Finalize() {
 
     SpriteCommon::Finalize();
 
-    modelConfig_->Finalize();
-    modelConfig_.reset();
-
-    if (directionalLightResource) {
-        directionalLightResource.Reset();
-    }
+    PointLightManager::Finalize();
+    DirectionalLightManager::Finalize();
 
     pso.reset();
 
@@ -225,6 +215,7 @@ void MyEngine::Finalize() {
 
     srvManager.reset();
 
+    VibrateManager::Finalize();
     input.reset();
 
     wc->Finalize();

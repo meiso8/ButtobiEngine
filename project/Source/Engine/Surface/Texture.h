@@ -26,7 +26,7 @@ public:
         TEST3,
         HART,
 
-        TEXTURES
+        TEXTURES,
     };
     static void LoadAllTexture();
 

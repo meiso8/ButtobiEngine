@@ -8,9 +8,9 @@
 
 #include<memory>
 
-
 #include <Xinput.h>
 #pragma comment(lib, "xinput.lib")
+#include<array>
 
 class Camera;
 
@@ -58,15 +58,12 @@ public:
     /// @brief マウスのホイール値を得る
     /// @return マウスのホイール値
     static float GetMouseWheel();
-    /// @brief コントローラーが接続されているかどうか
-    /// @param dwUserIndex コントローラーのインデックス
-    /// @return コントローラー接続判定
-    static bool IsControllerConnected(DWORD dwUserIndex);
-    /// @brief コントローラーの正規化されたスティックの座標(-1~1)を得る
+    static bool GetIsControllerConnected(DWORD dwUserIndex) { return isControllerConnected_[dwUserIndex]; }
+    /// @brief コントローラーの正規化されたスティックの座標(-1~1)とを得る
     /// @param type BUTTON_LEFTかBUTTON_RIGHTをいれる
     /// @param dwUserIndex コントローラーのインデックス
     /// @return 正規化されたスティックの座標(-1~1)
-    static Vector2 GetControllerStickPos(ButtonType type, DWORD dwUserIndex);
+    static bool IsControllerStickPosMove(ButtonType index, DWORD dwUserIndex, Vector2* pos);
     /// @brief コントローラーを振動させる
     /// @param dwUserIndex コントローラーのインデックス
     /// @param leftMotor 左モーターの振動値
@@ -112,12 +109,20 @@ private:
 
     //ゲームパッド
     static float deadZone_;
-    static WORD preWButtons_;
-    static BYTE  preBLeftTrigger_;
-    static BYTE  preBRightTrigger_;
-    static XINPUT_STATE xinputState_;
+    static std::array <bool ,4>isControllerConnected_;
 
+    static std::array <XINPUT_STATE, 4>xinputState_;
+    static std::array <XINPUT_STATE, 4>preXinputState_;
 private:
-    static Vector2 NormalizeButtonCount(SHORT& buttonLX, SHORT& buttonLY);
-    static XINPUT_STATE& GetControllerState(DWORD& dwUserIndex);
+    static Vector2 NormalizeButtonCount(SHORT& buttonX, SHORT& buttonY);
+    //static XINPUT_STATE& GetControllerState(DWORD& dwUserIndex);
+    /// @brief コントローラーが接続されているかどうか
+/// @param dwUserIndex コントローラーのインデックス
+/// @return コントローラー接続判定
+    static bool IsControllerConnected(DWORD dwUserIndex);
+    /// @brief コントローラーのスティックが動いているかどうか
+/// @param type BUTTON_LEFTかBUTTON_RIGHTをいれる
+/// @param dwUserIndex コントローラーのインデックス
+/// @return コントローラーのスティックが動いているかどうか
+    static bool IsControllerStickMove(SHORT& buttonX, SHORT& buttonY);
 };

@@ -2,14 +2,10 @@
 #include"VertexData.h"
 #include<wrl.h>
 #include<d3d12.h>
-#include"ModelConfig.h"
 #include"commandList.h"  
-#include"Balloon.h"
-#include"Wave.h"
 
 #include"Transform.h"
 #include"PSO.h"  
-#include"Light.h"
 #include"Texture.h"
 
 class MeshCommon
@@ -23,23 +19,11 @@ public:
     VertexData& GetVertexData(const uint32_t& index) {
         return vertexData_[index];
     }
-    Balloon& GetBalloonData() {
-        return *balloonData_;
-    }
-    Wave& GetWaveData(size_t index) { return waveData_[index]; };
-    PointLight& GetPointLightData() { return *pointLightData_; };
-
-    void InitWaveData();
-    void InitBalloonData();
-    void InitPointLightData();
     void SetTextureHandle(const Texture::TEXTURE_HANDLE& textureHandle);
-
+    uint32_t GetTextureHandle() { return textureHandle_; }
 protected:
     /// @brief テクスチャハンドル
     uint32_t textureHandle_ = 0;
-
-    //rootSignatureとdirectionalLight
-    static ModelConfig* modelConfig_;
 
     //頂点データ
     Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};
@@ -49,22 +33,9 @@ protected:
     D3D12_INDEX_BUFFER_VIEW  indexBufferView_{};
     Microsoft::WRL::ComPtr <ID3D12Resource> indexResource_{};
     uint32_t* indexData_ = nullptr;
-    //膨張データ
-    Microsoft::WRL::ComPtr<ID3D12Resource> expansionResource_;
-    Balloon* balloonData_ = nullptr;
-    //波データ
-    Microsoft::WRL::ComPtr<ID3D12Resource> waveResource_;
-    Wave* waveData_ = nullptr;
-
-    Microsoft::WRL::ComPtr <ID3D12Resource> pointLightResource_;
-    PointLight* pointLightData_ = nullptr;
 
 protected:
     virtual void CreateVertex() = 0;
     virtual void CreateIndexResource();
-
-    void CreateWaveData();
-    void CreateBalloonData();
-    void CreatePointLightData();
 };
 
