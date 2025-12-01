@@ -629,6 +629,7 @@ void Enemy::FloorChangeAttack()
         LerpRotateY(PI, 0.3f);
         RotateLR(2.0f);
     } else if(phaseTimer_ <= kFloorAttackEndingLagTime_){
+        //後隙
         LerpRotateZ(0.5f);
     } else {
         isSelectRandomPhase_ = true;
@@ -657,7 +658,7 @@ void Enemy::Exit()
     if (phaseTimer_ <= kExitSpinTime_) {
         SpinBody();
     } else {
-        if (phaseTimer_ <= kFlipOverTime_) {
+        if (phaseTimer_ <= 2.0f) {
             float localTimer = phaseTimer_ - 1.0f;
             bodyPos_.worldTransform_.rotate_.x = Easing::EaseInOutBack(0.0f, -QUARTER_PI*3.0f, localTimer);
         }

@@ -148,38 +148,48 @@ private:
     const float kTackleEndingLagTime_ = kTackleInitStartTime_ + 1.0f;
 #pragma endregion
 
-#pragma region//HitBack
+#pragma region//Hit Back
     //当たった後ちょっと戻るタイム
     const float kHitBackTime_ = 0.125f;
     //プレイヤーに当たった後初期地点に戻るタイム
     const float kPlayerHitBackTime_ = 2.0f;
+    
     //KnockBack中初期地点に戻るタイム
     const float kKnockBackSpinTime_ = 0.75f;
     //KnockBack最大タイム
     const float kKnockBackMaxTime_ = 2.0f;
 #pragma endregion
 
-#pragma region //波攻撃
-
-    //波攻撃地点まで移動するタイム
-    const float kWavePhaseMovePosTime_ =1.0f;
-    //波攻撃地点まで移動するタイム
-    const float kWaveShotTime_ = kWavePhaseMovePosTime_+0.5f;
-    //波攻撃最大タイム
-    const float kWavePhaseMaxTime_ = 5.0f;
-#pragma endregion
-
 #pragma region //ファイアボール
-    //一回転する時間
-    const float kFireBallRotateTime_ = 1.0f;
-    //ファイアボール最大タイム
-    const float kFireBallPhaseMaxTime_ = 8.0f;
     //ファイアボールのクールタイム
     float fireBallCoolTimer_ = 0.0f;
     //ファイアボールのクールタイム
     float kFireBallMaxCoolTime_ = 1.5f;
+    //一回転する時間
+    const float kFireBallRotateTime_ = 1.0f;
+    //ファイアボール最大タイム　ここは後隙を含めた値にする
+    const float kFireBallPhaseMaxTime_ = 8.0f;
 #pragma endregion
 
+#pragma region //床攻撃
+    //攻撃地点移動タイム
+    const float kFloorAttackPosMoveTime_ = 1.0f;
+    //ボムを投げる時間
+    const float kFloorBombShotTime_ = kFloorAttackPosMoveTime_ + 0.5f;
+    //ボム爆発まで待つ時間
+    const float kFloorBombWaitTime_ = 9.0f;
+    //ボム爆発後隙
+    const float kFloorAttackEndingLagTime_ = kFloorBombWaitTime_ + 1.0f;
+#pragma endregion
+
+#pragma region //波攻撃
+    //波攻撃地点まで移動するタイム
+    const float kWavePhaseMovePosTime_ = 1.0f;
+    //波攻撃地点まで移動するタイム
+    const float kWaveShotTime_ = kWavePhaseMovePosTime_ + 0.5f;
+    //波攻撃の終了タイム　ここは後隙を含めた値にする
+    const float kWavePhaseMaxTime_ = 5.0f;
+#pragma endregion
 #pragma region //四角移動
     //四角移動の初期地点の移動時間
     const float kLerpSquareInitPosTime_ = 1.0f;
@@ -195,16 +205,7 @@ private:
     const float kSquareMoveMaxTime_ = 8.0f;
 #pragma endregion
 
-#pragma region //床攻撃
-    //攻撃地点移動タイム
-    const float kFloorAttackPosMoveTime_ = 1.0f;
-    //ボムを投げる時間
-    const float kFloorBombShotTime_ = kFloorAttackPosMoveTime_ + 0.5f;
-    //ボム爆発まで待つ時間
-    const float kFloorBombWaitTime_ = 9.0f;
-    //ボム爆発後隙
-    const float kFloorAttackEndingLagTime_ = kFloorBombWaitTime_ + 1.0f;
-#pragma endregion
+
 
 #pragma region //最後の撃破アニメーション
 
