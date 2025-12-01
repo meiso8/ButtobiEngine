@@ -132,7 +132,11 @@ void GameScene::Update() {
         Initialize();
     }
 
-    if (PauseScreen::isBackToTitle || floorGamePlayer_->IsDead() || enemy_->IsDead()) {
+    if (enemy_->IsDead()) {
+        //ひたすらなんかする
+    }
+
+    if (PauseScreen::isBackToTitle || floorGamePlayer_->IsDead()||enemy_->IsOverKill()) {
 
         //if (enemy_->IsDead()) {
         //    SceneStaticValue::isClear = true;

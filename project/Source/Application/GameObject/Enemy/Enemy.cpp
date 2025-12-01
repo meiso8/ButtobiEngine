@@ -117,6 +117,8 @@ void Enemy::Init() {
 
     wingTheta_ = 0.0f;
 
+    overKillCount = 0;
+
     InitState();
 
     bodyPos_.GetWaveData(0).time = 0.0f;
@@ -175,14 +177,17 @@ void Enemy::Update()
     if (Input::IsTriggerKey(DIK_B)) { SetPhase(LERP_ROUND_POS); }
     if (Input::IsTriggerKey(DIK_N)) { SetPhase(LERP_SQUARE_POS); }
     if (Input::IsTriggerKey(DIK_M)) { SetPhase(RANDOM_WALK); }
-
+    if (Input::IsTriggerKey(DIK_L)) { SetPhase(EXIT); }
 #endif
 
     damageStruct_.isHit = false;
 
     HitAnimation();
     bodyPos_.GetWaveData(0).time += InverseFPS * 4.0f;
-    Winging(2.0f);
+ 
+    if (!damageStruct_.isDead) {
+        Winging(2.0f);
+    }
 
     bodyPos_.Update();
     wingLPos_.Update();
@@ -244,7 +249,7 @@ void Enemy::Update()
         ImGui::Text("B : ROUND_WALK");
         ImGui::Text("N : SQUARE_WALK");
         ImGui::Text("M : RANDOM_WALK");
-
+        ImGui::Text("L : EXIT");
         ImGui::TreePop();
     }
 
@@ -280,6 +285,10 @@ void Enemy::OnCollision(Collider* collider)
             damageStruct_.hps.hp -= damageStruct_.hps.hpDecrease;
         }
         poyoAnimTimer_ = 0.0f;
+
+        if (damageStruct_.isDead) {
+            overKillCount++;
+        }
     }
 
     if (collider->GetCollisionAttribute() == kCollisionPlayer) {
@@ -368,7 +377,7 @@ void Enemy::KnockBack()
 
         if (phaseTimer_ <= 0.75f) {
             SpinBody();
-            Sound::PlayOriginSE(Sound::STUN);
+           
         } else {
             LerpSpinOriginBody();
             bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, startPos_, 0.05f);
@@ -462,15 +471,19 @@ void Enemy::SwitchState()
         damageStruct_.isDead = true;
     }
 
+    //回転を初期化
+    bodyPos_.worldTransform_.rotate_.z = 0.0f;
+
     if (damageStruct_.isDead) {
+        if (phase_ != EXIT) {
+            SetPhase(EXIT);
+        }
+       
         return;
     }
 
     isReqestClearFloor_ = true;
     
-    //回転を初期化
-    bodyPos_.worldTransform_.rotate_.z = 0.0f;
-
     Sound::PlaySE(Sound::BOSS_HEAL);
     SetPhase(LERP_SQUARE_POS);
 
@@ -625,10 +638,17 @@ void Enemy::ShockWaveAttack()
 }
 void Enemy::Exit()
 {
-    if (phaseTimer_ <= 4.0f) {
+
+    LerpPos({ 0.0f,kLerpSquareEndPosY_,6.0f }, 0.05f);
+    if (phaseTimer_ <= 1.0f) {
         SpinBody();
     } else {
-        LerpSpinOriginBody();
+        if (phaseTimer_ <= 2.0f) {
+            float localTimer = phaseTimer_ - 1.0f;
+            bodyPos_.worldTransform_.rotate_.x = Easing::EaseInOutBack(0.0f, -QUARTER_PI*3.0f, localTimer);
+        }
+        bodyPos_.worldTransform_.rotate_.z = Lerp(bodyPos_.worldTransform_.rotate_.z, 0.0f, 0.5f);
+        bodyPos_.worldTransform_.translate_.y = Lerp(bodyPos_.worldTransform_.translate_.y, 0.5f, 0.05f);
     }
 }
 
@@ -688,6 +708,8 @@ void Enemy::RotateY(const float& timer)
 
 void Enemy::SpinBody()
 {
+    Sound::PlayOriginSE(Sound::STUN);
+
     float localTimer = (phaseTimer_ - 0.125f) / (0.75f - 0.125f);
     float theta = PI * 3.0f * localTimer; // 回転の速さを調整
     bodyPos_.worldTransform_.rotate_.z = sinf(theta);
