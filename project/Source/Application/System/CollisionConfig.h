@@ -10,4 +10,7 @@ constexpr uint32_t kCollisionPlayerBullet = 0b1 << 1;
 constexpr uint32_t kCollisionEnemy = 0b1 << 2;
 // 敵陣営
 constexpr uint64_t kCollisionEnemyBullet = 0b1 << 3;
+// 何の陣営にも属さない
+constexpr uint32_t kCollisionNone = 0b0;
+
 }

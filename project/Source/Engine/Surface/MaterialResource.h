@@ -26,12 +26,9 @@ class MaterialResource {
 
 public:
 
-
-
     MaterialResource() = default;
     ~MaterialResource();
     void UnMap();
-
 
     void CreateMaterial(const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, uint32_t lightType = LightMode::kLightModeNone);
     Material* GetMaterial() {
@@ -44,7 +41,6 @@ public:
 
     MaterialResource(const MaterialResource&) = delete;
     MaterialResource& operator=(const MaterialResource&) = delete;
-
     void SetColor(const Vector4& color);
     void SetUV(const Matrix4x4& transform);
     void SetLightMode(uint32_t lightType);

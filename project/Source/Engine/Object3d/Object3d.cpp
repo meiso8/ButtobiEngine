@@ -1,7 +1,8 @@
 #include "Object3d.h"
 #include"DirectXCommon.h"
 #include"MakeMatrix.h"
-
+#include"Lights/PointLightManager.h"
+#include"Lights/DirectionalLightManager.h"
 ID3D12GraphicsCommandList* Object3d::commandList_ = nullptr;
 
 
@@ -22,8 +23,81 @@ void Object3d::CreateUV()
 
     uvTransformMatrix_ = MakeIdentity4x4();
 
+};
+
+Object3d::~Object3d()
+{
+    if (waveResource_) {
+        waveResource_->Unmap(0, nullptr);
+    }
+
+    if (expansionResource_) {
+        expansionResource_->Unmap(0, nullptr);
+    }
+
+    waveResource_.Reset();
+    expansionResource_.Reset();
 }
-;
+
+void Object3d::InitBalloonData()
+{
+    //データを書き込む
+    balloonData_->expansion = 0.0f;
+    balloonData_->sphere = 0.0f;
+    balloonData_->cube = 0.0f;
+    balloonData_->isSphere = false;
+}
+
+void Object3d::InitWaveData()
+{
+    waveData_[0].direction = { 1.0f,0.0f,0.0f };
+    waveData_[0].time = 0.0f;
+    waveData_[0].amplitude = 0.0f;
+    waveData_[0].frequency = 4;
+
+    waveData_[1].direction = { 1.0f,0.0f,0.0f };
+    waveData_[1].time = 0.0f;
+    waveData_[1].amplitude = 0.0f;
+    waveData_[1].frequency = 4;
+
+}
+
+void Object3d::InitWaveDataIndex(const uint32_t& index)
+{
+    if (index > 1) {
+        return;
+    }
+
+    waveData_[index].direction = { 1.0f,0.0f,0.0f };
+    waveData_[index].time = 0.0f;
+    waveData_[index].amplitude = 0.0f;
+    waveData_[index].frequency = 4;
+}
+
+void Object3d::CreateWaveData()
+{
+    int waveCount = 2;
+    //waveResource_ = DirectXCommon::CreateBufferResource(sizeof(
+    // ) * waveCount);
+    size_t bufferSize = (sizeof(Wave) * waveCount + 255) & ~255;
+    waveResource_ = DirectXCommon::CreateBufferResource(bufferSize);
+    //書き込むためのアドレスを取得
+    waveResource_->Map(0, nullptr, reinterpret_cast<void**>(&waveData_));
+
+    InitWaveData();
+}
+
+void Object3d::CreateBalloonData()
+{
+    expansionResource_ = DirectXCommon::CreateBufferResource(sizeof(Balloon));
+
+    //書き込むためのアドレスを取得
+    expansionResource_->Map(0, nullptr, reinterpret_cast<void**>(&balloonData_));
+    //データを初期化する
+    InitBalloonData();
+
+}
+
 void Object3d::UpdateUV() {
 
     uvTransformMatrix_ = MakeAffineMatrix(uvTransform_.scale, uvTransform_.rotate, uvTransform_.translate);
@@ -42,8 +116,16 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
         commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定
         commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+        //timeのSRVの場所を設定
+        commandList_->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
+        //expansionのCBufferの場所を設定
+        commandList_->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
         //cameraのCBufferの場所を設定
         commandList_->SetGraphicsRootConstantBufferView(6, camera.GetResource()->GetGPUVirtualAddress());
+        //ライトのCBufferの場所を設定
+        DirectionalLightManager::SetGraphicsRootConstantBufferView();
+        PointLightManager::SetGraphicsRootDescriptorTable();
+        
         meshCommon_->Draw(commandList_);
     }
 }
@@ -55,6 +137,8 @@ void Object3d::Create()
     CreateMaterial();
     Initialize();
     CreateUV();
+    CreateWaveData();
+    CreateBalloonData();
 }
 
 void Object3d::Initialize()

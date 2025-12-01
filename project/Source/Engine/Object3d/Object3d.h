@@ -6,6 +6,8 @@
 #include"MeshCommon.h"
 #include"WorldTransform.h"
 #include"MaterialResource.h"  
+#include"Balloon.h"
+#include"Wave.h"
 
 #include<memory>
 enum LightMode;
@@ -28,7 +30,23 @@ private:
     Transform uvTransform_ = { 0.0f };
     Matrix4x4 uvTransformMatrix_{};
 
+
+    //膨張データ
+    Microsoft::WRL::ComPtr<ID3D12Resource> expansionResource_;
+    Balloon* balloonData_ = nullptr;
+    //波データ
+    Microsoft::WRL::ComPtr<ID3D12Resource> waveResource_;
+    Wave* waveData_ = nullptr;
+
 public:
+    ~Object3d();
+
+    Balloon& GetBalloonData() {
+        return *balloonData_;
+    }
+    Wave& GetWaveData(size_t index) { return waveData_[index]; };
+
+    void SetUV(const Transform& transform) { uvTransform_ = transform; };
     void UpdateUV();
 
     Material& GetMaterial() { return *materialResource_->GetMaterial(); };
@@ -37,25 +55,40 @@ public:
     Vector3& GetUVRotate() { return uvTransform_.rotate; };
     Vector3& GetUVTranslate() { return uvTransform_.translate; };
 
-    Transform& GetUVTransform() { return uvTransform_;  }
+    Transform& GetUVTransform() {
+        return uvTransform_;
+    }
 
-    int32_t& GetLightMode() { return materialResource_->GetMaterial()->lightMode; };
+    int32_t& GetLightMode() {
+        return materialResource_->GetMaterial()->lightMode;
+    };
+
     Vector4& GetColor() { return materialResource_->GetMaterial()->color; };
+    void SetColor(const Vector4& color) {
+        materialResource_->SetColor(color);
+    }
 
-    void SetUVTransform(const Transform& transform) {  uvTransform_ = transform; UpdateUV(); };
-    void SetMesh(MeshCommon* mesh) { meshCommon_ = mesh; };
-    void SetTextureHandle(const Texture::TEXTURE_HANDLE& handle) { meshCommon_->SetTextureHandle(handle); };
-    void SetColor(const Vector4& color) { materialResource_->SetColor(color); }
     void SetLightMode(const LightMode& lightMode) { materialResource_->SetLightMode(lightMode); }
+
 
     void Create();
     void Initialize();
     void Update();
     void Draw(Camera& camera, const BlendMode& blendMode = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack);
     
+    void InitWaveData();
+    void InitWaveDataIndex(const uint32_t& index);
+    void InitBalloonData();
+   
+    void SetMesh(MeshCommon* mesh) { meshCommon_ = mesh; };
+    void SetTextureHandle(const Texture::TEXTURE_HANDLE& handle) { meshCommon_->SetTextureHandle(handle); };
 private:
     void CreateUV();
     void CreateTransformationMatrix();
     void CreateMaterial(const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, const uint32_t& lightType = 0);
+    void CreateWaveData();
+    void CreateBalloonData();
+
+
 };
 

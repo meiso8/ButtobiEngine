@@ -34,6 +34,7 @@ public:
     ParticleEmitter();
     void Initialize();
     void UpdateTimer();
+    void InitTimer();
     void Update(Camera& camera);
     void Emit();
     void Draw();

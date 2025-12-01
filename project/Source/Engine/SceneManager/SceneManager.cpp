@@ -27,22 +27,19 @@ void SceneManager::Draw()
 
 void SceneManager::Debug()
 {
-
 }
 
 void SceneManager::SceneChangeUpdate()
 {
-
-    //// 何かをしたらシーン遷移
-    //if (Input::IsTriggerKey(DIK_SPACE)) {
-    //    sceneChange_->SetState(SceneChange::kFadeIn, 30);
-    //}
-
 #ifdef _DEBUG
+
+    if (Input::IsTriggerKey(DIK_R)) { Initialize(); }
+
     // 何かをしたらシーン遷移
     if (Input::IsTriggerKey(DIK_I)) {
         sceneChange_->SetState(SceneChange::kFadeIn, 30);
     }
+
 #endif
     sceneChange_->Update();
 }

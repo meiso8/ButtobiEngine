@@ -125,7 +125,7 @@ void PSO::CreateALLPSO()
             *rootSignature,
             *inputLayout,
             blendStates[b],
-            rasterizerStates[kCullModeBack],
+            rasterizerStates[kCullModeNone],
             depthStencils[kZero], kParticle, kTriangle
         );
     }

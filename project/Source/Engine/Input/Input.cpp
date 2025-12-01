@@ -5,6 +5,7 @@
 
 #include"Camera/Camera.h"
 #include<cmath>
+#include"Vector2.h"
 
 BYTE Input::key_[256];
 BYTE Input::preKey_[256];
@@ -13,10 +14,11 @@ float Input::deadZone_ = 0.1f;
 DIMOUSESTATE Input::mouseState_;
 DIMOUSESTATE Input::preMouseState_;
 
-XINPUT_STATE Input::xinputState_;
-WORD Input::preWButtons_;
-BYTE  Input::preBLeftTrigger_;
-BYTE  Input::preBRightTrigger_;
+std::array <XINPUT_STATE, 4>Input::xinputState_;
+std::array <XINPUT_STATE, 4>Input::preXinputState_;
+
+std::array <bool, 4>Input::isControllerConnected_;
+
 bool Input::isDragging_ = false;
 
 HRESULT Input::Initialize(Window& window/*, int& fps*/) {
@@ -75,6 +77,10 @@ HRESULT Input::Initialize(Window& window/*, int& fps*/) {
     diprop.diph.dwObj = 0;
     diprop.diph.dwHow = DIPH_DEVICE;
     diprop.dwData = DIPROPAXISMODE_REL;	// 相対値モードで設定（絶対値はDIPROPAXISMODE_ABS）
+
+    for (int i = 0; i < 4; ++i) {
+        isControllerConnected_[i] = false;
+    }
 
     result = mouse_->SetProperty(DIPROP_AXISMODE, &diprop.diph);
     assert(SUCCEEDED(result));
@@ -144,41 +150,53 @@ void Input::Update() {
     //マウスの状態を取得する
     mouse_->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState_);
 
-    //ボタン状態をコピーする
-    memcpy(&preWButtons_, &xinputState_.Gamepad.wButtons, sizeof(preWButtons_));
-    memcpy(&preBLeftTrigger_, &xinputState_.Gamepad.bLeftTrigger, sizeof(preBLeftTrigger_));
-    memcpy(&preBRightTrigger_, &xinputState_.Gamepad.bRightTrigger, sizeof(preBRightTrigger_));
+   
+    for (int i = 0; i < 4; ++i) {
+        if (isControllerConnected_[i]) {
+            memcpy(&preXinputState_[i], &xinputState_[i], sizeof(XINPUT_STATE));
+        }
+    }
 
+    for (int i = 0; i < 4; ++i) {
+        isControllerConnected_[i] = IsControllerConnected(i) ? true : false;
+    }
 }
 
-Vector2 Input::GetControllerStickPos(ButtonType index, DWORD dwUserIndex)
+bool Input::IsControllerStickPosMove(ButtonType index, DWORD dwUserIndex,Vector2* pos)
 {
-    if (IsControllerConnected(dwUserIndex))
+    if (isControllerConnected_[dwUserIndex])
     {
         if (index == ButtonType::BUTTON_LEFT) {
-            SHORT lx = xinputState_.Gamepad.sThumbLX; // 左スティックX軸
-            SHORT ly = xinputState_.Gamepad.sThumbLY; // 左スティックY軸
-            if (abs(lx) > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || abs(ly) > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+            SHORT lx = xinputState_[dwUserIndex].Gamepad.sThumbLX; // 左スティックX軸
+            SHORT ly = xinputState_[dwUserIndex].Gamepad.sThumbLY; // 左スティックY軸
+            if (IsControllerStickMove(lx, ly))
             {
-                return NormalizeButtonCount(xinputState_.Gamepad.sThumbLX, xinputState_.Gamepad.sThumbLY);
+                *pos = NormalizeButtonCount(xinputState_[dwUserIndex].Gamepad.sThumbLX, xinputState_[dwUserIndex].Gamepad.sThumbLY);
+                return true;
             }
         } else if (index == ButtonType::BUTTON_RIGHT) {
-            SHORT rx = xinputState_.Gamepad.sThumbRX; // 右スティックX軸
-            SHORT ry = xinputState_.Gamepad.sThumbRY; // 右スティックY軸
-            if (abs(rx) > XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE || abs(ry) > XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
+            SHORT rx = xinputState_[dwUserIndex].Gamepad.sThumbRX; // 右スティックX軸
+            SHORT ry = xinputState_[dwUserIndex].Gamepad.sThumbRY; // 右スティックY軸
+            if (IsControllerStickMove(rx,ry))
             {
-                return NormalizeButtonCount(xinputState_.Gamepad.sThumbRX, xinputState_.Gamepad.sThumbRY);
+                *pos = NormalizeButtonCount(xinputState_[dwUserIndex].Gamepad.sThumbRX, xinputState_[dwUserIndex].Gamepad.sThumbRY);
+                return true;
             }
         }
     }
 
-
-    return { 0.0f,0.0f };
+    *pos = { 0.0f,0.0f };
+    return false;
 }
-Vector2 Input::NormalizeButtonCount(SHORT& buttonLX, SHORT& buttonLY)
+bool Input::IsControllerStickMove(SHORT& buttonX, SHORT& buttonY)
 {
-    float normX = (static_cast<float>(buttonLX) / SHRT_MAX);
-    float normY = (static_cast<float>(buttonLY) / SHRT_MAX);
+    return abs(buttonX) > XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE || abs(buttonY) > XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE;
+}
+Vector2 Input::NormalizeButtonCount(SHORT& buttonX, SHORT& buttonY)
+{
+
+    float normX = (static_cast<float>(buttonX) / SHRT_MAX);
+    float normY = (static_cast<float>(buttonY) / SHRT_MAX);
 
     if (normX > 1.0f - deadZone_) {
         normX = 1.0f;
@@ -192,35 +210,35 @@ Vector2 Input::NormalizeButtonCount(SHORT& buttonLX, SHORT& buttonLY)
         normY = -1.0f;
     }
 
-    float absX = std::fabsf(normX);
-    float absY = std::fabsf(normY);
+    Vector2 normalize = Normalize(Vector2{ normX,normY });
 
-    if (absX == 1.0f || absY < deadZone_) {
-        normY = 0.0f;
-    }
+    //if (absX == 1.0f || absY < deadZone_) {
+    //    normY = 0.0f;
+    //}
 
-    if (absY == 1.0f || absX < deadZone_) {
-        normX = 0.0f;
-    }
+    //if (absY == 1.0f || absX < deadZone_) {
+    //    normX = 0.0f;
+    //}
 
-    return { normX,normY };
+    return normalize;
 
 }
 
 bool Input::IsControllerConnected(DWORD dwUserIndex)
 {
-    return (XInputGetState(dwUserIndex, &GetControllerState(dwUserIndex)) == ERROR_SUCCESS);
+    ZeroMemory(&xinputState_[dwUserIndex], sizeof(XINPUT_STATE));
+    return (XInputGetState(dwUserIndex, &xinputState_[dwUserIndex]) == ERROR_SUCCESS);
 }
 
-XINPUT_STATE& Input::GetControllerState(DWORD& dwUserIndex)
-{
-    ZeroMemory(&xinputState_, sizeof(XINPUT_STATE));
-    return xinputState_;
-}
+//XINPUT_STATE& Input::GetControllerState(DWORD& dwUserIndex)
+//{
+//
+//    return xinputState_[dwUserIndex];
+//}
 
 void Input::VibrateController(DWORD dwUserIndex, WORD leftMotor, WORD rightMotor)
 {
-    if (IsControllerConnected(dwUserIndex)) {
+    if (isControllerConnected_[dwUserIndex]) {
         XINPUT_VIBRATION vibration;
         vibration.wLeftMotorSpeed = leftMotor;   // 0 ～ 65535（低周波）
         vibration.wRightMotorSpeed = rightMotor; // 0 ～ 65535（高周波）
@@ -232,9 +250,9 @@ void Input::VibrateController(DWORD dwUserIndex, WORD leftMotor, WORD rightMotor
 
 bool Input::IsControllerPressButton(UINT16 button, DWORD dwUserIndex)
 {
-    if (IsControllerConnected(dwUserIndex))
+    if (isControllerConnected_[dwUserIndex])
     {
-        if (xinputState_.Gamepad.wButtons & button) {
+        if (xinputState_[dwUserIndex].Gamepad.wButtons & button) {
             return true;
         }
     }
@@ -244,9 +262,9 @@ bool Input::IsControllerPressButton(UINT16 button, DWORD dwUserIndex)
 
 bool Input::IsControllerTriggerButton(UINT16 button, DWORD dwUserIndex)
 {
-    if (IsControllerConnected(dwUserIndex))
+    if (isControllerConnected_[dwUserIndex])
     {
-        if (!(preWButtons_ & button) && (xinputState_.Gamepad.wButtons & button)) {
+        if (!(preXinputState_[dwUserIndex].Gamepad.wButtons & button) && (xinputState_[dwUserIndex].Gamepad.wButtons & button)) {
             return true;
         }
     }
@@ -257,11 +275,11 @@ bool Input::IsControllerTriggerButton(UINT16 button, DWORD dwUserIndex)
 
 bool Input::IsControllerPressLTRT(ButtonType index, DWORD dwUserIndex)
 {
-    if (IsControllerConnected(dwUserIndex)) {
+    if (isControllerConnected_[dwUserIndex]) {
         if (index == 0) {
-            return IsControllerDeadZone(xinputState_.Gamepad.bLeftTrigger);
+            return IsControllerDeadZone(xinputState_[dwUserIndex].Gamepad.bLeftTrigger);
         } else {
-            return IsControllerDeadZone(xinputState_.Gamepad.bRightTrigger);
+            return IsControllerDeadZone(xinputState_[dwUserIndex].Gamepad.bRightTrigger);
         }
     }
 
@@ -271,12 +289,12 @@ bool Input::IsControllerPressLTRT(ButtonType index, DWORD dwUserIndex)
 
 bool Input::IsControllerTriggerLTRT(ButtonType index, DWORD dwUserIndex)
 {
-    if (IsControllerConnected(dwUserIndex))
+    if (isControllerConnected_[dwUserIndex])
     {
         if (index == 0) {
-            return (IsControllerDeadZone(xinputState_.Gamepad.bLeftTrigger) && !IsControllerDeadZone(preBLeftTrigger_));
+            return (IsControllerDeadZone(xinputState_[dwUserIndex].Gamepad.bLeftTrigger) && !IsControllerDeadZone(preXinputState_[dwUserIndex].Gamepad.bLeftTrigger));
         } else {
-            return (IsControllerDeadZone(xinputState_.Gamepad.bRightTrigger) && !IsControllerDeadZone(preBRightTrigger_));
+            return (IsControllerDeadZone(xinputState_[dwUserIndex].Gamepad.bRightTrigger) && !IsControllerDeadZone(preXinputState_[dwUserIndex].Gamepad.bRightTrigger));
         }
     }
 
@@ -285,17 +303,17 @@ bool Input::IsControllerTriggerLTRT(ButtonType index, DWORD dwUserIndex)
 
 BYTE Input::GetControllerTriggerCount(ButtonType index, DWORD dwUserIndex)
 {
-    if (IsControllerConnected(dwUserIndex))
+    if (isControllerConnected_[dwUserIndex])
     {
         if (index == 0) {
-            if (IsControllerDeadZone(xinputState_.Gamepad.bLeftTrigger))
+            if (IsControllerDeadZone(xinputState_[dwUserIndex].Gamepad.bLeftTrigger))
             {
-                return xinputState_.Gamepad.bLeftTrigger;
+                return xinputState_[dwUserIndex].Gamepad.bLeftTrigger;
             }
         } else {
-            if (IsControllerDeadZone(xinputState_.Gamepad.bRightTrigger))
+            if (IsControllerDeadZone(xinputState_[dwUserIndex].Gamepad.bRightTrigger))
             {
-                return xinputState_.Gamepad.bRightTrigger;
+                return xinputState_[dwUserIndex].Gamepad.bRightTrigger;
             }
         }
     }
@@ -335,8 +353,8 @@ Vector2& Input::GetMousePosFiltered()
     static Vector2 mousePos; // 静的変数を使用して左辺値を確保 
     mousePos.x = static_cast<float>(mouseState_.lX);
     mousePos.y = static_cast<float>(mouseState_.lY);
-    mousePos.x = (std::abs(mousePos.x) < 0.1f) ? 0.0f : mousePos.x;
-    mousePos.y = (std::abs(mousePos.y) < 0.1f) ? 0.0f : mousePos.y;
+    mousePos.x = (std::abs(mousePos.x) < 1.0f) ? 0.0f : mousePos.x;
+    mousePos.y = (std::abs(mousePos.y) < 1.0f) ? 0.0f : mousePos.y;
     return mousePos;
 
 }

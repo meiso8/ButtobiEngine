@@ -14,13 +14,8 @@ Model::~Model()
 
 void Model::Create() {
 
-    modelConfig_ = ModelConfig::GetInstance();
     textureHandle_ = modelData_->material.textureSrvIndex;
     CreateVertex();
-  
-    CreateWaveData();
-    CreateBalloonData();
-    CreatePointLightData();
 }
 
 
@@ -45,16 +40,8 @@ void Model::Draw(ID3D12GraphicsCommandList* commandList) {
  
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
     SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
- 
-    //LightのCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
-    //timeのSRVの場所を設定
-    commandList->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
-    //expansionのCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
-    //pointLightのCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(7, pointLightResource_->GetGPUVirtualAddress());
-    //描画!(DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
+
+//描画!(DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
     commandList->DrawInstanced(UINT(modelData_->vertices.size()), 1, 0, 0);
 
 }

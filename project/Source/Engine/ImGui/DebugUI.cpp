@@ -13,13 +13,15 @@
 #include"Sound.h"
 
 #include"SphereMesh.h"
-#include"Light.h"
+#include"Lights/Light.h"
+#include"Lights/DirectionalLightManager.h"
 #include"PSO.h"
 #include"Camera.h"
 #include"JsonFile.h"
 
 #include<numbers>
 #include<algorithm>
+
 
 struct Param {
     char name[128];
@@ -205,19 +207,10 @@ void DebugUI::CheckJsonFile()
 #endif
 }
 
+
 void DebugUI::CheckMesh(MeshCommon& mesh, const char* label) {
 #ifdef USE_IMGUI
     ImGui::Begin("Mesh");
-
-    if (ImGui::TreeNode(label)) {
-
-        CheckWaveData(mesh.GetWaveData(0), "wave0");
-        CheckWaveData(mesh.GetWaveData(1), "wave1");
-        CheckBalloonData(mesh.GetBalloonData());
-
-        CheckPointLightData(mesh.GetPointLightData(), "pointLight");
-        ImGui::TreePop();
-    }
 
     ImGui::End();
 #endif
@@ -239,31 +232,50 @@ void DebugUI::CheckInput() {
     ImGui::Begin("Input");
     ImGui::SliderFloat2("mousePos", &Input::GetMousePos().x, 0.0f, 1280.0f);
 
-    ImGui::Text("Controller %s", Input::IsControllerConnected(0) ? "Connected" : "Unkown");
-    ImGui::Text("left %d", Input::GetControllerTriggerCount(BUTTON_LEFT, 0));
-    ImGui::Text("right %d", Input::GetControllerTriggerCount(BUTTON_RIGHT, 0));
+    for (int i = 0; i < 4; ++i) {
+        CheckXInput(i);
+    }
 
-    ImGui::Text("DPAD_UP %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_UP, 0));
-    ImGui::Text("DPAD_DOWN %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_DOWN, 0));
-    ImGui::Text("DPAD_LEFT %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_LEFT, 0));
-    ImGui::Text("DPAD_RIGHT %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_RIGHT, 0));
-    ImGui::Text("START %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_START, 0));
-    ImGui::Text("BACK %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_BACK, 0));
-    ImGui::Text("LEFT_THUMB %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_LEFT_THUMB, 0));
-    ImGui::Text("RIGHT_THUMB %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_RIGHT_THUMB, 0));
-    ImGui::Text("LEFT_SHOULDER %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_LEFT_SHOULDER, 0));
-    ImGui::Text("RIGHT_SHOULDER %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_RIGHT_SHOULDER, 0));
-    ImGui::Text("A %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_A, 0));
-    ImGui::Text("B %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_B, 0));
-    ImGui::Text("X %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_X, 0));
-    ImGui::Text("Y %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_Y, 0));
-    Vector2 L = Input::GetControllerStickPos(BUTTON_LEFT, 0);
-    Vector2 R = Input::GetControllerStickPos(BUTTON_RIGHT, 0);
-    ImGui::SliderFloat2("BUTTON_LEFT", &L.x, -32768.0f, 32768.0f);
-    ImGui::SliderFloat2("BUTTON_RIGHT", &R.x, -32768.0f, 32768.0f);
     ImGui::End();
 #endif
 
+}
+
+void DebugUI::CheckXInput(const int& num)
+{
+#ifdef USE_IMGUI
+    std::string numOK = std::to_string(num);
+    if (ImGui::TreeNode(numOK.c_str())) {
+
+        ImGui::Text("Controller %s", Input::GetIsControllerConnected(num) ? "Connected" : "Unkown");
+        ImGui::Text("left %d", Input::GetControllerTriggerCount(BUTTON_LEFT, num));
+        ImGui::Text("right %d", Input::GetControllerTriggerCount(BUTTON_RIGHT, num));
+
+        ImGui::Text("DPAD_UP %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_UP, num));
+        ImGui::Text("DPAD_DOWN %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_DOWN, num));
+        ImGui::Text("DPAD_LEFT %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_LEFT, num));
+        ImGui::Text("DPAD_RIGHT %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_RIGHT, num));
+        ImGui::Text("START %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_START, num));
+        ImGui::Text("BACK %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_BACK, num));
+        ImGui::Text("LEFT_THUMB %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_LEFT_THUMB, num));
+        ImGui::Text("RIGHT_THUMB %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_RIGHT_THUMB, num));
+        ImGui::Text("LEFT_SHOULDER %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_LEFT_SHOULDER, num));
+        ImGui::Text("RIGHT_SHOULDER %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_RIGHT_SHOULDER, num));
+        ImGui::Text("A %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_A, num));
+        ImGui::Text("B %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_B, num));
+        ImGui::Text("X %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_X, num));
+        ImGui::Text("Y %d", Input::IsControllerPressButton(XINPUT_GAMEPAD_Y, num));
+        Vector2 L = { 0.0f };
+        Vector2 R = { 0.0f };
+
+        ImGui::Text("L %d", Input::IsControllerStickPosMove(BUTTON_LEFT, num, &L));
+        ImGui::Text("R %d", Input::IsControllerStickPosMove(BUTTON_RIGHT, num, &R));
+        ImGui::SliderFloat2("BUTTON_LEFT", &L.x, -32768.0f, 32768.0f);
+        ImGui::SliderFloat2("BUTTON_RIGHT", &R.x, -32768.0f, 32768.0f);
+
+        ImGui::TreePop();
+    }
+#endif
 }
 
 void DebugUI::CheckSprite(Sprite& sprite, const char* label) {
@@ -350,9 +362,11 @@ void DebugUI::CheckPointLightData(PointLight& pointLight, const char* label)
 {
 #ifdef USE_IMGUI
     if (ImGui::TreeNode(label)) {
-        CheckColor(pointLight.color, "PointLightcolor");
-        ImGui::DragFloat("intensity", &pointLight.intensity, 0.03f);
+        CheckColor(pointLight.color, "color");
+        ImGui::SliderFloat("intensity", &pointLight.intensity, 0.0f, 100.0f);
         ImGui::DragFloat3("position", &pointLight.position.x, 0.03f, -10000.0f, 10000.0f);
+        ImGui::SliderFloat("radius", &pointLight.radius, 0.0f, 100.0f);
+        ImGui::SliderFloat("decay", &pointLight.decay, 0.0f, 100.0f);
         ImGui::TreePop();
     }
 #endif
@@ -365,10 +379,15 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
     if (ImGui::TreeNode(label)) {
         CheckWorldTransform(object3d.worldTransform_, label);
         ShowMatrix4x4(object3d.worldTransform_.matWorld_);
+
         CheckMaterial(object3d.GetMaterial(), "material");
         CheckColor(object3d.GetColor(), "modelColor");//一応マテリアルについている
         CheckTransform(object3d.GetUVTransform(), "uvTransfrom");
         CheckLightMode(object3d.GetLightMode(), "GetLightMode");
+
+        CheckWaveData(object3d.GetWaveData(0), "wave0");
+        CheckWaveData(object3d.GetWaveData(1), "wave1");
+        CheckBalloonData(object3d.GetBalloonData());
 
         ImGui::TreePop();
     }
@@ -381,8 +400,6 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter, const char* label)
 
     ParticleManager& particle = *ParticleManager::GetInstance();
     ImGui::Begin("Particle");
-
-
 
     static  Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
     Emitter& emitter = particleEmitter.emitter_;
@@ -408,30 +425,34 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter, const char* label)
         ImGui::TreePop();
     }
 
-    for (const auto& [name, group] : particle.GetParticleGroups()) {
 
+    if (ImGui::TreeNode("Particles")) {
 
-        if (ImGui::TreeNode(name.c_str())) {
+        for (const auto& [name, group] : particle.GetParticleGroups()) {
 
-            ImGui::Checkbox("useModel", &group->useModel);
-            ImGui::Checkbox("useBillboard", &group->useBillboard);
-            ImGui::Checkbox("useSpriteCamera", &group->useSpriteCamera);
+            if (ImGui::TreeNode(name.c_str())) {
 
-            ImGui::SliderFloat3("acceleration", &group->accelerationField.acceleration.x, -100.0f, 100.0f);
-            ImGui::SliderFloat3("area.min", &group->accelerationField.area.min.x, -100.0f, 0.0f);
-            ImGui::SliderFloat3("area.max", &group->accelerationField.area.max.x, 0.0f, 100.0f);
-            ImGui::SliderFloat2("textureSize", &group->textureSize.x, 0.0f, static_cast<float>(Window::GetClientWidth()));
+                ImGui::Checkbox("useModel", &group->useModel);
+                ImGui::Checkbox("useBillboard", &group->useBillboard);
+                ImGui::Checkbox("useSpriteCamera", &group->useSpriteCamera);
 
-            if (ImGui::Button(name.c_str())) {
-                particle.Emit(emitter);
+                ImGui::SliderFloat3("acceleration", &group->accelerationField.acceleration.x, -100.0f, 100.0f);
+                ImGui::SliderFloat3("area.min", &group->accelerationField.area.min.x, -100.0f, 0.0f);
+                ImGui::SliderFloat3("area.max", &group->accelerationField.area.max.x, 0.0f, 100.0f);
+                ImGui::SliderFloat2("textureSize", &group->textureSize.x, 0.0f, static_cast<float>(Window::GetClientWidth()));
+
+                if (ImGui::Button(name.c_str())) {
+                    particle.Emit(emitter);
+                }
+                for (std::list<Particle>::iterator itr = group->particles.begin(); itr != group->particles.end(); ++itr) {
+                    CheckTransform((*itr).transform, name.c_str());
+                }
+                ImGui::TreePop();
             }
-            for (std::list<Particle>::iterator itr = group->particles.begin(); itr != group->particles.end(); ++itr) {
-                CheckTransform((*itr).transform, name.c_str());
-            }
-            ImGui::TreePop();
+
+
         }
-
-
+        ImGui::TreePop();
     }
 
     ImGui::End();
@@ -484,7 +505,7 @@ void DebugUI::CheckWorldTransform(WorldTransform& worldTransform, const char* la
 void DebugUI::CheckDirectionalLight() {
 #ifdef USE_IMGUI
     if (ImGui::TreeNode("DirectionalLight")) {
-        DirectionalLight* directionalLight = MyEngine::GetDirectionalLightData();
+        DirectionalLight* directionalLight = DirectionalLightManager::GetDirectionalLightData();
         Vector3 direction = directionalLight->direction;
 
         ImGui::ColorEdit4("color", &directionalLight->color.x);

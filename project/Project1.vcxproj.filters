@@ -357,6 +357,15 @@
     <ClCompile Include="Source\Game.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\Input\VibrateManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Lights\DirectionalLightManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Lights\PointLightManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -415,9 +424,6 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Math\Lerp\Easing.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Surface\Light.h">
-      <Filter>ヘッダー ファイル\Engine\Surface</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\ImGui\ImGuiClass.h">
       <Filter>ヘッダー ファイル\Engine\ImGui</Filter>
@@ -705,6 +711,18 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Input\VibrateManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Lights\DirectionalLightManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Lights\Light.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Lights\PointLightManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
