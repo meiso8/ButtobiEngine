@@ -72,7 +72,7 @@ void DebugUI::CheckCamera(Camera& camera) {
         ImGui::SliderFloat2("ofsset", &camera.offset_.x, -1000.0f, 1000.0f);
         ImGui::SliderFloat("nearZ", &camera.nearZ_, 0.0f, 1000.0f);
         ImGui::SliderFloat("farZ", &camera.farZ_, 0.0f, 1000.0f);
-
+        ImGui::SliderFloat("fovAngleY", &camera.fovAngleY_, -6.28f, 6.28f);
         ImGui::Text("Type : %s", (camera.projectionType_ == Camera::PERSPECTIVE) ? "PERSPECTIVE" : "PARALLEL");
 
         if (ImGui::Button("ChangeType")) {
@@ -230,7 +230,7 @@ void DebugUI::CheckDamageStruct(Damage& damage, const char* label)
 void DebugUI::CheckSpotLight()
 {
 
-    SpotLight& spotLight =  *SpotLightManager::GetData();
+    SpotLight& spotLight = *SpotLightManager::GetData();
     Vector3& direction = spotLight.direction;
 
     if (ImGui::TreeNode("SpotLight")) {

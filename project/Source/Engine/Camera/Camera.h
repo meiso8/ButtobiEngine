@@ -14,11 +14,12 @@ struct CameraForGPU {
 
 class Camera {
 public:
+    const float kFovAngle_ = 45.0f * 3.141592654f / 180.0f;
     Vector3 scale_ = { 1.0f,1.0f,1.0f };
     Vector3 rotate_ = { 0.0f,0.0f,0.0f };
     Vector3 translate_ = { 0.0f,0.0f,0.0f };
     // 垂直方向視野角
-    float fovAngleY_ = 45.0f * 3.141592654f / 180.0f;
+    float fovAngleY_ = kFovAngle_;
     float farZ_ = 1000.0f;
     float nearZ_ = 0.1f;
 
