@@ -9,8 +9,7 @@
 #include"VibrateManager.h"
 #include"Lights/PointLightManager.h"
 #include"Lights/DirectionalLightManager.h"
-
-
+#include"SceneManager.h"
 
 std::unique_ptr<PSO> MyEngine::pso = nullptr;
 std::unique_ptr <Input> MyEngine::input = nullptr;
@@ -122,6 +121,9 @@ void MyEngine::Update() {
 #endif
     VibrateManager::Update(); //エスケープボタンを押したら終了
     if (Input::IsTriggerKey(DIK_ESCAPE)) { MyEngine::endRequest_ = true; }
+
+    SceneManager::Update();
+
 }
 
 void MyEngine::Debug()
@@ -134,7 +136,11 @@ void MyEngine::Debug()
     DebugUI::CheckSound();
     DebugUI::CheckPointLightData(PointLightManager::GetPointLightData(0),"pointLight0");
     DebugUI::CheckPointLightData(PointLightManager::GetPointLightData(1), "pointLight1");
+
+    SceneManager::Debug();
+
 #endif // USE_IMGUI
+
 }
 
 void MyEngine::Run() {
@@ -169,6 +175,9 @@ void MyEngine::PreCommandSet(Vector4 screenColor) {
     imGuiClass.Render();
 #endif
     directXCommon->PreDraw(screenColor);
+
+    // シーンの描画
+    SceneManager::Draw();
 };
 
 void MyEngine::PostCommandSet() {
@@ -183,6 +192,7 @@ void MyEngine::PostCommandSet() {
 void MyEngine::Finalize() {
 
 
+    SceneManager::Finalize();
 
     particleManager_->Finalize();
     particleManager_.reset();

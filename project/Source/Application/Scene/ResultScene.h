@@ -1,6 +1,6 @@
 #pragma once
 #include"SceneManager.h"
-class ResultScene :public SceneManager
+class ResultScene :public BaseScene
 {
 public:
     ResultScene();

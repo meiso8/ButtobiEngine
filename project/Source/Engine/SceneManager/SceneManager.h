@@ -2,10 +2,10 @@
 #include"Camera.h"
 #include"DebugCamera.h"
 #include<memory>
-
+#include<vector>
 #include"SceneChange.h"
 
-class SceneManager
+class BaseScene
 {
 protected:
     //カメラ
@@ -15,8 +15,8 @@ protected:
     Camera* currentCamera_ = nullptr;
     std::unique_ptr <SceneChange> sceneChange_ = nullptr;
 public:
-    SceneManager();
-    virtual ~SceneManager() = default;
+    BaseScene();
+    virtual ~BaseScene() = default;
     virtual void Initialize();
     virtual void Update();
     virtual void Draw();
@@ -31,4 +31,23 @@ public:
     };
 
     void SwitchCamera();
+};
+
+#include<map>
+
+class SceneManager {
+public:
+    static void Finalize();
+    static void Update();
+    static void Draw();
+    static void Debug();
+    static void SetMap(const std::string& name, std::unique_ptr<BaseScene> scene);
+    static void SetItr(const std::string& name);
+    static void InitScene();
+private:
+
+    static BaseScene* currentScene_;
+    //static BaseScene* nextScene_;
+    static std::map < std::string, std::unique_ptr<BaseScene>> scenes_;
+    static std::map<std::string, std::unique_ptr<BaseScene>>::iterator currentIt_;
 };

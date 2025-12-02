@@ -1,10 +1,10 @@
 #include "TitleScene.h"
 #include"Input.h"
+#include"SampleScene.h"
 
 
 TitleScene::TitleScene()
 {
-    sceneName_ = "Title";
 }
 
 TitleScene::~TitleScene()

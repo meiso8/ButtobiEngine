@@ -413,8 +413,6 @@ void ParticleManager::Finalize()
     }
 }
 
-
-
 // ==========================================================================================================
 
 void ParticleManager::UpdateInstancingData(ParticleGroup& group, Particle& particleItr)

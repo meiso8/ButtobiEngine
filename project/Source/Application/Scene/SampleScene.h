@@ -27,7 +27,7 @@ class CubeMesh;
 class Model;
 class ParticleEmitter;
 
-class SampleScene :public SceneManager {
+class SampleScene :public BaseScene {
 
 public:
     SampleScene();
