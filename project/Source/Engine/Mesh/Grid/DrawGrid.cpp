@@ -3,33 +3,31 @@
 #include"MakeMatrix.h"
 #include"Texture.h"
 #include"AABB.h"
-std::array<LineMesh*, 102> DrawGrid::line_;
-std::array < CubeMesh*, 2> DrawGrid::cube_;
 
-std::array<Object3d*, 102> DrawGrid::lineTransforms_;
+std::array<std::unique_ptr<LineMesh>, 102> DrawGrid::line_;
+std::array <std::unique_ptr<CubeMesh>, 2>  DrawGrid::cube_;
+
+std::array< std::unique_ptr<Object3d>, 102>  DrawGrid::lineTransforms_;
 
 void DrawGrid::Finalize()
 {
-
-    for (auto& line : line_) {
-        delete line;
+    for (auto& l : line_) {
+        l.reset();
     }
 
-    for (auto& cube : cube_) {
-        delete cube;
+    for (auto& c : cube_) {
+        c.reset();
     }
 
-
-    for (auto& line : lineTransforms_) {
-        delete line;
+    for (auto& t : lineTransforms_) {
+        t.reset();
     }
-
 }
 
 void DrawGrid::Create()
 {
     for (int i = 0; i < line_.size(); ++i) {
-        line_[i] = new LineMesh();
+        line_[i] = std::make_unique< LineMesh>();
         line_[i]->Create();
     }
 
@@ -39,7 +37,7 @@ void DrawGrid::Create()
     }
 
     for (int i = 0; i < cube_.size(); ++i) {
-        cube_[i] = new CubeMesh();
+        cube_[i] = std::make_unique <CubeMesh>();
         cube_[i]->Create(Texture::WHITE_1X1);
     }
 
@@ -51,12 +49,12 @@ void DrawGrid::Create()
 
 
     for (size_t i = 0; i < lineTransforms_.size(); ++i) {
-        lineTransforms_[i] = new Object3d();
+        lineTransforms_[i] = std::make_unique< Object3d>();
         lineTransforms_[i]->Create();
         lineTransforms_[i]->Update();
         lineTransforms_[i]->SetLightMode(kLightModeNone);
         if (i != 25 && i != 76) {
-            lineTransforms_[i]->SetMesh(line_[i]);
+            lineTransforms_[i]->SetMesh(line_[i].get());
         }
 
         if (i < 50) {
@@ -77,9 +75,9 @@ void DrawGrid::Create()
 
     }
 
-    lineTransforms_[27]->SetMesh(cube_[0]);
+    lineTransforms_[27]->SetMesh(cube_[0].get());
     lineTransforms_[27]->SetColor(Vector4(0.0f, 1.0f, 0.0f, 1.0f));
-    lineTransforms_[76]->SetMesh(cube_[1]);
+    lineTransforms_[76]->SetMesh(cube_[1].get());
     lineTransforms_[76]->SetColor(Vector4(1.0f, 0.0f, 0.0f, 1.0f));
 }
 
