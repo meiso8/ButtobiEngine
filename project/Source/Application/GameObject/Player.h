@@ -22,6 +22,7 @@ public:
     void Update();
     void Move();
     void Zoom();
+    void PointLightSwitch();
     Vector3& GetForward();
     void LookBack();
     void MouseLook();
@@ -32,6 +33,9 @@ public:
         return bodyPos_.worldTransform_.translate_;
     };
 
+    WorldTransform& GetBodyWorldTransform() {
+        return bodyPos_.worldTransform_;
+    }
     AABB GetWorldAABB();
     Circle& GetCircle() {
         return circle_;

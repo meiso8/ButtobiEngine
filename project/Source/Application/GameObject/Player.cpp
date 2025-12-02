@@ -10,6 +10,7 @@
 #include"CircleMesh.h"
 #include"CubeMesh.h"
 #include"JsonFile.h"
+#include"LightingManager.h"
 
 Player::Player() {
 
@@ -86,9 +87,10 @@ void Player::Update()
 
     Move();
     Zoom();
+    PointLightSwitch();
     LookBack();
     MouseLook();
-   
+
     bodyPos_.Update();
     eyePos_.Update();
     circle_.center = bodyPos_.worldTransform_.GetWorldPosition();
@@ -170,7 +172,7 @@ void Player::Zoom()
 
         isZoom_ = true;
         if (zoomTimer_ < 1.0f) {
-            zoomTimer_ += InverseFPS*2.0f;
+            zoomTimer_ += InverseFPS * 2.0f;
 
         } else {
             zoomTimer_ = 1.0f;
@@ -186,6 +188,13 @@ void Player::Zoom()
         }
     }
 
+}
+
+void Player::PointLightSwitch()
+{
+    if (Input::IsTriggerMouse(0)) {
+        LightingManager::isPointLightOn_ = LightingManager::isPointLightOn_ ? false : true;
+    }
 }
 
 Vector3& Player::GetForward()
@@ -259,17 +268,17 @@ void Player::MouseLook()
     }
 
     Vector2 controllerPos = { cameraRotateY_ ,cameraRotateX_ };
-   
+
     if (Input::IsControllerStickPosMove(BUTTON_RIGHT, 0, &controllerPos)) {
         cameraRotateY_ += controllerPos.x * InverseFPS * cameraSpeed_;
         cameraRotateX_ -= controllerPos.y * InverseFPS * cameraSpeed_;
     }
- 
-   cameraRotateY_ += Input::GetMousePosFiltered().x * InverseFPS / cameraSpeed_;
-   cameraRotateX_ += Input::GetMousePosFiltered().y * InverseFPS / cameraSpeed_;
 
-   bodyPos_.worldTransform_.rotate_.y = Lerp(bodyPos_.worldTransform_.rotate_.y, cameraRotateY_, 0.5f);
-   eyePos_.worldTransform_.rotate_.x = Lerp(eyePos_.worldTransform_.rotate_.y, cameraRotateX_, 0.5f);
+    cameraRotateY_ += Input::GetMousePosFiltered().x * InverseFPS / cameraSpeed_;
+    cameraRotateX_ += Input::GetMousePosFiltered().y * InverseFPS / cameraSpeed_;
+
+    bodyPos_.worldTransform_.rotate_.y = Lerp(bodyPos_.worldTransform_.rotate_.y, cameraRotateY_, 0.5f);
+    eyePos_.worldTransform_.rotate_.x = Lerp(eyePos_.worldTransform_.rotate_.y, cameraRotateX_, 0.5f);
 
 
     eyePos_.worldTransform_.rotate_.x = std::clamp(

@@ -33,7 +33,7 @@ void Medjed::Init()
 
 void Medjed::Draw(Camera& camera)
 {
-
+    object3d_->SetLightMode(kLightModeHalfL);
     object3d_->Draw(camera);
 
 }

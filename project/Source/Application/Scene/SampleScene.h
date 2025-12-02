@@ -17,7 +17,7 @@
 #include"UI/HPGage.h"
 #include "Enemy/EnemyBulletManager.h"
 #include "Enemy/EnemyShotBulletManager.h"
-
+#include"LightingManager.h"
 #pragma endregion
 
 class Sprite;
@@ -25,8 +25,6 @@ class PlaneMesh;
 class SphereMesh;
 class CubeMesh;
 class Model;
-
-
 class ParticleEmitter;
 
 class SampleScene :public SceneManager {
@@ -55,8 +53,9 @@ public:
     std::unique_ptr<EnemyBulletManager>enemyBulletManager_ = nullptr;
     std::unique_ptr<EnemyShotBulletManager>enemyShotBulletManager_ = nullptr;
 
+    std::unique_ptr<LightingManager>lightingManager_ = nullptr;
 #pragma endregion
 
-    std::array<std::unique_ptr<ParticleEmitter>,2>particleEmitters_;
-     std::unique_ptr<HPGage>hpGage_;
+    std::array<std::unique_ptr<ParticleEmitter>, 2>particleEmitters_;
+    std::unique_ptr<HPGage>hpGage_;
 };
