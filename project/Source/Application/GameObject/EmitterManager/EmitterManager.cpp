@@ -39,19 +39,22 @@ void EmitterManager::Initialize()
         particleEmitter->Initialize();
     }
 
-    particleEmitters_[kPlayerWalkEmitter]->emitter_.count = 10;
+    particleEmitters_[kPlayerWalkEmitter]->emitter_.count = 1;
     particleEmitters_[kPlayerWalkEmitter]->emitter_.movement = ParticleMovements::kParticleNormal;
     particleEmitters_[kPlayerWalkEmitter]->emitter_.translateOffset_ = 0.5f;
     particleEmitters_[kPlayerWalkEmitter]->emitter_.rotateOffset_ = 0.0f;
-    particleEmitters_[kPlayerWalkEmitter]->emitter_.frequency = 0.3f;
+    particleEmitters_[kPlayerWalkEmitter]->emitter_.frequency = 0.1f;
     particleEmitters_[kPlayerWalkEmitter]->emitter_.blendMode = kBlendModeSubtract;
     particleEmitters_[kPlayerWalkEmitter]->emitter_.transform.scale_ = { 0.5f,0.5f,0.5f };
+    particleEmitters_[kPlayerWalkEmitter]->emitter_.scaleOffset_ = 0.125f;
 
     particleEmitters_[kEnemyHitEmitter]->emitter_.transform.translate_.y = -0.75f;
     particleEmitters_[kEnemyHitEmitter]->emitter_.count = 16;
     particleEmitters_[kEnemyHitEmitter]->emitter_.movement = ParticleMovements::kParticleShock;
     particleEmitters_[kEnemyHitEmitter]->emitter_.radius = 2.0f;
-    particleEmitters_[kEnemyHitEmitter]->emitter_.radiusSpeed = InverseFPS*0.125f;
+    particleEmitters_[kEnemyHitEmitter]->emitter_.radiusSpeed = InverseFPS;
+    particleEmitters_[kPlayerHitEmitter]->emitter_.radiusSpeedMinMax = { -1.0f,1.0f };
+
     particleEmitters_[kEnemyHitEmitter]->emitter_.rotateOffset_ = 3.14f;
     particleEmitters_[kEnemyHitEmitter]->emitter_.frequency = 0.3f;
     particleEmitters_[kEnemyHitEmitter]->emitter_.blendMode = kBlendModeNormal;
@@ -78,11 +81,15 @@ void EmitterManager::Initialize()
 
 void EmitterManager::Update(Camera& camera)
 {
-    if (player_->isMove_) {
-        particleEmitters_[kPlayerWalkEmitter]->UpdateTimer();
-    } else {
-        particleEmitters_[kPlayerWalkEmitter]->InitTimer();
+
+    if (!player_->IsDead()) {
+        if (player_->isMove_) {
+            particleEmitters_[kPlayerWalkEmitter]->UpdateTimer();
+        } else {
+            particleEmitters_[kPlayerWalkEmitter]->InitTimer();
+        }
     }
+
 
     if (player_->IsHit()) {
         particleEmitters_[kPlayerHitEmitter]->UpdateTimer();

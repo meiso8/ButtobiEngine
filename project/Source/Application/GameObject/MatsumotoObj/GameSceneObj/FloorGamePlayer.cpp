@@ -131,6 +131,7 @@ void FloorGamePlayer::Initialize() {
 
 void FloorGamePlayer::Update() {
 	if (damageStruct_.hps.hp <= 0) {
+        damageStruct_.isDead = true;
 		//死亡モーション
         body_.worldTransform_.rotate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.rotate_.y, deathRotate_, 0.1f);
         if (body_.worldTransform_.rotate_.y >= deathRotate_ * 0.99f) {
@@ -317,9 +318,6 @@ void FloorGamePlayer::HitAction()
         if (damageStruct_.flashTimer <= 0.0f) {
             damageStruct_.flashTimer = 0.0f;
             damageStruct_.isHit = false;
-            if (damageStruct_.hps.hp <= 0.0f) {
-                damageStruct_.isDead = true;
-            }
         }
 
         Flashing();
