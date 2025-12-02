@@ -58,20 +58,21 @@ void ParticleManager::Create()
     CreateVertexBufferResource();
 }
 
-Particle MakeNewParticle(const bool& isRandomTranslate, const bool& isRandomRotate, const WorldTransform& transform, const Vector4& color, const float& lifeTime)
+Particle MakeNewParticle(const WorldTransform& transform, const Vector4& color, const float& lifeTime, const float& translateOffset, const float& rotateOffset, const float& scaleOffset)
 {
 
     Particle particle;
-    Random::SetMinMax(-1.0f, 1.0f);
+    Random::SetMinMax(0.0f, 1.0f);
     particle.lifeTime = (lifeTime == -1.0f) ? Random::Get() : lifeTime;
+    Random::SetMinMax(-1.0f, 1.0f);
     particle.velocity = { Random::Get(), Random::Get(), Random::Get() };
 
-    particle.transform.scale = transform.scale_;
-    Random::SetMinMax(-0.5f, 0.5f);
-    particle.transform.translate = (isRandomTranslate) ? Vector3{ Random::Get(), Random::Get(), Random::Get() } + transform.GetWorldPosition() : transform.GetWorldPosition();
-    Random::SetMinMax(0.0f, 6.28f);
-    particle.transform.rotate = (isRandomRotate) ? Vector3{ Random::Get(), Random::Get(), Random::Get() } : transform.rotate_;
-    Random::SetMinMax(-transform.scale_.x, transform.scale_.y);
+    Random::SetMinMax(-scaleOffset, scaleOffset);
+    particle.transform.scale = transform.scale_ + Vector3{ Random::Get(), Random::Get(), Random::Get() };
+    Random::SetMinMax(-translateOffset, translateOffset);
+    particle.transform.translate = Vector3{ Random::Get(), Random::Get(), Random::Get() } + transform.GetWorldPosition();
+    Random::SetMinMax(-rotateOffset, rotateOffset);
+    particle.transform.rotate = Vector3{ Random::Get(), Random::Get(), Random::Get() } + transform.rotate_;
 
     particle.currentTime = 0;
     particle.color = color;
@@ -79,26 +80,19 @@ Particle MakeNewParticle(const bool& isRandomTranslate, const bool& isRandomRota
     return particle;
 }
 
-SphericalCoordinate MakeNewSphericalCoordinate(const bool& isRandom, const float& radius)
+
+SphericalMove MakeNewSphericalCoordinate(const float& radius, const int& count, const int& maxCount, const float& radiusSpeed, const float& polarSpeed, const MinMax& polarSpeedMinMax, const MinMax& radiusSpeedMinMax)
 {
-    SphericalCoordinate sphericalCoordinate;
-    Random::SetMinMax(0.0f, 6.28f);
-    sphericalCoordinate.azimuthal = 0.0f;
-    sphericalCoordinate.polar = (isRandom) ? Random::Get() : 0.0f;
-    sphericalCoordinate.radius = radius;
-    return sphericalCoordinate;
+    SphericalMove spherical;
+    spherical.coordinate.azimuthal = 0.0f;
+    spherical.coordinate.polar = std::numbers::pi_v<float>*2.0f / maxCount * count;
+    spherical.coordinate.radius = radius;
+    Random::SetMinMax(polarSpeedMinMax.min, polarSpeedMinMax.max);
+    spherical.polarSpeed = polarSpeed + Random::Get();
+    Random::SetMinMax(radiusSpeedMinMax.min, radiusSpeedMinMax.max);
+    spherical.radiusSpeed = radiusSpeed + Random::Get();
+    return spherical;
 }
-
-
-SphericalCoordinate MakeNewSphericalCoordinateForShock(const float& radius, const int& count, const int& maxCount)
-{
-    SphericalCoordinate sphericalCoordinate;
-    sphericalCoordinate.azimuthal = 0.0f;
-    sphericalCoordinate.polar = std::numbers::pi_v<float>*2.0f / maxCount * count;
-    sphericalCoordinate.radius = radius;
-    return sphericalCoordinate;
-}
-
 
 void ParticleManager::CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle, const bool& useModel, const ModelManager::MODEL_HANDLE& modelHandle)
 {
@@ -161,34 +155,22 @@ void ParticleManager::Update(Camera& camera)
     }
 }
 
-std::list<Particle> EmitParticles(const bool& isRandomTranslate, const bool& isRandomRotate, const WorldTransform& transform, uint32_t count, const Vector4& color, const float& lifeTime)
+std::list<Particle> EmitParticles(const WorldTransform& transform, uint32_t count, const Vector4& color, const float& lifeTime, const float& translateOffset, const float& rotateOffset, const float& scaleOffset)
 {
     std::list<Particle>particles;
     for (uint32_t i = 0; i < count; ++i) {
-        particles.push_back(MakeNewParticle(isRandomTranslate, isRandomRotate, transform, color, lifeTime));
+        particles.push_back(MakeNewParticle(transform, color, lifeTime, translateOffset, rotateOffset, scaleOffset));
     }
     return particles;
 }
 
-std::list<SphericalCoordinate> EmitCoordinate(const bool& isRandom, uint32_t count, const float& radius)
+
+std::list<SphericalMove> EmitCoordinate(uint32_t count ,const float& radius, const float& radiusSpeed, const float& polarSpeed, const MinMax& polarSpeedMinMax, const MinMax& radiusSpeedMinMax)
 {
-    std::list<SphericalCoordinate>sphericalCoordinates;
+    std::list<SphericalMove>sphericalCoordinates;
 
     for (uint32_t i = 0; i < count; ++i) {
-        sphericalCoordinates.push_back(MakeNewSphericalCoordinate(isRandom, radius));
-    }
-
-    return sphericalCoordinates;
-
-}
-
-
-std::list<SphericalCoordinate> EmitCoordinateForShock(uint32_t count, const float& radius)
-{
-    std::list<SphericalCoordinate>sphericalCoordinates;
-
-    for (uint32_t i = 0; i < count; ++i) {
-        sphericalCoordinates.push_back(MakeNewSphericalCoordinateForShock(radius, i, count));
+        sphericalCoordinates.push_back(MakeNewSphericalCoordinate(radius, i, count, radiusSpeed, polarSpeed, polarSpeedMinMax, radiusSpeedMinMax));
     }
     return sphericalCoordinates;
 
@@ -199,17 +181,13 @@ void ParticleManager::Emit(Emitter& emitter)
 {
     assert(particleGroups.contains(emitter.name));
 
-    particleGroups[emitter.name]->particles.splice(particleGroups[emitter.name]->particles.end(), EmitParticles(emitter.isRandomTranslate, emitter.isRandomRotate, emitter.transform, emitter.count, emitter.color, emitter.lifeTime));
+    particleGroups[emitter.name]->particles.splice(particleGroups[emitter.name]->particles.end(), EmitParticles(emitter.transform, emitter.count, emitter.color, emitter.lifeTime, emitter.translateOffset_, emitter.rotateOffset_, emitter.scaleOffset_));
 
     particleGroups[emitter.name]->movement = emitter.movement;
     particleGroups[emitter.name]->parentPos_ = &emitter.transform;
 
-    if (emitter.movement == kParticleSphere) {
-        particleGroups[emitter.name]->sphericalCoordinates.splice(particleGroups[emitter.name]->sphericalCoordinates.end(), EmitCoordinate(emitter.isRandomRotate, emitter.count, emitter.radius));
-    }
-
-    if (emitter.movement == kParticleShock) {
-        particleGroups[emitter.name]->sphericalCoordinates.splice(particleGroups[emitter.name]->sphericalCoordinates.end(), EmitCoordinateForShock(emitter.count, emitter.radius));
+    if (emitter.movement == kParticleSphere|| emitter.movement == kParticleShock) {
+        particleGroups[emitter.name]->sphericalCoordinates.splice(particleGroups[emitter.name]->sphericalCoordinates.end(), EmitCoordinate(emitter.count, emitter.radius, emitter.radiusSpeed, emitter.polarSpeed, emitter.polarSpeedMinMax, emitter.radiusSpeedMinMax));
     }
 }
 
@@ -268,16 +246,17 @@ void ParticleManager::Sphere(ParticleGroup& group)
                 continue;
             }
 
-            coordIterator->polar += std::numbers::pi_v<float> *InverseFPS;
-            if (coordIterator->radius > 0.0f) {
-                coordIterator->radius -= InverseFPS;
+            coordIterator->coordinate.polar += coordIterator->polarSpeed;
+
+            if (coordIterator->coordinate.radius > 0.0f) {
+                coordIterator->coordinate.radius -= coordIterator->radiusSpeed;
             } else {
                 particleIterator = group.particles.erase(particleIterator);
                 coordIterator = group.sphericalCoordinates.erase(coordIterator);
                 continue;
             }
 
-            Vector3 sphereCoordinate = TransformCoordinate(*coordIterator);
+            Vector3 sphereCoordinate = TransformCoordinate(coordIterator->coordinate);
 
             particleIterator->transform.translate = group.parentPos_->GetWorldPosition() + particleIterator->velocity + sphereCoordinate;
 
@@ -318,17 +297,15 @@ void ParticleManager::Shock(ParticleGroup& group)
             }
 
 
-            if (coordIterator->radius > 8.0f) {
+            if (coordIterator->coordinate.radius > 8.0f) {
                 particleIterator = group.particles.erase(particleIterator);
                 coordIterator = group.sphericalCoordinates.erase(coordIterator);
                 continue;
             } else {
-                coordIterator->radius += InverseFPS * 2.0f;
+                coordIterator->coordinate.radius += coordIterator->radiusSpeed;
             }
 
-
-
-            Vector3 sphereCoordinate = TransformCoordinate(*coordIterator);
+            Vector3 sphereCoordinate = TransformCoordinate(coordIterator->coordinate);
 
             particleIterator->transform.translate = group.parentPos_->GetWorldPosition() + particleIterator->velocity + sphereCoordinate;
 

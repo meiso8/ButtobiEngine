@@ -3,8 +3,9 @@
 #include"../MatsumotoObj/GameSceneObj/FloorGamePlayer.h"
 #include"Enemy/Enemy.h"
 //#include"Enemy/EnemyBombManager.h"
+#include"Input.h"
 
-EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy):player_(&player),enemy_(&enemy)
+EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy) :player_(&player), enemy_(&enemy)
 {
 
     for (auto& particleEmitter : particleEmitters_) {
@@ -40,8 +41,8 @@ void EmitterManager::Initialize()
 
     particleEmitters_[kPlayerWalkEmitter]->emitter_.count = 10;
     particleEmitters_[kPlayerWalkEmitter]->emitter_.movement = ParticleMovements::kParticleNormal;
-    particleEmitters_[kPlayerWalkEmitter]->emitter_.isRandomTranslate = true;
-    particleEmitters_[kPlayerWalkEmitter]->emitter_.isRandomRotate = false;
+    particleEmitters_[kPlayerWalkEmitter]->emitter_.translateOffset_ = 0.5f;
+    particleEmitters_[kPlayerWalkEmitter]->emitter_.rotateOffset_ = 0.0f;
     particleEmitters_[kPlayerWalkEmitter]->emitter_.frequency = 0.3f;
     particleEmitters_[kPlayerWalkEmitter]->emitter_.blendMode = kBlendModeSubtract;
     particleEmitters_[kPlayerWalkEmitter]->emitter_.transform.scale_ = { 0.5f,0.5f,0.5f };
@@ -50,22 +51,29 @@ void EmitterManager::Initialize()
     particleEmitters_[kEnemyHitEmitter]->emitter_.count = 16;
     particleEmitters_[kEnemyHitEmitter]->emitter_.movement = ParticleMovements::kParticleShock;
     particleEmitters_[kEnemyHitEmitter]->emitter_.radius = 2.0f;
-    particleEmitters_[kEnemyHitEmitter]->emitter_.isRandomRotate = true;
+    particleEmitters_[kEnemyHitEmitter]->emitter_.radiusSpeed = InverseFPS*0.125f;
+    particleEmitters_[kEnemyHitEmitter]->emitter_.rotateOffset_ = 3.14f;
     particleEmitters_[kEnemyHitEmitter]->emitter_.frequency = 0.3f;
     particleEmitters_[kEnemyHitEmitter]->emitter_.blendMode = kBlendModeNormal;
+    particleEmitters_[kEnemyHitEmitter]->emitter_.polarSpeedMinMax = { 0.0f,0.0f};
+
 
     particleEmitters_[kPlayerHitEmitter]->emitter_.transform.translate_.y = 0.75f;
+    particleEmitters_[kPlayerHitEmitter]->emitter_.translateOffset_ = { 0.0f };
     particleEmitters_[kPlayerHitEmitter]->emitter_.transform.scale_ = { 0.5f,0.5f,0.5f };
-    particleEmitters_[kPlayerHitEmitter]->emitter_.count = 8;
-    particleEmitters_[kPlayerHitEmitter]->emitter_.movement = ParticleMovements::kParticleShock;
-    particleEmitters_[kPlayerHitEmitter]->emitter_.radius = 0.0f;
-    particleEmitters_[kPlayerHitEmitter]->emitter_.isRandomRotate = false;
-    particleEmitters_[kPlayerHitEmitter]->emitter_.frequency = 0.5f;
+    particleEmitters_[kPlayerHitEmitter]->emitter_.count = 1;
+    particleEmitters_[kPlayerHitEmitter]->emitter_.movement = ParticleMovements::kParticleSphere;
+    particleEmitters_[kPlayerHitEmitter]->emitter_.radius = 0.5f;
+    particleEmitters_[kPlayerHitEmitter]->emitter_.radiusSpeed = 0.0f;
+    particleEmitters_[kPlayerHitEmitter]->emitter_.radiusSpeedMinMax = { 0.0f,0.0f };
+
+    particleEmitters_[kPlayerHitEmitter]->emitter_.polarSpeed = InverseFPS*std::numbers::pi_v<float>;
+    particleEmitters_[kEnemyHitEmitter]->emitter_.polarSpeedMinMax = { 0.0f,0.0f };
+    particleEmitters_[kPlayerHitEmitter]->emitter_.frequency = 0.25f;
+    particleEmitters_[kPlayerHitEmitter]->emitter_.lifeTime = 1.0f;
+
     particleEmitters_[kPlayerHitEmitter]->emitter_.blendMode = kBlendModeNormal;
 
-   /* for (const auto& bomb :bombEmitter_) {
-        bomb->Initialize();
-    }*/
 }
 
 void EmitterManager::Update(Camera& camera)
@@ -83,7 +91,7 @@ void EmitterManager::Update(Camera& camera)
     }
 
     if (enemy_->IsHit()) {
-      particleEmitters_[kEnemyHitEmitter]->Emit();
+        particleEmitters_[kEnemyHitEmitter]->Emit();
     }
 
     for (auto& particleEmitter : particleEmitters_) {
@@ -102,13 +110,16 @@ void EmitterManager::Draw()
         particleEmitter->Draw();
     }
 
- /*   for (const auto& bomb : bombEmitter_) {
-        bomb->Draw();
-    }*/
+    /*   for (const auto& bomb : bombEmitter_) {
+           bomb->Draw();
+       }*/
 }
 
 void EmitterManager::Debug()
 {
+    DebugUI::CheckParticle(*particleEmitters_[kPlayerHitEmitter], "PlayerEmitter");
+
     DebugUI::CheckParticle(*particleEmitters_[kEnemyHitEmitter], "EnemyEmitter");
     DebugUI::CheckParticle(*particleEmitters_[kPlayerWalkEmitter], "PlayerEmitter");
+
 }
