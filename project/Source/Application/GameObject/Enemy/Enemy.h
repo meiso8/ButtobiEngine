@@ -7,6 +7,7 @@
 #include"Collider.h"
 #include<memory>
 #include<unordered_map>
+#include "Engine/Math/Vector/Vector3.h"
 class Model;
 class Camera;
 enum LightMode;
@@ -41,6 +42,9 @@ public:
         return { 0.0f };
     }
 
+    // 死亡後のアニメーション
+	void LeathalMoveUpdate();
+
     //ファイアボールを打つフラグ
     bool isShot_ = false;
     //ボムを投げる
@@ -49,6 +53,8 @@ public:
     bool isWaveShot_ = false;
     //床を初期化する
     bool isReqestClearFloor_ = false;
+	// フェーズを変えているかどうか
+	bool isFaseChange_ = false;
     //体の位置
     Object3d bodyPos_;
     //弾と当たったかどうかを得る
@@ -58,6 +64,9 @@ public:
     HPs* GetHpsPtr() { return &damageStruct_.hps; }
     bool IsOverKill() { return(overKillCount >= kMaxOverKillCount); }
 private:
+
+    // 死亡時のぶっ飛び
+    bool isLeathalVec_;
 
     enum PHASE {
         //攻撃
@@ -241,7 +250,7 @@ private:
     //オーバーキルカウント
     int overKillCount = 0;
     //オーバーキルカウント最大値
-    int kMaxOverKillCount = 5;
+    int kMaxOverKillCount = 150;
 private:
     //状態を初期化
     void InitState();

@@ -29,7 +29,8 @@ void KeyBindConfig::Update() {
 	for (auto& [actionName, inputDevice] : keyBinds_) {
 		isControll |= IsPress(actionName);
 	}
-	if (isControll) {
+	Vector2 controllerStickPos;
+	if (isControll || Input::IsControllerStickPosMove(BUTTON_LEFT,0, &controllerStickPos)) {
 		noControllTimer_ = 0.0f;
 	} else {
 		noControllTimer_ += 0.016f;

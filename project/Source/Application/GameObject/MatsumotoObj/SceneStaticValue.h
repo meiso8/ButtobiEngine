@@ -1,5 +1,5 @@
 #pragma once
 namespace SceneStaticValue
 {
-	constexpr bool isClear = false;
+    extern bool isClear;
 }

@@ -11,6 +11,7 @@ void CameraController::Update()
 
     UpdateShakeTimer();
 	UpdateFocusTarget();
+	UpdateEnemyLethal();
 
     camera_->UpdateMatrix();
 
@@ -28,6 +29,11 @@ void CameraController::Initialize()
 
 	isFocusTarget_ = false;
 	focusTargetPos_ = nullptr;
+
+	isEnemyLethal_ = false;
+
+	cameraDefaultTransform_.translate = camera_->translate_;
+	cameraDefaultTransform_.rotate = camera_->rotate_;
 }
 
 void CameraController::StartShake(const float& moveRange, const uint32_t& frame)
@@ -53,12 +59,30 @@ void CameraController::ResetFocusTarget() {
 
 void CameraController::UpdateFocusTarget() {
 	if (!isFocusTarget_ || !focusTargetPos_) {
-        camera_->fovAngleY_ = MY_Utility::SimpleEaseIn(45.0f * 3.141592654f / 180.0f, 0.9f, 0.1f);
+		camera_->rotate_ = MY_Utility::SimpleEaseIn(camera_->rotate_, cameraDefaultTransform_.rotate, 0.1f);
+        camera_->fovAngleY_ = MY_Utility::SimpleEaseIn(camera_->fovAngleY_, 45.0f * 3.141592654f / 180.0f, 0.1f);
 		return;
 	}
 	Vector3 targetRotate = MY_Utility::CalcLookAtRotation(camera_->translate_, *focusTargetPos_);
 	camera_->rotate_ = MY_Utility::SimpleEaseIn(camera_->rotate_, targetRotate, 0.1f);
-	camera_->fovAngleY_ = MY_Utility::SimpleEaseIn(camera_->fovAngleY_, 0.2f, 0.3f);
+	camera_->fovAngleY_ = MY_Utility::SimpleEaseIn(camera_->fovAngleY_, 0.3f, 0.3f);
+}
+
+void CameraController::StartEnemyLethal() {
+	isEnemyLethal_ = true;
+}
+
+void CameraController::UpdateEnemyLethal() {
+	if (!isEnemyLethal_) {
+		return;
+	}
+    camera_->rotate_.x = MY_Utility::SimpleEaseIn(camera_->rotate_.x, -0.2f, 0.1f);
+	camera_->translate_.y = MY_Utility::SimpleEaseIn(camera_->translate_.y, 5.0f, 0.1f);
+    camera_->translate_.z = MY_Utility::SimpleEaseIn(camera_->translate_.z, -10.0f, 0.1f);
+}
+
+void CameraController::EndEnemyLethal() {
+	isEnemyLethal_ = false;
 }
 
 void CameraController::UpdateShakeTimer()
