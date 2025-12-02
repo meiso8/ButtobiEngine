@@ -16,6 +16,8 @@ namespace MY_Utility {
 	Vector4 SimpleEaseIn(const Vector4& from, const Vector4& to, float transitionSpeed);
 	Vector4 SimpleEaseOut(const Vector4& from, const Vector4& to, float transitionSpeed);
 
+	Vector3 CalcLookAtRotation(const Vector3& from, const Vector3& to);
+
 	bool IsActiveForTimerSwitch(float& timer, float interval);
 
 	float Length(const Vector2& vec);

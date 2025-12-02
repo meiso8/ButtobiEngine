@@ -123,16 +123,27 @@ void FloorGamePlayer::Initialize() {
     //べとべと床フラグ
     isOnStickyFloor_ = false;
     stickyFloorSlowRate_ = 0.4f;
+
+    // 死んだときに回転する量
+	deathRotate_ = 50.0f;
 }
 
 
 void FloorGamePlayer::Update() {
-    Move();
-    LookMoveDir();
-    StriptFloor();
-    ShotFloor();
-    //無敵時間継続時間を更新する
-    HitAction();
+	if (damageStruct_.hps.hp <= 0) {
+		//死亡モーション
+        body_.worldTransform_.rotate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.rotate_.y, deathRotate_, 0.1f);
+        if (body_.worldTransform_.rotate_.y >= deathRotate_ * 0.99f) {
+            body_.worldTransform_.rotate_.x = MY_Utility::SimpleEaseIn(body_.worldTransform_.rotate_.x, 3.14f * 0.5f, 0.1f);
+        }
+    } else {
+        Move();
+        LookMoveDir();
+        StriptFloor();
+        ShotFloor();
+        //無敵時間継続時間を更新する
+        HitAction();
+    }
 
     // ワールドトランスフォーム更新
     body_.Update();

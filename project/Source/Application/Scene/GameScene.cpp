@@ -64,7 +64,9 @@ GameScene::GameScene()
     floorActionManager_ = std::make_unique<FloorActionManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
     floorGamePlayerAnimationManager_ = std::make_unique<FloorGamePlayerAnimationManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
     healItemSpawner_ = std::make_unique<HealItemSpawner>();
+	gameOverEvent_ = std::make_unique<GameOverEvent>(floorGamePlayer_.get());
     actionUI_ = std::make_unique<ActionUI>(floorGamePlayer_.get());
+	letterboxBars_ = std::make_unique<LetterboxBars>();
 
     enemyBulletManager_ = std::make_unique<EnemyBulletManager>();
     enemyShotBulletManager_ = std::make_unique<EnemyShotBulletManager>(enemy_.get(), enemyBulletManager_.get());
@@ -100,6 +102,8 @@ void GameScene::Initialize() {
     playerFloorStripManager_->Initialize();
     healItemSpawner_->Initialize();
     actionUI_->Initialize();
+	letterboxBars_->Initialize();
+	gameOverEvent_->Initialize();
 
     healItemSpawner_->SpawnHealItem({ 2.0f,1.0f,2.0f });
 
@@ -132,20 +136,22 @@ void GameScene::Update() {
         Initialize();
     }
 
+	if (gameOverEvent_->IsReqestedAction()) {
+		if (gameOverEvent_->IsRetrySelected()) {
+			Initialize();
+			
+        } else {
+            sceneChange_->SetState(SceneChange::kFadeIn, 30);
+        }
+	}
+
     if (enemy_->IsDead()) {
         //ひたすらなんかする
     }
 
-    if (PauseScreen::isBackToTitle || floorGamePlayer_->IsDead()||enemy_->IsOverKill()) {
-
-        //if (enemy_->IsDead()) {
-        //    SceneStaticValue::isClear = true;
-        //}
-
+    if (PauseScreen::isBackToTitle || enemy_->IsOverKill()) {
         sceneChange_->SetState(SceneChange::kFadeIn, 30);
     }
-
-
 
     //仮に音声を鳴らす　全体のvolumeがあってオフセット分だけいじる
     Sound::PlayBGM(Sound::BGM1, 0.0f);
@@ -158,6 +164,7 @@ void GameScene::Update() {
         emitterManager_->Update(*currentCamera_);
     }
 
+	letterboxBars_->Update();
     uiManager_->Update();
 
 }
@@ -176,6 +183,8 @@ void GameScene::Draw() {
     playerFloorStripManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     healItemSpawner_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     actionUI_->Draw();
+	letterboxBars_->Draw();
+	gameOverEvent_->Draw();
     enemy_->Draw(*currentCamera_, kLightModeHalfL);
     enemyBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     enemyBombManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
@@ -219,6 +228,11 @@ void GameScene::UpdateCamera()
         } else {
             cameraController_->SetShakeFalse();
         }
+
+        if (floorGamePlayer_->GetDamageStruct().hps.hp <= 0) {
+            cameraController_->FocusTarget(&floorGamePlayer_->body_.worldTransform_.translate_);
+        }
+
         cameraController_->Update();
     }
 
@@ -237,9 +251,14 @@ void GameScene::UpdateGameObject()
     enemyShockWaveManager_->Update();
     tree_->Update();
 
-
     // オブジェクト同士の干渉
     actionUI_->Update();
+    if (floorGamePlayer_->GetDamageStruct().hps.hp <= 0) {
+        actionUI_->isHide_ = true;
+    } else {
+        actionUI_->isHide_ = false;
+    }
+    
     floorStripManager_->Update();
     playerFloorStripManager_->Update();
     floorPlayerShotBulletManager_->Update();
@@ -256,6 +275,13 @@ void GameScene::UpdateGameObject()
     // アニメーション更新
     floorGamePlayerAnimationManager_->Update();
 
+    // イベントシステム
+    gameOverEvent_->Update();
+    if (floorGamePlayer_->GetDamageStruct().hps.hp <= 0) {
+        letterboxBars_->isOpen_ = true;
+    } else {
+		letterboxBars_->isOpen_ = false;
+    }
 }
 
 void GameScene::CheckAllCollision()
