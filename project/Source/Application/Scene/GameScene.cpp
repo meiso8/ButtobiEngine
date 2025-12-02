@@ -268,6 +268,7 @@ void GameScene::UpdateGameObject()
     floorPlayerStripTargetUI_->Update();
     floorActionManager_->Update();
     if (enemy_->isReqestClearFloor_) {
+        Sound::PlaySE(Sound::kFloorRespawn);
         floorGameFloorManager_->Initialize();
         enemy_->isReqestClearFloor_ = false;
     }

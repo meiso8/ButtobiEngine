@@ -5,7 +5,7 @@
 #include<algorithm>
 #include"DebugUI.h"
 #include "MatsumotoObj/KeyBindConfig.h"
-
+#include"Sound.h"
 bool PauseScreen::isActive_ = false;
 bool PauseScreen::isPause_ = false;
 bool PauseScreen::isRetry = false;
@@ -89,6 +89,7 @@ void PauseScreen::Update()
 {
 
     if (KeyBindConfig::Instance().IsTrigger("Menu")) {
+        Sound::IsPlaying(Sound::kPauseButton);
         isPause_ = (isPause_) ? false : true;
         pauseTimer_ = 0.0f;
         isActive_ = true;
@@ -148,6 +149,7 @@ void PauseScreen::SelectButton()
 {
 	KeyBindConfig* key = &KeyBindConfig::Instance();
     if (key->IsTrigger("MoveForward")) {
+        Sound::IsPlaying(Sound::kMoveCursor);
         selectButtonNum_--;
         if (selectButtonNum_ < 0) {
             selectButtonNum_ = kButtonMax - 1;
@@ -156,6 +158,7 @@ void PauseScreen::SelectButton()
     }
 
     if (key->IsTrigger("MoveBack")) {
+        Sound::IsPlaying(Sound::kMoveCursor);
         selectButtonNum_++;
         selectButtonNum_ %= kButtonMax;
         scaleTheta_ = 0.0f;
@@ -163,7 +166,7 @@ void PauseScreen::SelectButton()
 
 
     if (key->IsTrigger("Shot")) {
-
+        Sound::IsPlaying(Sound::kDecision);
         switch (selectButtonNum_)
         {
         case kBackToGameButton:

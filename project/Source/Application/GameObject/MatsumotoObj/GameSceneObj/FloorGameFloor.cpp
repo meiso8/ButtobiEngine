@@ -146,6 +146,7 @@ void FloorGameFloor::BombFloorUpdate() {
 		autoSwapTimer_ -= 0.016f;
 	} else {
 		SwapFloorType(nextFloorType_);
+		Sound::PlaySE(Sound::kExplosion);
 		isExploded_ = true;
 	}
 }

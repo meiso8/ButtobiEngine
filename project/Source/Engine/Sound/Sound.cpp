@@ -39,12 +39,26 @@ void Sound::LoadAllSound()
     handles_[FIRE_BALL] = Load("Resource/Sounds/externals/fireBall.mp3");
     handles_[THROW_FLOOR] = Load("Resource/Sounds/externals/throwFloor.mp3");
 
-    handles_[BOSS_HEAL] = Load("Resource/Sounds/JamesSound/bossHeal.mp3");
-    handles_[BOSS_TACKLE] = Load("Resource/Sounds/JamesSound/bossTackle.mp3");
-    handles_[DAMAGE] = Load("Resource/Sounds/JamesSound/damage.mp3");
-    handles_[DEFEAT_BOSS] = Load("Resource/Sounds/JamesSound/defeatBoss.mp3");
-    handles_[PLAYER_WALK] = Load("Resource/Sounds/JamesSound/playerWalk.mp3");
-    handles_[STUN] = Load("Resource/Sounds/JamesSound/stun.mp3");
+    handles_[kBossDamage01] = Load("Resource/Sounds/SE/bossDamage01.mp3");
+    handles_[kBossDamage02] = Load("Resource/Sounds/SE/bossDamage02.mp3");
+    handles_[kBossFireBall] = Load("Resource/Sounds/SE/bossFireBall.mp3");
+    handles_[kBossHeal] = Load("Resource/Sounds/SE/bossHeal.mp3");
+    handles_[kBossTackle] = Load("Resource/Sounds/SE/bossTackle.mp3");
+    handles_[kDamage] = Load("Resource/Sounds/SE/damage.mp3");
+    handles_[kDecision] = Load("Resource/Sounds/SE/decision.mp3");
+    handles_[kDefeatBoss] = Load("Resource/Sounds/SE/defeatBoss.mp3");
+    handles_[kExplosion] = Load("Resource/Sounds/SE/explosion.mp3");
+    handles_[kFloorRespawn] = Load("Resource/Sounds/SE/floorRespawn.mp3");
+    handles_[kMoveCursor] = Load("Resource/Sounds/SE/moveCursor.mp3");
+    handles_[kPauseButton] = Load("Resource/Sounds/SE/pauseButton.mp3");
+    handles_[kPlayerDamage] = Load("Resource/Sounds/SE/playerDamage.mp3");
+    handles_[kPlayerHeal] = Load("Resource/Sounds/SE/playerHeal.mp3");
+    handles_[kPlayerWalk] = Load("Resource/Sounds/SE/playerWalk.mp3");
+    handles_[kStripObj] = Load("Resource/Sounds/SE/stripObj.mp3");
+    handles_[kStun] = Load("Resource/Sounds/SE/stun.mp3");
+    handles_[kTrhowObj] = Load("Resource/Sounds/SE/trhowObj.mp3");
+    handles_[kWindAttackCharge] = Load("Resource/Sounds/SE/windAttackCharge.mp3");
+    handles_[kWindAttackShot] = Load("Resource/Sounds/SE/windAttackShot.mp3");
 
 }
 
