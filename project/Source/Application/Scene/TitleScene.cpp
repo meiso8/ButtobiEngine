@@ -4,6 +4,7 @@
 
 TitleScene::TitleScene()
 {
+    sceneName_ = "Title";
 }
 
 TitleScene::~TitleScene()
