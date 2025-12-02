@@ -128,7 +128,7 @@ private:
     //球面移動に移行する時のスピード
     const float kSphericalLerpSpeed_ = 0.5f;
     //円移動時の半径
-    const float kRoundRadius_ = 7.0f;
+    const float kRoundRadius_ = 5.5f;
 #pragma endregion
 
 #pragma region //タックル
