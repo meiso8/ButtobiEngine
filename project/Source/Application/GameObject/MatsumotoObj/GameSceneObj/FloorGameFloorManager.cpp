@@ -52,6 +52,14 @@ void FloorGameFloorManager::Draw(Camera& camera, const LightMode& lightType) {
     }
 }
 
+void FloorGameFloorManager::ForceChangeAllFloorType(const FloorType& floorType) {
+	for (int y = 0; y < kMapHeight; y++) {
+		for (int x = 0; x < kMapWidth; x++) {
+			floors_[y][x]->SwapFloorType(floorType);
+		}
+	}
+}
+
 void FloorGameFloorManager::AddCollider(CollisionManager* collisionManager) {
 	for (int y = 0; y < kMapHeight; y++) {
 		for (int x = 0; x < kMapWidth; x++) {

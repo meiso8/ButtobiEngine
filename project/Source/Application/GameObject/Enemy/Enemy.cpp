@@ -81,6 +81,7 @@ void Enemy::Init() {
     isAttack_ = false;
     isPreAttack_ = false;
     isFeint_ = false;
+    isLeathalVec_ = false;
 
     isReqestClearFloor_ = false;
 
@@ -158,6 +159,10 @@ void Enemy::Draw(Camera& camera, const LightMode& lightMode)
 
 void Enemy::Update()
 {
+    if (IsOverKill()) {
+		return;
+    }
+
     // とりあえずフェーズが最大になったら処理を終える  
     if (phase_ >= MAX_PHASE || phase_ < 0) {
         return;
@@ -302,6 +307,26 @@ void Enemy::OnCollision(Collider* collider)
 
 }
 
+void Enemy::LeathalMoveUpdate() {
+    if (!isLeathalVec_) {
+        isLeathalVec_ = true;
+        velocity_ = { 5.0f,30.0f,350.0f };
+		
+    }
+
+	velocity_.y -= 9.8f * 0.016f;
+    bodyPos_.worldTransform_.translate_ += velocity_ * 0.016f;
+    velocity_ *= 0.98f;
+
+	bodyPos_.worldTransform_.rotate_.x += 0.3f;
+    bodyPos_.worldTransform_.rotate_.y += 0.2f;
+    bodyPos_.worldTransform_.rotate_.z += 0.1f;
+
+    bodyPos_.Update();
+    wingLPos_.Update();
+    wingRPos_.Update();
+}
+
 void Enemy::Tackle()
 {
 
@@ -427,6 +452,7 @@ void Enemy::LerpSquarePos()
     } else if (phaseTimer_ <= kLerpSquareTime_) {
         LerpPos({ 0.0f,kLerpSquareEndPosY_,6.0f }, 0.1f);
     } else {
+		isFaseChange_ = false;
         SetPhase(SQUARE);
     }
 
@@ -479,8 +505,10 @@ void Enemy::SwitchState()
 
     if (currentState_ == "First") {
         currentState_ = "Second";
+		isFaseChange_ = true;
     } else if (currentState_ == "Second") {
         currentState_ = "Third";
+		isFaseChange_ = true;
     } else if (currentState_ == "Third") {
         damageStruct_.isDead = true;
     }

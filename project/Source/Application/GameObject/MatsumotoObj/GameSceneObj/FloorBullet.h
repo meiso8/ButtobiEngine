@@ -42,6 +42,7 @@ private:
     float moveSpeed_;
     float lifeTimer_;
     float lifeDuration_;
+	Vector3 velocity_;
 
     float homingStayTime_;
 	Object3d* homingTarget_ = nullptr;

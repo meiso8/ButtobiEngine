@@ -131,6 +131,11 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 
+    if (enemy_->bodyPos_.worldTransform_.translate_.z >= 200.0f) {
+		SceneStaticValue::isClear = true;
+		sceneChange_->SetState(SceneChange::kFadeIn, 30);
+    }
+
     if (PauseScreen::isRetry) {
         PauseScreen::isRetry = false;
         Initialize();
@@ -145,11 +150,11 @@ void GameScene::Update() {
         }
 	}
 
-    if (enemy_->IsDead()) {
+    if (enemy_->IsOverKill()) {
         //ひたすらなんかする
     }
 
-    if (PauseScreen::isBackToTitle || enemy_->IsOverKill()) {
+    if (PauseScreen::isBackToTitle) {
         sceneChange_->SetState(SceneChange::kFadeIn, 30);
     }
 
@@ -229,9 +234,24 @@ void GameScene::UpdateCamera()
             cameraController_->SetShakeFalse();
         }
 
+        if (enemy_->isFaseChange_) {
+            cameraController_->FocusTarget(&enemy_->bodyPos_.worldTransform_.translate_);
+        } else {
+            cameraController_->ResetFocusTarget();
+        }
+
         if (floorGamePlayer_->GetDamageStruct().hps.hp <= 0) {
+			cameraController_->ResetFocusTarget();
             cameraController_->FocusTarget(&floorGamePlayer_->body_.worldTransform_.translate_);
         }
+
+		if (enemy_->IsDead()) {
+			cameraController_->StartEnemyLethal();
+            if (enemy_->IsOverKill()) {
+                cameraController_->ResetFocusTarget();
+                cameraController_->FocusTarget(&enemy_->bodyPos_.worldTransform_.translate_);
+            }
+		}
 
         cameraController_->Update();
     }
@@ -240,6 +260,10 @@ void GameScene::UpdateCamera()
 
 void GameScene::UpdateGameObject()
 {
+    if (enemy_->IsDead()) {
+        floorGameFloorManager_->ForceChangeAllFloorType(FloorType::Strong);
+    }
+
     // オブジェクト個人の更新
     floorGamePlayer_->Update();
     floorGameFloorManager_->Update();
@@ -271,13 +295,16 @@ void GameScene::UpdateGameObject()
         floorGameFloorManager_->Initialize();
         enemy_->isReqestClearFloor_ = false;
     }
+    if (enemy_->IsOverKill()) {
+        enemy_->LeathalMoveUpdate();
+    }
 
     // アニメーション更新
     floorGamePlayerAnimationManager_->Update();
 
     // イベントシステム
     gameOverEvent_->Update();
-    if (floorGamePlayer_->GetDamageStruct().hps.hp <= 0) {
+    if (floorGamePlayer_->GetDamageStruct().hps.hp <= 0 || enemy_->isFaseChange_ || enemy_->IsOverKill()) {
         letterboxBars_->isOpen_ = true;
     } else {
 		letterboxBars_->isOpen_ = false;

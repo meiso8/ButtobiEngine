@@ -2,6 +2,7 @@
 class Camera;
 #include<cstdint>
 #include "Math/Vector/Vector3.h"
+#include "Engine/Object3d/Object3d.h"
 
 class CameraController
 {
@@ -17,7 +18,13 @@ public:
     void ResetFocusTarget();
     void UpdateFocusTarget();
 
+    void StartEnemyLethal();
+    void UpdateEnemyLethal();
+    void EndEnemyLethal();
+
 private:
+	Transform cameraDefaultTransform_;
+
     uint32_t  shakeFrame_ = 0;
     float moveRange_ = 0.0f;
     Camera* camera_ = nullptr;
@@ -25,4 +32,6 @@ private:
 
 	bool isFocusTarget_ = false;
 	Vector3* focusTargetPos_ = nullptr;
+
+	bool isEnemyLethal_ = false;
 };

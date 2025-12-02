@@ -44,6 +44,7 @@ void FloorBullet::Initialize() {
 	isActive_ = false;
 	isHit_ = false;
 	size_ = 1.0f;
+	velocity_ = { 0.0f,0.0f,0.0f };
 
 	floorType_ = FloorType::Normal;
 	reqestFloorType_ = FloorType::Normal;
@@ -128,7 +129,6 @@ void FloorBullet::Draw(Camera& camera, const LightMode& lightType) {
 
 	body_.SetLightMode(lightType);
 	body_.Draw(camera, kBlendModeNormal);
-	ColliderDraw(camera);
 
 }
 
@@ -154,6 +154,11 @@ void FloorBullet::SetHoming(Object3d* target, float stayTime) {
 		isHoming_ = true;
 		homingTarget_ = target;
 		homingStayTime_ = stayTime;
+
+		velocity_ = (body_.worldTransform_.GetWorldPosition() - homingTarget_->worldTransform_.GetWorldPosition());
+		float dist = Length(velocity_);
+		velocity_.y = 0.0f;
+		velocity_ = Normalize(velocity_) * dist * 0.1f;
 	}
 }
 
@@ -163,6 +168,8 @@ void FloorBullet::Move() {
 		if (homingStayTime_ > 0.0f) {
 			homingStayTime_ -= 0.016f;
 			body_.worldTransform_.rotate_.y += 0.5f;
+			body_.worldTransform_.translate_ += velocity_;
+			velocity_ *= 0.95f;
 			return;
 		}
 	}
