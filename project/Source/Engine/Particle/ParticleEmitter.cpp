@@ -16,17 +16,27 @@ void ParticleEmitter::Initialize()
     emitter_.transform.rotate_ = { 0.0f,0.0f,0.0f };
     emitter_.transform.scale_ = { 1.0f,1.0f,1.0f };
     emitter_.transform.translate_ = { 0.0f,0.0f,0.0f };
-    emitter_.isRandomTranslate = true;
-    emitter_.isRandomRotate = true;
+
+    emitter_.translateOffset_ = 0.0f;
+    emitter_.rotateOffset_ = 0.0f;
+    emitter_.scaleOffset_ = 0.0f;
+
     emitter_.color = { 1.0f,1.0f,1.0f,1.0f };
+
     emitter_.blendMode = kBlendModeAdd;
     emitter_.movement = ParticleMovements::kParticleNormal;
     emitter_.lifeTime = -1.0f;
     emitter_.radius = 5.0f;
+
+    emitter_.radiusSpeed = InverseFPS;
+    emitter_.polarSpeed = std::numbers::pi_v<float>*InverseFPS;
+    emitter_.polarSpeedMinMax = { 0.0f,0.0f };
+    emitter_.radiusSpeedMinMax = { 0.0f,0.0f };
+
 }
 void ParticleEmitter::UpdateTimer()
 {
-    emitter_.frequencyTime +=InverseFPS;
+    emitter_.frequencyTime += InverseFPS;
 
     if (emitter_.frequency <= emitter_.frequencyTime) {
         emitter_.frequencyTime -= emitter_.frequency;

@@ -30,6 +30,17 @@ struct Particle {
     float currentTime;
 };
 
+struct MinMax {
+    float min;
+    float max;
+};
+
+struct SphericalMove {
+    SphericalCoordinate coordinate;
+    float radiusSpeed;
+    float polarSpeed;
+};
+
 struct ParticleForGPU {
     Matrix4x4 WVP;
     Matrix4x4 World;
@@ -46,7 +57,7 @@ enum ParticleMovements {
 struct ParticleGroup {
     MaterialData materialData;
     std::list<Particle>particles;
-    std::list<SphericalCoordinate>sphericalCoordinates;
+    std::list<SphericalMove>sphericalCoordinates;
     uint32_t instanceSrvIndex;
     Microsoft::WRL::ComPtr<ID3D12Resource> instancingResource;
     uint32_t numInstance;//インスタンス数
@@ -61,13 +72,12 @@ struct ParticleGroup {
     AccelerationField accelerationField;
 };
 
-std::list<SphericalCoordinate> EmitCoordinate(const bool& isRandom, uint32_t count, const float& radius = 3.0f);
-std::list<SphericalCoordinate> EmitCoordinateForShock(uint32_t count, const float& radius);
+std::list<SphericalMove> EmitCoordinate(uint32_t count, const float& radius, const float& radiusSpeed, const float& polarSpeed, const MinMax& polarSpeedMinMax, const MinMax& radiusSpeedMinMax);
 
-std::list<Particle> EmitParticles(const bool& isRandomTranslate, const bool& isRandomRotate, const WorldTransform& transform, uint32_t count, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f },const float& lifeTime = -1.0f);
-Particle MakeNewParticle(const bool& isRandomTranslate, const bool& isRandomRotate, const WorldTransform& transform, const Vector4& color, const float& lifeTime = -1.0f);
-SphericalCoordinate MakeNewSphericalCoordinate(const bool& isRandom = true,const float& radius = 3.0f);
-SphericalCoordinate MakeNewSphericalCoordinateForShock( const float& radius, const int& count, const int& maxCount);
+std::list<Particle> EmitParticles(const WorldTransform& transform, uint32_t count, const Vector4& color, const float& lifeTime, const float& translateOffset, const float& rotateOffset, const float& scaleOffset);
+Particle MakeNewParticle(const WorldTransform& transform, const Vector4& color, const float& lifeTime, const float& translateOffset , const float& rotateOffset,const float& scaleOffset);
+
+SphericalMove MakeNewSphericalCoordinate(const float& radius, const int& count, const int& maxCount, const float& radiusSpeed, const float& polarSpeed, const MinMax& polarSpeedMinMax, const MinMax& radiusSpeedMinMax);
 
 class ParticleManager
 {

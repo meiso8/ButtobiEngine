@@ -24,9 +24,7 @@ void Tree::Initialize()
     positions_[kTree].Initialize();
     positions_[kLeaves].Initialize();
     positions_[kTree].worldTransform_.scale_ = { 50.0f,50.0f,50.0f };
-    positions_[kTree].worldTransform_.translate_ = { 0.0f,-7.0f,-6.0f };
-    //position_.worldTransform_.scale_ = { 2.5f,2.5f,2.5f };
-    //position_.worldTransform_.translate_.y = -0.45f;
+    positions_[kTree].worldTransform_.translate_ = { 0.0f,-7.0f,-35.0f };
 }
 
 void Tree::Update()

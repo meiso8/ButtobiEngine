@@ -7,13 +7,13 @@
     },
     "Second": {
         "phaseTime": 6.0,
-        "HP": 50,
+        "HP": 40,
         "hpDecrease": 1,
         "velocity": 3.5
     },
     "Third": {
         "phaseTime": 3.0,
-        "HP": 70,
+        "HP": 40,
         "hpDecrease": 1,
         "velocity": 4.0
     }
