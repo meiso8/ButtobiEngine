@@ -4,11 +4,13 @@
 #include"Input.h"
 #include"Random.h"
 #include <math.h>
+#include "MatsumotoObj/MY_Utility.h"
 
 void CameraController::Update()
 {
 
     UpdateShakeTimer();
+	UpdateFocusTarget();
 
     camera_->UpdateMatrix();
 
@@ -23,6 +25,9 @@ void CameraController::Initialize()
     isShakeStart_ = false;
     shakeFrame_ = 0;
     moveRange_ = 0.0f;
+
+	isFocusTarget_ = false;
+	focusTargetPos_ = nullptr;
 }
 
 void CameraController::StartShake(const float& moveRange, const uint32_t& frame)
@@ -34,6 +39,26 @@ void CameraController::StartShake(const float& moveRange, const uint32_t& frame)
     isShakeStart_ = true;
     moveRange_ = moveRange;
     shakeFrame_ = frame;
+}
+
+void CameraController::FocusTarget(const Vector3* targetPos) {
+	isFocusTarget_ = true;
+	focusTargetPos_ = const_cast<Vector3*>(targetPos);
+}
+
+void CameraController::ResetFocusTarget() {
+	isFocusTarget_ = false;
+	focusTargetPos_ = nullptr;
+}
+
+void CameraController::UpdateFocusTarget() {
+	if (!isFocusTarget_ || !focusTargetPos_) {
+        camera_->fovAngleY_ = MY_Utility::SimpleEaseIn(45.0f * 3.141592654f / 180.0f, 0.9f, 0.1f);
+		return;
+	}
+	Vector3 targetRotate = MY_Utility::CalcLookAtRotation(camera_->translate_, *focusTargetPos_);
+	camera_->rotate_ = MY_Utility::SimpleEaseIn(camera_->rotate_, targetRotate, 0.1f);
+	camera_->fovAngleY_ = MY_Utility::SimpleEaseIn(camera_->fovAngleY_, 0.2f, 0.3f);
 }
 
 void CameraController::UpdateShakeTimer()

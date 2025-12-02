@@ -67,6 +67,16 @@ Vector4 MY_Utility::SimpleEaseOut(const Vector4& from, const Vector4& to, float 
 	return value;
 }
 
+Vector3 MY_Utility::CalcLookAtRotation(const Vector3& from, const Vector3& to) {
+	Vector3 result;
+	Vector3 direction = to - from;
+	float distanceXZ = sqrtf(direction.x * direction.x + direction.z * direction.z);
+	result.x = -atan2f(direction.y, distanceXZ);
+	result.y = atan2f(direction.x, direction.z);
+	result.z = 0.0f;
+	return result;
+}
+
 bool MY_Utility::IsActiveForTimerSwitch(float& timer, float interval) {
 	return  (fmod(timer, interval * 2) < interval);
 }
