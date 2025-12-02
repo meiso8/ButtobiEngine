@@ -277,6 +277,12 @@ void Enemy::OnCollision(Collider* collider)
 {
     //デバック用
     OnCollisionCollider();
+    if (isFaseChange_) {
+		// フェーズチェンジ中はHP2/3以下のダメージを受け付けない
+        if ((damageStruct_.hps.maxHp / 3) * 2 >= damageStruct_.hps.hp) {
+			return;
+        }
+    }
 
     if (collider->GetCollisionAttribute() == kCollisionPlayerBullet) {
 
