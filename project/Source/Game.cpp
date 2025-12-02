@@ -15,9 +15,9 @@ void Game::Initialize()
     // シーンの生成
     // =============================================
 
-    //scenes["Title"] = std::make_unique < TitleScene>();
+    scenes["Title"] = std::make_unique < TitleScene>();
     scenes["Sample"] = std::make_unique < SampleScene>();
-    //scenes["Result"] = std::make_unique < ResultScene>();
+ /*   scenes["Result"] = std::make_unique < ResultScene>();*/
 
     //最初の位置を保持
     currentIt = scenes.begin();

@@ -23,10 +23,11 @@ public:
     virtual void Debug();
     virtual void SceneChangeUpdate();
     bool GetIsEndScene() {
-        if (sceneChange_ == nullptr) { // 修正: 比較演算子 "==" を使用
-            return false; // nullptr の場合は false を返す
+        if (sceneChange_ == nullptr) { 
+            return false;
         }
-        return sceneChange_->IsEndScene(); // nullptr でない場合は IsEndScene() を呼び出す
+        // nullptr でない場合は IsEndScene() を呼び出す
+        return sceneChange_->IsEndScene(); 
     };
 
     void SwitchCamera();
