@@ -157,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\GameOverEvent.cpp" />
     <ClCompile Include="Source\Engine\Lights\DirectionalLightManager.cpp" />
     <ClCompile Include="Source\Engine\Lights\PointLightManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\House\House.cpp" />
@@ -299,6 +300,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Lights\SpotLightManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\GameOverEvent.h" />
     <ClInclude Include="Source\Engine\Lights\DirectionalLightManager.h" />
     <ClInclude Include="Source\Engine\Lights\PointLightManager.h" />
     <ClInclude Include="Source\Application\GameObject\House\House.h" />

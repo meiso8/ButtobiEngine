@@ -33,6 +33,11 @@ void FloorGamePlayerAnimationManager::Update() {
 	player_->body_.worldTransform_.scale_.y = MY_Utility::SimpleEaseIn(player_->body_.worldTransform_.scale_.y, 1.0f, 0.1f);
 	player_->body_.worldTransform_.scale_.z = MY_Utility::SimpleEaseIn(player_->body_.worldTransform_.scale_.z, 1.0f, 0.1f);
 
+	if (player_->GetDamageStruct().hps.hp <= 0)
+	{
+		return;
+	}
+
 	animationTimer_ += deltaTime_;
 	animationStateAction_[player_->animationState_]();
 }

@@ -34,6 +34,7 @@ public:
 
 	void ForceDamage();
 
+	Damage& GetDamageStruct() { return damageStruct_; }
 	Vector3& GetLookDir() { return lookDir_; }
 	HPs* GetHpsPtr() { return &damageStruct_.hps; }
 	bool& IsHit() { return damageStruct_.isHit; }
@@ -89,4 +90,6 @@ private:
 	float shotDuration_;
 
 	float stickyFloorSlowRate_;
+
+	float deathRotate_;
 };

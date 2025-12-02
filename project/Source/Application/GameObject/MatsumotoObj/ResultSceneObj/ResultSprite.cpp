@@ -18,7 +18,8 @@ void ResultSprite::Initialize() {
 	if (SceneStaticValue::isClear) {
 		sprite_->SetTexture(Texture::RESULT_CLEAR);
 	} else {
-		sprite_->SetTexture(Texture::RESULT_GAMEOVER);
+		sprite_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
+		sprite_->SetTexture(Texture::WHITE_1X1);
 	}
 }
 

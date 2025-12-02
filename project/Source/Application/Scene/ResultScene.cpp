@@ -42,6 +42,8 @@
 #include"MyEngine.h"
 #include "MatsumotoObj/KeyBindConfig.h"
 
+#include "MatsumotoObj/SceneStaticValue.h"
+
 ResultScene::ResultScene() {
 	// 現在のカメラを設定
 	currentCamera_ = camera_.get();
@@ -67,7 +69,9 @@ void ResultScene::Initialize() {
 }
 
 void ResultScene::Update() {
-
+    if (!SceneStaticValue::isClear) {
+        sceneChange_->SetState(SceneChange::kFadeIn, 60);
+    }
 
     if (KeyBindConfig::Instance().IsTrigger("Shot")) {
         sceneChange_->SetState(SceneChange::kFadeIn, 60);
