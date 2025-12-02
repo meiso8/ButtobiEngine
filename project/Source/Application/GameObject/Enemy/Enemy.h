@@ -137,9 +137,11 @@ private:
     //タックル中にプレイヤーに向くタイム
     const float kTackleLookTime_ = 2.0f;
     //タックル中にぽよぽよするタイム
-    const float kTacklePoyoTime_ = kTackleLookTime_ + 1.0f;
+    const float kTacklePoyoTime_ = kTackleLookTime_;
+    //タックル終了インターバル
+    const float kTackleInterval_ = kTacklePoyoTime_ + 0.5f;
     //プレイヤーに向けてタックルするタイム
-    const float kTackleGoPlayerTime_ = kTacklePoyoTime_ + 0.7f;
+    const float kTackleGoPlayerTime_ = kTackleInterval_ + 0.7f;
     //タックル終了後ちょっと戻るタイム
     const float kTackleBackTime_ = kTackleGoPlayerTime_ + 1.0f;
     //タックル終了後初期地点に戻るタイム

@@ -187,7 +187,7 @@ void Enemy::Update()
 
     HitAnimation();
     bodyPos_.GetWaveData(0).time += InverseFPS * 4.0f;
- 
+
     if (!damageStruct_.isDead) {
         Winging(2.0f);
     }
@@ -320,16 +320,15 @@ void Enemy::Tackle()
 
     if (phaseTimer_ <= kTacklePoyoTime_) {
 
-
-      
-
         if (phaseTimer_ <= kTackleLookTime_) {
             LookTarget(*playerPos_);
         }
 
         PoyoPoyo(kTacklePoyoTime_);
 
-    } else if (phaseTimer_ <= kTackleGoPlayerTime_) {
+    } else if (phaseTimer_ <= kTackleInterval_) {
+    
+    }else if (phaseTimer_ <= kTackleGoPlayerTime_) {
 
         float localTimer = (phaseTimer_ - kTacklePoyoTime_) / (kTackleGoPlayerTime_ - kTacklePoyoTime_);
 
@@ -342,7 +341,7 @@ void Enemy::Tackle()
         LerpScale();
 
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(startPos_, endPos_, localTimer);
-      
+
         if (Dot(*playerLookDir_, endPos_ - startPos_) < 0.0f) {
             if (damageStruct_.isHit) {
                 Sound::PlayOriginSE(Sound::BOSS_TACKLE);
@@ -356,7 +355,7 @@ void Enemy::Tackle()
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(endPos_, startPos_, localTimer);
     } else if (phaseTimer_ <= kTackleInitStartTime_) {
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(bodyPos_.worldTransform_.translate_, startPos_, 0.5f);
-    } else if(phaseTimer_ <= kTackleEndingLagTime_){
+    } else if (phaseTimer_ <= kTackleEndingLagTime_) {
 
     } else {
         isSelectRandomPhase_ = true;
@@ -393,7 +392,7 @@ void Enemy::KnockBack()
 
         if (phaseTimer_ <= kKnockBackSpinTime_) {
             SpinBody();
-           
+
         } else {
             LerpSpinOriginBody();
             bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, startPos_, 0.05f);
@@ -412,9 +411,9 @@ void Enemy::LerpRoundPos()
 
     sphericalPos_.polar = Lerp(sphericalPos_.polar, 0.0f, 0.05f);
     sphericalPos_.radius = Lerp(sphericalPos_.radius, kRoundRadius_, 0.05f);
-     
+
     bodyPos_.worldTransform_.translate_ = TransformCoordinate(sphericalPos_);
-    if (fabs(sphericalPos_.polar) <= QUARTER_PI && sphericalPos_.radius >= kRoundRadius_-2.0f) {
+    if (fabs(sphericalPos_.polar) <= QUARTER_PI && sphericalPos_.radius >= kRoundRadius_ - 2.0f) {
         SetPhase(ROUND);
     }
 }
@@ -436,10 +435,10 @@ void Enemy::LerpSquarePos()
 void Enemy::SquareMove()
 {
 
-    float loopedTime = std::fmod(phaseTimer_, 4.0f* kSquareMoveInterval_);
+    float loopedTime = std::fmod(phaseTimer_, 4.0f * kSquareMoveInterval_);
 
     Vector3 endPos = { 0.0f,0.0f,0.0f };
-    if (loopedTime <= 1.0f* kSquareMoveInterval_) {
+    if (loopedTime <= 1.0f * kSquareMoveInterval_) {
         endPos = { 6.0f,kRadius_,6.0f };
         bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, kSquareMoveSpeed_);
     } else if (loopedTime <= 2.0f * kSquareMoveInterval_) {
@@ -493,12 +492,12 @@ void Enemy::SwitchState()
         if (phase_ != EXIT) {
             SetPhase(EXIT);
         }
-       
+
         return;
     }
 
     isReqestClearFloor_ = true;
-    
+
     Sound::PlaySE(Sound::BOSS_HEAL);
     SetPhase(LERP_SQUARE_POS);
 
@@ -571,7 +570,6 @@ void Enemy::Round()
     sphericalPos_.radius = Lerp(sphericalPos_.radius, kRoundRadius_, kSphericalLerpSpeed_);
     sphericalPos_.azimuthal = Lerp(sphericalPos_.azimuthal, 0.0f, 0.01f);
 
-
     sphericalPos_.polar += InverseFPS * roundSpeedY;
 
     if (sphericalPos_.polar > HALF_PI || sphericalPos_.polar < -HALF_PI) {
@@ -625,10 +623,10 @@ void Enemy::FloorChangeAttack()
         }
         LerpRotateY(0.0f, 0.3f);
 
-    } else if(phaseTimer_ <= kFloorBombWaitTime_){
+    } else if (phaseTimer_ <= kFloorBombWaitTime_) {
         LerpRotateY(PI, 0.3f);
         RotateLR(2.0f);
-    } else if(phaseTimer_ <= kFloorAttackEndingLagTime_){
+    } else if (phaseTimer_ <= kFloorAttackEndingLagTime_) {
         //後隙
         LerpRotateZ(0.5f);
     } else {
@@ -660,7 +658,7 @@ void Enemy::Exit()
     } else {
         if (phaseTimer_ <= 2.0f) {
             float localTimer = phaseTimer_ - 1.0f;
-            bodyPos_.worldTransform_.rotate_.x = Easing::EaseInOutBack(0.0f, -QUARTER_PI*3.0f, localTimer);
+            bodyPos_.worldTransform_.rotate_.x = Easing::EaseInOutBack(0.0f, -QUARTER_PI * 3.0f, localTimer);
         }
         bodyPos_.worldTransform_.rotate_.z = Lerp(bodyPos_.worldTransform_.rotate_.z, 0.0f, 0.5f);
         bodyPos_.worldTransform_.translate_.y = Lerp(bodyPos_.worldTransform_.translate_.y, 0.5f, 0.05f);
@@ -742,7 +740,7 @@ void Enemy::Winging(const float& speed)
 void Enemy::RotateLR(const float& speed)
 {
     rotateLRTheta_ += std::numbers::pi_v<float>*InverseFPS * speed;
-    bodyPos_.worldTransform_.rotate_.z = sinf(rotateLRTheta_)*0.5f;
+    bodyPos_.worldTransform_.rotate_.z = sinf(rotateLRTheta_) * 0.5f;
 }
 
 void Enemy::LerpRotateZ(const float& speed)
