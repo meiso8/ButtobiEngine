@@ -27,8 +27,13 @@ void ParticleManager::CreateAll()
     CreateParticleGroup("playerHitParticle", Texture::PLAYER_DAMAGE_PARTICLE);
     CreateParticleGroup("playerWalkParticle", Texture::PLAYER_WALK_PARTICLE);
 
-    CreateParticleGroup("floorBombBlastParticle", Texture::PLAYER_WALK_PARTICLE, true, ModelManager::BOX);
 
+
+    CreateParticleGroup("floorBombBlastParticle", Texture::PLAYER_WALK_PARTICLE);
+
+    CreateParticleGroup("windAttackParticle01", Texture::WIND_ATTACK_PARTICLE01);
+    CreateParticleGroup("windAttackParticle02", Texture::WIND_ATTACK_PARTICLE02);
+    CreateParticleGroup("leafParticle", Texture::LEAF_PARTICLE);
 }
 
 // ==========================================================================================================
@@ -58,7 +63,7 @@ void ParticleManager::Create()
     CreateVertexBufferResource();
 }
 
-Particle MakeNewParticle(const WorldTransform& transform, const Vector4& color, const float& lifeTime, const float& translateOffset, const float& rotateOffset, const float& scaleOffset)
+Particle MakeNewParticle(const WorldTransform& transform, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const float& rotateOffset, const float& scaleOffset)
 {
 
     Particle particle;
@@ -69,8 +74,15 @@ Particle MakeNewParticle(const WorldTransform& transform, const Vector4& color, 
 
     Random::SetMinMax(-scaleOffset, scaleOffset);
     particle.transform.scale = transform.scale_ + Vector3{ Random::Get(), Random::Get(), Random::Get() };
-    Random::SetMinMax(-translateOffset, translateOffset);
-    particle.transform.translate = Vector3{ Random::Get(), Random::Get(), Random::Get() } + transform.GetWorldPosition();
+    
+    Vector3 newTransform = transform.GetWorldPosition();
+    Random::SetMinMax(translateAABB.min.x, translateAABB.max.x);
+    particle.transform.translate.x =  Random::Get()+ newTransform.x;
+    Random::SetMinMax(translateAABB.min.y, translateAABB.max.y);
+    particle.transform.translate.y = Random::Get() + newTransform.y;
+    Random::SetMinMax(translateAABB.min.z, translateAABB.max.z);
+    particle.transform.translate.z = Random::Get() + newTransform.z;
+
     Random::SetMinMax(-rotateOffset, rotateOffset);
     particle.transform.rotate = Vector3{ Random::Get(), Random::Get(), Random::Get() } + transform.rotate_;
 
@@ -155,11 +167,11 @@ void ParticleManager::Update(Camera& camera)
     }
 }
 
-std::list<Particle> EmitParticles(const WorldTransform& transform, uint32_t count, const Vector4& color, const float& lifeTime, const float& translateOffset, const float& rotateOffset, const float& scaleOffset)
+std::list<Particle> EmitParticles(const WorldTransform& transform, uint32_t count, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const float& rotateOffset, const float& scaleOffset)
 {
     std::list<Particle>particles;
     for (uint32_t i = 0; i < count; ++i) {
-        particles.push_back(MakeNewParticle(transform, color, lifeTime, translateOffset, rotateOffset, scaleOffset));
+        particles.push_back(MakeNewParticle(transform, color, lifeTime, translateAABB, rotateOffset, scaleOffset));
     }
     return particles;
 }
@@ -181,7 +193,7 @@ void ParticleManager::Emit(Emitter& emitter)
 {
     assert(particleGroups.contains(emitter.name));
 
-    particleGroups[emitter.name]->particles.splice(particleGroups[emitter.name]->particles.end(), EmitParticles(emitter.transform, emitter.count, emitter.color, emitter.lifeTime, emitter.translateOffset_, emitter.rotateOffset_, emitter.scaleOffset_));
+    particleGroups[emitter.name]->particles.splice(particleGroups[emitter.name]->particles.end(), EmitParticles(emitter.transform, emitter.count, emitter.color, emitter.lifeTime, emitter.translateAABB_, emitter.rotateOffset_, emitter.scaleOffset_));
 
     particleGroups[emitter.name]->movement = emitter.movement;
     particleGroups[emitter.name]->parentPos_ = &emitter.transform;

@@ -17,7 +17,7 @@ void ParticleEmitter::Initialize()
     emitter_.transform.scale_ = { 1.0f,1.0f,1.0f };
     emitter_.transform.translate_ = { 0.0f,0.0f,0.0f };
 
-    emitter_.translateOffset_ = 0.0f;
+    emitter_.translateAABB_ = { 0.0f };
     emitter_.rotateOffset_ = 0.0f;
     emitter_.scaleOffset_ = 0.0f;
 
@@ -32,6 +32,51 @@ void ParticleEmitter::Initialize()
     emitter_.polarSpeed = std::numbers::pi_v<float>*InverseFPS;
     emitter_.polarSpeedMinMax = { 0.0f,0.0f };
     emitter_.radiusSpeedMinMax = { 0.0f,0.0f };
+
+}
+void ParticleEmitter::SetEmitterParam(
+    const Vector3& translate,
+    const Vector3& scale,
+    const Vector3& rotate,
+    const  AABB& translateAABB_,
+    const float& rotateOffset_,
+    const float& scaleOffset_,
+    const uint32_t& count,
+    const float& frequency,
+    const float& frequencyTime,
+    const Vector4& color,
+    const BlendMode& blendMode,
+    const ParticleMovements& movement,
+    const float& lifeTime,
+    const float& radius,
+    const float& radiusSpeed,
+    const MinMax& radiusSpeedMinMax,
+    const float& polarSpeed,
+    const MinMax& polarSpeedMinMax)
+{
+    //ペアレントなし
+    emitter_.transform.scale_ = scale;//エミッタのTransfrom
+    emitter_.transform.translate_ = translate;//エミッタのTransfrom
+    emitter_.transform.rotate_ = rotate;//エミッタのTransfrom
+
+    emitter_.translateAABB_ = translateAABB_;
+    emitter_. rotateOffset_ = rotateOffset_;
+    emitter_. scaleOffset_ = scaleOffset_;
+    emitter_.count = count;//発生数
+    emitter_. frequency = frequency;//発生頻度
+    emitter_. frequencyTime = frequencyTime;//頻度用時刻
+    emitter_.color = color;//色
+    emitter_.blendMode = blendMode;//ブレンドモード
+    emitter_.movement = movement;//動き
+    emitter_. lifeTime = lifeTime;//生存時間
+    //球面座標の半径
+    emitter_. radius = radius;
+    //半径の移動速度
+    emitter_. radiusSpeed = radiusSpeed;
+    emitter_.radiusSpeedMinMax = radiusSpeedMinMax;
+    //経度の移動速度
+    emitter_. polarSpeed = polarSpeed;
+    emitter_.polarSpeedMinMax = polarSpeedMinMax;
 
 }
 void ParticleEmitter::UpdateTimer()

@@ -29,11 +29,12 @@ public:
     void Shot(const Vector3& startPos, const Vector3& endPos, const AABBType& aabbType);
     bool isActive_ = false;
     Object3d body_;
+    std::array<AABB, kMaxAABB> localAABBs_;
 private:
     const float kMoveTime_ = 5.5f;
     const float kAabbWidth_ = 0.4f;
 
-    std::array<AABB, kMaxAABB> localAABBs_;
+
 
     Vector3 endPos_ = { 0.0f };
     std::unique_ptr<CubeMesh>cubeMesh_ = nullptr;
