@@ -7,7 +7,7 @@ public:
     void UpdatePointLight();
     void DirectionalLightUpdate();
     WorldTransform playerHandPos_;
-    Vector3 direction_;
+    Vector3* direction_;
     static bool isPointLightOn_;
 };
 
