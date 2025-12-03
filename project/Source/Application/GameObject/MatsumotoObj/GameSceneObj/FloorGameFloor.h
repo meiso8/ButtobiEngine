@@ -23,6 +23,9 @@ public:
 	void SwapFloorType(FloorType type);
 	void SwapNextFloorType();
 
+	void popupFloor();
+	void downFloor();
+
 	void OnCollision(Collider* collider)override;
 	Vector3 GetWorldPosition() const override {
 		return body_.worldTransform_.GetWorldPosition();
@@ -44,4 +47,6 @@ private:
 	float autoSwapDuration_;
 	FloorType nextFloorType_;
 	FloorType prevFloorType_;
+	bool isPopuping_;
+	float downColor_;
 };

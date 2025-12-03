@@ -22,6 +22,13 @@ void FloorStripManager::Update() {
 		return;
 	}
 
+	// 床のハイライト
+	if (!player_->isStriptting_) {
+		floorManager_->PopupFloor(player_->body_.worldTransform_.translate_);
+	} else {
+		floorManager_->downFloor();
+	}
+
 	// 床剥がし
 	if (player_->isReqestStript_ && !player_->isStriptting_) {
 		player_->isStriptting_ = true;

@@ -26,6 +26,8 @@ public:
 	//床の座標が欲しいのでここでゲッターを用意します
     Vector3& GetFloorPos(const int& xIndex, const int& yIndex);
 	std::vector<Vector2> GetExprodedFloorMap() const;
+	void PopupFloor(const Vector3& position);
+	void downFloor();
 private:
 	std::vector<std::vector<std::unique_ptr<FloorGameFloor>>> floors_;
 };
