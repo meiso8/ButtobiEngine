@@ -13,18 +13,18 @@
 #include "MatsumotoObj/MY_Utility.h"
 
 FloorPlayerStripTargetUI::FloorPlayerStripTargetUI(FloorGamePlayer* player) : player_(player) {
-	body_.Create();
+	/*body_.Create();
 	cubeMesh_ = std::make_unique<CubeMesh>();
 	cubeMesh_.get()->Create(Texture::WHITE_1X1);
 	body_.SetColor({ 1.0f,0.0f,0.0f,0.8f });
-	body_.SetMesh(cubeMesh_.get());
+	body_.SetMesh(cubeMesh_.get());*/
 }
 
 void FloorPlayerStripTargetUI::Initialize() {
 }
 
 void FloorPlayerStripTargetUI::Update() {
-	isActive_ = !player_->isStriptting_;
+	/*isActive_ = !player_->isStriptting_;
 	time_ += 0.016f;
 
 	Vector3 playerPos = player_->body_.worldTransform_.translate_;
@@ -55,13 +55,13 @@ void FloorPlayerStripTargetUI::Update() {
 		0.2f
 	);
 
-	body_.Update();
+	body_.Update();*/
 }
 
 void FloorPlayerStripTargetUI::Draw(Camera& camera, const LightMode& lightType) {
-	if (!isActive_) {
+	/*if (!isActive_) {
 		return;
 	}
 	body_.SetLightMode(lightType);
-	body_.Draw(camera, kBlendModeNormal);
+	body_.Draw(camera, kBlendModeNormal);*/
 }

@@ -163,3 +163,34 @@ std::vector<Vector2> FloorGameFloorManager::GetExprodedFloorMap() const {
 	}
     return exprodedFloorPositions;
 }
+
+void FloorGameFloorManager::PopupFloor(const Vector3& position) {
+    for (int y = 0; y < kMapHeight; y++) {
+        for (int x = 0; x < kMapWidth; x++) {
+			floors_[y][x]->downFloor();
+        }
+    }
+
+	std::pair<int, int> floorIndex = GetFloorIndexAtPosition(position);
+	int xIndex = floorIndex.first;
+	int yIndex = floorIndex.second;
+	if (xIndex < 0 || xIndex >= kMapWidth || yIndex < 0 || yIndex >= kMapHeight) {
+		// 範囲外の場合は一番近い端に補正する
+        if (floors_[std::clamp(yIndex, 0, kMapHeight - 1)][std::clamp(xIndex, 0, kMapWidth - 1)]->floorType_ != FloorType::Sticky) {
+			floors_[std::clamp(yIndex, 0, kMapHeight - 1)][std::clamp(xIndex, 0, kMapWidth - 1)]->popupFloor();
+			return;
+        }
+	}
+    if (floors_[yIndex][xIndex]->floorType_ != FloorType::Sticky) {
+        floors_[yIndex][xIndex]->popupFloor();
+        return;
+    }
+}
+
+void FloorGameFloorManager::downFloor() {
+	for (int y = 0; y < kMapHeight; y++) {
+		for (int x = 0; x < kMapWidth; x++) {
+			floors_[y][x]->downFloor();
+		}
+	}
+}
