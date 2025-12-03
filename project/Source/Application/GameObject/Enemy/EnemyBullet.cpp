@@ -12,7 +12,6 @@ EnemyBullet::EnemyBullet() {
 
     body_.Create();
     model_ = ModelManager::GetModel(ModelManager::FIRE_BALL);
-    body_.SetColor({ 0.0f,1.0f,0.0f,1.0f });
     body_.SetMesh(model_);
 
     SetRadius(0.5f);
