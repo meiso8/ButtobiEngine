@@ -291,7 +291,7 @@ void Enemy::OnCollision(Collider* collider)
         }
 
         damageStruct_.isHit = true;
-        Sound::PlaySE(Sound::kBossDamage01);
+        Sound::PlaySE(Sound::kDefeatBoss);
 
         VibrateManager::SetTime(0.5f, 2000, 2000);
 
