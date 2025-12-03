@@ -146,6 +146,11 @@ void GameScene::Update() {
     }
 
 	if (gameOverEvent_->IsReqestedAction()) {
+        Sound::Stop(Sound::inGameBGM01);
+        Sound::Stop(Sound::inGameBGM02);
+        Sound::Stop(Sound::playerHP1BGM);
+        Sound::PlayBGM(Sound::resultBGM);
+
 		if (gameOverEvent_->IsRetrySelected()) {
 			Initialize();
 			
@@ -157,9 +162,23 @@ void GameScene::Update() {
     if (PauseScreen::isBackToTitle) {
         sceneChange_->SetState(SceneChange::kFadeIn, 30);
     }
+    if (floorGamePlayer_->GetHpsPtr()->hp <= 20.0f) {
+        Sound::Stop(Sound::inGameBGM01);
+        Sound::Stop(Sound::inGameBGM02);
+        Sound::PlayBGM(Sound::playerHP1BGM);
+    } else {
 
-    //仮に音声を鳴らす　全体のvolumeがあってオフセット分だけいじる
-    Sound::PlayBGM(Sound::BGM1, 0.0f);
+        Sound::Stop(Sound::resultBGM);
+
+        if (enemy_->GetCurrentState() != "Third") {
+            Sound::Stop(Sound::inGameBGM02);
+            Sound::PlayBGM(Sound::inGameBGM01);
+        } else {
+            Sound::Stop(Sound::inGameBGM01);
+            //仮に音声を鳴らす　全体のvolumeがあってオフセット分だけいじる
+            Sound::PlayBGM(Sound::inGameBGM02);
+        }
+    }
 
     if (!PauseScreen::isActive_) {
         UpdateCamera();
@@ -294,6 +313,7 @@ void GameScene::UpdateGameObject()
     floorPlayerStripTargetUI_->Update();
     floorActionManager_->Update();
     if (enemy_->isReqestClearFloor_) {
+        Sound::PlaySE(Sound::kFloorRespawn);
         floorGameFloorManager_->Initialize();
         enemy_->isReqestClearFloor_ = false;
     }

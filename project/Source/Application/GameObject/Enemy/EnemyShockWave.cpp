@@ -102,6 +102,10 @@ void EnemyShockWave::Update() {
     body_.SetColor({ color,color,color,1.0f });
 
     if (lifeTimer_ <= kMoveTime_) {
+        if (!isSound_) {
+            isSound_ = true;
+            Sound::PlaySE(Sound::kWindAttackShot);
+        }
         body_.worldTransform_.translate_ = Lerp(body_.worldTransform_.translate_, endPos_, speed_);
     }
 
@@ -127,4 +131,5 @@ void EnemyShockWave::Shot(const Vector3& startPos, const Vector3& endPos, const 
     isActive_ = true;
     body_.Update();
     ColliderUpdate();
+    isSound_ = false;
 }

@@ -93,8 +93,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
         // エンジンの更新処理
         myEngine->Update();
-        //エスケープボタンを押したら終了
-        if (Input::IsTriggerKey(DIK_ESCAPE)) { break; }
 
 #ifdef _DEBUG
         // デバック用

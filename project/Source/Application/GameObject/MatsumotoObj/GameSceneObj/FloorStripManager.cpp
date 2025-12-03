@@ -2,7 +2,7 @@
 #include "FloorGamePlayer.h"
 #include "FloorGameFloorManager.h"
 #include "PlayerStripFloorManager.h"
-
+#include"Sound.h"
 FloorStripManager::FloorStripManager(FloorGamePlayer* player, FloorGameFloorManager* floorManager, PlayerFloorStripManager* playerStripManager) :
 	player_(player), floorManager_(floorManager), playerStripManager_(playerStripManager) {
 	striptTypeAction_ = {
@@ -31,6 +31,7 @@ void FloorStripManager::Update() {
 
 	// 床剥がし
 	if (player_->isReqestStript_ && !player_->isStriptting_) {
+		Sound::PlaySE(Sound::kStripObj);
 		player_->isStriptting_ = true;
 		player_->isReqestStript_ = false;
 		player_->body_.worldTransform_.scale_ = { 1.5f,0.1f,1.5f };
