@@ -361,7 +361,7 @@ void Enemy::Tackle()
     
     }else if (phaseTimer_ <= kTackleGoPlayerTime_) {
 
-        float localTimer = (phaseTimer_ - kTacklePoyoTime_) / (kTackleGoPlayerTime_ - kTacklePoyoTime_);
+        float localTimer = (phaseTimer_ - kTackleInterval_) / (kTackleGoPlayerTime_ - kTackleInterval_);
 
         if (localTimer > 0.1f) {
             if (isFeint_) {
