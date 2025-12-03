@@ -5,7 +5,10 @@
 //#include"Enemy/EnemyBombManager.h"
 #include"Input.h"
 #include"Enemy/EnemyShockWaveManager.h"
-EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShockWaveManager& enemyShockWaveManager) :player_(&player), enemy_(&enemy),enemyShockWaveManager_(&enemyShockWaveManager)
+#include"Enemy/EnemyShotWaveManager.h"
+
+
+EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShockWaveManager& enemyShockWaveManager) :player_(&player), enemy_(&enemy), enemyShockWaveManager_(&enemyShockWaveManager)
 {
 
     for (auto& particleEmitter : particleEmitters_) {
@@ -29,43 +32,59 @@ EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShock
         std::unique_ptr<ParticleEmitter> newEmitter = std::make_unique<ParticleEmitter>();
         newEmitter->SetName("windAttackParticle01");
         newEmitter->emitter_.transform.Parent(wave->body_.worldTransform_);
-        newEmitter->emitter_.movement = kParticleSphere;
+        newEmitter->emitter_.scaleOffset_ = { 0.2f };
+        newEmitter->emitter_.movement = kParticleNormal;
         newEmitter->emitter_.translateAABB_ = wave->localAABBs_[EnemyShockWave::AABBType::kHorizontal];
-        newEmitter->emitter_.radiusSpeed -= 1.0f;
-        waveEmitter_.push_back(std::move(newEmitter));
+        newEmitter->emitter_.radius = 1.0f;
+        newEmitter->emitter_.radiusSpeed = 0.0f;
+        newEmitter->emitter_.polarSpeed = 0.0f;
+        newEmitter->emitter_.velocityMinMax = { 0.0f,0.0f };
+        newEmitter->emitter_.rotateOffset_ = { 0.1f };
+        newEmitter->emitter_.frequency = 0.6f;
+        newEmitter->emitter_.lifeTime = 3.5f;
+        newEmitter->emitter_.count = 1;
+        waveEmitters_.push_back({ wave.get(), std::move(newEmitter) });
     }
+
+
     for (auto& wave : enemyShockWaveManager_->GetWaves()) {
         std::unique_ptr<ParticleEmitter> newEmitter = std::make_unique<ParticleEmitter>();
         newEmitter->SetName("windAttackParticle02");
         newEmitter->emitter_.transform.Parent(wave->body_.worldTransform_);
+        newEmitter->emitter_.scaleOffset_ = { 0.2f };
+        newEmitter->emitter_.movement = kParticleNormal;
         newEmitter->emitter_.translateAABB_ = wave->localAABBs_[EnemyShockWave::AABBType::kHorizontal];
-        newEmitter->emitter_.movement = kParticleShock;
-        newEmitter->emitter_.radiusSpeed = 0.0f;
         newEmitter->emitter_.radius = 1.0f;
+        newEmitter->emitter_.radiusSpeed = 0.0f;
         newEmitter->emitter_.polarSpeed = 0.0f;
-        waveEmitter_.push_back(std::move(newEmitter));
+        newEmitter->emitter_.velocityMinMax = { 0.0f,0.0f };
+        newEmitter->emitter_.rotateOffset_ = { 0.1f };
+        newEmitter->emitter_.frequency = 0.6f;
+        newEmitter->emitter_.lifeTime = 2.5f;
+        newEmitter->emitter_.count = 2;
+        waveEmitters_.push_back({ wave.get(), std::move(newEmitter) });
     }
 
-    for (auto& wave: enemyShockWaveManager_->GetWaves()) {
-        std::unique_ptr<ParticleEmitter> newEmitter = std::make_unique<ParticleEmitter>();
-        newEmitter->SetName("leafParticle");
-        
-        newEmitter->emitter_.transform.Parent(wave->body_.worldTransform_);
-        newEmitter->emitter_.translateAABB_ = wave->localAABBs_[EnemyShockWave::AABBType::kHorizontal];
-  
-        waveEmitter_.push_back(std::move(newEmitter));
-    }
+
+    //for (auto& wave : enemyShockWaveManager_->GetWaves()) {
+    //    std::unique_ptr<ParticleEmitter> newEmitter = std::make_unique<ParticleEmitter>();
+    //    newEmitter->SetName("leafParticle");
+    //    newEmitter->emitter_.movement = kParticleSphere;
+    //    newEmitter->emitter_.transform.Parent(wave->body_.worldTransform_);
+    //    newEmitter->emitter_.translateAABB_ = wave->localAABBs_[EnemyShockWave::AABBType::kHorizontal];
+    //    newEmitter->emitter_.polarSpeed = InverseFPS * std::numbers::pi_v<float>;
+    //    newEmitter->emitter_.radiusSpeed = 0.0f;
+    //    waveEmitters_.push_back({ wave.get(), std::move(newEmitter) });
+    //}
 
 }
 
 void EmitterManager::Initialize()
 {
 
-    for (auto&emitter : waveEmitter_) {
-     /*   emitter->Initialize();*/
-        emitter->emitter_.frequency = 1.0f;
-        emitter->emitter_.frequencyTime = 0.0f;
-        emitter->emitter_.lifeTime = 10.0f;
+    for (auto& grop : waveEmitters_) {
+        grop.emitter->emitter_.frequency = 0.1f;
+    
     }
 
     for (auto& particleEmitter : particleEmitters_) {
@@ -81,7 +100,7 @@ void EmitterManager::Initialize()
     particleEmitters_[kPlayerWalkEmitter]->emitter_.transform.scale_ = { 0.5f,0.5f,0.5f };
     particleEmitters_[kPlayerWalkEmitter]->emitter_.scaleOffset_ = 0.125f;
 
-    particleEmitters_[kEnemyHitEmitter]->emitter_.transform.translate_.y = -0.75f;
+    particleEmitters_[kEnemyHitEmitter]->emitter_.transform.translate_ = { 0.0f,-0.75f,0.0f };
     particleEmitters_[kEnemyHitEmitter]->emitter_.count = 16;
     particleEmitters_[kEnemyHitEmitter]->emitter_.movement = ParticleMovements::kParticleShock;
     particleEmitters_[kEnemyHitEmitter]->emitter_.radius = 2.0f;
@@ -89,7 +108,8 @@ void EmitterManager::Initialize()
     particleEmitters_[kEnemyHitEmitter]->emitter_.rotateOffset_ = 3.14f;
     particleEmitters_[kEnemyHitEmitter]->emitter_.frequency = 0.3f;
     particleEmitters_[kEnemyHitEmitter]->emitter_.blendMode = kBlendModeNormal;
-    particleEmitters_[kEnemyHitEmitter]->emitter_.polarSpeedMinMax = { 0.0f,0.0f};
+    particleEmitters_[kEnemyHitEmitter]->emitter_.polarSpeedMinMax = { 0.0f,0.0f };
+    particleEmitters_[kEnemyHitEmitter]->emitter_.velocityMinMax = { -1.0f,1.0f };
 
     particleEmitters_[kPlayerHitEmitter]->emitter_.transform.translate_.y = 0.75f;
     particleEmitters_[kPlayerHitEmitter]->emitter_.translateAABB_ = { 0.0f };
@@ -99,7 +119,7 @@ void EmitterManager::Initialize()
     particleEmitters_[kPlayerHitEmitter]->emitter_.radius = 0.5f;
     particleEmitters_[kPlayerHitEmitter]->emitter_.radiusSpeed = 0.0f;
     particleEmitters_[kPlayerHitEmitter]->emitter_.radiusSpeedMinMax = { 0.0f,0.0f };
-    particleEmitters_[kPlayerHitEmitter]->emitter_.polarSpeed = InverseFPS*std::numbers::pi_v<float>;
+    particleEmitters_[kPlayerHitEmitter]->emitter_.polarSpeed = InverseFPS * std::numbers::pi_v<float>;
     particleEmitters_[kEnemyHitEmitter]->emitter_.polarSpeedMinMax = { 0.0f,0.0f };
     particleEmitters_[kPlayerHitEmitter]->emitter_.frequency = 0.25f;
     particleEmitters_[kPlayerHitEmitter]->emitter_.lifeTime = 1.0f;
@@ -133,10 +153,24 @@ void EmitterManager::Update(Camera& camera)
         particleEmitter->Update(camera);
     }
 
-    for (auto& emitter : waveEmitter_) {
-        emitter->UpdateTimer();
-        emitter->Update(camera);
+    auto& waveItr = enemyShockWaveManager_->GetWaves();
+
+    for (auto& grop : waveEmitters_) {
+
+        if (grop.wave->isActive_) {
+            if (grop.wave->isEmit_) {
+                grop.emitter->emitter_.translateAABB_ = grop.wave->localAABBs_[grop.wave->aabbType_];
+                grop.emitter->UpdateTimer();
+                grop.emitter->Update(camera);
+            } else {
+                grop.emitter->InitTimer();
+            }
+        
+        }
+
     }
+
+
 
 
     //for (const auto& bomb : bombEmitter_) {
@@ -151,9 +185,12 @@ void EmitterManager::Draw()
         particleEmitter->Draw();
     }
 
-    for (auto& emitter : waveEmitter_) {
-        emitter->Draw();
+
+    for (auto& grop : waveEmitters_) {
+
+        grop.emitter->Draw();
     }
+
 
     /*   for (const auto& bomb : bombEmitter_) {
            bomb->Draw();
@@ -166,5 +203,11 @@ void EmitterManager::Debug()
 
     DebugUI::CheckParticle(*particleEmitters_[kEnemyHitEmitter], "EnemyEmitter");
     DebugUI::CheckParticle(*particleEmitters_[kPlayerWalkEmitter], "PlayerEmitter");
+
+
+    DebugUI::CheckParticle(*waveEmitters_[0].emitter, "waveEmitter0");
+    DebugUI::CheckParticle(*waveEmitters_[1].emitter, "waveEmitter1");
+    DebugUI::CheckParticle(*waveEmitters_[2].emitter, "waveEmitter2");
+
 
 }

@@ -63,13 +63,13 @@ void ParticleManager::Create()
     CreateVertexBufferResource();
 }
 
-Particle MakeNewParticle(const WorldTransform& transform, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const float& rotateOffset, const float& scaleOffset)
+Particle MakeNewParticle(const MinMax& velocityMinMax, const WorldTransform& transform, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const float& rotateOffset, const float& scaleOffset)
 {
 
     Particle particle;
     Random::SetMinMax(0.0f, 1.0f);
     particle.lifeTime = (lifeTime == -1.0f) ? Random::Get() : lifeTime;
-    Random::SetMinMax(-1.0f, 1.0f);
+    Random::SetMinMax(velocityMinMax.min, velocityMinMax.max);
     particle.velocity = { Random::Get(), Random::Get(), Random::Get() };
 
     Random::SetMinMax(-scaleOffset, scaleOffset);
@@ -167,11 +167,11 @@ void ParticleManager::Update(Camera& camera)
     }
 }
 
-std::list<Particle> EmitParticles(const WorldTransform& transform, uint32_t count, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const float& rotateOffset, const float& scaleOffset)
+std::list<Particle> EmitParticles(const MinMax& velocityMinMax, const WorldTransform& transform, uint32_t count, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const float& rotateOffset, const float& scaleOffset)
 {
     std::list<Particle>particles;
     for (uint32_t i = 0; i < count; ++i) {
-        particles.push_back(MakeNewParticle(transform, color, lifeTime, translateAABB, rotateOffset, scaleOffset));
+        particles.push_back(MakeNewParticle(velocityMinMax,transform, color, lifeTime, translateAABB, rotateOffset, scaleOffset));
     }
     return particles;
 }
@@ -193,7 +193,7 @@ void ParticleManager::Emit(Emitter& emitter)
 {
     assert(particleGroups.contains(emitter.name));
 
-    particleGroups[emitter.name]->particles.splice(particleGroups[emitter.name]->particles.end(), EmitParticles(emitter.transform, emitter.count, emitter.color, emitter.lifeTime, emitter.translateAABB_, emitter.rotateOffset_, emitter.scaleOffset_));
+    particleGroups[emitter.name]->particles.splice(particleGroups[emitter.name]->particles.end(), EmitParticles(emitter.velocityMinMax,emitter.transform, emitter.count, emitter.color, emitter.lifeTime, emitter.translateAABB_, emitter.rotateOffset_, emitter.scaleOffset_));
 
     particleGroups[emitter.name]->movement = emitter.movement;
     particleGroups[emitter.name]->parentPos_ = &emitter.transform;

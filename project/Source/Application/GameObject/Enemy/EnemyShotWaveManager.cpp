@@ -5,7 +5,7 @@
 #include"MatsumotoObj/GameSceneObj/FloorGameFloorManager.h"
 
 #include"Sound.h"
-
+EnemyShotWaveManager::Direction EnemyShotWaveManager::direction_ = EnemyShotWaveManager::Direction::LEFT;
 //テーブルにポインタを入れるために別途定義が必要　static
 void(EnemyShotWaveManager::* EnemyShotWaveManager::spFuncTable[])(int& randX, int& randY) {
     &EnemyShotWaveManager::Left,

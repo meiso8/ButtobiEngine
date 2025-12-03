@@ -13,6 +13,7 @@ struct Emitter
     std::string name = "unknown";
     WorldTransform transform;//エミッタのTransfrom
     AABB translateAABB_ = { 0.0f };
+    MinMax velocityMinMax = { 0.0f,0.0f };
     float rotateOffset_ = 0.0f;
     float scaleOffset_ = 0.0f;
     uint32_t count = 3;//発生数
@@ -47,6 +48,7 @@ public:
         const Vector3& scale,
         const Vector3& rotate,
         const  AABB& translateAABB_,
+        const MinMax& velocityMinMax,
    const float& rotateOffset_,
    const float& scaleOffset_,
    const uint32_t& count,

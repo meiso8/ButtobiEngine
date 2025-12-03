@@ -22,6 +22,7 @@ public:
 	EnemyShotWaveManager(Enemy* enemy, EnemyShockWaveManager* bombManager, FloorGameFloorManager* floorGameFloorManager);
 	void Initialize();
 	void Update();
+	static Direction direction_;
 private:
 	Enemy* enemy_ = nullptr;
 	EnemyShockWaveManager* shockWaveManager_ = nullptr;
@@ -38,7 +39,7 @@ private:
 	void Right(int& randX, int& randY);
 	void Back(int& randX, int& randY);
 	static void (EnemyShotWaveManager::* spFuncTable[])(int& randX, int& randY);
-	Direction direction_ = Direction::LEFT;
+
 	std::unordered_map<Direction, Vector3> enemyPoses_;
 	Vector3 startPos_ = { 0.0f };
 	Vector3 endPos_ = { 0.0f };
