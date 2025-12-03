@@ -176,13 +176,20 @@ void FloorGameFloorManager::PopupFloor(const Vector3& position) {
 	int yIndex = floorIndex.second;
 	if (xIndex < 0 || xIndex >= kMapWidth || yIndex < 0 || yIndex >= kMapHeight) {
 		// 範囲外の場合は一番近い端に補正する
-        if (floors_[std::clamp(yIndex, 0, kMapHeight - 1)][std::clamp(xIndex, 0, kMapWidth - 1)]->floorType_ != FloorType::Sticky) {
-			floors_[std::clamp(yIndex, 0, kMapHeight - 1)][std::clamp(xIndex, 0, kMapWidth - 1)]->popupFloor();
-			return;
-        }
+		xIndex = std::clamp(xIndex, 0, kMapWidth - 1);
+		yIndex = std::clamp(yIndex, 0, kMapHeight - 1);
 	}
+
     if (floors_[yIndex][xIndex]->floorType_ != FloorType::Sticky) {
-        floors_[yIndex][xIndex]->popupFloor();
+        if (floors_[yIndex][xIndex]->floorType_ == FloorType::Strong) {
+			std::vector<std::pair<int, int>> connectedFloors =
+				GetConnectedFloorsAtPosition(position);
+            for (const auto& floorPos : connectedFloors) {
+                floors_[floorPos.second][floorPos.first]->popupFloor();
+            }
+        } else {
+			floors_[yIndex][xIndex]->popupFloor();
+        }
         return;
     }
 }
