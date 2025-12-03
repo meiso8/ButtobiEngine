@@ -128,6 +128,7 @@
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\SceneStaticValue.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\ExprostionParticle.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\ExprostionParticleEmitter.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Ground.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\GameObject\UI\PauseScreen.h" />
@@ -281,6 +282,7 @@
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\GameOverEvent.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\ExprostionParticle.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\ExprostionParticleEmitter.h" />
+    <ClInclude Include="Source\Application\GameObject\Ground.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="externals\assimp\lib\Debug\assimp-vc143-mdd.lib" />
