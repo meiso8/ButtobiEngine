@@ -66,3 +66,7 @@ Matrix4x4 Inverse(const Matrix4x4& m);
 
 //任意軸回転行列作成関数
 Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
+//
+Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to);
+
+Matrix4x4 MakeRotateAxisSinCos(const Vector3& n, const float& cos, const float& sin);
