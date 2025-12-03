@@ -28,10 +28,12 @@ public:
 
     //TAGを宣言する
     enum TAG {
-        BGM1,
-
-        FIRE_BALL,
-        THROW_FLOOR,
+  
+        inGameBGM01,
+        inGameBGM02,
+        playerHP1BGM,
+        resultBGM,
+        titleBGM,
 
         kBossDamage01,
         kBossDamage02,

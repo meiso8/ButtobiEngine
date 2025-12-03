@@ -33,11 +33,12 @@ void Sound::LoadAllSound()
 
     handles_.resize(SOUNDS);
 
-    //サウンドの読み込み
-    handles_[BGM1] = Load("Resource/Sounds/externals/sea.mp3");
 
-    handles_[FIRE_BALL] = Load("Resource/Sounds/externals/fireBall.mp3");
-    handles_[THROW_FLOOR] = Load("Resource/Sounds/externals/throwFloor.mp3");
+    handles_[inGameBGM01] = Load("Resource/Sounds/BGM/inGameBGM01.mp3");
+    handles_[inGameBGM02] = Load("Resource/Sounds/BGM/inGameBGM02.mp3");
+    handles_[playerHP1BGM] = Load("Resource/Sounds/BGM/playerHP1BGM.mp3");
+    handles_[resultBGM] = Load("Resource/Sounds/BGM/resultBGM.mp3");
+    handles_[titleBGM] = Load("Resource/Sounds/BGM/titleBGM.mp3");
 
     handles_[kBossDamage01] = Load("Resource/Sounds/SE/bossDamage01.mp3");
     handles_[kBossDamage02] = Load("Resource/Sounds/SE/bossDamage02.mp3");

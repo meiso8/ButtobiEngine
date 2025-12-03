@@ -24,6 +24,7 @@ public:
     void Init();
     void Draw(Camera& camera, const LightMode& lightMode);
     void Update();
+    std::string GetCurrentState() { return currentState_; };
     //コライダーのオーバーライド
     Vector3 GetWorldPosition()const override;
     void OnCollision(Collider* collder)override;
