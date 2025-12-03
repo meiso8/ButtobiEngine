@@ -89,7 +89,7 @@ GameScene::GameScene()
 void GameScene::Initialize() {
 
     sceneChange_->Initialize();
-    sceneChange_->SetState(SceneChange::kFadeOut, 60);
+    sceneChange_->SetState(SceneChange::kFadeOut, 90);
 
     cameraController_->Initialize();
 
@@ -150,7 +150,7 @@ void GameScene::Update() {
 			Initialize();
 			
         } else {
-            sceneChange_->SetState(SceneChange::kFadeIn, 30);
+            sceneChange_->SetState(SceneChange::kFadeIn, 60);
         }
 	}
 
