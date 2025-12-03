@@ -34,4 +34,5 @@ private:
     float speed_;
     float lifeTimer_;
     float lifeDuration_;
+	float lifeDelay_;
 };

@@ -39,6 +39,7 @@ private:
     void SelectButton();
     void ScalingButton();
 
+	float selectTimer_ = 0.0f;
     float pauseTimer_ = 0.0f;
     int selectButtonNum_ = kBackToGameButton;
 
