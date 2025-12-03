@@ -9,6 +9,7 @@
 #include"Collision.h"
 #include"CollisionConfig.h"
 #include "Input.h"
+#include "MatsumotoObj/GameSceneObj/Data/MapData.h"
 
 FloorGameFloor::FloorGameFloor() {
 	body_.Create();
@@ -48,6 +49,7 @@ void FloorGameFloor::Initialize() {
 	};
 
 
+	body_.worldTransform_.scale_ = { kHalfFloorSize * 2.0f,kHalfFloorSize * 2.0f,kHalfFloorSize * 2.0f };
 
 	isExploded_ = false;
 

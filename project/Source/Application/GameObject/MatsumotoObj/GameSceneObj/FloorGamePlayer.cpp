@@ -13,6 +13,7 @@
 #include"Enemy/EnemyBomb.h"
 #include"VibrateManager.h"
 #include "MatsumotoObj/KeyBindConfig.h"
+#include "MatsumotoObj/GameSceneObj/Data/MapData.h"
 
 FloorGamePlayer::FloorGamePlayer() {
     body_.Create();
@@ -89,8 +90,8 @@ void FloorGamePlayer::Initialize() {
     // 移動
     moveDir_ = { 0.0f,0.0f,1.0f };
     isMove_ = false;
-    moveLimitMax_ = { 5.0f,5.0f,5.0f };
-    moveLimitMin_ = { -5.0f,0.0f,-5.0f };
+    moveLimitMax_ = { static_cast<float>(kMapWidth) * 0.5f,5.0f,static_cast<float>(kMapHeight) * 0.5f };
+    moveLimitMin_ = { -static_cast<float>(kMapWidth) * 0.5f,0.0f,-static_cast<float>(kMapHeight) * 0.5f };
 
     moveAcceleration_ = json["Speed"]["acceleration"];
     moveSpeed_ = json["Speed"]["velocity"];

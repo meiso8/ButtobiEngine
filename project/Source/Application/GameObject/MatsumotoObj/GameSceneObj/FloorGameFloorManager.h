@@ -15,6 +15,8 @@ public:
 	void Update();
 	void Draw(class Camera& camera, const LightMode& lightType);
 
+	void ForceChangeAllFloorType(const FloorType& floorType);
+
 	void AddCollider(CollisionManager* collisionManager);
 	FloorType GetFloorTypeAtPosition(const Vector3& position) const;
 	std::vector<std::pair<int, int>> GetConnectedFloorsAtPosition(const Vector3& position) const;

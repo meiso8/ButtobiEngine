@@ -125,6 +125,7 @@
     <ClCompile Include="Source\Engine\Lights\DirectionalLightManager.cpp" />
     <ClCompile Include="Source\Engine\Lights\SpotLightManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\GameOverEvent.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\SceneStaticValue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\GameObject\UI\PauseScreen.h" />

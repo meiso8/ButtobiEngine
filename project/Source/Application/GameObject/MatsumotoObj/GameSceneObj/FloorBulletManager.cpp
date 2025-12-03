@@ -1,7 +1,7 @@
 #include "FloorBulletManager.h"
 #include "Enemy/Enemy.h"
 namespace {
-	const int kMaxBullets = 100;
+	const int kMaxBullets = 300;
 }
 
 FloorBulletManager::FloorBulletManager(Enemy* enemy) {
