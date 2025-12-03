@@ -373,11 +373,13 @@ void Enemy::Tackle()
 
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(startPos_, endPos_, localTimer);
 
-        if (Dot(*playerLookDir_, endPos_ - startPos_) < 0.0f) {
-            if (damageStruct_.isHit) {
-                Sound::PlayOriginSE(Sound::kBossTackle);
-                VibrateManager::SetTime(1.0f, 2000, 2000);
-                SetPhase(KNOCKBACK);
+        if (!isFeint_) {
+            if (Dot(*playerLookDir_, endPos_ - startPos_) < 0.0f) {
+                if (damageStruct_.isHit) {
+                    Sound::PlayOriginSE(Sound::kBossTackle);
+                    VibrateManager::SetTime(1.0f, 2000, 2000);
+                    SetPhase(KNOCKBACK);
+                }
             }
         }
 
