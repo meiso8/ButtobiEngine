@@ -3,6 +3,7 @@
 #include"MakeMatrix.h"
 #include"Lights/PointLightManager.h"
 #include"Lights/DirectionalLightManager.h"
+#include"Lights/SpotLightManager.h"
 ID3D12GraphicsCommandList* Object3d::commandList_ = nullptr;
 
 
@@ -125,7 +126,7 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
         //ライトのCBufferの場所を設定
         DirectionalLightManager::SetGraphicsRootConstantBufferView();
         PointLightManager::SetGraphicsRootDescriptorTable();
-        
+        SpotLightManager::SetGraphicsRootConstantBufferView();
         meshCommon_->Draw(commandList_);
     }
 }

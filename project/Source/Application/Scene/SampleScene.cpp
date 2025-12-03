@@ -98,6 +98,7 @@ SampleScene::SampleScene()
 
     lightingManager_ = std::make_unique<LightingManager>();
     lightingManager_->playerHandPos_.Parent(player_->GetBodyWorldTransform());
+    lightingManager_->direction_ = &player_->GetForward();
 }
 
 void SampleScene::Initialize() {

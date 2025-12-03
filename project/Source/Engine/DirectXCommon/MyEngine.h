@@ -17,13 +17,13 @@
 #include"Log.h"
 #include"DebugUI.h"
 
+
 #include<memory>
 
 #pragma endregion
 
 class MyEngine {
 private:
-    D3DResourceLeakChecker leakCheck;
     static std::unique_ptr<DirectXCommon> directXCommon;
 #ifdef USE_IMGUI
     ImGuiClass imGuiClass = {};

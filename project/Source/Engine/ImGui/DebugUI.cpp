@@ -15,6 +15,7 @@
 #include"SphereMesh.h"
 #include"Lights/Light.h"
 #include"Lights/DirectionalLightManager.h"
+#include"Lights/SpotLightManager.h"
 #include"PSO.h"
 #include"Camera.h"
 #include"JsonFile.h"
@@ -207,6 +208,27 @@ void DebugUI::CheckJsonFile()
 #endif
 }
 
+
+
+void DebugUI::CheckSpotLight()
+{
+#ifdef USE_IMGUI
+    SpotLight& spotLight =  SpotLightManager::GetData();
+    Vector3& direction = spotLight.direction;
+
+    if (ImGui::TreeNode("SpotLight")) {
+        CheckColor(spotLight.color, "color");
+        ImGui::SliderFloat("intensity", &spotLight.intensity, 0.0f, 100.0f);
+        ImGui::DragFloat3("position", &spotLight.position.x, 0.03f, -10000.0f, 10000.0f);
+        ImGui::SliderFloat3("direction", &direction.x, -1.0f, 1.0f);
+        direction = Normalize(direction);
+        ImGui::SliderFloat("distance", &spotLight.distance, 0.0f, 100.0f);
+        ImGui::SliderFloat("decay", &spotLight.decay, 0.0f, 100.0f);
+        ImGui::SliderFloat("cosAngle", &spotLight.cosAngle, -6.28f, 6.28f);
+        ImGui::TreePop();
+    }
+#endif
+}
 
 void DebugUI::CheckMesh(MeshCommon& mesh, const char* label) {
 #ifdef USE_IMGUI
