@@ -32,13 +32,17 @@ public:
     static void CheckSound();
     static void CheckJsonFile();
     /// @brief 入力
-       /// @param input 
+    /// @param input 
     static void CheckInput();
     static void CheckXInput(const int& num);
     /// @brief 光源
    /// @param directionalLights 
    /// @param lightType 
     static void CheckDirectionalLight();
+    /// @brief 光源
+/// @param CheckSpotLight 
+/// @param lightType 
+    static void CheckSpotLight();
     /// @brief メッシュ
     /// @param mesh 
     static void CheckMesh(MeshCommon& mesh, const char* label);
