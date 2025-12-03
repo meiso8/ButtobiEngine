@@ -16,8 +16,15 @@ public:
         ENEMY_WING_L,
         ENEMY_WING_R,
 
+        NEST,
+        FIRE_BALL,
+        GROUND,
+
+
         FLOOR,
         MELT_FLOOR,
+        MELT_FLOOR_PARTICLE,
+
 
         HOUSE_FLOOR,
         HOUSE_WALL_L,

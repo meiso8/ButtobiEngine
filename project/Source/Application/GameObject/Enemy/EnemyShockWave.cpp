@@ -88,7 +88,7 @@ void EnemyShockWave::Update() {
         lifeTimer_ -= 0.016f;
     }
 
-    if (lifeTimer_ > 3.5f && lifeTimer_ <= lifeDuration_ - 0.1f) {
+    if (lifeTimer_ > 3.5f) {
         isEmit_ = true;
     }
 

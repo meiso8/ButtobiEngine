@@ -65,27 +65,10 @@ EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShock
         waveEmitters_.push_back({ wave.get(), std::move(newEmitter) });
     }
 
-
-    //for (auto& wave : enemyShockWaveManager_->GetWaves()) {
-    //    std::unique_ptr<ParticleEmitter> newEmitter = std::make_unique<ParticleEmitter>();
-    //    newEmitter->SetName("leafParticle");
-    //    newEmitter->emitter_.movement = kParticleSphere;
-    //    newEmitter->emitter_.transform.Parent(wave->body_.worldTransform_);
-    //    newEmitter->emitter_.translateAABB_ = wave->localAABBs_[EnemyShockWave::AABBType::kHorizontal];
-    //    newEmitter->emitter_.polarSpeed = InverseFPS * std::numbers::pi_v<float>;
-    //    newEmitter->emitter_.radiusSpeed = 0.0f;
-    //    waveEmitters_.push_back({ wave.get(), std::move(newEmitter) });
-    //}
-
-}
-
-void EmitterManager::Initialize()
-{
-
     for (auto& grop : waveEmitters_) {
         grop.emitter->emitter_.frequency = 0.1f;
-    
     }
+
 
     for (auto& particleEmitter : particleEmitters_) {
         particleEmitter->Initialize();
@@ -124,6 +107,30 @@ void EmitterManager::Initialize()
     particleEmitters_[kPlayerHitEmitter]->emitter_.frequency = 0.25f;
     particleEmitters_[kPlayerHitEmitter]->emitter_.lifeTime = 1.0f;
     particleEmitters_[kPlayerHitEmitter]->emitter_.blendMode = kBlendModeNormal;
+
+    //for (auto& wave : enemyShockWaveManager_->GetWaves()) {
+    //    std::unique_ptr<ParticleEmitter> newEmitter = std::make_unique<ParticleEmitter>();
+    //    newEmitter->SetName("leafParticle");
+    //    newEmitter->emitter_.movement = kParticleSphere;
+    //    newEmitter->emitter_.transform.Parent(wave->body_.worldTransform_);
+    //    newEmitter->emitter_.translateAABB_ = wave->localAABBs_[EnemyShockWave::AABBType::kHorizontal];
+    //    newEmitter->emitter_.polarSpeed = InverseFPS * std::numbers::pi_v<float>;
+    //    newEmitter->emitter_.radiusSpeed = 0.0f;
+    //    waveEmitters_.push_back({ wave.get(), std::move(newEmitter) });
+    //}
+
+}
+
+void EmitterManager::Initialize()
+{
+
+    for (auto& particleEmitter : particleEmitters_) {
+        particleEmitter->InitTimer();
+    }
+
+    for (auto& grop : waveEmitters_) {
+        grop.emitter->InitTimer();
+    }
 
 }
 
@@ -165,18 +172,10 @@ void EmitterManager::Update(Camera& camera)
             } else {
                 grop.emitter->InitTimer();
             }
-        
+
         }
 
     }
-
-
-
-
-    //for (const auto& bomb : bombEmitter_) {
-    //    bomb->UpdateTimer();
-    //    bomb->Update(camera);
-    //}
 }
 
 void EmitterManager::Draw()
