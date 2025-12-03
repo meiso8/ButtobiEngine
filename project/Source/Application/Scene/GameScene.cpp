@@ -79,7 +79,7 @@ GameScene::GameScene()
 
     tree_ = std::make_unique<Tree>();
     ground_ = std::make_unique<Ground>();
-
+    nest_ = std::make_unique<Nest>();
 #pragma endregion
 
     uiManager_ = std::make_unique<UIManager>(*enemy_->GetHpsPtr(), *floorGamePlayer_->GetHpsPtr());
@@ -123,6 +123,7 @@ void GameScene::Initialize() {
 
     tree_->Initialize();
     ground_->Init();
+    nest_->Init();
 #pragma endregion
     collisionManager_->ClearColliders();
 
@@ -217,6 +218,7 @@ void GameScene::Draw() {
     enemyShockWaveManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     tree_->Draw(*currentCamera_);
     ground_->Draw(*currentCamera_);
+    nest_->Draw(*currentCamera_);
 #pragma endregion
     //エミッター
     emitterManager_->Draw();
@@ -298,6 +300,7 @@ void GameScene::UpdateGameObject()
     enemyShockWaveManager_->Update();
     tree_->Update();
     ground_->Update();
+    nest_->Update();
 
     // オブジェクト同士の干渉
     actionUI_->Update();
