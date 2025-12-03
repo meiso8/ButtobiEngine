@@ -9,6 +9,7 @@ FloorActionManager::FloorActionManager(FloorGamePlayer* player, FloorGameFloorMa
 }
 
 void FloorActionManager::Initialize() {
+	explosionEmitter_.Initialize();
 
 }
 
@@ -37,9 +38,18 @@ void FloorActionManager::Update() {
 
 	// 爆破床が爆発して、プレイヤーが1.5m以内にいるとき、ダメージを与える
 	for (Vector2& ex : floorManager_->GetExprodedFloorMap()) {
+		explosionEmitter_.Spawn({ ex.x,0.0f,ex.y });
+
 		Vector3 floorPos = { ex.x,player_->body_.worldTransform_.translate_.y,ex.y };
 		if (fabsf(Length(player_->body_.worldTransform_.translate_ - floorPos)) < 1.5f) {
 			player_->ForceDamage();
 		}
 	}
+
+	explosionEmitter_.Update();
+}
+
+void FloorActionManager::Draw(Camera& camera, const LightMode& lightType) {
+
+	explosionEmitter_.Draw(camera,lightType);
 }

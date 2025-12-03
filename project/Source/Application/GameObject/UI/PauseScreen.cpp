@@ -147,18 +147,26 @@ void PauseScreen::TimerUpdate()
 void PauseScreen::SelectButton()
 {
 	KeyBindConfig* key = &KeyBindConfig::Instance();
-    if (key->IsTrigger("MoveForward")) {
-        selectButtonNum_--;
-        if (selectButtonNum_ < 0) {
-            selectButtonNum_ = kButtonMax - 1;
-        }
-        scaleTheta_ = 0.0f;
-    }
+    Vector2 stickPos;
 
-    if (key->IsTrigger("MoveBack")) {
-        selectButtonNum_++;
-        selectButtonNum_ %= kButtonMax;
-        scaleTheta_ = 0.0f;
+	if (selectTimer_ > 0.0f) {
+        selectTimer_ -= 0.016f;
+    } else {
+        if (key->IsTrigger("MoveForward") || Input::IsControllerStickPosMove(BUTTON_LEFT, 0, &stickPos)) {
+            selectButtonNum_--;
+            if (selectButtonNum_ < 0) {
+                selectButtonNum_ = kButtonMax - 1;
+            }
+            scaleTheta_ = 0.0f;
+            selectTimer_ = 0.2f;
+        }
+
+        if (key->IsTrigger("MoveBack") || Input::IsControllerStickPosMove(BUTTON_LEFT, 0, &stickPos)) {
+            selectButtonNum_++;
+            selectButtonNum_ %= kButtonMax;
+            scaleTheta_ = 0.0f;
+            selectTimer_ = 0.2f;
+        }
     }
 
 

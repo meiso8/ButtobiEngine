@@ -33,10 +33,11 @@ void EnemyBomb::Initialize() {
     moveDir_ = { 0.0f,0.0f,1.0f };
     speed_ = 0.1f;
     lifeTimer_ = 0.0f;
-    lifeDuration_ = 6.0f;
+    lifeDuration_ = 4.5f;
     isActive_ = false;
 	isGroundHit_ = false;
     size_ = 1.0f;
+    lifeDelay_ = 0.0f;
 
 }
 void EnemyBomb::OnCollision(Collider* collider)
@@ -81,7 +82,7 @@ void EnemyBomb::Update() {
     body_.Update();
     ColliderUpdate();
 
-    float color = lifeTimer_ / lifeDuration_;
+    float color = lifeTimer_ / lifeDuration_ + lifeDelay_;
     body_.SetColor({ color,color,color,1.0f });
 
     if (lifeTimer_ <= 3.8f) {
@@ -112,7 +113,8 @@ void EnemyBomb::Shot(const Vector3& startPos, const Vector3& endPos, const float
     endPos_ = endPos;
     size_ = size;
     body_.worldTransform_.scale_ = { size_,size_,size_ };
-    lifeTimer_ = lifeDuration_;
+	lifeDelay_ = std::fabsf(Length(endPos - startPos) / 5.0f);
+    lifeTimer_ = lifeDuration_ + lifeDelay_;
     isActive_ = true;
 	isGroundHit_ = false;
 	body_.Update();

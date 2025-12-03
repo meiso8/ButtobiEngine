@@ -187,6 +187,7 @@ void GameScene::Draw() {
     floorPlayerStripTargetUI_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     playerFloorStripManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     healItemSpawner_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+	floorActionManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     actionUI_->Draw();
 	letterboxBars_->Draw();
 	gameOverEvent_->Draw();
