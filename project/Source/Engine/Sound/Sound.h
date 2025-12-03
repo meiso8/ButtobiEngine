@@ -28,18 +28,34 @@ public:
 
     //TAGを宣言する
     enum TAG {
-        BGM1,
+  
+        inGameBGM01,
+        inGameBGM02,
+        playerHP1BGM,
+        resultBGM,
+        titleBGM,
 
-        FIRE_BALL,
-        THROW_FLOOR,
-
-        BOSS_HEAL,
-        BOSS_TACKLE,
-        DAMAGE,
-        DEFEAT_BOSS,
-        PLAYER_WALK,
-        STUN,
-
+        kBossDamage01,
+        kBossDamage02,
+        kBossFireBall,
+        kBossHeal,
+        kBossTackle,
+        kDamage,
+        kDecision,
+        kDefeatBoss,
+        kExplosion,
+        kFloorRespawn,
+        kMoveCursor,
+        kPauseButton,
+        kPlayerDamage,
+        kPlayerHeal,
+        kPlayerWalk,
+        kStripObj,
+        kStun,
+        kTrhowObj,
+        kWindAttackCharge,
+        kWindAttackShot,
+        
         SOUNDS
     };
 

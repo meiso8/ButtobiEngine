@@ -77,7 +77,7 @@ void Enemy::Init() {
     isShot_ = false;
     isBombShot_ = false;
     isWaveShot_ = false;
-    isReqestClearFloor_ = false;
+
     isAttack_ = false;
     isPreAttack_ = false;
     isFeint_ = false;
@@ -291,7 +291,7 @@ void Enemy::OnCollision(Collider* collider)
         }
 
         damageStruct_.isHit = true;
-        Sound::PlaySE(Sound::DEFEAT_BOSS);
+        Sound::PlaySE(Sound::kBossDamage01);
 
         VibrateManager::SetTime(0.5f, 2000, 2000);
 
@@ -375,7 +375,7 @@ void Enemy::Tackle()
 
         if (Dot(*playerLookDir_, endPos_ - startPos_) < 0.0f) {
             if (damageStruct_.isHit) {
-                Sound::PlayOriginSE(Sound::BOSS_TACKLE);
+                Sound::PlayOriginSE(Sound::kBossTackle);
                 VibrateManager::SetTime(1.0f, 2000, 2000);
                 SetPhase(KNOCKBACK);
             }
@@ -524,6 +524,7 @@ void Enemy::SwitchState()
 
     if (damageStruct_.isDead) {
         if (phase_ != EXIT) {
+            Sound::PlaySE(Sound::kBossDamage02);
             SetPhase(EXIT);
         }
 
@@ -532,7 +533,7 @@ void Enemy::SwitchState()
 
     isReqestClearFloor_ = true;
 
-    Sound::PlaySE(Sound::BOSS_HEAL);
+    Sound::PlaySE(Sound::kBossHeal);
     SetPhase(LERP_SQUARE_POS);
 
     InitState();
@@ -750,7 +751,7 @@ void Enemy::RotateY(const float& timer)
 
 void Enemy::SpinBody()
 {
-    Sound::PlayOriginSE(Sound::STUN);
+    Sound::PlayOriginSE(Sound::kStun);
 
     float localTimer = (phaseTimer_ - 0.125f) / (0.75f - 0.125f);
     float theta = PI * 3.0f * localTimer; // 回転の速さを調整

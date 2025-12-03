@@ -41,5 +41,6 @@ private:
     float speed_;
     float lifeTimer_;
     float lifeDuration_;
+    bool isSound_ = false;
 
 };

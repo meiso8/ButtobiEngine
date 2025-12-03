@@ -59,6 +59,7 @@ void FloorGamePlayer::OnCollision(Collider* collider)
 {
     if (collider->GetCollisionAttribute() == kCollisionPlayerHealItem) {
         damageStruct_.hps.hp += 20;
+        Sound::PlaySE(Sound::kPlayerHeal);
     }
 
     if (collider->GetCollisionAttribute() == kCollisionEnemy ||
@@ -66,6 +67,7 @@ void FloorGamePlayer::OnCollision(Collider* collider)
         //デバック用
         OnCollisionCollider();
         HitUpdate();
+
     }
 
     if (collider->GetCollisionAttribute() == kCollisionEnemyWave) {
@@ -236,7 +238,7 @@ void FloorGamePlayer::Move() {
 
     // 移動
     if (isMove_) {
-        Sound::PlayOriginSE(Sound::PLAYER_WALK);
+        Sound::PlayOriginSE(Sound::kPlayerWalk);
         animationState_ = PlayerAnimationState::Walk;
         moveDir_ = Normalize(moveDir_);
         lookDir_ = moveDir_;
@@ -362,13 +364,12 @@ void FloorGamePlayer::HitUpdate()
     if (damageStruct_.isHit) { return; }
 
     damageStruct_.isHit = true;
-    Sound::PlaySE(Sound::DAMAGE);
+    Sound::PlaySE(Sound::kPlayerDamage);
     VibrateManager::SetTime(1.0f, 1000, 1000);
     damageStruct_.flashTimer = damageStruct_.invincibilityTime;
     //hpを減らす
     if (damageStruct_.hps.hp > 0) {
         damageStruct_.hps.hp -= damageStruct_.hps.hpDecrease;
     }
-
 
 }
