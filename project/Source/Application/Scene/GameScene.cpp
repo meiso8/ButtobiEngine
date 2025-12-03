@@ -129,11 +129,13 @@ void GameScene::Initialize() {
 
     emitterManager_->Initialize();
 
+	gameclearTimer_ = 0.0f;
+
 }
 
 void GameScene::Update() {
 
-    if (enemy_->bodyPos_.worldTransform_.translate_.z >= 200.0f) {
+    if (gameclearTimer_ > 2.0f) {
 		SceneStaticValue::isClear = true;
 		sceneChange_->SetState(SceneChange::kFadeIn, 30);
     }
@@ -296,6 +298,7 @@ void GameScene::UpdateGameObject()
     }
     if (enemy_->IsOverKill()) {
         enemy_->LeathalMoveUpdate();
+		gameclearTimer_ += 0.016f;
     }
 
     // アニメーション更新
