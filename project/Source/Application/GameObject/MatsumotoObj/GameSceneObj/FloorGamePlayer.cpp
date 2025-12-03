@@ -59,6 +59,7 @@ void FloorGamePlayer::OnCollision(Collider* collider)
 {
     if (collider->GetCollisionAttribute() == kCollisionPlayerHealItem) {
         damageStruct_.hps.hp += 20;
+        Sound::PlaySE(Sound::kPlayerHeal);
     }
 
     if (collider->GetCollisionAttribute() == kCollisionEnemy ||
@@ -66,6 +67,7 @@ void FloorGamePlayer::OnCollision(Collider* collider)
         //デバック用
         OnCollisionCollider();
         HitUpdate();
+
     }
 
     if (collider->GetCollisionAttribute() == kCollisionEnemyWave) {
@@ -134,10 +136,15 @@ void FloorGamePlayer::Initialize() {
 void FloorGamePlayer::Update() {
 	if (damageStruct_.hps.hp <= 0) {
         damageStruct_.isDead = true;
+
 		//死亡モーション
         body_.worldTransform_.rotate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.rotate_.y, deathRotate_, 0.1f);
         if (body_.worldTransform_.rotate_.y >= deathRotate_ * 0.99f) {
             body_.worldTransform_.rotate_.x = MY_Utility::SimpleEaseIn(body_.worldTransform_.rotate_.x, 3.14f * 0.5f, 0.1f);
+            Vector4 color = Lerp(body_.GetColor(), { 1.0f,1.0f,1.0f,1.0f }, 0.1f);
+            SetBodyColor(color);
+        } else {
+            SetBodyColor({ 1.0f,0.0f,0.0f,1.0f });
         }
     } else {
         Move();
@@ -237,7 +244,7 @@ void FloorGamePlayer::Move() {
 
     // 移動
     if (isMove_) {
-        Sound::PlayOriginSE(Sound::PLAYER_WALK);
+        Sound::PlayOriginSE(Sound::kPlayerWalk);
         animationState_ = PlayerAnimationState::Walk;
         moveDir_ = Normalize(moveDir_);
         lookDir_ = moveDir_;
@@ -363,13 +370,12 @@ void FloorGamePlayer::HitUpdate()
     if (damageStruct_.isHit) { return; }
 
     damageStruct_.isHit = true;
-    Sound::PlaySE(Sound::DAMAGE);
+    Sound::PlaySE(Sound::kPlayerDamage);
     VibrateManager::SetTime(1.0f, 1000, 1000);
     damageStruct_.flashTimer = damageStruct_.invincibilityTime;
     //hpを減らす
     if (damageStruct_.hps.hp > 0) {
         damageStruct_.hps.hp -= damageStruct_.hps.hpDecrease;
     }
-
 
 }

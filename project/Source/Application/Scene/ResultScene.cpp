@@ -60,6 +60,7 @@ ResultScene::~ResultScene() {
 
 void ResultScene::Initialize() {
 
+    Sound::StopAllSound();
 	sceneChange_->Initialize();
 	sceneChange_->SetState(SceneChange::kFadeOut, 60);
 
@@ -69,6 +70,8 @@ void ResultScene::Initialize() {
 }
 
 void ResultScene::Update() {
+
+  
     if (!SceneStaticValue::isClear) {
         sceneChange_->SetState(SceneChange::kFadeIn, 60);
     }

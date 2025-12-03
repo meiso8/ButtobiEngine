@@ -73,7 +73,7 @@ void EnemyShotWaveManager::Update() {
     // 弾投げ
     if (enemy_->isWaveShot_) {
         
-        Sound::PlayOriginSE(Sound::DEFEAT_BOSS);
+        Sound::PlayOriginSE(Sound::kWindAttackCharge);
 
         for (auto& wave : shockWaveManager_->GetWaves()) {
 
@@ -90,6 +90,7 @@ void EnemyShotWaveManager::Update() {
 
             startPos_.y += 1.0f;
             endPos_.y += 1.0f;
+
 
             if (direction_ != BACK) {
                 shockWaveManager_->ShotWave(startPos_, endPos_, EnemyShockWave::kHorizontal);
