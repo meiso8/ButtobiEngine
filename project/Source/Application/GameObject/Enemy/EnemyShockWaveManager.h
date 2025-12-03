@@ -2,9 +2,11 @@
 #pragma once
 #include"EnemyShockWave.h"
 #include <vector>
+
 class EnemyShockWaveManager
 {
 public:
+	static const int kMaxWaves = 5;
 	EnemyShockWaveManager();
 	~EnemyShockWaveManager();
 	void Initialize();
@@ -14,6 +16,7 @@ public:
 	const std::vector<std::unique_ptr<EnemyShockWave>>& GetWaves() const {
 		return waves_;
 	};
+
 private:
 	std::vector<std::unique_ptr<EnemyShockWave>> waves_;
 };

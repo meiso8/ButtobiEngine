@@ -1,9 +1,5 @@
 #include "EnemyShockWaveManager.h"
 
-namespace {
-    const int kMaxWaves = 5;
-}
-
 EnemyShockWaveManager::EnemyShockWaveManager() {
     for (int i = 0; i < kMaxWaves; i++) {
         waves_.emplace_back(std::make_unique<EnemyShockWave>());
