@@ -43,6 +43,8 @@
 #include"VibrateManager.h"
 #include"MatsumotoObj/SceneStaticValue.h"
 
+#include"CollisionConfig.h"
+
 GameScene::GameScene()
 {
     // 現在のカメラを設定
@@ -87,7 +89,7 @@ GameScene::GameScene()
 void GameScene::Initialize() {
 
     sceneChange_->Initialize();
-    sceneChange_->SetState(SceneChange::kFadeOut, 60);
+    sceneChange_->SetState(SceneChange::kFadeOut, 90);
 
     cameraController_->Initialize();
 
@@ -127,11 +129,13 @@ void GameScene::Initialize() {
 
     emitterManager_->Initialize();
 
+	gameclearTimer_ = 0.0f;
+
 }
 
 void GameScene::Update() {
 
-    if (enemy_->bodyPos_.worldTransform_.translate_.z >= 200.0f) {
+    if (gameclearTimer_ > 2.0f) {
 		SceneStaticValue::isClear = true;
 		sceneChange_->SetState(SceneChange::kFadeIn, 30);
     }
@@ -151,13 +155,9 @@ void GameScene::Update() {
 			Initialize();
 			
         } else {
-            sceneChange_->SetState(SceneChange::kFadeIn, 30);
+            sceneChange_->SetState(SceneChange::kFadeIn, 60);
         }
 	}
-
-    if (enemy_->IsOverKill()) {
-        //ひたすらなんかする
-    }
 
     if (PauseScreen::isBackToTitle) {
         sceneChange_->SetState(SceneChange::kFadeIn, 30);
@@ -281,6 +281,7 @@ void GameScene::UpdateGameObject()
 {
     if (enemy_->IsDead()) {
         floorGameFloorManager_->ForceChangeAllFloorType(FloorType::Strong);
+        floorGamePlayer_->SetCollisionAttribute(kCollisionNone);
     }
 
     // オブジェクト個人の更新
@@ -317,6 +318,7 @@ void GameScene::UpdateGameObject()
     }
     if (enemy_->IsOverKill()) {
         enemy_->LeathalMoveUpdate();
+		gameclearTimer_ += 0.016f;
     }
 
     // アニメーション更新
@@ -336,7 +338,9 @@ void GameScene::CheckAllCollision()
 
     collisionManager_->ClearColliders();
 
-    collisionManager_->AddCollider(floorGamePlayer_.get());
+    if (!enemy_->IsDead()) {
+        collisionManager_->AddCollider(floorGamePlayer_.get());
+    }
     collisionManager_->AddCollider(enemy_.get());
     healItemSpawner_->AddCollider(collisionManager_.get());
     floorGameFloorManager_->AddCollider(collisionManager_.get());

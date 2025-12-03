@@ -21,7 +21,7 @@ GameOverEvent::~GameOverEvent() {
 
 void GameOverEvent::Initialize() {
 	isGameOver_ = false;
-	isRetrySelected_ = false;
+	isRetrySelected_ = true;
 	isReqestedAction_ = false;
 	timer_ = 0.0f;
 

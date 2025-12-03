@@ -87,4 +87,6 @@ private:
 #pragma endregion
     std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
     std::unique_ptr<EmitterManager>emitterManager_ = nullptr;
+
+	float gameclearTimer_ = 0.0f;
 };

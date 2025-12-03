@@ -86,6 +86,7 @@ void FloorGamePlayer::Initialize() {
     body_.worldTransform_.translate_.y = 0.2f;
     Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
     SetBodyColor(color);
+    SetCollisionAttribute(kCollisionPlayer);
 
     // 移動
     moveDir_ = { 0.0f,0.0f,1.0f };
