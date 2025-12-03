@@ -643,9 +643,32 @@ Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle)
     float cos = std::cosf(angle);
     float sin = std::sinf(angle);
 
-    float cosM = 1.0f - cos;
+    return  MakeRotateAxisSinCos(axis, cos, sin);
+}
+Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to)
+{
+    Vector3 cross = Cross(from, to);
+    float sin = Length(cross);
+    float cos = Dot(from, to);
 
-    Vector3 n = axis;
+    Vector3 n = { 0.0f };
+
+    if (from == -to) {
+        if (from.x != 0.0f || from.y != 0.0f) {
+            n = Normalize({ from.y ,-from.x,0.0f });
+        } else if (from.z != 0.0f) {
+            n = Normalize({ from.z ,0.0f,-from.x });
+        }
+    } else {
+        n = Normalize(cross);
+    }
+
+    return MakeRotateAxisSinCos(n, cos, sin);
+};
+
+Matrix4x4 MakeRotateAxisSinCos(const Vector3& n, const float& cos, const float& sin) {
+
+    float cosM = 1.0f - cos;
 
     Matrix4x4 tnn;
     tnn.m[0][0] = n.x * n.x * cosM + cos;
@@ -669,5 +692,5 @@ Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle)
     tnn.m[3][3] = 1.0f;
 
     return tnn;
+
 }
-;
