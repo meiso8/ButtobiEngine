@@ -212,8 +212,8 @@ void DebugUI::CheckJsonFile()
 
 void DebugUI::CheckSpotLight()
 {
-
-    SpotLight& spotLight =  *SpotLightManager::GetData();
+#ifdef USE_IMGUI
+    SpotLight& spotLight =  SpotLightManager::GetData();
     Vector3& direction = spotLight.direction;
 
     if (ImGui::TreeNode("SpotLight")) {
@@ -227,7 +227,7 @@ void DebugUI::CheckSpotLight()
         ImGui::SliderFloat("cosAngle", &spotLight.cosAngle, -6.28f, 6.28f);
         ImGui::TreePop();
     }
-
+#endif
 }
 
 void DebugUI::CheckMesh(MeshCommon& mesh, const char* label) {
