@@ -25,4 +25,7 @@ private:
 
 	std::unique_ptr<Sprite> retrySprite_ = nullptr;
 	std::unique_ptr<Sprite> backToTitleSprite_ = nullptr;
+
+	std::unique_ptr<Sprite> gameOverStringSprite_ = nullptr;
+	std::unique_ptr<Sprite> tips1Sprite_ = nullptr;
 };
