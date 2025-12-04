@@ -16,7 +16,7 @@ ExprostionParticle::ExprostionParticle() {
     body_.Create();
     // It's good practice to initialize variables.
     isActive_ = false;
-    size_ = 1.0f;
+    size_ = 0.75f;
     lifeTimer_ = 0.0f;
     lifeDuration_ = 1.0f; // Default lifetime of 1 second.
 	circleMesh_ = std::make_unique<CircleMesh>();
