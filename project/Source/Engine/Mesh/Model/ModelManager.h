@@ -24,8 +24,8 @@ public:
 
         FLOOR,
         MELT_FLOOR,
+        HARD_FLOOR,
         MELT_FLOOR_PARTICLE,
-
 
         HOUSE_FLOOR,
         HOUSE_WALL_L,
