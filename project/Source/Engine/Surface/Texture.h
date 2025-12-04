@@ -29,6 +29,7 @@ public:
         WIND_ATTACK_PARTICLE01,
         WIND_ATTACK_PARTICLE02,
         LEAF_PARTICLE,
+        FLOOR_PARTICLE,
 
         ENEMY_TEXTURE2,
 

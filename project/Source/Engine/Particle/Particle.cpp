@@ -34,6 +34,7 @@ void ParticleManager::CreateAll()
     CreateParticleGroup("windAttackParticle01", Texture::WIND_ATTACK_PARTICLE01);
     CreateParticleGroup("windAttackParticle02", Texture::WIND_ATTACK_PARTICLE02);
     CreateParticleGroup("leafParticle", Texture::LEAF_PARTICLE);
+    CreateParticleGroup("floorParticle", Texture::FLOOR_PARTICLE);
 }
 
 // ==========================================================================================================

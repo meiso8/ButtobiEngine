@@ -58,17 +58,6 @@ public:
 	bool isFaseChange_ = false;
     //体の位置
     Object3d bodyPos_;
-    //弾と当たったかどうかを得る
-    bool IsHit() { return damageStruct_.isHit; }
-    bool IsDead() { return damageStruct_.isDead; }
-    //HPを得る
-    HPs* GetHpsPtr() { return &damageStruct_.hps; }
-    bool IsOverKill() { return(overKillCount >= kMaxOverKillCount); }
-private:
-
-    // 死亡時のぶっ飛び
-    bool isLeathalVec_;
-
     enum PHASE {
         //攻撃
         TACKLE,
@@ -89,10 +78,24 @@ private:
         EXIT,
         MAX_PHASE
     };
+    PHASE phase_ = PHASE::ROUND;
+
+    //弾と当たったかどうかを得る
+    bool IsHit() { return damageStruct_.isHit; }
+    bool IsDead() { return damageStruct_.isDead; }
+    //HPを得る
+    HPs* GetHpsPtr() { return &damageStruct_.hps; }
+    bool IsOverKill() { return(overKillCount >= kMaxOverKillCount); }
+private:
+
+    // 死亡時のぶっ飛び
+    bool isLeathalVec_;
+
+
 
     //メンバ関数ポインタテーブル
     std::unordered_map<PHASE, std::function<void()>> UpdateActions_;
-    PHASE phase_ = PHASE::ROUND;
+
 
     std::string currentState_ = "First";
     //メンバ関数ポインタテーブル　ランダムアクションに切り替わる

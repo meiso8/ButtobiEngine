@@ -84,7 +84,7 @@ GameScene::GameScene()
 
     uiManager_ = std::make_unique<UIManager>(*enemy_->GetHpsPtr(), *floorGamePlayer_->GetHpsPtr());
 
-    emitterManager_ = std::make_unique<EmitterManager>(*floorGamePlayer_, *enemy_,*enemyShockWaveManager_);
+    emitterManager_ = std::make_unique<EmitterManager>(*floorGamePlayer_, *enemy_,*enemyShockWaveManager_,*floorBulletManager_);
 }
 
 void GameScene::Initialize() {
