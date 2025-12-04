@@ -21,14 +21,14 @@ IXAudio2MasteringVoice* Sound::masterVoice_ = nullptr;
 std::vector<SoundData> Sound::soundDatas;
 std::vector<uint32_t> Sound::handles_;
 
-float Sound::bgmVolume_ = 0.0625f;
+float Sound::bgmVolume_ = 0.375f;
 float Sound::seVolume_ = 0.5f;
 
 void Sound::LoadAllSound()
 {
 #ifdef _DEBUG
-    bgmVolume_ = 0.0f;
-    seVolume_ = 0.1f;
+    bgmVolume_ = 0.375f;
+    seVolume_ = 0.5f;
 #endif // _DEBUG
 
     handles_.resize(SOUNDS);

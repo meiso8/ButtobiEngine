@@ -90,6 +90,7 @@ EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShock
     particleEmitters_[kEnemyHitEmitter]->emitter_.radiusSpeed = InverseFPS;
     particleEmitters_[kEnemyHitEmitter]->emitter_.rotateOffset_ = 3.14f;
     particleEmitters_[kEnemyHitEmitter]->emitter_.frequency = 0.3f;
+    particleEmitters_[kEnemyHitEmitter]->emitter_.lifeTime = 0.5f;
     particleEmitters_[kEnemyHitEmitter]->emitter_.blendMode = kBlendModeNormal;
     particleEmitters_[kEnemyHitEmitter]->emitter_.polarSpeedMinMax = { 0.0f,0.0f };
     particleEmitters_[kEnemyHitEmitter]->emitter_.velocityMinMax = { -1.0f,1.0f };
@@ -103,7 +104,7 @@ EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShock
     particleEmitters_[kPlayerHitEmitter]->emitter_.radiusSpeed = 0.0f;
     particleEmitters_[kPlayerHitEmitter]->emitter_.radiusSpeedMinMax = { 0.0f,0.0f };
     particleEmitters_[kPlayerHitEmitter]->emitter_.polarSpeed = InverseFPS * std::numbers::pi_v<float>;
-    particleEmitters_[kEnemyHitEmitter]->emitter_.polarSpeedMinMax = { 0.0f,0.0f };
+    particleEmitters_[kPlayerHitEmitter]->emitter_.polarSpeedMinMax = { 0.0f,0.0f };
     particleEmitters_[kPlayerHitEmitter]->emitter_.frequency = 0.25f;
     particleEmitters_[kPlayerHitEmitter]->emitter_.lifeTime = 1.0f;
     particleEmitters_[kPlayerHitEmitter]->emitter_.blendMode = kBlendModeNormal;
@@ -180,20 +181,14 @@ void EmitterManager::Update(Camera& camera)
 
 void EmitterManager::Draw()
 {
+    for (auto& grop : waveEmitters_) {
+        grop.emitter->Draw();
+    }
+
     for (auto& particleEmitter : particleEmitters_) {
         particleEmitter->Draw();
     }
 
-
-    for (auto& grop : waveEmitters_) {
-
-        grop.emitter->Draw();
-    }
-
-
-    /*   for (const auto& bomb : bombEmitter_) {
-           bomb->Draw();
-       }*/
 }
 
 void EmitterManager::Debug()

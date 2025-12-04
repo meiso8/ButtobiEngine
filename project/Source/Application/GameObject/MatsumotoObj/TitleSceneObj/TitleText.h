@@ -29,8 +29,8 @@ public:
 	Object3d body_;
 
 private:
-	std::unique_ptr<CubeMesh>cubeMesh_ = nullptr;
-	
+	//std::unique_ptr<CubeMesh>cubeMesh_ = nullptr;
+	//
 	float damageTimer_;
 
 	float rotatePower_;

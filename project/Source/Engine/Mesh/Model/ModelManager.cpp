@@ -24,6 +24,7 @@ void ModelManager::LoadAllModel()
     LoadModel("Resource/Models/Enemy", "WingL.obj", ENEMY_WING_L);
     LoadModel("Resource/Models/Enemy", "WingR.obj", ENEMY_WING_R);
 
+    LoadModel("Resource/Models/Egg", "Egg.obj", EGG);
     LoadModel("Resource/Models/BirdNest", "Nest.obj", NEST);
     LoadModel("Resource/Models/FireBall", "FireBall.obj", FIRE_BALL);
 
