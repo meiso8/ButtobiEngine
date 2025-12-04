@@ -107,7 +107,7 @@ void GameScene::Initialize() {
 	letterboxBars_->Initialize();
 	gameOverEvent_->Initialize();
 
-    healItemSpawner_->SpawnHealItem({ 2.0f,1.0f,2.0f });
+    //healItemSpawner_->SpawnHealItem({ 2.0f,1.0f,2.0f });
 
     enemy_->Init();
     enemy_->SetTarget(floorGamePlayer_->body_.worldTransform_.translate_);

@@ -16,10 +16,10 @@ GameOverEvent::GameOverEvent(FloorGamePlayer* player) {
 	backToTitleSprite_->Create(Texture::BUTTON_BACK_TO_TITL, { 0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f });
 
 	gameOverStringSprite_ = std::make_unique<Sprite>();
-	gameOverStringSprite_->Create(Texture::GAMEOVER_STRING, { static_cast<float>(Window::GetClientWidth()) * 0.5f,100.0f }, { 1.0f,1.0f,1.0f,1.0f });
+	gameOverStringSprite_->Create(Texture::GAMEOVER_STRING, { static_cast<float>(Window::GetClientWidth()) * 0.5f,-200.0f }, { 1.0f,1.0f,1.0f,1.0f });
 
 	tips1Sprite_ = std::make_unique<Sprite>();
-	tips1Sprite_->Create(Texture::GAMEOVER_TIPS_1, { static_cast<float>(Window::GetClientWidth()) * 0.5f,300.0f }, { 1.0f,1.0f,1.0f,1.0f });
+	tips1Sprite_->Create(Texture::GAMEOVER_TIPS_1, { static_cast<float>(Window::GetClientWidth()) * 0.7f , 720.0f+450.0f }, { 1.0f,1.0f,1.0f,1.0f });
 }
 
 GameOverEvent::~GameOverEvent() {
@@ -31,9 +31,11 @@ void GameOverEvent::Initialize() {
 	isReqestedAction_ = false;
 	timer_ = 0.0f;
 
-	retrySprite_->SetPosition({ -500.0f, static_cast<float>(Window::GetClientHeight()) * 0.5f+ kYOffset });
-	backToTitleSprite_->SetPosition({ static_cast<float>(Window::GetClientWidth()) + 500.0f, static_cast<float>(Window::GetClientHeight()) * 0.5f + kYOffset });
-	
+	retrySprite_->SetPosition({ -500.0f, static_cast<float>(Window::GetClientHeight()) * 0.25f+ kYOffset });
+	backToTitleSprite_->SetPosition({ static_cast<float>(Window::GetClientWidth()) + 500.0f, static_cast<float>(Window::GetClientHeight()) * 0.25f + kYOffset * 1.5f });
+	gameOverStringSprite_->SetPosition({ static_cast<float>(Window::GetClientWidth()) * 0.5f, -200.0f });
+	tips1Sprite_->SetPosition({ static_cast<float>(Window::GetClientWidth()) * 0.7f , 720.0f + 450.0f });
+
 	gameOverStringSprite_->SetAnchorPoint({ 0.5f,0.5f });
 	tips1Sprite_->SetAnchorPoint({ 0.5f,0.5f });
 	retrySprite_->SetAnchorPoint({ 0.5f,0.5f });
@@ -56,18 +58,32 @@ void GameOverEvent::Update() {
 			Vector2{ static_cast<float>(Window::GetClientWidth()) +500.0f,
 				static_cast<float>(Window::GetClientHeight()) * 0.5f + kYOffset },
 			0.1f));
+
 		return;
 	} else {
 		retrySprite_->SetPosition(MY_Utility::SimpleEaseIn(
 			retrySprite_->GetPosition(),
-			Vector2{ static_cast<float>(Window::GetClientWidth()) * 0.5f - kXOffset,
+			Vector2{ static_cast<float>(Window::GetClientWidth()) * 0.45f - kXOffset,
 				static_cast<float>(Window::GetClientHeight()) * 0.5f + kYOffset },
 			0.1f));
 		backToTitleSprite_->SetPosition(MY_Utility::SimpleEaseIn(
 			backToTitleSprite_->GetPosition(),
-			Vector2{ static_cast<float>(Window::GetClientWidth()) * 0.5f + kXOffset,
-				static_cast<float>(Window::GetClientHeight()) * 0.5f + kYOffset },
+			Vector2{ static_cast<float>(Window::GetClientWidth()) * 0.45f - kXOffset,
+				static_cast<float>(Window::GetClientHeight()) * 0.5f + kYOffset *0.5f},
 			0.1f));
+
+		gameOverStringSprite_->SetPosition(MY_Utility::SimpleEaseIn(
+			gameOverStringSprite_->GetPosition(),
+			Vector2{ static_cast<float>(Window::GetClientWidth()) * 0.5f,
+				200.0f },
+			0.1f));
+		tips1Sprite_->SetPosition(MY_Utility::SimpleEaseIn(
+			tips1Sprite_->GetPosition(),
+			Vector2{ static_cast<float>(Window::GetClientWidth()) * 0.7f ,
+				450.0f },
+			0.1f));
+
+		gameOverStringSprite_->SetScale({ 1.0f + sinf(timer_) * 0.05f,1.0f + sinf(timer_) * 0.05f });
 	}
 
 	if (isGameOver_) {
@@ -75,10 +91,10 @@ void GameOverEvent::Update() {
 	}
 
 	KeyBindConfig& key = KeyBindConfig::Instance();
-	if (key.IsTrigger("MoveLeft")) {
+	if (key.IsTrigger("MoveBack")) {
 		isRetrySelected_ = true;
 	}
-	if (key.IsTrigger("MoveRight")) {
+	if (key.IsTrigger("MoveForward")) {
 		isRetrySelected_ = false;
 	}
 	if (key.IsTrigger("Shot")) {
