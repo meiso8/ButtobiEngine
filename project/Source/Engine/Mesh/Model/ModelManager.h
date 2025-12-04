@@ -15,10 +15,12 @@ public:
         ENEMY_BODY,
         ENEMY_WING_L,
         ENEMY_WING_R,
+        ENEMY_SLEEP,
 
         FLOOR,
         MELT_FLOOR,
         HARD_FLOOR,
+		EXPLOTION_FLOOR,
 
         HOUSE_FLOOR,
         HOUSE_WALL_L,
