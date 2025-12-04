@@ -121,8 +121,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     float32_t4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
     
 
-    
-    
+   
     //textureのα値ガ0.2以下の時にpixleを棄却
     if (textureColor.a <= 0.2)
     {
@@ -200,6 +199,6 @@ PixelShaderOutput main(VertexShaderOutput input)
     {
         discard;
     }
-    
+
     return output;
 }

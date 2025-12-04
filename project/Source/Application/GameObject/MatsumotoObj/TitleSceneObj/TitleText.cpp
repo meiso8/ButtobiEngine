@@ -13,8 +13,8 @@
 TitleText::TitleText() {
 	body_.Create();
 	body_.Initialize();
-	cubeMesh_ = std::make_unique<CubeMesh>();
-	cubeMesh_->Create();
+	//cubeMesh_ = std::make_unique<CubeMesh>();
+	//cubeMesh_->Create();
 	model_ = ModelManager::GetModel(ModelManager::ENEMY_SLEEP);
 	
 	body_.SetMesh(model_);
