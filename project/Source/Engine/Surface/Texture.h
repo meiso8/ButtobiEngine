@@ -42,6 +42,9 @@ public:
 		RESULT_CLEAR,
 		RESULT_GAMEOVER,
 
+        GAMEOVER_STRING,
+        GAMEOVER_TIPS_1,
+
         TEXTURES,
     };
     static void LoadAllTexture();

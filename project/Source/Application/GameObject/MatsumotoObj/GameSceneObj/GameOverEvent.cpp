@@ -14,6 +14,12 @@ GameOverEvent::GameOverEvent(FloorGamePlayer* player) {
 	backToTitleSprite_ = std::make_unique<Sprite>();
 	retrySprite_->Create(Texture::BUTTON_RETRY, { 0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f });
 	backToTitleSprite_->Create(Texture::BUTTON_BACK_TO_TITL, { 0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f });
+
+	gameOverStringSprite_ = std::make_unique<Sprite>();
+	gameOverStringSprite_->Create(Texture::GAMEOVER_STRING, { static_cast<float>(Window::GetClientWidth()) * 0.5f,100.0f }, { 1.0f,1.0f,1.0f,1.0f });
+
+	tips1Sprite_ = std::make_unique<Sprite>();
+	tips1Sprite_->Create(Texture::GAMEOVER_TIPS_1, { static_cast<float>(Window::GetClientWidth()) * 0.5f,300.0f }, { 1.0f,1.0f,1.0f,1.0f });
 }
 
 GameOverEvent::~GameOverEvent() {
@@ -27,7 +33,9 @@ void GameOverEvent::Initialize() {
 
 	retrySprite_->SetPosition({ -500.0f, static_cast<float>(Window::GetClientHeight()) * 0.5f+ kYOffset });
 	backToTitleSprite_->SetPosition({ static_cast<float>(Window::GetClientWidth()) + 500.0f, static_cast<float>(Window::GetClientHeight()) * 0.5f + kYOffset });
-
+	
+	gameOverStringSprite_->SetAnchorPoint({ 0.5f,0.5f });
+	tips1Sprite_->SetAnchorPoint({ 0.5f,0.5f });
 	retrySprite_->SetAnchorPoint({ 0.5f,0.5f });
 	backToTitleSprite_->SetAnchorPoint({ 0.5f,0.5f });
 }
@@ -87,11 +95,18 @@ void GameOverEvent::Update() {
 
 	retrySprite_->Update();
 	backToTitleSprite_->Update();
+	gameOverStringSprite_->Update();
+	tips1Sprite_->Update();
 }
 
 void GameOverEvent::Draw() {
 	retrySprite_->PreDraw();
 	backToTitleSprite_->PreDraw();
+	gameOverStringSprite_->PreDraw();
+	tips1Sprite_->PreDraw();
+
 	retrySprite_->Draw();
 	backToTitleSprite_->Draw();
+	gameOverStringSprite_->Draw();
+	tips1Sprite_->Draw();
 }

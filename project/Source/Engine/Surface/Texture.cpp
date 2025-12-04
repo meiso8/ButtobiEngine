@@ -39,6 +39,9 @@ void Texture::LoadAllTexture() {
 
 	handles[RESULT_CLEAR] = Load("Resource/Textures/GameClear.png");
 	handles[RESULT_GAMEOVER] = Load("Resource/Textures/GameOver.png");
+
+	handles[GAMEOVER_STRING] = Load("Resource/Textures/GameOverString.png");
+	handles[GAMEOVER_TIPS_1] = Load("Resource/Textures/Tips1.png");
 }
 
 uint32_t Texture::Load(const std::string& filePath)
