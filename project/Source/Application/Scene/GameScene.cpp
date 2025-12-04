@@ -78,12 +78,13 @@ GameScene::GameScene()
     enemyShotWaveManager_ = std::make_unique<EnemyShotWaveManager>(enemy_.get(), enemyShockWaveManager_.get(), floorGameFloorManager_.get());
 
     tree_ = std::make_unique<Tree>();
-
+    ground_ = std::make_unique<Ground>();
+    nest_ = std::make_unique<Nest>();
 #pragma endregion
 
     uiManager_ = std::make_unique<UIManager>(*enemy_->GetHpsPtr(), *floorGamePlayer_->GetHpsPtr());
 
-    emitterManager_ = std::make_unique<EmitterManager>(*floorGamePlayer_, *enemy_);
+    emitterManager_ = std::make_unique<EmitterManager>(*floorGamePlayer_, *enemy_,*enemyShockWaveManager_);
 }
 
 void GameScene::Initialize() {
@@ -121,7 +122,8 @@ void GameScene::Initialize() {
     enemyShotWaveManager_->Initialize();
 
     tree_->Initialize();
-
+    ground_->Init();
+    nest_->Init();
 #pragma endregion
     collisionManager_->ClearColliders();
 
@@ -146,6 +148,11 @@ void GameScene::Update() {
     }
 
 	if (gameOverEvent_->IsReqestedAction()) {
+        Sound::Stop(Sound::inGameBGM01);
+        Sound::Stop(Sound::inGameBGM02);
+        Sound::Stop(Sound::playerHP1BGM);
+        Sound::PlayBGM(Sound::resultBGM);
+
 		if (gameOverEvent_->IsRetrySelected()) {
 			Initialize();
 			
@@ -157,9 +164,23 @@ void GameScene::Update() {
     if (PauseScreen::isBackToTitle) {
         sceneChange_->SetState(SceneChange::kFadeIn, 30);
     }
+    if (floorGamePlayer_->GetHpsPtr()->hp <= 20.0f) {
+        Sound::Stop(Sound::inGameBGM01);
+        Sound::Stop(Sound::inGameBGM02);
+        Sound::PlayBGM(Sound::playerHP1BGM);
+    } else {
 
-    //仮に音声を鳴らす　全体のvolumeがあってオフセット分だけいじる
-    Sound::PlayBGM(Sound::BGM1, 0.0f);
+        Sound::Stop(Sound::resultBGM);
+
+        if (enemy_->GetCurrentState() != "Third") {
+            Sound::Stop(Sound::inGameBGM02);
+            Sound::PlayBGM(Sound::inGameBGM01);
+        } else {
+            Sound::Stop(Sound::inGameBGM01);
+            //仮に音声を鳴らす　全体のvolumeがあってオフセット分だけいじる
+            Sound::PlayBGM(Sound::inGameBGM02);
+        }
+    }
 
     if (!PauseScreen::isActive_) {
         UpdateCamera();
@@ -196,6 +217,8 @@ void GameScene::Draw() {
     enemyBombManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     enemyShockWaveManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     tree_->Draw(*currentCamera_);
+    ground_->Draw(*currentCamera_);
+    nest_->Draw(*currentCamera_);
 #pragma endregion
     //エミッター
     emitterManager_->Draw();
@@ -276,6 +299,8 @@ void GameScene::UpdateGameObject()
     enemyBombManager_->Update();
     enemyShockWaveManager_->Update();
     tree_->Update();
+    ground_->Update();
+    nest_->Update();
 
     // オブジェクト同士の干渉
     actionUI_->Update();
@@ -294,6 +319,7 @@ void GameScene::UpdateGameObject()
     floorPlayerStripTargetUI_->Update();
     floorActionManager_->Update();
     if (enemy_->isReqestClearFloor_) {
+        Sound::PlaySE(Sound::kFloorRespawn);
         floorGameFloorManager_->Initialize();
         enemy_->isReqestClearFloor_ = false;
     }

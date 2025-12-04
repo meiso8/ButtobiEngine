@@ -13,10 +13,11 @@
 TitleText::TitleText() {
 	body_.Create();
 	body_.Initialize();
-	cubeMesh_ = std::make_unique<CubeMesh>();
-	cubeMesh_->Create();
+	//cubeMesh_ = std::make_unique<CubeMesh>();
+	//cubeMesh_->Create();
 	
-	body_.SetMesh(cubeMesh_.get());
+	model_ = ModelManager::GetModel(ModelManager::EGG);
+	body_.SetMesh(model_);
 
 	body_.worldTransform_.translate_.y = 2.0f;
 	body_.worldTransform_.translate_.z = 12.0f;

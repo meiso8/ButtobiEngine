@@ -28,6 +28,8 @@
 #include "Enemy/EnemyShockWaveManager.h"
 #include "Enemy/EnemyShotWaveManager.h"
 #include"Tree/Tree.h"
+#include"Nest/Nest.h"
+#include"Ground.h"
 #pragma endregion
 
 #include"CollisionManager.h"
@@ -79,7 +81,8 @@ private:
     std::unique_ptr<EnemyShotWaveManager>enemyShotWaveManager_ = nullptr;
 
     std::unique_ptr<Tree>tree_ = nullptr;
-
+    std::unique_ptr<Ground> ground_ = nullptr;
+    std::unique_ptr<Nest> nest_ = nullptr;
 #pragma endregion
 
 #pragma region//UI

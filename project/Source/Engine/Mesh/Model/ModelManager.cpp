@@ -24,9 +24,17 @@ void ModelManager::LoadAllModel()
     LoadModel("Resource/Models/Enemy", "WingL.obj", ENEMY_WING_L);
     LoadModel("Resource/Models/Enemy", "WingR.obj", ENEMY_WING_R);
 
+    LoadModel("Resource/Models/Egg", "Egg.obj", EGG);
+    LoadModel("Resource/Models/BirdNest", "Nest.obj", NEST);
+    LoadModel("Resource/Models/FireBall", "FireBall.obj", FIRE_BALL);
+
+    LoadModel("Resource/Models/Ground", "Ground.obj", GROUND);
+
+    //床と床パーティクル
     LoadModel("Resource/Models/Floor", "Floor.obj", FLOOR);
     LoadModel("Resource/Models/MeltFloor", "MeltFloor.obj", MELT_FLOOR);
-	LoadModel("Resource/Models/HardFloor", "HardFloor.obj", HARD_FLOOR);
+	  LoadModel("Resource/Models/HardFloor", "HardFloor.obj", HARD_FLOOR);
+    LoadModel("Resource/Models/MeltFloorParticle", "MeltFloorParticle.obj", MELT_FLOOR_PARTICLE);
 
     //家
     LoadModel("Resource/Models/House", "Floor.obj", HOUSE_FLOOR);
@@ -46,7 +54,7 @@ void ModelManager::LoadAllModel()
     LoadModel("Resource/Models/Player", "Leg_R.obj", PLAYER_LEG_R);
     LoadModel("Resource/Models/Player", "PlayerModel.obj", PLAYER_MODEL);
 
-	LoadModel("Resource/Models/HealItem", "HealItem.obj", HEAL_ITEM);
+    LoadModel("Resource/Models/HealItem", "HealItem.obj", HEAL_ITEM);
 
 }
 
@@ -80,7 +88,7 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
 
     //追加したテクスチャデータのポインタ
     std::unique_ptr<Model> model = std::make_unique<Model>();
-   
+
     std::unique_ptr<ModelData> modelData = std::make_unique<ModelData>();
 
     Assimp::Importer importer;

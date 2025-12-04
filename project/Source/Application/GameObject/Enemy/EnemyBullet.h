@@ -26,7 +26,7 @@ public:
     float size_;
 private:
     void InitFlagAndPosAndTimer();
-    std::unique_ptr<CubeMesh>cubeMesh_ = nullptr;
+    Model* model_;
     Vector3 moveDir_;
     float moveSpeed_;
     float lifeTimer_;
