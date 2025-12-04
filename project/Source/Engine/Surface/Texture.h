@@ -30,6 +30,7 @@ public:
         WIND_ATTACK_PARTICLE02,
         LEAF_PARTICLE,
 
+        ENEMY_TEXTURE2,
 
         ACTION_UI_MOVE,
 		ACTION_UI_STRIP,

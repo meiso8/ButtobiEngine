@@ -99,7 +99,7 @@ private:
     std::unordered_map<std::string, std::function<void()>> SwitchRandomAttackPhase_;
 
     //モデル
-    Model* model_ = nullptr;
+    std::unordered_map< Parts,Model*> models_;
     //翼の位置
     Object3d wingLPos_;
     //翼の位置
