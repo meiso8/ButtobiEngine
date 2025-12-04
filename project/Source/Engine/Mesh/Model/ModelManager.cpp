@@ -26,6 +26,7 @@ void ModelManager::LoadAllModel()
 
     LoadModel("Resource/Models/Floor", "Floor.obj", FLOOR);
     LoadModel("Resource/Models/MeltFloor", "MeltFloor.obj", MELT_FLOOR);
+	LoadModel("Resource/Models/HardFloor", "HardFloor.obj", HARD_FLOOR);
 
     //家
     LoadModel("Resource/Models/House", "Floor.obj", HOUSE_FLOOR);

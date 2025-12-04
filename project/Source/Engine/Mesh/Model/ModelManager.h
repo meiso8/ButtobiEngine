@@ -18,6 +18,7 @@ public:
 
         FLOOR,
         MELT_FLOOR,
+        HARD_FLOOR,
 
         HOUSE_FLOOR,
         HOUSE_WALL_L,

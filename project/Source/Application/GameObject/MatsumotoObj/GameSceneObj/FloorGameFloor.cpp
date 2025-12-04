@@ -19,7 +19,7 @@ FloorGameFloor::FloorGameFloor() {
 	{
 	  { FloorType::Normal, ModelManager::GetModel(ModelManager::FLOOR)},
 	  { FloorType::Sticky, ModelManager::GetModel(ModelManager::MELT_FLOOR) },
-	  { FloorType::Strong, ModelManager::GetModel(ModelManager::FLOOR) },
+	  { FloorType::Strong, ModelManager::GetModel(ModelManager::HARD_FLOOR) },
 	  { FloorType::Bomb, ModelManager::GetModel(ModelManager::FLOOR) }
 	};
 
@@ -160,13 +160,13 @@ void FloorGameFloor::StickyFloorUpdate() {
 
 void FloorGameFloor::StrongFloorUpdate() {
 	body_.InitWaveData();
-	body_.SetColor({ 0.0f,1.0f - downColor_,0.0f,1.0f });
+	body_.SetColor({ 1.0f - downColor_,1.0f - downColor_,1.0f - downColor_,1.0f });
 }
 
 void FloorGameFloor::BombFloorUpdate() {
 	body_.InitWaveData();
 	float color = autoSwapTimer_ / autoSwapDuration_;
-	body_.SetColor({ color - downColor_,0.0f,0.0f,1.0f });
+	body_.SetColor({ color - downColor_,color - downColor_,color - downColor_,1.0f });
 
 	if (autoSwapTimer_ > 0.0f) {
 		autoSwapTimer_ -= 0.016f;

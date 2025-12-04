@@ -83,7 +83,7 @@ void GameOverEvent::Update() {
 				450.0f },
 			0.1f));
 
-		gameOverStringSprite_->SetScale({ 1.0f + sinf(timer_) * 0.05f,1.0f + sinf(timer_) * 0.05f });
+		gameOverStringSprite_->SetScale({ 2.0f + sinf(timer_) * 0.05f,2.0f + sinf(timer_) * 0.05f });
 	}
 
 	if (isGameOver_) {
