@@ -21,7 +21,7 @@ void EnemyShotWaveManager::Left(int& randX, int& randY)
     startPos_ = floorGameFloorManager_->GetFloorPos(0, randY);
     startPos_.x -= offset_;
     endPos_ = floorGameFloorManager_->GetFloorPos(randX, randY);
-    endPos_.x += offset_;
+    endPos_.x += endOffset_;
 }
 
 void EnemyShotWaveManager::Right(int& randX, int& randY)
@@ -31,7 +31,7 @@ void EnemyShotWaveManager::Right(int& randX, int& randY)
     startPos_ = floorGameFloorManager_->GetFloorPos(kMapWidth - 1, randY);
     startPos_.x += offset_;
     endPos_ = floorGameFloorManager_->GetFloorPos(randX, randY);
-    endPos_.x -= offset_;
+    endPos_.x -= endOffset_;
 }
 
 void EnemyShotWaveManager::Back(int& randX, int& randY)
@@ -41,7 +41,7 @@ void EnemyShotWaveManager::Back(int& randX, int& randY)
     startPos_ = floorGameFloorManager_->GetFloorPos(randX, kMapHeight - 1);
     startPos_.z += offsetBackStart_;
     endPos_ = floorGameFloorManager_->GetFloorPos(randX, randY);
-    endPos_.z -= offset_;
+    endPos_.z -= endOffset_;
 }
 
 

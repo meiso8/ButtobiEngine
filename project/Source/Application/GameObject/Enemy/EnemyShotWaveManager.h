@@ -44,6 +44,7 @@ private:
 	Vector3 startPos_ = { 0.0f };
 	Vector3 endPos_ = { 0.0f };
 	float offset_ = 4.0f;
+	float endOffset_ = 12.0f;
 	float offsetBackStart_ = 2.0f;
 	float enemyPosY_ = 1.0f;
 };
