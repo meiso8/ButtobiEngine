@@ -44,7 +44,7 @@ void EnemyShockWave::Initialize() {
     body_.Initialize();
     speed_ = 0.02f;
     lifeTimer_ = 0.0f;
-    lifeDuration_ = 6.5f;
+    lifeDuration_ = 7.0f;
     isActive_ = false;
     aabbType_ = kHorizontal;
     isEmit_ = false;

@@ -34,7 +34,7 @@ public:
     bool isEmit_ = false;
 private:
     float lifeTimer_;
-    const float kMoveTime_ = 5.5f;
+    const float kMoveTime_ = 5.0f;
     const float kAabbWidth_ = 0.4f;
     Vector3 endPos_ = { 0.0f };
     std::array<std::unique_ptr<CubeMesh>,kMaxAABB>cubeMesh_;
