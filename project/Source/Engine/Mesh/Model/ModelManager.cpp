@@ -23,6 +23,7 @@ void ModelManager::LoadAllModel()
     LoadModel("Resource/Models/Enemy", "Body.obj", ENEMY_BODY);
     LoadModel("Resource/Models/Enemy", "WingL.obj", ENEMY_WING_L);
     LoadModel("Resource/Models/Enemy", "WingR.obj", ENEMY_WING_R);
+	LoadModel("Resource/Models/EnemyHouse", "EnemyHouse.obj", ENEMY_SLEEP);
 
     LoadModel("Resource/Models/Egg", "Egg.obj", EGG);
     LoadModel("Resource/Models/BirdNest", "Nest.obj", NEST);
@@ -34,8 +35,8 @@ void ModelManager::LoadAllModel()
     LoadModel("Resource/Models/Floor", "Floor.obj", FLOOR);
     LoadModel("Resource/Models/MeltFloor", "MeltFloor.obj", MELT_FLOOR);
 	  LoadModel("Resource/Models/HardFloor", "HardFloor.obj", HARD_FLOOR);
+	  LoadModel("Resource/Models/ExplosionFloor", "ExplosionFloor.obj", EXPLOTION_FLOOR);
     LoadModel("Resource/Models/MeltFloorParticle", "MeltFloorParticle.obj", MELT_FLOOR_PARTICLE);
-
     //家
     LoadModel("Resource/Models/House", "Floor.obj", HOUSE_FLOOR);
     LoadModel("Resource/Models/House", "Wall_R.obj", HOUSE_WALL_R);

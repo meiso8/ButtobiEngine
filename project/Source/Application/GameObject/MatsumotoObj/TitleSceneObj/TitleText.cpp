@@ -13,10 +13,10 @@
 TitleText::TitleText() {
 	body_.Create();
 	body_.Initialize();
-	//cubeMesh_ = std::make_unique<CubeMesh>();
-	//cubeMesh_->Create();
+	cubeMesh_ = std::make_unique<CubeMesh>();
+	cubeMesh_->Create();
+	model_ = ModelManager::GetModel(ModelManager::ENEMY_SLEEP);
 	
-	model_ = ModelManager::GetModel(ModelManager::EGG);
 	body_.SetMesh(model_);
 
 	body_.worldTransform_.translate_.y = 2.0f;
@@ -50,7 +50,7 @@ void TitleText::Initialize() {
 	hitCount_ = 0;
 
 	body_.worldTransform_.translate_ = { 0.0f,2.0f,12.0f };
-	body_.worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
+	body_.worldTransform_.scale_ = { 5.0f,5.0f,5.0f };
 	body_.SetColor({ 1.0f,1.0f,1.0f,1.0f });
 	timer_ = 0.0f;
 	isBreak_ = false;
@@ -63,11 +63,11 @@ void TitleText::Update() {
 		return;
 	}
 
-	float hitScale = 1.0f + static_cast<float>(hitCount_) * 0.5f;
+	float hitScale = 5.0f + static_cast<float>(hitCount_) * 0.5f;
 	timer_ += 0.016f;
 	if (damageTimer_ > 0.0f) {
 		damageTimer_ -= 0.016f;
-		body_.worldTransform_.scale_ = MY_Utility::SimpleEaseIn(body_.worldTransform_.scale_, { hitScale * 0.5f,hitScale * 2.0f,hitScale * 0.5f }, 0.5f);
+		//body_.worldTransform_.scale_ = MY_Utility::SimpleEaseIn(body_.worldTransform_.scale_, { hitScale * 0.5f,hitScale * 2.0f,hitScale * 0.5f }, 0.5f);
 
 		if (MY_Utility::IsActiveForTimerSwitch(damageTimer_, 0.1f)) {
 			body_.SetColor({1.0f,0.0f,0.0f,1.0f});
@@ -83,7 +83,7 @@ void TitleText::Update() {
 	body_.worldTransform_.translate_.x = sinf(timer_ * (hitScale - 1.0f) * 10.0f) * 0.1f;
 
 	force_.Update();
-	body_.worldTransform_.rotate_.y += rotatePower_;
+	//body_.worldTransform_.rotate_.y += rotatePower_;
 	rotatePower_ *= 0.98f;
 	body_.worldTransform_.translate_ += force_.velocity;
 	if (body_.worldTransform_.translate_.y < 0.0f) {

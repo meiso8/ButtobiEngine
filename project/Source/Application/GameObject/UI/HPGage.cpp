@@ -10,7 +10,7 @@ HPGage::HPGage()
     sprites_.emplace(SpriteTypes::MaxHp, std::make_unique<Sprite>());
 
     sprites_[layer1]->Create(Texture::WHITE_1X1, { 640.0,64.0f }, {1.0f,0.0f,0.0f,1.0f});
-    sprites_[layer2]->Create(Texture::WHITE_1X1, { 640.0,64.0f }, { 1.0f,1.0f,0.0f,1.0f });
+    sprites_[layer2]->Create(Texture::WHITE_1X1, { 640.0,64.0f }, { 1.0f,1.0f,1.0f,1.0f });
     sprites_[MaxHp]->Create(Texture::WHITE_1X1, { 640.0,64.0f }, { 0.0f,0.0f,0.0f,0.5f });
 }
 
@@ -34,7 +34,7 @@ void HPGage::Initialize()
 
 void HPGage::Update()
 {
-    if (hps_->hp < preHP_) {
+    if (hps_->hp != preHP_) {
         preHP_ = hps_->hp;
         timer_ = 0.0f;
     }
@@ -50,6 +50,8 @@ void HPGage::Update()
     sprites_[layer1]->SetScale({preHPScale,1.0f });
    
     sprites_[layer2]->SetScale({ scale,1.0f });
+    sprites_[layer1]->SetColor({ 1.0f- (static_cast<float>(hps_->hp) / static_cast<float>(hps_->maxHp)) ,static_cast<float>(hps_->hp) / static_cast<float>(hps_->maxHp) ,0.0f,1.0f });
+
     preScale_ = scale;
 
     DebugUI::CheckSprite(*sprites_[layer1], "HPGage");
