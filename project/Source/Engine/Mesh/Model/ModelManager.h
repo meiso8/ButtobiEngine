@@ -16,6 +16,7 @@ public:
         ENEMY_WING_L,
         ENEMY_WING_R,
 
+        EGG,
         NEST,
         FIRE_BALL,
         GROUND,
