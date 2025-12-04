@@ -64,12 +64,12 @@ void GameOverEvent::Update() {
 		retrySprite_->SetPosition(MY_Utility::SimpleEaseIn(
 			retrySprite_->GetPosition(),
 			Vector2{ static_cast<float>(Window::GetClientWidth()) * 0.45f - kXOffset,
-				static_cast<float>(Window::GetClientHeight()) * 0.5f + kYOffset },
+				static_cast<float>(Window::GetClientHeight()) * 0.5f + kYOffset * 0.5f },
 			0.1f));
 		backToTitleSprite_->SetPosition(MY_Utility::SimpleEaseIn(
 			backToTitleSprite_->GetPosition(),
 			Vector2{ static_cast<float>(Window::GetClientWidth()) * 0.45f - kXOffset,
-				static_cast<float>(Window::GetClientHeight()) * 0.5f + kYOffset *0.5f},
+				static_cast<float>(Window::GetClientHeight()) * 0.5f + kYOffset},
 			0.1f));
 
 		gameOverStringSprite_->SetPosition(MY_Utility::SimpleEaseIn(
@@ -91,10 +91,10 @@ void GameOverEvent::Update() {
 	}
 
 	KeyBindConfig& key = KeyBindConfig::Instance();
-	if (key.IsTrigger("MoveBack")) {
+	if (key.IsTrigger("MoveForward")) {
 		isRetrySelected_ = true;
 	}
-	if (key.IsTrigger("MoveForward")) {
+	if (key.IsTrigger("MoveBack")) {
 		isRetrySelected_ = false;
 	}
 	if (key.IsTrigger("Shot")) {
