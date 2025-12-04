@@ -17,7 +17,7 @@ Nest::Nest() {
 void Nest::Init()
 {
     object3d_->Initialize();
-    object3d_->worldTransform_.scale_ = { 4.0f,4.0f,4.0f };
+    object3d_->worldTransform_.scale_ = { 6.0f,6.0f,6.0f };
     object3d_->worldTransform_.translate_.z = 8.0f;
     //model_->ResetTextureHandle();
 }
