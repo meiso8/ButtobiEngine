@@ -169,24 +169,26 @@ void EmitterManager::Update(Camera& camera)
 
     particleEmitters_[kPlayerHitEmitter]->Update(camera);
 
+    if (!enemy_->IsOverKill()) {
+        if (enemy_->IsHit()) {
+            particleEmitters_[kEnemyHitEmitter]->Emit();
 
-    if (enemy_->IsHit()) {
-        particleEmitters_[kEnemyHitEmitter]->Emit();
-
- /*       for (auto& grop : floorBulletEmitters_) {
-            if (grop.floorBullet->isActive_) {
-                if (grop.floorBullet->isHit_) {
-                    grop.emitter->Emit();
-                } else {
-                    grop.emitter->InitTimer();
-                }
-                grop.emitter->Update(camera);
-            }
-        }*/
+            /*       for (auto& grop : floorBulletEmitters_) {
+                       if (grop.floorBullet->isActive_) {
+                           if (grop.floorBullet->isHit_) {
+                               grop.emitter->Emit();
+                           } else {
+                               grop.emitter->InitTimer();
+                           }
+                           grop.emitter->Update(camera);
+                       }
+                   }*/
+            particleEmitters_[kEnemyHitEmitter]->Update(camera);
+        }
 
     }
 
-    particleEmitters_[kEnemyHitEmitter]->Update(camera);
+
 
     //if (!enemy_->IsOverKill()) {
 
