@@ -157,6 +157,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\Nest\Nest.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Ground.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\ExprostionParticle.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\ExprostionParticleEmitter.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\GameOverEvent.cpp" />
@@ -303,6 +305,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Lights\SpotLightManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\Nest\Nest.h" />
+    <ClInclude Include="Source\Application\GameObject\Ground.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\ExprostionParticle.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\ExprostionParticleEmitter.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\GameOverEvent.h" />

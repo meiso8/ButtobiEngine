@@ -12,18 +12,18 @@
 
 EnemyShockWave::EnemyShockWave() {
 
-    localAABBs_[kHorizontal] = {.min = {-2.0f,-0.5f,-kAabbWidth_},.max = {2.0f,0.5f,kAabbWidth_}};
+    localAABBs_[kHorizontal] = { .min = {-2.0f,-0.5f,-kAabbWidth_},.max = {2.0f,0.5f,kAabbWidth_} };
     localAABBs_[kVertical] = { .min = {-kAabbWidth_,-0.5f,-2.0f},.max = {kAabbWidth_,0.5f,2.0f} };
 
     body_.Create();
-    cubeMesh_ = std::make_unique<CubeMesh>();
-    cubeMesh_.get()->Create(Texture::WHITE_1X1);
-    //cubeMesh_->SetMinMax(localAABBs_[kHorizontal]);
-
-
+    //for (int i = 0; i < kMaxAABB; ++i) {
+    //    cubeMesh_[i] = std::make_unique<CubeMesh>();
+    //    cubeMesh_[i].get()->Create(Texture::WHITE_1X1);
+    //    cubeMesh_[i]->SetMinMax(localAABBs_[i]);
+    //}
 
     body_.SetColor({ 1.0f,0.5f,0.0f,1.0f });
-    body_.SetMesh(cubeMesh_.get());
+ /*   body_.SetMesh(cubeMesh_[kHorizontal].get());*/
 
 
     SetCollisionAttribute(kCollisionEnemyWave);
@@ -44,8 +44,10 @@ void EnemyShockWave::Initialize() {
     body_.Initialize();
     speed_ = 0.02f;
     lifeTimer_ = 0.0f;
-    lifeDuration_ = 6.0f;
+    lifeDuration_ = 7.0f;
     isActive_ = false;
+    aabbType_ = kHorizontal;
+    isEmit_ = false;
 }
 void EnemyShockWave::OnCollision(Collider* collider)
 {
@@ -54,22 +56,10 @@ void EnemyShockWave::OnCollision(Collider* collider)
         return;
     }
 
-    if (collider->GetCollisionAttribute() == kCollisionPlayerBullet) {
-        //デバック用
-        OnCollisionCollider();
-    }
-
-
     if (collider->GetCollisionAttribute() == kCollisionPlayer) {
         //デバック用
         OnCollisionCollider();
     }
-
-    if (collider->GetCollisionAttribute() == kCollisionFloor) {
-        //デバック用
-        //OnCollisionCollider();
-    }
-
 
 }
 Vector3 EnemyShockWave::GetWorldPosition() const
@@ -84,8 +74,10 @@ void EnemyShockWave::Update() {
         return;
     }
 
+    isEmit_ = false;
+
     body_.Update();
-    ColliderUpdate();
+    //ColliderUpdate();
 
 
     if (lifeTimer_ <= 0.0f) {
@@ -96,12 +88,19 @@ void EnemyShockWave::Update() {
         lifeTimer_ -= 0.016f;
     }
 
+    if (lifeTimer_ > 3.5f) {
+        isEmit_ = true;
+    }
 
 
-    float color = lifeTimer_ / lifeDuration_;
-    body_.SetColor({ color,color,color,1.0f });
+    //float color = lifeTimer_ / lifeDuration_;
+    //body_.SetColor({ color,color,color,1.0f });
 
     if (lifeTimer_ <= kMoveTime_) {
+        if (!isSound_) {
+            isSound_ = true;
+            Sound::PlaySE(Sound::kWindAttackShot);
+        }
         body_.worldTransform_.translate_ = Lerp(body_.worldTransform_.translate_, endPos_, speed_);
     }
 
@@ -112,19 +111,22 @@ void EnemyShockWave::Draw(Camera& camera, const LightMode& lightType) {
     if (!isActive_) {
         return;
     }
-    body_.SetLightMode(lightType);
-    body_.Draw(camera, kBlendModeNormal);
+    //body_.SetLightMode(lightType);
+    //body_.Draw(camera, kBlendModeNormal);
 
-    ColliderDraw(camera);
+    //ColliderDraw(camera);
 }
 
 
-void EnemyShockWave::Shot(const Vector3& startPos, const Vector3& endPos, const AABBType&aabbType) {
+void EnemyShockWave::Shot(const Vector3& startPos, const Vector3& endPos, const AABBType& aabbType) {
     body_.worldTransform_.translate_ = startPos;
     endPos_ = endPos;
     SetAABB(localAABBs_[aabbType]);
+    //body_.SetMesh(cubeMesh_[aabbType].get());
+    aabbType_ = aabbType;
     lifeTimer_ = lifeDuration_;
     isActive_ = true;
     body_.Update();
     ColliderUpdate();
+    isSound_ = false;
 }

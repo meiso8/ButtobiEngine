@@ -45,7 +45,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     scenes["Result"] = std::make_unique < ResultScene>();
 
     //最初の位置を保持
-	std::string startSceneName = "Game";
+	std::string startSceneName = "Title";
 	SceneManager* currentScene = scenes[startSceneName].get();
 	auto currentIt = scenes.find(startSceneName);
     currentScene->Initialize();
@@ -93,8 +93,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
         // エンジンの更新処理
         myEngine->Update();
-        //エスケープボタンを押したら終了
-        if (Input::IsTriggerKey(DIK_ESCAPE)) { break; }
 
 #ifdef _DEBUG
         // デバック用

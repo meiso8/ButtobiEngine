@@ -17,10 +17,17 @@ public:
         ENEMY_WING_R,
         ENEMY_SLEEP,
 
+        EGG,
+        NEST,
+        FIRE_BALL,
+        GROUND,
+
+
         FLOOR,
         MELT_FLOOR,
         HARD_FLOOR,
-		EXPLOTION_FLOOR,
+		    EXPLOTION_FLOOR,
+        MELT_FLOOR_PARTICLE,
 
         HOUSE_FLOOR,
         HOUSE_WALL_L,

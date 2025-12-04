@@ -88,6 +88,8 @@ TitleScene::~TitleScene()
 
 void TitleScene::Initialize()
 {
+
+    Sound::StopAllSound();
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 60);
 
@@ -190,11 +192,21 @@ void TitleScene::UpdateCamera() {
 }
 
 void TitleScene::UpdateGameObject() {
+
+
+    
+
+
+
     // オブジェクト個人の更新
     if (titleText_->GetIsBreak()) {
+        Sound::Stop(Sound::titleBGM);
+        Sound::PlayBGM(Sound::inGameBGM01);
         bossDummy_->Update();
 		actionUI_->isHide_ = true;
     } else {
+    /*    Sound::Stop(Sound::inGameBGM01);*/
+        Sound::PlayBGM(Sound::titleBGM);
         floorGamePlayer_->Update();
         floorGameFloorManager_->Update();
         floorBulletManager_->Update();

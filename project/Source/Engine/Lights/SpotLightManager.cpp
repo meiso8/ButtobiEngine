@@ -14,7 +14,7 @@ void SpotLightManager::Create()
     //デフォルト値はとりあえず以下のようにしておく   
     spotLightData_->color = { 1.0f,230.0f / 255.0f,200.0f / 255.0f,1.0f };
     spotLightData_->position = { 0.0f,0.0f,0.0f };//位置
-    spotLightData_->intensity = { 2.0f };//輝度
+    spotLightData_->intensity = { 0.0f };//輝度
     spotLightData_->direction = { 0.0f,0.0f,1.0f };//スポットライトの方向
     spotLightData_->distance = { 1.0f };//ライトの届く範囲
     spotLightData_->decay = 0.1f;

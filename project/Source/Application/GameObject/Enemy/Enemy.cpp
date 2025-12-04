@@ -53,15 +53,17 @@ Enemy::Enemy()
     wingRPos_.Create();
 
     //体のモデルを取得する
-    model_ = ModelManager::GetModel(ModelManager::ENEMY_BODY);
+    models_[BODY] = ModelManager::GetModel(ModelManager::ENEMY_BODY);
+    models_[WING_L] = ModelManager::GetModel(ModelManager::ENEMY_WING_L);
+    models_[WING_R] = ModelManager::GetModel(ModelManager::ENEMY_WING_R);
     bodyPos_.GetWaveData(0).direction = { 0.0f,0.0f,1.0f };
     bodyPos_.GetWaveData(0).amplitude = 0.05f;
     bodyPos_.GetWaveData(0).frequency = 8.0f;
 
     //各々のトランスフォームにメッシュを入れる
-    bodyPos_.SetMesh(model_);
-    wingLPos_.SetMesh(ModelManager::GetModel(ModelManager::ENEMY_WING_L));
-    wingRPos_.SetMesh(ModelManager::GetModel(ModelManager::ENEMY_WING_R));
+    bodyPos_.SetMesh(models_[BODY]);
+    wingLPos_.SetMesh(models_[WING_L]);
+    wingRPos_.SetMesh(models_[WING_R]);
     //体の位置にペアレント化する
     wingLPos_.worldTransform_.Parent(bodyPos_.worldTransform_);
     wingRPos_.worldTransform_.Parent(bodyPos_.worldTransform_);
@@ -77,7 +79,7 @@ void Enemy::Init() {
     isShot_ = false;
     isBombShot_ = false;
     isWaveShot_ = false;
-    isReqestClearFloor_ = false;
+
     isAttack_ = false;
     isPreAttack_ = false;
     isFeint_ = false;
@@ -100,6 +102,11 @@ void Enemy::Init() {
     wingRPos_.worldTransform_.translate_.x = 1.0f;
     wingLPos_.worldTransform_.translate_.y = 0.3f;
     wingRPos_.worldTransform_.translate_.y = 0.3f;
+
+    for (auto& [type, model] : models_) {
+        model->ResetTextureHandle();
+    }
+
 
     //球面座標系
     sphericalPos_ = { .radius = 0.0f,.azimuthal = 0.0f ,.polar = 0.0f };
@@ -160,7 +167,7 @@ void Enemy::Draw(Camera& camera, const LightMode& lightMode)
 void Enemy::Update()
 {
     if (IsOverKill()) {
-		return;
+        return;
     }
 
     // とりあえずフェーズが最大になったら処理を終える  
@@ -278,9 +285,9 @@ void Enemy::OnCollision(Collider* collider)
     //デバック用
     OnCollisionCollider();
     if (isFaseChange_) {
-		// フェーズチェンジ中はHP2/3以下のダメージを受け付けない
+        // フェーズチェンジ中はHP2/3以下のダメージを受け付けない
         if ((damageStruct_.hps.maxHp / 3) * 2 >= damageStruct_.hps.hp) {
-			return;
+            return;
         }
     }
 
@@ -291,7 +298,7 @@ void Enemy::OnCollision(Collider* collider)
         }
 
         damageStruct_.isHit = true;
-        Sound::PlaySE(Sound::DEFEAT_BOSS);
+        Sound::PlaySE(Sound::kDefeatBoss);
 
         VibrateManager::SetTime(0.5f, 2000, 2000);
 
@@ -317,14 +324,14 @@ void Enemy::LeathalMoveUpdate() {
     if (!isLeathalVec_) {
         isLeathalVec_ = true;
         velocity_ = { 5.0f,30.0f,350.0f };
-		
+
     }
 
-	velocity_.y -= 9.8f * 0.016f;
+    velocity_.y -= 9.8f * 0.016f;
     bodyPos_.worldTransform_.translate_ += velocity_ * 0.016f;
     velocity_ *= 0.98f;
 
-	bodyPos_.worldTransform_.rotate_.x += 0.3f;
+    bodyPos_.worldTransform_.rotate_.x += 0.3f;
     bodyPos_.worldTransform_.rotate_.y += 0.2f;
     bodyPos_.worldTransform_.rotate_.z += 0.1f;
 
@@ -358,10 +365,10 @@ void Enemy::Tackle()
         PoyoPoyo(kTacklePoyoTime_);
 
     } else if (phaseTimer_ <= kTackleInterval_) {
-    
-    }else if (phaseTimer_ <= kTackleGoPlayerTime_) {
 
-        float localTimer = (phaseTimer_ - kTacklePoyoTime_) / (kTackleGoPlayerTime_ - kTacklePoyoTime_);
+    } else if (phaseTimer_ <= kTackleGoPlayerTime_) {
+
+        float localTimer = (phaseTimer_ - kTackleInterval_) / (kTackleGoPlayerTime_ - kTackleInterval_);
 
         if (localTimer > 0.1f) {
             if (isFeint_) {
@@ -373,11 +380,13 @@ void Enemy::Tackle()
 
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(startPos_, endPos_, localTimer);
 
-        if (Dot(*playerLookDir_, endPos_ - startPos_) < 0.0f) {
-            if (damageStruct_.isHit) {
-                Sound::PlayOriginSE(Sound::BOSS_TACKLE);
-                VibrateManager::SetTime(1.0f, 2000, 2000);
-                SetPhase(KNOCKBACK);
+        if (!isFeint_) {
+            if (Dot(*playerLookDir_, endPos_ - startPos_) < 0.0f) {
+                if (damageStruct_.isHit) {
+                    Sound::PlayOriginSE(Sound::kBossTackle);
+                    VibrateManager::SetTime(1.0f, 2000, 2000);
+                    SetPhase(KNOCKBACK);
+                }
             }
         }
 
@@ -458,7 +467,7 @@ void Enemy::LerpSquarePos()
     } else if (phaseTimer_ <= kLerpSquareTime_) {
         LerpPos({ 0.0f,kLerpSquareEndPosY_,6.0f }, 0.1f);
     } else {
-		isFaseChange_ = false;
+        isFaseChange_ = false;
         SetPhase(SQUARE);
     }
 
@@ -511,12 +520,17 @@ void Enemy::SwitchState()
 
     if (currentState_ == "First") {
         currentState_ = "Second";
-		isFaseChange_ = true;
+        isFaseChange_ = true;
     } else if (currentState_ == "Second") {
         currentState_ = "Third";
-		isFaseChange_ = true;
+        isFaseChange_ = true;
+
+        for (auto& [type, model] : models_) {
+            model->SetTextureHandle(Texture::ENEMY_TEXTURE2);
+        }
     } else if (currentState_ == "Third") {
         damageStruct_.isDead = true;
+
     }
 
     //回転を初期化
@@ -524,6 +538,7 @@ void Enemy::SwitchState()
 
     if (damageStruct_.isDead) {
         if (phase_ != EXIT) {
+            Sound::PlaySE(Sound::kBossDamage02);
             SetPhase(EXIT);
         }
 
@@ -532,7 +547,7 @@ void Enemy::SwitchState()
 
     isReqestClearFloor_ = true;
 
-    Sound::PlaySE(Sound::BOSS_HEAL);
+    Sound::PlaySE(Sound::kBossHeal);
     SetPhase(LERP_SQUARE_POS);
 
     InitState();
@@ -750,7 +765,7 @@ void Enemy::RotateY(const float& timer)
 
 void Enemy::SpinBody()
 {
-    Sound::PlayOriginSE(Sound::STUN);
+    Sound::PlayOriginSE(Sound::kStun);
 
     float localTimer = (phaseTimer_ - 0.125f) / (0.75f - 0.125f);
     float theta = PI * 3.0f * localTimer; // 回転の速さを調整

@@ -25,6 +25,7 @@ public:
     void Init();
     void Draw(Camera& camera, const LightMode& lightMode);
     void Update();
+    std::string GetCurrentState() { return currentState_; };
     //コライダーのオーバーライド
     Vector3 GetWorldPosition()const override;
     void OnCollision(Collider* collder)override;
@@ -57,17 +58,6 @@ public:
 	bool isFaseChange_ = false;
     //体の位置
     Object3d bodyPos_;
-    //弾と当たったかどうかを得る
-    bool IsHit() { return damageStruct_.isHit; }
-    bool IsDead() { return damageStruct_.isDead; }
-    //HPを得る
-    HPs* GetHpsPtr() { return &damageStruct_.hps; }
-    bool IsOverKill() { return(overKillCount >= kMaxOverKillCount); }
-private:
-
-    // 死亡時のぶっ飛び
-    bool isLeathalVec_;
-
     enum PHASE {
         //攻撃
         TACKLE,
@@ -88,17 +78,31 @@ private:
         EXIT,
         MAX_PHASE
     };
+    PHASE phase_ = PHASE::ROUND;
+
+    //弾と当たったかどうかを得る
+    bool IsHit() { return damageStruct_.isHit; }
+    bool IsDead() { return damageStruct_.isDead; }
+    //HPを得る
+    HPs* GetHpsPtr() { return &damageStruct_.hps; }
+    bool IsOverKill() { return(overKillCount >= kMaxOverKillCount); }
+private:
+
+    // 死亡時のぶっ飛び
+    bool isLeathalVec_;
+
+
 
     //メンバ関数ポインタテーブル
     std::unordered_map<PHASE, std::function<void()>> UpdateActions_;
-    PHASE phase_ = PHASE::ROUND;
+
 
     std::string currentState_ = "First";
     //メンバ関数ポインタテーブル　ランダムアクションに切り替わる
     std::unordered_map<std::string, std::function<void()>> SwitchRandomAttackPhase_;
 
     //モデル
-    Model* model_ = nullptr;
+    std::unordered_map< Parts,Model*> models_;
     //翼の位置
     Object3d wingLPos_;
     //翼の位置
@@ -156,7 +160,7 @@ private:
     //タックル終了後初期地点に戻るタイム
     const float kTackleInitStartTime_ = kTackleGoPlayerTime_ + 1.0f;
     //タックル終了後　後隙
-    const float kTackleEndingLagTime_ = kTackleInitStartTime_ + 1.0f;
+    const float kTackleEndingLagTime_ = kTackleInitStartTime_ + 0.5f;
 #pragma endregion
 
 #pragma region//Hit Back
@@ -166,9 +170,9 @@ private:
     const float kPlayerHitBackTime_ = 2.0f;
     
     //KnockBack中初期地点に戻るタイム
-    const float kKnockBackSpinTime_ = 0.75f;
+    const float kKnockBackSpinTime_ = 1.0f;
     //KnockBack最大タイム
-    const float kKnockBackMaxTime_ = 2.0f;
+    const float kKnockBackMaxTime_ = 3.5f;
 #pragma endregion
 
 #pragma region //ファイアボール
@@ -179,7 +183,7 @@ private:
     //一回転する時間
     const float kFireBallRotateTime_ = 1.0f;
     //ファイアボール最大タイム　ここは後隙を含めた値にする
-    const float kFireBallPhaseMaxTime_ = 8.0f;
+    const float kFireBallPhaseMaxTime_ = 8.5f;
 #pragma endregion
 
 #pragma region //床攻撃
@@ -188,7 +192,7 @@ private:
     //ボムを投げる時間
     const float kFloorBombShotTime_ = kFloorAttackPosMoveTime_ + 0.5f;
     //ボム爆発まで待つ時間
-    const float kFloorBombWaitTime_ = 9.0f;
+    const float kFloorBombWaitTime_ = 11.0f;
     //ボム爆発後隙
     const float kFloorAttackEndingLagTime_ = kFloorBombWaitTime_ + 1.0f;
 #pragma endregion
@@ -205,7 +209,7 @@ private:
     //四角移動の初期地点の移動時間
     const float kLerpSquareInitPosTime_ = 1.0f;
     //四角移動に移行する際のタイム
-    const float kLerpSquareTime_ = 2.0f;
+    const float kLerpSquareTime_ = 1.5f;
 
     const float kLerpSquareStartPosY_ = 4.0f + kRadius_;
     const float kLerpSquareEndPosY_ = 1.0f + kRadius_ * 2.0f;

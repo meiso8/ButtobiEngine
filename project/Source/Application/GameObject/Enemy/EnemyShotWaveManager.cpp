@@ -5,7 +5,7 @@
 #include"MatsumotoObj/GameSceneObj/FloorGameFloorManager.h"
 
 #include"Sound.h"
-
+EnemyShotWaveManager::Direction EnemyShotWaveManager::direction_ = EnemyShotWaveManager::Direction::LEFT;
 //テーブルにポインタを入れるために別途定義が必要　static
 void(EnemyShotWaveManager::* EnemyShotWaveManager::spFuncTable[])(int& randX, int& randY) {
     &EnemyShotWaveManager::Left,
@@ -21,7 +21,7 @@ void EnemyShotWaveManager::Left(int& randX, int& randY)
     startPos_ = floorGameFloorManager_->GetFloorPos(0, randY);
     startPos_.x -= offset_;
     endPos_ = floorGameFloorManager_->GetFloorPos(randX, randY);
-    endPos_.x += offset_;
+    endPos_.x += endOffset_;
 }
 
 void EnemyShotWaveManager::Right(int& randX, int& randY)
@@ -31,7 +31,7 @@ void EnemyShotWaveManager::Right(int& randX, int& randY)
     startPos_ = floorGameFloorManager_->GetFloorPos(kMapWidth - 1, randY);
     startPos_.x += offset_;
     endPos_ = floorGameFloorManager_->GetFloorPos(randX, randY);
-    endPos_.x -= offset_;
+    endPos_.x -= endOffset_;
 }
 
 void EnemyShotWaveManager::Back(int& randX, int& randY)
@@ -41,7 +41,7 @@ void EnemyShotWaveManager::Back(int& randX, int& randY)
     startPos_ = floorGameFloorManager_->GetFloorPos(randX, kMapHeight - 1);
     startPos_.z += offsetBackStart_;
     endPos_ = floorGameFloorManager_->GetFloorPos(randX, randY);
-    endPos_.z -= offset_;
+    endPos_.z -= endOffset_;
 }
 
 
@@ -73,7 +73,7 @@ void EnemyShotWaveManager::Update() {
     // 弾投げ
     if (enemy_->isWaveShot_) {
         
-        Sound::PlayOriginSE(Sound::DEFEAT_BOSS);
+        Sound::PlayOriginSE(Sound::kWindAttackCharge);
 
         for (auto& wave : shockWaveManager_->GetWaves()) {
 
@@ -90,6 +90,7 @@ void EnemyShotWaveManager::Update() {
 
             startPos_.y += 1.0f;
             endPos_.y += 1.0f;
+
 
             if (direction_ != BACK) {
                 shockWaveManager_->ShotWave(startPos_, endPos_, EnemyShockWave::kHorizontal);

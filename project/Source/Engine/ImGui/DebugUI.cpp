@@ -449,7 +449,8 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter, const char* label)
         emitter.movement = static_cast<ParticleMovements>(movement);
         ImGui::SliderFloat("radius", &emitter.radius, 0.1f, 10.0f);
         ImGui::SliderFloat("lifeTime", &emitter.lifeTime, -1.0f, 50.0f);
-        ImGui::SliderFloat("translateOffset", &emitter.translateOffset_, 0.0f, 20.0f);
+        ImGui::SliderFloat3("translateMin", &emitter.translateAABB_.min.x, -20.0f, 0.0f);
+        ImGui::SliderFloat3("translateMax", &emitter.translateAABB_.max.x, 0.0f, 20.0f);
         ImGui::SliderFloat("rotateOffset", &emitter.rotateOffset_, 0.0f, 20.0f);
         ImGui::SliderFloat("scaleOffset", &emitter.scaleOffset_, 0.0f, 20.0f);
         CheckBlendMode(emitter.blendMode);
@@ -618,8 +619,8 @@ void DebugUI::CheckSound()
         // 正規化済みのモノラル波形バッファ
         if (ImGui::TreeNode("ShowOscilloscope")) {
             static int writeIdx = 0;
-            std::vector<float> waveform = Sound::GetWaveform(Sound::BGM1);
-            writeIdx = (int)(Sound::GetSamplesPlayed(Sound::BGM1) % waveform.size());
+            std::vector<float> waveform = Sound::GetWaveform(Sound::resultBGM);
+            writeIdx = (int)(Sound::GetSamplesPlayed(Sound::resultBGM) % waveform.size());
 
             float scale = Sound::bgmVolume_; // 0.0〜1.0
 

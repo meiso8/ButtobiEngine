@@ -9,11 +9,10 @@
 #include"CollisionConfig.h"
 
 EnemyBullet::EnemyBullet() {
+
     body_.Create();
-    cubeMesh_ = std::make_unique<CubeMesh>();
-    cubeMesh_.get()->Create(Texture::WHITE_1X1);
-    body_.SetColor({ 0.0f,1.0f,0.0f,1.0f });
-    body_.SetMesh(cubeMesh_.get());
+    model_ = ModelManager::GetModel(ModelManager::FIRE_BALL);
+    body_.SetMesh(model_);
 
     SetRadius(0.5f);
     SetCollisionAttribute(kCollisionEnemyBullet);
