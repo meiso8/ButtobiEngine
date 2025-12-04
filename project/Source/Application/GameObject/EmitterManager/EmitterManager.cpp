@@ -1,14 +1,14 @@
 #include "EmitterManager.h"
 #include"DebugUI.h"
 #include"../MatsumotoObj/GameSceneObj/FloorGamePlayer.h"
+#include"../MatsumotoObj/GameSceneObj/FloorBulletManager.h"
 #include"Enemy/Enemy.h"
 //#include"Enemy/EnemyBombManager.h"
 #include"Input.h"
 #include"Enemy/EnemyShockWaveManager.h"
 #include"Enemy/EnemyShotWaveManager.h"
 
-
-EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShockWaveManager& enemyShockWaveManager) :player_(&player), enemy_(&enemy), enemyShockWaveManager_(&enemyShockWaveManager)
+EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShockWaveManager& enemyShockWaveManager, FloorBulletManager& floorBulletManager) :player_(&player), enemy_(&enemy), enemyShockWaveManager_(&enemyShockWaveManager), floorBulletManager_(&floorBulletManager)
 {
 
     for (auto& particleEmitter : particleEmitters_) {
@@ -24,8 +24,8 @@ EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShock
     particleEmitters_[kEnemyHitEmitter]->SetName("enemyHitParticle");
     particleEmitters_[kEnemyHitEmitter]->emitter_.transform.Parent(enemy_->bodyPos_.worldTransform_);
 
-    particleEmitters_[kEnemyWingEmitter]->SetName("enemyWingParticle");
-    particleEmitters_[kEnemyWingEmitter]->emitter_.transform.Parent(enemy_->bodyPos_.worldTransform_);
+    //particleEmitters_[kEnemyWingEmitter]->SetName("enemyWingParticle");
+    //particleEmitters_[kEnemyWingEmitter]->emitter_.transform.Parent(enemy_->bodyPos_.worldTransform_);
 
 
     for (auto& wave : enemyShockWaveManager_->GetWaves()) {
@@ -70,6 +70,24 @@ EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShock
     }
 
 
+    //for (auto& floorBullet : floorBulletManager.GetBullets()) {
+    //    std::unique_ptr<ParticleEmitter> newEmitter = std::make_unique<ParticleEmitter>();
+    //    newEmitter->SetName("floorParticle");
+    //    newEmitter->emitter_.transform.Parent(floorBullet->body_.worldTransform_);
+    //    newEmitter->emitter_.scaleOffset_ = { 0.2f };
+    //    newEmitter->emitter_.movement = kParticleNormal;
+    //    newEmitter->emitter_.translateAABB_ = { .min{-1.0f,-1.0f,-1.0f},.max{1.0f,1.0f,1.0f} };
+    //    newEmitter->emitter_.radius = 1.0f;
+    //    newEmitter->emitter_.radiusSpeed = 0.0f;
+    //    newEmitter->emitter_.polarSpeed = 0.0f;
+    //    newEmitter->emitter_.velocityMinMax = { -1.0f,1.0f };
+    //    newEmitter->emitter_.rotateOffset_ = { 0.1f };
+    //    newEmitter->emitter_.frequency = 0.6f;
+    //    newEmitter->emitter_.lifeTime = 2.5f;
+    //    newEmitter->emitter_.count = 3;
+    //    floorBulletEmitters_.push_back({ floorBullet.get(), std::move(newEmitter) });
+    //}
+
     for (auto& particleEmitter : particleEmitters_) {
         particleEmitter->Initialize();
     }
@@ -98,7 +116,7 @@ EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShock
     particleEmitters_[kPlayerHitEmitter]->emitter_.transform.translate_.y = 0.75f;
     particleEmitters_[kPlayerHitEmitter]->emitter_.translateAABB_ = { 0.0f };
     particleEmitters_[kPlayerHitEmitter]->emitter_.transform.scale_ = { 0.5f,0.5f,0.5f };
-    particleEmitters_[kPlayerHitEmitter]->emitter_.count = 1;
+    particleEmitters_[kPlayerHitEmitter]->emitter_.count = 3;
     particleEmitters_[kPlayerHitEmitter]->emitter_.movement = ParticleMovements::kParticleSphere;
     particleEmitters_[kPlayerHitEmitter]->emitter_.radius = 0.5f;
     particleEmitters_[kPlayerHitEmitter]->emitter_.radiusSpeed = 0.0f;
@@ -108,17 +126,6 @@ EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShock
     particleEmitters_[kPlayerHitEmitter]->emitter_.frequency = 0.25f;
     particleEmitters_[kPlayerHitEmitter]->emitter_.lifeTime = 1.0f;
     particleEmitters_[kPlayerHitEmitter]->emitter_.blendMode = kBlendModeNormal;
-
-    //for (auto& wave : enemyShockWaveManager_->GetWaves()) {
-    //    std::unique_ptr<ParticleEmitter> newEmitter = std::make_unique<ParticleEmitter>();
-    //    newEmitter->SetName("leafParticle");
-    //    newEmitter->emitter_.movement = kParticleSphere;
-    //    newEmitter->emitter_.transform.Parent(wave->body_.worldTransform_);
-    //    newEmitter->emitter_.translateAABB_ = wave->localAABBs_[EnemyShockWave::AABBType::kHorizontal];
-    //    newEmitter->emitter_.polarSpeed = InverseFPS * std::numbers::pi_v<float>;
-    //    newEmitter->emitter_.radiusSpeed = 0.0f;
-    //    waveEmitters_.push_back({ wave.get(), std::move(newEmitter) });
-    //}
 
 }
 
@@ -133,6 +140,11 @@ void EmitterManager::Initialize()
         grop.emitter->InitTimer();
     }
 
+
+  /*  for (auto& grop : floorBulletEmitters_) {
+        grop.emitter->InitTimer();
+    }*/
+
 }
 
 void EmitterManager::Update(Camera& camera)
@@ -144,46 +156,70 @@ void EmitterManager::Update(Camera& camera)
         } else {
             particleEmitters_[kPlayerWalkEmitter]->InitTimer();
         }
-    }
+        particleEmitters_[kPlayerWalkEmitter]->Update(camera);
 
-
-    if (player_->IsHit()) {
-        particleEmitters_[kPlayerHitEmitter]->UpdateTimer();
+        if (player_->IsHit()) {
+            particleEmitters_[kPlayerHitEmitter]->UpdateTimer();
+        } else {
+            particleEmitters_[kPlayerHitEmitter]->InitTimer();
+        }
     } else {
-        particleEmitters_[kPlayerHitEmitter]->InitTimer();
+        particleEmitters_[kPlayerHitEmitter]->UpdateTimer();
     }
+
+    particleEmitters_[kPlayerHitEmitter]->Update(camera);
+
 
     if (enemy_->IsHit()) {
         particleEmitters_[kEnemyHitEmitter]->Emit();
-    }
 
-    for (auto& particleEmitter : particleEmitters_) {
-        particleEmitter->Update(camera);
-    }
-
-    auto& waveItr = enemyShockWaveManager_->GetWaves();
-
-    for (auto& grop : waveEmitters_) {
-
-        if (grop.wave->isActive_) {
-            if (grop.wave->isEmit_) {
-                grop.emitter->emitter_.translateAABB_ = grop.wave->localAABBs_[grop.wave->aabbType_];
-                grop.emitter->UpdateTimer();
+ /*       for (auto& grop : floorBulletEmitters_) {
+            if (grop.floorBullet->isActive_) {
+                if (grop.floorBullet->isHit_) {
+                    grop.emitter->Emit();
+                } else {
+                    grop.emitter->InitTimer();
+                }
                 grop.emitter->Update(camera);
-            } else {
-                grop.emitter->InitTimer();
             }
+        }*/
 
+    }
+
+    particleEmitters_[kEnemyHitEmitter]->Update(camera);
+
+    //if (!enemy_->IsOverKill()) {
+
+    //  
+    //
+    //}
+
+    if (enemy_->phase_ == Enemy::SHOCKWAVEATTACK) {
+        for (auto& grop : waveEmitters_) {
+            if (grop.wave->isActive_) {
+                if (grop.wave->isEmit_) {
+                    grop.emitter->emitter_.translateAABB_ = grop.wave->localAABBs_[grop.wave->aabbType_];
+                    grop.emitter->UpdateTimer();
+                    grop.emitter->Update(camera);
+                } else {
+                    grop.emitter->InitTimer();
+                }
+            }
         }
-
     }
 }
 
 void EmitterManager::Draw()
 {
-    for (auto& grop : waveEmitters_) {
-        grop.emitter->Draw();
+    if (enemy_->phase_ == Enemy::SHOCKWAVEATTACK) {
+        for (auto& grop : waveEmitters_) {
+            grop.emitter->Draw();
+        }
     }
+
+    //for (auto& grop : floorBulletEmitters_) {
+    //    grop.emitter->Draw();
+    //}
 
     for (auto& particleEmitter : particleEmitters_) {
         particleEmitter->Draw();

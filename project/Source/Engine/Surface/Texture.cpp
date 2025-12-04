@@ -26,6 +26,7 @@ void Texture::LoadAllTexture() {
     handles[WIND_ATTACK_PARTICLE01] = Load("Resource/Textures/WindAttackParticle01.png");
     handles[WIND_ATTACK_PARTICLE02] = Load("Resource/Textures/WindAttackParticle02.png");
     handles[LEAF_PARTICLE] = Load("Resource/Textures/LeafParticle.png");
+    handles[FLOOR_PARTICLE] = Load("Resource/Textures/FloorParticle.png");
     handles[ENEMY_TEXTURE2] = Load("Resource/Models/Enemy/Enemy02.png");
 
 	handles[ACTION_UI_MOVE] = Load("Resource/Textures/ActionUI_Move_Pop.png");
