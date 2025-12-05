@@ -10,7 +10,7 @@ bool LightingManager::isPointLightOn_ = false;
 void LightingManager::Initialize()
 {
     DirectionalLightManager::GetDirectionalLightData()->direction = { 0.0f,-1.0f,0.0f };
-    DirectionalLightManager::GetDirectionalLightData()->intensity = -1.0f;
+    DirectionalLightManager::GetDirectionalLightData()->intensity = 0.0f;
 
     PointLightManager::GetPointLightData(0).color = { 160.0f / 255.0f,1.0f,1.0f,1.0f };
     PointLightManager::GetPointLightData(0).intensity = 3.3f;

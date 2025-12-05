@@ -342,16 +342,20 @@ void DebugUI::CheckSprite(Sprite& sprite, const char* label) {
 
 void DebugUI::ShowMatrix4x4(const Matrix4x4& matrix, const char* label) {
 #ifdef USE_IMGUI
-    if (ImGui::BeginTable(label, 4, ImGuiTableFlags_Borders)) {
-        for (uint32_t row = 0; row < 4; ++row) {
-            ImGui::TableNextRow();
-            for (uint32_t col = 0; col < 4; ++col) {
-                ImGui::TableSetColumnIndex(col);
-                ImGui::Text("%.3f", matrix.m[row][col]);
+    if (ImGui::TreeNode(label)) {
+        if (ImGui::BeginTable(label, 4, ImGuiTableFlags_Borders)) {
+            for (uint32_t row = 0; row < 4; ++row) {
+                ImGui::TableNextRow();
+                for (uint32_t col = 0; col < 4; ++col) {
+                    ImGui::TableSetColumnIndex(col);
+                    ImGui::Text("%.3f", matrix.m[row][col]);
+                }
             }
+            ImGui::EndTable();
         }
-        ImGui::EndTable();
+        ImGui::TreePop();
     }
+ 
 #endif
 }
 
