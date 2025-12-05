@@ -91,5 +91,7 @@ private:
     std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
     std::unique_ptr<EmitterManager>emitterManager_ = nullptr;
 
+    float bgmMaxVol_ = 0.375f;
+
 	float gameclearTimer_ = 0.0f;
 };

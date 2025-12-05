@@ -44,6 +44,7 @@
 #include"MatsumotoObj/SceneStaticValue.h"
 
 #include"CollisionConfig.h"
+#include"Lerp.h"
 
 GameScene::GameScene()
 {
@@ -88,6 +89,8 @@ GameScene::GameScene()
 }
 
 void GameScene::Initialize() {
+
+    Sound::bgmVolume_ = bgmMaxVol_;
 
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 90);
@@ -182,12 +185,18 @@ void GameScene::Update() {
         }
     }
 
+    if (PauseScreen::isPause_) {
+        Sound::bgmVolume_ = Lerp(Sound::bgmVolume_, 0.125f, 0.5f);
+    } else {
+        Sound::bgmVolume_ = Lerp(Sound::bgmVolume_, bgmMaxVol_, 0.5f);
+    }
     if (!PauseScreen::isActive_) {
         UpdateCamera();
         UpdateGameObject();
         CheckAllCollision();
         //エミッター
         emitterManager_->Update(*currentCamera_);
+
     }
 
 	letterboxBars_->Update();

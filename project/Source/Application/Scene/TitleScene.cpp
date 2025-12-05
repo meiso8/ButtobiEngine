@@ -77,6 +77,8 @@ TitleScene::TitleScene()
     PointLightManager::GetPointLightData(0).radius = 94.0f;
     PointLightManager::GetPointLightData(0).decay = 3.0f;
 
+    
+
 #pragma endregion
 
 	eventTimer_ = 0.0f;
@@ -88,6 +90,7 @@ TitleScene::~TitleScene()
 
 void TitleScene::Initialize()
 {
+    Sound::bgmVolume_ = 0.375f;
 
     Sound::StopAllSound();
     sceneChange_->Initialize();
@@ -192,10 +195,6 @@ void TitleScene::UpdateCamera() {
 }
 
 void TitleScene::UpdateGameObject() {
-
-
-    
-
 
 
     // オブジェクト個人の更新
