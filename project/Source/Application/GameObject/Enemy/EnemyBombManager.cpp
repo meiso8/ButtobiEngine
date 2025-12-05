@@ -24,9 +24,9 @@ void EnemyBombManager::Update() {
     }
 }
 
-void EnemyBombManager::Draw(Camera& camera, const LightMode& lightType) {
+void EnemyBombManager::Draw(Camera& camera) {
     for (auto& bomb : bombs_) {
-        bomb->Draw(camera, lightType);
+        bomb->Draw(camera);
     }
 }
 

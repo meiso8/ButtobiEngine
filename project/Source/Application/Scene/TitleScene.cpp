@@ -133,7 +133,7 @@ void TitleScene::Update()
 void TitleScene::Draw()
 {
 #pragma region // オブジェクト描画    
-    floorGameFloorManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    floorGameFloorManager_->Draw(*currentCamera_);
 
     //家
     house_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
@@ -143,10 +143,10 @@ void TitleScene::Draw()
         bossDummy_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     } else {
         titleText_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
-        floorGamePlayer_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
-        floorBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+        floorGamePlayer_->Draw(*currentCamera_);
+        floorBulletManager_->Draw(*currentCamera_);
         floorPlayerStripTargetUI_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
-        playerFloorStripManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+        playerFloorStripManager_->Draw(*currentCamera_);
     }
   
 	letterboxBars_->Draw();

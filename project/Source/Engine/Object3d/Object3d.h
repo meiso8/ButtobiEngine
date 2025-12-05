@@ -85,7 +85,7 @@ public:
 private:
     void CreateUV();
     void CreateTransformationMatrix();
-    void CreateMaterial(const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, const uint32_t& lightType = 0);
+    void CreateMaterial(const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, const uint32_t& lightType = kLightModeHalfL);
     void CreateWaveData();
     void CreateBalloonData();
 

@@ -438,6 +438,24 @@ ParticleManager* ParticleManager::GetInstance()
     return instance_;
 }
 
+void ParticleManager::Reset(const std::string& name)
+{
+    if (particleGroups.contains(name)) {
+        auto& group = particleGroups[name];
+        group->particles.clear();
+        group->sphericalCoordinates.clear();
+        group->numInstance = 0;
+        group->instancingResource->Map(0, nullptr, reinterpret_cast<void**>(&group->instancingData));
+        for (uint32_t i = 0; i < kNumMaxInstance; ++i) {
+            group->instancingData[i].WVP = MakeIdentity4x4();
+            group->instancingData[i].World = MakeIdentity4x4();
+            group->instancingData[i].color = Vector4{ 1.0f, 1.0f, 1.0f, 0.0f }; // アルファ0で非表示に
+        }
+        group->instancingResource->Unmap(0, nullptr);
+    }
+}
+
+
 std::unordered_map<std::string, std::unique_ptr<ParticleGroup>>& ParticleManager::GetParticleGroups()
 {
     return particleGroups;

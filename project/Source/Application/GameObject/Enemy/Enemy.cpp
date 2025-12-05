@@ -145,17 +145,15 @@ void Enemy::InitState()
     damageStruct_.hps.hpDecrease = file[currentState_]["hpDecrease"];
     damageStruct_.isHit = false;
     damageStruct_.isDead = false;
+    damageStruct_.isInvincible = false;
     //速度
     float velocity = file[currentState_]["velocity"];
     velocity_ = { velocity ,velocity ,velocity };
 }
 
 
-void Enemy::Draw(Camera& camera, const LightMode& lightMode)
+void Enemy::Draw(Camera& camera)
 {
-    bodyPos_.SetLightMode(lightMode);
-    wingLPos_.SetLightMode(lightMode);
-    wingRPos_.SetLightMode(lightMode);
 
     bodyPos_.Draw(camera, kBlendModeNormal);
     wingLPos_.Draw(camera, kBlendModeNormal);

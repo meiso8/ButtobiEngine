@@ -11,7 +11,7 @@ public:
 	~EnemyShockWaveManager();
 	void Initialize();
 	void Update();
-	void Draw(class Camera& camera, const LightMode& lightType);
+	void Draw(class Camera& camera);
 	void ShotWave(const Vector3& startPpos, const Vector3& endPos, const EnemyShockWave::AABBType& type);
 	const std::vector<std::unique_ptr<EnemyShockWave>>& GetWaves() const {
 		return waves_;

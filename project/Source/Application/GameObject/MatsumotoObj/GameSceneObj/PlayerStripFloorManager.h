@@ -10,7 +10,7 @@ public:
 	PlayerFloorStripManager(FloorGamePlayer* player);
 	void Initialize();
 	void Update();
-	void Draw(class Camera& camera, const LightMode& lightType);
+	void Draw(class Camera& camera);
 
 	void ActiveAllFloors();
 	void DeactiveAllFloors();

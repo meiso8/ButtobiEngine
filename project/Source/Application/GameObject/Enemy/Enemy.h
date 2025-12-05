@@ -23,7 +23,7 @@ public:
 
     Enemy();
     void Init();
-    void Draw(Camera& camera, const LightMode& lightMode);
+    void Draw(Camera& camera);
     void Update();
     std::string GetCurrentState() { return currentState_; };
     //コライダーのオーバーライド

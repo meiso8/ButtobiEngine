@@ -40,9 +40,8 @@ void StrippedFloor::Update() {
 	body_.Update();
 }
 
-void StrippedFloor::Draw(Camera& camera, const LightMode& lightType) {
+void StrippedFloor::Draw(Camera& camera) {
 	if (!isActive_) { return; }
 
-	body_.SetLightMode(lightType);
 	body_.Draw(camera, kBlendModeNormal);
 }

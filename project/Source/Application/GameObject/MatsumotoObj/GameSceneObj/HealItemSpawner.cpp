@@ -25,9 +25,9 @@ void HealItemSpawner::Update() {
 	}
 }
 
-void HealItemSpawner::Draw(Camera& camera, const LightMode& lightType) {
+void HealItemSpawner::Draw(Camera& camera) {
 	for (auto& healItem : healItems_) {
-		healItem->Draw(camera, lightType);
+		healItem->Draw(camera);
 	}
 }
 

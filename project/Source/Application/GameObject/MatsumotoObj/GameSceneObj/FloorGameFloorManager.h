@@ -13,7 +13,7 @@ public:
 	~FloorGameFloorManager();
 	void Initialize();
 	void Update();
-	void Draw(class Camera& camera, const LightMode& lightType);
+	void Draw(class Camera& camera);
 
 	void ForceChangeAllFloorType(const FloorType& floorType);
 

@@ -44,10 +44,10 @@ void FloorGameFloorManager::Update() {
     }
 }
 
-void FloorGameFloorManager::Draw(Camera& camera, const LightMode& lightType) {
+void FloorGameFloorManager::Draw(Camera& camera) {
     for (int y = 0; y < kMapHeight; y++) {
         for (int x = 0; x < kMapWidth; x++) {
-            floors_[y][x]->Draw(camera, lightType);
+            floors_[y][x]->Draw(camera);
         }
     }
 }

@@ -134,18 +134,22 @@ void EmitterManager::Initialize()
 
     for (auto& particleEmitter : particleEmitters_) {
         particleEmitter->InitTimer();
+        ParticleManager::Reset(particleEmitter->emitter_.name);
     }
 
     for (auto& grop : waveEmitters_) {
         grop.emitter->InitTimer();
     }
 
+    ParticleManager::Reset("windAttackParticle01");
+    ParticleManager::Reset("windAttackParticle02");
 
   /*  for (auto& grop : floorBulletEmitters_) {
         grop.emitter->InitTimer();
     }*/
 
 }
+
 
 void EmitterManager::Update(Camera& camera)
 {
@@ -159,7 +163,7 @@ void EmitterManager::Update(Camera& camera)
         particleEmitters_[kPlayerWalkEmitter]->Update(camera);
 
         if (player_->IsHit()) {
-            particleEmitters_[kPlayerHitEmitter]->UpdateTimer();
+            particleEmitters_[kPlayerHitEmitter]->Emit();
         } else {
             particleEmitters_[kPlayerHitEmitter]->InitTimer();
         }

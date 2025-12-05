@@ -16,14 +16,14 @@ EnemyShockWave::EnemyShockWave() {
     localAABBs_[kVertical] = { .min = {-kAabbWidth_,-0.5f,-2.0f},.max = {kAabbWidth_,0.5f,2.0f} };
 
     body_.Create();
-    //for (int i = 0; i < kMaxAABB; ++i) {
-    //    cubeMesh_[i] = std::make_unique<CubeMesh>();
-    //    cubeMesh_[i].get()->Create(Texture::WHITE_1X1);
-    //    cubeMesh_[i]->SetMinMax(localAABBs_[i]);
-    //}
+    for (int i = 0; i < kMaxAABB; ++i) {
+        cubeMesh_[i] = std::make_unique<CubeMesh>();
+        cubeMesh_[i].get()->Create(Texture::WHITE_1X1);
+        cubeMesh_[i]->SetMinMax(localAABBs_[i]);
+    }
 
     body_.SetColor({ 1.0f,0.5f,0.0f,1.0f });
- /*   body_.SetMesh(cubeMesh_[kHorizontal].get());*/
+    body_.SetMesh(cubeMesh_[kHorizontal].get());
 
 
     SetCollisionAttribute(kCollisionEnemyWave);
@@ -93,8 +93,8 @@ void EnemyShockWave::Update() {
     }
 
 
-    //float color = lifeTimer_ / lifeDuration_;
-    //body_.SetColor({ color,color,color,1.0f });
+    float color = lifeTimer_ / lifeDuration_;
+    body_.SetColor({ color,color,color,1.0f });
 
     if (lifeTimer_ <= kMoveTime_) {
         if (!isSound_) {
@@ -106,13 +106,13 @@ void EnemyShockWave::Update() {
 
 }
 
-void EnemyShockWave::Draw(Camera& camera, const LightMode& lightType) {
+void EnemyShockWave::Draw(Camera& camera) {
 
     if (!isActive_) {
         return;
     }
-    //body_.SetLightMode(lightType);
-    //body_.Draw(camera, kBlendModeNormal);
+
+    body_.Draw(camera, kBlendModeAdd);
 
     //ColliderDraw(camera);
 }
@@ -122,11 +122,10 @@ void EnemyShockWave::Shot(const Vector3& startPos, const Vector3& endPos, const 
     body_.worldTransform_.translate_ = startPos;
     endPos_ = endPos;
     SetAABB(localAABBs_[aabbType]);
-    //body_.SetMesh(cubeMesh_[aabbType].get());
+    body_.SetMesh(cubeMesh_[aabbType].get());
     aabbType_ = aabbType;
     lifeTimer_ = lifeDuration_;
     isActive_ = true;
     body_.Update();
-    ColliderUpdate();
     isSound_ = false;
 }

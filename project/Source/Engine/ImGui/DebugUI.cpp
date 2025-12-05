@@ -218,6 +218,7 @@ void DebugUI::CheckDamageStruct(Damage& damage, const char* label)
         ImGui::SliderFloat("flashTimer", &damage.flashTimer, 0.0f, 10.0f);
         ImGui::SliderFloat("flashTimer", &damage.invincibilityTime, 0.0f, 10.0f);
         ImGui::Checkbox("isHit", &damage.isHit);
+        ImGui::Checkbox("isInvincible", &damage.isInvincible);
         ImGui::DragInt("HP", &damage.hps.hp, 1, 0, 100);
         ImGui::DragInt("MaxHP", &damage.hps.maxHp, 1, 0, 100);
         ImGui::DragInt("hpDecrease", &damage.hps.hpDecrease, 1, 0, 100);

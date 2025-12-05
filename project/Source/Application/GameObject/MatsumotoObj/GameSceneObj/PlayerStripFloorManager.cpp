@@ -55,16 +55,16 @@ void PlayerFloorStripManager::Update() {
 	}
 }
 
-void PlayerFloorStripManager::Draw(Camera& camera, const LightMode& lightType) {
+void PlayerFloorStripManager::Draw(Camera& camera) {
 	if (!isActive_) { return; }
 
 	if (isSingle_) {
-		singleFloor_->Draw(camera, lightType);
+		singleFloor_->Draw(camera);
 
 	} else {
 		for (int y = 0; y < kMapHeight; y++) {
 			for (int x = 0; x < kMapWidth; x++) {
-				floors_[y][x]->Draw(camera, lightType);
+				floors_[y][x]->Draw(camera);
 			}
 		}
 	}

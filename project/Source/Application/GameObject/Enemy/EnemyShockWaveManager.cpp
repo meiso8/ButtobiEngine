@@ -24,9 +24,9 @@ void EnemyShockWaveManager::Update() {
 
 }
 
-void EnemyShockWaveManager::Draw(Camera& camera, const LightMode& lightType) {
+void EnemyShockWaveManager::Draw(Camera& camera) {
     for (auto& wave : waves_) {
-        wave->Draw(camera, lightType);
+        wave->Draw(camera);
     }
 }
 

@@ -83,7 +83,7 @@ SphericalMove MakeNewSphericalCoordinate(const float& radius, const int& count, 
 class ParticleManager
 {
 public:
-    const uint32_t kNumMaxInstance = 100;//インスタンス数
+    static const uint32_t kNumMaxInstance = 100;//インスタンス数
 private:
     RootSignature* rootSignature_ = nullptr;
     static ID3D12GraphicsCommandList* commandList_;
@@ -117,7 +117,7 @@ public:
     ParticleManager& operator=(ParticleManager&) = delete;
     void Create();
     static ParticleManager* GetInstance();
-
+    static void Reset(const std::string& name);
 static void Emit(Emitter& emitter);
 
     std::unordered_map<std::string, std::unique_ptr <ParticleGroup>>& GetParticleGroups();

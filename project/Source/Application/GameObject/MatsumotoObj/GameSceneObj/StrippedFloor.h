@@ -16,7 +16,7 @@ public:
 	~StrippedFloor();
 	void Initialize();
 	void Update();
-	void Draw(Camera& camera, const LightMode& lightType);
+	void Draw(Camera& camera);
 
 	void SwapType(FloorType type) { requestType_ = type; }
 

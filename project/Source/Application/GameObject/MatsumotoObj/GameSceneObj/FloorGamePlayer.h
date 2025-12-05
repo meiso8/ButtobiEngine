@@ -30,7 +30,7 @@ public:
 	}
 	void Initialize();
 	void Update();
-	void Draw(Camera& camera, const LightMode& lightType);
+	void Draw(Camera& camera);
 
 	void ForceDamage();
 
@@ -71,6 +71,7 @@ private:
 	float kRadius_ = 0.4f;
 	Model* model_ = nullptr;
 	Damage damageStruct_;
+
 	float moveAcceleration_;
 
 	float moveSpeed_;

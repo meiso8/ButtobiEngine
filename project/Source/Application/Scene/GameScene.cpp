@@ -202,20 +202,21 @@ void GameScene::Draw() {
 #endif
 
 #pragma region // オブジェクト描画
-    floorGamePlayer_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
-    floorGameFloorManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
-    floorBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    floorGamePlayer_->Draw(*currentCamera_);
+    floorGameFloorManager_->Draw(*currentCamera_);
+    floorBulletManager_->Draw(*currentCamera_);
     floorPlayerStripTargetUI_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
-    playerFloorStripManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
-    healItemSpawner_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    playerFloorStripManager_->Draw(*currentCamera_);
+    healItemSpawner_->Draw(*currentCamera_);
 	floorActionManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     actionUI_->Draw();
 	letterboxBars_->Draw();
 	gameOverEvent_->Draw();
-    enemy_->Draw(*currentCamera_, kLightModeHalfL);
-    enemyBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
-    enemyBombManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
-    enemyShockWaveManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    enemy_->Draw(*currentCamera_);
+    enemyBulletManager_->Draw(*currentCamera_);
+    enemyBombManager_->Draw(*currentCamera_);
+    enemyShockWaveManager_->Draw(*currentCamera_);
+   
     tree_->Draw(*currentCamera_);
     ground_->Draw(*currentCamera_);
     nest_->Draw(*currentCamera_);

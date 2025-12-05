@@ -106,6 +106,7 @@ void FloorGamePlayer::Initialize() {
     damageStruct_.hps.hp = damageStruct_.hps.maxHp;
     damageStruct_.hps.hpDecrease = damageStruct_.hps.maxHp / HPIcon::kMaxHPIcon_;
     damageStruct_.isDead = false;
+    damageStruct_.isInvincible = false;
 
     // 方向
     lookDir_ = moveDir_;
@@ -129,15 +130,19 @@ void FloorGamePlayer::Initialize() {
     stickyFloorSlowRate_ = 0.4f;
 
     // 死んだときに回転する量
-	deathRotate_ = 50.0f;
+    deathRotate_ = 50.0f;
 }
 
 
 void FloorGamePlayer::Update() {
-	if (damageStruct_.hps.hp <= 0) {
+
+    //毎フレームヒットを初期化する
+    damageStruct_.isHit = false;
+
+    if (damageStruct_.hps.hp <= 0) {
         damageStruct_.isDead = true;
 
-		//死亡モーション
+        //死亡モーション
         body_.worldTransform_.rotate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.rotate_.y, deathRotate_, 0.1f);
         if (body_.worldTransform_.rotate_.y >= deathRotate_ * 0.99f) {
             body_.worldTransform_.rotate_.x = MY_Utility::SimpleEaseIn(body_.worldTransform_.rotate_.x, 3.14f * 0.5f, 0.1f);
@@ -187,21 +192,14 @@ void FloorGamePlayer::Update() {
 
 }
 
-void FloorGamePlayer::Draw(Camera& camera, const LightMode& lightType) {
+void FloorGamePlayer::Draw(Camera& camera) {
 
-    body_.SetLightMode(lightType);
-    headObject_.SetLightMode(lightType);
-    rightArmObject_.SetLightMode(lightType);
-    leftArmObject_.SetLightMode(lightType);
-    rightLegObject_.SetLightMode(lightType);
-    leftLegObject_.SetLightMode(lightType);
-
-    body_.Draw(camera, kBlendModeNormal);
-    headObject_.Draw(camera, kBlendModeNormal);
-    rightArmObject_.Draw(camera, kBlendModeNormal);
-    leftArmObject_.Draw(camera, kBlendModeNormal);
-    rightLegObject_.Draw(camera, kBlendModeNormal);
-    leftLegObject_.Draw(camera, kBlendModeNormal);
+    body_.Draw(camera);
+    headObject_.Draw(camera);
+    rightArmObject_.Draw(camera);
+    leftArmObject_.Draw(camera);
+    rightLegObject_.Draw(camera);
+    leftLegObject_.Draw(camera);
     ColliderDraw(camera);
 
 }
@@ -316,7 +314,7 @@ void FloorGamePlayer::ShotFloor() {
 
 void FloorGamePlayer::HitAction()
 {
-    if (damageStruct_.isHit) {
+    if (damageStruct_.isInvincible) {
 
         if (damageStruct_.flashTimer == 0.0f) {
             return;
@@ -326,7 +324,7 @@ void FloorGamePlayer::HitAction()
 
         if (damageStruct_.flashTimer <= 0.0f) {
             damageStruct_.flashTimer = 0.0f;
-            damageStruct_.isHit = false;
+            damageStruct_.isInvincible = false;
         }
 
         Flashing();
@@ -367,9 +365,10 @@ void FloorGamePlayer::SetBodyColor(const Vector4& color)
 
 void FloorGamePlayer::HitUpdate()
 {
-    if (damageStruct_.isHit) { return; }
+    if (damageStruct_.isInvincible || damageStruct_.isHit) { return; }
 
     damageStruct_.isHit = true;
+    damageStruct_.isInvincible = true;
     Sound::PlaySE(Sound::kPlayerDamage);
     VibrateManager::SetTime(1.0f, 1000, 1000);
     damageStruct_.flashTimer = damageStruct_.invincibilityTime;
