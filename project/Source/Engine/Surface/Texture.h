@@ -59,12 +59,7 @@ public:
 
     static uint32_t AddTextureHandle(const std::string& filePath);
 
-    static uint32_t GetHandle(const TEXTURE_HANDLE& handle) {
-    if(handleToPath_[])
-    
-    
-    
-    };
+    static uint32_t GetHandle(const TEXTURE_HANDLE& handle) { return handles[handle]; }
     static std::string& GetFilePath(const TEXTURE_HANDLE& handle) { return handleToPath_[handles[handle]]; }
 
     //SRVインデックスの開始番号

@@ -16,7 +16,7 @@ void Texture::Initialize()
     textureDatas.reserve(SrvManager::kMaxSRVCount);
 
     // 各ハンドルに対応するファイルパスを登録
-    textureDatas["Resource/Textures/white1x1.png"].filePath = "Resource/Textures/white1x1.png";
+  /*  textureDatas["Resource/Textures/white1x1.png"].filePath = "Resource/Textures/white1x1.png";
     textureDatas["Resource/Textures/uvChecker.png"].filePath = "Resource/Textures/uvChecker.png";
     textureDatas["Resource/Textures/Numbers_Pop.png"].filePath = "Resource/Textures/Numbers_Pop.png";
 
@@ -50,7 +50,7 @@ void Texture::Initialize()
     textureDatas["Resource/Textures/GameOver.png"].filePath = "Resource/Textures/GameOver.png";
 
     textureDatas["Resource/Textures/GameOverString.png"].filePath = "Resource/Textures/GameOverString.png";
-    textureDatas["Resource/Textures/Tips1.png"].filePath = "Resource/Textures/Tips1.png";
+    textureDatas["Resource/Textures/Tips1.png"].filePath = "Resource/Textures/Tips1.png";*/
 
     // handles 配列を初期化（未ロード状態を示すために 0 で埋める）
     handles.resize(TEXTURES, 0);
@@ -59,8 +59,8 @@ void Texture::Initialize()
 
 void Texture::LoadAllTexture() {
 
-  /*  handles.resize(TEXTURES);*/
-  /*  handles[WHITE_1X1] = Load("Resource/Textures/white1x1.png");
+    handles.resize(TEXTURES);
+    handles[WHITE_1X1] = Load("Resource/Textures/white1x1.png");
     handles[UV_CHECKER] = Load("Resource/Textures/uvChecker.png");
     handles[NUMBERS] = Load("Resource/Textures/Numbers_Pop.png");
 
@@ -94,7 +94,7 @@ void Texture::LoadAllTexture() {
 	handles[RESULT_GAMEOVER] = Load("Resource/Textures/GameOver.png");
 
 	handles[GAMEOVER_STRING] = Load("Resource/Textures/GameOverString.png");
-	handles[GAMEOVER_TIPS_1] = Load("Resource/Textures/Tips1.png");*/
+	handles[GAMEOVER_TIPS_1] = Load("Resource/Textures/Tips1.png");
 }
 
 uint32_t Texture::Load(const std::string& filePath)
