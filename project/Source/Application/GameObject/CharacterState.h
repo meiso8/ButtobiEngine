@@ -16,6 +16,7 @@ struct Damage {
     float invincibilityTime;
     float flashTimer;
     bool isHit;
+    bool isInvincible;
     HPs hps;
     bool isDead;
 };

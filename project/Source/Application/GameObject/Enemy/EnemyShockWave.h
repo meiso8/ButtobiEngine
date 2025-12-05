@@ -25,7 +25,7 @@ public:
     Vector3 GetWorldPosition() const;
     void Initialize();
     void Update();
-    void Draw(Camera& camera, const LightMode& lightType);
+    void Draw(Camera& camera);
     void Shot(const Vector3& startPos, const Vector3& endPos, const AABBType& aabbType);
     bool isActive_ = false;
     Object3d body_;

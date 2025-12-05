@@ -59,11 +59,10 @@ void HealItem::Update() {
 	ColliderUpdate();
 }
 
-void HealItem::Draw(Camera& camera, const LightMode& lightType) {
+void HealItem::Draw(Camera& camera) {
 	if ( Length(body_.worldTransform_.scale_) <= 0.1f ) {
 		return;
 	}
-	body_.SetLightMode(lightType);
 	body_.Draw(camera, kBlendModeNormal);
 }
 

@@ -43,9 +43,9 @@ void FloorBulletManager::Update() {
 	}
 }
 
-void FloorBulletManager::Draw(Camera& camera, const LightMode& lightType) {
+void FloorBulletManager::Draw(Camera& camera) {
 	for (auto& bullet : bullets_) {
-		bullet->Draw(camera, lightType);
+		bullet->Draw(camera);
 	}
 }
 

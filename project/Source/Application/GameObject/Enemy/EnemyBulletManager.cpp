@@ -27,9 +27,9 @@ void EnemyBulletManager::Update() {
 	}
 }
 
-void EnemyBulletManager::Draw(Camera& camera, const LightMode& lightType) {
+void EnemyBulletManager::Draw(Camera& camera) {
 	for (auto& bullet : bullets_) {
-		bullet->Draw(camera, lightType);
+		bullet->Draw(camera);
 	}
 }
 

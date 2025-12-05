@@ -115,7 +115,7 @@ void FloorBullet::Update() {
 
 }
 
-void FloorBullet::Draw(Camera& camera, const LightMode& lightType) {
+void FloorBullet::Draw(Camera& camera) {
 
 	if (!isActive_) {
 		return;
@@ -127,7 +127,6 @@ void FloorBullet::Draw(Camera& camera, const LightMode& lightType) {
 		body_.SetMesh(models_[floorType_]);
 	}
 
-	body_.SetLightMode(lightType);
 	body_.Draw(camera, kBlendModeNormal);
 
 }

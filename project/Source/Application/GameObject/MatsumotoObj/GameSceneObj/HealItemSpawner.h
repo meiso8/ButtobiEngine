@@ -9,7 +9,7 @@ public:
 	~HealItemSpawner();
 	void Initialize();
 	void Update();
-	void Draw(class Camera& camera, const LightMode& lightType);
+	void Draw(class Camera& camera);
 	void SpawnHealItem(const Vector3& position);
 
 	void AddCollider(CollisionManager* collisionManager);

@@ -51,5 +51,5 @@ void FloorActionManager::Update() {
 
 void FloorActionManager::Draw(Camera& camera, const LightMode& lightType) {
 
-	explosionEmitter_.Draw(camera,lightType);
+	explosionEmitter_.Draw(camera, lightType);
 }

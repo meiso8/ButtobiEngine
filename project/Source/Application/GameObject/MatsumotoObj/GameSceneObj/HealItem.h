@@ -19,7 +19,7 @@ public:
 	}
 	void Initialize();
 	void Update();
-	void Draw(Camera& camera, const LightMode& lightType);
+	void Draw(Camera& camera);
 	void Spawn(const Vector3& position);
 	bool isActive_;
 	Object3d body_;

@@ -81,9 +81,8 @@ void FloorGameFloor::Update() {
 	ColliderUpdate();
 }
 
-void FloorGameFloor::Draw(Camera& camera, const LightMode& lightType) {
-	body_.SetLightMode(lightType);
-	body_.Draw(camera, kBlendModeNormal);
+void FloorGameFloor::Draw(Camera& camera) {
+	body_.Draw(camera);
 }
 
 void FloorGameFloor::SwapFloorType(FloorType type) {

@@ -97,12 +97,12 @@ void EnemyBomb::Update() {
 
 }
 
-void EnemyBomb::Draw(Camera& camera, const LightMode& lightType) {
+void EnemyBomb::Draw(Camera& camera) {
 
     if (!isActive_) {
         return;
     }
-    body_.SetLightMode(lightType);
+
     body_.Draw(camera, kBlendModeNormal);
 
     ColliderDraw(camera);

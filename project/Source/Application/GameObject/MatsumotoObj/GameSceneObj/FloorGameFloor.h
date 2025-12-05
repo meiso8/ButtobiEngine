@@ -18,7 +18,7 @@ public:
 	~FloorGameFloor();
 	void Initialize();
 	void Update();
-	void Draw(Camera& camera, const LightMode& lightType);
+	void Draw(Camera& camera);
 
 	void SwapFloorType(FloorType type);
 	void SwapNextFloorType();

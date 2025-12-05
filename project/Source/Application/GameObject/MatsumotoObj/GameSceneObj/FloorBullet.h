@@ -21,7 +21,7 @@ public:
     void Initialize();
     void InitFlagAndPosAndTimer();
     void Update();
-    void Draw(Camera& camera, const LightMode& lightType);
+    void Draw(Camera& camera);
     void Shot(const Vector3& position, const Vector3& direction, const float& speed, const float& size,FloorType type);
 	void SetHoming(Object3d* target, float stayTime);
     bool isActive_ = false;
