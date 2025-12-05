@@ -1,7 +1,8 @@
 #include "UIManager.h"
 #include"Window.h"
-UIManager::UIManager(HPs& enemyHp, HPs& playerHp)
+UIManager::UIManager(HPs& enemyHp, HPs& playerHp,bool& isHit)
 {
+
     hpGages_.emplace(GageType::kEnemy, std::make_unique<HPGage>());
     hpGages_[kEnemy]->SetHpPtr(&enemyHp);
     hpGages_[kEnemy]->Setting({ 640.0f,32.0f }, { 640.0f,64.0f }, { 0.5f,0.0f });
@@ -18,13 +19,14 @@ UIManager::UIManager(HPs& enemyHp, HPs& playerHp)
 
     playerHpIcon_ = std::make_unique<HPIcon>();
     playerHpIcon_->SetHpPtr(&playerHp);
+    playerHpIcon_->SetIsHitPtr(isHit);
     playerHpIcon_->Setting({ 64.0f,64.0f }, { 64.0f,static_cast<float>(Window::GetClientHeight() - 96) });
 
 
     pauseScreen_ = std::make_unique<PauseScreen>();
 
-
-
+    redPinchScreen = std::make_unique<RedPinchScreen>();
+    redPinchScreen->SetHitPtr(isHit);
 }
 
 void UIManager::Initialize()
@@ -35,6 +37,7 @@ void UIManager::Initialize()
 
     playerHpIcon_->Initialize();
     pauseScreen_->Initialize();
+    redPinchScreen->Init();
 }
 
 void UIManager::Update()
@@ -47,6 +50,7 @@ void UIManager::Update()
     playerHpIcon_->Update();
 
     pauseScreen_->Update();
+    redPinchScreen->Update();
 }
 
 void UIManager::Draw()
@@ -56,6 +60,7 @@ void UIManager::Draw()
     }
 
     playerHpIcon_->Draw();
+    redPinchScreen->Draw();
 
     pauseScreen_->Draw();
 }

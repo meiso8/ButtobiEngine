@@ -59,7 +59,7 @@ void HPGage::Update()
 
 void HPGage::Draw()
 {
-    sprites_[layer1]->PreDraw();
+    Sprite::PreDraw();
 
     for (const auto& [type, sprite] : sprites_) {
         sprite->Draw();
