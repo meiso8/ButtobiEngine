@@ -162,8 +162,8 @@ void EmitterManager::Update(Camera& camera)
         }
         particleEmitters_[kPlayerWalkEmitter]->Update(camera);
 
-        if (player_->IsHit()) {
-            particleEmitters_[kPlayerHitEmitter]->Emit();
+        if (player_->IsInvincible()) {
+            particleEmitters_[kPlayerHitEmitter]->UpdateTimer();
         } else {
             particleEmitters_[kPlayerHitEmitter]->InitTimer();
         }

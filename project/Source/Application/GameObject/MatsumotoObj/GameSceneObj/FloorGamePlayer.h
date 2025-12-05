@@ -38,6 +38,7 @@ public:
 	Vector3& GetLookDir() { return lookDir_; }
 	HPs* GetHpsPtr() { return &damageStruct_.hps; }
 	bool& IsHit() { return damageStruct_.isHit; }
+	bool& IsInvincible() { return damageStruct_.isInvincible; }
 	bool& IsDead() { return damageStruct_.isDead; }
 	float& InvincibilityTime(){ return damageStruct_.invincibilityTime; }
 	bool isStriptting_;
