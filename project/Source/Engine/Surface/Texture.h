@@ -30,6 +30,7 @@ public:
         WIND_ATTACK_PARTICLE02,
         LEAF_PARTICLE,
         FLOOR_PARTICLE,
+        BLOOM,
 
         ENEMY_TEXTURE2,
 
