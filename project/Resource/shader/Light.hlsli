@@ -24,5 +24,6 @@ struct SpotLight
     float32_t distance; //ライトの届く範囲
     float32_t decay; //減衰率
     float32_t cosAngle; //スポットライトの余弦
-    float padding[2];
+    float32_t cosFalloffStart;//cosFalloffの角度指定
+    float padding[1];
 };
