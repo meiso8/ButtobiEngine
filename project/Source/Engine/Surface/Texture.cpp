@@ -11,10 +11,56 @@ using namespace StringUtility;
 
 std::unordered_map<std::string, Texture::TextureData> Texture::textureDatas;
 
+void Texture::Initialize()
+{
+    textureDatas.reserve(SrvManager::kMaxSRVCount);
+
+    // 各ハンドルに対応するファイルパスを登録
+    textureDatas["Resource/Textures/white1x1.png"].filePath = "Resource/Textures/white1x1.png";
+    textureDatas["Resource/Textures/uvChecker.png"].filePath = "Resource/Textures/uvChecker.png";
+    textureDatas["Resource/Textures/Numbers_Pop.png"].filePath = "Resource/Textures/Numbers_Pop.png";
+
+    textureDatas["Resource/Textures/PlayerHPIcon.png"].filePath = "Resource/Textures/PlayerHPIcon.png";
+    textureDatas["Resource/Textures/PlayerWalkParticle_Pop.png"].filePath = "Resource/Textures/PlayerWalkParticle_Pop.png";
+    textureDatas["Resource/Textures/PlayerDamageParticle.png"].filePath = "Resource/Textures/PlayerDamageParticle.png";
+    textureDatas["Resource/Textures/EnemyActionParticle.png"].filePath = "Resource/Textures/EnemyActionParticle.png";
+
+    textureDatas["Resource/Textures/WindAttackParticle01.png"].filePath = "Resource/Textures/WindAttackParticle01.png";
+    textureDatas["Resource/Textures/WindAttackParticle02.png"].filePath = "Resource/Textures/WindAttackParticle02.png";
+    textureDatas["Resource/Textures/MeltFloorParticle.png"].filePath = "Resource/Textures/MeltFloorParticle.png";
+    textureDatas["Resource/Textures/LeafParticle.png"].filePath = "Resource/Textures/LeafParticle.png";
+    textureDatas["Resource/Textures/FloorParticle.png"].filePath = "Resource/Textures/FloorParticle.png";
+    textureDatas["Resource/Textures/Bloom.png"].filePath = "Resource/Textures/Bloom.png";
+    textureDatas["Resource/Models/Enemy/Enemy02.png"].filePath = "Resource/Models/Enemy/Enemy02.png";
+
+    textureDatas["Resource/Textures/ActionUI_Move_Pop.png"].filePath = "Resource/Textures/ActionUI_Move_Pop.png";
+    textureDatas["Resource/Textures/ActionUI_Strip_Pop.png"].filePath = "Resource/Textures/ActionUI_Strip_Pop.png";
+    textureDatas["Resource/Textures/ActionUI_Shot_Pop.png"].filePath = "Resource/Textures/ActionUI_Shot_Pop.png";
+
+    textureDatas["Resource/Textures/PausingBG_02.png"].filePath = "Resource/Textures/PausingBG_02.png";
+    textureDatas["Resource/Textures/PauseUI_Pop.png"].filePath = "Resource/Textures/PauseUI_Pop.png";
+
+    textureDatas["Resource/Textures/BackToTitleUI_Pop.png"].filePath = "Resource/Textures/BackToTitleUI_Pop.png";
+    textureDatas["Resource/Textures/BackToGameUI_Pop.png"].filePath = "Resource/Textures/BackToGameUI_Pop.png";
+    textureDatas["Resource/Textures/RetryUI_Pop.png"].filePath = "Resource/Textures/RetryUI_Pop.png";
+    textureDatas["Resource/Textures/Button_A_Pop.png"].filePath = "Resource/Textures/Button_A_Pop.png";
+    textureDatas["Resource/Textures/ConfirmUI_Pop.png"].filePath = "Resource/Textures/ConfirmUI_Pop.png";
+
+    textureDatas["Resource/Textures/GameClear.png"].filePath = "Resource/Textures/GameClear.png";
+    textureDatas["Resource/Textures/GameOver.png"].filePath = "Resource/Textures/GameOver.png";
+
+    textureDatas["Resource/Textures/GameOverString.png"].filePath = "Resource/Textures/GameOverString.png";
+    textureDatas["Resource/Textures/Tips1.png"].filePath = "Resource/Textures/Tips1.png";
+
+    // handles 配列を初期化（未ロード状態を示すために 0 で埋める）
+    handles.resize(TEXTURES, 0);
+}
+
+
 void Texture::LoadAllTexture() {
 
-    handles.resize(TEXTURES);
-    handles[WHITE_1X1] = Load("Resource/Textures/white1x1.png");
+  /*  handles.resize(TEXTURES);*/
+  /*  handles[WHITE_1X1] = Load("Resource/Textures/white1x1.png");
     handles[UV_CHECKER] = Load("Resource/Textures/uvChecker.png");
     handles[NUMBERS] = Load("Resource/Textures/Numbers_Pop.png");
 
@@ -48,7 +94,7 @@ void Texture::LoadAllTexture() {
 	handles[RESULT_GAMEOVER] = Load("Resource/Textures/GameOver.png");
 
 	handles[GAMEOVER_STRING] = Load("Resource/Textures/GameOverString.png");
-	handles[GAMEOVER_TIPS_1] = Load("Resource/Textures/Tips1.png");
+	handles[GAMEOVER_TIPS_1] = Load("Resource/Textures/Tips1.png");*/
 }
 
 uint32_t Texture::Load(const std::string& filePath)
@@ -77,13 +123,6 @@ uint32_t Texture::AddTextureHandle(const std::string& filePath) {
 void Texture::Finalize()
 {
     textureDatas.clear();
-}
-
-void Texture::Initialize()
-{
-    //SRVの和と同数
-    textureDatas.reserve(SrvManager::kMaxSRVCount);
-
 }
 
 void Texture::LoadTexture(const std::string& filePath)
