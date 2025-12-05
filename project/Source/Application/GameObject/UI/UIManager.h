@@ -11,7 +11,7 @@ class UIManager
         kPlayer,
     };
 public:
-    UIManager(HPs& enemyHp, HPs& playerHp, bool& isHit);
+    UIManager(HPs& enemyHp, HPs& playerHp, bool& isPlayerHit, bool& isEnemyHit, bool& isEnemyKnockBack);
     void Initialize();
     void Update();
     void Draw();

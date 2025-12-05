@@ -83,7 +83,13 @@ GameScene::GameScene()
     nest_ = std::make_unique<Nest>();
 #pragma endregion
 
-    uiManager_ = std::make_unique<UIManager>(*enemy_->GetHpsPtr(), *floorGamePlayer_->GetHpsPtr(), floorGamePlayer_->IsHit());
+    uiManager_ = std::make_unique<UIManager>(
+        *enemy_->GetHpsPtr(), 
+        *floorGamePlayer_->GetHpsPtr(),
+        floorGamePlayer_->IsHit(),
+        enemy_->IsHit(),
+        enemy_->isKnockBack_
+    );
 
     emitterManager_ = std::make_unique<EmitterManager>(*floorGamePlayer_, *enemy_,*enemyShockWaveManager_,*floorBulletManager_);
 }

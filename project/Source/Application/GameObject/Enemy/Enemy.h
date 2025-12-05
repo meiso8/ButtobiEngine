@@ -84,7 +84,7 @@ public:
     PHASE phase_ = PHASE::ROUND;
 
     //弾と当たったかどうかを得る
-    bool IsHit() { return damageStruct_.isHit; }
+    bool& IsHit() { return damageStruct_.isHit; }
     bool IsDead() { return damageStruct_.isDead; }
     //HPを得る
     HPs* GetHpsPtr() { return &damageStruct_.hps; }

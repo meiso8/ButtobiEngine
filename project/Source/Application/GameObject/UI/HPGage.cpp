@@ -9,9 +9,11 @@ HPGage::HPGage()
     sprites_.emplace(SpriteTypes::layer2, std::make_unique<Sprite>());
     sprites_.emplace(SpriteTypes::MaxHp, std::make_unique<Sprite>());
 
+ 
     sprites_[layer1]->Create(Texture::WHITE_1X1, { 640.0,64.0f }, {1.0f,0.0f,0.0f,1.0f});
     sprites_[layer2]->Create(Texture::WHITE_1X1, { 640.0,64.0f }, { 1.0f,1.0f,1.0f,1.0f });
     sprites_[MaxHp]->Create(Texture::WHITE_1X1, { 640.0,64.0f }, { 0.0f,0.0f,0.0f,0.5f });
+    shake_ = std::make_unique<Shake>();
 }
 
 void HPGage::Setting(const Vector2& size, const Vector2& pos, const Vector2& anchorPoint)
@@ -22,11 +24,13 @@ void HPGage::Setting(const Vector2& size, const Vector2& pos, const Vector2& anc
         sprite->SetPosition(pos);
         sprite->SetAnchorPoint(anchorPoint);
         sprite->Update();
+        pos_[type] = sprite->GetPosition();
     }
 }
 
 void HPGage::Initialize()
 {
+    shake_->Reset();
     preHP_ = hps_->maxHp;
     timer_ = 0.0f;
     preScale_ = 0.0f;
@@ -66,4 +70,20 @@ void HPGage::Draw()
     }
 
 
+}
+
+void HPGage::UpdateHitAction()
+{
+    if (isHitPtr_&&*isHitPtr_) {
+        shake_->Start(10.0f, 60);
+    }else if (isKnockBackPtr_ && *isKnockBackPtr_) {
+        shake_->Start(20.0f, 60);
+    }
+
+    shake_->Update();
+
+    for (const auto& [type, sprite] : sprites_) {
+        sprite->SetPosition(pos_[type]+ shake_->GetOffset());
+    }
+  
 }
