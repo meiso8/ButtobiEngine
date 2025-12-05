@@ -69,8 +69,8 @@ float3 CalculateSpotLightDiffuse(float3 normal, float3 worldPos, SpotLight light
     //コサインを求める
     float cosAngle = dot(dir, normalize(light.direction));
     
-     //減衰率を求める
-    float falloffFactor = saturate((cosAngle - light.cosAngle) / (1.0f - light.cosAngle));
+     //減衰率を求める  cosAngleとcosFalloffStartが同じになると0除算が発生するため設定で何とかする
+    float falloffFactor = saturate((cosAngle - light.cosAngle) / (light.cosFalloffStart - light.cosAngle));
         //距離による減衰
     float attenuationFactor = pow(saturate(light.distance / 1.0f), light.decay);
     
@@ -163,7 +163,7 @@ PixelShaderOutput main(VertexShaderOutput input)
         float32_t3 DirectionalLightDiffuse = CalculateDirectionalDiffuse(normalInput, gDirectionalLight.direction, gDirectionalLight.color.rgb, gDirectionalLight.intensity, gMaterial.lightType);
 
         
-        float32_t3 spotLightDiffuse = CalculateSpotLightDiffuse(normalInput,input.worldPosition,gSpotLight,gMaterial.lightType);
+        float32_t3 spotLightDiffuse = CalculateSpotLightDiffuse(normalInput, input.worldPosition, gSpotLight, gMaterial.lightType);
 
         if (gMaterial.lightType == 1)
         {

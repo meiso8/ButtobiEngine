@@ -213,7 +213,7 @@ void DebugUI::CheckJsonFile()
 void DebugUI::CheckSpotLight()
 {
 #ifdef USE_IMGUI
-    SpotLight& spotLight =  SpotLightManager::GetData();
+    SpotLight& spotLight = SpotLightManager::GetData();
     Vector3& direction = spotLight.direction;
 
     if (ImGui::TreeNode("SpotLight")) {
@@ -225,6 +225,9 @@ void DebugUI::CheckSpotLight()
         ImGui::SliderFloat("distance", &spotLight.distance, 0.0f, 100.0f);
         ImGui::SliderFloat("decay", &spotLight.decay, 0.0f, 100.0f);
         ImGui::SliderFloat("cosAngle", &spotLight.cosAngle, -6.28f, 6.28f);
+        ImGui::SliderFloat("cosFalloffStart", &spotLight.cosFalloffStart, -6.28f, 6.28f);
+        assert(spotLight.cosAngle != spotLight.cosFalloffStart);
+
         ImGui::TreePop();
     }
 #endif

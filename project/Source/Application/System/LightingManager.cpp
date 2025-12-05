@@ -18,7 +18,7 @@ void LightingManager::Initialize()
     PointLightManager::GetPointLightData(0).radius = 30.0f;
     PointLightManager::GetPointLightData(0).decay = 0.3f;
 
-    SpotLightManager::GetData().intensity = 1.0f;
+    SpotLightManager::GetData().intensity = 25.0f;
     SpotLightManager::GetData().color = { 1.0f,1.0f,1.0f,1.0f };
     SpotLightManager::GetData().distance =0.1f;
     SpotLightManager::GetData().decay = 0.5f;
