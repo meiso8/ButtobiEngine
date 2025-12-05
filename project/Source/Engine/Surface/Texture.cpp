@@ -24,7 +24,8 @@ void Texture::LoadAllTexture() {
     handles[ENEMY_ACTION_PARTICLE] = Load("Resource/Textures/EnemyActionParticle.png");
 
     handles[WIND_ATTACK_PARTICLE01] = Load("Resource/Textures/WindAttackParticle01.png");
-    handles[WIND_ATTACK_PARTICLE02] = Load("Resource/Textures/WindAttackParticle02.png");
+   handles[WIND_ATTACK_PARTICLE02] = Load("Resource/Textures/WindAttackParticle02.png");  
+    handles[MELT_FLOOR_PARTICLE] = Load("Resource/Textures/MeltFloorParticle.png");
     handles[LEAF_PARTICLE] = Load("Resource/Textures/LeafParticle.png");
     handles[FLOOR_PARTICLE] = Load("Resource/Textures/FloorParticle.png");
     handles[BLOOM] = Load("Resource/Textures/Bloom.png");

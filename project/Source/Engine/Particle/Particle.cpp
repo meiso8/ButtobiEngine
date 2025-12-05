@@ -23,17 +23,17 @@ std::unordered_map<std::string, std::unique_ptr <ParticleGroup> >ParticleManager
 void ParticleManager::CreateAll()
 {
     CreateParticleGroup("enemyHitParticle", Texture::ENEMY_ACTION_PARTICLE/*, true, ModelManager::BOX*/);
-    CreateParticleGroup("enemyWingParticle", Texture::PLAYER_WALK_PARTICLE);
+    //CreateParticleGroup("enemyWingParticle", Texture::PLAYER_WALK_PARTICLE);
     CreateParticleGroup("playerHitParticle", Texture::PLAYER_DAMAGE_PARTICLE);
     CreateParticleGroup("playerWalkParticle", Texture::PLAYER_WALK_PARTICLE);
-
-
 
     CreateParticleGroup("floorBombBlastParticle", Texture::PLAYER_WALK_PARTICLE);
 
     CreateParticleGroup("windAttackParticle01", Texture::WIND_ATTACK_PARTICLE01);
     CreateParticleGroup("windAttackParticle02", Texture::WIND_ATTACK_PARTICLE02);
+   //葉っぱ
     CreateParticleGroup("leafParticle", Texture::LEAF_PARTICLE);
+    //床
     CreateParticleGroup("floorParticle", Texture::FLOOR_PARTICLE);
 }
 
