@@ -10,6 +10,14 @@
 
 EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShockWaveManager& enemyShockWaveManager, FloorBulletManager& floorBulletManager) :player_(&player), enemy_(&enemy), enemyShockWaveManager_(&enemyShockWaveManager), floorBulletManager_(&floorBulletManager)
 {
+    manager_ = ParticleManager::GetInstance();
+
+    enemyKnockBackEmitter_ = std::make_unique<ParticleEmitter>();
+    enemyKnockBackEmitter_->SetName("HitParticle");
+    enemyKnockBackEmitter_->emitter_.transform.Parent(enemy_->bodyPos_.worldTransform_);
+
+
+
 
     for (auto& particleEmitter : particleEmitters_) {
         particleEmitter = std::make_unique<ParticleEmitter>();
@@ -18,11 +26,14 @@ EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShock
     particleEmitters_[kPlayerWalkEmitter]->SetName("playerWalkParticle");
     particleEmitters_[kPlayerWalkEmitter]->emitter_.transform.Parent(player_->GetWorldBodyTransform());
 
-    particleEmitters_[kPlayerHitEmitter]->SetName("playerHitParticle");
+    particleEmitters_[kPlayerHitEmitter]->SetName("HitParticle");
     particleEmitters_[kPlayerHitEmitter]->emitter_.transform.Parent(player_->GetWorldBodyTransform());
 
     particleEmitters_[kEnemyHitEmitter]->SetName("enemyHitParticle");
     particleEmitters_[kEnemyHitEmitter]->emitter_.transform.Parent(enemy_->bodyPos_.worldTransform_);
+
+
+
 
     //particleEmitters_[kEnemyWingEmitter]->SetName("enemyWingParticle");
     //particleEmitters_[kEnemyWingEmitter]->emitter_.transform.Parent(enemy_->bodyPos_.worldTransform_);
@@ -127,6 +138,40 @@ EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShock
     particleEmitters_[kPlayerHitEmitter]->emitter_.lifeTime = 1.0f;
     particleEmitters_[kPlayerHitEmitter]->emitter_.blendMode = kBlendModeNormal;
 
+    //ノックバックにプレイヤーと同じパラメーターを入れる
+    enemyKnockBackEmitter_->emitter_.transform.translate_ = { 0.0f,2.0f,1.0f };
+    enemyKnockBackEmitter_->emitter_.transform.scale_ = { 2.0f,2.0f,2.0f };
+    enemyKnockBackEmitter_->emitter_.translateAABB_ = { 0.0f };
+    enemyKnockBackEmitter_->emitter_.transform.scale_ = { 0.5f,0.5f,0.5f };
+    enemyKnockBackEmitter_->emitter_.count = 3;
+    enemyKnockBackEmitter_->emitter_.movement = ParticleMovements::kParticleSphere;
+    enemyKnockBackEmitter_->emitter_.radius = 1.0f;
+    enemyKnockBackEmitter_->emitter_.radiusSpeed = 0.0f;
+    enemyKnockBackEmitter_->emitter_.radiusSpeedMinMax = { 0.0f,0.0f };
+    enemyKnockBackEmitter_->emitter_.polarSpeed = InverseFPS * std::numbers::pi_v<float>;
+    enemyKnockBackEmitter_->emitter_.polarSpeedMinMax = { 0.0f,0.0f };
+    enemyKnockBackEmitter_->emitter_.frequency = 0.2f;
+    enemyKnockBackEmitter_->emitter_.lifeTime = 1.0f;
+    enemyKnockBackEmitter_->emitter_.blendMode = kBlendModeNormal;
+
+
+    leafEmitter_ = std::make_unique<ParticleEmitter>();
+    leafEmitter_->SetName("leafParticle");
+
+    leafEmitter_->emitter_.count = 2;
+    leafEmitter_->emitter_.movement = ParticleMovements::kParticleNormal;
+    leafEmitter_->emitter_.transform.translate_.y = 5.0f;
+    leafEmitter_->emitter_.translateAABB_ = { .min = {-7.5f,0.0f,-7.5f},.max = {7.5f,1.0f,7.5f} };
+    leafEmitter_->emitter_.rotateOffset_ = 0.0f;
+    leafEmitter_->emitter_.frequency = 0.35f;
+    leafEmitter_->emitter_.lifeTime = 2.0f;
+    leafEmitter_->emitter_.blendMode = kBlendModeNormal;
+    leafEmitter_->emitter_.scaleOffset_ = 0.125f; 
+    leafEmitter_->emitter_.rotateOffset_ = 3.14f;
+
+   auto& leafGroup = manager_->GetParticleGroup(leafEmitter_->emitter_.name);
+   leafGroup->accelerationField.area = { .min = {-16.0f,0.0f,-16.0f},.max = {16.0f,10.0f,16.0f} };
+   leafGroup->accelerationField.acceleration = { 0.2f, -1.0f,0.0f };
 }
 
 void EmitterManager::Initialize()
@@ -137,6 +182,11 @@ void EmitterManager::Initialize()
         ParticleManager::Reset(particleEmitter->emitter_.name);
     }
 
+    enemyKnockBackEmitter_->InitTimer();
+
+    leafEmitter_->InitTimer();
+    ParticleManager::Reset(leafEmitter_->emitter_.name);
+
     for (auto& grop : waveEmitters_) {
         grop.emitter->InitTimer();
     }
@@ -144,9 +194,9 @@ void EmitterManager::Initialize()
     ParticleManager::Reset("windAttackParticle01");
     ParticleManager::Reset("windAttackParticle02");
 
-  /*  for (auto& grop : floorBulletEmitters_) {
-        grop.emitter->InitTimer();
-    }*/
+    /*  for (auto& grop : floorBulletEmitters_) {
+          grop.emitter->InitTimer();
+      }*/
 
 }
 
@@ -176,23 +226,22 @@ void EmitterManager::Update(Camera& camera)
     if (!enemy_->IsOverKill()) {
         if (enemy_->IsHit()) {
             particleEmitters_[kEnemyHitEmitter]->Emit();
-
-            /*       for (auto& grop : floorBulletEmitters_) {
-                       if (grop.floorBullet->isActive_) {
-                           if (grop.floorBullet->isHit_) {
-                               grop.emitter->Emit();
-                           } else {
-                               grop.emitter->InitTimer();
-                           }
-                           grop.emitter->Update(camera);
-                       }
-                   }*/
             particleEmitters_[kEnemyHitEmitter]->Update(camera);
         }
 
+
+
     }
 
+    if (enemy_->phase_ == Enemy::KNOCKBACK) {
+        if (enemy_->isKnockBackEmit_) {
+            enemyKnockBackEmitter_->UpdateTimer();
+            enemyKnockBackEmitter_->Update(camera);
+        } else {
+            enemyKnockBackEmitter_->InitTimer();
+        }
 
+    }
 
     //if (!enemy_->IsOverKill()) {
 
@@ -213,6 +262,10 @@ void EmitterManager::Update(Camera& camera)
             }
         }
     }
+
+
+    leafEmitter_->UpdateTimer();
+    leafEmitter_->Update(camera);
 }
 
 void EmitterManager::Draw()
@@ -230,7 +283,12 @@ void EmitterManager::Draw()
     for (auto& particleEmitter : particleEmitters_) {
         particleEmitter->Draw();
     }
+ 
+    if (enemy_->phase_ == Enemy::KNOCKBACK) {
+        enemyKnockBackEmitter_->Draw();
+    }
 
+    leafEmitter_->Draw();
 }
 
 void EmitterManager::Debug()
@@ -240,10 +298,9 @@ void EmitterManager::Debug()
     DebugUI::CheckParticle(*particleEmitters_[kEnemyHitEmitter], "EnemyEmitter");
     DebugUI::CheckParticle(*particleEmitters_[kPlayerWalkEmitter], "PlayerEmitter");
 
-
-    DebugUI::CheckParticle(*waveEmitters_[0].emitter, "waveEmitter0");
-    DebugUI::CheckParticle(*waveEmitters_[1].emitter, "waveEmitter1");
     DebugUI::CheckParticle(*waveEmitters_[2].emitter, "waveEmitter2");
 
 
+    DebugUI::CheckParticle(*enemyKnockBackEmitter_, "KnockBack");
+    DebugUI::CheckParticle(*leafEmitter_, "leafEmitter");
 }

@@ -79,6 +79,8 @@ void Enemy::Init() {
     isShot_ = false;
     isBombShot_ = false;
     isWaveShot_ = false;
+    isKnockBackEmit_ = false;
+    isKnockBack_ = false;
 
     isAttack_ = false;
     isPreAttack_ = false;
@@ -194,6 +196,7 @@ void Enemy::Update()
 
 
     damageStruct_.isHit = false;
+    isKnockBack_ = false;
 
     HitAnimation();
     bodyPos_.GetWaveData(0).time += InverseFPS * 4.0f;
@@ -381,8 +384,16 @@ void Enemy::Tackle()
         if (!isFeint_) {
             if (Dot(*playerLookDir_, endPos_ - startPos_) < 0.0f) {
                 if (damageStruct_.isHit) {
+                    isKnockBack_ = true;
+                    isKnockBackEmit_ = true;
+                    LookTarget(*playerPos_);
+
                     Sound::PlayOriginSE(Sound::kBossTackle);
+                    if (damageStruct_.hps.hp >= kKnockBackDamage_) {
+                        damageStruct_.hps.hp -= kKnockBackDamage_;
+                    }
                     VibrateManager::SetTime(1.0f, 2000, 2000);
+                 
                     SetPhase(KNOCKBACK);
                 }
             }
@@ -420,18 +431,19 @@ void Enemy::PlayerHitBack()
 void Enemy::KnockBack()
 {
 
-    if (phaseTimer_ == 0.0f) {
-        LookTarget(*playerPos_);
-    }
-
     if (phaseTimer_ <= kHitBackTime_) {
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(bodyPos_.worldTransform_.translate_, startPos_, 0.05f);
     } else {
 
         if (phaseTimer_ <= kKnockBackSpinTime_) {
             SpinBody();
+        
+            if (phaseTimer_ >= kKnockBackSpinTime_ - 0.5f) {
+                isKnockBackEmit_ = false;
+            }
 
         } else {
+   
             LerpSpinOriginBody();
             bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, startPos_, 0.05f);
         }

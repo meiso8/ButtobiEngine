@@ -44,7 +44,7 @@ public:
     }
 
     // 死亡後のアニメーション
-	void LeathalMoveUpdate();
+    void LeathalMoveUpdate();
 
     //ファイアボールを打つフラグ
     bool isShot_ = false;
@@ -54,8 +54,11 @@ public:
     bool isWaveShot_ = false;
     //床を初期化する
     bool isReqestClearFloor_ = false;
-	// フェーズを変えているかどうか
-	bool isFaseChange_ = false;
+    // フェーズを変えているかどうか
+    bool isFaseChange_ = false;
+    //ノックバックえみっとするか
+    bool isKnockBackEmit_ = false;
+    bool isKnockBack_ = false;
     //体の位置
     Object3d bodyPos_;
     enum PHASE {
@@ -102,7 +105,7 @@ private:
     std::unordered_map<std::string, std::function<void()>> SwitchRandomAttackPhase_;
 
     //モデル
-    std::unordered_map< Parts,Model*> models_;
+    std::unordered_map< Parts, Model*> models_;
     //翼の位置
     Object3d wingLPos_;
     //翼の位置
@@ -161,6 +164,7 @@ private:
     const float kTackleInitStartTime_ = kTackleGoPlayerTime_ + 1.0f;
     //タックル終了後　後隙
     const float kTackleEndingLagTime_ = kTackleInitStartTime_ + 0.5f;
+
 #pragma endregion
 
 #pragma region//Hit Back
@@ -168,11 +172,13 @@ private:
     const float kHitBackTime_ = 0.125f;
     //プレイヤーに当たった後初期地点に戻るタイム
     const float kPlayerHitBackTime_ = 2.0f;
-    
+
     //KnockBack中初期地点に戻るタイム
     const float kKnockBackSpinTime_ = 1.0f;
     //KnockBack最大タイム
     const float kKnockBackMaxTime_ = 3.5f;
+
+    const int kKnockBackDamage_ = 4;
 #pragma endregion
 
 #pragma region //ファイアボール

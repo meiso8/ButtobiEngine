@@ -118,9 +118,13 @@ public:
     void Create();
     static ParticleManager* GetInstance();
     static void Reset(const std::string& name);
-static void Emit(Emitter& emitter);
+    static void Emit(Emitter& emitter);
 
     std::unordered_map<std::string, std::unique_ptr <ParticleGroup>>& GetParticleGroups();
+    std::unique_ptr <ParticleGroup>& GetParticleGroup(const std::string& name) {
+        assert(particleGroups.contains(name));
+        return particleGroups[name];
+    };
     void CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle, const bool& useModel = false, const ModelManager::MODEL_HANDLE& modelHandle = ModelManager::MODEL_HANDLE::BOX);
 
     void Update(Camera& camera);
@@ -141,7 +145,7 @@ private:
     void CreateModelData();
     void CreateVertexBufferResource();
 
-    void IsCollisionFieldArea(Particle& particleItr ,ParticleGroup& group);
+    void IsCollisionFieldArea(Particle& particleItr, ParticleGroup& group);
     void UpdateWorldMatrixForBillBord(Particle& particleItr, ParticleGroup& group);
     void UpdateWorldMatrix(Particle& particleItr, ParticleGroup& group);
     void UpdateWVPMatrix(Camera& camera, ParticleGroup& group);

@@ -24,7 +24,7 @@ struct FloorBulletEmitterPair {
 class EmitterManager
 {
 public:
-    EmitterManager(FloorGamePlayer& player, Enemy&enemy, EnemyShockWaveManager& enemyShockWaveManager, FloorBulletManager& floorBulletManager);
+    EmitterManager( FloorGamePlayer& player, Enemy&enemy, EnemyShockWaveManager& enemyShockWaveManager, FloorBulletManager& floorBulletManager);
     void Initialize();
     void Update(Camera& camera);
     void Draw();
@@ -34,7 +34,7 @@ private:
 
     std::vector<WaveEmitterPair> waveEmitters_;
     //std::vector<FloorBulletEmitterPair> floorBulletEmitters_;
-
+    ParticleManager* manager_ = nullptr;
     FloorGamePlayer* player_ = nullptr;
     Enemy* enemy_ = nullptr;
     EnemyShockWaveManager* enemyShockWaveManager_;
@@ -45,6 +45,10 @@ private:
         kEnemyHitEmitter,
         kMaxEmitter
     };
+
+    std::unique_ptr<ParticleEmitter> leafEmitter_ = nullptr;
+
+    std::unique_ptr<ParticleEmitter> enemyKnockBackEmitter_ = nullptr;
     //std::vector <std::unique_ptr<ParticleEmitter>> bombEmitter_;
     std::array< std::unique_ptr<ParticleEmitter>, kMaxEmitter>particleEmitters_;
 };
