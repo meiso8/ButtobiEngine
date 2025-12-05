@@ -23,9 +23,7 @@ void CameraController::Initialize()
     camera_->translate_ = { 0.0f, 17.0f,-7.4f };
     camera_->rotate_ = { 1.2f,0.0f,0.0f };
     camera_->offset_ = { 0.0f,0.0f };
-    isShakeStart_ = false;
-    shakeFrame_ = 0;
-    moveRange_ = 0.0f;
+    shake_.Reset();
 
 	isFocusTarget_ = false;
 	focusTargetPos_ = nullptr;
@@ -38,13 +36,7 @@ void CameraController::Initialize()
 
 void CameraController::StartShake(const float& moveRange, const uint32_t& frame)
 {
-    if (isShakeStart_) {
-        return;
-    }
-
-    isShakeStart_ = true;
-    moveRange_ = moveRange;
-    shakeFrame_ = frame;
+    shake_.Start(moveRange, frame);
 }
 
 void CameraController::FocusTarget(const Vector3* targetPos) {
@@ -87,24 +79,6 @@ void CameraController::EndEnemyLethal() {
 
 void CameraController::UpdateShakeTimer()
 {
-    if (shakeFrame_ == 0) {
-        camera_->offset_ = { 0.0f,0.0f };
-        return;
-    }
-
-    if (shakeFrame_ > 0) {
-        shakeFrame_--;
-    }
-   
-    if (shakeFrame_ % 6 == 0) {
-        if (moveRange_ > 0.0f) {
-            moveRange_--;
-        }
-    }
-
-    Random::SetMinMax(-moveRange_, moveRange_);
-    camera_->offset_.x = Random::Get();
-    camera_->offset_.y = Random::Get();
-
-
+    shake_.Update();
+	camera_->offset_ = shake_.GetOffset();
 }

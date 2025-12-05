@@ -17,6 +17,7 @@ HPIcon::HPIcon() {
 		}
 	}
 
+	shake = std::make_unique<Shake>();
 }
 
 void HPIcon::Setting(const Vector2& size, const Vector2& pos) {
@@ -31,6 +32,9 @@ void HPIcon::Setting(const Vector2& size, const Vector2& pos) {
 			};
 			spriteList[i]->SetSize(size);
 			spriteList[i]->SetPosition(offsetPos);
+
+			position_.push_back(offsetPos);
+
 		}
 	}
 }
@@ -43,9 +47,12 @@ void HPIcon::Initialize() {
 		sprite->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 	}
 	drawHpNum_ = kMaxHPIcon_;
+	shake->Reset();
 }
 
 void HPIcon::Update() {
+
+
 	if (hps_->hp > 0) {
 
 		if (hps_->hp != preHP) {
@@ -66,6 +73,8 @@ void HPIcon::Update() {
 			drawHpNum_ = static_cast<size_t>(std::clamp(static_cast<float>(drawHpNum_), 0.0f, static_cast<float>(kMaxHPIcon_)));
 		}
 
+		HitAction();
+
 	} else {
 
 		drawHpNum_ = 0;
@@ -84,8 +93,7 @@ void HPIcon::Update() {
 
 void HPIcon::Draw() {
 
-	sprites_[layer1][0]->PreDraw();
-
+	Sprite::PreDraw();
 
 	for (auto& sprite : sprites_[MaxHp]) {
 		sprite->Draw();
@@ -97,4 +105,24 @@ void HPIcon::Draw() {
 	}
 
 
+}
+
+void HPIcon::HitAction()
+{
+	if (*isHitPtr_) {
+		shake->Start(10.0f, 60);
+	}
+	
+	shake->Update();
+
+	for (size_t i = 0; i < drawHpNum_; ++i) {
+		sprites_[MaxHp][i]->SetPosition(position_[i] + shake->GetOffset());
+		sprites_[layer1][i]->SetPosition(position_[i] + shake->GetOffset());
+	}
+
+}
+
+HPIcon::~HPIcon()
+{
+	position_.clear();
 }

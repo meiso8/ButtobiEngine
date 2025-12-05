@@ -82,7 +82,7 @@ GameScene::GameScene()
     nest_ = std::make_unique<Nest>();
 #pragma endregion
 
-    uiManager_ = std::make_unique<UIManager>(*enemy_->GetHpsPtr(), *floorGamePlayer_->GetHpsPtr());
+    uiManager_ = std::make_unique<UIManager>(*enemy_->GetHpsPtr(), *floorGamePlayer_->GetHpsPtr(), floorGamePlayer_->IsHit());
 
     emitterManager_ = std::make_unique<EmitterManager>(*floorGamePlayer_, *enemy_,*enemyShockWaveManager_,*floorBulletManager_);
 }
@@ -255,8 +255,6 @@ void GameScene::UpdateCamera()
 
         if (floorGamePlayer_->IsHit()) {
             cameraController_->StartShake(2.0f, 60);
-        } else {
-            cameraController_->SetShakeFalse();
         }
 
         if (enemy_->isFaseChange_) {
