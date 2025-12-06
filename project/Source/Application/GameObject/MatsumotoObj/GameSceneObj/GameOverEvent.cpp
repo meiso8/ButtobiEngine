@@ -98,7 +98,9 @@ void GameOverEvent::Update() {
 		isRetrySelected_ = false;
 	}
 	if (key.IsTrigger("Shot")) {
-		isReqestedAction_ = true;
+		if (timer_ > 1.0f) {
+			isReqestedAction_ = true;
+		}
 	}
 
 	if (isRetrySelected_) {
