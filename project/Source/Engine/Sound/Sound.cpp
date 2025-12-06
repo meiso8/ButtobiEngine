@@ -37,6 +37,8 @@ void Sound::LoadAllSound()
     handles_[inGameBGM01] = Load("Resource/Sounds/BGM/inGameBGM01.mp3");
     handles_[inGameBGM02] = Load("Resource/Sounds/BGM/inGameBGM02.mp3");
     handles_[playerHP1BGM] = Load("Resource/Sounds/BGM/playerHP1BGM.mp3");
+    handles_[gameOverBGM] = Load("Resource/Sounds/BGM/gameOverBGM.mp3");
+
     handles_[resultBGM] = Load("Resource/Sounds/BGM/resultBGM.mp3");
     handles_[titleBGM] = Load("Resource/Sounds/BGM/titleBGM.mp3");
 

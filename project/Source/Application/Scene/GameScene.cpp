@@ -97,6 +97,8 @@ GameScene::GameScene()
 void GameScene::Initialize() {
 
     Sound::bgmVolume_ = bgmMaxVol_;
+    Sound::Stop(Sound::titleBGM);
+    isSoundGameOverBGM_ = false;
 
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 90);
@@ -141,10 +143,12 @@ void GameScene::Initialize() {
     emitterManager_->Initialize();
 
 	gameclearTimer_ = 0.0f;
-
+    gameOverTimer_ = 0.0f;
 }
 
 void GameScene::Update() {
+
+    UpdateBGM();
 
     if (gameclearTimer_ > 2.0f) {
 		SceneStaticValue::isClear = true;
@@ -157,10 +161,6 @@ void GameScene::Update() {
     }
 
 	if (gameOverEvent_->IsReqestedAction()) {
-        Sound::Stop(Sound::inGameBGM01);
-        Sound::Stop(Sound::inGameBGM02);
-        Sound::Stop(Sound::playerHP1BGM);
-        Sound::PlayBGM(Sound::resultBGM);
 
 		if (gameOverEvent_->IsRetrySelected()) {
 			Initialize();
@@ -173,29 +173,8 @@ void GameScene::Update() {
     if (PauseScreen::isBackToTitle) {
         sceneChange_->SetState(SceneChange::kFadeIn, 30);
     }
-    if (floorGamePlayer_->GetHpsPtr()->hp <= 20.0f) {
-        Sound::Stop(Sound::inGameBGM01);
-        Sound::Stop(Sound::inGameBGM02);
-        Sound::PlayBGM(Sound::playerHP1BGM);
-    } else {
 
-        Sound::Stop(Sound::resultBGM);
 
-        if (enemy_->GetCurrentState() != "Third") {
-            Sound::Stop(Sound::inGameBGM02);
-            Sound::PlayBGM(Sound::inGameBGM01);
-        } else {
-            Sound::Stop(Sound::inGameBGM01);
-            //仮に音声を鳴らす　全体のvolumeがあってオフセット分だけいじる
-            Sound::PlayBGM(Sound::inGameBGM02);
-        }
-    }
-
-    if (PauseScreen::isPause_) {
-        Sound::bgmVolume_ = Lerp(Sound::bgmVolume_, 0.125f, 0.5f);
-    } else {
-        Sound::bgmVolume_ = Lerp(Sound::bgmVolume_, bgmMaxVol_, 0.5f);
-    }
     if (!PauseScreen::isActive_) {
         UpdateCamera();
         UpdateGameObject();
@@ -316,8 +295,14 @@ void GameScene::UpdateGameObject()
     ground_->Update();
     nest_->Update();
 
+    if (floorGamePlayer_->IsDead()) {
+        gameOverTimer_ += InverseFPS;
+    }
+
+
     // オブジェクト同士の干渉
     actionUI_->Update();
+
     if (floorGamePlayer_->GetDamageStruct().hps.hp <= 0) {
         actionUI_->isHide_ = true;
     } else {
@@ -337,21 +322,73 @@ void GameScene::UpdateGameObject()
         floorGameFloorManager_->Initialize();
         enemy_->isReqestClearFloor_ = false;
     }
+
     if (enemy_->IsOverKill()) {
         enemy_->LeathalMoveUpdate();
 		gameclearTimer_ += 0.016f;
     }
 
+
     // アニメーション更新
     floorGamePlayerAnimationManager_->Update();
 
-    // イベントシステム
-    gameOverEvent_->Update();
+    if (IsGameOverEventUpdate()) {
+        // イベントシステム
+        gameOverEvent_->Update();
+    }
+
     if (floorGamePlayer_->GetDamageStruct().hps.hp <= 0 || enemy_->isFaseChange_ || enemy_->IsOverKill()) {
         letterboxBars_->isOpen_ = true;
     } else {
 		letterboxBars_->isOpen_ = false;
     }
+}
+
+void GameScene::UpdateBGM()
+{
+
+    if (IsGameOverBGMSound()) {
+        if (!isSoundGameOverBGM_) {
+            isSoundGameOverBGM_ = true;
+            Sound::PlaySE(Sound::gameOverBGM);
+        }
+    }
+
+    if (floorGamePlayer_->IsDead()|| SceneStaticValue::isClear) {
+        Sound::Stop(Sound::inGameBGM01);
+        Sound::Stop(Sound::inGameBGM02);
+        Sound::Stop(Sound::playerHP1BGM);
+    } else {
+
+        if (floorGamePlayer_->GetHpsPtr()->hp <= 20.0f) {
+
+            Sound::Stop(Sound::inGameBGM01);
+            Sound::Stop(Sound::inGameBGM02);
+
+            Sound::PlayBGM(Sound::playerHP1BGM);
+        } else {
+
+            Sound::Stop(Sound::playerHP1BGM);
+
+            if (enemy_->GetCurrentState() != "Third") {
+                Sound::Stop(Sound::inGameBGM02);
+                Sound::PlayBGM(Sound::inGameBGM01);
+            } else {
+                Sound::Stop(Sound::inGameBGM01);
+                //仮に音声を鳴らす　全体のvolumeがあってオフセット分だけいじる
+                Sound::PlayBGM(Sound::inGameBGM02);
+            }
+        }
+    }
+
+
+    if (PauseScreen::isPause_) {
+        Sound::bgmVolume_ = Lerp(Sound::bgmVolume_, 0.125f, 0.5f);
+    } else {
+        Sound::bgmVolume_ = Lerp(Sound::bgmVolume_, bgmMaxVol_, 0.5f);
+    }
+
+
 }
 
 void GameScene::CheckAllCollision()

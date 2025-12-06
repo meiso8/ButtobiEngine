@@ -51,6 +51,9 @@ public:
 private:
     void UpdateCamera();
     void UpdateGameObject();
+    void UpdateBGM();
+    bool IsGameOverBGMSound() { return(gameOverTimer_ >= 0.5f); }
+    bool IsGameOverEventUpdate() { return(gameOverTimer_ >= 1.5f); }
     //全衝突判定
     void CheckAllCollision();
 private:
@@ -92,6 +95,8 @@ private:
     std::unique_ptr<EmitterManager>emitterManager_ = nullptr;
 
     float bgmMaxVol_ = 0.375f;
+    int isSoundGameOverBGM_ = false;
 
 	float gameclearTimer_ = 0.0f;
+    float gameOverTimer_ = 0.0f;
 };

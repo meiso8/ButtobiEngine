@@ -32,6 +32,7 @@ public:
         inGameBGM01,
         inGameBGM02,
         playerHP1BGM,
+        gameOverBGM,
         resultBGM,
         titleBGM,
 
