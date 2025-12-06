@@ -6,7 +6,7 @@
 class EnemyShockWaveManager
 {
 public:
-	static const int kMaxWaves = 5;
+	static const int kMaxWaves = 4;
 	EnemyShockWaveManager();
 	~EnemyShockWaveManager();
 	void Initialize();
