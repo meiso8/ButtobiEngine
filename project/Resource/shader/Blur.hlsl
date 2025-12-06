@@ -1,6 +1,5 @@
 #include "object3d.hlsli"
 
-//テクスチャを貼り付けたり、ライティングを行ったりと、もっとも主要なShaderである
 
 struct Material
 {
@@ -14,16 +13,14 @@ struct DoFParam
     float focusDepth; //焦点距離を追加
 };
 
-//ConstantBufferを定義する
-//ConstantBuffer<構造体>変数名 : register(b0);//配置場所
-//CPUから値を渡すにはConstantBufferという機能を利用する
+
 ConstantBuffer<Material> gMaterial : register(b0);
 ConstantBuffer<DoFParam> gDoFParam : register(b1);
 
-Texture2D<float32_t4> gTexture : register(t0); //SRVはt
-Texture2D<float32_t4> gDepthTexture : register(t1); //追加
+Texture2D<float32_t4> gTexture : register(t0);
+Texture2D<float32_t4> gDepthTexture : register(t1); 
 
-SamplerState gSampler : register(s0); //Samplerはs これを介してtextureを読む
+SamplerState gSampler : register(s0);
 
 
 float GaussianWeight(float x, float sigma)

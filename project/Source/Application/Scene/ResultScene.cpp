@@ -72,6 +72,8 @@ void ResultScene::Initialize() {
 void ResultScene::Update() {
 
   
+    Sound::PlayBGM(Sound::resultBGM);
+
     if (!SceneStaticValue::isClear) {
         sceneChange_->SetState(SceneChange::kFadeIn, 60);
     }

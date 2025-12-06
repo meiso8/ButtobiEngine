@@ -10,15 +10,15 @@ struct TransformationMatrix
 
 struct Wave
 {
-    float32_t4 direction; //方向
-    float time; // アニメーション用の時間変数
-    float amplitude; //振幅
-    float frequency; //周期
+    float32_t4 direction; 
+    float time; 
+    float amplitude; 
+    float frequency; 
 };
 
 struct Balloon
 {
-    float expansion; //膨張
+    float expansion;
     float sphere;
     float cube;
     bool isSphere;
@@ -55,7 +55,6 @@ float32_t3 BalloonUpdate(VertexShaderInput input)
 {
     float32_t3 output;
     
-    //法線*膨張率
     output = input.normal * gBalloon.expansion;
     return output;
 }
@@ -84,7 +83,7 @@ float32_t4 CubeUpdate(VertexShaderInput input)
 VertexShaderOutput main(VertexShaderInput input)
 {
     VertexShaderOutput output;
-    //行列の積を計算する関数がhlslの組み込み関数で定義されている
+
     input.position.y += WaveUpdate(input);
      
     input.position.xyz += BalloonUpdate(input);

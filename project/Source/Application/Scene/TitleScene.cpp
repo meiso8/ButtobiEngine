@@ -120,6 +120,8 @@ void TitleScene::Initialize()
 #pragma endregion
 
 	eventTimer_ = 0.0f;
+
+    Sound::Stop(Sound::resultBGM);
 }
 
 void TitleScene::Update()
