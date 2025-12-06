@@ -294,9 +294,9 @@ void Enemy::OnCollision(Collider* collider)
 
     if (collider->GetCollisionAttribute() == kCollisionPlayerBullet) {
 
-        if (damageStruct_.isHit) {
-            return;
-        }
+        //if (damageStruct_.isHit) {
+        //    return;
+        //}
 
         damageStruct_.isHit = true;
         Sound::PlaySE(Sound::kDefeatBoss);
