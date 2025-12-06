@@ -5,6 +5,7 @@
 #include"FloorGameFloor.h"
 #include <algorithm>
 #include <memory>
+#include "MatsumotoObj/GameSceneObj/Data/MapData.h"
 
 StrippedFloor::StrippedFloor() {
 	body_.Create();
@@ -20,6 +21,8 @@ StrippedFloor::StrippedFloor() {
 	body_.SetMesh(models_[type_]);
 
 	isActive_ = false;
+
+	body_.worldTransform_.scale_ = { kHalfFloorSize * 2.0f,kHalfFloorSize * 2.0f,kHalfFloorSize * 2.0f };
 }
 
 StrippedFloor::~StrippedFloor() {
@@ -27,6 +30,7 @@ StrippedFloor::~StrippedFloor() {
 
 void StrippedFloor::Initialize() {
 	body_.Initialize();
+	body_.worldTransform_.scale_ = { kHalfFloorSize * 2.0f,kHalfFloorSize * 2.0f,kHalfFloorSize * 2.0f };
 }
 
 void StrippedFloor::Update() {

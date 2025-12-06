@@ -6,18 +6,18 @@
 #include <algorithm>
 
 FloorGameFloorManager::FloorGameFloorManager() {
-    for (int y = 0; y < kMapHeight; y++) {
-        floors_.emplace_back();
-        for (int x = 0; x < kMapWidth; x++) {
-            floors_[y].emplace_back(std::make_unique<FloorGameFloor>());
-            floors_[y][x]->Initialize();
-            floors_[y][x]->body_.worldTransform_.translate_ = {
-                static_cast<float>(x) - (static_cast<float>(kMapWidth) * kHalfFloorSize) + kHalfFloorSize,
-                -kHalfFloorSize,
-                static_cast<float>(y) - (static_cast<float>(kMapHeight) * kHalfFloorSize) + kHalfFloorSize
-            };
-        }
-    }
+	for (int y = 0; y < kMapHeight; y++) {
+		floors_.emplace_back();
+		for (int x = 0; x < kMapWidth; x++) {
+			floors_[y].emplace_back(std::make_unique<FloorGameFloor>());
+			floors_[y][x]->Initialize();
+			floors_[y][x]->body_.worldTransform_.translate_ = {
+				static_cast<float>(x) * kHalfFloorSize - (static_cast<float>(kMapWidth) * kHalfFloorSize) + kHalfFloorSize,
+				0.5f,
+				static_cast<float>(y) * kHalfFloorSize - (static_cast<float>(kMapHeight) * kHalfFloorSize) + kHalfFloorSize
+			};
+		}
+	}
 }
 
 FloorGameFloorManager::~FloorGameFloorManager() {
@@ -27,29 +27,29 @@ void FloorGameFloorManager::Initialize() {
 	for (int y = 0; y < kMapHeight; y++) {
 		for (int x = 0; x < kMapWidth; x++) {
 			floors_[y][x]->Initialize();
-            floors_[y][x]->body_.worldTransform_.translate_ = {
-                static_cast<float>(x) - (static_cast<float>(kMapWidth) * kHalfFloorSize) + kHalfFloorSize,
-                -kHalfFloorSize,
-                static_cast<float>(y) - (static_cast<float>(kMapHeight) * kHalfFloorSize) + kHalfFloorSize
-            };
+			floors_[y][x]->body_.worldTransform_.translate_ = {
+				static_cast<float>(x)* (kHalfFloorSize * 2.0f) - (static_cast<float>(kMapWidth) * kHalfFloorSize) + kHalfFloorSize,
+				0.5f,
+				static_cast<float>(y) * (kHalfFloorSize * 2.0f) - (static_cast<float>(kMapHeight) * kHalfFloorSize) + kHalfFloorSize
+			};
 		}
 	}
 }
 
 void FloorGameFloorManager::Update() {
-    for (int y = 0; y < kMapHeight; y++) {
-        for (int x = 0; x < kMapWidth; x++) {
-            floors_[y][x]->Update();
-        }
-    }
+	for (int y = 0; y < kMapHeight; y++) {
+		for (int x = 0; x < kMapWidth; x++) {
+			floors_[y][x]->Update();
+		}
+	}
 }
 
 void FloorGameFloorManager::Draw(Camera& camera) {
-    for (int y = 0; y < kMapHeight; y++) {
-        for (int x = 0; x < kMapWidth; x++) {
-            floors_[y][x]->Draw(camera);
-        }
-    }
+	for (int y = 0; y < kMapHeight; y++) {
+		for (int x = 0; x < kMapWidth; x++) {
+			floors_[y][x]->Draw(camera);
+		}
+	}
 }
 
 void FloorGameFloorManager::ForceChangeAllFloorType(const FloorType& floorType) {
@@ -69,85 +69,88 @@ void FloorGameFloorManager::AddCollider(CollisionManager* collisionManager) {
 }
 
 FloorType FloorGameFloorManager::GetFloorTypeAtPosition(const Vector3& position) const {
-    std::pair<int, int> floorIndex = GetFloorIndexAtPosition(position);
-    int xIndex = floorIndex.first;
-    int yIndex = floorIndex.second;
-    return floors_[yIndex][xIndex]->floorType_;
+	std::pair<int, int> floorIndex = GetFloorIndexAtPosition(position);
+	int xIndex = floorIndex.first;
+	int yIndex = floorIndex.second;
+	return floors_[yIndex][xIndex]->floorType_;
 }
 
 std::vector<std::pair<int, int>> FloorGameFloorManager::GetConnectedFloorsAtPosition(const Vector3& position) const {
-    std::vector<std::pair<int, int>> result;
+	std::vector<std::pair<int, int>> result;
 
-    std::pair<int, int> floorIndex = GetFloorIndexAtPosition(position);
-    int xIndex = floorIndex.first;
-    int yIndex = floorIndex.second;
+	std::pair<int, int> floorIndex = GetFloorIndexAtPosition(position);
+	int xIndex = floorIndex.first;
+	int yIndex = floorIndex.second;
 
-    FloorType targetType = floors_[yIndex][xIndex]->floorType_;
-    std::vector<std::vector<bool>> visited(kMapHeight, std::vector<bool>(kMapWidth, false));
-    std::queue<std::pair<int, int>> q;
+	FloorType targetType = floors_[yIndex][xIndex]->floorType_;
+	std::vector<std::vector<bool>> visited(kMapHeight, std::vector<bool>(kMapWidth, false));
+	std::queue<std::pair<int, int>> q;
 
-    q.push({ yIndex, xIndex });
-    visited[yIndex][xIndex] = true;
+	q.push({ yIndex, xIndex });
+	visited[yIndex][xIndex] = true;
 
-    const int dx[4] = { 0, 1, 0, -1 };
-    const int dy[4] = { -1, 0, 1, 0 };
+	const int dx[4] = { 0, 1, 0, -1 };
+	const int dy[4] = { -1, 0, 1, 0 };
 
-    while (!q.empty()) {
-        auto [cy, cx] = q.front();
-        q.pop();
-        result.emplace_back(cx, cy);
+	while (!q.empty()) {
+		auto [cy, cx] = q.front();
+		q.pop();
+		result.emplace_back(cx, cy);
 
-        for (int dir = 0; dir < 4; ++dir) {
-            int ny = cy + dy[dir];
-            int nx = cx + dx[dir];
-            if (nx >= 0 && nx < kMapWidth && ny >= 0 && ny < kMapHeight) {
-                if (!visited[ny][nx] && floors_[ny][nx]->floorType_ == targetType) {
-                    visited[ny][nx] = true;
-                    q.push({ ny, nx });
-                }
-            }
-        }
-    }
+		for (int dir = 0; dir < 4; ++dir) {
+			int ny = cy + dy[dir];
+			int nx = cx + dx[dir];
+			if (nx >= 0 && nx < kMapWidth && ny >= 0 && ny < kMapHeight) {
+				if (!visited[ny][nx] && floors_[ny][nx]->floorType_ == targetType) {
+					visited[ny][nx] = true;
+					q.push({ ny, nx });
+				}
+			}
+		}
+	}
 
-    return result;
+	return result;
 }
 
 void FloorGameFloorManager::SwapFloorTypeAtPosition(const int& xIndex, const int& yIndex) {
-    if (xIndex < 0 || xIndex >= kMapWidth || yIndex < 0 || yIndex >= kMapHeight) {
-        // 範囲外の場合は一番近い端に補正する
-        return floors_[std::clamp(yIndex, 0, kMapHeight - 1)][std::clamp(xIndex, 0, kMapWidth - 1)]->SwapNextFloorType();
-    }
-    floors_[yIndex][xIndex]->SwapNextFloorType();
+	if (xIndex < 0 || xIndex >= kMapWidth || yIndex < 0 || yIndex >= kMapHeight) {
+		// 範囲外の場合は一番近い端に補正する
+		return floors_[std::clamp(yIndex, 0, kMapHeight - 1)][std::clamp(xIndex, 0, kMapWidth - 1)]->SwapNextFloorType();
+	}
+	floors_[yIndex][xIndex]->SwapNextFloorType();
 }
 
 void FloorGameFloorManager::SwapFloorTypeAtPosition(const Vector3& position) {
-    std::pair<int, int> floorIndex = GetFloorIndexAtPosition(position);
-    int xIndex = floorIndex.first;
-    int yIndex = floorIndex.second;
-    if (xIndex < 0 || xIndex >= kMapWidth || yIndex < 0 || yIndex >= kMapHeight) {
-        // 範囲外の場合は一番近い端に補正する
-        floors_[std::clamp(yIndex, 0, kMapHeight - 1)][std::clamp(xIndex, 0, kMapWidth - 1)]->SwapNextFloorType();
-        return;
-    }
-    floors_[yIndex][xIndex]->SwapNextFloorType();
+	std::pair<int, int> floorIndex = GetFloorIndexAtPosition(position);
+	int xIndex = floorIndex.first;
+	int yIndex = floorIndex.second;
+	if (xIndex < 0 || xIndex >= kMapWidth || yIndex < 0 || yIndex >= kMapHeight) {
+		// 範囲外の場合は一番近い端に補正する
+		floors_[std::clamp(yIndex, 0, kMapHeight - 1)][std::clamp(xIndex, 0, kMapWidth - 1)]->SwapNextFloorType();
+		return;
+	}
+	floors_[yIndex][xIndex]->SwapNextFloorType();
 }
 
 std::pair<int, int> FloorGameFloorManager::GetFloorIndexAtPosition(const Vector3& position) const {
-    int xIndex = static_cast<int>(position.x + (static_cast<float>(kMapWidth) * kHalfFloorSize));
-    int yIndex = static_cast<int>(position.z + (static_cast<float>(kMapHeight) * kHalfFloorSize));
-    return std::pair<int, int>(std::clamp(xIndex, 0, kMapWidth - 1), std::clamp(yIndex, 0, kMapHeight - 1));
+	int xIndex = static_cast<int>(std::round(position.x / (kHalfFloorSize * 2.0f) + kMapWidth * 0.5f - 0.5f));
+	int yIndex = static_cast<int>(std::round(position.z / (kHalfFloorSize * 2.0f) + kMapHeight * 0.5f - 0.5f));
+	return std::pair<int, int>(
+		std::clamp(xIndex, 0, kMapWidth - 1),
+		std::clamp(yIndex, 0, kMapHeight - 1)
+	);
 }
 
 Vector3& FloorGameFloorManager::GetFloorPos(const int& xIndex, const int& yIndex)
 {
 
-    if (xIndex < 0 || xIndex >= kMapWidth || yIndex < 0 || yIndex >= kMapHeight) {
-        // 範囲外の場合は真ん中
-        static Vector3 pos = { 0.0f,0.0f,0.0f };
-        return pos;
-    }
+	if (xIndex < 0 || xIndex >= kMapWidth || yIndex < 0 || yIndex >= kMapHeight) {
+		// 範囲外の場合は真ん中
+		static Vector3 pos = { 0.0f,0.0f,0.0f };
+		return pos;
+	}
 
-    return floors_[yIndex][xIndex]->body_.worldTransform_.translate_;
+	return floors_[yIndex][xIndex]->body_.worldTransform_.translate_;
 
 }
 
@@ -156,20 +159,23 @@ std::vector<Vector2> FloorGameFloorManager::GetExprodedFloorMap() const {
 	for (int y = 0; y < kMapHeight; y++) {
 		for (int x = 0; x < kMapWidth; x++) {
 			if (floors_[y][x]->isExploded_) {
-                exprodedFloorPositions.push_back({ static_cast<float>(x) - (static_cast<float>(kMapWidth) * 0.5f),static_cast<float>(y) - (static_cast<float>(kMapHeight) * 0.5f) });
+				exprodedFloorPositions.push_back({
+						static_cast<float>(x) * kHalfFloorSize - (static_cast<float>(kMapWidth) * kHalfFloorSize * 0.5f) + kHalfFloorSize * 0.5f,
+						static_cast<float>(y) * kHalfFloorSize - (static_cast<float>(kMapHeight) * kHalfFloorSize * 0.5f) + kHalfFloorSize * 0.5f
+					});
 				floors_[y][x]->isExploded_ = false;
 			}
 		}
 	}
-    return exprodedFloorPositions;
+	return exprodedFloorPositions;
 }
 
 void FloorGameFloorManager::PopupFloor(const Vector3& position) {
-    for (int y = 0; y < kMapHeight; y++) {
-        for (int x = 0; x < kMapWidth; x++) {
+	for (int y = 0; y < kMapHeight; y++) {
+		for (int x = 0; x < kMapWidth; x++) {
 			floors_[y][x]->downFloor();
-        }
-    }
+		}
+	}
 
 	std::pair<int, int> floorIndex = GetFloorIndexAtPosition(position);
 	int xIndex = floorIndex.first;
@@ -180,18 +186,19 @@ void FloorGameFloorManager::PopupFloor(const Vector3& position) {
 		yIndex = std::clamp(yIndex, 0, kMapHeight - 1);
 	}
 
-    if (floors_[yIndex][xIndex]->floorType_ != FloorType::Sticky) {
-        if (floors_[yIndex][xIndex]->floorType_ == FloorType::Strong) {
+	if (floors_[yIndex][xIndex]->floorType_ != FloorType::Sticky) {
+		if (floors_[yIndex][xIndex]->floorType_ == FloorType::Strong) {
 			std::vector<std::pair<int, int>> connectedFloors =
 				GetConnectedFloorsAtPosition(position);
-            for (const auto& floorPos : connectedFloors) {
-                floors_[floorPos.second][floorPos.first]->popupFloor();
-            }
-        } else {
+			for (const auto& floorPos : connectedFloors) {
+				floors_[floorPos.second][floorPos.first]->popupFloor();
+			}
+		}
+		else {
 			floors_[yIndex][xIndex]->popupFloor();
-        }
-        return;
-    }
+		}
+		return;
+	}
 }
 
 void FloorGameFloorManager::downFloor() {

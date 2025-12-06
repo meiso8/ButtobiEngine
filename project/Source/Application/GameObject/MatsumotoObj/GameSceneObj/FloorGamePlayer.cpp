@@ -91,8 +91,8 @@ void FloorGamePlayer::Initialize() {
     // 移動
     moveDir_ = { 0.0f,0.0f,1.0f };
     isMove_ = false;
-    moveLimitMax_ = { static_cast<float>(kMapWidth) * 0.5f,5.0f,static_cast<float>(kMapHeight) * 0.5f };
-    moveLimitMin_ = { -static_cast<float>(kMapWidth) * 0.5f,0.0f,-static_cast<float>(kMapHeight) * 0.5f };
+    moveLimitMax_ = { static_cast<float>(kMapWidth) * kHalfFloorSize,5.0f,static_cast<float>(kMapHeight) * kHalfFloorSize };
+    moveLimitMin_ = { -static_cast<float>(kMapWidth) * kHalfFloorSize,0.0f,-static_cast<float>(kMapHeight) * kHalfFloorSize };
 
     moveAcceleration_ = json["Speed"]["acceleration"];
     moveSpeed_ = json["Speed"]["velocity"];
