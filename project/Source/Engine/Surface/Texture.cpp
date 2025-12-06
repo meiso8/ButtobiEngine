@@ -64,22 +64,25 @@ void Texture::LoadAllTexture() {
     handles[UV_CHECKER] = Load("Resource/Textures/uvChecker.png");
     handles[NUMBERS] = Load("Resource/Textures/Numbers_Pop.png");
 
-    handles[HART] = Load("Resource/Textures/PlayerHPIcon.png");
+    handles[PLAYER_HP_ICON] = Load("Resource/Textures/PlayerHPIcon.png");
+    handles[GAUGE01] = Load("Resource/Textures/BossHPGauge_Pop.png");
+    handles[GAUGE02] = Load("Resource/Textures/BossHPGauge02_Pop.png");
+
     handles[PLAYER_WALK_PARTICLE] = Load("Resource/Textures/PlayerWalkParticle_Pop.png");
     handles[PLAYER_DAMAGE_PARTICLE] = Load("Resource/Textures/PlayerDamageParticle.png");
     handles[ENEMY_ACTION_PARTICLE] = Load("Resource/Textures/EnemyActionParticle.png");
 
     handles[WIND_ATTACK_PARTICLE01] = Load("Resource/Textures/WindAttackParticle01.png");
-   handles[WIND_ATTACK_PARTICLE02] = Load("Resource/Textures/WindAttackParticle02.png");  
+    handles[WIND_ATTACK_PARTICLE02] = Load("Resource/Textures/WindAttackParticle02.png");
     handles[MELT_FLOOR_PARTICLE] = Load("Resource/Textures/MeltFloorParticle.png");
     handles[LEAF_PARTICLE] = Load("Resource/Textures/LeafParticle.png");
     handles[FLOOR_PARTICLE] = Load("Resource/Textures/FloorParticle.png");
     handles[BLOOM] = Load("Resource/Textures/Bloom.png");
     handles[ENEMY_TEXTURE2] = Load("Resource/Models/Enemy/Enemy02.png");
 
-	handles[ACTION_UI_MOVE] = Load("Resource/Textures/ActionUI_Move_Pop.png");
-	handles[ACTION_UI_STRIP] = Load("Resource/Textures/ActionUI_Strip_Pop.png");
-	handles[ACTION_UI_SHOT] = Load("Resource/Textures/ActionUI_Shot_Pop.png");
+    handles[ACTION_UI_MOVE] = Load("Resource/Textures/ActionUI_Move_Pop.png");
+    handles[ACTION_UI_STRIP] = Load("Resource/Textures/ActionUI_Strip_Pop.png");
+    handles[ACTION_UI_SHOT] = Load("Resource/Textures/ActionUI_Shot_Pop.png");
 
     handles[PAUSING_BG] = Load("Resource/Textures/PausingBG_02.png");
     handles[PAUSING] = Load("Resource/Textures/PauseUI_Pop.png");
@@ -90,11 +93,11 @@ void Texture::LoadAllTexture() {
     handles[BUTTON_A] = Load("Resource/Textures/Button_A_Pop.png");
     handles[CONFIRM_UI] = Load("Resource/Textures/ConfirmUI_Pop.png");
 
-	handles[RESULT_CLEAR] = Load("Resource/Textures/GameClear.png");
-	handles[RESULT_GAMEOVER] = Load("Resource/Textures/GameOver.png");
+    handles[RESULT_CLEAR] = Load("Resource/Textures/GameClear.png");
+    handles[RESULT_GAMEOVER] = Load("Resource/Textures/GameOver.png");
 
-	handles[GAMEOVER_STRING] = Load("Resource/Textures/GameOverString.png");
-	handles[GAMEOVER_TIPS_1] = Load("Resource/Textures/Tips1.png");
+    handles[GAMEOVER_STRING] = Load("Resource/Textures/GameOverString.png");
+    handles[GAMEOVER_TIPS_1] = Load("Resource/Textures/Tips1.png");
 }
 
 uint32_t Texture::Load(const std::string& filePath)

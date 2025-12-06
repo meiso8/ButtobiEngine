@@ -360,7 +360,7 @@ void Enemy::Tackle()
     if (phaseTimer_ <= kTacklePoyoTime_) {
 
         if (phaseTimer_ <= kTackleLookTime_) {
-            LookTarget(*playerPos_);
+            LookTargetAndSetPos(*playerPos_);
         }
 
         PoyoPoyo(kTacklePoyoTime_);
@@ -386,14 +386,14 @@ void Enemy::Tackle()
                 if (damageStruct_.isHit) {
                     isKnockBack_ = true;
                     isKnockBackEmit_ = true;
-                    LookTarget(*playerPos_);
+                    LookTargetNormal(*playerPos_);
 
                     Sound::PlayOriginSE(Sound::kBossTackle);
                     if (damageStruct_.hps.hp >= kKnockBackDamage_) {
                         damageStruct_.hps.hp -= kKnockBackDamage_;
                     }
                     VibrateManager::SetTime(1.0f, 2000, 2000);
-                 
+
                     SetPhase(KNOCKBACK);
                 }
             }
@@ -416,7 +416,7 @@ void Enemy::PlayerHitBack()
 {
 
     if (phaseTimer_ == 0.0f) {
-        LookTarget(*playerPos_);
+        LookTargetAndSetPos(*playerPos_);
     }
 
     if (phaseTimer_ <= kHitBackTime_) {
@@ -433,23 +433,18 @@ void Enemy::KnockBack()
 
     if (phaseTimer_ <= kHitBackTime_) {
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(bodyPos_.worldTransform_.translate_, startPos_, 0.05f);
-    } else {
+    } else if (phaseTimer_ <= kKnockBackSpinTime_) {
 
-        if (phaseTimer_ <= kKnockBackSpinTime_) {
-            SpinBody();
-        
-            if (phaseTimer_ >= kKnockBackSpinTime_ - 0.5f) {
-                isKnockBackEmit_ = false;
-            }
+        SpinBody();
 
-        } else {
-   
-            LerpSpinOriginBody();
-            bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, startPos_, 0.05f);
+        if (phaseTimer_ >= kKnockBackSpinTime_ - 0.5f) {
+            isKnockBackEmit_ = false;
         }
-    }
 
-    if (phaseTimer_ > kKnockBackMaxTime_) {
+    } else if(phaseTimer_ < kKnockBackMaxTime_){
+        LerpSpinOriginBody();
+        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, startPos_, 0.05f);
+    } else {
         isSelectRandomPhase_ = true;
     }
 
@@ -503,7 +498,7 @@ void Enemy::SquareMove()
         bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, kSquareMoveSpeed_);
     }
 
-    LookTarget(endPos);
+    LookTargetNormal(endPos);
 
     if (phaseTimer_ >= kSquareMoveMaxTime_) {
         isSelectRandomPhase_ = true;
@@ -635,7 +630,7 @@ void Enemy::Round()
         roundSpeedY *= -1.0f;
     }
 
-    LookTarget(*playerPos_);
+    LookTargetNormal(*playerPos_);
 
     bodyPos_.worldTransform_.translate_ = TransformCoordinate(sphericalPos_);
     bodyPos_.worldTransform_.translate_.y = GetRadius();
@@ -653,7 +648,7 @@ void Enemy::Fireball()
         fireBallCoolTimer_ = 0.0f;
     } else {
 
-        LookTarget(*playerPos_);
+        LookTargetNormal(*playerPos_);
 
         fireBallCoolTimer_ += InverseFPS;
 
@@ -696,7 +691,7 @@ void Enemy::FloorChangeAttack()
 void Enemy::ShockWaveAttack()
 {
     if (phaseTimer_ <= kWavePhaseMovePosTime_) {
-        LookTarget(*playerPos_);
+        LookTargetNormal(*playerPos_);
         bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, *target_, 0.05f);
 
     } else if (phaseTimer_ <= kWaveShotTime_) {
@@ -732,14 +727,21 @@ void Enemy::UpdatePhaseTimer()
 
 // =============================//アニメーション//============================================================
 
-void Enemy::LookTarget(Vector3& target)
+void Enemy::LookTargetAndSetPos(Vector3& target)
 {
     startPos_ = GetWorldPosition();
     endPos_ = target;
     Vector3 direction = endPos_ - startPos_;
     bodyPos_.worldTransform_.rotate_.y = std::atan2(direction.x, direction.z); // Y軸回転（ラジアン）
-
 }
+
+
+void Enemy::LookTargetNormal(Vector3& target)
+{
+    Vector3 direction = target - GetWorldPosition();
+    bodyPos_.worldTransform_.rotate_.y = std::atan2(direction.x, direction.z); // Y軸回転（ラジアン）
+}
+
 
 void Enemy::PoyoPoyo(const float& endTimer)
 {

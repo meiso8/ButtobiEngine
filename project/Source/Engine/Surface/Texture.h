@@ -22,7 +22,10 @@ public:
         UV_CHECKER,
         NUMBERS,
 
-        HART,
+        PLAYER_HP_ICON,
+        GAUGE01,
+        GAUGE02,
+
         PLAYER_WALK_PARTICLE,
         PLAYER_DAMAGE_PARTICLE,
         ENEMY_ACTION_PARTICLE,

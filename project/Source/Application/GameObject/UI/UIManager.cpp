@@ -5,7 +5,7 @@ UIManager::UIManager(HPs& enemyHp, HPs& playerHp,bool& isPlayerHit,bool&isEnemyH
 
     hpGages_.emplace(GageType::kEnemy, std::make_unique<HPGage>());
     hpGages_[kEnemy]->SetHpPtr(&enemyHp);
-    hpGages_[kEnemy]->Setting({ 640.0f,32.0f }, { 640.0f,64.0f }, { 0.5f,0.0f });
+    hpGages_[kEnemy]->Setting({ 512.0f,32.0f }, { static_cast<float>(Window::GetClientWidth())-64.0f,80.0f}, { 1.0f,1.0f });
     hpGages_[kEnemy]->isHitPtr_ = &isEnemyHit;
     hpGages_[kEnemy]->isKnockBackPtr_ = &isEnemyKnockBack;
 #ifdef _DEBUG
@@ -15,7 +15,7 @@ UIManager::UIManager(HPs& enemyHp, HPs& playerHp,bool& isPlayerHit,bool&isEnemyH
     if (isDrawPlayerGage_) {
         hpGages_.emplace(GageType::kPlayer, std::make_unique<HPGage>());
         hpGages_[kPlayer]->SetHpPtr(&playerHp);
-        hpGages_[kPlayer]->Setting({ 320.0f,16.0f }, { 64.0f, static_cast<float>(Window::GetClientHeight() - 32) }, { 0.0f,0.0f });
+        hpGages_[kPlayer]->Setting({ 256.0f,32.0f }, { 64.0f, static_cast<float>(Window::GetClientHeight() - 48) }, { 0.0f,0.0f });
     }
 
     playerHpIcon_ = std::make_unique<HPIcon>();

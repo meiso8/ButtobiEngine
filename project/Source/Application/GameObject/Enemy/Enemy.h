@@ -327,7 +327,9 @@ private:
 
 #pragma region //アニメーション
     //ターゲットを見る
-    void LookTarget(Vector3& target);
+    void LookTargetAndSetPos(Vector3& target);
+    void LookTargetNormal(Vector3& target);
+
     //弾が当たった時のアニメ
     void HitAnimation();
     //ぽよぽよアニメ

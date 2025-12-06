@@ -99,6 +99,8 @@ void GameScene::Initialize() {
     Sound::bgmVolume_ = bgmMaxVol_;
     Sound::Stop(Sound::titleBGM);
     isSoundGameOverBGM_ = false;
+    SceneStaticValue::isClear = false;
+
 
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 90);
