@@ -109,7 +109,7 @@ EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShock
     particleEmitters_[kEnemyHitEmitter]->emitter_.radiusSpeed = InverseFPS;
     particleEmitters_[kEnemyHitEmitter]->emitter_.rotateOffset_ = 3.14f;
     particleEmitters_[kEnemyHitEmitter]->emitter_.frequency = 0.3f;
-    particleEmitters_[kEnemyHitEmitter]->emitter_.lifeTime = 0.5f;
+    particleEmitters_[kEnemyHitEmitter]->emitter_.lifeTime = 0.7f;
     particleEmitters_[kEnemyHitEmitter]->emitter_.blendMode = kBlendModeNormal;
     particleEmitters_[kEnemyHitEmitter]->emitter_.polarSpeedMinMax = { 0.0f,0.0f };
     particleEmitters_[kEnemyHitEmitter]->emitter_.velocityMinMax = { -1.0f,1.0f };
@@ -132,7 +132,7 @@ EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShock
     enemyKnockBackEmitter_->emitter_.polarSpeed = InverseFPS * std::numbers::pi_v<float>;
     enemyKnockBackEmitter_->emitter_.polarSpeedMinMax = { 0.0f,0.0f };
     enemyKnockBackEmitter_->emitter_.frequency = 0.2f;
-    enemyKnockBackEmitter_->emitter_.lifeTime = 1.0f;
+    enemyKnockBackEmitter_->emitter_.lifeTime = 1.5f;
     enemyKnockBackEmitter_->emitter_.blendMode = kBlendModeNormal;
 
     // ====================================================================
