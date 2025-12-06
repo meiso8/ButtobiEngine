@@ -9,10 +9,10 @@
 #include"CollisionConfig.h"
 
 #include"Data/FloorData.h"
+#include "Data/MapData.h"
 
 FloorBullet::FloorBullet() {
 	body_.Create();
-	body_.SetColor({ 1.0f,0.0f,0.0f,1.0f });
 	body_.SetMesh(cubeMesh_.get());
 
 	models_ =
@@ -26,7 +26,7 @@ FloorBullet::FloorBullet() {
 	body_.SetMesh(models_[FloorType::Normal]);
 
 
-	SetRadius(0.5f);
+	SetRadius(kHalfFloorSize);
 	SetCollisionAttribute(kCollisionPlayerBullet);
 	// 弾は「敵と敵の弾」とだけ衝突したい
 	SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet);
@@ -37,13 +37,14 @@ FloorBullet::~FloorBullet() {
 
 void FloorBullet::Initialize() {
 	body_.Initialize();
+	size_ = kHalfFloorSize * 2.0f;
+	body_.worldTransform_.scale_ = { size_,size_,size_ };
 	moveDir_ = { 0.0f,0.0f,1.0f };
 	moveSpeed_ = 0.2f;
 	lifeTimer_ = 0.0f;
 	lifeDuration_ = 2.0f;
 	isActive_ = false;
 	isHit_ = false;
-	size_ = 1.0f;
 	velocity_ = { 0.0f,0.0f,0.0f };
 
 	floorType_ = FloorType::Normal;

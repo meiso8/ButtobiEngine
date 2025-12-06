@@ -3,6 +3,8 @@
 #include "FloorGameFloorManager.h"
 #include "PlayerStripFloorManager.h"
 #include"Sound.h"
+#include "Data/MapData.h"
+
 FloorStripManager::FloorStripManager(FloorGamePlayer* player, FloorGameFloorManager* floorManager, PlayerFloorStripManager* playerStripManager) :
 	player_(player), floorManager_(floorManager), playerStripManager_(playerStripManager) {
 	striptTypeAction_ = {
@@ -25,7 +27,8 @@ void FloorStripManager::Update() {
 	// 床のハイライト
 	if (!player_->isStriptting_) {
 		floorManager_->PopupFloor(player_->body_.worldTransform_.translate_);
-	} else {
+	}
+	else {
 		floorManager_->downFloor();
 	}
 
@@ -39,7 +42,7 @@ void FloorStripManager::Update() {
 
 		// プレイヤーの位置から床タイプを取得
 		FloorType currentFloorType = floorManager_->GetFloorTypeAtPosition(player_->body_.worldTransform_.translate_);
-		std::pair<int,int> tempFloorIndex = floorManager_->GetFloorIndexAtPosition(player_->body_.worldTransform_.translate_);
+		std::pair<int, int> tempFloorIndex = floorManager_->GetFloorIndexAtPosition(player_->body_.worldTransform_.translate_);
 		player_->stripFloorPosX_ = tempFloorIndex.first;
 		player_->stripFloorPosY_ = tempFloorIndex.second;
 		player_->isOnStripedFloor_ = true;
@@ -62,14 +65,10 @@ void FloorStripManager::StrongStript() {
 	std::vector<std::pair<int, int>> connectedFloors =
 		floorManager_->GetConnectedFloorsAtPosition(player_->body_.worldTransform_.translate_);
 	for (const auto& floorPos : connectedFloors) {
-		Vector3 position = {
-			static_cast<float>(floorPos.first) - 5.0f + 0.5f,
-			0.0f,
-			static_cast<float>(floorPos.second) - 5.0f + 0.5f
-		};
+		Vector3 position = floorManager_->GetFloorPos(floorPos.first, floorPos.second);
 		floorManager_->SwapFloorTypeAtPosition(position);
 	}
-	playerStripManager_->StripMapFloor(connectedFloors,FloorType::Strong);
+	playerStripManager_->StripMapFloor(connectedFloors, FloorType::Strong);
 	player_->strippedFloorMap_ = playerStripManager_->GetRotetedFloorMap(connectedFloors);
 }
 

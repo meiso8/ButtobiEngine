@@ -24,9 +24,9 @@ PlayerFloorStripManager::PlayerFloorStripManager(FloorGamePlayer* player) {
 			floors_[y][x]->Initialize();
 			floors_[y][x]->body_.worldTransform_.Parent(floorPivot_.worldTransform_);
 			floors_[y][x]->body_.worldTransform_.translate_ = {
-				static_cast<float>(x) - (static_cast<float>(kMapWidth) * kHalfFloorSize) + kHalfFloorSize,
-				-kHalfFloorSize,
-				static_cast<float>(y) - (static_cast<float>(kMapHeight) * kHalfFloorSize) + kHalfFloorSize
+				((float)x - (kMapWidth / 2.0f - 0.5f)) * (kHalfFloorSize * 2.0f),
+				-0.5f,
+				((float)y - (kMapHeight / 2.0f - 0.5f)) * (kHalfFloorSize * 2.0f)
 			};
 		}
 	}

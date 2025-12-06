@@ -60,15 +60,15 @@ void FloorGameFloor::Initialize() {
 
 void FloorGameFloor::Update() {
 	if (isPopuping_) {
-		body_.worldTransform_.translate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.translate_.y, -kHalfFloorSize + 0.1f,0.1f);
+		body_.worldTransform_.translate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.translate_.y, -0.5f + 0.1f,0.1f);
 		body_.worldTransform_.rotate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.rotate_.y, 31.4f * 0.5f, 0.1f);
 		body_.worldTransform_.scale_ = MY_Utility::SimpleEaseIn(body_.worldTransform_.scale_, { 1.5f,1.5f,1.5f }, 0.1f);
 		body_.SetColor({ 1.0f,1.0f,1.0f,1.0f });
 		downColor_ = 0.0f;
 	} else {
-		body_.worldTransform_.translate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.translate_.y, -kHalfFloorSize, 0.1f);
+		body_.worldTransform_.translate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.translate_.y, -0.5f, 0.1f);
 		body_.worldTransform_.rotate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.rotate_.y, 0.0f, 0.1f);
-		body_.worldTransform_.scale_ = MY_Utility::SimpleEaseIn(body_.worldTransform_.scale_, { 1.0f,1.0f,1.0f }, 0.1f);
+		body_.worldTransform_.scale_ = MY_Utility::SimpleEaseIn(body_.worldTransform_.scale_, { kHalfFloorSize * 2.0f,kHalfFloorSize * 2.0f,kHalfFloorSize * 2.0f }, 0.1f);
 		body_.SetColor({ 1.0f - downColor_,1.0f - downColor_,1.0f - downColor_,1.0f });
 		downColor_ = 0.4f;
 	}

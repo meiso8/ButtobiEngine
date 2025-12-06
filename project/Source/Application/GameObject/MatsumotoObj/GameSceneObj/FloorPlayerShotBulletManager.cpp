@@ -9,7 +9,7 @@ FloorPlayerShotBulletManager::FloorPlayerShotBulletManager(FloorGamePlayer* play
 }
 
 void FloorPlayerShotBulletManager::Initialize() {
-
+	shotSize_ = kHalfFloorSize;
 }
 
 void FloorPlayerShotBulletManager::Update() {
