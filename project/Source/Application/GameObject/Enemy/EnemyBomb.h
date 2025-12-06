@@ -29,8 +29,7 @@ private:
     int explosionFrame_ = 0;
     float kRadius_ = {0.5f};
     Vector3 endPos_ = { 0.0f };
-    std::unique_ptr<CubeMesh>cubeMesh_ = nullptr;
-    Vector3 moveDir_;
+    Model* model_ = nullptr;
     float speed_;
     float lifeTimer_;
     float lifeDuration_;

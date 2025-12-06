@@ -25,6 +25,7 @@
 
 #include"House/House.h"   
 #include"Tree/Tree.h"
+#include"PlayerDirectionSpotLight.h"
 
 #pragma endregion
 
@@ -63,6 +64,11 @@ private:
     //家追加しましたヨシダ
     std::unique_ptr<House>house_ = nullptr;
     std::unique_ptr<Tree>tree_ = nullptr;
+
+        std::unique_ptr<PlayerDirectionSpotLight>playerDirectionSpotLight_ = nullptr;
+
+    
+
 #pragma endregion
 	float eventTimer_ = 0.0f;
 

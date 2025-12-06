@@ -42,7 +42,8 @@
 
 #include "MatsumotoObj/MY_Utility.h"
 #include"Lights/PointLightManager.h"
-
+#include"Lights/DirectionalLightManager.h"
+#include"Lerp.h"
 TitleScene::TitleScene()
 {
     // 現在のカメラを設定
@@ -71,13 +72,19 @@ TitleScene::TitleScene()
 
     house_->SetHitCounts(titleText_->GetHitCount(), titleText_->GetMaxHitCount());
     tree_ = std::make_unique<Tree>();
+    playerDirectionSpotLight_ = std::make_unique<PlayerDirectionSpotLight>();
+    playerDirectionSpotLight_->dirPtr_ = &floorGamePlayer_->GetLookDir();
+    playerDirectionSpotLight_->pos_.Parent(floorGamePlayer_->headObject_.worldTransform_);
 
-    PointLightManager::GetPointLightData(0).color = { 17.0f / 255.0f,34.0f / 255.0f,55.0f / 255.0f };
-    PointLightManager::GetPointLightData(0).intensity = 11.5f;
+    PointLightManager::GetPointLightData(0).color = { 17.0f / 255.0f,68.0f / 255.0f,134.0f / 255.0f };
+    PointLightManager::GetPointLightData(0).intensity = 6.1f;
     PointLightManager::GetPointLightData(0).radius = 94.0f;
-    PointLightManager::GetPointLightData(0).decay = 3.0f;
+    PointLightManager::GetPointLightData(0).decay = 6.0f;
 
-    
+    PointLightManager::GetPointLightData(1).color = { 0.9f,0.5f,0.0f,1.0f };
+    PointLightManager::GetPointLightData(1).radius = 94.0f;
+    PointLightManager::GetPointLightData(1).decay = 0.9f;
+    PointLightManager::GetPointLightData(1).position = {0.0f,10.0f,7.0f};
 
 #pragma endregion
 
@@ -95,6 +102,14 @@ void TitleScene::Initialize()
     Sound::StopAllSound();
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 60);
+
+    DirectionalLightManager::GetDirectionalLightData()->direction = Normalize({ 0.7f,-0.24f,-0.64f });
+    DirectionalLightManager::GetDirectionalLightData()->intensity = 1.0f;
+
+    PointLightManager::GetPointLightData(1).intensity = 0.0f;
+ PointLightManager::GetPointLightData(0).intensity = 1.0f;
+
+
 
     camera_->Initialize();
     camera_->translate_ = { 0.0f, 12.0f,-14.0f };
@@ -205,6 +220,7 @@ void TitleScene::UpdateGameObject() {
         Sound::PlayBGM(Sound::inGameBGM01);
         bossDummy_->Update();
 		actionUI_->isHide_ = true;
+
     } else {
     /*    Sound::Stop(Sound::inGameBGM01);*/
         Sound::PlayBGM(Sound::titleBGM);
@@ -228,6 +244,7 @@ void TitleScene::UpdateGameObject() {
     floorPlayerShotBulletManager_->Update();
     floorPlayerStripTargetUI_->Update();
     floorActionManager_->Update();
+    playerDirectionSpotLight_->Update();
 
     // アニメーション更新
     floorGamePlayerAnimationManager_->Update();

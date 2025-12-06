@@ -25,9 +25,9 @@ void ModelManager::LoadAllModel()
     LoadModel("Resource/Models/Enemy", "WingR.obj", ENEMY_WING_R);
 	LoadModel("Resource/Models/EnemyHouse", "EnemyHouse.obj", ENEMY_SLEEP);
 
-    LoadModel("Resource/Models/Egg", "Egg.obj", EGG);
     LoadModel("Resource/Models/BirdNest", "Nest.obj", NEST);
     LoadModel("Resource/Models/FireBall", "FireBall.obj", FIRE_BALL);
+    LoadModel("Resource/Models/Bomb", "bomb.obj", BOMB);
 
     LoadModel("Resource/Models/Ground", "Ground.obj", GROUND);
 

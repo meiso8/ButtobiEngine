@@ -5,6 +5,7 @@
 #include<vector>
 #include"CharacterState.h"
 #include"Shake.h"
+#include"Texture.h"
 class HPIcon
 {
 public:
@@ -17,13 +18,18 @@ public:
     HPIcon();
     void SetHpPtr(HPs* hp) { hps_ = hp; };
     void SetIsHitPtr(bool& isHit) { isHitPtr_ = &isHit; };
+    void SetMaxIconNum(const int& num) { maxIcon_ = num; }
     void Setting(const Vector2& size, const Vector2& pos);
     void Initialize();
     void Update();
     void Draw();
     void HitAction();
-    static const int kMaxHPIcon_ = 5;
+    void SetTextureHandle(Texture::TEXTURE_HANDLE handle) {
+        textureHandle_ = handle;
+    };
     ~HPIcon();
+
+
 private:
     HPs* hps_ = 0;
     int preHP;
@@ -34,5 +40,7 @@ private:
     float maxTime_ = 1.0f;
     float theta_ = 0.0f;
     size_t drawHpNum_ = 0;
+    int maxIcon_ = 5;
+    Texture::TEXTURE_HANDLE textureHandle_ = Texture::TEXTURE_HANDLE::WHITE_1X1;
     std::unique_ptr<Shake>shake = nullptr;
 };

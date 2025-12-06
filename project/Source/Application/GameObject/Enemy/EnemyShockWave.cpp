@@ -22,7 +22,7 @@ EnemyShockWave::EnemyShockWave() {
         cubeMesh_[i]->SetMinMax(localAABBs_[i]);
     }
 
-    body_.SetColor({ 1.0f,0.5f,0.0f,1.0f });
+    body_.SetColor({ 1.0f,0.5f,0.0f,0.2f });
     body_.SetMesh(cubeMesh_[kHorizontal].get());
 
 
@@ -92,10 +92,6 @@ void EnemyShockWave::Update() {
         isEmit_ = true;
     }
 
-
-    float color = lifeTimer_ / lifeDuration_;
-    body_.SetColor({ color,color,color,1.0f });
-
     if (lifeTimer_ <= kMoveTime_) {
         if (!isSound_) {
             isSound_ = true;
@@ -112,7 +108,7 @@ void EnemyShockWave::Draw(Camera& camera) {
         return;
     }
 
-    body_.Draw(camera, kBlendModeAdd);
+    body_.Draw(camera);
 
     //ColliderDraw(camera);
 }

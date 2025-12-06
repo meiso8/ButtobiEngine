@@ -89,6 +89,8 @@ public:
     //HPを得る
     HPs* GetHpsPtr() { return &damageStruct_.hps; }
     bool IsOverKill() { return(overKillCount >= kMaxOverKillCount); }
+
+    HPs totalHPs_;
 private:
 
     // 死亡時のぶっ飛び

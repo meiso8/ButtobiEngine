@@ -1,6 +1,6 @@
 #include "EnemyBomb.h"
 #include"ModelManager.h"
-
+#include"Model.h"
 #include"MyEngine.h"
 #include"Easing.h"
 #include<algorithm>
@@ -12,15 +12,15 @@
 
 EnemyBomb::EnemyBomb() {
     body_.Create();
-    cubeMesh_ = std::make_unique<CubeMesh>();
-    cubeMesh_.get()->Create(Texture::WHITE_1X1);
+
     body_.SetColor({ 0.0f,0.0f,1.0f,1.0f });
-    body_.SetMesh(cubeMesh_.get());
+    model_ = ModelManager::GetModel(ModelManager::BOMB);
+    body_.SetMesh(model_);
 
     SetRadius(kRadius_);
     SetCollisionAttribute(kCollisionNone);
     // 弾は「PlayerとPlayerの弾」とだけ衝突したい
-    SetCollisionMask(kCollisionPlayer | kCollisionPlayerBullet| kCollisionFloor);
+    SetCollisionMask(kCollisionPlayer | kCollisionPlayerBullet | kCollisionFloor);
     ////全部と衝突したい時
     //SetCollisionMask(~kCollisionEnemyBullet);
 }
@@ -30,12 +30,11 @@ EnemyBomb::~EnemyBomb() {
 
 void EnemyBomb::Initialize() {
     body_.Initialize();
-    moveDir_ = { 0.0f,0.0f,1.0f };
     speed_ = 0.1f;
     lifeTimer_ = 0.0f;
     lifeDuration_ = 4.5f;
     isActive_ = false;
-	isGroundHit_ = false;
+    isGroundHit_ = false;
     size_ = 1.0f;
     lifeDelay_ = 0.0f;
 
@@ -71,13 +70,12 @@ void EnemyBomb::Update() {
 
     if (lifeTimer_ <= 0.0f) {
 
-     lifeTimer_ = 0.0f;
-     
+        lifeTimer_ = 0.0f;
+
     } else {
         lifeTimer_ -= 0.016f;
     }
 
-    body_.worldTransform_.rotate_ = moveDir_;
 
     body_.Update();
     ColliderUpdate();
@@ -103,6 +101,7 @@ void EnemyBomb::Draw(Camera& camera) {
         return;
     }
 
+    body_.SetLightMode(kLightModeLReflectance);
     body_.Draw(camera, kBlendModeNormal);
 
     ColliderDraw(camera);
@@ -113,10 +112,10 @@ void EnemyBomb::Shot(const Vector3& startPos, const Vector3& endPos, const float
     endPos_ = endPos;
     size_ = size;
     body_.worldTransform_.scale_ = { size_,size_,size_ };
-	lifeDelay_ = std::fabsf(Length(endPos - startPos) / 5.0f);
+    lifeDelay_ = std::fabsf(Length(endPos - startPos) / 5.0f);
     lifeTimer_ = lifeDuration_ + lifeDelay_;
     isActive_ = true;
-	isGroundHit_ = false;
-	body_.Update();
-	ColliderUpdate();
+    isGroundHit_ = false;
+    body_.Update();
+    ColliderUpdate();
 }

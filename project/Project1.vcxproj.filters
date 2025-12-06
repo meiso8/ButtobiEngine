@@ -104,7 +104,6 @@
     <ClCompile Include="Source\Engine\Surface\Texture.cpp" />
     <ClCompile Include="Source\Engine\Camera\SpriteCamera.cpp" />
     <ClCompile Include="Source\Engine\SRVmanager\SrvManager.cpp" />
-    <ClCompile Include="Source\Application\GameObject\World.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\UIManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\KeyBindConfig.cpp" />
     <ClCompile Include="Source\Application\Scene\TitleScene.cpp" />
@@ -132,6 +131,7 @@
     <ClCompile Include="Source\Application\GameObject\Nest\Nest.cpp" />
     <ClCompile Include="Source\Application\System\Shake.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\RedPinchScreen.cpp" />
+    <ClCompile Include="Source\Application\GameObject\PlayerDirectionSpotLight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\GameObject\UI\PauseScreen.h" />
@@ -263,7 +263,6 @@
     <ClInclude Include="Source\Engine\Surface\Texture.h" />
     <ClInclude Include="Source\Engine\Camera\SpriteCamera.h" />
     <ClInclude Include="Source\Engine\SRVmanager\SrvManager.h" />
-    <ClInclude Include="Source\Application\GameObject\World.h" />
     <ClInclude Include="Source\Application\GameObject\UI\UIManager.h" />
     <ClInclude Include="Source\Application\Scene\TitleScene.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\ActionUI.h" />
@@ -289,6 +288,7 @@
     <ClInclude Include="Source\Application\GameObject\Nest\Nest.h" />
     <ClInclude Include="Source\Application\System\Shake.h" />
     <ClInclude Include="Source\Application\GameObject\UI\RedPinchScreen.h" />
+    <ClInclude Include="Source\Application\GameObject\PlayerDirectionSpotLight.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="externals\assimp\lib\Debug\assimp-vc143-mdd.lib" />

@@ -1,6 +1,6 @@
 #include "UIManager.h"
 #include"Window.h"
-UIManager::UIManager(HPs& enemyHp, HPs& playerHp,bool& isPlayerHit,bool&isEnemyHit,bool& isEnemyKnockBack)
+UIManager::UIManager(HPs& enemyHp,HPs& enemyTotalHp, HPs& playerHp,bool& isPlayerHit,bool&isEnemyHit,bool& isEnemyKnockBack)
 {
 
     hpGages_.emplace(GageType::kEnemy, std::make_unique<HPGage>());
@@ -21,8 +21,16 @@ UIManager::UIManager(HPs& enemyHp, HPs& playerHp,bool& isPlayerHit,bool&isEnemyH
     playerHpIcon_ = std::make_unique<HPIcon>();
     playerHpIcon_->SetHpPtr(&playerHp);
     playerHpIcon_->SetIsHitPtr(isPlayerHit);
+    playerHpIcon_->SetTextureHandle(Texture::PLAYER_HP_ICON);
     playerHpIcon_->Setting({ 64.0f,64.0f }, { 64.0f,static_cast<float>(Window::GetClientHeight() - 96) });
 
+    enemyHpIcon_ = std::make_unique<HPIcon>();
+    enemyHpIcon_->SetMaxIconNum(3);
+    enemyHpIcon_->SetHpPtr(&enemyTotalHp);
+    enemyHpIcon_->SetIsHitPtr(isEnemyHit);
+
+    enemyHpIcon_->SetTextureHandle(Texture::ENEMY_ACTION_PARTICLE);
+    enemyHpIcon_->Setting({ 32.0f,32.0f }, { static_cast<float>(Window::GetClientWidth()) - 512.0f,8.0f });
 
     pauseScreen_ = std::make_unique<PauseScreen>();
 
@@ -37,6 +45,7 @@ void UIManager::Initialize()
     }
 
     playerHpIcon_->Initialize();
+    enemyHpIcon_->Initialize();
     pauseScreen_->Initialize();
     redPinchScreen->Init();
 }
@@ -51,7 +60,7 @@ void UIManager::Update()
     hpGages_[kEnemy]->UpdateHitAction();
 
     playerHpIcon_->Update();
-
+    enemyHpIcon_->Update();
     pauseScreen_->Update();
     redPinchScreen->Update();
 }
@@ -63,6 +72,7 @@ void UIManager::Draw()
     }
 
     playerHpIcon_->Draw();
+    enemyHpIcon_->Draw();
     redPinchScreen->Draw();
 
     pauseScreen_->Draw();

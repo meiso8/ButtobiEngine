@@ -47,9 +47,12 @@ void EnemyShotWaveManager::Back(int& randX, int& randY)
 
 EnemyShotWaveManager::EnemyShotWaveManager(Enemy* enemy, EnemyShockWaveManager* shockWaveManager, FloorGameFloorManager* floorGameFloorManager) :
     enemy_(enemy), shockWaveManager_(shockWaveManager), floorGameFloorManager_(floorGameFloorManager) {
-    enemyPoses_[LEFT] = { floorGameFloorManager_->GetFloorPos(0, kMapHeight / 2) + Vector3{-offset_,enemyPosY_,0.0f} };
-    enemyPoses_[RIGHT] = { floorGameFloorManager_->GetFloorPos(kMapWidth - 1,  kMapHeight / 2) + Vector3{offset_,enemyPosY_,0.0f} };
-    enemyPoses_[BACK] = { floorGameFloorManager_->GetFloorPos(kMapWidth / 2,kMapHeight - 1) + Vector3{0.0f,enemyPosY_,offset_} };
+    
+
+    enemyPoses_[LEFT] = { -4.0f - offset_,enemyPosY_,0.0f };
+    enemyPoses_[RIGHT] = { 4.0f + offset_,enemyPosY_,0.0f };
+    enemyPoses_[BACK] =  Vector3{ 0.0f, enemyPosY_, offset_ +1.0f};
+
 }
 
 void EnemyShotWaveManager::Initialize() {
@@ -91,6 +94,8 @@ void EnemyShotWaveManager::Update() {
             startPos_.y += 1.0f;
             endPos_.y += 1.0f;
 
+
+            enemy_->SetTarget(enemyPoses_[direction_]);
 
             if (direction_ != BACK) {
                 shockWaveManager_->ShotWave(startPos_, endPos_, EnemyShockWave::kHorizontal);

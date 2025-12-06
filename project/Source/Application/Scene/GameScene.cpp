@@ -45,7 +45,9 @@
 
 #include"CollisionConfig.h"
 #include"Lerp.h"
-
+#include"Lights/DirectionalLightManager.h"
+#include"Lights/PointLightManager.h"
+#include"Lights/SpotLightManager.h"
 GameScene::GameScene()
 {
     // 現在のカメラを設定
@@ -67,9 +69,9 @@ GameScene::GameScene()
     floorActionManager_ = std::make_unique<FloorActionManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
     floorGamePlayerAnimationManager_ = std::make_unique<FloorGamePlayerAnimationManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
     healItemSpawner_ = std::make_unique<HealItemSpawner>();
-	gameOverEvent_ = std::make_unique<GameOverEvent>(floorGamePlayer_.get());
+    gameOverEvent_ = std::make_unique<GameOverEvent>(floorGamePlayer_.get());
     actionUI_ = std::make_unique<ActionUI>(floorGamePlayer_.get());
-	letterboxBars_ = std::make_unique<LetterboxBars>();
+    letterboxBars_ = std::make_unique<LetterboxBars>();
 
     enemyBulletManager_ = std::make_unique<EnemyBulletManager>();
     enemyShotBulletManager_ = std::make_unique<EnemyShotBulletManager>(enemy_.get(), enemyBulletManager_.get());
@@ -84,14 +86,15 @@ GameScene::GameScene()
 #pragma endregion
 
     uiManager_ = std::make_unique<UIManager>(
-        *enemy_->GetHpsPtr(), 
+        *enemy_->GetHpsPtr(),
+        enemy_->totalHPs_,
         *floorGamePlayer_->GetHpsPtr(),
         floorGamePlayer_->IsHit(),
         enemy_->IsHit(),
         enemy_->isKnockBack_
     );
 
-    emitterManager_ = std::make_unique<EmitterManager>(*floorGamePlayer_, *enemy_,*enemyShockWaveManager_,*floorBulletManager_);
+    emitterManager_ = std::make_unique<EmitterManager>(*floorGamePlayer_, *enemy_, *enemyShockWaveManager_, *floorBulletManager_);
 }
 
 void GameScene::Initialize() {
@@ -101,6 +104,10 @@ void GameScene::Initialize() {
     isSoundGameOverBGM_ = false;
     SceneStaticValue::isClear = false;
 
+    DirectionalLightManager::GetDirectionalLightData()->direction = Normalize({ 0.7f,-0.24f,-0.64f });
+    DirectionalLightManager::GetDirectionalLightData()->intensity = 1.0f;
+    PointLightManager::GetPointLightData(1).intensity = 0.0f;
+    SpotLightManager::GetData()->direction = {0.0f,0.0f,1.0f};
 
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 90);
@@ -118,8 +125,8 @@ void GameScene::Initialize() {
     playerFloorStripManager_->Initialize();
     healItemSpawner_->Initialize();
     actionUI_->Initialize();
-	letterboxBars_->Initialize();
-	gameOverEvent_->Initialize();
+    letterboxBars_->Initialize();
+    gameOverEvent_->Initialize();
 
     //healItemSpawner_->SpawnHealItem({ 2.0f,1.0f,2.0f });
 
@@ -144,7 +151,7 @@ void GameScene::Initialize() {
 
     emitterManager_->Initialize();
 
-	gameclearTimer_ = 0.0f;
+    gameclearTimer_ = 0.0f;
     gameOverTimer_ = 0.0f;
 }
 
@@ -153,8 +160,8 @@ void GameScene::Update() {
     UpdateBGM();
 
     if (gameclearTimer_ > 2.0f) {
-		SceneStaticValue::isClear = true;
-		sceneChange_->SetState(SceneChange::kFadeIn, 30);
+        SceneStaticValue::isClear = true;
+        sceneChange_->SetState(SceneChange::kFadeIn, 30);
     }
 
     if (PauseScreen::isRetry) {
@@ -162,15 +169,15 @@ void GameScene::Update() {
         Initialize();
     }
 
-	if (gameOverEvent_->IsReqestedAction()) {
+    if (gameOverEvent_->IsReqestedAction()) {
 
-		if (gameOverEvent_->IsRetrySelected()) {
-			Initialize();
-			
+        if (gameOverEvent_->IsRetrySelected()) {
+            Initialize();
+
         } else {
             sceneChange_->SetState(SceneChange::kFadeIn, 60);
         }
-	}
+    }
 
     if (PauseScreen::isBackToTitle) {
         sceneChange_->SetState(SceneChange::kFadeIn, 30);
@@ -178,6 +185,7 @@ void GameScene::Update() {
 
 
     if (!PauseScreen::isActive_) {
+        UpdateLight();
         UpdateCamera();
         UpdateGameObject();
         CheckAllCollision();
@@ -186,7 +194,7 @@ void GameScene::Update() {
 
     }
 
-	letterboxBars_->Update();
+    letterboxBars_->Update();
     uiManager_->Update();
 
 }
@@ -204,15 +212,15 @@ void GameScene::Draw() {
     floorPlayerStripTargetUI_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     playerFloorStripManager_->Draw(*currentCamera_);
     healItemSpawner_->Draw(*currentCamera_);
-	floorActionManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+    floorActionManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     actionUI_->Draw();
-	letterboxBars_->Draw();
-	gameOverEvent_->Draw();
+    letterboxBars_->Draw();
+    gameOverEvent_->Draw();
     enemy_->Draw(*currentCamera_);
     enemyBulletManager_->Draw(*currentCamera_);
     enemyBombManager_->Draw(*currentCamera_);
     enemyShockWaveManager_->Draw(*currentCamera_);
-   
+
     tree_->Draw(*currentCamera_);
     ground_->Draw(*currentCamera_);
     nest_->Draw(*currentCamera_);
@@ -242,6 +250,46 @@ void GameScene::Debug()
 #endif // !USE_IMGUI
 }
 
+void GameScene::UpdateLight()
+{
+
+
+
+    if (enemy_->GetCurrentState() == "Second") {
+
+        float& intensity0 = PointLightManager::GetPointLightData(0).intensity;
+        intensity0 = Lerp(intensity0, 0.0f, 0.01f);
+
+        float& intensity1 = PointLightManager::GetPointLightData(1).intensity;
+        intensity1 = Lerp(intensity1, 0.2f, 0.01f);
+    } else {
+        float& intensity1 = PointLightManager::GetPointLightData(1).intensity;
+        intensity1 = Lerp(intensity1, 0.0f, 0.01f);
+
+        if (enemy_->GetCurrentState() == "Third") {
+            float& intensity0 = PointLightManager::GetPointLightData(0).intensity;
+            intensity0 = Lerp(intensity0, 3.0f, 0.01f);
+
+        }else{
+            float& intensity0 = PointLightManager::GetPointLightData(0).intensity;
+            intensity0 = Lerp(intensity0, 1.0f, 0.01f);
+        }
+    }
+
+    if (enemy_->GetCurrentState() == "Third") {
+        float& intensity = DirectionalLightManager::GetDirectionalLightData()->intensity;
+        intensity = Lerp(intensity, 0.0f, 0.01f);
+
+    } else {
+
+        Vector3& dir = DirectionalLightManager::GetDirectionalLightData()->direction;
+        float hpRatio = static_cast<float>(enemy_->totalHPs_.hp) / static_cast<float>(enemy_->totalHPs_.maxHp);
+        float mapped = hpRatio * 2.0f - 1.0f;
+
+        dir = Normalize(Lerp(dir, { mapped,0.1f,0.0f }, 0.01f));
+    }
+}
+
 void GameScene::UpdateCamera()
 {
 
@@ -260,17 +308,17 @@ void GameScene::UpdateCamera()
         }
 
         if (floorGamePlayer_->GetDamageStruct().hps.hp <= 0) {
-			cameraController_->ResetFocusTarget();
+            cameraController_->ResetFocusTarget();
             cameraController_->FocusTarget(&floorGamePlayer_->body_.worldTransform_.translate_);
         }
 
-		if (enemy_->IsDead()) {
-			cameraController_->StartEnemyLethal();
+        if (enemy_->IsDead()) {
+            cameraController_->StartEnemyLethal();
             if (enemy_->IsOverKill()) {
                 cameraController_->ResetFocusTarget();
                 cameraController_->FocusTarget(&enemy_->bodyPos_.worldTransform_.translate_);
             }
-		}
+        }
 
         cameraController_->Update();
     }
@@ -310,7 +358,7 @@ void GameScene::UpdateGameObject()
     } else {
         actionUI_->isHide_ = false;
     }
-    
+
     floorStripManager_->Update();
     playerFloorStripManager_->Update();
     floorPlayerShotBulletManager_->Update();
@@ -327,7 +375,7 @@ void GameScene::UpdateGameObject()
 
     if (enemy_->IsOverKill()) {
         enemy_->LeathalMoveUpdate();
-		gameclearTimer_ += 0.016f;
+        gameclearTimer_ += 0.016f;
     }
 
 
@@ -342,7 +390,7 @@ void GameScene::UpdateGameObject()
     if (floorGamePlayer_->GetDamageStruct().hps.hp <= 0 || enemy_->isFaseChange_ || enemy_->IsOverKill()) {
         letterboxBars_->isOpen_ = true;
     } else {
-		letterboxBars_->isOpen_ = false;
+        letterboxBars_->isOpen_ = false;
     }
 }
 
@@ -356,7 +404,7 @@ void GameScene::UpdateBGM()
         }
     }
 
-    if (floorGamePlayer_->IsDead()|| SceneStaticValue::isClear) {
+    if (floorGamePlayer_->IsDead() || SceneStaticValue::isClear) {
         Sound::Stop(Sound::inGameBGM01);
         Sound::Stop(Sound::inGameBGM02);
         Sound::Stop(Sound::playerHP1BGM);

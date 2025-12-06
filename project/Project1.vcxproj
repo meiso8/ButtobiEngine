@@ -157,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\PlayerDirectionSpotLight.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\RedPinchScreen.cpp" />
     <ClCompile Include="Source\Application\System\Shake.cpp" />
     <ClCompile Include="Source\Application\GameObject\Nest\Nest.cpp" />
@@ -300,13 +301,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Surface\Texture.cpp" />
     <ClCompile Include="Source\Engine\Camera\SpriteCamera.cpp" />
     <ClCompile Include="Source\Engine\SRVmanager\SrvManager.cpp" />
-    <ClCompile Include="Source\Application\GameObject\World.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\UIManager.cpp" />
     <ClCompile Include="Source\Engine\Input\VibrateManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\Tree\Tree.cpp" />
     <ClCompile Include="Source\Engine\Lights\SpotLightManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\PlayerDirectionSpotLight.h" />
     <ClInclude Include="Source\Application\GameObject\UI\RedPinchScreen.h" />
     <ClInclude Include="Source\Application\System\Shake.h" />
     <ClInclude Include="Source\Application\GameObject\Nest\Nest.h" />
@@ -457,7 +458,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Surface\Texture.h" />
     <ClInclude Include="Source\Engine\Camera\SpriteCamera.h" />
     <ClInclude Include="Source\Engine\SRVmanager\SrvManager.h" />
-    <ClInclude Include="Source\Application\GameObject\World.h" />
     <ClInclude Include="Source\Application\GameObject\UI\UIManager.h" />
     <ClInclude Include="Source\Engine\Input\VibrateManager.h" />
     <ClInclude Include="Source\Application\GameObject\Tree\Tree.h" />

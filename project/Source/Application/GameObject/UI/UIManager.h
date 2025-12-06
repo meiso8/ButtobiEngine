@@ -11,7 +11,7 @@ class UIManager
         kPlayer,
     };
 public:
-    UIManager(HPs& enemyHp, HPs& playerHp, bool& isPlayerHit, bool& isEnemyHit, bool& isEnemyKnockBack);
+    UIManager(HPs& enemyHp, HPs& enemyTotalHp, HPs& playerHp, bool& isPlayerHit, bool& isEnemyHit, bool& isEnemyKnockBack);
     void Initialize();
     void Update();
     void Draw();
@@ -19,6 +19,7 @@ public:
 private:
     std::unordered_map<GageType, std::unique_ptr<HPGage>>hpGages_;
     std::unique_ptr<HPIcon>playerHpIcon_= nullptr;
+    std::unique_ptr<HPIcon>enemyHpIcon_ = nullptr;
     std::unique_ptr<PauseScreen>pauseScreen_ = nullptr;
     std::unique_ptr<RedPinchScreen> redPinchScreen = nullptr;
 };

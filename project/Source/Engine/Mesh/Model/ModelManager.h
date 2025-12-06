@@ -17,11 +17,11 @@ public:
         ENEMY_WING_R,
         ENEMY_SLEEP,
 
-        EGG,
+    
         NEST,
         FIRE_BALL,
         GROUND,
-
+        BOMB,
 
         FLOOR,
         MELT_FLOOR,

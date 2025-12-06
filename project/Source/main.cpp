@@ -28,7 +28,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // ==============================================//↑基本いじらない↑//============================================
     //画面の色
     Vector4 screenColor = { 0.373f,0.804f,0.894f,1.0f };
-    DirectionalLightManager::GetDirectionalLightData()->direction = Normalize({ 0.7f,-0.24f,-0.64f });
 
 	// * ラッパークラスここから * //
 	// キーバインドの初期化

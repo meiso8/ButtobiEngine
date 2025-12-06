@@ -46,6 +46,6 @@ private:
 	float offset_ = 4.0f;
 	float endOffset_ = 12.0f;
 	float offsetBackStart_ = 2.0f;
-	float enemyPosY_ = 1.0f;
+	float enemyPosY_ = 4.0f;
 };
 

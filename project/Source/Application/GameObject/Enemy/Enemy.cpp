@@ -71,6 +71,12 @@ Enemy::Enemy()
     //初期化
     Init();
 
+    Json file = JsonFile::GetJsonFiles("Boss");
+    totalHPs_.maxHp = 0;
+    totalHPs_.maxHp = file["First"]["HP"];
+    totalHPs_.maxHp += file["Second"]["HP"];
+    totalHPs_.maxHp += file["Third"]["HP"];
+
 }
 
 void Enemy::Init() {
@@ -129,6 +135,7 @@ void Enemy::Init() {
     wingTheta_ = 0.0f;
 
     overKillCount = 0;
+    totalHPs_.hp = totalHPs_.maxHp;
 
     InitState();
 
@@ -151,6 +158,7 @@ void Enemy::InitState()
     //速度
     float velocity = file[currentState_]["velocity"];
     velocity_ = { velocity ,velocity ,velocity };
+ 
 }
 
 
@@ -304,6 +312,7 @@ void Enemy::OnCollision(Collider* collider)
         VibrateManager::SetTime(0.5f, 2000, 2000);
 
         if (damageStruct_.hps.hp > 0) {
+            totalHPs_.hp -= damageStruct_.hps.hpDecrease;
             damageStruct_.hps.hp -= damageStruct_.hps.hpDecrease;
         }
         poyoAnimTimer_ = 0.0f;
@@ -384,17 +393,24 @@ void Enemy::Tackle()
         if (!isFeint_) {
             if (Dot(*playerLookDir_, endPos_ - startPos_) < 0.0f) {
                 if (damageStruct_.isHit) {
-                    isKnockBack_ = true;
-                    isKnockBackEmit_ = true;
-                    LookTargetNormal(*playerPos_);
 
-                    Sound::PlayOriginSE(Sound::kBossTackle);
-                    if (damageStruct_.hps.hp >= kKnockBackDamage_) {
-                        damageStruct_.hps.hp -= kKnockBackDamage_;
+                    if (!isKnockBack_) {
+                        isKnockBack_ = true;
+                        isKnockBackEmit_ = true;
+                        LookTargetNormal(*playerPos_);
+
+                        Sound::PlayOriginSE(Sound::kBossTackle);
+                        if (damageStruct_.hps.hp >= kKnockBackDamage_) {
+             
+                            totalHPs_.hp -= kKnockBackDamage_;
+                            damageStruct_.hps.hp -= kKnockBackDamage_;
+                        }
+                        VibrateManager::SetTime(1.0f, 2000, 2000);
+
+                        SetPhase(KNOCKBACK);
                     }
-                    VibrateManager::SetTime(1.0f, 2000, 2000);
+                 
 
-                    SetPhase(KNOCKBACK);
                 }
             }
         }
@@ -535,7 +551,7 @@ void Enemy::SwitchState()
         }
     } else if (currentState_ == "Third") {
         damageStruct_.isDead = true;
-
+        damageStruct_.hps.hp = kMaxOverKillCount;
     }
 
     //回転を初期化
@@ -646,10 +662,13 @@ void Enemy::Fireball()
     if (phaseTimer_ <= kFireBallRotateTime_) {
         RotateY(phaseTimer_);
         fireBallCoolTimer_ = 0.0f;
+
+        //yを戻す
+        bodyPos_.worldTransform_.translate_.y = Lerp(bodyPos_.worldTransform_.translate_.y, kRadius_, 0.1f);
     } else {
 
         LookTargetNormal(*playerPos_);
-
+     
         fireBallCoolTimer_ += InverseFPS;
 
         if (fireBallCoolTimer_ > kFireBallMaxCoolTime_) {
@@ -698,11 +717,13 @@ void Enemy::ShockWaveAttack()
         if (!isWaveShot_) {
             isWaveShot_ = true;
         }
-    }
+    } else if (phaseTimer_ < kWavePhaseMaxTime_) {
 
-    if (phaseTimer_ >= kWavePhaseMaxTime_) {
+    } else {
         isSelectRandomPhase_ = true;
     }
+
+
 }
 void Enemy::Exit()
 {

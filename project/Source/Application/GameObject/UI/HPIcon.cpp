@@ -6,21 +6,22 @@
 
 HPIcon::HPIcon() {
 
-	for (int i = 0; i < kMaxHPIcon_; ++i) {
+	shake = std::make_unique<Shake>();
+}
+
+void HPIcon::Setting(const Vector2& size, const Vector2& pos) {
+
+	for (int i = 0; i < maxIcon_; ++i) {
 		sprites_[SpriteTypes::layer1].emplace_back(std::make_unique<Sprite>());
 		sprites_[SpriteTypes::MaxHp].emplace_back(std::make_unique<Sprite>());
 	}
 
 	for (auto& [type, spriteList] : sprites_) {
 		for (auto& sprite : spriteList) {
-			sprite->Create(Texture::PLAYER_HP_ICON, { 64.0f,128.0f }, { 0.0f,0.0f,0.0f,0.5f });
+			sprite->Create(textureHandle_, { 64.0f,128.0f }, { 0.0f,0.0f,0.0f,0.5f });
 		}
 	}
 
-	shake = std::make_unique<Shake>();
-}
-
-void HPIcon::Setting(const Vector2& size, const Vector2& pos) {
 	for (auto& [type, spriteList] : sprites_) {
 		for (size_t i = 0; i < spriteList.size(); ++i) {
 
@@ -34,6 +35,7 @@ void HPIcon::Setting(const Vector2& size, const Vector2& pos) {
 			spriteList[i]->SetPosition(offsetPos);
 
 			position_.push_back(offsetPos);
+			spriteList[i]->SetTexture(textureHandle_);
 
 		}
 	}
@@ -46,7 +48,7 @@ void HPIcon::Initialize() {
 	for (auto& sprite : sprites_[layer1]) {
 		sprite->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 	}
-	drawHpNum_ = kMaxHPIcon_;
+	drawHpNum_ = maxIcon_;
 	shake->Reset();
 }
 
@@ -65,12 +67,12 @@ void HPIcon::Update() {
 			timer_ -= InverseFPS;
 			theta_ += std::numbers::phi_v<float>*InverseFPS * 12.0f;
 			float alpha = cosf(theta_) * 0.5f + 1.0f;
-			sprites_[layer1][(drawHpNum_ - 1) % kMaxHPIcon_]->SetColor({ 1.0f,1.0f,1.0f,alpha });
+			sprites_[layer1][(drawHpNum_ - 1) % maxIcon_]->SetColor({ 1.0f,1.0f,1.0f,alpha });
 		} else {
 			timer_ = 0.0f;
 			theta_ = 0.0f;
-			drawHpNum_ = static_cast<size_t>(hps_->hp / (hps_->maxHp / static_cast<float>(sprites_[layer1].size())) + 0.9f);
-			drawHpNum_ = static_cast<size_t>(std::clamp(static_cast<float>(drawHpNum_), 0.0f, static_cast<float>(kMaxHPIcon_)));
+			drawHpNum_ = static_cast<size_t>(hps_->hp / (hps_->maxHp / static_cast<float>(maxIcon_)) + 0.9f);
+			drawHpNum_ = static_cast<size_t>(std::clamp(static_cast<float>(drawHpNum_), 0.0f, static_cast<float>(maxIcon_)));
 		}
 
 		HitAction();
@@ -109,7 +111,7 @@ void HPIcon::Draw() {
 
 void HPIcon::HitAction()
 {
-	if (*isHitPtr_) {
+	if (isHitPtr_&& *isHitPtr_) {
 		shake->Start(40.0f, 15);
 	}
 	
