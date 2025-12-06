@@ -110,7 +110,7 @@ void HPIcon::Draw() {
 void HPIcon::HitAction()
 {
 	if (*isHitPtr_) {
-		shake->Start(10.0f, 60);
+		shake->Start(40.0f, 15);
 	}
 	
 	shake->Update();

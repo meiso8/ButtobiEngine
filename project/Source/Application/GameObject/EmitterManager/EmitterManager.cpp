@@ -140,21 +140,21 @@ EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShock
     leafEmitter_ = std::make_unique<ParticleEmitter>();
     leafEmitter_->SetName("leafParticle");
 
-    leafEmitter_->emitter_.count = 2;
+    leafEmitter_->emitter_.count = 1;
     leafEmitter_->emitter_.movement = ParticleMovements::kParticleNormal;
     leafEmitter_->emitter_.transform.translate_.y = 5.0f;
-    leafEmitter_->emitter_.translateAABB_ = { .min = {-7.5f,0.0f,-7.5f},.max = {7.5f,1.0f,7.5f} };
+    leafEmitter_->emitter_.translateAABB_ = { .min = {15.0f,-5.0f,-7.5f},.max = {16.0f,1.5f,7.5f} };
     leafEmitter_->emitter_.rotateOffset_ = 0.0f;
-    leafEmitter_->emitter_.frequency = 0.35f;
-    leafEmitter_->emitter_.lifeTime = 2.0f;
+    leafEmitter_->emitter_.frequency = 1.2f;
+    leafEmitter_->emitter_.lifeTime = 8.0f;
     leafEmitter_->emitter_.blendMode = kBlendModeNormal;
-    leafEmitter_->emitter_.scaleOffset_ = 0.125f;
+    leafEmitter_->emitter_.scaleOffset_ = 0.2f;
     leafEmitter_->emitter_.rotateOffset_ = 3.14f;
 
     //マネージャーから加速度の数値をもらう
     auto& leafGroup = manager_->GetParticleGroup(leafEmitter_->emitter_.name);
-    leafGroup->accelerationField.area = { .min = {-16.0f,0.0f,-16.0f},.max = {16.0f,10.0f,16.0f} };
-    leafGroup->accelerationField.acceleration = { 0.2f, -1.0f,0.0f };
+    leafGroup->accelerationField.area = { .min = {-20.0f,-10.0f,-16.0f},.max = {20.0f,10.0f,16.0f} };
+    leafGroup->accelerationField.acceleration = { -0.8f, -0.1f,0.0f };
     // ====================================================================
 }
 

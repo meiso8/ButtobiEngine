@@ -13,6 +13,6 @@ public:
 private:
 	Enemy* enemy_ = nullptr;
 	EnemyBulletManager* bulletManager_ = nullptr;
-	float shotSpeed_ = 0.3f;
-	float shotSize_ = 1.0f;
+	float shotSpeed_ = 0.2f;
+	float shotSize_ = 0.6f;
 };

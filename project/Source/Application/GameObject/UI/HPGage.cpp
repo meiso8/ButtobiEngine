@@ -75,9 +75,9 @@ void HPGage::Draw()
 void HPGage::UpdateHitAction()
 {
     if (isHitPtr_&&*isHitPtr_) {
-        shake_->Start(10.0f, 60);
+        shake_->Start(10.0f, 10);
     }else if (isKnockBackPtr_ && *isKnockBackPtr_) {
-        shake_->Start(20.0f, 60);
+        shake_->Start(30.0f, 60);
     }
 
     shake_->Update();
