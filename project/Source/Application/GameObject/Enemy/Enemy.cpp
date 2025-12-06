@@ -551,6 +551,7 @@ void Enemy::SwitchState()
         }
     } else if (currentState_ == "Third") {
         damageStruct_.isDead = true;
+        damageStruct_.hps.maxHp = kMaxOverKillCount;
         damageStruct_.hps.hp = kMaxOverKillCount;
     }
 
