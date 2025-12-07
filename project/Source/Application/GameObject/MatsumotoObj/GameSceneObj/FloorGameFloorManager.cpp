@@ -13,7 +13,7 @@ FloorGameFloorManager::FloorGameFloorManager() {
 			floors_[y][x]->Initialize();
 			floors_[y][x]->body_.worldTransform_.translate_ = {
 				static_cast<float>(x) * kHalfFloorSize - (static_cast<float>(kMapWidth) * kHalfFloorSize) + kHalfFloorSize,
-				0.5f,
+				0.1f,
 				static_cast<float>(y) * kHalfFloorSize - (static_cast<float>(kMapHeight) * kHalfFloorSize) + kHalfFloorSize
 			};
 		}
@@ -29,7 +29,7 @@ void FloorGameFloorManager::Initialize() {
 			floors_[y][x]->Initialize();
 			floors_[y][x]->body_.worldTransform_.translate_ = {
 				static_cast<float>(x)* (kHalfFloorSize * 2.0f) - (static_cast<float>(kMapWidth) * kHalfFloorSize) + kHalfFloorSize,
-				0.5f,
+				0.1f,
 				static_cast<float>(y) * (kHalfFloorSize * 2.0f) - (static_cast<float>(kMapHeight) * kHalfFloorSize) + kHalfFloorSize
 			};
 		}
