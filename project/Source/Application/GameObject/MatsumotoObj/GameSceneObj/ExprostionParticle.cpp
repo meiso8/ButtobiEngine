@@ -14,6 +14,7 @@
 
 ExprostionParticle::ExprostionParticle() {
     body_.Create();
+    body_.Initialize();
     // It's good practice to initialize variables.
     isActive_ = false;
     size_ = 0.75f;
@@ -40,6 +41,7 @@ void ExprostionParticle::Initialize() {
     //    
     //}
     body_.SetMesh(circleMesh_.get());
+	body_.SetColor({ 1.0f, 0.5f, 0.0f, 1.0f }); // Orange color for explosion.
 
     // Set an initial scale.
     body_.worldTransform_.scale_ = { size_, size_, size_ };
@@ -91,6 +93,6 @@ void ExprostionParticle::SetPosition(const Vector3& position) {
 
     // Reset its lifetime.
     lifeTimer_ = lifeDuration_;
-
+    body_.SetColor({ 1.0f, 0.5f, 0.0f, 1.0f });
     body_.worldTransform_.scale_ = { size_, size_, size_ };
 }

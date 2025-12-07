@@ -159,9 +159,10 @@ std::vector<Vector2> FloorGameFloorManager::GetExprodedFloorMap() const {
 	for (int y = 0; y < kMapHeight; y++) {
 		for (int x = 0; x < kMapWidth; x++) {
 			if (floors_[y][x]->isExploded_) {
+				// 床の真ん中座標を返す
 				exprodedFloorPositions.push_back({
-						static_cast<float>(x) * kHalfFloorSize - (static_cast<float>(kMapWidth) * kHalfFloorSize * 0.5f) + kHalfFloorSize * 0.5f,
-						static_cast<float>(y) * kHalfFloorSize - (static_cast<float>(kMapHeight) * kHalfFloorSize * 0.5f) + kHalfFloorSize * 0.5f
+					static_cast<float>(x) * (kHalfFloorSize * 2.0f) - (static_cast<float>(kMapWidth) * kHalfFloorSize) + kHalfFloorSize,
+					static_cast<float>(y) * (kHalfFloorSize * 2.0f) - (static_cast<float>(kMapHeight) * kHalfFloorSize) + kHalfFloorSize
 					});
 				floors_[y][x]->isExploded_ = false;
 			}
