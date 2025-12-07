@@ -47,3 +47,8 @@ void HealItemSpawner::AddCollider(CollisionManager* collisionManager) {
 		}
 	}
 }
+
+void HealItemSpawner::Release()
+{
+	healItems_.clear();
+}

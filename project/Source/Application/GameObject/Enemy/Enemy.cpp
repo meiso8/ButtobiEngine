@@ -12,6 +12,9 @@
 #include"DebugUI.h"
 #include"VibrateManager.h"
 #include "MatsumotoObj/SceneStaticValue.h"
+#include "MatsumotoObj/GameSceneObj/HealItemSpawner.h"
+#include "MatsumotoObj/GameSceneObj/Data/MapData.h"
+
 #define PI std::numbers::pi_v<float>
 #define QUARTER_PI PI*0.25f
 #define HALF_PI PI*0.5f
@@ -567,6 +570,9 @@ void Enemy::SwitchState()
         currentState_ = "Second";
         isFaseChange_ = true;
     } else if (currentState_ == "Second") {
+        Vector3 spawnPos = { 0.0f ,10.0f, 0.0f };
+		HealItemSpawner::Instance().SpawnHealItem(spawnPos);
+
         currentState_ = "Third";
         isFaseChange_ = true;
 

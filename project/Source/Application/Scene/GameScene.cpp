@@ -68,7 +68,6 @@ GameScene::GameScene()
     floorPlayerStripTargetUI_ = std::make_unique<FloorPlayerStripTargetUI>(floorGamePlayer_.get());
     floorActionManager_ = std::make_unique<FloorActionManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
     floorGamePlayerAnimationManager_ = std::make_unique<FloorGamePlayerAnimationManager>(floorGamePlayer_.get(), floorGameFloorManager_.get());
-    healItemSpawner_ = std::make_unique<HealItemSpawner>();
     gameOverEvent_ = std::make_unique<GameOverEvent>(floorGamePlayer_.get());
     actionUI_ = std::make_unique<ActionUI>(floorGamePlayer_.get());
     letterboxBars_ = std::make_unique<LetterboxBars>();
@@ -95,6 +94,8 @@ GameScene::GameScene()
     );
 
     emitterManager_ = std::make_unique<EmitterManager>(*floorGamePlayer_, *enemy_, *enemyShockWaveManager_, *floorBulletManager_);
+
+	
 }
 
 void GameScene::Initialize() {
@@ -123,7 +124,7 @@ void GameScene::Initialize() {
     floorPlayerStripTargetUI_->Initialize();
     floorActionManager_->Initialize();
     playerFloorStripManager_->Initialize();
-    healItemSpawner_->Initialize();
+    HealItemSpawner::Instance().Initialize();
     actionUI_->Initialize();
     letterboxBars_->Initialize();
     gameOverEvent_->Initialize();
@@ -219,7 +220,7 @@ void GameScene::Draw() {
     floorBulletManager_->Draw(*currentCamera_);
     floorPlayerStripTargetUI_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     playerFloorStripManager_->Draw(*currentCamera_);
-    healItemSpawner_->Draw(*currentCamera_);
+	HealItemSpawner::Instance().Draw(*currentCamera_);
     floorActionManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     actionUI_->Draw();
     letterboxBars_->Draw();
@@ -348,7 +349,7 @@ void GameScene::UpdateGameObject()
     floorGamePlayer_->Update();
     floorGameFloorManager_->Update();
     floorBulletManager_->Update();
-    healItemSpawner_->Update();
+	HealItemSpawner::Instance().Update();
     enemy_->Update();
     enemyBulletManager_->Update();
     enemyBombManager_->Update();
@@ -454,7 +455,7 @@ void GameScene::CheckAllCollision()
         collisionManager_->AddCollider(floorGamePlayer_.get());
     }
     collisionManager_->AddCollider(enemy_.get());
-    healItemSpawner_->AddCollider(collisionManager_.get());
+	HealItemSpawner::Instance().AddCollider(collisionManager_.get());
     floorGameFloorManager_->AddCollider(collisionManager_.get());
 
     for (auto& bullet : floorBulletManager_->GetBullets()) {
@@ -480,4 +481,5 @@ void GameScene::CheckAllCollision()
 GameScene::~GameScene()
 {
     camera_ = nullptr;
+	HealItemSpawner::Instance().Release();
 }
