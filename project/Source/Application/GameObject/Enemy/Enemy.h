@@ -276,7 +276,7 @@ private:
     //オーバーキルカウント
     int overKillCount = 0;
     //オーバーキルカウント最大値
-    int kMaxOverKillCount = 150;
+    int kMaxOverKillCount = 250;
 private:
     //状態を初期化
     void InitState();
