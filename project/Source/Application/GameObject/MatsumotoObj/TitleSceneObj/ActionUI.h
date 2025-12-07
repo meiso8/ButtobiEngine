@@ -17,7 +17,9 @@ public:
 private:
 	float moveUiY;
 	float stripUiY;
+	float menuUiY;
 	FloorGamePlayer* player_ = nullptr;
 	std::unique_ptr<Sprite> moveSprite_ = nullptr;
 	std::unique_ptr<Sprite> actionSprite_ = nullptr;
+	std::unique_ptr<Sprite> menuSprite_ = nullptr;
 };

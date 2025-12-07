@@ -83,6 +83,7 @@ void Texture::LoadAllTexture() {
     handles[ACTION_UI_MOVE] = Load("Resource/Textures/ActionUI_Move_Pop.png");
     handles[ACTION_UI_STRIP] = Load("Resource/Textures/ActionUI_Strip_Pop.png");
     handles[ACTION_UI_SHOT] = Load("Resource/Textures/ActionUI_Shot_Pop.png");
+	handles[ACTION_UI_MENU] = Load("Resource/Textures/PauseUI_Pop.png");
 
     handles[PAUSING_BG] = Load("Resource/Textures/PausingBG_02.png");
     handles[PAUSING] = Load("Resource/Textures/PauseUI_Pop.png");

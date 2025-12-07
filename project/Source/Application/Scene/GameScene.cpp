@@ -183,7 +183,6 @@ void GameScene::Update() {
         sceneChange_->SetState(SceneChange::kFadeIn, 30);
     }
 
-
     if (!PauseScreen::isActive_) {
         UpdateLight();
         UpdateCamera();
@@ -192,6 +191,14 @@ void GameScene::Update() {
         //エミッター
         emitterManager_->Update(*currentCamera_);
 
+    }
+
+    actionUI_->Update();
+    if (floorGamePlayer_->GetDamageStruct().hps.hp <= 0 && !PauseScreen::isActive_) {
+        actionUI_->isHide_ = true;
+    }
+    else {
+        actionUI_->isHide_ = false;
     }
 
     letterboxBars_->Update();
@@ -236,7 +243,6 @@ void GameScene::Draw() {
 
 void GameScene::Debug()
 {
-
     if (Input::IsTriggerKey(DIK_Q)) {
         SwitchCamera();
     }
@@ -252,9 +258,6 @@ void GameScene::Debug()
 
 void GameScene::UpdateLight()
 {
-
-
-
     if (enemy_->GetCurrentState() == "Second") {
 
         float& intensity0 = PointLightManager::GetPointLightData(0).intensity;
@@ -351,14 +354,6 @@ void GameScene::UpdateGameObject()
 
 
     // オブジェクト同士の干渉
-    actionUI_->Update();
-
-    if (floorGamePlayer_->GetDamageStruct().hps.hp <= 0) {
-        actionUI_->isHide_ = true;
-    } else {
-        actionUI_->isHide_ = false;
-    }
-
     floorStripManager_->Update();
     playerFloorStripManager_->Update();
     floorPlayerShotBulletManager_->Update();
