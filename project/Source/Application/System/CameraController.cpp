@@ -27,6 +27,7 @@ void CameraController::Initialize()
 
 	isFocusTarget_ = false;
 	focusTargetPos_ = nullptr;
+	focusFov_ = 0.35f;
 
 	isEnemyLethal_ = false;
 
@@ -38,10 +39,11 @@ void CameraController::StartShake(const float& moveRange, const uint32_t& frame)
 {
     shake_.Start(moveRange, frame);
 }
-
-void CameraController::FocusTarget(const Vector3* targetPos) {
+void CameraController::FocusTarget(const Vector3* targetPos, float fov)
+{
 	isFocusTarget_ = true;
 	focusTargetPos_ = const_cast<Vector3*>(targetPos);
+	focusFov_ = fov;
 }
 
 void CameraController::ResetFocusTarget() {
@@ -57,7 +59,7 @@ void CameraController::UpdateFocusTarget() {
 	}
 	Vector3 targetRotate = MY_Utility::CalcLookAtRotation(camera_->translate_, *focusTargetPos_);
 	camera_->rotate_ = MY_Utility::SimpleEaseIn(camera_->rotate_, targetRotate, 0.1f);
-	camera_->fovAngleY_ = MY_Utility::SimpleEaseIn(camera_->fovAngleY_, 0.35f, 0.3f);
+	camera_->fovAngleY_ = MY_Utility::SimpleEaseIn(camera_->fovAngleY_, focusFov_, 0.3f);
 }
 
 void CameraController::StartEnemyLethal() {

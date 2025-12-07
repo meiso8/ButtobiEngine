@@ -313,7 +313,7 @@ void GameScene::UpdateCamera()
 
         if (floorGamePlayer_->GetDamageStruct().hps.hp <= 0) {
             cameraController_->ResetFocusTarget();
-            cameraController_->FocusTarget(&floorGamePlayer_->body_.worldTransform_.translate_);
+            cameraController_->FocusTarget(&floorGamePlayer_->body_.worldTransform_.translate_,0.2f);
         }
 
         if (enemy_->IsDead()) {

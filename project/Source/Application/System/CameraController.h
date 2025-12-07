@@ -13,7 +13,7 @@ public:
     void StartShake(const float& moveRange, const uint32_t& frame);
     void UpdateShakeTimer();
 
-    void FocusTarget(const Vector3* targetPos);
+    void FocusTarget(const Vector3* targetPos,float fov = 0.35f);
     void ResetFocusTarget();
     void UpdateFocusTarget();
 
@@ -29,6 +29,7 @@ private:
 
 	bool isFocusTarget_ = false;
 	Vector3* focusTargetPos_ = nullptr;
+	float focusFov_ = 0.35f;
 
 	bool isEnemyLethal_ = false;
 };
