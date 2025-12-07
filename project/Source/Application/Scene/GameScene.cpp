@@ -180,6 +180,7 @@ void GameScene::Update() {
     }
 
     if (PauseScreen::isBackToTitle) {
+        SceneStaticValue::isClear = false;
         sceneChange_->SetState(SceneChange::kFadeIn, 30);
     }
 
