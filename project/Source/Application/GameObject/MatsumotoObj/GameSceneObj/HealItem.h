@@ -23,8 +23,10 @@ public:
 	void Spawn(const Vector3& position);
 	bool isActive_;
 	Object3d body_;
+	
 
 private:
+	Vector3 velocity_;
 	Model* model_;
 	float rotateSpeed_ = 1.0f;
 };

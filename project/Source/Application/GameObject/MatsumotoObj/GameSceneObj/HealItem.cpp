@@ -9,6 +9,7 @@
 #include"CollisionConfig.h"
 #include"JsonFile.h"
 #include "MatsumotoObj/MY_Utility.h"
+#include "MatsumotoObj/GameSceneObj/Data/MapData.h"
 
 HealItem::HealItem() {
 	model_ = ModelManager::GetModel(ModelManager::HEAL_ITEM);
@@ -22,6 +23,7 @@ HealItem::HealItem() {
 	SetCollisionAttribute(kCollisionPlayerHealItem);
 	SetCollisionMask(kCollisionPlayer);
 	isActive_ = false;
+
 }
 
 HealItem::~HealItem() {
@@ -38,6 +40,7 @@ void HealItem::OnCollision(Collider* collider) {
 void HealItem::Initialize() {
 	isActive_ = false;
 	rotateSpeed_ = 1.0f;
+	velocity_ = { 0.0f,0.0f,0.0f };
 }
 
 void HealItem::Update() {
@@ -54,12 +57,29 @@ void HealItem::Update() {
 			0.1f
 		);
 	}
-	body_.worldTransform_.translate_.y -= 0.5f;
+
+	if (body_.worldTransform_.translate_.x > static_cast<float>(kMapWidth) * kHalfFloorSize - kHalfFloorSize) {
+		velocity_.x = -1.0f;
+	}
+	if (body_.worldTransform_.translate_.x < -static_cast<float>(kMapWidth) * kHalfFloorSize + kHalfFloorSize) {
+		velocity_.x = 1.0f;
+	}
+	if (body_.worldTransform_.translate_.z > static_cast<float>(kMapHeight) * kHalfFloorSize - kHalfFloorSize) {
+		velocity_.z = -1.0f;
+	}
+	if (body_.worldTransform_.translate_.z < -static_cast<float>(kMapHeight) * kHalfFloorSize + kHalfFloorSize) {
+		velocity_.z = 1.0f;
+	}
+
+	velocity_.y -= 9.81f * 0.016f;
+
+	body_.worldTransform_.rotate_.y += 0.016f * rotateSpeed_;
+	body_.worldTransform_.translate_ += velocity_;
+
 	if (body_.worldTransform_.translate_.y <= 1.0f) {
 		body_.worldTransform_.translate_.y = 1.0f;
 	}
-
-	body_.worldTransform_.rotate_.y += 0.016f * rotateSpeed_;
+	velocity_ *= 0.95f;
 	body_.Update();
 	ColliderUpdate();
 }
@@ -77,4 +97,5 @@ void HealItem::Spawn(const Vector3& position) {
 	body_.worldTransform_.scale_ = { 0.0f,0.0f,0.0f };
 	body_.SetColor({ 1.0f,1.0f,1.0f,1.0f });
 	SetCollisionAttribute(kCollisionPlayerHealItem);
+	velocity_ = { 0.0f,0.5f,0.0f };
 }

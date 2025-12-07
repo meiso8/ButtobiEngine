@@ -82,7 +82,7 @@ void FloorBullet::OnCollision(Collider* collider) {
 	isHit_ = true;
 
 	// 敵の弾を撃ち落とすと確率で回復アイテムを出す
-	if (MY_Utility::RandomBool(0.2f) || collider->GetCollisionAttribute() == kCollisionEnemyBullet) {
+	if (MY_Utility::RandomBool(0.2f) && collider->GetCollisionAttribute() == kCollisionEnemyBullet) {
 		HealItemSpawner::Instance().SpawnHealItem(body_.worldTransform_.GetWorldPosition());
 	}
 }
