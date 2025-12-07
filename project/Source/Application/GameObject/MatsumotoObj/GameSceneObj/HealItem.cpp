@@ -74,6 +74,6 @@ void HealItem::Spawn(const Vector3& position) {
 	isActive_ = true;
 	body_.worldTransform_.translate_ = position;
 	body_.worldTransform_.scale_ = { 0.0f,0.0f,0.0f };
-	body_.SetColor({ 0.0f,1.0f,0.0f,1.0f });
+	body_.SetColor({ 1.0f,1.0f,1.0f,1.0f });
 	SetCollisionAttribute(kCollisionPlayerHealItem);
 }
