@@ -44,8 +44,13 @@
 #include"Lights/PointLightManager.h"
 #include"Lights/DirectionalLightManager.h"
 #include"Lerp.h"
+
+#include "MatsumotoObj/SceneStaticValue.h"
 TitleScene::TitleScene()
 {
+	SceneStaticValue::isClear = false;
+	SceneStaticValue::bossRound = 0;
+
     // 現在のカメラを設定
     currentCamera_ = camera_.get();
 
@@ -107,9 +112,7 @@ void TitleScene::Initialize()
     DirectionalLightManager::GetDirectionalLightData()->intensity = 1.0f;
 
     PointLightManager::GetPointLightData(1).intensity = 0.0f;
- PointLightManager::GetPointLightData(0).intensity = 1.0f;
-
-
+    PointLightManager::GetPointLightData(0).intensity = 1.0f;
 
     camera_->Initialize();
     camera_->translate_ = { 0.0f, 12.0f,-14.0f };

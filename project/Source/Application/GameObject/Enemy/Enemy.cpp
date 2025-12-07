@@ -11,6 +11,7 @@
 #include"Easing.h"
 #include"DebugUI.h"
 #include"VibrateManager.h"
+#include "MatsumotoObj/SceneStaticValue.h"
 #define PI std::numbers::pi_v<float>
 #define QUARTER_PI PI*0.25f
 #define HALF_PI PI*0.5f
@@ -99,6 +100,9 @@ void Enemy::Init() {
     actionCount_ = 0;
 
     currentState_ = "First";
+    if (SceneStaticValue::bossRound >= 2) {
+		currentState_ = "Second";
+    }
     phase_ = PHASE::ROUND;
 
     //体についての項目
@@ -282,6 +286,15 @@ void Enemy::Update()
     ImGui::End();
 
 #endif
+    if (currentState_ == "First") {
+        SceneStaticValue::bossRound = 1;
+	}
+	else if (currentState_ == "Second") {
+		SceneStaticValue::bossRound = 2;
+	}
+	else if (currentState_ == "Third") {
+		SceneStaticValue::bossRound = 3;
+	}
 }
 
 Vector3 Enemy::GetWorldPosition()const
@@ -329,7 +342,18 @@ void Enemy::OnCollision(Collider* collider)
     }
 
 }
-
+void Enemy::ForceSetBossRound(uint32_t round)
+{
+	if (round == 1) {
+		currentState_ = "First";
+	}
+	else if (round == 2) {
+		currentState_ = "Second";
+	}
+	else if (round >= 3) {
+		currentState_ = "Third";
+	}
+}
 void Enemy::LeathalMoveUpdate() {
     if (!isLeathalVec_) {
         isLeathalVec_ = true;

@@ -3,4 +3,5 @@
 
 namespace SceneStaticValue {
 	bool isClear = false;
+	int bossRound = 0;
 }

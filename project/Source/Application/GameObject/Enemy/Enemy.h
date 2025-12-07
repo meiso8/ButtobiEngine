@@ -42,6 +42,7 @@ public:
         }
         return { 0.0f };
     }
+    void ForceSetBossRound(uint32_t round);
 
     // 死亡後のアニメーション
     void LeathalMoveUpdate();
