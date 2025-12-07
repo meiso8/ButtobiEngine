@@ -37,7 +37,7 @@ PauseScreen::PauseScreen()
     startPos_[kPauseBG] = { width,0.0f };
     endPos_[kPauseBG] = { width - sprites_[kPauseBG]->GetSize().x,0.0f };
 
-    startPos_[kPausing] = { width+128.0f,64.0f };
+    startPos_[kPausing] = { width + 128.0f,64.0f };
     endPos_[kPausing] = { width - sprites_[kPausing]->GetSize().x - 24.0f,startPos_[kPausing].y };
 
     startPos_[kBackToGame] = { width + 256.0f,height * 0.5f - 32.0f };
@@ -62,6 +62,14 @@ PauseScreen::PauseScreen()
     sprites_[kBackToGame]->SetAnchorPoint({ 0.5f,0.5f });
     sprites_[kReTry]->SetAnchorPoint({ 0.5f,0.5f });
     sprites_[kBackToTitle]->SetAnchorPoint({ 0.5f,0.5f });
+
+
+    menuSprite_ = std::make_unique<Sprite>();
+    menuSprite_->Create(Texture::ACTION_UI_MENU, { 128.0f,128.0f }, { 1.0f,1.0f,1.0f,1.0f });
+    menuUiPos_ = { 1280.0f - 128.0f - 32.0f,720.0f - 64.0f };
+    menuSprite_->SetPosition(menuUiPos_);
+    menuSprite_->SetAnchorPoint({ 0.5f,0.5f });
+    //menuSprite_->SetSize({ 256.0f,64.0f});
 
 
 
@@ -101,9 +109,13 @@ void PauseScreen::Update()
         DebugUI::CheckSprite(*sprites_[i], world.c_str());
     }
 
+
     if (!isActive_) { return; }
 
     TimerUpdate();
+
+
+
 
     if (isPause_) {
 
@@ -113,12 +125,21 @@ void PauseScreen::Update()
             ScalingButton();
         }
 
+        if (pauseTimer_ <= 1.0f) {
+            float scaleTheta = pauseTimer_ * std::numbers::pi_v<float>*2.0f;
+            float scale = cosf(scaleTheta) * 0.125f + 1.125f;
+            menuSprite_->SetScale({ scale,scale });
+        }
+    
+
         for (int i = kPauseBG; i < sprites_.size(); ++i) {
             Vector2 pos = Easing::EaseInOut(sprites_[i]->GetPosition(), endPos_[i], 0.2f);
             sprites_[i]->SetPosition(pos);
         }
 
     } else {
+
+        menuSprite_->SetScale({ 1.0f,1.0f });
 
         for (int i = 0; i < kButtonMax; ++i) {
             sprites_[i + kBackToGame]->SetScale({ 1.0f,1.0f });
@@ -147,14 +168,14 @@ void PauseScreen::TimerUpdate()
 
 void PauseScreen::SelectButton()
 {
-	KeyBindConfig* key = &KeyBindConfig::Instance();
+    KeyBindConfig* key = &KeyBindConfig::Instance();
     Vector2 stickPos;
 
-	if (selectTimer_ > 0.0f) {
+    if (selectTimer_ > 0.0f) {
         selectTimer_ -= 0.016f;
     } else {
         if (key->IsTrigger("MoveForward") || (Input::IsControllerStickPosMove(BUTTON_LEFT, 0, &stickPos) && stickPos.y > 0.5f)) {
-            
+
             Sound::PlaySE(Sound::kMoveCursor);
             selectButtonNum_--;
             if (selectButtonNum_ < 0) {
@@ -175,7 +196,7 @@ void PauseScreen::SelectButton()
 
 
     if (key->IsTrigger("Shot")) {
-        
+
         Sound::PlaySE(Sound::kDecision);
         switch (selectButtonNum_)
         {
@@ -215,9 +236,12 @@ void PauseScreen::ScalingButton()
 
 void PauseScreen::Draw()
 {
+
+    Sprite::PreDraw();
+    menuSprite_->Draw();
+
     if (!isActive_) { return; }
 
-    sprites_[kButton]->PreDraw();
 
     for (auto& sprite : sprites_) {
         sprite->Draw();

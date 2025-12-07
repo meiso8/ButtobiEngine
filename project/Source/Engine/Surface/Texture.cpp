@@ -86,7 +86,7 @@ void Texture::LoadAllTexture() {
 	handles[ACTION_UI_MENU] = Load("Resource/Textures/PauseUI_Pop.png");
 
     handles[PAUSING_BG] = Load("Resource/Textures/PausingBG_02.png");
-    handles[PAUSING] = Load("Resource/Textures/PauseUI_Pop.png");
+    handles[PAUSING] = Load("Resource/Textures/PauseUI_Word.png");
 
     handles[BUTTON_BACK_TO_TITL] = Load("Resource/Textures/BackToTitleUI_Pop.png");
     handles[BUTTON_BACK_TO_GAME] = Load("Resource/Textures/BackToGameUI_Pop.png");
