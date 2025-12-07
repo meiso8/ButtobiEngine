@@ -10,6 +10,8 @@
 
 #include"Data/FloorData.h"
 #include "Data/MapData.h"
+#include "MatsumotoObj/GameSceneObj/HealItemSpawner.h"
+#include "MatsumotoObj/MY_Utility.h"
 
 FloorBullet::FloorBullet() {
 	body_.Create();
@@ -79,6 +81,10 @@ void FloorBullet::OnCollision(Collider* collider) {
 	}
 	isHit_ = true;
 
+	// 確率で回復アイテムを出す
+	if (MY_Utility::RandomBool(0.2f)) {
+	HealItemSpawner::Instance().SpawnHealItem(body_.worldTransform_.GetWorldPosition());
+	}
 }
 Vector3 FloorBullet::GetWorldPosition() const {
 	return body_.worldTransform_.GetWorldPosition();
