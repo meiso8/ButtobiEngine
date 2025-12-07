@@ -133,6 +133,7 @@
     <ClCompile Include="Source\Application\GameObject\UI\RedPinchScreen.cpp" />
     <ClCompile Include="Source\Application\GameObject\PlayerDirectionSpotLight.cpp" />
     <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBeak.cpp" />
+    <ClCompile Include="BetoBeto.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\GameObject\UI\PauseScreen.h" />
@@ -291,6 +292,7 @@
     <ClInclude Include="Source\Application\GameObject\UI\RedPinchScreen.h" />
     <ClInclude Include="Source\Application\GameObject\PlayerDirectionSpotLight.h" />
     <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBeak.h" />
+    <ClInclude Include="BetoBeto.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="externals\assimp\lib\Debug\assimp-vc143-mdd.lib" />

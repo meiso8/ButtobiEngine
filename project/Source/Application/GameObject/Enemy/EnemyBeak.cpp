@@ -25,13 +25,14 @@ void EnemyBeak::Initialize()
 void EnemyBeak::Update()
 {
     isFloorHit_ = false;
-
+    
+#ifdef USE_IMGUI
     DebugUI::CheckWorldTransform(beak_, "EnemyBeak");
     ImGui::Text("GetWorldPos %f %f %f", GetWorldPosition());
     ImGui::Checkbox("isFloorHit_", &isFloorHit_);
     WorldTransformUpdate(beak_);
     ColliderUpdate();
-
+#endif
 }
 
 void EnemyBeak::OnCollision(Collider* collider)

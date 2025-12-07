@@ -26,8 +26,8 @@ public:
         FLOOR,
         MELT_FLOOR,
         HARD_FLOOR,
-		    EXPLOTION_FLOOR,
- 
+		EXPLOTION_FLOOR,
+        BETOBETO_FLOOR,
 
         HOUSE_FLOOR,
         HOUSE_WALL_L,
