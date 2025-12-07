@@ -21,4 +21,6 @@ namespace MY_Utility {
 	bool IsActiveForTimerSwitch(float& timer, float interval);
 
 	float Length(const Vector2& vec);
+
+	bool RandomBool(float trueProbability);
 } 

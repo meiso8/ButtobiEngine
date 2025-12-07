@@ -1,5 +1,6 @@
 #include "MY_Utility.h"
 #include <math.h>
+#include <random>
 
 float MY_Utility::SimpleEaseIn(float from, float to, float transitionSpeed) {
 	float value = from;
@@ -83,4 +84,10 @@ bool MY_Utility::IsActiveForTimerSwitch(float& timer, float interval) {
 
 float MY_Utility::Length(const Vector2& vec) {
 	return sqrtf(vec.x * vec.x + vec.y * vec.y);
+}
+
+bool MY_Utility::RandomBool(float trueProbability)
+{
+	float randomValue = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+	return randomValue < trueProbability;
 }

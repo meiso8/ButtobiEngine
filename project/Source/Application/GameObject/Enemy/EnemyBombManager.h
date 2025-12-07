@@ -12,6 +12,8 @@ public:
 	void Update();
 	void Draw(class Camera& camera);
 	void ShotBomb(const Vector3& startPpos,const Vector3& endPos, const float& size);
+
+	void ClearBombs();
 	const std::vector<std::unique_ptr<EnemyBomb>>& GetBombs() const {
 		return bombs_;
 	};

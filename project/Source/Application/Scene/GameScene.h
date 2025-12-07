@@ -71,7 +71,6 @@ private:
 	std::unique_ptr<FloorActionManager>floorActionManager_ = nullptr;
 	std::unique_ptr<FloorGamePlayerAnimationManager>floorGamePlayerAnimationManager_ = nullptr;
 	std::unique_ptr<PlayerFloorStripManager>playerFloorStripManager_ = nullptr;
-	std::unique_ptr<HealItemSpawner>healItemSpawner_ = nullptr;
 	std::unique_ptr<GameOverEvent>gameOverEvent_ = nullptr;
 	std::unique_ptr<ActionUI>actionUI_ = nullptr;
 	std::unique_ptr<LetterboxBars>letterboxBars_ = nullptr;
