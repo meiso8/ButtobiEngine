@@ -12,6 +12,9 @@
 #include"DebugUI.h"
 #include"VibrateManager.h"
 #include "MatsumotoObj/SceneStaticValue.h"
+#include "MatsumotoObj/GameSceneObj/HealItemSpawner.h"
+#include "MatsumotoObj/GameSceneObj/Data/MapData.h"
+
 #define PI std::numbers::pi_v<float>
 #define QUARTER_PI PI*0.25f
 #define HALF_PI PI*0.5f
@@ -95,7 +98,7 @@ void Enemy::Init() {
     isLeathalVec_ = false;
 
     isReqestClearFloor_ = false;
-
+	isReqestOverheadView_ = false;
     //アクションカウントの初期化　何回同じタイプの行動をしたかを記録
     actionCount_ = 0;
 
@@ -562,11 +565,14 @@ void Enemy::LerpPos(const Vector3& endPos, const float& lerpPosSpeed)
 
 void Enemy::SwitchState()
 {
-
+    isReqestOverheadView_ = false;
     if (currentState_ == "First") {
         currentState_ = "Second";
         isFaseChange_ = true;
     } else if (currentState_ == "Second") {
+        Vector3 spawnPos = { 0.0f ,10.0f, 0.0f };
+		HealItemSpawner::Instance().SpawnHealItem(spawnPos);
+
         currentState_ = "Third";
         isFaseChange_ = true;
 
@@ -636,7 +642,6 @@ void Enemy::SetPhase(PHASE phase)
 void Enemy::SwitchPhase()
 {
     if (isSelectRandomPhase_) {
-
         isSelectRandomPhase_ = false;
 
         if (actionCount_ < 1) {
@@ -711,6 +716,7 @@ void Enemy::Fireball()
 void Enemy::FloorChangeAttack()
 {
     if (phaseTimer_ <= kFloorAttackPosMoveTime_) {
+		isReqestOverheadView_ = true;
         LerpScale();
         LerpPos({ 0.0f,kRadius_,6.0f }, 0.1f);
         LerpRotateY(PI, 0.3f);
@@ -729,12 +735,14 @@ void Enemy::FloorChangeAttack()
         LerpRotateZ(0.5f);
     } else {
         isSelectRandomPhase_ = true;
+		isReqestOverheadView_ = false;
     }
 
 }
 void Enemy::ShockWaveAttack()
 {
     if (phaseTimer_ <= kWavePhaseMovePosTime_) {
+		isReqestOverheadView_ = true;
         LookTargetNormal(*playerPos_);
         bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, *target_, 0.05f);
 
@@ -746,6 +754,7 @@ void Enemy::ShockWaveAttack()
 
     } else {
         isSelectRandomPhase_ = true;
+		isReqestOverheadView_ = false;
     }
 
 

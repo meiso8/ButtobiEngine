@@ -40,3 +40,10 @@ void EnemyBombManager::ShotBomb(const Vector3& startPos, const Vector3& endPos, 
     }
 
 }
+
+void EnemyBombManager::ClearBombs()
+{
+	for (auto& bomb : bombs_) {
+		bomb->isActive_ = false;
+	}
+}
