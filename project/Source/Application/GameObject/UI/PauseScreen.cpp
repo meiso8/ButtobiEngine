@@ -182,7 +182,7 @@ void PauseScreen::SelectButton()
                 selectButtonNum_ = kButtonMax - 1;
             }
             scaleTheta_ = 0.0f;
-            selectTimer_ = 0.2f;
+            selectTimer_ = 0.025f;
         }
 
         if (key->IsTrigger("MoveBack") || (Input::IsControllerStickPosMove(BUTTON_LEFT, 0, &stickPos) && stickPos.y < -0.5f)) {
@@ -190,7 +190,7 @@ void PauseScreen::SelectButton()
             selectButtonNum_++;
             selectButtonNum_ %= kButtonMax;
             scaleTheta_ = 0.0f;
-            selectTimer_ = 0.2f;
+            selectTimer_ = 0.025f;
         }
     }
 
