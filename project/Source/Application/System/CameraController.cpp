@@ -88,6 +88,7 @@ void CameraController::EndOverheadView()
 
 void CameraController::StartEnemyLethal() {
 	isEnemyLethal_ = true;
+	isOverheadView_ = false;
 }
 
 void CameraController::UpdateEnemyLethal() {

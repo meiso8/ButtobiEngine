@@ -30,7 +30,7 @@ FloorGameFloor::FloorGameFloor() {
 	SetRadius(0.5f);
 
 	isExploded_ = false;
-	downColor_ = 0.9f;
+	downColor_ = 0.5f;
 }
 
 FloorGameFloor::~FloorGameFloor() {
@@ -52,7 +52,8 @@ void FloorGameFloor::Initialize() {
 
 
 	body_.worldTransform_.scale_ = { kHalfFloorSize * 2.0f,kHalfFloorSize * 2.0f,kHalfFloorSize * 2.0f };
-
+	body_.worldTransform_.translate_.y = -0.5f;
+	isPopuping_ = false;
 	isExploded_ = false;
 
 	body_.InitWaveData();
@@ -62,15 +63,14 @@ void FloorGameFloor::Update() {
 	if (isPopuping_) {
 		body_.worldTransform_.translate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.translate_.y, -0.5f + 0.1f,0.1f);
 		body_.worldTransform_.rotate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.rotate_.y, 31.4f * 0.5f, 0.1f);
-		body_.worldTransform_.scale_ = MY_Utility::SimpleEaseIn(body_.worldTransform_.scale_, { 1.5f,1.5f,1.5f }, 0.1f);
-		//body_.SetColor({ 1.0f,1.0f,1.0f,1.0f });
+		body_.worldTransform_.scale_ = MY_Utility::SimpleEaseIn(body_.worldTransform_.scale_, 
+			{ (kHalfFloorSize * 2.0f) * 1.2f,(kHalfFloorSize * 2.0f) * 1.2f,(kHalfFloorSize * 2.0f) * 1.2f }, 0.1f);
 		downColor_ = 1.0f;
 	} else {
 		body_.worldTransform_.translate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.translate_.y, -0.5f, 0.1f);
 		body_.worldTransform_.rotate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.rotate_.y, 0.0f, 0.1f);
 		body_.worldTransform_.scale_ = MY_Utility::SimpleEaseIn(body_.worldTransform_.scale_, { kHalfFloorSize * 2.0f,kHalfFloorSize * 2.0f,kHalfFloorSize * 2.0f }, 0.1f);
-		//body_.SetColor({ 1.0f - downColor_,1.0f - downColor_,1.0f,1.0f });
-		downColor_ = 0.95f;
+		downColor_ = 0.83f;
 	}
 
 	if (floorType_ != FloorType::Bomb) {
@@ -153,7 +153,7 @@ void FloorGameFloor::StickyFloorUpdate() {
 	body_.GetWaveData(1).direction = { 0.0f,0.0f,1.0f };
 
 	float color = autoSwapTimer_ / autoSwapDuration_;
-	body_.SetColor({ 1.0f,color * downColor_,color * downColor_,1.0f });
+	body_.SetColor({ 1.0f,0.6f,color * downColor_,1.0f });
 
 	if (autoSwapTimer_ > 0.0f) {
 		autoSwapTimer_ -= 0.016f;
