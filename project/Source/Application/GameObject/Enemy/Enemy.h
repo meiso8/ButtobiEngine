@@ -8,6 +8,7 @@
 #include<memory>
 #include<unordered_map>
 #include "Engine/Math/Vector/Vector3.h"
+#include "EnemyBeak.h"
 class Model;
 class Camera;
 enum LightMode;
@@ -60,6 +61,11 @@ public:
     //ノックバックえみっとするか
     bool isKnockBackEmit_ = false;
     bool isKnockBack_ = false;
+
+    //床を持っているか
+    bool isFloorBring_ = false;
+    //ランダム位置の床に行くかどうか
+    bool isGoToRanDomFloor_ = false;
     //体の位置
     Object3d bodyPos_;
     enum PHASE {
@@ -68,6 +74,8 @@ public:
         FIREBALL,
         FLOORCHANGEATTACK,
         SHOCKWAVEATTACK,
+        RANDOM_FLOORCHANG_ATTACK,
+
         //元の位置から移動する
         LERP_ROUND_POS,
         LERP_SQUARE_POS,
@@ -77,7 +85,6 @@ public:
         //移動フェーズ
         ROUND,
         SQUARE,
-        RANDOM_WALK,
         //終了
         EXIT,
         MAX_PHASE
@@ -93,13 +100,15 @@ public:
 
     HPs totalHPs_;
 
-	bool isReqestOverheadView_ = false;
+    bool isReqestOverheadView_ = false;
+
+    std::unique_ptr<EnemyBeak> enemyBeak_;
+
 private:
+
 
     // 死亡時のぶっ飛び
     bool isLeathalVec_;
-
-
 
     //メンバ関数ポインタテーブル
     std::unordered_map<PHASE, std::function<void()>> UpdateActions_;
@@ -304,8 +313,6 @@ private:
     //四角移動から戻る処理
     void LerpSquarePos();
 
-    //任意位置に移動
-    void RandomWalk();
     //回転ラープをする
     void LerpRotateY(const float& endRadius, const float& lerRotateSpeed);
     //座標をらーぷする
@@ -325,6 +332,8 @@ private:
     void KnockBack();
     //衝撃波攻撃
     void ShockWaveAttack();
+    //ランダム位置床変化攻撃
+    void RandomFloorChangAttack();
 #pragma endregion
 
     //離脱

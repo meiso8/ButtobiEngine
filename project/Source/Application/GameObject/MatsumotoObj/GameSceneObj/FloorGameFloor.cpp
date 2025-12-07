@@ -26,7 +26,7 @@ FloorGameFloor::FloorGameFloor() {
 	body_.SetMesh(models_[FloorType::Normal]);
 
 	SetCollisionAttribute(kCollisionFloor);
-	SetCollisionMask(kCollisionEnemyBomb);
+	SetCollisionMask(kCollisionEnemyBomb|kCollisionEnemy);
 	SetRadius(0.5f);
 
 	isExploded_ = false;

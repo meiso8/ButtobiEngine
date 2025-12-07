@@ -3,13 +3,15 @@
 class Enemy;
 class EnemyBombManager;
 class FloorGameFloorManager;
-class EnemyShotBombManager
+#include"Vector3.h"
+class EnemyFloorChangeManager
 {
 public:
-	EnemyShotBombManager() = delete;
-	EnemyShotBombManager(Enemy* enemy, EnemyBombManager* bombManager, FloorGameFloorManager* floorGameFloorManager);
+	EnemyFloorChangeManager() = delete;
+	EnemyFloorChangeManager(Enemy* enemy, EnemyBombManager* bombManager, FloorGameFloorManager* floorGameFloorManager);
 	void Initialize();
 	void Update();
+	void SelectFloor(int& randX, int& randY, Vector3& endPos);
 private:
 	Enemy* enemy_ = nullptr;
 	EnemyBombManager* bombManager_ = nullptr;
@@ -21,5 +23,7 @@ private:
 		return used[x][y];
 	}
 	bool used[kMapWidth][kMapHeight] = {};
+
+	bool isSelected_ = false;
 };
 

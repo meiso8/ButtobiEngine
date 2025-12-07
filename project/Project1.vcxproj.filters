@@ -7,7 +7,7 @@
     <ClCompile Include="Source\Application\GameObject\Enemy\EnemyShockWave.cpp" />
     <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBomb.cpp" />
     <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBombManager.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyShotBombManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyFloorChangeManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorActionManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorGamePlayerAnimationManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\PlayerStripFloorManager.cpp" />
@@ -132,6 +132,7 @@
     <ClCompile Include="Source\Application\System\Shake.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\RedPinchScreen.cpp" />
     <ClCompile Include="Source\Application\GameObject\PlayerDirectionSpotLight.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBeak.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\GameObject\UI\PauseScreen.h" />
@@ -140,7 +141,7 @@
     <ClInclude Include="Source\Application\GameObject\Enemy\EnemyShockWave.h" />
     <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBomb.h" />
     <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBombManager.h" />
-    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyShotBombManager.h" />
+    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyFloorChangeManager.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\Data\FloorData.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\Data\MapData.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FloorActionManager.h" />
@@ -289,6 +290,7 @@
     <ClInclude Include="Source\Application\System\Shake.h" />
     <ClInclude Include="Source\Application\GameObject\UI\RedPinchScreen.h" />
     <ClInclude Include="Source\Application\GameObject\PlayerDirectionSpotLight.h" />
+    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBeak.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="externals\assimp\lib\Debug\assimp-vc143-mdd.lib" />

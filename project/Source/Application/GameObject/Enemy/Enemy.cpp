@@ -28,7 +28,7 @@ Enemy::Enemy()
          {PHASE::ROUND, std::bind(&Enemy::Round, this)},
          {PHASE::LERP_SQUARE_POS, std::bind(&Enemy::LerpSquarePos, this)},
          {PHASE::SQUARE, std::bind(&Enemy::SquareMove, this)},
-         {PHASE::RANDOM_WALK, std::bind(&Enemy::RandomWalk, this)},
+         {PHASE::RANDOM_FLOORCHANG_ATTACK, std::bind(&Enemy::RandomFloorChangAttack, this)},
          {PHASE::FIREBALL, std::bind(&Enemy::Fireball, this)},
          {PHASE::FLOORCHANGEATTACK, std::bind(&Enemy::FloorChangeAttack, this)},
          {PHASE::TACKLE, std::bind(&Enemy::Tackle, this)},
@@ -72,6 +72,10 @@ Enemy::Enemy()
     wingLPos_.worldTransform_.Parent(bodyPos_.worldTransform_);
     wingRPos_.worldTransform_.Parent(bodyPos_.worldTransform_);
 
+
+    enemyBeak_ = std::make_unique<EnemyBeak>();
+    enemyBeak_->beak_.Parent(bodyPos_.worldTransform_);
+
     //初期化
     Init();
 
@@ -80,6 +84,7 @@ Enemy::Enemy()
     totalHPs_.maxHp = file["First"]["HP"];
     totalHPs_.maxHp += file["Second"]["HP"];
     totalHPs_.maxHp += file["Third"]["HP"];
+
 
 }
 
@@ -98,13 +103,17 @@ void Enemy::Init() {
     isLeathalVec_ = false;
 
     isReqestClearFloor_ = false;
-	isReqestOverheadView_ = false;
+    isReqestOverheadView_ = false;
+
+    isFloorBring_ = false;
+    isGoToRanDomFloor_ = false;
+
     //アクションカウントの初期化　何回同じタイプの行動をしたかを記録
     actionCount_ = 0;
 
     currentState_ = "First";
     if (SceneStaticValue::bossRound >= 2) {
-		currentState_ = "Second";
+        currentState_ = "Second";
     }
     phase_ = PHASE::ROUND;
 
@@ -117,6 +126,8 @@ void Enemy::Init() {
     wingRPos_.worldTransform_.translate_.x = 1.0f;
     wingLPos_.worldTransform_.translate_.y = 0.3f;
     wingRPos_.worldTransform_.translate_.y = 0.3f;
+
+    enemyBeak_->Initialize();
 
     for (auto& [type, model] : models_) {
         model->ResetTextureHandle();
@@ -165,17 +176,16 @@ void Enemy::InitState()
     //速度
     float velocity = file[currentState_]["velocity"];
     velocity_ = { velocity ,velocity ,velocity };
- 
+
 }
 
 
 void Enemy::Draw(Camera& camera)
 {
-
     bodyPos_.Draw(camera, kBlendModeNormal);
     wingLPos_.Draw(camera, kBlendModeNormal);
     wingRPos_.Draw(camera, kBlendModeNormal);
-
+    enemyBeak_->Draw(camera);
     ColliderDraw(camera);
 }
 
@@ -200,9 +210,12 @@ void Enemy::Update()
     if (Input::IsTriggerKey(DIK_C)) { SetPhase(TACKLE); }
     if (Input::IsTriggerKey(DIK_V)) { SetPhase(FIREBALL); }
 
+
+    if (Input::IsTriggerKey(DIK_M)) { SetPhase(RANDOM_FLOORCHANG_ATTACK); }
+
     if (Input::IsTriggerKey(DIK_B)) { SetPhase(LERP_ROUND_POS); }
     if (Input::IsTriggerKey(DIK_N)) { SetPhase(LERP_SQUARE_POS); }
-    if (Input::IsTriggerKey(DIK_M)) { SetPhase(RANDOM_WALK); }
+
     if (Input::IsTriggerKey(DIK_L)) { SetPhase(EXIT); }
 #endif
     // 呼び出す  
@@ -224,6 +237,8 @@ void Enemy::Update()
     wingLPos_.Update();
     wingRPos_.Update();
 
+    enemyBeak_->Update();
+
     ColliderUpdate();
 
     if (damageStruct_.hps.hp <= 0.0f) {
@@ -233,6 +248,11 @@ void Enemy::Update()
 #ifdef USE_IMGUI
 
     ImGui::Begin("Enemy");
+
+    ImGui::Checkbox("isFloorBring_", &isFloorBring_);
+    ImGui::Checkbox("isGoToRanDomFloor_", &isGoToRanDomFloor_);
+
+
     DebugUI::CheckDamageStruct(damageStruct_, "Boss");
     DebugUI::CheckObject3d(bodyPos_, "bodyPos");
     DebugUI::CheckObject3d(wingLPos_, "wingLPos");
@@ -279,7 +299,7 @@ void Enemy::Update()
 
         ImGui::Text("B : ROUND_WALK");
         ImGui::Text("N : SQUARE_WALK");
-        ImGui::Text("M : RANDOM_WALK");
+        ImGui::Text("M : RANDOM_FLOORCHANG_ATTACK");
         ImGui::Text("L : EXIT");
         ImGui::TreePop();
     }
@@ -291,13 +311,11 @@ void Enemy::Update()
 #endif
     if (currentState_ == "First") {
         SceneStaticValue::bossRound = 1;
-	}
-	else if (currentState_ == "Second") {
-		SceneStaticValue::bossRound = 2;
-	}
-	else if (currentState_ == "Third") {
-		SceneStaticValue::bossRound = 3;
-	}
+    } else if (currentState_ == "Second") {
+        SceneStaticValue::bossRound = 2;
+    } else if (currentState_ == "Third") {
+        SceneStaticValue::bossRound = 3;
+    }
 }
 
 Vector3 Enemy::GetWorldPosition()const
@@ -347,15 +365,13 @@ void Enemy::OnCollision(Collider* collider)
 }
 void Enemy::ForceSetBossRound(uint32_t round)
 {
-	if (round == 1) {
-		currentState_ = "First";
-	}
-	else if (round == 2) {
-		currentState_ = "Second";
-	}
-	else if (round >= 3) {
-		currentState_ = "Third";
-	}
+    if (round == 1) {
+        currentState_ = "First";
+    } else if (round == 2) {
+        currentState_ = "Second";
+    } else if (round >= 3) {
+        currentState_ = "Third";
+    }
 }
 void Enemy::LeathalMoveUpdate() {
     if (!isLeathalVec_) {
@@ -428,7 +444,7 @@ void Enemy::Tackle()
 
                         Sound::PlayOriginSE(Sound::kBossTackle);
                         if (damageStruct_.hps.hp >= kKnockBackDamage_) {
-             
+
                             totalHPs_.hp -= kKnockBackDamage_;
                             damageStruct_.hps.hp -= kKnockBackDamage_;
                         }
@@ -436,7 +452,7 @@ void Enemy::Tackle()
 
                         SetPhase(KNOCKBACK);
                     }
-                 
+
 
                 }
             }
@@ -484,7 +500,7 @@ void Enemy::KnockBack()
             isKnockBackEmit_ = false;
         }
 
-    } else if(phaseTimer_ < kKnockBackMaxTime_){
+    } else if (phaseTimer_ < kKnockBackMaxTime_) {
         LerpSpinOriginBody();
         bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, startPos_, 0.05f);
     } else {
@@ -548,11 +564,6 @@ void Enemy::SquareMove()
     }
 }
 
-
-void Enemy::RandomWalk()
-{
-}
-
 void Enemy::LerpRotateY(const float& endRadius, const float& lerRotateSpeed)
 {
     bodyPos_.worldTransform_.rotate_.y = Lerp(bodyPos_.worldTransform_.rotate_.y, endRadius, lerRotateSpeed);
@@ -571,7 +582,7 @@ void Enemy::SwitchState()
         isFaseChange_ = true;
     } else if (currentState_ == "Second") {
         Vector3 spawnPos = { 0.0f ,10.0f, 0.0f };
-		HealItemSpawner::Instance().SpawnHealItem(spawnPos);
+        HealItemSpawner::Instance().SpawnHealItem(spawnPos);
 
         currentState_ = "Third";
         isFaseChange_ = true;
@@ -620,6 +631,7 @@ void Enemy::SetPhase(PHASE phase)
     }
 
     if (phase_ == FIREBALL || phase_ == KNOCKBACK) {
+        //くるっと一回転するよ
         startRotateY_ = bodyPos_.worldTransform_.rotate_.y;
         endRotateY_ = startRotateY_ + PI_2;
     }
@@ -698,7 +710,7 @@ void Enemy::Fireball()
     } else {
 
         LookTargetNormal(*playerPos_);
-     
+
         fireBallCoolTimer_ += InverseFPS;
 
         if (fireBallCoolTimer_ > kFireBallMaxCoolTime_) {
@@ -716,7 +728,7 @@ void Enemy::Fireball()
 void Enemy::FloorChangeAttack()
 {
     if (phaseTimer_ <= kFloorAttackPosMoveTime_) {
-		isReqestOverheadView_ = true;
+        isReqestOverheadView_ = true;
         LerpScale();
         LerpPos({ 0.0f,kRadius_,6.0f }, 0.1f);
         LerpRotateY(PI, 0.3f);
@@ -735,19 +747,19 @@ void Enemy::FloorChangeAttack()
         LerpRotateZ(0.5f);
     } else {
         isSelectRandomPhase_ = true;
-		isReqestOverheadView_ = false;
+        isReqestOverheadView_ = false;
     }
 
 }
 void Enemy::ShockWaveAttack()
 {
     if (phaseTimer_ <= kWavePhaseMovePosTime_) {
-		isReqestOverheadView_ = true;
+        isReqestOverheadView_ = true;
         LookTargetNormal(*playerPos_);
         bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, *target_, 0.05f);
 
     } else if (phaseTimer_ <= kWaveShotTime_) {
-      
+
         //yを戻す
         bodyPos_.worldTransform_.translate_.y = Lerp(bodyPos_.worldTransform_.translate_.y, kRadius_, 0.1f);
 
@@ -758,9 +770,52 @@ void Enemy::ShockWaveAttack()
 
     } else {
         isSelectRandomPhase_ = true;
-		isReqestOverheadView_ = false;
+        isReqestOverheadView_ = false;
     }
 
+
+}
+void Enemy::RandomFloorChangAttack()
+{
+
+    if (phaseTimer_ <= 1.0f) {
+        //前隙
+        LerpPos({ 0.0f,kRadius_,6.0f }, 0.01f);
+        LerpRotateY(PI, 0.3f);
+
+        isGoToRanDomFloor_ = true;
+  
+    } else if (phaseTimer_ <= 2.0f) {
+
+        LookTargetNormal(*target_);
+        //床に行く
+        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, *target_, 0.01f);
+    
+    }else if(phaseTimer_ <= 3.0f) {
+
+        bodyPos_.worldTransform_.rotate_.x = Lerp(bodyPos_.worldTransform_.rotate_.x, HALF_PI, 0.05f);
+
+    } else if (phaseTimer_ <= 4.0f) {
+
+        if (enemyBeak_->isFloorHit_) {
+            if (!isFloorBring_) {
+                //床を持つ
+                isFloorBring_ = true;
+            }
+        }
+        //床から離れる
+    } else if (phaseTimer_ <= 5.0f) {
+
+        LerpPos({ 0.0f,kRadius_,6.0f }, 0.1f);
+        bodyPos_.worldTransform_.rotate_.x = Lerp(bodyPos_.worldTransform_.rotate_.x, 0.0f, 0.05f);
+
+    } else if (phaseTimer_ <= 6.0f) {
+        //タイマーによって強制的に床を消去
+        isFloorBring_ = false;
+    } else {
+        isSelectRandomPhase_ = true;
+
+    }
 
 }
 void Enemy::Exit()
