@@ -51,9 +51,6 @@ void ActionUI::Update() {
 		moveSprite_->SetPosition(MY_Utility::SimpleEaseIn(moveSprite_->GetPosition(),{-256.0f,moveUiY},0.3f));
 		actionSprite_->SetPosition(MY_Utility::SimpleEaseIn(actionSprite_->GetPosition(), { -256.0f,stripUiY }, 0.3f));
 		
-		
-		
-
 	} else {
 		moveSprite_->SetPosition(MY_Utility::SimpleEaseIn(moveSprite_->GetPosition(), { 0.0f,moveUiY }, 0.3f));
 		actionSprite_->SetPosition(MY_Utility::SimpleEaseIn(actionSprite_->GetPosition(), { 0.0f,stripUiY }, 0.3f));

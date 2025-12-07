@@ -82,6 +82,8 @@ GameScene::GameScene()
     tree_ = std::make_unique<Tree>();
     ground_ = std::make_unique<Ground>();
     nest_ = std::make_unique<Nest>();
+    betoBeto_ = std::make_unique<BetoBeto>();
+
 #pragma endregion
 
     uiManager_ = std::make_unique<UIManager>(
@@ -145,6 +147,7 @@ void GameScene::Initialize() {
     tree_->Initialize();
     ground_->Init();
     nest_->Init();
+    betoBeto_->Initialize();
 #pragma endregion
     collisionManager_->ClearColliders();
 
@@ -195,14 +198,6 @@ void GameScene::Update() {
 
     }
 
-    actionUI_->Update();
-    if (floorGamePlayer_->GetDamageStruct().hps.hp <= 0 && !PauseScreen::isActive_) {
-        actionUI_->isHide_ = true;
-    }
-    else {
-        actionUI_->isHide_ = false;
-    }
-
     letterboxBars_->Update();
     uiManager_->Update();
 
@@ -233,6 +228,7 @@ void GameScene::Draw() {
     tree_->Draw(*currentCamera_);
     ground_->Draw(*currentCamera_);
     nest_->Draw(*currentCamera_);
+    betoBeto_->Draw(*currentCamera_);
 #pragma endregion
     //エミッター
     emitterManager_->Draw();
@@ -357,13 +353,19 @@ void GameScene::UpdateGameObject()
     tree_->Update();
     ground_->Update();
     nest_->Update();
-
+    betoBeto_->Update();
     if (floorGamePlayer_->IsDead()) {
         gameOverTimer_ += InverseFPS;
     }
 
-
     // オブジェクト同士の干渉
+    actionUI_->Update();
+    if (floorGamePlayer_->GetDamageStruct().hps.hp <= 0 && !PauseScreen::isActive_) {
+        actionUI_->isHide_ = true;
+    } else {
+        actionUI_->isHide_ = false;
+    }
+
     floorStripManager_->Update();
     playerFloorStripManager_->Update();
     floorPlayerShotBulletManager_->Update();

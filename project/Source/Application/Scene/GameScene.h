@@ -30,6 +30,7 @@
 #include"Tree/Tree.h"
 #include"Nest/Nest.h"
 #include"Ground.h"
+#include"BetoBeto/BetoBeto.h"
 #pragma endregion
 
 #include"CollisionManager.h"
@@ -86,6 +87,8 @@ private:
     std::unique_ptr<Tree>tree_ = nullptr;
     std::unique_ptr<Ground> ground_ = nullptr;
     std::unique_ptr<Nest> nest_ = nullptr;
+    std::unique_ptr<BetoBeto> betoBeto_ = nullptr;
+
 #pragma endregion
 
 #pragma region//UI
