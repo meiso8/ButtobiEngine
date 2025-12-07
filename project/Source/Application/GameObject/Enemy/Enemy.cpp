@@ -739,6 +739,10 @@ void Enemy::ShockWaveAttack()
         bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, *target_, 0.05f);
 
     } else if (phaseTimer_ <= kWaveShotTime_) {
+      
+        //yを戻す
+        bodyPos_.worldTransform_.translate_.y = Lerp(bodyPos_.worldTransform_.translate_.y, kRadius_, 0.1f);
+
         if (!isWaveShot_) {
             isWaveShot_ = true;
         }

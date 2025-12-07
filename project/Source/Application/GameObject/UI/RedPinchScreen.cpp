@@ -27,7 +27,7 @@ void RedPinchScreen::Update()
 
     // 赤の強さとアルファをイージングで制御
     float intensity = Easing::EaseOutExpo(1.0f, 0.0f, timer_); // 1→0 に減衰
-    sprite_->SetColor({ intensity, 0.0f, 0.0f, intensity}); // 半透明赤
+    sprite_->SetColor({ intensity, 0.0f, 0.0f, intensity*0.5f}); // 半透明赤
     DebugUI::CheckSprite(*sprite_,"redSprite");
 
 }
