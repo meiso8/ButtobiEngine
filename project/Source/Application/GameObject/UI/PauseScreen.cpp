@@ -153,7 +153,7 @@ void PauseScreen::SelectButton()
 	if (selectTimer_ > 0.0f) {
         selectTimer_ -= 0.016f;
     } else {
-        if (key->IsTrigger("MoveForward") || Input::IsControllerStickPosMove(BUTTON_LEFT, 0, &stickPos)) {
+        if (key->IsTrigger("MoveForward") || (Input::IsControllerStickPosMove(BUTTON_LEFT, 0, &stickPos) && stickPos.y > 0.5f)) {
             
             Sound::PlaySE(Sound::kMoveCursor);
             selectButtonNum_--;
@@ -164,7 +164,7 @@ void PauseScreen::SelectButton()
             selectTimer_ = 0.2f;
         }
 
-        if (key->IsTrigger("MoveBack") || Input::IsControllerStickPosMove(BUTTON_LEFT, 0, &stickPos)) {
+        if (key->IsTrigger("MoveBack") || (Input::IsControllerStickPosMove(BUTTON_LEFT, 0, &stickPos) && stickPos.y < -0.5f)) {
             Sound::PlaySE(Sound::kMoveCursor);
             selectButtonNum_++;
             selectButtonNum_ %= kButtonMax;
