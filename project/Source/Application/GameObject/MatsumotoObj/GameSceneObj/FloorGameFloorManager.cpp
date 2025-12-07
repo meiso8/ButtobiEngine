@@ -52,6 +52,18 @@ void FloorGameFloorManager::Draw(Camera& camera) {
 	}
 }
 
+void FloorGameFloorManager::DamageCleanUp()
+{
+	// 爆弾床だけ普通の床に戻す
+	for (int y = 0; y < kMapHeight; y++) {
+		for (int x = 0; x < kMapWidth; x++) {
+			if (floors_[y][x]->floorType_ == FloorType::Bomb) {
+				floors_[y][x]->SwapFloorType(FloorType::Normal);
+			}
+		}
+	}
+}
+
 void FloorGameFloorManager::ForceChangeAllFloorType(const FloorType& floorType) {
 	for (int y = 0; y < kMapHeight; y++) {
 		for (int x = 0; x < kMapWidth; x++) {

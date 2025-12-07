@@ -15,6 +15,8 @@ public:
 	void Update();
 	void Draw(class Camera& camera);
 
+	void DamageCleanUp();
+
 	void ForceChangeAllFloorType(const FloorType& floorType);
 
 	void AddCollider(CollisionManager* collisionManager);
