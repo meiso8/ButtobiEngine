@@ -30,7 +30,7 @@ FloorGameFloor::FloorGameFloor() {
 	SetRadius(0.5f);
 
 	isExploded_ = false;
-	downColor_ = 0.2f;
+	downColor_ = 0.9f;
 }
 
 FloorGameFloor::~FloorGameFloor() {
@@ -63,14 +63,19 @@ void FloorGameFloor::Update() {
 		body_.worldTransform_.translate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.translate_.y, -0.5f + 0.1f,0.1f);
 		body_.worldTransform_.rotate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.rotate_.y, 31.4f * 0.5f, 0.1f);
 		body_.worldTransform_.scale_ = MY_Utility::SimpleEaseIn(body_.worldTransform_.scale_, { 1.5f,1.5f,1.5f }, 0.1f);
-		body_.SetColor({ 1.0f,1.0f,1.0f,1.0f });
-		downColor_ = 0.0f;
+		//body_.SetColor({ 1.0f,1.0f,1.0f,1.0f });
+		downColor_ = 1.0f;
 	} else {
 		body_.worldTransform_.translate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.translate_.y, -0.5f, 0.1f);
 		body_.worldTransform_.rotate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.rotate_.y, 0.0f, 0.1f);
 		body_.worldTransform_.scale_ = MY_Utility::SimpleEaseIn(body_.worldTransform_.scale_, { kHalfFloorSize * 2.0f,kHalfFloorSize * 2.0f,kHalfFloorSize * 2.0f }, 0.1f);
-		body_.SetColor({ 1.0f - downColor_,1.0f - downColor_,1.0f - downColor_,1.0f });
-		downColor_ = 0.4f;
+		//body_.SetColor({ 1.0f - downColor_,1.0f - downColor_,1.0f,1.0f });
+		downColor_ = 0.95f;
+	}
+
+	if (floorType_ != FloorType::Bomb) {
+		body_.worldTransform_.rotate_.x = 0.0f;
+		body_.worldTransform_.rotate_.z = 0.0f;
 	}
 
 	body_.Update();
@@ -132,7 +137,7 @@ void FloorGameFloor::OnCollision(Collider* collider) {
 
 void FloorGameFloor::NormalFloorUpdate() {
 	body_.InitWaveData();
-	body_.SetColor({ 1.0f - downColor_,1.0f - downColor_,1.0f - downColor_,1.0f });
+	body_.SetColor({ downColor_,downColor_,1.0f,1.0f});
 }
 
 void FloorGameFloor::StickyFloorUpdate() {
@@ -148,7 +153,7 @@ void FloorGameFloor::StickyFloorUpdate() {
 	body_.GetWaveData(1).direction = { 0.0f,0.0f,1.0f };
 
 	float color = autoSwapTimer_ / autoSwapDuration_;
-	body_.SetColor({ color - downColor_,color - downColor_,color - downColor_,1.0f });
+	body_.SetColor({ 1.0f,color * downColor_,color * downColor_,1.0f });
 
 	if (autoSwapTimer_ > 0.0f) {
 		autoSwapTimer_ -= 0.016f;
@@ -159,13 +164,23 @@ void FloorGameFloor::StickyFloorUpdate() {
 
 void FloorGameFloor::StrongFloorUpdate() {
 	body_.InitWaveData();
-	body_.SetColor({ 1.0f - downColor_,1.0f - downColor_,1.0f - downColor_,1.0f });
+	body_.SetColor({ 1.0f * downColor_,1.0f * downColor_,1.0f,1.0f });
 }
 
 void FloorGameFloor::BombFloorUpdate() {
 	body_.InitWaveData();
 	float color = autoSwapTimer_ / autoSwapDuration_;
-	body_.SetColor({ color - downColor_,color - downColor_,color - downColor_,1.0f });
+	color = std::clamp(color, 0.0f, 1.0f);
+	float elapsed = autoSwapDuration_ - autoSwapTimer_;
+	
+
+	// colorが0に近づくほど点滅が速くなる
+	float blinkSpeed = 5.0f + (1.0f - color) * 20.0f;
+	float blink = (sinf(elapsed * blinkSpeed) * 0.5f + 0.5f);
+
+	// 点滅効果を掛け合わせる
+	body_.SetColor({ 1.0f, color * downColor_ * blink, color * blink, 1.0f });
+	
 
 	if (autoSwapTimer_ > 0.0f) {
 		autoSwapTimer_ -= 0.016f;
@@ -174,4 +189,8 @@ void FloorGameFloor::BombFloorUpdate() {
 		Sound::PlaySE(Sound::kExplosion);
 		isExploded_ = true;
 	}
+
+	float rotateSpeed = 1.0f + (1.0f - color) * 5.0f;
+	body_.worldTransform_.rotate_.x = sinf(elapsed * 5.0f * rotateSpeed) * ((1.0f - color) * 0.5f);
+	body_.worldTransform_.rotate_.z = cosf(elapsed * 5.0f * rotateSpeed) * ((1.0f - color) * 0.5f);
 }
