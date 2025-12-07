@@ -41,6 +41,7 @@ public:
         ACTION_UI_MOVE,
 		ACTION_UI_STRIP,
 		ACTION_UI_SHOT,
+		ACTION_UI_MENU,
 
         PAUSING_BG,
         PAUSING,
