@@ -157,9 +157,12 @@ void GameScene::Initialize() {
 
     gameclearTimer_ = 0.0f;
     gameOverTimer_ = 0.0f;
+
+	SceneStaticValue::isPlayerAlive = true;
 }
 
 void GameScene::Update() {
+	SceneStaticValue::isPlayerAlive = !floorGamePlayer_->IsDead();
 
     UpdateBGM();
 

@@ -6,6 +6,7 @@
 #include"DebugUI.h"
 #include "MatsumotoObj/KeyBindConfig.h"
 #include"Sound.h"
+#include "MatsumotoObj/SceneStaticValue.h"
 bool PauseScreen::isActive_ = false;
 bool PauseScreen::isPause_ = false;
 bool PauseScreen::isRetry = false;
@@ -102,6 +103,10 @@ void PauseScreen::Update()
         pauseTimer_ = 0.0f;
         isActive_ = true;
         selectButtonNum_ = kBackToGameButton;
+    }
+
+    if (!SceneStaticValue::isPlayerAlive) {
+        isActive_ = false;
     }
 
     for (int i = 0; i < sprites_.size(); ++i) {
