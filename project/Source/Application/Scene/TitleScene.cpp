@@ -115,7 +115,7 @@ void TitleScene::Initialize()
     PointLightManager::GetPointLightData(0).intensity = 1.0f;
 
     camera_->Initialize();
-    camera_->translate_ = { 0.0f, 12.0f,-14.0f };
+    camera_->translate_ = { 0.0f, 11.0f,-14.0f };
     camera_->rotate_ = { 0.6f,0.0f,0.0f };
     camera_->UpdateMatrix();
 
