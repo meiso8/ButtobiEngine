@@ -21,6 +21,7 @@ KeyBindConfig::KeyBindConfig() {
 	keyBinds_["MoveBack"].controllerButtons.push_back(XINPUT_GAMEPAD_DPAD_DOWN);
 	keyBinds_["Stript"].controllerButtons.push_back(XINPUT_GAMEPAD_A);
 	keyBinds_["Shot"].controllerButtons.push_back(XINPUT_GAMEPAD_A);
+	keyBinds_["Shot"].controllerButtons.push_back(XINPUT_GAMEPAD_X);
 	keyBinds_["Menu"].controllerButtons.push_back(XINPUT_GAMEPAD_START);
 }
 
