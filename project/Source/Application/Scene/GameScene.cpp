@@ -273,7 +273,7 @@ void GameScene::UpdateLight()
 
         if (enemy_->GetCurrentState() == "Third") {
             float& intensity0 = PointLightManager::GetPointLightData(0).intensity;
-            intensity0 = Lerp(intensity0, 3.0f, 0.01f);
+            intensity0 = Lerp(intensity0, 4.0f, 0.01f);
 
         }else{
             float& intensity0 = PointLightManager::GetPointLightData(0).intensity;

@@ -48,5 +48,9 @@ private:
     std::array < Vector2, kMaxLayer> startPos_;
     std::array < Vector2, kMaxLayer> endPos_;
     std::array<std::unique_ptr<Sprite>, kMaxLayer> sprites_;
+
+    Vector2 menuUiPos_;
+    std::unique_ptr<Sprite> menuSprite_ = nullptr;
+
 };
 
