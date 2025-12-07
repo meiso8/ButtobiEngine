@@ -16,6 +16,7 @@ HealItem::HealItem() {
 	body_.Initialize();
 	body_.SetMesh(model_);
 	body_.worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
+	body_.worldTransform_.rotate_ = { 0.5f,0.0f,0.0f };
 	//コライダーの設定
 	SetRadius(0.7f);
 	SetCollisionAttribute(kCollisionPlayerHealItem);
@@ -57,14 +58,14 @@ void HealItem::Update() {
 	if (body_.worldTransform_.translate_.y <= 0.5f) {
 		body_.worldTransform_.translate_.y = 0.5f;
 	}
-	
+
 	body_.worldTransform_.rotate_.y += 0.016f * rotateSpeed_;
 	body_.Update();
 	ColliderUpdate();
 }
 
 void HealItem::Draw(Camera& camera) {
-	if ( Length(body_.worldTransform_.scale_) <= 0.1f ) {
+	if (Length(body_.worldTransform_.scale_) <= 0.1f) {
 		return;
 	}
 	body_.Draw(camera, kBlendModeNormal);

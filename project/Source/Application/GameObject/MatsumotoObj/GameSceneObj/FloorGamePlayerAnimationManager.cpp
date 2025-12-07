@@ -9,8 +9,8 @@ namespace
 	Vector3 headBasePos_ = { 0.0f,0.3f,0.0f };
 	Vector3 rightArmBasePos_ = { 0.5f,0.0f,0.0f };
 	Vector3 leftArmBasePos_ = { -0.5f,0.0f,0.0f };
-	Vector3 rightLegBasePos = { 0.3f,-0.2f,-0.3f };
-	Vector3 leftLegBasePos = { -0.3f,-0.2f,-0.3f };
+	Vector3 rightLegBasePos = { 0.3f,-0.2f,0.0f };
+	Vector3 leftLegBasePos = { -0.3f,-0.2f,0.0f };
 }
 
 FloorGamePlayerAnimationManager::FloorGamePlayerAnimationManager(FloorGamePlayer* player, FloorGameFloorManager* floorManager)
