@@ -17,6 +17,9 @@ public:
     void ResetFocusTarget();
     void UpdateFocusTarget();
 
+	void StartOverheadView();
+	void UpdateOverheadView();
+	void EndOverheadView();
     void StartEnemyLethal();
     void UpdateEnemyLethal();
     void EndEnemyLethal();
@@ -32,4 +35,6 @@ private:
 	float focusFov_ = 0.35f;
 
 	bool isEnemyLethal_ = false;
+
+	bool isOverheadView_ = false;
 };

@@ -12,9 +12,9 @@ void CameraController::Update()
     UpdateShakeTimer();
 	UpdateFocusTarget();
 	UpdateEnemyLethal();
+	UpdateOverheadView();
 
     camera_->UpdateMatrix();
-
 }
 
 void CameraController::Initialize()
@@ -44,6 +44,8 @@ void CameraController::FocusTarget(const Vector3* targetPos, float fov)
 	isFocusTarget_ = true;
 	focusTargetPos_ = const_cast<Vector3*>(targetPos);
 	focusFov_ = fov;
+
+	isOverheadView_ = false;
 }
 
 void CameraController::ResetFocusTarget() {
@@ -60,6 +62,28 @@ void CameraController::UpdateFocusTarget() {
 	Vector3 targetRotate = MY_Utility::CalcLookAtRotation(camera_->translate_, *focusTargetPos_);
 	camera_->rotate_ = MY_Utility::SimpleEaseIn(camera_->rotate_, targetRotate, 0.1f);
 	camera_->fovAngleY_ = MY_Utility::SimpleEaseIn(camera_->fovAngleY_, focusFov_, 0.3f);
+}
+
+void CameraController::StartOverheadView()
+{
+	isOverheadView_ = true;
+}
+
+void CameraController::UpdateOverheadView()
+{
+	if (!isOverheadView_) {
+		camera_->rotate_ = MY_Utility::SimpleEaseIn(camera_->rotate_, cameraDefaultTransform_.rotate, 0.1f);
+		camera_->translate_ = MY_Utility::SimpleEaseIn(camera_->translate_, cameraDefaultTransform_.translate, 0.1f);
+		return;
+	}
+	camera_->rotate_.x = MY_Utility::SimpleEaseIn(camera_->rotate_.x, 1.68f, 0.1f);
+	camera_->translate_.y = MY_Utility::SimpleEaseIn(camera_->translate_.y, 30.0f, 0.1f);
+	camera_->translate_.z = MY_Utility::SimpleEaseIn(camera_->translate_.z, 0.0f, 0.1f);
+}
+
+void CameraController::EndOverheadView()
+{
+	isOverheadView_ = false;
 }
 
 void CameraController::StartEnemyLethal() {

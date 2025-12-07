@@ -92,6 +92,8 @@ public:
     bool IsOverKill() { return(overKillCount >= kMaxOverKillCount); }
 
     HPs totalHPs_;
+
+	bool isReqestOverheadView_ = false;
 private:
 
     // 死亡時のぶっ飛び

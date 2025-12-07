@@ -305,8 +305,16 @@ void GameScene::UpdateCamera()
             cameraController_->StartShake(2.0f, 60);
         }
 
+        if (enemy_->isReqestOverheadView_) {
+			cameraController_->StartOverheadView();
+        }
+        else {
+			cameraController_->EndOverheadView();
+        }
+
         if (enemy_->isFaseChange_) {
             cameraController_->FocusTarget(&enemy_->bodyPos_.worldTransform_.translate_);
+			enemyBombManager_->ClearBombs();
         } else {
             cameraController_->ResetFocusTarget();
         }
