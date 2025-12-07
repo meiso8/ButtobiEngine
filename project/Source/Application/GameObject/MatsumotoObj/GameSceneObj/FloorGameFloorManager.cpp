@@ -144,6 +144,37 @@ void FloorGameFloorManager::SwapFloorTypeAtPosition(const Vector3& position) {
 	floors_[yIndex][xIndex]->SwapNextFloorType();
 }
 
+void FloorGameFloorManager::SwapFloorTypeAtPosition(const Vector3& position, const FloorType& floorType)
+{
+	std::pair<int, int> floorIndex = GetFloorIndexAtPosition(position);
+	int xIndex = floorIndex.first;
+	int yIndex = floorIndex.second;
+	if (xIndex < 0 || xIndex >= kMapWidth || yIndex < 0 || yIndex >= kMapHeight) {
+		// 範囲外の場合は一番近い端に補正する
+		floors_[std::clamp(yIndex, 0, kMapHeight - 1)][std::clamp(xIndex, 0, kMapWidth - 1)]->SwapFloorType(floorType);
+		return;
+	}
+	floors_[yIndex][xIndex]->SwapFloorType(floorType);
+}
+
+void FloorGameFloorManager::SwapFloorTypeCross(const Vector3& position, const FloorType& floorType)
+{
+	std::pair<int, int> floorIndex = GetFloorIndexAtPosition(position);
+	int xIndex = floorIndex.first;
+	int yIndex = floorIndex.second;
+
+	const int dx[5] = { 0, 0, 0, -1, 1 };
+	const int dy[5] = { 0, -1, 1, 0, 0 };
+
+	for (int i = 0; i < 5; ++i) {
+		int nx = xIndex + dx[i];
+		int ny = yIndex + dy[i];
+		if (nx >= 0 && nx < kMapWidth && ny >= 0 && ny < kMapHeight) {
+			floors_[ny][nx]->SwapFloorType(floorType);
+		}
+	}
+}
+
 std::pair<int, int> FloorGameFloorManager::GetFloorIndexAtPosition(const Vector3& position) const {
 	int xIndex = static_cast<int>(std::round(position.x / (kHalfFloorSize * 2.0f) + kMapWidth * 0.5f - 0.5f));
 	int yIndex = static_cast<int>(std::round(position.z / (kHalfFloorSize * 2.0f) + kMapHeight * 0.5f - 0.5f));

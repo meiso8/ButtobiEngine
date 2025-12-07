@@ -44,6 +44,10 @@ void FloorActionManager::Update() {
 		if (fabsf(Length(player_->body_.worldTransform_.translate_ - floorPos)) < 1.5f) {
 			player_->ForceDamage();
 		}
+
+		// 爆発地点から十字にべとべと床にする
+		floorManager_->SwapFloorTypeAtPosition(floorPos, FloorType::Sticky);
+		//floorManager_->SwapFloorTypeCross(floorPos, FloorType::Sticky);
 	}
 
 	explosionEmitter_.Update();
