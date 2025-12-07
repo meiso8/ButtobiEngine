@@ -72,7 +72,7 @@ void EnemyShotWaveManager::Update() {
         return;
     }
 
-    enemy_->SetTarget(enemyPoses_[direction_]);
+    //enemy_->SetTarget(enemyPoses_[direction_]);
     // 弾投げ
     if (enemy_->isWaveShot_) {
         

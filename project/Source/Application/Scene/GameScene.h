@@ -24,7 +24,7 @@
 #include "Enemy/EnemyBulletManager.h"
 #include "Enemy/EnemyShotBulletManager.h"
 #include "Enemy/EnemyBombManager.h"
-#include "Enemy/EnemyShotBombManager.h"
+#include "Enemy/EnemyFloorChangeManager.h"
 #include "Enemy/EnemyShockWaveManager.h"
 #include "Enemy/EnemyShotWaveManager.h"
 #include"Tree/Tree.h"
@@ -79,7 +79,7 @@ private:
     std::unique_ptr<EnemyBulletManager>enemyBulletManager_ = nullptr;
     std::unique_ptr<EnemyShotBulletManager>enemyShotBulletManager_ = nullptr;
     std::unique_ptr<EnemyBombManager>enemyBombManager_ = nullptr;
-    std::unique_ptr<EnemyShotBombManager>enemyShotBombManager_ = nullptr;
+    std::unique_ptr<EnemyFloorChangeManager>enemyFloorChangeManager_ = nullptr;
     std::unique_ptr<EnemyShockWaveManager>enemyShockWaveManager_ = nullptr;
     std::unique_ptr<EnemyShotWaveManager>enemyShotWaveManager_ = nullptr;
 

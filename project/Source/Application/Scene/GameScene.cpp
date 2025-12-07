@@ -75,7 +75,7 @@ GameScene::GameScene()
     enemyBulletManager_ = std::make_unique<EnemyBulletManager>();
     enemyShotBulletManager_ = std::make_unique<EnemyShotBulletManager>(enemy_.get(), enemyBulletManager_.get());
     enemyBombManager_ = std::make_unique<EnemyBombManager>();
-    enemyShotBombManager_ = std::make_unique<EnemyShotBombManager>(enemy_.get(), enemyBombManager_.get(), floorGameFloorManager_.get());
+    enemyFloorChangeManager_ = std::make_unique<EnemyFloorChangeManager>(enemy_.get(), enemyBombManager_.get(), floorGameFloorManager_.get());
     enemyShockWaveManager_ = std::make_unique<EnemyShockWaveManager>();
     enemyShotWaveManager_ = std::make_unique<EnemyShotWaveManager>(enemy_.get(), enemyShockWaveManager_.get(), floorGameFloorManager_.get());
 
@@ -138,7 +138,7 @@ void GameScene::Initialize() {
     enemyBulletManager_->Initialize();
     enemyShotBulletManager_->Initialize();
     enemyBombManager_->Initialize();
-    enemyShotBombManager_->Initialize();
+    enemyFloorChangeManager_->Initialize();
     enemyShockWaveManager_->Initialize();
     enemyShotWaveManager_->Initialize();
 
@@ -368,7 +368,7 @@ void GameScene::UpdateGameObject()
     playerFloorStripManager_->Update();
     floorPlayerShotBulletManager_->Update();
     enemyShotBulletManager_->Update();
-    enemyShotBombManager_->Update();
+    enemyFloorChangeManager_->Update();
     enemyShotWaveManager_->Update();
     floorPlayerStripTargetUI_->Update();
     floorActionManager_->Update();
@@ -453,8 +453,11 @@ void GameScene::CheckAllCollision()
 
     if (!enemy_->IsDead()) {
         collisionManager_->AddCollider(floorGamePlayer_.get());
+        //敵のくちばし
+        collisionManager_->AddCollider(enemy_->enemyBeak_.get());
     }
     collisionManager_->AddCollider(enemy_.get());
+
 	HealItemSpawner::Instance().AddCollider(collisionManager_.get());
     floorGameFloorManager_->AddCollider(collisionManager_.get());
 
