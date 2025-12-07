@@ -77,8 +77,8 @@ void CameraController::UpdateOverheadView()
 		return;
 	}
 	camera_->rotate_.x = MY_Utility::SimpleEaseIn(camera_->rotate_.x, 1.68f, 0.1f);
-	camera_->translate_.y = MY_Utility::SimpleEaseIn(camera_->translate_.y, 30.0f, 0.1f);
-	camera_->translate_.z = MY_Utility::SimpleEaseIn(camera_->translate_.z, 0.0f, 0.1f);
+	camera_->translate_.y = MY_Utility::SimpleEaseIn(camera_->translate_.y, 20.0f, 0.1f);
+	camera_->translate_.z = MY_Utility::SimpleEaseIn(camera_->translate_.z, -1.5f, 0.1f);
 }
 
 void CameraController::EndOverheadView()
