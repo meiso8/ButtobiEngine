@@ -148,6 +148,7 @@ void FloorGameFloor::StickyFloorUpdate() {
 	if (autoSwapTimer_ > 0.0f) {
 		autoSwapTimer_ -= 0.016f;
 	} else {
+		body_.worldTransform_.translate_.y = -1.0f;
 		SwapFloorType(nextFloorType_);
 	}
 }

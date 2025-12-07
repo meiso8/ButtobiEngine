@@ -13,7 +13,7 @@ FloorGameFloorManager::FloorGameFloorManager() {
 			floors_[y][x]->Initialize();
 			floors_[y][x]->body_.worldTransform_.translate_ = {
 				static_cast<float>(x) * kHalfFloorSize - (static_cast<float>(kMapWidth) * kHalfFloorSize) + kHalfFloorSize,
-				0.5f,
+				0.1f,
 				static_cast<float>(y) * kHalfFloorSize - (static_cast<float>(kMapHeight) * kHalfFloorSize) + kHalfFloorSize
 			};
 		}
@@ -29,7 +29,7 @@ void FloorGameFloorManager::Initialize() {
 			floors_[y][x]->Initialize();
 			floors_[y][x]->body_.worldTransform_.translate_ = {
 				static_cast<float>(x)* (kHalfFloorSize * 2.0f) - (static_cast<float>(kMapWidth) * kHalfFloorSize) + kHalfFloorSize,
-				0.5f,
+				0.1f,
 				static_cast<float>(y) * (kHalfFloorSize * 2.0f) - (static_cast<float>(kMapHeight) * kHalfFloorSize) + kHalfFloorSize
 			};
 		}
@@ -48,6 +48,18 @@ void FloorGameFloorManager::Draw(Camera& camera) {
 	for (int y = 0; y < kMapHeight; y++) {
 		for (int x = 0; x < kMapWidth; x++) {
 			floors_[y][x]->Draw(camera);
+		}
+	}
+}
+
+void FloorGameFloorManager::DamageCleanUp()
+{
+	// 爆弾床だけ普通の床に戻す
+	for (int y = 0; y < kMapHeight; y++) {
+		for (int x = 0; x < kMapWidth; x++) {
+			if (floors_[y][x]->floorType_ == FloorType::Bomb) {
+				floors_[y][x]->SwapFloorType(FloorType::Normal);
+			}
 		}
 	}
 }
@@ -130,6 +142,37 @@ void FloorGameFloorManager::SwapFloorTypeAtPosition(const Vector3& position) {
 		return;
 	}
 	floors_[yIndex][xIndex]->SwapNextFloorType();
+}
+
+void FloorGameFloorManager::SwapFloorTypeAtPosition(const Vector3& position, const FloorType& floorType)
+{
+	std::pair<int, int> floorIndex = GetFloorIndexAtPosition(position);
+	int xIndex = floorIndex.first;
+	int yIndex = floorIndex.second;
+	if (xIndex < 0 || xIndex >= kMapWidth || yIndex < 0 || yIndex >= kMapHeight) {
+		// 範囲外の場合は一番近い端に補正する
+		floors_[std::clamp(yIndex, 0, kMapHeight - 1)][std::clamp(xIndex, 0, kMapWidth - 1)]->SwapFloorType(floorType);
+		return;
+	}
+	floors_[yIndex][xIndex]->SwapFloorType(floorType);
+}
+
+void FloorGameFloorManager::SwapFloorTypeCross(const Vector3& position, const FloorType& floorType)
+{
+	std::pair<int, int> floorIndex = GetFloorIndexAtPosition(position);
+	int xIndex = floorIndex.first;
+	int yIndex = floorIndex.second;
+
+	const int dx[5] = { 0, 0, 0, -1, 1 };
+	const int dy[5] = { 0, -1, 1, 0, 0 };
+
+	for (int i = 0; i < 5; ++i) {
+		int nx = xIndex + dx[i];
+		int ny = yIndex + dy[i];
+		if (nx >= 0 && nx < kMapWidth && ny >= 0 && ny < kMapHeight) {
+			floors_[ny][nx]->SwapFloorType(floorType);
+		}
+	}
 }
 
 std::pair<int, int> FloorGameFloorManager::GetFloorIndexAtPosition(const Vector3& position) const {

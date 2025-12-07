@@ -157,9 +157,12 @@ void GameScene::Initialize() {
 
     gameclearTimer_ = 0.0f;
     gameOverTimer_ = 0.0f;
+
+	SceneStaticValue::isPlayerAlive = true;
 }
 
 void GameScene::Update() {
+	SceneStaticValue::isPlayerAlive = !floorGamePlayer_->IsDead();
 
     UpdateBGM();
 
@@ -376,7 +379,7 @@ void GameScene::UpdateGameObject()
     floorActionManager_->Update();
     if (enemy_->isReqestClearFloor_) {
         Sound::PlaySE(Sound::kFloorRespawn);
-        floorGameFloorManager_->Initialize();
+        floorGameFloorManager_->DamageCleanUp();
         enemy_->isReqestClearFloor_ = false;
     }
 

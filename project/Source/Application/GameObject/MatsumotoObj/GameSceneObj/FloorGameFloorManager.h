@@ -15,6 +15,8 @@ public:
 	void Update();
 	void Draw(class Camera& camera);
 
+	void DamageCleanUp();
+
 	void ForceChangeAllFloorType(const FloorType& floorType);
 
 	void AddCollider(CollisionManager* collisionManager);
@@ -22,6 +24,10 @@ public:
 	std::vector<std::pair<int, int>> GetConnectedFloorsAtPosition(const Vector3& position) const;
 	void SwapFloorTypeAtPosition(const int& xIndex, const int& yIndex);
 	void SwapFloorTypeAtPosition(const Vector3& position);
+
+	void SwapFloorTypeAtPosition(const Vector3& position, const FloorType& floorType);
+
+	void SwapFloorTypeCross(const Vector3& position, const FloorType& floorType);
 	std::pair<int, int> GetFloorIndexAtPosition(const Vector3& position) const;
 	//床の座標が欲しいのでここでゲッターを用意します
     Vector3& GetFloorPos(const int& xIndex, const int& yIndex);
