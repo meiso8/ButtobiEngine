@@ -2,7 +2,7 @@
 #include "MatsumotoObj/GameSceneObj/FloorGamePlayer.h"
 #include "MatsumotoObj/KeyBindConfig.h"
 #include "MatsumotoObj/MY_Utility.h"
-
+#include"Sound.h"
 namespace {
 	const float kXOffset = 200.0f;
 	const float kYOffset = 200.0f;
@@ -93,11 +93,14 @@ void GameOverEvent::Update() {
 	KeyBindConfig& key = KeyBindConfig::Instance();
 	if (key.IsTrigger("MoveForward")) {
 		isRetrySelected_ = true;
+		Sound::PlaySE(Sound::kMoveCursor);
 	}
 	if (key.IsTrigger("MoveBack")) {
 		isRetrySelected_ = false;
+		Sound::PlaySE(Sound::kMoveCursor);
 	}
 	if (key.IsTrigger("Shot")) {
+		Sound::PlaySE(Sound::kDecision);
 		if (timer_ > 1.0f) {
 			isReqestedAction_ = true;
 		}
