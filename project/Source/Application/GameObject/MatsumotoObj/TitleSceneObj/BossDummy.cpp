@@ -9,6 +9,7 @@
 #include"CollisionConfig.h"
 #include"JsonFile.h"
 #include "MatsumotoObj/MY_Utility.h"
+#include"VibrateManager.h"
 
 BossDummy::BossDummy() {
     body_.Create();
@@ -42,6 +43,10 @@ void BossDummy::Initialize() {
 }
 
 void BossDummy::Update() {
+
+    if (timer_== 0.0f) {
+        VibrateManager::SetTime(3.5f, 20000, 20000);
+    }
     timer_ += 0.016f;
     body_.worldTransform_.rotate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.rotate_.y, 3.14f, 0.1f);
     body_.SetColor(MY_Utility::SimpleEaseIn(body_.GetColor(), { 1.0f,0.0f,0.0f,1.0f }, 0.1f));
@@ -55,6 +60,9 @@ void BossDummy::Update() {
     wingRPos_.Update();
 
     Winging(2.0f);
+
+
+  
 
     if (timer_ > 3.0f) {
         isAnimEnd_ = true;

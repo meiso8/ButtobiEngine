@@ -252,7 +252,7 @@ void FloorGamePlayer::Move() {
         moveSpeed_ = std::clamp(moveSpeed_, kMinMoveSpeed_, kMaxMoveSpeed_);
         //べとべと床にいるときは移動速度を落とす
         if (isOnStickyFloor_) {
-
+            VibrateManager::SetTime(0.01f, 1000, 1000);
             body_.worldTransform_.translate_ += moveDir_ * moveSpeed_ * stickyFloorSlowRate_;
         } else {
             body_.worldTransform_.translate_ += moveDir_ * moveSpeed_;
@@ -289,6 +289,7 @@ void FloorGamePlayer::StriptFloor() {
 
     // 床剥がし入力 //コントローラーの処理を追加しました　吉田
     if (KeyBindConfig::Instance().IsTrigger("Stript")) {
+        VibrateManager::SetTime(0.2f, 3000, 3000);
         isReqestStript_ = true;
         striptTimer_ = striptDuration_;
     }
@@ -306,6 +307,7 @@ void FloorGamePlayer::ShotFloor() {
     }
     // 床投げ入力
     if (KeyBindConfig::Instance().IsTrigger("Shot")) {
+        VibrateManager::SetTime(0.1f, 1000, 1000);
         isReqestShot_ = true;
         isStriptting_ = false;
         shotTimer_ = shotDuration_;
@@ -370,7 +372,7 @@ void FloorGamePlayer::HitUpdate()
     damageStruct_.isHit = true;
     damageStruct_.isInvincible = true;
      Sound::PlaySE(Sound::kPlayerDamage);
-    VibrateManager::SetTime(1.0f, 1000, 1000);
+    VibrateManager::SetTime(0.5f, 3000, 3000);
     damageStruct_.flashTimer = damageStruct_.invincibilityTime;
     //hpを減らす
     if (damageStruct_.hps.hp > 0) {

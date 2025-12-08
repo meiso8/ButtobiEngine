@@ -9,7 +9,7 @@
 #include"CubeMesh.h"
 #include"CollisionConfig.h"
 #include"Sound.h"
-
+#include"VibrateManager.h"
 EnemyShockWave::EnemyShockWave() {
 
     localAABBs_[kHorizontal] = { .min = {-2.0f,-0.5f,-kAabbWidth_},.max = {2.0f,0.5f,kAabbWidth_} };
@@ -81,6 +81,7 @@ void EnemyShockWave::Update() {
 
 
     if (lifeTimer_ <= 0.0f) {
+
         lifeTimer_ = 0.0f;
         isActive_ = false;
         return;
@@ -96,6 +97,7 @@ void EnemyShockWave::Update() {
         if (!isSound_) {
             isSound_ = true;
             Sound::PlaySE(Sound::kWindAttackShot);
+            VibrateManager::SetTime(1.0f,1000, 1000);
         }
         body_.worldTransform_.translate_ = Lerp(body_.worldTransform_.translate_, endPos_, speed_);
     } else {

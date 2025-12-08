@@ -29,12 +29,12 @@ void VibrateManager::Update()
         return;
     }
 
-    if (timer_ > 0.0f) {
-        timer_ -= InverseFPS;
-    } else {
-        timer_ =  0.0f;
+    if (timer_ <= 0.0f) {
+        timer_ = 0.0f;
         leftMotor_ = 0;
         rightMotor_ = 0;
+    } else {
+        timer_ -= InverseFPS;
     }
 
     Input::VibrateController(0, leftMotor_, rightMotor_);

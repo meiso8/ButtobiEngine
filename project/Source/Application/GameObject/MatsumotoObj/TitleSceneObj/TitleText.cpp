@@ -9,7 +9,7 @@
 #include "Cube/CubeMesh.h"
 #include "MatsumotoObj/MY_Utility.h"
 #include<algorithm>
-
+#include"VibrateManager.h"
 TitleText::TitleText() {
 	body_.Create();
 	body_.Initialize();
@@ -39,6 +39,8 @@ void TitleText::OnCollision(Collider* collider) {
 		rotatePower_ += 0.5f;
 		force_.isGravity = true;
 		damageTimer_ = 0.4f;
+
+		VibrateManager::SetTime(0.2f, 3000, 3000);
 	}
 }
 

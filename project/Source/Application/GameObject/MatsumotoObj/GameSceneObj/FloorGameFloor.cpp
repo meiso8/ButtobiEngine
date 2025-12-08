@@ -12,7 +12,7 @@
 #include "MatsumotoObj/MY_Utility.h"
 
 #include "MatsumotoObj/GameSceneObj/AttackAreaEmitter.h"
-
+#include"VibrateManager.h"
 FloorGameFloor::FloorGameFloor() {
 	body_.Create();
 
@@ -191,11 +191,16 @@ void FloorGameFloor::BombFloorUpdate() {
 	body_.SetColor({ 1.0f, color * downColor_ * blink, color * blink, 1.0f });
 	
 
+
 	if (autoSwapTimer_ > 0.0f) {
 		autoSwapTimer_ -= 0.016f;
+		//振動させる　ヨシダ
+		WORD vibrate = 1000+(WORD)color * 1000;
+		VibrateManager::SetTime(0.016f, vibrate, vibrate);
 	} else {
 		SwapFloorType(nextFloorType_);
 		Sound::PlaySE(Sound::kExplosion);
+		VibrateManager::SetTime(0.5f, 3000, 3000);
 		isExploded_ = true;
 
 	}
