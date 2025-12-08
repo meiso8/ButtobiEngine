@@ -58,8 +58,11 @@ FloorGamePlayer::~FloorGamePlayer() {
 void FloorGamePlayer::OnCollision(Collider* collider)
 {
     if (collider->GetCollisionAttribute() == kCollisionPlayerHealItem) {
-        damageStruct_.hps.hp += 20;
         Sound::PlaySE(Sound::kPlayerHeal);
+
+        if (damageStruct_.hps.hp <= damageStruct_.hps.maxHp - 20.0f) {
+            damageStruct_.hps.hp += 20;  
+        }
     }
 
     if (collider->GetCollisionAttribute() == kCollisionEnemy ||
