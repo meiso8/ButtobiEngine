@@ -263,7 +263,6 @@ void EmitterManager::Update(Camera& camera)
 
     particleEmitters_[kPlayerHitEmitter]->UpdateEmitter();
 
-   for(floorGameFloorManager_->)
 
 
     if (!enemy_->IsOverKill()) {
