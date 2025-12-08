@@ -70,6 +70,7 @@ struct ParticleGroup {
     const WorldTransform* parentPos_ = nullptr;
     ParticleMovements movement;
     AccelerationField accelerationField;
+    BlendMode blendMode = BlendMode::kBlendModeAdd
 };
 
 std::list<SphericalMove> EmitCoordinate(uint32_t count, const float& radius, const float& radiusSpeed, const float& polarSpeed, const MinMax& polarSpeedMinMax, const MinMax& radiusSpeedMinMax);
