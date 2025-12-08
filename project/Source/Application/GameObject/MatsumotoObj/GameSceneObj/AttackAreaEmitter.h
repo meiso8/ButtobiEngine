@@ -17,6 +17,7 @@ public:
 	void Draw(Camera& camera);
 	uint32_t EmitCircle(const Vector3& position, float size, float duration);
 	uint32_t EmitSquare(const Vector3& position, const Vector2& dir, const Vector2& size, float duration);
+	uint32_t EmitSquareForm(const Vector3& position, const Vector2& dir, const Vector2& size, float duration);
 
 	void DeleteEffect(uint32_t effectID);
 private:

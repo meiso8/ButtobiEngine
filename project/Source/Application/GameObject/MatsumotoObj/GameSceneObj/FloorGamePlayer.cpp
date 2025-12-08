@@ -291,6 +291,12 @@ void FloorGamePlayer::StriptFloor() {
     if (KeyBindConfig::Instance().IsTrigger("Stript")) {
         isReqestStript_ = true;
         striptTimer_ = striptDuration_;
+		AttackAreaEmitter::GetInstance().EmitSquareForm(
+			body_.worldTransform_.translate_,
+			{ lookDir_.z,lookDir_.x },
+			{ 1.0f,5.0f },
+			5.0f
+		);
     }
 }
 

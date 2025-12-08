@@ -1,5 +1,5 @@
 #include "AttackAreaEmitter.h"
-
+#include "MatsumotoObj/MY_Utility.h"
 void AttackAreaEmitter::Initialize()
 {
 	for (int i = 0; i < maxEffectNum_; i++) {
@@ -53,6 +53,25 @@ uint32_t AttackAreaEmitter::EmitSquare(const Vector3& position, const Vector2& d
 	}
 	return UINT32_MAX; // 全て使用中
 }
+
+uint32_t AttackAreaEmitter::EmitSquareForm(const Vector3& position, const Vector2& dir, const Vector2& size, float duration)
+{
+	// positionを四角形の端（中心からsize/2だけdir方向にオフセット）にする
+	Vector3 edgePos = position;
+	float angle = MY_Utility::GetAngleFromDir(dir);
+	edgePos.x += sinf(angle) * (size.y / 2.0f);
+	edgePos.z += cosf(angle) * (size.y / 2.0f);
+	edgePos.y = 0.0f;
+
+	for (int i = 0; i < maxEffectNum_; i++) {
+		if (!effectsPtr_[i]->isActive_) {
+			effectsPtr_[i]->SpawnSquare(edgePos, dir, size, duration);
+			return i;
+		}
+	}
+	return UINT32_MAX; // 全て使用中
+}
+
 
 void AttackAreaEmitter::DeleteEffect(uint32_t effectID)
 {
