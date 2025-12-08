@@ -242,7 +242,7 @@ void FloorGamePlayer::Move() {
 
     // 移動
     if (isMove_) {
-        Sound::PlayOriginSE(Sound::kPlayerWalk);
+
         animationState_ = PlayerAnimationState::Walk;
         moveDir_ = Normalize(moveDir_);
         lookDir_ = moveDir_;
@@ -252,9 +252,11 @@ void FloorGamePlayer::Move() {
         moveSpeed_ = std::clamp(moveSpeed_, kMinMoveSpeed_, kMaxMoveSpeed_);
         //べとべと床にいるときは移動速度を落とす
         if (isOnStickyFloor_) {
+            Sound::PlayOriginSE(Sound::kMeltFloor);
             VibrateManager::SetTime(0.01f, 1000, 1000);
             body_.worldTransform_.translate_ += moveDir_ * moveSpeed_ * stickyFloorSlowRate_;
         } else {
+            Sound::PlayOriginSE(Sound::kPlayerWalk);
             body_.worldTransform_.translate_ += moveDir_ * moveSpeed_;
         }
     } else if (animationState_ != PlayerAnimationState::Stript && animationState_ != PlayerAnimationState::Shot) {

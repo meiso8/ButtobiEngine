@@ -117,8 +117,9 @@ void FloorGameFloor::SwapFloorType(FloorType type) {
 		break;
 	case FloorType::Strong:
 
-		//ヨシダ　強く復活下かどうかのフラグ　追加しました。
+		//ヨシダ　復活かどうかのフラグ　追加しました。
 		isToStrong_ = true;
+		//Sound::PlayOriginSE(Sound::kFloorRespawn);
 		nextFloorType_ = FloorType::Normal;
 		break;
 	case FloorType::Bomb:

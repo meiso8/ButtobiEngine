@@ -51,7 +51,11 @@ void Sound::LoadAllSound()
     handles_[kDecision] = Load("Resource/Sounds/SE/decision.mp3");
     handles_[kDefeatBoss] = Load("Resource/Sounds/SE/defeatBoss.mp3");
     handles_[kExplosion] = Load("Resource/Sounds/SE/explosion.mp3");
+
+    handles_[kFloorUpdate] = Load("Resource/Sounds/SE/FloorUpdate.mp3");
     handles_[kFloorRespawn] = Load("Resource/Sounds/SE/floorRespawn.mp3");
+    handles_[kMeltFloor] = Load("Resource/Sounds/SE/meltFloor.mp3");
+
     handles_[kMoveCursor] = Load("Resource/Sounds/SE/moveCursor.mp3");
     handles_[kPauseButton] = Load("Resource/Sounds/SE/pauseButton.mp3");
     handles_[kPlayerDamage] = Load("Resource/Sounds/SE/playerDamage.mp3");

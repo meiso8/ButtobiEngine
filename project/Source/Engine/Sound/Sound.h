@@ -45,7 +45,12 @@ public:
         kDecision,
         kDefeatBoss,
         kExplosion,
+        kFloorUpdate,
         kFloorRespawn,
+        kMeltFloor,
+
+
+
         kMoveCursor,
         kPauseButton,
         kPlayerDamage,

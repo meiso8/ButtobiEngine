@@ -328,6 +328,7 @@ void Enemy::OnCollision(Collider* collider)
 {
     //デバック用
     OnCollisionCollider();
+
     if (isFaseChange_) {
         // フェーズチェンジ中はHP2/3以下のダメージを受け付けない
         if ((damageStruct_.hps.maxHp / 3) * 2 >= damageStruct_.hps.hp) {
@@ -336,13 +337,6 @@ void Enemy::OnCollision(Collider* collider)
     }
 
     if (collider->GetCollisionAttribute() == kCollisionPlayerBullet) {
-
-        //if (damageStruct_.isHit) {
-        //    return;
-        //}
-
-        damageStruct_.isHit = true;
-        Sound::PlaySE(Sound::kDefeatBoss);
 
         VibrateManager::SetTime(0.5f, 2000, 2000);
 
@@ -354,6 +348,11 @@ void Enemy::OnCollision(Collider* collider)
 
         if (damageStruct_.isDead) {
             overKillCount++;
+            Sound::PlayOriginSE(Sound::kStun);
+            Sound::PlayOriginSE(Sound::kDefeatBoss);
+        } else {
+
+            Sound::PlaySE(Sound::kDefeatBoss);
         }
     }
 
