@@ -43,5 +43,5 @@ void BetoBeto::Update()
 void BetoBeto::Draw(Camera& camera)
 {
     //position_.SetLightMode(kLightModeLReflectance);
-    position_.Draw(camera, kBlendModeAdd, kCullModeNone);
+    position_.Draw(camera, kBlendModeNormal, kCullModeNone);
 }
