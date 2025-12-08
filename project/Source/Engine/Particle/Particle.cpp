@@ -27,7 +27,7 @@ void ParticleManager::CreateAll()
     CreateParticleGroup("HitParticle", Texture::PLAYER_DAMAGE_PARTICLE);
     CreateParticleGroup("playerWalkParticle", Texture::PLAYER_WALK_PARTICLE);
 
-    CreateParticleGroup("floorBombBlastParticle", Texture::PLAYER_WALK_PARTICLE);
+    //CreateParticleGroup("floorBombBlastParticle", Texture::PLAYER_WALK_PARTICLE);
 
     CreateParticleGroup("windAttackParticle01", Texture::WIND_ATTACK_PARTICLE01);
     CreateParticleGroup("windAttackParticle02", Texture::WIND_ATTACK_PARTICLE02);
@@ -38,6 +38,10 @@ void ParticleManager::CreateAll()
 
     //ベトベト床
     CreateParticleGroup("meltFloorParticle", Texture::MELT_FLOOR_PARTICLE);
+
+
+    //泡パーティクル
+    CreateParticleGroup("bubbleParticle", Texture::BUBBLE_PARTICLE);
 }
 
 // ==========================================================================================================
@@ -67,14 +71,19 @@ void ParticleManager::Create()
     CreateVertexBufferResource();
 }
 
-Particle MakeNewParticle(const MinMax& velocityMinMax, const WorldTransform& transform, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const float& rotateOffset, const float& scaleOffset)
+Particle MakeNewParticle(const AABB& velocityAABB, const WorldTransform& transform, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const float& rotateOffset, const float& scaleOffset)
 {
 
     Particle particle;
     Random::SetMinMax(0.0f, 1.0f);
-    particle.lifeTime = (lifeTime == -1.0f) ? Random::Get() : lifeTime;
-    Random::SetMinMax(velocityMinMax.min, velocityMinMax.max);
-    particle.velocity = { Random::Get(), Random::Get(), Random::Get() };
+    particle.lifeTime = (lifeTime < 0.0f) ? Random::Get() : lifeTime;
+
+    Random::SetMinMax(velocityAABB.min.x, velocityAABB.max.x);
+    particle.velocity.x = Random::Get();
+    Random::SetMinMax(velocityAABB.min.y, velocityAABB.max.y);
+    particle.velocity.y = Random::Get();
+    Random::SetMinMax(velocityAABB.min.z, velocityAABB.max.z);
+    particle.velocity.z = Random::Get();
 
     Random::SetMinMax(-scaleOffset, scaleOffset);
     float scale = Random::Get();
@@ -172,11 +181,11 @@ void ParticleManager::Update(Camera& camera)
     }
 }
 
-std::list<Particle> EmitParticles(const MinMax& velocityMinMax, const WorldTransform& transform, uint32_t count, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const float& rotateOffset, const float& scaleOffset)
+std::list<Particle> EmitParticles(const AABB& velocityAABB, const WorldTransform& transform, uint32_t count, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const float& rotateOffset, const float& scaleOffset)
 {
     std::list<Particle>particles;
     for (uint32_t i = 0; i < count; ++i) {
-        particles.push_back(MakeNewParticle(velocityMinMax,transform, color, lifeTime, translateAABB, rotateOffset, scaleOffset));
+        particles.push_back(MakeNewParticle(velocityAABB,transform, color, lifeTime, translateAABB, rotateOffset, scaleOffset));
     }
     return particles;
 }
@@ -198,7 +207,7 @@ void ParticleManager::Emit(Emitter& emitter)
 {
     assert(particleGroups.contains(emitter.name));
 
-    particleGroups[emitter.name]->particles.splice(particleGroups[emitter.name]->particles.end(), EmitParticles(emitter.velocityMinMax,emitter.transform, emitter.count, emitter.color, emitter.lifeTime, emitter.translateAABB_, emitter.rotateOffset_, emitter.scaleOffset_));
+    particleGroups[emitter.name]->particles.splice(particleGroups[emitter.name]->particles.end(), EmitParticles(emitter.velocityAABB,emitter.transform, emitter.count, emitter.color, emitter.lifeTime, emitter.translateAABB_, emitter.rotateOffset_, emitter.scaleOffset_));
 
     particleGroups[emitter.name]->movement = emitter.movement;
     particleGroups[emitter.name]->parentPos_ = &emitter.transform;

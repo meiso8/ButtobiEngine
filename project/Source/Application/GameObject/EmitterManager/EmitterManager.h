@@ -57,7 +57,7 @@ private:
 
     std::array< std::unique_ptr<ParticleEmitter>, kMaxEmitter>particleEmitters_;
 
-    std::unique_ptr<ParticleEmitter> floorCrashEmitter_ = nullptr;
+    std::unique_ptr<ParticleEmitter> BubbleEmitter_ = nullptr;
 
 };
 
