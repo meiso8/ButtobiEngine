@@ -2,6 +2,7 @@
 #include "AttackAreaEffect.h"
 #include <memory>
 #include <array>
+#include <cstdint>
 
 class AttackAreaEmitter {
 public:
@@ -14,7 +15,9 @@ public:
 	void Finalize();
 	void Update();
 	void Draw(Camera& camera);
-	void EmitCircle(const Vector3& position, float size, float duration);
+	uint32_t EmitCircle(const Vector3& position, float size, float duration);
+
+	void DeleteEffect(uint32_t effectID);
 private:
 	AttackAreaEmitter();
 	~AttackAreaEmitter() = default;

@@ -28,14 +28,23 @@ void AttackAreaEmitter::Draw(Camera& camera)
 	}
 }
 
-void AttackAreaEmitter::EmitCircle(const Vector3& position, float size, float duration)
+uint32_t AttackAreaEmitter::EmitCircle(const Vector3& position, float size, float duration)
 {
+	Vector3 pos = position;
+	pos.y = 0.0f;
 	for (int i = 0; i < maxEffectNum_; i++) {
 		if (!effectsPtr_[i]->isActive_) {
-			effectsPtr_[i]->SpawnCircle(position, size, duration);
-			break;
+			effectsPtr_[i]->SpawnCircle(pos, size, duration);
+			return i;
 		}
 	}
+	return UINT32_MAX; // 全て使用中
+}
+
+void AttackAreaEmitter::DeleteEffect(uint32_t effectID)
+{
+	if (effectID >= maxEffectNum_)return;
+	effectsPtr_[effectID]->isActive_ = false;
 }
 
 AttackAreaEmitter::AttackAreaEmitter()

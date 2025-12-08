@@ -10,11 +10,11 @@ AttackAreaEffect::AttackAreaEffect()
 {
 	body_.Create();
 	body_.SetMesh(ModelManager::GetModel(ModelManager::PLATE));
-	body_.SetColor({ 1.0f,0.0f,0.0f,1.0f });
+	body_.SetColor({ 1.0f,0.0f,0.0f,0.8f });
 
 	underBody_.Create();
 	underBody_.SetMesh(ModelManager::GetModel(ModelManager::PLATE));
-	underBody_.SetColor({ 1.0f,0.0f,0.0f,0.5f });
+	underBody_.SetColor({ 1.0f,0.0f,0.0f,0.4f });
 }
 
 AttackAreaEffect::~AttackAreaEffect()
@@ -60,8 +60,8 @@ void AttackAreaEffect::Update()
 void AttackAreaEffect::Draw(Camera& camera)
 {
 	if (!isActive_)return;
-	body_.Draw(camera);
 	underBody_.Draw(camera);
+	body_.Draw(camera);
 }
 
 void AttackAreaEffect::SpawnCircle(const Vector3& position, float size, float duration)
@@ -75,7 +75,7 @@ void AttackAreaEffect::SpawnCircle(const Vector3& position, float size, float du
 	body_.SetTextureHandle(Texture::WHITECIRCLE);
 
 	underBody_.worldTransform_.translate_ = position;
-	underBody_.worldTransform_.translate_.y -= 0.1f;
+	underBody_.worldTransform_.translate_.y -= 0.15f;
 	underBody_.worldTransform_.scale_ = { size,1.0f,size };
 	underBody_.SetTextureHandle(Texture::WHITECIRCLE);
 }
