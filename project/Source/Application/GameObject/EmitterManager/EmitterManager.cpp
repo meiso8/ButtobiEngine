@@ -185,6 +185,10 @@ EmitterManager::EmitterManager(
     melt->accelerationField.acceleration = { 0.0f,1.0f,0.0f };
 
     // ====================================================================
+
+    floorCrashEmitter_ = std::make_unique<ParticleEmitter>();
+    floorCrashEmitter_->SetName("floorParticle");
+
 }
 
 void EmitterManager::Initialize()
@@ -218,7 +222,6 @@ void EmitterManager::Update(Camera& camera)
 {
 
     if (!player_->IsDead()) {
-
 
         if (player_->isMove_) {
             //自動エミっとしてくれる
@@ -259,6 +262,9 @@ void EmitterManager::Update(Camera& camera)
     }
 
     particleEmitters_[kPlayerHitEmitter]->UpdateEmitter();
+
+   for(floorGameFloorManager_->)
+
 
     if (!enemy_->IsOverKill()) {
         //敵ヒット
@@ -314,20 +320,6 @@ void EmitterManager::Update(Camera& camera)
 
 void EmitterManager::Draw()
 {
-    //if (enemy_->phase_ == Enemy::SHOCKWAVEATTACK) {
-    //    for (auto& grop : waveEmitters_) {
-    //        grop.emitter->Draw();
-    //    }
-    //}
-
-    //for (auto& particleEmitter : particleEmitters_) {
-    //    particleEmitter->Draw();
-    //}
-
-    //if (enemy_->phase_ == Enemy::KNOCKBACK) {
-    //    enemyKnockBackEmitter_->Draw();
-    //}
-
     ParticleEmitter::Draw();
 }
 

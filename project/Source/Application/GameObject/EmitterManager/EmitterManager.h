@@ -55,9 +55,9 @@ private:
 
     std::unique_ptr<ParticleEmitter> betobetoEmitter_ = nullptr;
 
-    //std::vector <std::unique_ptr<ParticleEmitter>> bombEmitter_;
     std::array< std::unique_ptr<ParticleEmitter>, kMaxEmitter>particleEmitters_;
 
+    std::unique_ptr<ParticleEmitter> floorCrashEmitter_ = nullptr;
 
 };
 

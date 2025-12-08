@@ -34,7 +34,7 @@ public:
 	Object3d body_;
 	FloorType floorType_;
 	bool isExploded_;
-
+	bool isToStrong_;
 private:
 	//std::unique_ptr<CubeMesh>cubeMesh_ = nullptr;
 	std::unordered_map<FloorType, std::function<void()>> floorTypeUpdate_;

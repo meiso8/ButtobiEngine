@@ -54,11 +54,15 @@ void FloorGameFloor::Initialize() {
 	body_.worldTransform_.translate_.y = -0.5f;
 	isPopuping_ = false;
 	isExploded_ = false;
-
+	isToStrong_ = false;
 	//body_.InitWaveData();
 }
 
 void FloorGameFloor::Update() {
+
+	//ヨシダ　強く復活下かどうかのフラグを戻す　追加しました。
+	isToStrong_ = false;
+
 	if (isPopuping_) {
 		body_.worldTransform_.translate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.translate_.y, -0.5f + 0.1f,0.1f);
 		body_.worldTransform_.rotate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.rotate_.y, 31.4f * 0.5f, 0.1f);
@@ -92,6 +96,7 @@ void FloorGameFloor::Draw(Camera& camera) {
 void FloorGameFloor::SwapFloorType(FloorType type) {
 	prevFloorType_ = floorType_;
 	floorType_ = type;
+	
 	switch (floorType_)
 	{
 	case FloorType::Normal:
@@ -100,6 +105,8 @@ void FloorGameFloor::SwapFloorType(FloorType type) {
 	case FloorType::Sticky:
 		autoSwapTimer_ = autoSwapDuration_;
 		nextFloorType_ = FloorType::Strong;
+		//ヨシダ　強く復活下かどうかのフラグ　追加しました。
+		isToStrong_ = true;
 		break;
 	case FloorType::Strong:
 		nextFloorType_ = FloorType::Normal;
