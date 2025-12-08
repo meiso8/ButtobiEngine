@@ -34,6 +34,9 @@ public:
 	std::vector<Vector2> GetExprodedFloorMap() const;
 	void PopupFloor(const Vector3& position);
 	void downFloor();
+
+	std::vector<std::vector<std::unique_ptr<FloorGameFloor>>>& GetFloor() {return floors_;
+	};
 private:
 	std::vector<std::vector<std::unique_ptr<FloorGameFloor>>> floors_;
 };

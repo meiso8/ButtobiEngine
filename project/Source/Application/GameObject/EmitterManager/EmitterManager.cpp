@@ -188,7 +188,7 @@ EmitterManager::EmitterManager(
 
     floorCrashEmitter_ = std::make_unique<ParticleEmitter>();
     floorCrashEmitter_->SetName("floorParticle");
-
+    
 }
 
 void EmitterManager::Initialize()
@@ -215,6 +215,10 @@ void EmitterManager::Initialize()
 
     betobetoEmitter_->InitTimer();
     ParticleManager::Reset(betobetoEmitter_->emitter_.name);
+
+    floorCrashEmitter_->InitTimer();
+    ParticleManager::Reset(floorCrashEmitter_->emitter_.name);
+
 }
 
 
@@ -307,6 +311,16 @@ void EmitterManager::Update(Camera& camera)
         }
     }
 
+
+    for (auto& floors :floorGameFloorManager_->GetFloor()) {
+        for (auto& floor : floors) {
+            if (floor->isToStrong_) {
+                floorCrashEmitter_->emitter_.transform.translate_ =  floor->GetWorldPosition();
+                floorCrashEmitter_->UpdateEmitter();
+                floorCrashEmitter_->Emit();
+            }
+        }
+    }
 
     //葉っぱ
     leafEmitter_->UpdateTimer();

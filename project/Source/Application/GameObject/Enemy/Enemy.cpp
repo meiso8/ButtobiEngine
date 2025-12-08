@@ -459,14 +459,14 @@ void Enemy::Tackle()
             }
         }
 
+    } else if (phaseTimer_ <= kTackleEndingLagTime_) {
+
     } else if (phaseTimer_ <= kTackleBackTime_) {
-        float localTimer = (phaseTimer_ - kTackleGoPlayerTime_) * 0.5f;//半減した速さで行う
+        float localTimer = (phaseTimer_ - kTackleEndingLagTime_) * 0.5f;//半減した速さで行う
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(endPos_, startPos_, localTimer);
     } else if (phaseTimer_ <= kTackleInitStartTime_) {
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(bodyPos_.worldTransform_.translate_, startPos_, 0.5f);
-    } else if (phaseTimer_ <= kTackleEndingLagTime_) {
-
-    } else {
+    }else {
         isSelectRandomPhase_ = true;
     }
 
@@ -481,6 +481,8 @@ void Enemy::PlayerHitBack()
 
     if (phaseTimer_ <= kHitBackTime_) {
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(endPos_, startPos_, phaseTimer_);
+    } else if (phaseTimer_ <= kHitBackIntervalTime_) {
+
     } else if (phaseTimer_ <= kPlayerHitBackTime_) {
         bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, startPos_, 0.05f);
     } else {

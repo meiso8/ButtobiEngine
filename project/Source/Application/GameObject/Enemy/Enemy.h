@@ -173,12 +173,13 @@ private:
     const float kTackleInterval_ = kTacklePoyoTime_ + 0.5f;
     //プレイヤーに向けてタックルするタイム
     const float kTackleGoPlayerTime_ = kTackleInterval_ + 0.7f;
+        //タックル終了後　後隙
+    const float kTackleEndingLagTime_ = kTackleGoPlayerTime_ + 1.0f;
     //タックル終了後ちょっと戻るタイム
-    const float kTackleBackTime_ = kTackleGoPlayerTime_ + 1.0f;
+    const float kTackleBackTime_ = kTackleEndingLagTime_ + 1.0f;
     //タックル終了後初期地点に戻るタイム
     const float kTackleInitStartTime_ = kTackleGoPlayerTime_ + 1.0f;
-    //タックル終了後　後隙
-    const float kTackleEndingLagTime_ = kTackleInitStartTime_ + 0.5f;
+
 
 #pragma endregion
 
@@ -186,10 +187,13 @@ private:
     //当たった後ちょっと戻るタイム
     const float kHitBackTime_ = 0.125f;
     //プレイヤーに当たった後初期地点に戻るタイム
-    const float kPlayerHitBackTime_ = 2.0f;
+    const float kHitBackIntervalTime_ = kHitBackTime_+1.0f;
+    //プレイヤーに当たった後初期地点に戻るタイム
+    const float kPlayerHitBackTime_ = kHitBackIntervalTime_+0.875f;
 
     //KnockBack中初期地点に戻るタイム
     const float kKnockBackSpinTime_ = 1.0f;
+
     //KnockBack最大タイム
     const float kKnockBackMaxTime_ = 3.5f;
 
