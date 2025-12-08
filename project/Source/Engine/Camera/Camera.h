@@ -21,7 +21,7 @@ public:
     // 垂直方向視野角
     float fovAngleY_ = kFovAngle_;
     float farZ_ = 1000.0f;
-    float nearZ_ = 0.5f;
+    float nearZ_ = 0.1f;
 
     Vector2 offset_ = { 0.0f };
 

@@ -41,6 +41,19 @@ uint32_t AttackAreaEmitter::EmitCircle(const Vector3& position, float size, floa
 	return UINT32_MAX; // 全て使用中
 }
 
+uint32_t AttackAreaEmitter::EmitSquare(const Vector3& position, const Vector2& dir, const Vector2& size, float duration)
+{
+	Vector3 pos = position;
+	pos.y = 0.0f;
+	for (int i = 0; i < maxEffectNum_; i++) {
+		if (!effectsPtr_[i]->isActive_) {
+			effectsPtr_[i]->SpawnSquare(pos, dir, size, duration);
+			return i;
+		}
+	}
+	return UINT32_MAX; // 全て使用中
+}
+
 void AttackAreaEmitter::DeleteEffect(uint32_t effectID)
 {
 	if (effectID >= maxEffectNum_)return;

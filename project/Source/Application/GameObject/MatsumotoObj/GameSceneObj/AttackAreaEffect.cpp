@@ -80,6 +80,28 @@ void AttackAreaEffect::SpawnCircle(const Vector3& position, float size, float du
 	underBody_.SetTextureHandle(Texture::WHITECIRCLE);
 }
 
+void AttackAreaEffect::SpawnSquare(const Vector3& position, const Vector2& dir, const Vector2& size, float duration)
+{
+	float angle = MY_Utility::GetAngleFromDir(dir);
+
+	isActive_ = true;
+	lifeTimer_ = 0.0f;
+	lifeDuration_ = duration;
+	body_.worldTransform_.translate_ = position;
+	squareSize_ = size;
+	startPosition_ = position;
+
+	type_ = AttackAreaEffectType::SQUARE;
+	body_.SetTextureHandle(Texture::WHITE_1X1);
+	body_.worldTransform_.rotate_.y = angle;
+
+	underBody_.worldTransform_.translate_ = position;
+	underBody_.worldTransform_.translate_.y -= 0.15f;
+	underBody_.worldTransform_.scale_ = { size.x,1.0f,size.y };
+	underBody_.worldTransform_.rotate_.y = angle;
+	underBody_.SetTextureHandle(Texture::WHITE_1X1);
+}
+
 void AttackAreaEffect::CircleUpdate()
 {
 	float scale = lifeTimer_ / lifeDuration_;
@@ -89,4 +111,18 @@ void AttackAreaEffect::CircleUpdate()
 void AttackAreaEffect::SquareUpdate()
 {
 	float scale = lifeTimer_ / lifeDuration_;
+	// Z方向に伸ばす
+	body_.worldTransform_.scale_ = { squareSize_.x, 1.0f, scale * squareSize_.y };
+
+	// ローカルZ軸方向にオフセット
+	float offset = (squareSize_.y * (scale - 1.0f) * 0.5f);
+
+	// 回転を考慮したオフセット計算
+	float angle = body_.worldTransform_.rotate_.y; // ラジアンであることを確認
+	float dx = sinf(angle) * offset;
+	float dz = cosf(angle) * offset;
+
+	body_.worldTransform_.translate_.x = startPosition_.x + dx;
+	body_.worldTransform_.translate_.z = startPosition_.z + dz;
 }
+

@@ -23,4 +23,6 @@ namespace MY_Utility {
 	float Length(const Vector2& vec);
 
 	bool RandomBool(float trueProbability);
+
+	float GetAngleFromDir(const Vector2& dir);
 } 

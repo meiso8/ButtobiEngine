@@ -91,3 +91,11 @@ bool MY_Utility::RandomBool(float trueProbability)
 	float randomValue = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
 	return randomValue < trueProbability;
 }
+
+float MY_Utility::GetAngleFromDir(const Vector2& dir)
+{
+	if (MY_Utility::Length(dir) > 0.0f) {
+		return atan2f(dir.y, dir.x);
+	}
+	return 0.0f;
+}
