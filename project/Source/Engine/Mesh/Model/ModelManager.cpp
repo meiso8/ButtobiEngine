@@ -34,6 +34,7 @@ void ModelManager::LoadAllModel()
     //床と床パーティクル
     LoadModel("Resource/Models/Floor", "Floor.obj", FLOOR);
     LoadModel("Resource/Models/MeltFloor", "MeltFloor.obj", MELT_FLOOR);
+    LoadModel("Resource/Models/FloorFrame", "FloorFrame.obj", FLOOR_FRAME);
     LoadModel("Resource/Models/BetoBetoFloor", "betobeto.obj", BETOBETO_FLOOR);
     LoadModel("Resource/Models/HardFloor", "HardFloor.obj", HARD_FLOOR);
     LoadModel("Resource/Models/ExplosionFloor", "ExplosionFloor.obj", EXPLOTION_FLOOR);

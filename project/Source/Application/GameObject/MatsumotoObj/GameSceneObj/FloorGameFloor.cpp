@@ -18,7 +18,7 @@ FloorGameFloor::FloorGameFloor() {
 	models_ =
 	{
 	  { FloorType::Normal, ModelManager::GetModel(ModelManager::FLOOR)},
-		{ FloorType::Sticky, nullptr },
+		{ FloorType::Sticky,ModelManager::GetModel(ModelManager::FLOOR_FRAME)},
 	  { FloorType::Strong, ModelManager::GetModel(ModelManager::HARD_FLOOR) },
 	  { FloorType::Bomb, ModelManager::GetModel(ModelManager::EXPLOTION_FLOOR) }
 	};
@@ -142,8 +142,9 @@ void FloorGameFloor::NormalFloorUpdate() {
 
 void FloorGameFloor::StickyFloorUpdate() {
 
-	float color = autoSwapTimer_ / autoSwapDuration_;
-	body_.SetColor({ 1.0f,color * downColor_,color * downColor_,1.0f });
+	float t =1.0f- autoSwapTimer_ / autoSwapDuration_;
+	t = std::clamp(t, 0.0f, 1.0f);
+	body_.SetColor({1.0f ,t, t, 1.0f });
 
 	if (autoSwapTimer_ > 0.0f) {
 		autoSwapTimer_ -= 0.016f;
