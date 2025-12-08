@@ -57,7 +57,7 @@ private:
 
     std::array< std::unique_ptr<ParticleEmitter>, kMaxEmitter>particleEmitters_;
 
-    std::unique_ptr<ParticleEmitter> BubbleEmitter_ = nullptr;
+    std::unique_ptr<ParticleEmitter> starEmitter_ = nullptr;
 
 };
 

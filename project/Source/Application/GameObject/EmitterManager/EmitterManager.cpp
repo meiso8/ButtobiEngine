@@ -186,18 +186,22 @@ EmitterManager::EmitterManager(
 
     // ====================================================================
 
-    BubbleEmitter_ = std::make_unique<ParticleEmitter>();
-    BubbleEmitter_->SetName("bubbleParticle");
-    //BubbleEmitter_->emitter_.movement = ParticleMovements::kParticleShock;
-    //BubbleEmitter_->emitter_.radius = 0.1f;
-    BubbleEmitter_->emitter_.count = 5;
-    BubbleEmitter_->emitter_.velocityAABB = { .min = {-2.0f,2.0f,-2.0f},.max = {2.0f,3.0f,2.0f} };
-    BubbleEmitter_->emitter_.transform.scale_ = { 0.4f,0.4f,0.4f };
-    BubbleEmitter_->emitter_.scaleOffset_ = { 0.2f };
-    BubbleEmitter_->emitter_.translateAABB_ = { .min = { -size ,0.0f,-size },.max = {size,0.0f,size} };
+    starEmitter_ = std::make_unique<ParticleEmitter>();
+    starEmitter_->SetName("Star");
+    starEmitter_->emitter_.movement = ParticleMovements::kParticleShock;
+    starEmitter_->emitter_.radius = 0.1f;
+    starEmitter_->emitter_.radiusSpeed = InverseFPS*2.0f;
+    starEmitter_->emitter_.count = 5;
+    starEmitter_->emitter_.color = { 1.0f,1.0f,0.0f,1.0f };
+    starEmitter_->emitter_.transform.translate_.y = 0.2f;
+    starEmitter_->emitter_.lifeTime = 0.5f;
+    //starEmitter_->emitter_.velocityAABB = { .min = {0.0f,2.0f,0.0f},.max = {2.0f,3.0f,2.0f} };
+    starEmitter_->emitter_.transform.scale_ = { 0.5f,0.5f,0.5f };
+    //starEmitter_->emitter_.scaleOffset_ = { 0.2f };
+    starEmitter_->emitter_.translateAABB_ = { .min = { -size ,0.0f,-size },.max = {size,0.0f,size} };
 
 
-    auto& bobble = BubbleEmitter_->GetGroup();
+    auto& bobble = starEmitter_->GetGroup();
     bobble->accelerationField.area = { .min = {-5.0f,0.0f,-5.0f},.max = {5.0f,3.0f,5.0f} };
     bobble->accelerationField.acceleration = { 0.0f,-0.2f,0.0f };
 
@@ -228,8 +232,8 @@ void EmitterManager::Initialize()
     betobetoEmitter_->InitTimer();
     ParticleManager::Reset(betobetoEmitter_->emitter_.name);
 
-    BubbleEmitter_->InitTimer();
-    ParticleManager::Reset(BubbleEmitter_->emitter_.name);
+    starEmitter_->InitTimer();
+    ParticleManager::Reset(starEmitter_->emitter_.name);
 
 }
 
@@ -327,9 +331,9 @@ void EmitterManager::Update(Camera& camera)
     for (auto& floors :floorGameFloorManager_->GetFloor()) {
         for (auto& floor : floors) {
             if (floor->isToStrong_) {
-                BubbleEmitter_->emitter_.transform.Parent(floor->body_.worldTransform_);
-                BubbleEmitter_->UpdateEmitter();
-                BubbleEmitter_->Emit();
+                starEmitter_->emitter_.transform.Parent(floor->body_.worldTransform_);
+                starEmitter_->UpdateEmitter();
+                starEmitter_->Emit();
             }
         }
     }
@@ -360,5 +364,5 @@ void EmitterManager::Debug()
     //DebugUI::CheckParticle(*enemyKnockBackEmitter_, "KnockBack");
     DebugUI::CheckParticle(*leafEmitter_, "leafEmitter");
     DebugUI::CheckParticle(*betobetoEmitter_, "betobetoEmitter");
-    DebugUI::CheckParticle(*BubbleEmitter_, "floorCrashEmitter");
+    DebugUI::CheckParticle(*starEmitter_, "starEmitter");
 }

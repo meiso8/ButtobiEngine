@@ -32,7 +32,7 @@ void Texture::LoadAllTexture() {
     handles[GAUGE02] = Load("Resource/Textures/BossHPGauge02_Pop.png");
 
     handles[PLAYER_WALK_PARTICLE] = Load("Resource/Textures/PlayerWalkParticle_Pop.png");
-    handles[PLAYER_DAMAGE_PARTICLE] = Load("Resource/Textures/PlayerDamageParticle.png");
+    handles[STAR_PARTICLE] = Load("Resource/Textures/PlayerDamageParticle.png");
     handles[ENEMY_ACTION_PARTICLE] = Load("Resource/Textures/EnemyActionParticle.png");
 
     handles[WIND_ATTACK_PARTICLE01] = Load("Resource/Textures/WindAttackParticle01.png");
