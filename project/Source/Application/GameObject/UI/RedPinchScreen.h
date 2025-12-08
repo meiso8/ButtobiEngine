@@ -20,10 +20,10 @@ private:
 	std::unique_ptr<Sprite> sprite_;
 	float timer_ = 0.0f;
 
-	const float kFlashTime_ = 0.7f;
+	const float kFlashTime_ = 0.5f;
 	float flashTimer_;
-	const float kFlashMaxAlpha_ = 0.6f;
-	const float kFlashMinAlpha_ = 0.1f;
+	const float kFlashMaxAlpha_ = 0.4f;
+	const float kFlashMinAlpha_ = 0.05f;
 	bool isFlashing_;
 };
 

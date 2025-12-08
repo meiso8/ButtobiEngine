@@ -37,7 +37,7 @@ private:
 	Force force_;
 
 	int hitCount_;
-	const int maxHitCount_ = 10;
+	const int maxHitCount_ = 5;
 	bool isBreak_;
 
 	float timer_;
