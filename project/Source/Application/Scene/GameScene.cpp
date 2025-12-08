@@ -95,7 +95,7 @@ GameScene::GameScene()
         enemy_->isKnockBack_
     );
 
-    emitterManager_ = std::make_unique<EmitterManager>(*floorGamePlayer_, *enemy_, *enemyShockWaveManager_, *floorBulletManager_);
+    emitterManager_ = std::make_unique<EmitterManager>(*floorGamePlayer_, *enemy_, *enemyShockWaveManager_, *floorBulletManager_,*floorGameFloorManager_);
 
 	
 }
@@ -233,6 +233,8 @@ void GameScene::Draw() {
     floorActionManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
    //透明のため後処理
     enemyShockWaveManager_->Draw(*currentCamera_);
+    //エミッター
+    emitterManager_->Draw();
 
     uiManager_->Draw();
     actionUI_->Draw();
@@ -240,8 +242,7 @@ void GameScene::Draw() {
     gameOverEvent_->Draw();
 
 #pragma endregion
-    //エミッター
-    emitterManager_->Draw();
+
 
 
 

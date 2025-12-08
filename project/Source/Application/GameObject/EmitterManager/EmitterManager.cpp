@@ -2,17 +2,28 @@
 #include"DebugUI.h"
 #include"../MatsumotoObj/GameSceneObj/FloorGamePlayer.h"
 #include"../MatsumotoObj/GameSceneObj/FloorBulletManager.h"
+#include"../MatsumotoObj/GameSceneObj/FloorGameFloorManager.h"
 #include"Enemy/Enemy.h"
 //#include"Enemy/EnemyBombManager.h"
 #include"Input.h"
 #include"Enemy/EnemyShockWaveManager.h"
 #include"Enemy/EnemyShotWaveManager.h"
+#include "MatsumotoObj/GameSceneObj/Data/MapData.h"
 
-EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShockWaveManager& enemyShockWaveManager, FloorBulletManager& floorBulletManager) :player_(&player), enemy_(&enemy), enemyShockWaveManager_(&enemyShockWaveManager), floorBulletManager_(&floorBulletManager)
+EmitterManager::EmitterManager(
+    FloorGamePlayer& player,
+    Enemy& enemy,
+    EnemyShockWaveManager& enemyShockWaveManager,
+    FloorBulletManager& floorBulletManager,
+    FloorGameFloorManager& floorGameFloorManager)
+
+    :player_(&player),
+    enemy_(&enemy),
+    enemyShockWaveManager_(&enemyShockWaveManager),
+    floorBulletManager_(&floorBulletManager),
+    floorGameFloorManager_(&floorGameFloorManager)
 {
-    //パーティクルマネージャーをもらう
-    manager_ = ParticleManager::GetInstance();
-
+    ParticleEmitter::Create();
     // ====================================================================
     //波のエミッター
     for (auto& wave : enemyShockWaveManager_->GetWaves()) {
@@ -27,8 +38,8 @@ EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShock
         newEmitter->emitter_.polarSpeed = 0.0f;
         newEmitter->emitter_.velocityMinMax = { 0.0f,0.0f };
         newEmitter->emitter_.rotateOffset_ = { 0.1f };
-        newEmitter->emitter_.frequency = 0.6f;
-        newEmitter->emitter_.lifeTime = 3.5f;
+        newEmitter->emitter_.frequency = 2.5f;
+        newEmitter->emitter_.lifeTime = 0.5f;
         newEmitter->emitter_.count = 1;
         waveEmitters_.push_back({ wave.get(), std::move(newEmitter) });
     }
@@ -47,8 +58,8 @@ EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShock
         newEmitter->emitter_.polarSpeed = 0.0f;
         newEmitter->emitter_.velocityMinMax = { 0.0f,0.0f };
         newEmitter->emitter_.rotateOffset_ = { 0.1f };
-        newEmitter->emitter_.frequency = 0.6f;
-        newEmitter->emitter_.lifeTime = 2.5f;
+        newEmitter->emitter_.frequency = 2.5f;
+        newEmitter->emitter_.lifeTime = 0.5f;
         newEmitter->emitter_.count = 2;
         waveEmitters_.push_back({ wave.get(), std::move(newEmitter) });
     }
@@ -74,7 +85,7 @@ EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShock
     particleEmitters_[kPlayerWalkEmitter]->emitter_.translateAABB_ = { .min = {-0.5f,-0.5f,-0.5f},.max = {0.5f,0.5f,0.5f} };
     particleEmitters_[kPlayerWalkEmitter]->emitter_.rotateOffset_ = 0.0f;
     particleEmitters_[kPlayerWalkEmitter]->emitter_.frequency = 0.1f;
-    particleEmitters_[kPlayerWalkEmitter]->emitter_.blendMode = kBlendModeSubtract;
+    particleEmitters_[kPlayerWalkEmitter]->emitter_.blendMode = kBlendModeAdd;
     particleEmitters_[kPlayerWalkEmitter]->emitter_.transform.scale_ = { 0.5f,0.5f,0.5f };
     particleEmitters_[kPlayerWalkEmitter]->emitter_.scaleOffset_ = 0.125f;
     // ====================================================================
@@ -91,11 +102,11 @@ EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShock
     particleEmitters_[kPlayerHitEmitter]->emitter_.radius = 0.5f;
     particleEmitters_[kPlayerHitEmitter]->emitter_.radiusSpeed = 0.0f;
     particleEmitters_[kPlayerHitEmitter]->emitter_.radiusSpeedMinMax = { 0.0f,0.0f };
-    particleEmitters_[kPlayerHitEmitter]->emitter_.polarSpeed = InverseFPS * std::numbers::pi_v<float>;
+    particleEmitters_[kPlayerHitEmitter]->emitter_.polarSpeed = InverseFPS * std::numbers::pi_v<float>*2.0f;
     particleEmitters_[kPlayerHitEmitter]->emitter_.polarSpeedMinMax = { 0.0f,0.0f };
-    particleEmitters_[kPlayerHitEmitter]->emitter_.frequency = 0.25f;
-    particleEmitters_[kPlayerHitEmitter]->emitter_.lifeTime = 1.0f;
-    particleEmitters_[kPlayerHitEmitter]->emitter_.blendMode = kBlendModeNormal;
+    particleEmitters_[kPlayerHitEmitter]->emitter_.frequency = 1.0f;
+    particleEmitters_[kPlayerHitEmitter]->emitter_.lifeTime = 3.0f;
+    particleEmitters_[kPlayerHitEmitter]->emitter_.blendMode = kBlendModeAdd;
 
     // ====================================================================
     //敵のヒット
@@ -129,11 +140,11 @@ EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShock
     enemyKnockBackEmitter_->emitter_.radius = 1.0f;
     enemyKnockBackEmitter_->emitter_.radiusSpeed = 0.0f;
     enemyKnockBackEmitter_->emitter_.radiusSpeedMinMax = { 0.0f,0.0f };
-    enemyKnockBackEmitter_->emitter_.polarSpeed = InverseFPS * std::numbers::pi_v<float>;
+    enemyKnockBackEmitter_->emitter_.polarSpeed = InverseFPS * std::numbers::pi_v<float>*2.0f;
     enemyKnockBackEmitter_->emitter_.polarSpeedMinMax = { 0.0f,0.0f };
     enemyKnockBackEmitter_->emitter_.frequency = 0.2f;
     enemyKnockBackEmitter_->emitter_.lifeTime = 1.5f;
-    enemyKnockBackEmitter_->emitter_.blendMode = kBlendModeNormal;
+    enemyKnockBackEmitter_->emitter_.blendMode = kBlendModeAdd;
 
     // ====================================================================
     //葉っぱ
@@ -146,15 +157,33 @@ EmitterManager::EmitterManager(FloorGamePlayer& player, Enemy& enemy, EnemyShock
     leafEmitter_->emitter_.translateAABB_ = { .min = {15.0f,-5.0f,-7.5f},.max = {16.0f,1.5f,7.5f} };
     leafEmitter_->emitter_.rotateOffset_ = 0.0f;
     leafEmitter_->emitter_.frequency = 1.2f;
-    leafEmitter_->emitter_.lifeTime = 8.0f;
+    leafEmitter_->emitter_.lifeTime = 7.0f;
     leafEmitter_->emitter_.blendMode = kBlendModeNormal;
     leafEmitter_->emitter_.scaleOffset_ = 0.2f;
     leafEmitter_->emitter_.rotateOffset_ = 3.14f;
 
     //マネージャーから加速度の数値をもらう
-    auto& leafGroup = manager_->GetParticleGroup(leafEmitter_->emitter_.name);
+    auto& leafGroup = leafEmitter_->GetGroup();
     leafGroup->accelerationField.area = { .min = {-20.0f,-10.0f,-16.0f},.max = {20.0f,10.0f,16.0f} };
     leafGroup->accelerationField.acceleration = { -0.8f, -0.1f,0.0f };
+    // ====================================================================
+
+    //ベトベト床
+    betobetoEmitter_ = std::make_unique<ParticleEmitter>();
+    betobetoEmitter_->SetName("meltFloorParticle");
+    float size = kHalfFloorSize * 0.5f;
+    betobetoEmitter_->emitter_.count = 5;
+    betobetoEmitter_->emitter_.frequency = 0.5f;
+    betobetoEmitter_->emitter_.rotateOffset_ = { 0.0f };
+    betobetoEmitter_->emitter_.velocityMinMax = { .min = {-0.1f},.max = {0.1f} };
+    betobetoEmitter_->emitter_.transform.scale_ = { 0.1f,0.1f,0.1f };
+    betobetoEmitter_->emitter_.scaleOffset_ = { 0.2f };
+    betobetoEmitter_->emitter_.translateAABB_ = { .min = { -size ,0.0f,-size },.max = {size,0.0f,size} };
+
+    auto& melt = betobetoEmitter_->GetGroup();
+    melt->accelerationField.area = { .min = {-5.0f,0.0f,-5.0f},.max = {5.0f,3.0f,5.0f} };
+    melt->accelerationField.acceleration = { 0.0f,1.0f,0.0f };
+
     // ====================================================================
 }
 
@@ -180,6 +209,8 @@ void EmitterManager::Initialize()
     ParticleManager::Reset("windAttackParticle01");
     ParticleManager::Reset("windAttackParticle02");
 
+    betobetoEmitter_->InitTimer();
+    ParticleManager::Reset(betobetoEmitter_->emitter_.name);
 }
 
 
@@ -187,6 +218,8 @@ void EmitterManager::Update(Camera& camera)
 {
 
     if (!player_->IsDead()) {
+
+
         if (player_->isMove_) {
             //自動エミっとしてくれる
             particleEmitters_[kPlayerWalkEmitter]->UpdateTimer();
@@ -195,88 +228,119 @@ void EmitterManager::Update(Camera& camera)
             particleEmitters_[kPlayerWalkEmitter]->InitTimer();
         }
 
-        particleEmitters_[kPlayerWalkEmitter]->Update(camera);
-
+        particleEmitters_[kPlayerWalkEmitter]->UpdateEmitter();
 
         //無敵
-        if (player_->IsInvincible()) {
-            particleEmitters_[kPlayerHitEmitter]->UpdateTimer();
+        if (player_->IsHit()) {
+
+            particleEmitters_[kPlayerHitEmitter]->Emit();
+
         } else {
-            particleEmitters_[kPlayerHitEmitter]->InitTimer();
+           
+            particleEmitters_[kPlayerHitEmitter]->SetTimer();
         }
 
+          //べとべと床接触
+        if (player_->isOnStickyFloor_) {
+            std::pair<int, int> floorIndex = floorGameFloorManager_->GetFloorIndexAtPosition(player_->body_.worldTransform_.translate_);
+            int xIndex = floorIndex.first;
+            int yIndex = floorIndex.second;
+            Vector3 pos = floorGameFloorManager_->GetFloorPos(xIndex, yIndex);
+            pos.y += 1.5f;
+            betobetoEmitter_->emitter_.transform.translate_ = pos;
+            betobetoEmitter_->UpdateTimer();
+            betobetoEmitter_->UpdateEmitter();
+        } else {
+            betobetoEmitter_->InitTimer();
+        }
+    
     } else {
         particleEmitters_[kPlayerHitEmitter]->UpdateTimer();
     }
 
-    particleEmitters_[kPlayerHitEmitter]->Update(camera);
+    particleEmitters_[kPlayerHitEmitter]->UpdateEmitter();
 
     if (!enemy_->IsOverKill()) {
         //敵ヒット
         if (enemy_->IsHit()) {
             particleEmitters_[kEnemyHitEmitter]->Emit();
-            particleEmitters_[kEnemyHitEmitter]->Update(camera);
-        }
-    }
-
-    if (enemy_->phase_ == Enemy::KNOCKBACK) {
-        //isKnockBackEmit_はenemy KnockBackの中に
-        if (enemy_->isKnockBackEmit_) {
-            enemyKnockBackEmitter_->UpdateTimer();
-            enemyKnockBackEmitter_->Update(camera);
-        } else {
-            enemyKnockBackEmitter_->InitTimer();
+      
         }
 
+        particleEmitters_[kEnemyHitEmitter]->UpdateEmitter();
+
+        if (enemy_->phase_ == Enemy::KNOCKBACK) {
+            //isKnockBackEmit_はenemy KnockBackの中に
+            if (enemy_->isKnockBackEmit_) {
+                enemyKnockBackEmitter_->UpdateTimer();
+          
+            } else {
+                enemyKnockBackEmitter_->InitTimer();
+            }
+
+            enemyKnockBackEmitter_->UpdateEmitter();
+        }
+
+      
     }
+
 
     if (enemy_->phase_ == Enemy::SHOCKWAVEATTACK) {
         for (auto& grop : waveEmitters_) {
             if (grop.wave->isActive_) {
                 if (grop.wave->isEmit_) {
                     grop.emitter->emitter_.translateAABB_ = grop.wave->localAABBs_[grop.wave->aabbType_];
+                    grop.emitter->UpdateEmitter();
                     grop.emitter->UpdateTimer();
-                    grop.emitter->Update(camera);
+   
                 } else {
-                    grop.emitter->InitTimer();
+                    grop.emitter->SetTimer();
                 }
+
+            
             }
         }
     }
 
+
     //葉っぱ
     leafEmitter_->UpdateTimer();
-    leafEmitter_->Update(camera);
+    leafEmitter_->UpdateEmitter();
+
+
+    ParticleEmitter::Update(camera);
+
 }
 
 void EmitterManager::Draw()
 {
-    if (enemy_->phase_ == Enemy::SHOCKWAVEATTACK) {
-        for (auto& grop : waveEmitters_) {
-            grop.emitter->Draw();
-        }
-    }
+    //if (enemy_->phase_ == Enemy::SHOCKWAVEATTACK) {
+    //    for (auto& grop : waveEmitters_) {
+    //        grop.emitter->Draw();
+    //    }
+    //}
 
-    for (auto& particleEmitter : particleEmitters_) {
-        particleEmitter->Draw();
-    }
+    //for (auto& particleEmitter : particleEmitters_) {
+    //    particleEmitter->Draw();
+    //}
 
-    if (enemy_->phase_ == Enemy::KNOCKBACK) {
-        enemyKnockBackEmitter_->Draw();
-    }
+    //if (enemy_->phase_ == Enemy::KNOCKBACK) {
+    //    enemyKnockBackEmitter_->Draw();
+    //}
 
-    leafEmitter_->Draw();
+    ParticleEmitter::Draw();
 }
 
 void EmitterManager::Debug()
 {
     //ここでデバック
 
-    DebugUI::CheckParticle(*particleEmitters_[kPlayerHitEmitter], "PlayerEmitter");
-    DebugUI::CheckParticle(*particleEmitters_[kEnemyHitEmitter], "EnemyEmitter");
-    DebugUI::CheckParticle(*particleEmitters_[kPlayerWalkEmitter], "PlayerEmitter");
+    //DebugUI::CheckParticle(*particleEmitters_[kPlayerHitEmitter], "PlayerEmitter");
+    //DebugUI::CheckParticle(*particleEmitters_[kEnemyHitEmitter], "EnemyEmitter");
+    //DebugUI::CheckParticle(*particleEmitters_[kPlayerWalkEmitter], "PlayerEmitter");
 
-    DebugUI::CheckParticle(*waveEmitters_[2].emitter, "waveEmitter2");
-    DebugUI::CheckParticle(*enemyKnockBackEmitter_, "KnockBack");
+    //DebugUI::CheckParticle(*waveEmitters_[2].emitter, "waveEmitter2");
+    //DebugUI::CheckParticle(*enemyKnockBackEmitter_, "KnockBack");
     DebugUI::CheckParticle(*leafEmitter_, "leafEmitter");
+    DebugUI::CheckParticle(*betobetoEmitter_, "betobetoEmitter");
 }

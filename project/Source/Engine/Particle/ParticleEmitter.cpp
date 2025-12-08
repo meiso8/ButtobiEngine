@@ -2,11 +2,12 @@
 #include"Input.h"
 #include"Camera.h"
 
+ ParticleManager* ParticleEmitter::particleManager_ = nullptr;
+
 ParticleEmitter::ParticleEmitter()
 {
     Initialize();
-    particleManager_ = ParticleManager::GetInstance();
-    particleManager_->Create();
+
 }
 void ParticleEmitter::Initialize()
 {
@@ -95,9 +96,29 @@ void ParticleEmitter::InitTimer()
 {
     emitter_.frequencyTime = 0.0f;
 }
-void ParticleEmitter::Update(Camera& camera)
+
+void ParticleEmitter::SetTimer()
+{
+    emitter_.frequencyTime = emitter_.frequency;
+}
+void ParticleEmitter::UpdateEmitter()
 {
     WorldTransformUpdate(emitter_.transform);
+}
+
+std::unique_ptr <ParticleGroup>& ParticleEmitter::GetGroup()
+{
+    return particleManager_->GetParticleGroup(emitter_.name);
+}
+
+void ParticleEmitter::Create()
+{
+    particleManager_ = ParticleManager::GetInstance();
+    particleManager_->Create();
+}
+
+void ParticleEmitter::Update(Camera& camera)
+{
     particleManager_->Update(camera);
 }
 
@@ -108,7 +129,7 @@ void ParticleEmitter::Emit()
 
 void ParticleEmitter::Draw()
 {
-    particleManager_->Draw(emitter_.blendMode);
+    particleManager_->Draw();
 }
 
 void ParticleEmitter::SetParent(WorldTransform& parent)

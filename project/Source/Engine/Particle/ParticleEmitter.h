@@ -37,7 +37,7 @@ struct Emitter
 class ParticleEmitter
 {
 private:
-    ParticleManager* particleManager_ = nullptr;
+   static ParticleManager* particleManager_;
 public:
     Emitter emitter_{};
 public:
@@ -63,13 +63,21 @@ public:
    const MinMax& radiusSpeedMinMax,
    const float& polarSpeed,
    const MinMax& polarSpeedMinMax);
+
     void UpdateTimer();
     void InitTimer();
-    void Update(Camera& camera);
+    void SetTimer();
+    void UpdateEmitter();
     void Emit();
-    void Draw();
+
+
     void SetName(const std::string name) { emitter_.name = name; }
     void SetMovement(ParticleMovements& movement) { emitter_.movement; }
     void SetParent(WorldTransform& parent);
+
+    std::unique_ptr <ParticleGroup>& GetGroup();
+    static void Create();
+    static void Update(Camera& camera);
+    static void Draw();
 };
 
