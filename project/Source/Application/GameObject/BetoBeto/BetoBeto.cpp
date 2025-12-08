@@ -20,6 +20,8 @@ BetoBeto::BetoBeto()
     position_.GetWaveData(1).amplitude = 0.2f;
     position_.GetWaveData(1).frequency = 20;
     position_.GetWaveData(1).direction = { 0.0f,0.0f,1.0f };
+
+    position_.SetColor({ 1.0f,0.75f,0.75f,1.0f });
 }
 
 void BetoBeto::Initialize()
@@ -43,5 +45,5 @@ void BetoBeto::Update()
 void BetoBeto::Draw(Camera& camera)
 {
     //position_.SetLightMode(kLightModeLReflectance);
-    position_.Draw(camera, kBlendModeNormal, kCullModeNone);
+    position_.Draw(camera, kBlendModeAdd, kCullModeNone);
 }
