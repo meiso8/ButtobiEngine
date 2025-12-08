@@ -340,6 +340,8 @@ void Enemy::OnCollision(Collider* collider)
 
         VibrateManager::SetTime(0.5f, 2000, 2000);
 
+        damageStruct_.isHit = true;
+
         if (damageStruct_.hps.hp > 0) {
             totalHPs_.hp -= damageStruct_.hps.hpDecrease;
             damageStruct_.hps.hp -= damageStruct_.hps.hpDecrease;
