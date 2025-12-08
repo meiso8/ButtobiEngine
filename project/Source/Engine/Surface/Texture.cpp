@@ -24,6 +24,7 @@ void Texture::LoadAllTexture() {
 
     handles.resize(TEXTURES);
     handles[WHITE_1X1] = Load("Resource/Textures/white1x1.png");
+	handles[WHITECIRCLE] = Load("Resource/Textures/WhiteCircle.png");
     handles[UV_CHECKER] = Load("Resource/Textures/uvChecker.png");
     handles[NUMBERS] = Load("Resource/Textures/Numbers_Pop.png");
 

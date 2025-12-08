@@ -19,6 +19,7 @@ class Texture
 public:
     enum TEXTURE_HANDLE {
         WHITE_1X1,
+        WHITECIRCLE,
         UV_CHECKER,
         NUMBERS,
 
