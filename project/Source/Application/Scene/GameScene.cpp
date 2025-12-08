@@ -213,6 +213,16 @@ void GameScene::Draw() {
 #endif
 
 #pragma region // オブジェクト描画
+
+    ground_->Draw(*currentCamera_);
+    tree_->Draw(*currentCamera_);
+    betoBeto_->Draw(*currentCamera_);
+    nest_->Draw(*currentCamera_);
+
+    enemy_->Draw(*currentCamera_);
+    enemyBulletManager_->Draw(*currentCamera_);
+    enemyBombManager_->Draw(*currentCamera_);
+
     floorGamePlayer_->Draw(*currentCamera_);
     floorGameFloorManager_->Draw(*currentCamera_);
     floorBulletManager_->Draw(*currentCamera_);
@@ -220,18 +230,13 @@ void GameScene::Draw() {
     playerFloorStripManager_->Draw(*currentCamera_);
 	HealItemSpawner::Instance().Draw(*currentCamera_);
     floorActionManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+   //透明のため後処理
+    enemyShockWaveManager_->Draw(*currentCamera_);
+
     actionUI_->Draw();
     letterboxBars_->Draw();
     gameOverEvent_->Draw();
-    enemy_->Draw(*currentCamera_);
-    enemyBulletManager_->Draw(*currentCamera_);
-    enemyBombManager_->Draw(*currentCamera_);
-    enemyShockWaveManager_->Draw(*currentCamera_);
 
-    tree_->Draw(*currentCamera_);
-    ground_->Draw(*currentCamera_);
-    nest_->Draw(*currentCamera_);
-    betoBeto_->Draw(*currentCamera_);
 #pragma endregion
     //エミッター
     emitterManager_->Draw();
@@ -460,6 +465,18 @@ void GameScene::CheckAllCollision()
         collisionManager_->AddCollider(floorGamePlayer_.get());
         //敵のくちばし
         collisionManager_->AddCollider(enemy_->enemyBeak_.get());
+
+        for (auto& bullet : enemyBulletManager_->GetBullets()) {
+            if (bullet->isActive_) { collisionManager_->AddCollider(bullet.get()); }
+        }
+
+        for (auto& bomb : enemyBombManager_->GetBombs()) {
+            if (bomb->isActive_) { collisionManager_->AddCollider(bomb.get()); }
+        }
+
+        for (auto& wave : enemyShockWaveManager_->GetWaves()) {
+            if (wave->isActive_) { collisionManager_->AddCollider(wave.get()); }
+        }
     }
     collisionManager_->AddCollider(enemy_.get());
 
@@ -468,18 +485,6 @@ void GameScene::CheckAllCollision()
 
     for (auto& bullet : floorBulletManager_->GetBullets()) {
         if (bullet->isActive_) { collisionManager_->AddCollider(bullet.get()); }
-    }
-
-    for (auto& bullet : enemyBulletManager_->GetBullets()) {
-        if (bullet->isActive_) { collisionManager_->AddCollider(bullet.get()); }
-    }
-
-    for (auto& bomb : enemyBombManager_->GetBombs()) {
-        if (bomb->isActive_) { collisionManager_->AddCollider(bomb.get()); }
-    }
-
-    for (auto& wave : enemyShockWaveManager_->GetWaves()) {
-        if (wave->isActive_) { collisionManager_->AddCollider(wave.get()); }
     }
 
     collisionManager_->CheckAllCollisions();
