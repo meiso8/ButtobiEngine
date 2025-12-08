@@ -70,7 +70,7 @@ struct ParticleGroup {
     const WorldTransform* parentPos_ = nullptr;
     ParticleMovements movement;
     AccelerationField accelerationField;
-    BlendMode blendMode = BlendMode::kBlendModeAdd
+    BlendMode blendMode = BlendMode::kBlendModeAdd;
 };
 
 std::list<SphericalMove> EmitCoordinate(uint32_t count, const float& radius, const float& radiusSpeed, const float& polarSpeed, const MinMax& polarSpeedMinMax, const MinMax& radiusSpeedMinMax);
@@ -129,7 +129,7 @@ public:
     void CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle, const bool& useModel = false, const ModelManager::MODEL_HANDLE& modelHandle = ModelManager::MODEL_HANDLE::BOX);
 
     void Update(Camera& camera);
-    void Draw(uint32_t blendMode = BlendMode::kBlendModeAdd);
+    void Draw();
     void InitAccelerationField(ParticleGroup& group);
     void Finalize();
 

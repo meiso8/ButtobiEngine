@@ -59,6 +59,7 @@ public:
 	PlayerAnimationState animationState_ = PlayerAnimationState::Idle;
 	bool isMove_;
 
+	Vector3& GetStickyFloorPos();
 private:
 	void Move();
 	void LookMoveDir();

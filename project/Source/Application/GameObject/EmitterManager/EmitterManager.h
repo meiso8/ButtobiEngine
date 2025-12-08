@@ -10,6 +10,7 @@ class EnemyShockWaveManager;
 class EnemyShockWave;
 class FloorBullet;
 class FloorBulletManager;
+class FloorGameFloorManager;
 struct WaveEmitterPair {
     EnemyShockWave* wave;
     std::unique_ptr<ParticleEmitter> emitter;
@@ -24,7 +25,7 @@ struct FloorBulletEmitterPair {
 class EmitterManager
 {
 public:
-    EmitterManager( FloorGamePlayer& player, Enemy&enemy, EnemyShockWaveManager& enemyShockWaveManager, FloorBulletManager& floorBulletManager);
+    EmitterManager( FloorGamePlayer& player, Enemy&enemy, EnemyShockWaveManager& enemyShockWaveManager, FloorBulletManager& floorBulletManager, FloorGameFloorManager& floorGameFloorManager);
     void Initialize();
     void Update(Camera& camera);
     void Draw();
@@ -34,11 +35,12 @@ private:
 
     std::vector<WaveEmitterPair> waveEmitters_;
     //std::vector<FloorBulletEmitterPair> floorBulletEmitters_;
-    ParticleManager* manager_ = nullptr;
+
     FloorGamePlayer* player_ = nullptr;
     Enemy* enemy_ = nullptr;
-    EnemyShockWaveManager* enemyShockWaveManager_;
-    FloorBulletManager* floorBulletManager_;
+    EnemyShockWaveManager* enemyShockWaveManager_ = nullptr;
+    FloorBulletManager* floorBulletManager_ = nullptr;
+    FloorGameFloorManager* floorGameFloorManager_ = nullptr;
     enum EmitterType {
         kPlayerWalkEmitter,
         kPlayerHitEmitter,
@@ -49,7 +51,13 @@ private:
     std::unique_ptr<ParticleEmitter> leafEmitter_ = nullptr;
 
     std::unique_ptr<ParticleEmitter> enemyKnockBackEmitter_ = nullptr;
+
+
+    std::unique_ptr<ParticleEmitter> betobetoEmitter_ = nullptr;
+
     //std::vector <std::unique_ptr<ParticleEmitter>> bombEmitter_;
     std::array< std::unique_ptr<ParticleEmitter>, kMaxEmitter>particleEmitters_;
+
+
 };
 

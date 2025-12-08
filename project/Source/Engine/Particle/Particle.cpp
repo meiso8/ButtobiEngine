@@ -23,7 +23,7 @@ std::unordered_map<std::string, std::unique_ptr <ParticleGroup> >ParticleManager
 void ParticleManager::CreateAll()
 {
     CreateParticleGroup("enemyHitParticle", Texture::ENEMY_ACTION_PARTICLE/*, true, ModelManager::BOX*/);
-    //CreateParticleGroup("enemyWingParticle", Texture::PLAYER_WALK_PARTICLE);
+
     CreateParticleGroup("HitParticle", Texture::PLAYER_DAMAGE_PARTICLE);
     CreateParticleGroup("playerWalkParticle", Texture::PLAYER_WALK_PARTICLE);
 
@@ -35,6 +35,9 @@ void ParticleManager::CreateAll()
     CreateParticleGroup("leafParticle", Texture::LEAF_PARTICLE);
     //床
     CreateParticleGroup("floorParticle", Texture::FLOOR_PARTICLE);
+
+    //ベトベト床
+    CreateParticleGroup("meltFloorParticle", Texture::MELT_FLOOR_PARTICLE);
 }
 
 // ==========================================================================================================
@@ -74,7 +77,8 @@ Particle MakeNewParticle(const MinMax& velocityMinMax, const WorldTransform& tra
     particle.velocity = { Random::Get(), Random::Get(), Random::Get() };
 
     Random::SetMinMax(-scaleOffset, scaleOffset);
-    particle.transform.scale = transform.scale_ + Vector3{ Random::Get(), Random::Get(), Random::Get() };
+    float scale = Random::Get();
+    particle.transform.scale = transform.scale_ + Vector3{ scale ,scale, scale };
     
     Vector3 newTransform = transform.GetWorldPosition();
     Random::SetMinMax(translateAABB.min.x, translateAABB.max.x);
@@ -198,6 +202,8 @@ void ParticleManager::Emit(Emitter& emitter)
 
     particleGroups[emitter.name]->movement = emitter.movement;
     particleGroups[emitter.name]->parentPos_ = &emitter.transform;
+
+    particleGroups[emitter.name]->blendMode = emitter.blendMode;
 
     if (emitter.movement == kParticleSphere|| emitter.movement == kParticleShock) {
         particleGroups[emitter.name]->sphericalCoordinates.splice(particleGroups[emitter.name]->sphericalCoordinates.end(), EmitCoordinate(emitter.count, emitter.radius, emitter.radiusSpeed, emitter.polarSpeed, emitter.polarSpeedMinMax, emitter.radiusSpeedMinMax));
@@ -353,14 +359,14 @@ void ParticleManager::IsCollisionFieldArea(Particle& particleItr, ParticleGroup&
 }
 
 
-void ParticleManager::Draw(uint32_t blendMode)
+void ParticleManager::Draw()
 {
     for (const auto& [name, group] : particleGroups) {
 
         if (group->numInstance > 0) {
             //rootSignatureの設定
             commandList_->SetGraphicsRootSignature(rootSignature_->GetRootSignature(RootSignature::PARTICLE));
-            commandList_->SetPipelineState(PSO::GetGraphicsPipelineStateParticle(blendMode).Get());
+            commandList_->SetPipelineState(PSO::GetGraphicsPipelineStateParticle(group->blendMode).Get());
             //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
             commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
