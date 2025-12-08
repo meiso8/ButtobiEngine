@@ -24,7 +24,7 @@ void ParticleManager::CreateAll()
 {
     CreateParticleGroup("enemyHitParticle", Texture::ENEMY_ACTION_PARTICLE/*, true, ModelManager::BOX*/);
 
-    CreateParticleGroup("HitParticle", Texture::PLAYER_DAMAGE_PARTICLE);
+    CreateParticleGroup("HitParticle", Texture::STAR_PARTICLE);
     CreateParticleGroup("playerWalkParticle", Texture::PLAYER_WALK_PARTICLE);
 
     //CreateParticleGroup("floorBombBlastParticle", Texture::PLAYER_WALK_PARTICLE);
@@ -40,8 +40,8 @@ void ParticleManager::CreateAll()
     CreateParticleGroup("meltFloorParticle", Texture::MELT_FLOOR_PARTICLE);
 
 
-    //泡パーティクル
-    CreateParticleGroup("bubbleParticle", Texture::BUBBLE_PARTICLE);
+    //ほしパーティクル
+    CreateParticleGroup("Star", Texture::STAR_PARTICLE);
 }
 
 // ==========================================================================================================
