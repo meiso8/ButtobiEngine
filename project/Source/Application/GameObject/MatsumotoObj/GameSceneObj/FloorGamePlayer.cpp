@@ -65,32 +65,9 @@ void FloorGamePlayer::OnCollision(Collider* collider)
         }
     }
 
-
-
-    //if (collider->GetCollisionAttribute() == kCollisionEnemy ||
-    //    collider->GetCollisionAttribute() == kCollisionEnemyBullet|| collider->GetCollisionAttribute() == kCollisionEnemyWave) {
-    //    //デバック用
-    //    OnCollisionCollider();
-    //    HitUpdate();
-
-    //}
-
-
-    if (collider->GetCollisionAttribute() == kCollisionEnemy ) {
-        //デバック用
-        OnCollisionCollider();
-        HitUpdate();
-
-    }
-
-    if (collider->GetCollisionAttribute() == kCollisionEnemyBullet) {
-        //デバック用
-        OnCollisionCollider();
-        HitUpdate();
-
-    }
-
-    if (collider->GetCollisionAttribute() == kCollisionEnemyWave) {
+    if (collider->GetCollisionAttribute() == kCollisionEnemy ||
+        collider->GetCollisionAttribute() == kCollisionEnemyBullet|| 
+        collider->GetCollisionAttribute() == kCollisionEnemyWave) {
         //デバック用
         OnCollisionCollider();
         HitUpdate();
@@ -390,7 +367,7 @@ void FloorGamePlayer::HitUpdate()
 
     damageStruct_.isHit = true;
     damageStruct_.isInvincible = true;
-    Sound::PlaySE(Sound::kPlayerDamage);
+     Sound::PlaySE(Sound::kPlayerDamage);
     VibrateManager::SetTime(1.0f, 1000, 1000);
     damageStruct_.flashTimer = damageStruct_.invincibilityTime;
     //hpを減らす
