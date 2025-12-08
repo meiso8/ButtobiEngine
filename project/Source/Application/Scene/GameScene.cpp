@@ -240,13 +240,14 @@ void GameScene::Draw() {
     enemyShockWaveManager_->Draw(*currentCamera_);
     //エミッター
     emitterManager_->Draw();
+    AttackAreaEmitter::GetInstance().Draw(*currentCamera_);
 
     uiManager_->Draw();
     actionUI_->Draw();
     letterboxBars_->Draw();
     gameOverEvent_->Draw();
     
-	AttackAreaEmitter::GetInstance().Draw(*currentCamera_);
+	
 #pragma endregion
 
 
