@@ -51,7 +51,7 @@ EnemyShotWaveManager::EnemyShotWaveManager(Enemy* enemy, EnemyShockWaveManager* 
 
     enemyPoses_[LEFT] = { -4.0f - offset_,enemyPosY_,0.0f };
     enemyPoses_[RIGHT] = { 4.0f + offset_,enemyPosY_,0.0f };
-    enemyPoses_[BACK] = Vector3{ 0.0f, enemyPosY_, offset_ + 1.0f };
+    enemyPoses_[BACK] = Vector3{ 0.0f, enemyPosY_, offset_ + 4.0f };
 
 }
 
