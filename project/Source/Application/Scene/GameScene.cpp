@@ -234,6 +234,7 @@ void GameScene::Draw() {
    //透明のため後処理
     enemyShockWaveManager_->Draw(*currentCamera_);
 
+    uiManager_->Draw();
     actionUI_->Draw();
     letterboxBars_->Draw();
     gameOverEvent_->Draw();
@@ -242,7 +243,7 @@ void GameScene::Draw() {
     //エミッター
     emitterManager_->Draw();
 
-    uiManager_->Draw();
+
 
     //シーン遷移を描画する
     sceneChange_->Draw();

@@ -37,6 +37,7 @@ UIManager::UIManager(HPs& enemyHp,HPs& enemyTotalHp, HPs& playerHp,bool& isPlaye
 
     redPinchScreen = std::make_unique<RedPinchScreen>();
     redPinchScreen->SetHitPtr(isPlayerHit);
+    redPinchScreen->hpPtr_ = &playerHp;
 }
 
 void UIManager::Initialize()
@@ -72,13 +73,16 @@ void UIManager::Update()
 
 void UIManager::Draw()
 {
+
+    redPinchScreen->Draw();
+
     for (const auto& [type, gage] : hpGages_) {
         gage->Draw();
     }
 
     playerHpIcon_->Draw();
     enemyHpIcon_->Draw();
-    redPinchScreen->Draw();
+
 
     pauseScreen_->Draw();
 }
