@@ -101,13 +101,14 @@ EmitterManager::EmitterManager(
 	particleEmitters_[kPlayerHitEmitter]->emitter_.transform.scale_ = { 0.5f,0.5f,0.5f };
 	particleEmitters_[kPlayerHitEmitter]->emitter_.count = 3;
 	particleEmitters_[kPlayerHitEmitter]->emitter_.movement = ParticleMovements::kParticleSphere;
-	particleEmitters_[kPlayerHitEmitter]->emitter_.radius = 0.5f;
+	particleEmitters_[kPlayerHitEmitter]->emitter_.radius = 0.55f;
 	particleEmitters_[kPlayerHitEmitter]->emitter_.radiusSpeed = 0.0f;
 	particleEmitters_[kPlayerHitEmitter]->emitter_.radiusSpeedMinMax = { 0.0f,0.0f };
 	particleEmitters_[kPlayerHitEmitter]->emitter_.polarSpeed = InverseFPS * std::numbers::pi_v<float>*2.0f;
 	particleEmitters_[kPlayerHitEmitter]->emitter_.polarSpeedMinMax = { 0.0f,0.0f };
 	particleEmitters_[kPlayerHitEmitter]->emitter_.frequency = 1.0f;
 	particleEmitters_[kPlayerHitEmitter]->emitter_.lifeTime = 3.0f;
+	particleEmitters_[kPlayerHitEmitter]->emitter_.color = { 1.0f,1.0f,0.0f,1.0f };
 	particleEmitters_[kPlayerHitEmitter]->emitter_.blendMode = kBlendModeAdd;
 
 	// ====================================================================
@@ -118,11 +119,11 @@ EmitterManager::EmitterManager(
 	particleEmitters_[kEnemyHitEmitter]->emitter_.transform.translate_ = { 0.0f,-0.75f,0.0f };
 	particleEmitters_[kEnemyHitEmitter]->emitter_.count = 16;
 	particleEmitters_[kEnemyHitEmitter]->emitter_.movement = ParticleMovements::kParticleShock;
-	particleEmitters_[kEnemyHitEmitter]->emitter_.radius = 2.0f;
-	particleEmitters_[kEnemyHitEmitter]->emitter_.radiusSpeed = InverseFPS;
+	particleEmitters_[kEnemyHitEmitter]->emitter_.radius = 1.8f;
+	particleEmitters_[kEnemyHitEmitter]->emitter_.radiusSpeed = InverseFPS * 2.5f;
 	particleEmitters_[kEnemyHitEmitter]->emitter_.rotateOffset_ = 3.14f;
 	particleEmitters_[kEnemyHitEmitter]->emitter_.frequency = 0.3f;
-	particleEmitters_[kEnemyHitEmitter]->emitter_.lifeTime = 0.7f;
+	particleEmitters_[kEnemyHitEmitter]->emitter_.lifeTime = 0.3f;
 	particleEmitters_[kEnemyHitEmitter]->emitter_.blendMode = kBlendModeNormal;
 	particleEmitters_[kEnemyHitEmitter]->emitter_.polarSpeedMinMax = { 0.0f,0.0f };
 	particleEmitters_[kEnemyHitEmitter]->emitter_.velocityAABB = { .min = {-1.0f,-1.0f,-1.0f},.max = {1.0f,1.0f,1.0f} };
