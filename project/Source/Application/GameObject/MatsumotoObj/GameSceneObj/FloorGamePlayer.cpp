@@ -15,6 +15,8 @@
 #include "MatsumotoObj/KeyBindConfig.h"
 #include "MatsumotoObj/GameSceneObj/Data/MapData.h"
 
+#include "MatsumotoObj/GameSceneObj/AttackAreaEmitter.h"
+
 FloorGamePlayer::FloorGamePlayer() {
     body_.Create();
     headObject_.Create();

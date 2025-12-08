@@ -19,7 +19,7 @@ StrippedFloor::StrippedFloor() {
 	type_ = FloorType::Normal;
 	requestType_ = FloorType::Normal;
 	body_.SetMesh(models_[type_]);
-	body_.SetColor({ 1.0f,1.0f,1.0f,0.7f });
+	body_.SetColor({ 1.0f,1.0f,1.0f,0.85f });
 
 	isActive_ = false;
 

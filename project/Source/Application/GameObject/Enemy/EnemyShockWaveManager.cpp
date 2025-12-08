@@ -1,4 +1,5 @@
 #include "EnemyShockWaveManager.h"
+#include "MatsumotoObj/GameSceneObj/AttackAreaEmitter.h"
 
 EnemyShockWaveManager::EnemyShockWaveManager() {
     for (int i = 0; i < kMaxWaves; i++) {
@@ -35,6 +36,10 @@ void EnemyShockWaveManager::ShotWave(const Vector3& startPos, const Vector3& end
     for (auto& wave : waves_) {
         if (!wave->isActive_) {
             wave->Shot(startPos, endPos, type);
+			AttackAreaEmitter::GetInstance().EmitSquareForm(
+                startPos,
+				Normalize(Vector2(endPos.z - startPos.z, endPos.x - startPos.x)),
+                Vector2(1.5f, Length((endPos - startPos))), 2.5f);
             break;
         }
     }

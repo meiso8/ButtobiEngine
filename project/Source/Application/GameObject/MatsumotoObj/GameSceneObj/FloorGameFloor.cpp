@@ -11,6 +11,8 @@
 #include "MatsumotoObj/GameSceneObj/Data/MapData.h"
 #include "MatsumotoObj/MY_Utility.h"
 
+#include "MatsumotoObj/GameSceneObj/AttackAreaEmitter.h"
+
 FloorGameFloor::FloorGameFloor() {
 	body_.Create();
 
@@ -56,6 +58,7 @@ void FloorGameFloor::Initialize() {
 	isExploded_ = false;
 	isToStrong_ = false;
 	//body_.InitWaveData();
+	attackAreaEffectID_ = UINT32_MAX;
 }
 
 void FloorGameFloor::Update() {
@@ -94,6 +97,11 @@ void FloorGameFloor::Draw(Camera& camera) {
 }
 
 void FloorGameFloor::SwapFloorType(FloorType type) {
+	if (floorType_ == FloorType::Bomb || type != FloorType::Bomb) {
+		AttackAreaEmitter::GetInstance().DeleteEffect(attackAreaEffectID_);
+		attackAreaEffectID_ = UINT32_MAX;
+	}
+
 	prevFloorType_ = floorType_;
 	floorType_ = type;
 	
@@ -140,6 +148,7 @@ void FloorGameFloor::OnCollision(Collider* collider) {
 	}
 	if (collider->GetCollisionAttribute() == kCollisionEnemyBomb) {
 		SwapFloorType(FloorType::Bomb);
+		attackAreaEffectID_ = AttackAreaEmitter::GetInstance().EmitCircle(body_.worldTransform_.GetWorldPosition(), 3.0f, autoSwapDuration_);
 	}
 }
 
@@ -188,6 +197,7 @@ void FloorGameFloor::BombFloorUpdate() {
 		SwapFloorType(nextFloorType_);
 		Sound::PlaySE(Sound::kExplosion);
 		isExploded_ = true;
+
 	}
 
 	float rotateSpeed = 1.0f + (1.0f - color) * 5.0f;

@@ -134,6 +134,9 @@
     <ClCompile Include="Source\Application\GameObject\PlayerDirectionSpotLight.cpp" />
     <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBeak.cpp" />
     <ClCompile Include="Source\Application\GameObject\BetoBeto\BetoBeto.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\AttackAreaEffect.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\AttackAreaEmitter.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\SceneStaticClassManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\GameObject\UI\PauseScreen.h" />
@@ -293,6 +296,9 @@
     <ClInclude Include="Source\Application\GameObject\PlayerDirectionSpotLight.h" />
     <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBeak.h" />
     <ClInclude Include="Source\Application\GameObject\BetoBeto\BetoBeto.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\AttackAreaEffect.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\AttackAreaEmitter.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\SceneStaticClassManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="externals\assimp\lib\Debug\assimp-vc143-mdd.lib" />

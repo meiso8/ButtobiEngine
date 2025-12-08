@@ -10,9 +10,11 @@ void CameraController::Update()
 {
 
     UpdateShakeTimer();
+
 	UpdateFocusTarget();
 	UpdateEnemyLethal();
 	UpdateOverheadView();
+	
 
     camera_->UpdateMatrix();
 }
@@ -55,7 +57,9 @@ void CameraController::ResetFocusTarget() {
 
 void CameraController::UpdateFocusTarget() {
 	if (!isFocusTarget_ || !focusTargetPos_) {
-		camera_->rotate_ = MY_Utility::SimpleEaseIn(camera_->rotate_, cameraDefaultTransform_.rotate, 0.1f);
+		if (!isEnemyLethal_) {
+			camera_->rotate_ = MY_Utility::SimpleEaseIn(camera_->rotate_, cameraDefaultTransform_.rotate, 0.1f);
+		}
         camera_->fovAngleY_ = MY_Utility::SimpleEaseIn(camera_->fovAngleY_, 45.0f * 3.141592654f / 180.0f, 0.1f);
 		return;
 	}
@@ -67,13 +71,19 @@ void CameraController::UpdateFocusTarget() {
 void CameraController::StartOverheadView()
 {
 	isOverheadView_ = true;
+	isFocusTarget_ = false;
 }
 
 void CameraController::UpdateOverheadView()
 {
 	if (!isOverheadView_) {
-		camera_->rotate_ = MY_Utility::SimpleEaseIn(camera_->rotate_, cameraDefaultTransform_.rotate, 0.1f);
-		camera_->translate_ = MY_Utility::SimpleEaseIn(camera_->translate_, cameraDefaultTransform_.translate, 0.1f);
+		if (!isFocusTarget_&& !isEnemyLethal_) {
+			camera_->rotate_ = MY_Utility::SimpleEaseIn(camera_->rotate_, cameraDefaultTransform_.rotate, 0.1f);
+		}
+		if (!isEnemyLethal_) {
+			camera_->translate_ = MY_Utility::SimpleEaseIn(camera_->translate_, cameraDefaultTransform_.translate, 0.1f);
+		}
+		
 		return;
 	}
 	camera_->rotate_.x = MY_Utility::SimpleEaseIn(camera_->rotate_.x, 1.68f, 0.1f);
@@ -89,15 +99,19 @@ void CameraController::EndOverheadView()
 void CameraController::StartEnemyLethal() {
 	isEnemyLethal_ = true;
 	isOverheadView_ = false;
+	isFocusTarget_ = false;
 }
 
 void CameraController::UpdateEnemyLethal() {
 	if (!isEnemyLethal_) {
 		return;
 	}
-    camera_->rotate_.x = MY_Utility::SimpleEaseIn(camera_->rotate_.x, -0.2f, 0.1f);
+	if (!isFocusTarget_) {
+		camera_->rotate_.x = MY_Utility::SimpleEaseIn(camera_->rotate_.x, 0.2f, 0.1f);
+	}
+    
 	camera_->translate_.y = MY_Utility::SimpleEaseIn(camera_->translate_.y, 5.0f, 0.1f);
-    camera_->translate_.z = MY_Utility::SimpleEaseIn(camera_->translate_.z, -10.0f, 0.1f);
+    camera_->translate_.z = MY_Utility::SimpleEaseIn(camera_->translate_.z, -15.0f, 0.1f);
 }
 
 void CameraController::EndEnemyLethal() {

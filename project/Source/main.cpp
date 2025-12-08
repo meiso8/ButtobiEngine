@@ -8,6 +8,8 @@
 #include"Lights/DirectionalLightManager.h"
 #include"MakeMatrix.h"
 
+#include "MatsumotoObj/SceneStaticClassManager.h"
+
 #define WIN_WIDTH 1280
 #define WIN_HEIGHT 720
 
@@ -34,10 +36,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     KeyBindConfig::Instance();
 	// * ラッパークラスここまで * //
 
+    // 松本さんのシングルトンクラス初期化
+	MatsumotoSceneStaticClass::Initialize();
+
     // =============================================
     // シーンの生成
     // =============================================
-
     std::map<const std::string, std::unique_ptr<SceneManager>> scenes;
     scenes["Title"] = std::make_unique < TitleScene>();
     scenes["Game"] = std::make_unique < GameScene>();
@@ -130,6 +134,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         // エンジンの描画後処理
         myEngine->PostCommandSet();
     }
+
+    // 松本さんのシングルトンクラス終了処理
+    MatsumotoSceneStaticClass::Finalize();
 
     // エンジンの終了
     myEngine->Finalize();

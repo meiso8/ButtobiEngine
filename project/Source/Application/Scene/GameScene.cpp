@@ -48,6 +48,8 @@
 #include"Lights/DirectionalLightManager.h"
 #include"Lights/PointLightManager.h"
 #include"Lights/SpotLightManager.h"
+
+#include "MatsumotoObj/GameSceneObj/AttackAreaEmitter.h"
 GameScene::GameScene()
 {
     // 現在のカメラを設定
@@ -160,6 +162,8 @@ void GameScene::Initialize() {
     gameOverTimer_ = 0.0f;
 
 	SceneStaticValue::isPlayerAlive = true;
+
+	AttackAreaEmitter::GetInstance().Initialize();
 }
 
 void GameScene::Update() {
@@ -205,6 +209,7 @@ void GameScene::Update() {
     letterboxBars_->Update();
     uiManager_->Update();
 
+	AttackAreaEmitter::GetInstance().Update();
 }
 
 void GameScene::Draw() {
@@ -240,9 +245,9 @@ void GameScene::Draw() {
     actionUI_->Draw();
     letterboxBars_->Draw();
     gameOverEvent_->Draw();
-
+    
+	AttackAreaEmitter::GetInstance().Draw(*currentCamera_);
 #pragma endregion
-
 
 
 

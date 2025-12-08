@@ -49,4 +49,6 @@ private:
 	FloorType prevFloorType_;
 	bool isPopuping_;
 	float downColor_;
+
+	uint32_t attackAreaEffectID_ = UINT32_MAX;
 };

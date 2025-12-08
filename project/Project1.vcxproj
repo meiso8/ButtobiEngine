@@ -159,6 +159,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <ClCompile Include="Source\Application\GameObject\BetoBeto\BetoBeto.cpp" />
     <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBeak.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\AttackAreaEffect.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\AttackAreaEmitter.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\SceneStaticClassManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\PlayerDirectionSpotLight.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\RedPinchScreen.cpp" />
     <ClCompile Include="Source\Application\System\Shake.cpp" />
@@ -311,6 +314,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <ClInclude Include="Source\Application\GameObject\BetoBeto\BetoBeto.h" />
     <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBeak.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\AttackAreaEffect.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\AttackAreaEmitter.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\SceneStaticClassManager.h" />
     <ClInclude Include="Source\Application\GameObject\PlayerDirectionSpotLight.h" />
     <ClInclude Include="Source\Application\GameObject\UI\RedPinchScreen.h" />
     <ClInclude Include="Source\Application\System\Shake.h" />

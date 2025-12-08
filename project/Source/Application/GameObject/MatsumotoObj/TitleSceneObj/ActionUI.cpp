@@ -15,9 +15,6 @@ ActionUI::ActionUI(FloorGamePlayer* player) {
 
 	moveSprite_->SetSize({ 256.0f,64.0f });
 	actionSprite_->SetSize({ 256.0f,64.0f });
-
-
-
 }
 
 void ActionUI::Initialize() {
