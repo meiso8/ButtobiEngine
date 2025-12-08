@@ -94,6 +94,7 @@ void Enemy::Init() {
     isShot_ = false;
     isBombShot_ = false;
     isWaveShot_ = false;
+    isWavePosSelect_ = false;
     isKnockBackEmit_ = false;
     isKnockBack_ = false;
 
@@ -784,14 +785,14 @@ void Enemy::RandomFloorChangAttack()
         LerpRotateY(PI, 0.3f);
 
         isGoToRanDomFloor_ = true;
-  
+
     } else if (phaseTimer_ <= 2.0f) {
 
         LookTargetNormal(*target_);
         //床に行く
         bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, *target_, 0.01f);
-    
-    }else if(phaseTimer_ <= 3.0f) {
+
+    } else if (phaseTimer_ <= 3.0f) {
 
         bodyPos_.worldTransform_.rotate_.x = Lerp(bodyPos_.worldTransform_.rotate_.x, HALF_PI, 0.05f);
 

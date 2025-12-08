@@ -111,6 +111,7 @@ void GameScene::Initialize() {
     DirectionalLightManager::GetDirectionalLightData()->intensity = 1.0f;
     PointLightManager::GetPointLightData(1).intensity = 0.0f;
     SpotLightManager::GetData()->direction = {0.0f,0.0f,1.0f};
+    SpotLightManager::GetData()->position = { 0.0f,0.5f,0.0f };
 
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 90);
@@ -264,16 +265,20 @@ void GameScene::Debug()
 
 void GameScene::UpdateLight()
 {
+
+
+
     if (enemy_->GetCurrentState() == "Second") {
 
         float& intensity0 = PointLightManager::GetPointLightData(0).intensity;
         intensity0 = Lerp(intensity0, 0.0f, 0.01f);
 
         float& intensity1 = PointLightManager::GetPointLightData(1).intensity;
-        intensity1 = Lerp(intensity1, 0.2f, 0.01f);
+        intensity1 = Lerp(intensity1, 0.5f, 0.01f);
     } else {
+
         float& intensity1 = PointLightManager::GetPointLightData(1).intensity;
-        intensity1 = Lerp(intensity1, 0.0f, 0.01f);
+        intensity1 = Lerp(intensity1, 0.2f, 0.01f);
 
         if (enemy_->GetCurrentState() == "Third") {
             float& intensity0 = PointLightManager::GetPointLightData(0).intensity;

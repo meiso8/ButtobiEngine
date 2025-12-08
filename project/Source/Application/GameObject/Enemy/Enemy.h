@@ -54,6 +54,7 @@ public:
     bool isBombShot_ = false;
     //波を発生させる
     bool isWaveShot_ = false;
+    bool isWavePosSelect_ = false;
     //床を初期化する
     bool isReqestClearFloor_ = false;
     // フェーズを変えているかどうか
