@@ -102,6 +102,19 @@ void AttackAreaEffect::SpawnSquare(const Vector3& position, const Vector2& dir, 
 	underBody_.SetTextureHandle(Texture::WHITE_1X1);
 }
 
+void AttackAreaEffect::RotateSquare(const Vector3& position, const Vector2& dir, const Vector2& size)
+{
+	float angle = MY_Utility::GetAngleFromDir(dir);
+
+	body_.worldTransform_.translate_ = position;
+	body_.worldTransform_.rotate_.y = angle;
+	squareSize_ = size;
+	startPosition_ = position;
+
+	underBody_.worldTransform_.translate_ = position;
+	underBody_.worldTransform_.rotate_.y = angle;
+}
+
 void AttackAreaEffect::CircleUpdate()
 {
 	float scale = lifeTimer_ / lifeDuration_;

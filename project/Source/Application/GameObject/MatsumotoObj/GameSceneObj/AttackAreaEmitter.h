@@ -20,6 +20,9 @@ public:
 	uint32_t EmitSquareForm(const Vector3& position, const Vector2& dir, const Vector2& size, float duration);
 
 	void DeleteEffect(uint32_t effectID);
+
+	void RotateEffect(uint32_t effectID, const Vector3& position, const Vector2& dir, const Vector2& size);
+
 private:
 	AttackAreaEmitter();
 	~AttackAreaEmitter() = default;

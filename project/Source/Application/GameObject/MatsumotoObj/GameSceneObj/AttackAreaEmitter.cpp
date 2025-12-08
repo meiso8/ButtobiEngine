@@ -79,6 +79,22 @@ void AttackAreaEmitter::DeleteEffect(uint32_t effectID)
 	effectsPtr_[effectID]->isActive_ = false;
 }
 
+void AttackAreaEmitter::RotateEffect(uint32_t effectID, const Vector3& position, const Vector2& dir, const Vector2& size)
+{
+	if (effectID >= maxEffectNum_) return;
+	if (!effectsPtr_[effectID]->isActive_) return;
+
+	// EmitSquareFormで端にオフセットした場合も形が崩れないように、
+	// 四角形の中心座標を計算してtranslate_にセットする
+	float angle = MY_Utility::GetAngleFromDir(dir);
+	Vector3 centerPos = position;
+	centerPos.x -= sinf(angle) * (size.y / 2.0f);
+	centerPos.z -= cosf(angle) * (size.y / 2.0f);
+	centerPos.y = 0.0f;
+
+	effectsPtr_[effectID]->RotateSquare(centerPos, dir, size);
+}
+
 AttackAreaEmitter::AttackAreaEmitter()
 {
 	for (int i = 0; i < maxEffectNum_; i++) {
