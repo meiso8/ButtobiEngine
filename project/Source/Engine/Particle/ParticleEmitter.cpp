@@ -19,7 +19,7 @@ void ParticleEmitter::Initialize()
     emitter_.transform.translate_ = { 0.0f,0.0f,0.0f };
 
     emitter_.translateAABB_ = { 0.0f };
-    emitter_.velocityMinMax = { 0.0f,0.0f};
+    emitter_.velocityAABB = { 0.0f};
     emitter_.rotateOffset_ = 0.0f;
     emitter_.scaleOffset_ = 0.0f;
 
@@ -41,7 +41,7 @@ void ParticleEmitter::SetEmitterParam(
     const Vector3& scale,
     const Vector3& rotate,
     const  AABB& translateAABB_,
-    const MinMax& velocityMinMax,
+    const AABB& velocityAABB,
     const float& rotateOffset_,
     const float& scaleOffset_,
     const uint32_t& count,
@@ -63,7 +63,7 @@ void ParticleEmitter::SetEmitterParam(
     emitter_.transform.rotate_ = rotate;//エミッタのTransfrom
 
     emitter_.translateAABB_ = translateAABB_;
-    emitter_.velocityMinMax = velocityMinMax;
+    emitter_.velocityAABB = velocityAABB;
     emitter_. rotateOffset_ = rotateOffset_;
     emitter_. scaleOffset_ = scaleOffset_;
     emitter_.count = count;//発生数

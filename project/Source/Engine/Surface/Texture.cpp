@@ -40,6 +40,9 @@ void Texture::LoadAllTexture() {
     handles[MELT_FLOOR_PARTICLE] = Load("Resource/Textures/MeltFloorParticle.png");
     handles[LEAF_PARTICLE] = Load("Resource/Textures/LeafParticle.png");
     handles[FLOOR_PARTICLE] = Load("Resource/Textures/FloorParticle.png");
+    handles[BUBBLE_PARTICLE] = Load("Resource/Textures/BubbleParticle03.png");
+    
+
     handles[BLOOM] = Load("Resource/Textures/Bloom.png");
     handles[ENEMY_TEXTURE2] = Load("Resource/Models/Enemy/Enemy02.png");
 

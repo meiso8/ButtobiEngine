@@ -36,7 +36,7 @@ EmitterManager::EmitterManager(
         newEmitter->emitter_.radius = 1.0f;
         newEmitter->emitter_.radiusSpeed = 0.0f;
         newEmitter->emitter_.polarSpeed = 0.0f;
-        newEmitter->emitter_.velocityMinMax = { 0.0f,0.0f };
+        //newEmitter->emitter_.velocityAABB = { 0.0f,0.0f };
         newEmitter->emitter_.rotateOffset_ = { 0.1f };
         newEmitter->emitter_.frequency = 2.5f;
         newEmitter->emitter_.lifeTime = 0.5f;
@@ -56,7 +56,7 @@ EmitterManager::EmitterManager(
         newEmitter->emitter_.radius = 1.0f;
         newEmitter->emitter_.radiusSpeed = 0.0f;
         newEmitter->emitter_.polarSpeed = 0.0f;
-        newEmitter->emitter_.velocityMinMax = { 0.0f,0.0f };
+        //newEmitter->emitter_.velocityMinMax = { 0.0f,0.0f };
         newEmitter->emitter_.rotateOffset_ = { 0.1f };
         newEmitter->emitter_.frequency = 2.5f;
         newEmitter->emitter_.lifeTime = 0.5f;
@@ -123,7 +123,7 @@ EmitterManager::EmitterManager(
     particleEmitters_[kEnemyHitEmitter]->emitter_.lifeTime = 0.7f;
     particleEmitters_[kEnemyHitEmitter]->emitter_.blendMode = kBlendModeNormal;
     particleEmitters_[kEnemyHitEmitter]->emitter_.polarSpeedMinMax = { 0.0f,0.0f };
-    particleEmitters_[kEnemyHitEmitter]->emitter_.velocityMinMax = { -1.0f,1.0f };
+    particleEmitters_[kEnemyHitEmitter]->emitter_.velocityAABB = { .min = {-1.0f,-1.0f,-1.0f},.max = {1.0f,1.0f,1.0f}};
 
     // ====================================================================
     //ノックバック
@@ -175,20 +175,32 @@ EmitterManager::EmitterManager(
     betobetoEmitter_->emitter_.count = 5;
     betobetoEmitter_->emitter_.frequency = 0.5f;
     betobetoEmitter_->emitter_.rotateOffset_ = { 0.0f };
-    betobetoEmitter_->emitter_.velocityMinMax = { .min = {-0.1f},.max = {0.1f} };
-    betobetoEmitter_->emitter_.transform.scale_ = { 0.1f,0.1f,0.1f };
+    betobetoEmitter_->emitter_.velocityAABB = { .min = {-0.2f,1.5f,0.0f},.max = {0.2f,2.0f,0.0f} };
+    betobetoEmitter_->emitter_.transform.scale_ = { 0.3f,0.3f,0.3f };
     betobetoEmitter_->emitter_.scaleOffset_ = { 0.2f };
     betobetoEmitter_->emitter_.translateAABB_ = { .min = { -size ,0.0f,-size },.max = {size,0.0f,size} };
 
     auto& melt = betobetoEmitter_->GetGroup();
     melt->accelerationField.area = { .min = {-5.0f,0.0f,-5.0f},.max = {5.0f,3.0f,5.0f} };
-    melt->accelerationField.acceleration = { 0.0f,1.0f,0.0f };
+    melt->accelerationField.acceleration = { 0.0f,-1.0f,0.0f };
 
     // ====================================================================
 
-    floorCrashEmitter_ = std::make_unique<ParticleEmitter>();
-    floorCrashEmitter_->SetName("floorParticle");
-    
+    BubbleEmitter_ = std::make_unique<ParticleEmitter>();
+    BubbleEmitter_->SetName("bubbleParticle");
+    //BubbleEmitter_->emitter_.movement = ParticleMovements::kParticleShock;
+    //BubbleEmitter_->emitter_.radius = 0.1f;
+    BubbleEmitter_->emitter_.count = 5;
+    BubbleEmitter_->emitter_.velocityAABB = { .min = {-2.0f,2.0f,-2.0f},.max = {2.0f,3.0f,2.0f} };
+    BubbleEmitter_->emitter_.transform.scale_ = { 0.4f,0.4f,0.4f };
+    BubbleEmitter_->emitter_.scaleOffset_ = { 0.2f };
+    BubbleEmitter_->emitter_.translateAABB_ = { .min = { -size ,0.0f,-size },.max = {size,0.0f,size} };
+
+
+    auto& bobble = BubbleEmitter_->GetGroup();
+    bobble->accelerationField.area = { .min = {-5.0f,0.0f,-5.0f},.max = {5.0f,3.0f,5.0f} };
+    bobble->accelerationField.acceleration = { 0.0f,-0.2f,0.0f };
+
 }
 
 void EmitterManager::Initialize()
@@ -216,8 +228,8 @@ void EmitterManager::Initialize()
     betobetoEmitter_->InitTimer();
     ParticleManager::Reset(betobetoEmitter_->emitter_.name);
 
-    floorCrashEmitter_->InitTimer();
-    ParticleManager::Reset(floorCrashEmitter_->emitter_.name);
+    BubbleEmitter_->InitTimer();
+    ParticleManager::Reset(BubbleEmitter_->emitter_.name);
 
 }
 
@@ -315,9 +327,9 @@ void EmitterManager::Update(Camera& camera)
     for (auto& floors :floorGameFloorManager_->GetFloor()) {
         for (auto& floor : floors) {
             if (floor->isToStrong_) {
-                floorCrashEmitter_->emitter_.transform.translate_ =  floor->GetWorldPosition();
-                floorCrashEmitter_->UpdateEmitter();
-                floorCrashEmitter_->Emit();
+                BubbleEmitter_->emitter_.transform.Parent(floor->body_.worldTransform_);
+                BubbleEmitter_->UpdateEmitter();
+                BubbleEmitter_->Emit();
             }
         }
     }
@@ -348,4 +360,5 @@ void EmitterManager::Debug()
     //DebugUI::CheckParticle(*enemyKnockBackEmitter_, "KnockBack");
     DebugUI::CheckParticle(*leafEmitter_, "leafEmitter");
     DebugUI::CheckParticle(*betobetoEmitter_, "betobetoEmitter");
+    DebugUI::CheckParticle(*BubbleEmitter_, "floorCrashEmitter");
 }
