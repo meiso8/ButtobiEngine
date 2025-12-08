@@ -20,7 +20,7 @@ EnemyBomb::EnemyBomb() {
     SetRadius(kRadius_);
     SetCollisionAttribute(kCollisionNone);
     // 弾は「PlayerとPlayerの弾」とだけ衝突したい
-    SetCollisionMask(kCollisionPlayer | kCollisionPlayerBullet | kCollisionFloor);
+    SetCollisionMask(kCollisionPlayer | kCollisionFloor);
     ////全部と衝突したい時
     //SetCollisionMask(~kCollisionEnemyBullet);
 }

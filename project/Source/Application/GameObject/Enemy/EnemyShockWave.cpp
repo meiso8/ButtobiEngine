@@ -27,8 +27,8 @@ EnemyShockWave::EnemyShockWave() {
 
 
     SetCollisionAttribute(kCollisionEnemyWave);
-    // 弾は「PlayerとPlayerの弾」とだけ衝突したい
-    SetCollisionMask(kCollisionPlayer | kCollisionPlayerBullet | kCollisionFloor);
+    // 弾はPlayerとだけ衝突したい
+    SetCollisionMask(kCollisionPlayer);
 
     SetType(kAABB);
     SetAABB(localAABBs_[kHorizontal]);
