@@ -107,19 +107,21 @@ void FloorPlayerShotBulletManager::Update() {
 				}
 			}
 
-			Vector3 centerOffset = {
-				(static_cast<float>(maxXSize + minXSize) / 2.0f) - (static_cast<float>(kMapWidth) * kHalfFloorSize) + kHalfFloorSize,
-				0.0f,
-				(static_cast<float>(maxYSize + minYSize) / 2.0f) - (static_cast<float>(kMapHeight) * kHalfFloorSize) + kHalfFloorSize
-			};
+			Vector3 shotPosition = player_->body_.worldTransform_.translate_ + shotDirection * 0.5f;
+
+			// 床集合の中心をワールド座標で算出
+			Vector3 groupCenter = shotPosition; // プレイヤーの前方を中心にする
+
+			int centerX = (maxXSize + minXSize) / 2;
+			int centerY = (maxYSize + minYSize) / 2;
 
 			for (const auto& pos : tempFloorMap) {
 				Vector3 localPos = {
-					static_cast<float>(pos.first) - (static_cast<float>(kMapWidth) * kHalfFloorSize) + kHalfFloorSize,
+					static_cast<float>(pos.first - centerX) * kHalfFloorSize * 2,
 					0.0f,
-					static_cast<float>(pos.second) - (static_cast<float>(kMapHeight) * kHalfFloorSize) + kHalfFloorSize
+					static_cast<float>(pos.second - centerY) * kHalfFloorSize * 2
 				};
-				Vector3 worldPos = shotPosition + (localPos - centerOffset);
+				Vector3 worldPos = groupCenter + localPos;
 				bulletManager_->ShotBullet(
 					worldPos,
 					shotDirection,
