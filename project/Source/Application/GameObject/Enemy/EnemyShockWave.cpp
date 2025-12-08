@@ -22,7 +22,7 @@ EnemyShockWave::EnemyShockWave() {
         cubeMesh_[i]->SetMinMax(localAABBs_[i]);
     }
 
-    body_.SetColor({ 1.0f,0.5f,0.0f,0.2f });
+    body_.SetColor({ 1.0f,0.0f,0.0f,0.9f });
     body_.SetMesh(cubeMesh_[kHorizontal].get());
 
 
@@ -98,6 +98,12 @@ void EnemyShockWave::Update() {
             Sound::PlaySE(Sound::kWindAttackShot);
         }
         body_.worldTransform_.translate_ = Lerp(body_.worldTransform_.translate_, endPos_, speed_);
+    } else {
+        float lifeTime = lifeDuration_ - lifeTimer_;
+        lifeTime =1.0f- std::clamp(lifeTime, 0.0f, 1.0f);
+       
+        body_.SetColor({ 1.0f,0.0f,0.0f,lifeTime*0.9f });
+
     }
 
 }
@@ -119,9 +125,11 @@ void EnemyShockWave::Shot(const Vector3& startPos, const Vector3& endPos, const 
     endPos_ = endPos;
     SetAABB(localAABBs_[aabbType]);
     body_.SetMesh(cubeMesh_[aabbType].get());
+    body_.SetColor({ 1.0f,0.0f,0.0f,0.9f });
     aabbType_ = aabbType;
     lifeTimer_ = lifeDuration_;
     isActive_ = true;
     body_.Update();
+
     isSound_ = false;
 }
