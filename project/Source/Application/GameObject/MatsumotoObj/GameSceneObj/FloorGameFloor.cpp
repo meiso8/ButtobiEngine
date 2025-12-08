@@ -105,10 +105,12 @@ void FloorGameFloor::SwapFloorType(FloorType type) {
 	case FloorType::Sticky:
 		autoSwapTimer_ = autoSwapDuration_;
 		nextFloorType_ = FloorType::Strong;
-		//ヨシダ　強く復活下かどうかのフラグ　追加しました。
-		isToStrong_ = true;
+
 		break;
 	case FloorType::Strong:
+
+		//ヨシダ　強く復活下かどうかのフラグ　追加しました。
+		isToStrong_ = true;
 		nextFloorType_ = FloorType::Normal;
 		break;
 	case FloorType::Bomb:
