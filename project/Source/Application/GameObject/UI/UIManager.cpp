@@ -1,5 +1,6 @@
 #include "UIManager.h"
 #include"Window.h"
+#include"PauseScreen.h"
 UIManager::UIManager(HPs& enemyHp,HPs& enemyTotalHp, HPs& playerHp,bool& isPlayerHit,bool&isEnemyHit,bool& isEnemyKnockBack)
 {
 
@@ -30,7 +31,7 @@ UIManager::UIManager(HPs& enemyHp,HPs& enemyTotalHp, HPs& playerHp,bool& isPlaye
     enemyHpIcon_->SetIsHitPtr(isEnemyHit);
 
     enemyHpIcon_->SetTextureHandle(Texture::ENEMY_ACTION_PARTICLE);
-    enemyHpIcon_->Setting({ 32.0f,32.0f }, { static_cast<float>(Window::GetClientWidth()) - 512.0f,8.0f });
+    enemyHpIcon_->Setting({ 64.0f,64.0f }, { static_cast<float>(Window::GetClientWidth()) - 512.0f-64.0f,8.0f });
 
     pauseScreen_ = std::make_unique<PauseScreen>();
 
@@ -53,16 +54,20 @@ void UIManager::Initialize()
 void UIManager::Update()
 {
 
-    for (const auto& [type, gage] : hpGages_) {
-        gage->Update();
+    if (!PauseScreen::isActive_) {
+        
+        for (const auto& [type, gage] : hpGages_) {
+            gage->Update();
+            gage->UpdateHitAction();
+        }
+
+        playerHpIcon_->Update();
+        enemyHpIcon_->Update();
+        redPinchScreen->Update();
     }
 
-    hpGages_[kEnemy]->UpdateHitAction();
-
-    playerHpIcon_->Update();
-    enemyHpIcon_->Update();
     pauseScreen_->Update();
-    redPinchScreen->Update();
+ 
 }
 
 void UIManager::Draw()
