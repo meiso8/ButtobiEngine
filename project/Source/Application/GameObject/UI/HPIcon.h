@@ -37,7 +37,7 @@ private:
     std::map<SpriteTypes, std::vector<std::unique_ptr<Sprite>>> sprites_;
     std::vector<Vector2> position_;
     float timer_ = 0.0f;
-    float maxTime_ = 1.0f;
+    float maxTime_ = 0.8f;
     float theta_ = 0.0f;
     size_t drawHpNum_ = 0;
     int maxIcon_ = 3;
