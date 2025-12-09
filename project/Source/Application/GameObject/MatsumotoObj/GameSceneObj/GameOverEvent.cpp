@@ -3,6 +3,8 @@
 #include "MatsumotoObj/KeyBindConfig.h"
 #include "MatsumotoObj/MY_Utility.h"
 #include"Sound.h"
+#include "Input/Input.h"
+
 namespace {
 	const float kXOffset = 200.0f;
 	const float kYOffset = 200.0f;
@@ -40,6 +42,8 @@ void GameOverEvent::Initialize() {
 	tips1Sprite_->SetAnchorPoint({ 0.5f,0.5f });
 	retrySprite_->SetAnchorPoint({ 0.5f,0.5f });
 	backToTitleSprite_->SetAnchorPoint({ 0.5f,0.5f });
+
+	selectTimer_ = 0.0f;
 }
 
 void GameOverEvent::Update() {
@@ -90,15 +94,25 @@ void GameOverEvent::Update() {
 		timer_ += 0.016f;
 	}
 
+	if (selectTimer_ > 0.0f) {
+		selectTimer_ -= 0.016f;
+	}
+
 	KeyBindConfig& key = KeyBindConfig::Instance();
-	if (key.IsTrigger("MoveForward")) {
-		isRetrySelected_ = true;
-		Sound::PlaySE(Sound::kMoveCursor);
+	Vector2 stickPos;
+	if (selectTimer_ <= 0.0f) {
+		if (key.IsTrigger("MoveForward") || (Input::IsControllerStickPosMove(BUTTON_LEFT, 0, &stickPos) && stickPos.y > 0.5f)) {
+			isRetrySelected_ = true;
+			Sound::PlaySE(Sound::kMoveCursor);
+			selectTimer_ = 0.2f;
+		}
+		if (key.IsTrigger("MoveBack") || (Input::IsControllerStickPosMove(BUTTON_LEFT, 0, &stickPos) && stickPos.y < -0.5f)) {
+			isRetrySelected_ = false;
+			Sound::PlaySE(Sound::kMoveCursor);
+			selectTimer_ = 0.2f;
+		}
 	}
-	if (key.IsTrigger("MoveBack")) {
-		isRetrySelected_ = false;
-		Sound::PlaySE(Sound::kMoveCursor);
-	}
+	
 	if (key.IsTrigger("Shot")) {
 		Sound::PlaySE(Sound::kDecision);
 		if (timer_ > 1.0f) {
