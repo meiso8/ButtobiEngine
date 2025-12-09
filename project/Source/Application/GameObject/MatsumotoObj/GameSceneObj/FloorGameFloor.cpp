@@ -196,9 +196,6 @@ void FloorGameFloor::BombFloorUpdate() {
 
 	if (autoSwapTimer_ > 0.0f) {
 		autoSwapTimer_ -= 0.016f;
-		//振動させる　ヨシダ
-		WORD vibrate = 1000+(WORD)color * 1000;
-		VibrateManager::SetTime(0.016f, vibrate, vibrate);
 	} else {
 		SwapFloorType(nextFloorType_);
 		Sound::PlaySE(Sound::kExplosion);
