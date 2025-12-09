@@ -131,11 +131,6 @@ void Enemy::Init() {
 
     enemyBeak_->Initialize();
 
-    for (auto& [type, model] : models_) {
-        model->ResetTextureHandle();
-    }
-
-
     //球面座標系
     sphericalPos_ = { .radius = 0.0f,.azimuthal = 0.0f ,.polar = 0.0f };
 
@@ -161,13 +156,18 @@ void Enemy::Init() {
 
     bodyPos_.GetWaveData(0).time = 0.0f;
 
-	fireBallAttackAreaID_ = UINT32_MAX;
-	tackleAttackAreaID_ = UINT32_MAX;
+    fireBallAttackAreaID_ = UINT32_MAX;
+    tackleAttackAreaID_ = UINT32_MAX;
 
 }
 
 void Enemy::InitState()
 {
+
+
+
+    SetTextures();
+
     Json file = JsonFile::GetJsonFiles("Boss");
     //アニメーションタイマー
     phaseTime_ = file[currentState_]["phaseTime"];
@@ -398,6 +398,22 @@ void Enemy::LeathalMoveUpdate() {
     wingRPos_.Update();
 }
 
+void Enemy::SetTextures()
+{
+    for (auto& [type, model] : models_) {
+        if (currentState_ == "First") {
+            model->ResetTextureHandle();
+        } else if (currentState_ == "Second") {
+            Texture::TEXTURE_HANDLE textureHandle = Texture::ENEMY_TEXTURE3;
+            model->SetTextureHandle(textureHandle);
+        } else if (currentState_ == "Third") {
+            Texture::TEXTURE_HANDLE textureHandle = Texture::ENEMY_TEXTURE2;
+            model->SetTextureHandle(textureHandle);
+        }
+    }
+
+}
+
 void Enemy::Tackle()
 {
 
@@ -422,12 +438,12 @@ void Enemy::Tackle()
 
         PoyoPoyo(kTacklePoyoTime_);
 
-		if (tackleAttackAreaID_ == UINT32_MAX) {
-			tackleAttackAreaID_ = AttackAreaEmitter::GetInstance().EmitSquareForm(
-				bodyPos_.worldTransform_.GetWorldPosition(),
-				Vector2(1.0f,1.0f),
-                Vector2(3.0f,15.0f), kTacklePoyoTime_);
-		}
+        if (tackleAttackAreaID_ == UINT32_MAX) {
+            tackleAttackAreaID_ = AttackAreaEmitter::GetInstance().EmitSquareForm(
+                bodyPos_.worldTransform_.GetWorldPosition(),
+                Vector2(1.0f, 1.0f),
+                Vector2(3.0f, 15.0f), kTacklePoyoTime_);
+        }
 
         if (tackleAttackAreaID_ != UINT32_MAX) {
             AttackAreaEmitter::GetInstance().ZmRotateEffect(
@@ -458,7 +474,7 @@ void Enemy::Tackle()
                 if (damageStruct_.isHit) {
 
                     if (!isKnockBack_) {
-						tackleAttackAreaID_ = UINT32_MAX;
+                        tackleAttackAreaID_ = UINT32_MAX;
                         isKnockBack_ = true;
                         isKnockBackEmit_ = true;
                         LookTargetNormal(*playerPos_);
@@ -486,7 +502,7 @@ void Enemy::Tackle()
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(endPos_, startPos_, localTimer);
     } else if (phaseTimer_ <= kTackleInitStartTime_) {
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(bodyPos_.worldTransform_.translate_, startPos_, 0.5f);
-    }else {
+    } else {
         isSelectRandomPhase_ = true;
     }
 
@@ -613,14 +629,14 @@ void Enemy::SwitchState()
         currentState_ = "Third";
         isFaseChange_ = true;
 
-        for (auto& [type, model] : models_) {
-            model->SetTextureHandle(Texture::ENEMY_TEXTURE2);
-        }
     } else if (currentState_ == "Third") {
         damageStruct_.isDead = true;
         damageStruct_.hps.maxHp = kMaxOverKillCount;
         damageStruct_.hps.hp = kMaxOverKillCount;
     }
+
+    //テクスチャを変更
+    SetTextures();
 
     //回転を初期化
     bodyPos_.worldTransform_.rotate_.z = 0.0f;
@@ -753,10 +769,10 @@ void Enemy::Fireball()
         }
 
         if (fireBallAttackAreaID_ == UINT32_MAX) {
-			fireBallAttackAreaID_ = AttackAreaEmitter::GetInstance().EmitSquareForm(
-				bodyPos_.worldTransform_.GetWorldPosition(),
-				Vector2(sinf(bodyPos_.worldTransform_.rotate_.y), cosf(bodyPos_.worldTransform_.rotate_.y)),
-                Vector2(1.0f,15.0f), kFireBallMaxCoolTime_
+            fireBallAttackAreaID_ = AttackAreaEmitter::GetInstance().EmitSquareForm(
+                bodyPos_.worldTransform_.GetWorldPosition(),
+                Vector2(sinf(bodyPos_.worldTransform_.rotate_.y), cosf(bodyPos_.worldTransform_.rotate_.y)),
+                Vector2(1.0f, 15.0f), kFireBallMaxCoolTime_
             );
         }
     }

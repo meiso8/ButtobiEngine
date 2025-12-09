@@ -13,14 +13,19 @@
 
 BossDummy::BossDummy() {
     body_.Create();
-    model_ = ModelManager::GetModel(ModelManager::ENEMY_BODY);
-    body_.SetMesh(model_);
+
+    //体のモデルを取得する
+    models_[BODY] = ModelManager::GetModel(ModelManager::ENEMY_BODY);
+    models_[WING_L] = ModelManager::GetModel(ModelManager::ENEMY_WING_L);
+    models_[WING_R] = ModelManager::GetModel(ModelManager::ENEMY_WING_R);
+
+    body_.SetMesh(models_[BODY]);
 
     // ===================//羽を追加しましたヨシダ//================================
     wingLPos_.Create();
     wingRPos_.Create();
-    wingLPos_.SetMesh(ModelManager::GetModel(ModelManager::ENEMY_WING_L));
-    wingRPos_.SetMesh(ModelManager::GetModel(ModelManager::ENEMY_WING_R));
+    wingLPos_.SetMesh(models_[WING_L]);
+    wingRPos_.SetMesh(models_[WING_R]);
     wingLPos_.worldTransform_.Parent(body_.worldTransform_);
     wingRPos_.worldTransform_.Parent(body_.worldTransform_);
     wingLPos_.worldTransform_.translate_ = { -1.0f,0.3f,0.0f };
@@ -40,11 +45,16 @@ void BossDummy::Initialize() {
     wingRPos_.SetColor({ 1.0f,1.0f,1.0f,1.0f });
     timer_ = 0.0f;
     isAnimEnd_ = false;
+
+    for (auto& [type, model] : models_) {
+        model->ResetTextureHandle();
+    }
+
 }
 
 void BossDummy::Update() {
 
-    if (timer_== 0.0f) {
+    if (timer_ == 0.0f) {
         VibrateManager::SetTime(3.5f, 20000, 20000);
     }
     timer_ += 0.016f;
@@ -62,7 +72,7 @@ void BossDummy::Update() {
     Winging(2.0f);
 
 
-  
+
 
     if (timer_ > 3.0f) {
         isAnimEnd_ = true;
