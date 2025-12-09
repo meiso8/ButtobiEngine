@@ -24,6 +24,8 @@ void ParticleEmitter::Initialize()
     emitter_.scaleOffset_ = 0.0f;
 
     emitter_.color = { 1.0f,1.0f,1.0f,1.0f };
+    emitter_.startAlpha_ = 1.0f;
+    emitter_.endAlpha_ = 0.0f;
 
     emitter_.blendMode = kBlendModeAdd;
     emitter_.movement = ParticleMovements::kParticleNormal;

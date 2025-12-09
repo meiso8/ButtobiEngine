@@ -80,7 +80,7 @@ void ExprostionParticle::Draw(Camera& camera, const LightMode& lightType) {
         return;
     }
 
-    body_.SetLightMode(lightType);
+    body_.SetLightMode(kLightModeNone);
     body_.Draw(camera);
 }
 
