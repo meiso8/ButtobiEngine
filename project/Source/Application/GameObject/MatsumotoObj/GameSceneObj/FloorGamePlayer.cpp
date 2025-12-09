@@ -234,6 +234,8 @@ void FloorGamePlayer::ForceDamage() {
 }
 
 void FloorGamePlayer::Move() {
+	if (HPs().hp <= 0) return;
+
     // 移動方向決定
     isMove_ = false;
     moveDir_ = { 0.0f,0.0f,0.0f };
