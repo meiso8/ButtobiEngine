@@ -98,6 +98,7 @@ void GameOverEvent::Update() {
 		selectTimer_ -= 0.016f;
 	}
 
+	// 入力処理
 	KeyBindConfig& key = KeyBindConfig::Instance();
 	Vector2 stickPos;
 	if (selectTimer_ <= 0.0f) {
@@ -113,11 +114,19 @@ void GameOverEvent::Update() {
 		}
 	}
 	
+	// 決定ボタンで決定
 	if (key.IsTrigger("Shot")) {
 		Sound::PlaySE(Sound::kDecision);
 		if (timer_ > 1.0f) {
 			isReqestedAction_ = true;
 		}
+	}
+
+	// 戻るボタンでキャンセル
+	if (key.IsTrigger("MenuExit")) {
+		Sound::PlaySE(Sound::kDecision);
+		isRetrySelected_ = false;
+		isReqestedAction_ = true;
 	}
 
 	if (isRetrySelected_) {
