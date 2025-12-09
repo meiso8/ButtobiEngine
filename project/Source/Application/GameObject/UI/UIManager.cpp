@@ -1,6 +1,7 @@
 #include "UIManager.h"
 #include"Window.h"
 #include"PauseScreen.h"
+
 UIManager::UIManager(HPs& enemyHp,HPs& enemyTotalHp, HPs& playerHp,bool& isPlayerHit,bool&isEnemyHit,bool& isEnemyKnockBack)
 {
 
@@ -61,22 +62,21 @@ void UIManager::Update()
             gage->Update();
             gage->UpdateHitAction();
         }
-
-        
-
+ 
         playerHpIcon_->Update();
         enemyHpIcon_->Update();
         redPinchScreen->Update();
     }
 
-    pauseScreen_->Update();
+    if (isGameOverPtr_ && !*isGameOverPtr_) {
+        pauseScreen_->Update();
+    }
+
  
 }
 
 void UIManager::Draw()
 {
-
-    redPinchScreen->Draw();
 
     for (const auto& [type, gage] : hpGages_) {
         gage->Draw();
@@ -85,6 +85,13 @@ void UIManager::Draw()
     playerHpIcon_->Draw();
     enemyHpIcon_->Draw();
 
+    if (isGameOverPtr_ && !*isGameOverPtr_) {
+        pauseScreen_->Draw();
+    }
+}
 
-    pauseScreen_->Draw();
+void UIManager::DrawRedScreen()
+{
+    redPinchScreen->Draw();
+ 
 }
