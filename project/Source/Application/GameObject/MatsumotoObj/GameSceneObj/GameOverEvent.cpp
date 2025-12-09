@@ -93,14 +93,14 @@ void GameOverEvent::Update() {
 	KeyBindConfig& key = KeyBindConfig::Instance();
 	if (key.IsTrigger("MoveForward")) {
 		isRetrySelected_ = true;
-		Sound::PlaySE(Sound::kMoveCursor);
+		Sound::PlaySE(Sound::kMoveCursor,1.0f);
 	}
 	if (key.IsTrigger("MoveBack")) {
 		isRetrySelected_ = false;
-		Sound::PlaySE(Sound::kMoveCursor);
+		Sound::PlaySE(Sound::kMoveCursor,1.0f);
 	}
 	if (key.IsTrigger("Shot")) {
-		Sound::PlaySE(Sound::kDecision);
+		Sound::PlaySE(Sound::kDecision,1.0f);
 		if (timer_ > 1.0f) {
 			isReqestedAction_ = true;
 		}

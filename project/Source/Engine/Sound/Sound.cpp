@@ -22,7 +22,7 @@ std::vector<SoundData> Sound::soundDatas;
 std::vector<uint32_t> Sound::handles_;
 
 float Sound::bgmVolume_ = 0.375f;
-float Sound::seVolume_ = 0.5f;
+float Sound::seVolume_ = 0.75f;
 
 void Sound::LoadAllSound()
 {

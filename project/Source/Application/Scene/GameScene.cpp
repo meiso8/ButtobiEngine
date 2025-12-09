@@ -396,7 +396,7 @@ void GameScene::UpdateGameObject()
     floorPlayerStripTargetUI_->Update();
     floorActionManager_->Update();
     if (enemy_->isReqestClearFloor_) {
-        Sound::PlaySE(Sound::kFloorRespawn);
+        Sound::PlaySE(Sound::kFloorRespawn,1.0f);
         floorGameFloorManager_->DamageCleanUp();
         enemy_->isReqestClearFloor_ = false;
     }
@@ -428,7 +428,7 @@ void GameScene::UpdateBGM()
     if (IsGameOverBGMSound()) {
         if (!isSoundGameOverBGM_) {
             isSoundGameOverBGM_ = true;
-            Sound::PlaySE(Sound::gameOverBGM);
+            Sound::PlaySE(Sound::gameOverBGM,0.5f);
         }
     }
 
