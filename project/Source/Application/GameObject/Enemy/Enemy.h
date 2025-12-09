@@ -180,6 +180,7 @@ private:
     //タックル終了後初期地点に戻るタイム
     const float kTackleInitStartTime_ = kTackleGoPlayerTime_ + 1.0f;
 
+	uint32_t tackleAttackAreaID_ = UINT32_MAX;
 
 #pragma endregion
 
