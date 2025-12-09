@@ -39,6 +39,7 @@ public:
         HEAL_PARTICLE,
         BLOOM,
 
+        ENEMY_TEXTURE3,
         ENEMY_TEXTURE2,
 
         ACTION_UI_MOVE,

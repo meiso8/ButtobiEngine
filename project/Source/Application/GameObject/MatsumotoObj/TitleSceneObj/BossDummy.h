@@ -20,11 +20,19 @@ public:
 
 	Object3d body_;
 	bool isAnimEnd_;
+
+	enum Parts {
+		BODY,
+		WING_L,
+		WING_R
+	};
+
 private:
 	Object3d wingLPos_;
 	Object3d wingRPos_;
 	void Winging(const float& speed);
 
 	float timer_ = 0.0f;
-	Model* model_ = nullptr;
+	//モデル
+	std::unordered_map< Parts, Model*> models_;
 };

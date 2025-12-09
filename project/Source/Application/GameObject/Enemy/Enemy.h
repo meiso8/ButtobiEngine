@@ -47,6 +47,7 @@ public:
 
     // 死亡後のアニメーション
     void LeathalMoveUpdate();
+    void SetTextures();
 
     //ファイアボールを打つフラグ
     bool isShot_ = false;
