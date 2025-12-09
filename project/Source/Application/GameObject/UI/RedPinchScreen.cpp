@@ -29,7 +29,7 @@ void RedPinchScreen::Update()
 
 	float intensity = Easing::EaseOutExpo(1.0f, 0.0f, timer_); // 1→0 に減衰
 
-	if (hpPtr_ && hpPtr_->hp <= 20.0f) {
+	if (hpPtr_ && hpPtr_->hp <= 35.0f) {
 
 		if (isFlashing_) {
 			flashTimer_ += InverseFPS;

@@ -435,7 +435,7 @@ void GameScene::UpdateBGM()
         Sound::Stop(Sound::playerHP1BGM);
     } else {
 
-        if (floorGamePlayer_->GetHpsPtr()->hp <= 20.0f) {
+        if (floorGamePlayer_->GetHpsPtr()->hp <= 35.0f) {
 
             Sound::Stop(Sound::inGameBGM01);
             Sound::Stop(Sound::inGameBGM02);
