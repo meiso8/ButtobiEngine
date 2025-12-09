@@ -48,8 +48,14 @@ ResultScene::ResultScene() {
 	// 現在のカメラを設定
 	currentCamera_ = camera_.get();
 
+    SceneStaticValue::isClear = true;
+
 #pragma region // オブジェクト生成
 	resultSprite_ = std::make_unique<ResultSprite>();
+	tree_ = std::make_unique<Tree>();
+	nest_ = std::make_unique<Nest>();
+	bossDummy_ = std::make_unique<BossDummy>();
+	playerDummy_ = std::make_unique<PlayerDummy>();
 #pragma endregion
 
 }
@@ -66,10 +72,20 @@ void ResultScene::Initialize() {
 
 #pragma region // オブジェクト初期化
 	resultSprite_->Initialize();
+	tree_->Initialize();
+    nest_->Init();
+	nest_->SetPosition({ 0.0f,-1.0f,10.0f });
+	bossDummy_->Initialize();
+	playerDummy_->Initialize();
 #pragma endregion
+
+	camera_->translate_ = { 12.0f, 3.0f, 0.0f };
+	camera_->rotate_ = { 0.2f, -1.3f, 0.0f };
+	
 }
 
 void ResultScene::Update() {
+	timer_ += 0.016f;
 
     if (SceneStaticValue::isClear) {
         Sound::PlayBGM(Sound::resultBGM);
@@ -95,6 +111,10 @@ void ResultScene::Draw() {
 
 #pragma region // オブジェクト描画
 	resultSprite_->Draw();
+	tree_->Draw(*currentCamera_);
+	nest_->Draw(*currentCamera_);
+	bossDummy_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
+	playerDummy_->Draw(*currentCamera_);
 #pragma endregion
 
     //シーン遷移を描画する
@@ -118,12 +138,18 @@ void ResultScene::UpdateCamera() {
     if (isDebugCameraActive_) {
         debugCamera_->UpdateMatrix();
     } else {
+		camera_->rotate_ = { 0.2f + sinf(timer_) * 0.01f, -1.3f + cosf(timer_) * 0.01f, 0.0f};
+
 		camera_->UpdateMatrix();
     }
 }
 
 void ResultScene::UpdateGameObject() {
 	resultSprite_->Update();
+	tree_->Update();
+	nest_->Update();
+	bossDummy_->SorryUpdate();
+	playerDummy_->Update();
 }
 
 void ResultScene::UpdateEmitter() {

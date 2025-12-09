@@ -32,3 +32,8 @@ void Nest::Draw(Camera& camera)
 {
     object3d_->Draw(camera, kBlendModeNormal);
 }
+
+void Nest::SetPosition(const Vector3& position)
+{
+	object3d_->worldTransform_.translate_ = position;
+}

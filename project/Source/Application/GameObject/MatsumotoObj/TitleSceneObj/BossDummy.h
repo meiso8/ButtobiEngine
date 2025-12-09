@@ -16,6 +16,8 @@ public:
 	~BossDummy();
 	void Initialize();
 	void Update();
+
+	void SorryUpdate();
 	void Draw(Camera& camera, const LightMode& lightType);
 
 	Object3d body_;

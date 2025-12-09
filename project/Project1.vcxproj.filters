@@ -139,6 +139,7 @@
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\SceneStaticClassManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\BackGround\SkyDome\SkyDome.cpp" />
     <ClCompile Include="Source\Application\GameObject\BackGround\BackGround.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\ResultSceneObj\PlayerDummy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\GameObject\UI\PauseScreen.h" />
@@ -303,6 +304,7 @@
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\SceneStaticClassManager.h" />
     <ClInclude Include="Source\Application\GameObject\BackGround\SkyDome\SkyDome.h" />
     <ClInclude Include="Source\Application\GameObject\BackGround\BackGround.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\ResultSceneObj\PlayerDummy.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="externals\assimp\lib\Debug\assimp-vc143-mdd.lib" />

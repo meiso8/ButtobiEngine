@@ -85,6 +85,24 @@ void BossDummy::Update() {
 #endif
 }
 
+void BossDummy::SorryUpdate()
+{
+	timer_ += 0.016f;
+    body_.worldTransform_.translate_.y = 0.5f;
+	body_.worldTransform_.rotate_.x = sinf(timer_ * 3.0f) * 0.5f + 0.5f;
+    body_.worldTransform_.rotate_.y = 3.14f;
+
+    wingLPos_.worldTransform_.rotate_.y = 3.14f * 0.5f + sinf(timer_ * 3.0f) * 0.5f + 0.5f;
+	wingRPos_.worldTransform_.rotate_.y = -3.14f * 0.5f + sinf(timer_ * 3.0f) * 0.5f + 0.5f;
+
+    //body_.worldTransform_.scale_.y = 0.8f - sinf(timer_ * 3.0f) * 0.2f;
+
+
+	body_.Update();
+    wingLPos_.Update();
+    wingRPos_.Update();
+}
+
 void BossDummy::Draw(Camera& camera, const LightMode& lightType) {
     body_.SetLightMode(lightType);
     wingLPos_.SetLightMode(lightType);
