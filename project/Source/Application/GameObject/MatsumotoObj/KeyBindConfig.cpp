@@ -23,6 +23,8 @@ KeyBindConfig::KeyBindConfig() {
 	keyBinds_["Shot"].controllerButtons.push_back(XINPUT_GAMEPAD_A);
 	keyBinds_["Shot"].controllerButtons.push_back(XINPUT_GAMEPAD_X);
 	keyBinds_["Menu"].controllerButtons.push_back(XINPUT_GAMEPAD_START);
+	keyBinds_["MenuExit"].controllerButtons.push_back(XINPUT_GAMEPAD_B);
+	keyBinds_["MenuExit"].controllerButtons.push_back(XINPUT_GAMEPAD_Y);
 }
 
 void KeyBindConfig::Update() {

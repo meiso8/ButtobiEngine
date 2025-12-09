@@ -19,6 +19,7 @@ private:
 	bool isGameOver_ = false;
 	float timer_ = 0.0f;
 	const float gameOverDuration_ = 3.0f; // ゲームオーバーになるまでの時間（秒）
+	float selectTimer_ = 0.0f;
 
 	bool isRetrySelected_ = true; // リトライが選択されているかどうか
 	bool isReqestedAction_ = false; // 決定が押されたかどうか
