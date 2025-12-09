@@ -14,6 +14,7 @@
 #include "MatsumotoObj/SceneStaticValue.h"
 #include "MatsumotoObj/GameSceneObj/HealItemSpawner.h"
 #include "MatsumotoObj/GameSceneObj/Data/MapData.h"
+#include "MatsumotoObj/GameSceneObj/AttackAreaEmitter.h"
 
 #define PI std::numbers::pi_v<float>
 #define QUARTER_PI PI*0.25f
@@ -714,17 +715,34 @@ void Enemy::Fireball()
     } else {
 
         LookTargetNormal(*playerPos_);
+        if (fireBallAttackAreaID_ != UINT32_MAX) {
+            AttackAreaEmitter::GetInstance().ZmRotateEffect(
+                fireBallAttackAreaID_,
+                bodyPos_.worldTransform_.GetWorldPosition(),
+                Vector2(cosf(bodyPos_.worldTransform_.rotate_.y), sinf(bodyPos_.worldTransform_.rotate_.y)),
+                Vector2(1.0f, 15.0f));
+        }
 
         fireBallCoolTimer_ += InverseFPS;
 
         if (fireBallCoolTimer_ > kFireBallMaxCoolTime_) {
             fireBallCoolTimer_ = 0.0f;
             isShot_ = true;
+            fireBallAttackAreaID_ = UINT32_MAX;
+        }
+
+        if (fireBallAttackAreaID_ == UINT32_MAX) {
+			fireBallAttackAreaID_ = AttackAreaEmitter::GetInstance().EmitSquareForm(
+				bodyPos_.worldTransform_.GetWorldPosition(),
+				Vector2(sinf(bodyPos_.worldTransform_.rotate_.y), cosf(bodyPos_.worldTransform_.rotate_.y)),
+                Vector2(1.0f,15.0f), kFireBallMaxCoolTime_
+            );
         }
     }
 
     if (phaseTimer_ >= kFireBallPhaseMaxTime_) {
         isSelectRandomPhase_ = true;
+        fireBallAttackAreaID_ = UINT32_MAX;
     }
 
 }
