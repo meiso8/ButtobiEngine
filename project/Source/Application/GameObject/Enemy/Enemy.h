@@ -197,7 +197,7 @@ private:
     //KnockBack最大タイム
     const float kKnockBackMaxTime_ = 3.5f;
 
-    const int kKnockBackDamage_ = 4;
+    const int kKnockBackDamage_ = 5;
 #pragma endregion
 
 #pragma region //ファイアボール

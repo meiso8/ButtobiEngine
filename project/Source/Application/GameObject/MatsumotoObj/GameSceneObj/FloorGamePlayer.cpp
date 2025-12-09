@@ -104,7 +104,7 @@ void FloorGamePlayer::Initialize() {
     damageStruct_.isHit = json["Damage"]["isHit"];
     damageStruct_.hps.maxHp = json["Damage"]["maxHP"];
     damageStruct_.hps.hp = damageStruct_.hps.maxHp;
-    damageStruct_.hps.hpDecrease = damageStruct_.hps.maxHp /5;
+    damageStruct_.hps.hpDecrease = damageStruct_.hps.maxHp /3;
     damageStruct_.isDead = false;
     damageStruct_.isInvincible = false;
 

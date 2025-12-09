@@ -146,8 +146,9 @@ EmitterManager::EmitterManager(
 	enemyKnockBackEmitter_->emitter_.polarSpeed = InverseFPS * std::numbers::pi_v<float>*2.0f;
 	enemyKnockBackEmitter_->emitter_.polarSpeedMinMax = { 0.0f,0.0f };
 	enemyKnockBackEmitter_->emitter_.frequency = 0.2f;
-	enemyKnockBackEmitter_->emitter_.lifeTime = 1.5f;
+	enemyKnockBackEmitter_->emitter_.lifeTime = 3.0f;
 	enemyKnockBackEmitter_->emitter_.blendMode = kBlendModeAdd;
+	enemyKnockBackEmitter_->emitter_.color = { 1.0f,1.0f,1.0f,1.0f };
 
 	// ====================================================================
 	//葉っぱ
@@ -157,13 +158,14 @@ EmitterManager::EmitterManager(
 	leafEmitter_->emitter_.count = 1;
 	leafEmitter_->emitter_.movement = ParticleMovements::kParticleNormal;
 	leafEmitter_->emitter_.transform.translate_.y = 5.0f;
-	leafEmitter_->emitter_.translateAABB_ = { .min = {15.0f,-5.0f,-7.5f},.max = {16.0f,1.5f,7.5f} };
+	leafEmitter_->emitter_.translateAABB_ = { .min = {15.0f,-3.0f,-7.5f},.max = {16.0f,1.5f,7.5f} };
 	leafEmitter_->emitter_.rotateOffset_ = 0.0f;
 	leafEmitter_->emitter_.frequency = 1.2f;
-	leafEmitter_->emitter_.lifeTime = 7.0f;
+	leafEmitter_->emitter_.lifeTime = 6.0f;
 	leafEmitter_->emitter_.blendMode = kBlendModeNormal;
 	leafEmitter_->emitter_.scaleOffset_ = 0.2f;
 	leafEmitter_->emitter_.rotateOffset_ = 3.14f;
+	leafEmitter_->emitter_.velocityAABB = { .min = {-5.0f,-1.0f,-1.0f} ,.max = {-3.0f,1.0f,1.0f} };
 
 	//マネージャーから加速度の数値をもらう
 	auto& leafGroup = leafEmitter_->GetGroup();
@@ -176,16 +178,16 @@ EmitterManager::EmitterManager(
 	betobetoEmitter_->SetName("meltFloorParticle");
 	float size = kHalfFloorSize * 0.5f;
 	betobetoEmitter_->emitter_.count = 5;
-	betobetoEmitter_->emitter_.frequency = 0.5f;
+	betobetoEmitter_->emitter_.frequency = 0.45f;
 	betobetoEmitter_->emitter_.rotateOffset_ = { 0.0f };
-	betobetoEmitter_->emitter_.velocityAABB = { .min = {-0.2f,1.5f,0.0f},.max = {0.2f,2.0f,0.0f} };
+	betobetoEmitter_->emitter_.velocityAABB = { .min = {-2.0f,10.0f,-2.0f},.max = {2.0f,15.0f,2.0f} };
 	betobetoEmitter_->emitter_.transform.scale_ = { 0.3f,0.3f,0.3f };
 	betobetoEmitter_->emitter_.scaleOffset_ = { 0.2f };
-	betobetoEmitter_->emitter_.translateAABB_ = { .min = { -size ,0.0f,-size },.max = {size,0.0f,size} };
+	betobetoEmitter_->emitter_.translateAABB_ = { .min = { 0.0f ,-0.5f,0.0f },.max = {0.0f,-0.5f,0.0f} };
 
 	auto& melt = betobetoEmitter_->GetGroup();
-	melt->accelerationField.area = { .min = {-5.0f,0.0f,-5.0f},.max = {5.0f,3.0f,5.0f} };
-	melt->accelerationField.acceleration = { 0.0f,-1.0f,0.0f };
+	melt->accelerationField.area = { .min = {-10.0f,-1.0f,-10.0f},.max = {10.0f,5.0f,10.0f} };
+	melt->accelerationField.acceleration = { 0.0f,-45.0f,0.0f };
 
 	// ====================================================================
 
@@ -193,20 +195,21 @@ EmitterManager::EmitterManager(
 	starEmitter_->SetName("Star");
 	starEmitter_->emitter_.movement = ParticleMovements::kParticleShock;
 	starEmitter_->emitter_.radius = 0.1f;
-	starEmitter_->emitter_.radiusSpeed = InverseFPS * 2.0f;
+	starEmitter_->emitter_.radiusSpeed = InverseFPS * 10.0f;
 	starEmitter_->emitter_.count = 5;
 	starEmitter_->emitter_.color = { 1.0f,1.0f,0.0f,1.0f };
 	starEmitter_->emitter_.transform.translate_.y = 0.2f;
-	starEmitter_->emitter_.lifeTime = 0.5f;
-	//starEmitter_->emitter_.velocityAABB = { .min = {0.0f,2.0f,0.0f},.max = {2.0f,3.0f,2.0f} };
-	starEmitter_->emitter_.transform.scale_ = { 0.5f,0.5f,0.5f };
+	starEmitter_->emitter_.lifeTime = 0.3f;
+	//starEmitter_->emitter_.velocityAABB = { .min = {0.0f,0.0f,0.0f},.max = {0.0f,10.0f,0.0f} };
+	starEmitter_->emitter_.transform.scale_ = { 0.6f,0.6f,0.6f };
 	//starEmitter_->emitter_.scaleOffset_ = { 0.2f };
 	starEmitter_->emitter_.translateAABB_ = { .min = { -size ,0.0f,-size },.max = {size,0.0f,size} };
+	starEmitter_->emitter_.color = { 1.0f,0.5f,0.0f,1.0f };
 
 
 	auto& bobble = starEmitter_->GetGroup();
-	bobble->accelerationField.area = { .min = {-5.0f,0.0f,-5.0f},.max = {5.0f,3.0f,5.0f} };
-	bobble->accelerationField.acceleration = { 0.0f,-0.2f,0.0f };
+	bobble->accelerationField.area = { .min = {-5.0f,10.0f,-5.0f},.max = {5.0f,10.0f,5.0f} };
+	bobble->accelerationField.acceleration = { 0.0f,-60.0f,0.0f };
 
 }
 

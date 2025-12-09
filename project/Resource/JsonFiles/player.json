@@ -9,8 +9,8 @@
         "invincibilityTime": 2,
         "flashTimer": 0.05,
         "isHit": false,
-        "maxHP": 100,
-        "HP": 100,
+        "maxHP": 99,
+        "HP": 99,
         "hpDecrease": 1
     }
 

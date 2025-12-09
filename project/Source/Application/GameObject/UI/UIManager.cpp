@@ -6,7 +6,7 @@ UIManager::UIManager(HPs& enemyHp,HPs& enemyTotalHp, HPs& playerHp,bool& isPlaye
 
     hpGages_.emplace(GageType::kEnemy, std::make_unique<HPGage>());
     hpGages_[kEnemy]->SetHpPtr(&enemyHp);
-    hpGages_[kEnemy]->Setting({ 512.0f,32.0f }, { static_cast<float>(Window::GetClientWidth())-64.0f,80.0f}, { 1.0f,1.0f });
+    hpGages_[kEnemy]->Setting({ 512.0f*1.25f,32.0f*1.25f }, { static_cast<float>(Window::GetClientWidth())-32.0f,80.0f}, { 1.0f,1.0f });
     hpGages_[kEnemy]->isHitPtr_ = &isEnemyHit;
     hpGages_[kEnemy]->isKnockBackPtr_ = &isEnemyKnockBack;
 #ifdef _DEBUG
@@ -23,7 +23,7 @@ UIManager::UIManager(HPs& enemyHp,HPs& enemyTotalHp, HPs& playerHp,bool& isPlaye
     playerHpIcon_->SetHpPtr(&playerHp);
     playerHpIcon_->SetIsHitPtr(isPlayerHit);
     playerHpIcon_->SetTextureHandle(Texture::PLAYER_HP_ICON);
-    playerHpIcon_->Setting({ 64.0f,64.0f }, { 64.0f,static_cast<float>(Window::GetClientHeight() - 96) });
+    playerHpIcon_->Setting({ 64.0f*1.2f,64.0f*1.2f }, { 32.0f,20.0f});
 
     enemyHpIcon_ = std::make_unique<HPIcon>();
     enemyHpIcon_->SetMaxIconNum(3);

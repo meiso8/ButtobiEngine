@@ -40,7 +40,7 @@ private:
     float maxTime_ = 1.0f;
     float theta_ = 0.0f;
     size_t drawHpNum_ = 0;
-    int maxIcon_ = 5;
+    int maxIcon_ = 3;
     Texture::TEXTURE_HANDLE textureHandle_ = Texture::TEXTURE_HANDLE::WHITE_1X1;
     std::unique_ptr<Shake>shake = nullptr;
 };

@@ -403,8 +403,8 @@ void Enemy::Tackle()
             int random = rand() % 3;
             //1/3の確率でタックルしない
             if (random == 0) {
-
-                isFeint_ = true;
+                // 必ずタックルするようにfalseにします(ジェイムズ修正)
+                isFeint_ = false;
             } else {
                 isFeint_ = false;
             }
