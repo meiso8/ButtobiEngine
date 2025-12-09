@@ -18,7 +18,8 @@ constexpr uint32_t kCollisionEnemyBomb = 0b1 << 4;
 constexpr uint32_t kCollisionEnemyWave = 0b1 << 5;
 // 床
 constexpr uint32_t kCollisionFloor= 0b1 << 6;
-
+// 家
+constexpr uint32_t kCollisionHouse = 0b1 << 7;
 // 何の陣営にも属さない
 constexpr uint32_t kCollisionNone = 0b0;
 
