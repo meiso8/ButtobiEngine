@@ -382,6 +382,7 @@ void Enemy::LeathalMoveUpdate() {
     if (!isLeathalVec_) {
         isLeathalVec_ = true;
         velocity_ = { 5.0f,30.0f,350.0f };
+        Sound::PlaySE(Sound::kDefeatBoss);
 
     }
 

@@ -49,6 +49,7 @@
 #include"Lights/SpotLightManager.h"
 
 #include "MatsumotoObj/GameSceneObj/AttackAreaEmitter.h"
+#include "MatsumotoObj/GameSceneObj/FrameStopManager.h"
 GameScene::GameScene()
 {
     // 現在のカメラを設定
@@ -146,7 +147,6 @@ void GameScene::Initialize() {
     enemyShockWaveManager_->Initialize();
     enemyShotWaveManager_->Initialize();
 
-  
     nest_->Init();
     backGround_->Initialize();
  
@@ -167,6 +167,7 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 	SceneStaticValue::isPlayerAlive = !floorGamePlayer_->IsDead();
+	FrameStopManager::GetInstance().Update();
 
     UpdateBGM();
 
@@ -195,7 +196,7 @@ void GameScene::Update() {
         sceneChange_->SetState(SceneChange::kFadeIn, 30);
     }
 
-    if (!PauseScreen::isActive_) {
+    if (!PauseScreen::isActive_ && !FrameStopManager::GetInstance().isFrameStop_) {
         UpdateLight();
         UpdateCamera();
         UpdateGameObject();
