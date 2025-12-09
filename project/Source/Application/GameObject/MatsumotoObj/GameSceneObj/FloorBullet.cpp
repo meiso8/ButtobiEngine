@@ -30,8 +30,8 @@ FloorBullet::FloorBullet() {
 
 	SetRadius(kHalfFloorSize);
 	SetCollisionAttribute(kCollisionPlayerBullet);
-	// 弾は「敵と敵の弾」とだけ衝突したい
-	SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet);
+	// 弾は「敵と敵の弾と家」とだけ衝突したい
+	SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet| kCollisionHouse);
 }
 
 FloorBullet::~FloorBullet() {
@@ -64,10 +64,10 @@ void FloorBullet::OnCollision(Collider* collider) {
 		return;
 	}
 
-	if (collider->GetCollisionAttribute() == kCollisionEnemy || collider->GetCollisionAttribute() == kCollisionEnemyBullet) {
-		//デバック用
-		OnCollisionCollider();
-	}
+	//if (collider->GetCollisionAttribute() == kCollisionEnemy || collider->GetCollisionAttribute() == kCollisionEnemyBullet) {
+	//	//デバック用
+	//	OnCollisionCollider();
+	//}
 
 	if (collider->GetCollisionAttribute() == kCollisionEnemy) {
 		//デバック用

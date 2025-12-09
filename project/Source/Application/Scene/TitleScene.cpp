@@ -167,7 +167,8 @@ void TitleScene::Update()
 
     CheckAllCollision();
 
-
+    //エミッター
+    emitterManager_->Update(*currentCamera_);
 }
 
 void TitleScene::Draw()
@@ -203,8 +204,20 @@ void TitleScene::Draw()
 void TitleScene::Debug()
 {
 
+#ifdef USE_IMGUI //ImGuiを使用する際はこれで囲んでください
+
+    if (Input::IsTriggerKey(DIK_Q)) {
+        SwitchCamera();
+    }
+
+    ImGui::Text("SwitchCamera : Q key");
+    DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
+    std::function<void()> func = [this]() { SwitchCamera(); };
+    DebugUI::Button("ChangeCamera", func);
     DebugUI::CheckCamera(*camera_);
     emitterManager_->Debug();
+#endif
+
 }
 
 void TitleScene::SceneChangeUpdate()
@@ -273,8 +286,7 @@ void TitleScene::UpdateGameObject() {
     // アニメーション更新
     floorGamePlayerAnimationManager_->Update();
 
-    //エミッター
-    emitterManager_->Update(*currentCamera_);
+
 }
 
 void TitleScene::CheckAllCollision() {
@@ -282,6 +294,10 @@ void TitleScene::CheckAllCollision() {
 
     collisionManager_->AddCollider(floorGamePlayer_.get());
 	collisionManager_->AddCollider(titleText_.get());
+
+    for (auto& [type,house] : house_->GetColliders()) {
+        collisionManager_->AddCollider(house.get());
+    }
 
     for (auto& bullet : floorBulletManager_->GetBullets()) {
         if (bullet->isActive_) { collisionManager_->AddCollider(bullet.get()); }

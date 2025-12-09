@@ -263,11 +263,14 @@ void GameScene::Draw() {
 
 void GameScene::Debug()
 {
+
+
+#ifdef USE_IMGUI //ImGuiを使用する際はこれで囲んでください
+
     if (Input::IsTriggerKey(DIK_Q)) {
         SwitchCamera();
     }
 
-#ifdef USE_IMGUI //ImGuiを使用する際はこれで囲んでください
     ImGui::Text("SwitchCamera : Q key");
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
     std::function<void()> func = [this]() { SwitchCamera(); };

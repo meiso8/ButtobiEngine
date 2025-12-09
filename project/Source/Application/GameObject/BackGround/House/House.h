@@ -3,10 +3,24 @@
 #include"Object3d.h"
 #include <unordered_map>
 #include"Collider.h"
-
+#include<memory>
 class Model;
 class Camera;
 enum LightMode;
+
+class HouseCollider :public Collider {
+
+public:
+    HouseCollider();
+    void Setting(AABB aabb,Model* model);
+    void Initialize();
+    void Update();
+    void Draw(Camera& camera);
+    /// @brief 衝突時コールバック関数
+    void OnCollision(Collider* collider)override;
+    Vector3 GetWorldPosition() const override;
+    Object3d pos_;
+};
 
 class House
 {
@@ -29,10 +43,14 @@ public:
         hitCount_ = &hitCount;
         maxHitCount_ = maxHitCount;
     }
+    std::unordered_map<Objects, std::unique_ptr<HouseCollider>>& GetColliders() {
+        return colliders_
+            ;
+    }
 private:
     int* hitCount_ = nullptr;
     int maxHitCount_ = 0;
-    std::unordered_map<Objects, Object3d> positions_;
+    std::unordered_map<Objects, std::unique_ptr<HouseCollider>> colliders_;
     float wallBreakTimer_ = 0.0f;
     bool isDoorOpen_ = false;
     bool isWallBrake_ = false;
