@@ -254,7 +254,7 @@ void FloorGamePlayer::Move() {
         //べとべと床にいるときは移動速度を落とす
         if (isOnStickyFloor_) {
             Sound::PlayOriginSE(Sound::kMeltFloor,1.0f);
-            VibrateManager::SetTime(0.01f, 1000, 1000);
+            VibrateManager::SetTime(0.0001f, 770, 770);
             body_.worldTransform_.translate_ += moveDir_ * moveSpeed_ * stickyFloorSlowRate_;
         } else {
             Sound::PlayOriginSE(Sound::kPlayerWalk,-0.6f);

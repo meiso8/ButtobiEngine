@@ -219,10 +219,14 @@ EmitterManager::EmitterManager(
     floorBreakEmitter_ = std::make_unique<ParticleEmitter>();
     floorBreakEmitter_->SetName("floorParticle");
 
-    floorBreakEmitter_->emitter_.movement = ParticleMovements::kParticleShock;
-    floorBreakEmitter_->emitter_.radius = 0.1f;
-    floorBreakEmitter_->emitter_.radiusSpeed = InverseFPS * 10.0f;
+    floorBreakEmitter_->emitter_.movement = ParticleMovements::kParticleNormal;
+    //floorBreakEmitter_->emitter_.radius = 0.1f;
+    //floorBreakEmitter_->emitter_.radiusSpeed = InverseFPS * 10.0f;
     floorBreakEmitter_->emitter_.rotateOffset_ = 3.14f;
+    floorBreakEmitter_->emitter_.transform.scale_ = { 0.6f,0.6f,0.6f };
+    floorBreakEmitter_->emitter_.lifeTime = 0.3f;
+    floorBreakEmitter_->emitter_.count = 8;
+    floorBreakEmitter_->emitter_.velocityAABB = { .min = {-10.0f,-1.0f,-10.0f},.max = {10.0f,3.0f,10.0f} };
 
 
     spawnHealItemEmitter = std::make_unique<ParticleEmitter>();
