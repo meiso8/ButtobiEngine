@@ -6,6 +6,7 @@
 #include"Input.h"
 #include<algorithm>
 #include"CollisionConfig.h"
+#include"Sound.h"
 House::House()
 {
 
@@ -142,6 +143,7 @@ void HouseCollider::Draw(Camera& camera)
 void HouseCollider::OnCollision(Collider* collider)
 {
     OnCollisionCollider();
+    Sound::PlaySE(Sound::kDefeatBoss);
 }
 
 Vector3 HouseCollider::GetWorldPosition() const
