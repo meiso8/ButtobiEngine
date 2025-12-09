@@ -67,6 +67,8 @@ void Sound::LoadAllSound()
     handles_[kWindAttackCharge] = Load("Resource/Sounds/SE/windAttackCharge.mp3");
     handles_[kWindAttackShot] = Load("Resource/Sounds/SE/windAttackShot.mp3");
 
+	handles_[zushaa] = Load("Resource/Sounds/SE/zushaa.mp3");
+
 }
 
 void Sound::PlayBGM(const TAG& tag, const float& volumeOffset, const bool& loop)

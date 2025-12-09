@@ -15,6 +15,8 @@
 #include "MatsumotoObj/GameSceneObj/HealItemSpawner.h"
 #include "MatsumotoObj/GameSceneObj/Data/MapData.h"
 #include "MatsumotoObj/GameSceneObj/AttackAreaEmitter.h"
+#include "MatsumotoObj/GameSceneObj/FrameStopManager.h"
+#include "MatsumotoObj/GameSceneObj/FlashEffecter.h"
 
 #define PI std::numbers::pi_v<float>
 #define QUARTER_PI PI*0.25f
@@ -382,7 +384,9 @@ void Enemy::LeathalMoveUpdate() {
     if (!isLeathalVec_) {
         isLeathalVec_ = true;
         velocity_ = { 5.0f,30.0f,350.0f };
-
+        Sound::PlaySE(Sound::zushaa);
+		FrameStopManager::GetInstance().StopFrame(60);
+		FlashEffecter::GetInstance().StartFlash({ 1.0f,1.0f,1.0f,1.0f }, 0.5f, 0.1f);
     }
 
     velocity_.y -= 9.8f * 0.016f;

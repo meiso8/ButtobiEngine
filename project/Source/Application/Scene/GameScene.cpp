@@ -49,6 +49,8 @@
 #include"Lights/SpotLightManager.h"
 
 #include "MatsumotoObj/GameSceneObj/AttackAreaEmitter.h"
+#include "MatsumotoObj/GameSceneObj/FrameStopManager.h"
+#include "MatsumotoObj/GameSceneObj/FlashEffecter.h"
 GameScene::GameScene()
 {
     // 現在のカメラを設定
@@ -151,7 +153,6 @@ void GameScene::Initialize() {
     enemyShockWaveManager_->Initialize();
     enemyShotWaveManager_->Initialize();
 
-  
     nest_->Init();
     backGround_->Initialize();
  
@@ -172,6 +173,7 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 	SceneStaticValue::isPlayerAlive = !floorGamePlayer_->IsDead();
+	FrameStopManager::GetInstance().Update();
 
     UpdateBGM();
 
@@ -200,7 +202,7 @@ void GameScene::Update() {
         sceneChange_->SetState(SceneChange::kFadeIn, 30);
     }
 
-    if (!PauseScreen::isActive_) {
+    if (!PauseScreen::isActive_ && !FrameStopManager::GetInstance().isFrameStop_) {
         UpdateLight();
         UpdateCamera();
         UpdateGameObject();
@@ -212,7 +214,7 @@ void GameScene::Update() {
 
     letterboxBars_->Update();
     uiManager_->Update();
-
+	FlashEffecter::GetInstance().Update();
 	
 }
 
@@ -250,6 +252,7 @@ void GameScene::Draw() {
     //ポーズ画面を描画する
     uiManager_->Draw();
     gameOverEvent_->Draw();
+	FlashEffecter::GetInstance().Draw();
  
 	
 #pragma endregion

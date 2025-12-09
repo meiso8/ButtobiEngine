@@ -16,6 +16,7 @@
 #include "MatsumotoObj/GameSceneObj/Data/MapData.h"
 
 #include "MatsumotoObj/GameSceneObj/AttackAreaEmitter.h"
+#include "MatsumotoObj/GameSceneObj/FrameStopManager.h"
 
 FloorGamePlayer::FloorGamePlayer() {
     body_.Create();
@@ -399,6 +400,7 @@ void FloorGamePlayer::SetBodyColor(const Vector4& color)
 void FloorGamePlayer::HitUpdate()
 {
     if (damageStruct_.isInvincible || damageStruct_.isHit) { return; }
+	FrameStopManager::GetInstance().StopFrame(5);
 
     damageStruct_.isHit = true;
     damageStruct_.isInvincible = true;
