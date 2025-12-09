@@ -39,7 +39,7 @@ void EnemyShockWaveManager::ShotWave(const Vector3& startPos, const Vector3& end
 			AttackAreaEmitter::GetInstance().EmitSquareForm(
                 startPos,
 				Normalize(Vector2(endPos.z - startPos.z, endPos.x - startPos.x)),
-                Vector2(1.5f, Length((endPos - startPos))), 2.5f);
+                Vector2(1.5f, Length((endPos - startPos))), 2.1f);
             break;
         }
     }
