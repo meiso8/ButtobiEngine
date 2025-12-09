@@ -36,6 +36,7 @@ public:
         BUBBLE_PARTICLE,
         LEAF_PARTICLE,
         FLOOR_PARTICLE,
+        HEAL_PARTICLE,
         BLOOM,
 
         ENEMY_TEXTURE2,

@@ -43,6 +43,10 @@ void ParticleManager::CreateAll()
 
     //ほしパーティクル
     CreateParticleGroup("Star", Texture::STAR_PARTICLE);
+
+
+    //ヒールアイテムパーティクル
+    CreateParticleGroup("SpawnHealItem", Texture::HEAL_PARTICLE);
 }
 
 // ==========================================================================================================

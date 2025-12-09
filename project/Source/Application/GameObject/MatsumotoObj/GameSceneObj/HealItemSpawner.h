@@ -16,7 +16,10 @@ public:
     void SpawnHealItem(const Vector3& position);
     void AddCollider(CollisionManager* collisionManager);
     void Release();
-
+    std::vector<std::unique_ptr<HealItem>>& GetHealItems() {
+        return healItems_
+            ;
+    };
 private:
     HealItemSpawner();
     ~HealItemSpawner();
