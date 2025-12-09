@@ -23,8 +23,8 @@
 #include "MatsumotoObj/TitleSceneObj/ActionUI.h"
 
 
-#include"House/House.h"   
-#include"Tree/Tree.h"
+#include"BackGround/House/House.h"
+#include"BackGround/BackGround.h"
 #include"PlayerDirectionSpotLight.h"
 
 #pragma endregion
@@ -38,7 +38,7 @@ public:
     void Update()override;
     void Draw()override;
     void Debug()override;
-   void SceneChangeUpdate()override;
+    void SceneChangeUpdate()override;
 
 private:
     void UpdateCamera();
@@ -57,20 +57,20 @@ private:
     std::unique_ptr<FloorGamePlayerAnimationManager>floorGamePlayerAnimationManager_ = nullptr;
     std::unique_ptr<PlayerFloorStripManager>playerFloorStripManager_ = nullptr;
 
-	std::unique_ptr<TitleText> titleText_ = nullptr;
-	std::unique_ptr<BossDummy> bossDummy_ = nullptr;
-	std::unique_ptr<LetterboxBars> letterboxBars_ = nullptr;
-	std::unique_ptr<ActionUI> actionUI_ = nullptr;
+    std::unique_ptr<TitleText> titleText_ = nullptr;
+    std::unique_ptr<BossDummy> bossDummy_ = nullptr;
+    std::unique_ptr<LetterboxBars> letterboxBars_ = nullptr;
+    std::unique_ptr<ActionUI> actionUI_ = nullptr;
     //家追加しましたヨシダ
     std::unique_ptr<House>house_ = nullptr;
-    std::unique_ptr<Tree>tree_ = nullptr;
+    std::unique_ptr<BackGround>backGround_ = nullptr;
 
-        std::unique_ptr<PlayerDirectionSpotLight>playerDirectionSpotLight_ = nullptr;
+    std::unique_ptr<PlayerDirectionSpotLight>playerDirectionSpotLight_ = nullptr;
 
-    
+
 
 #pragma endregion
-	float eventTimer_ = 0.0f;
+    float eventTimer_ = 0.0f;
 
     std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
 };

@@ -27,10 +27,10 @@
 #include "Enemy/EnemyFloorChangeManager.h"
 #include "Enemy/EnemyShockWaveManager.h"
 #include "Enemy/EnemyShotWaveManager.h"
-#include"Tree/Tree.h"
-#include"Nest/Nest.h"
-#include"Ground.h"
-#include"BetoBeto/BetoBeto.h"
+
+#include"BackGround/Nest/Nest.h"
+
+#include"BackGround/BackGround.h"
 #pragma endregion
 
 #include"CollisionManager.h"
@@ -84,10 +84,9 @@ private:
     std::unique_ptr<EnemyShockWaveManager>enemyShockWaveManager_ = nullptr;
     std::unique_ptr<EnemyShotWaveManager>enemyShotWaveManager_ = nullptr;
 
-    std::unique_ptr<Tree>tree_ = nullptr;
-    std::unique_ptr<Ground> ground_ = nullptr;
+
     std::unique_ptr<Nest> nest_ = nullptr;
-    std::unique_ptr<BetoBeto> betoBeto_ = nullptr;
+    std::unique_ptr<BackGround> backGround_ = nullptr;
 
 #pragma endregion
 
