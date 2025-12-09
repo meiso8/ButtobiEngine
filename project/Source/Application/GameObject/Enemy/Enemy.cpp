@@ -600,6 +600,8 @@ void Enemy::LerpPos(const Vector3& endPos, const float& lerpPosSpeed)
 
 void Enemy::SwitchState()
 {
+    AttackAreaEmitter::GetInstance().Initialize();
+
     isReqestOverheadView_ = false;
     if (currentState_ == "First") {
         currentState_ = "Second";

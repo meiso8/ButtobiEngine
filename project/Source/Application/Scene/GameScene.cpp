@@ -202,13 +202,13 @@ void GameScene::Update() {
         CheckAllCollision();
         //エミッター
         emitterManager_->Update(*currentCamera_);
-
+        AttackAreaEmitter::GetInstance().Update();
     }
 
     letterboxBars_->Update();
     uiManager_->Update();
 
-	AttackAreaEmitter::GetInstance().Update();
+	
 }
 
 void GameScene::Draw() {
