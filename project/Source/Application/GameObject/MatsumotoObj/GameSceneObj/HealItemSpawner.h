@@ -20,6 +20,7 @@ public:
         return healItems_
             ;
     };
+    const int kMaxHealItemCount_ = 10;
 private:
     HealItemSpawner();
     ~HealItemSpawner();
@@ -27,5 +28,5 @@ private:
     HealItemSpawner& operator=(const HealItemSpawner&) = delete;
 
     std::vector<std::unique_ptr<HealItem>> healItems_;
-    const int kMaxHealItemCount_ = 10;
+
 };

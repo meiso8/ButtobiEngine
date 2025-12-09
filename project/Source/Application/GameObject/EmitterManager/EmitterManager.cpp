@@ -228,14 +228,18 @@ EmitterManager::EmitterManager(
     floorBreakEmitter_->emitter_.count = 8;
     floorBreakEmitter_->emitter_.velocityAABB = { .min = {-10.0f,-1.0f,-10.0f},.max = {10.0f,3.0f,10.0f} };
 
+    spawnHealItemEmitters_.resize(HealItemSpawner::Instance().kMaxHealItemCount_);
 
-    spawnHealItemEmitter = std::make_unique<ParticleEmitter>();
-    spawnHealItemEmitter->SetName("SpawnHealItem");
-    spawnHealItemEmitter->emitter_.velocityAABB = { .min = {0.0f,1.0f,0.0f},.max = {0.0f,1.0f,0.0f} };
-    spawnHealItemEmitter->emitter_.translateAABB_ = { .min = { -size ,0.0f,-size },.max = {size,0.0f,size} };
-    spawnHealItemEmitter->emitter_.transform.scale_ = { 0.2f,0.2f,0.2f };
-    spawnHealItemEmitter->emitter_.frequency = 0.2f;
-    spawnHealItemEmitter->emitter_.count = 3;
+    for (auto& emitter : spawnHealItemEmitters_) {
+        emitter = std::make_unique<ParticleEmitter>();
+        emitter->SetName("SpawnHealItem");
+        emitter->emitter_.velocityAABB = { .min = {0.0f,1.0f,0.0f},.max = {0.0f,1.0f,0.0f} };
+        emitter->emitter_.translateAABB_ = { .min = { -size ,0.0f,-size },.max = {size,0.0f,size} };
+        emitter->emitter_.transform.scale_ = { 0.2f,0.2f,0.2f };
+        emitter->emitter_.frequency = 0.2f;
+        emitter->emitter_.count = 3;
+    }
+
 }
 
 
@@ -380,13 +384,15 @@ void EmitterManager::Update(Camera& camera)
         }
     }
 
+  
+    int i = 0;
     for (auto& healItem : HealItemSpawner::Instance().GetHealItems()) {
         if (healItem->isActive_) {
-            spawnHealItemEmitter->emitter_.transform.Parent(healItem->body_.worldTransform_);
-            spawnHealItemEmitter->UpdateEmitter();
-            spawnHealItemEmitter->UpdateTimer();
+            spawnHealItemEmitters_[i]->emitter_.transform.Parent(healItem->body_.worldTransform_);
+            spawnHealItemEmitters_[i]->UpdateEmitter();
+            spawnHealItemEmitters_[i]->UpdateTimer();
+            i++;
         }
-
     }
 
     //葉っぱ
@@ -416,7 +422,7 @@ void EmitterManager::Debug()
     DebugUI::CheckParticle(*leafEmitter_, "leafEmitter");
     DebugUI::CheckParticle(*betobetoEmitter_, "betobetoEmitter");
     DebugUI::CheckParticle(*starEmitter_, "starEmitter");
-    DebugUI::CheckParticle(*spawnHealItemEmitter, "spawnHealItemEmitter");
+    DebugUI::CheckParticle(*spawnHealItemEmitters_[0], "spawnHealItemEmitter");
 
-    
+
 }

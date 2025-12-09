@@ -60,7 +60,7 @@ private:
     std::unique_ptr<ParticleEmitter> starEmitter_ = nullptr;
 
     std::unique_ptr<ParticleEmitter> floorBreakEmitter_ = nullptr;
-    std::unique_ptr<ParticleEmitter> spawnHealItemEmitter = nullptr;
+    std::vector< std::unique_ptr<ParticleEmitter>> spawnHealItemEmitters_;
 
     
 
