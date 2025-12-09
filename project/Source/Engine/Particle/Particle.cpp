@@ -10,6 +10,7 @@
 #include"SpriteCamera.h"
 #include"ParticleEmitter.h"
 #include"Input.h"
+#include"Lerp.h"
 
 using namespace  Microsoft::WRL;
 
@@ -213,6 +214,11 @@ void ParticleManager::Emit(Emitter& emitter)
     particleGroups[emitter.name]->parentPos_ = &emitter.transform;
 
     particleGroups[emitter.name]->blendMode = emitter.blendMode;
+
+
+    particleGroups[emitter.name]->startAlpha_ = emitter.startAlpha_;
+    particleGroups[emitter.name]->endAlpha_ = emitter.endAlpha_;
+
 
     if (emitter.movement == kParticleSphere|| emitter.movement == kParticleShock) {
         particleGroups[emitter.name]->sphericalCoordinates.splice(particleGroups[emitter.name]->sphericalCoordinates.end(), EmitCoordinate(emitter.count, emitter.radius, emitter.radiusSpeed, emitter.polarSpeed, emitter.polarSpeedMinMax, emitter.radiusSpeedMinMax));
@@ -435,8 +441,8 @@ void ParticleManager::UpdateInstancingData(ParticleGroup& group, Particle& parti
     group.instancingData[group.numInstance].WVP = worldViewProjectionMatrix;
     group.instancingData[group.numInstance].World = worldMatrix;
     group.instancingData[group.numInstance].color = (particleItr).color;
-    float alpha = 1.0f - ((particleItr).currentTime / (particleItr).lifeTime);
-    group.instancingData[group.numInstance].color.w = alpha;
+    float time = ((particleItr).currentTime / (particleItr).lifeTime);
+    group.instancingData[group.numInstance].color.w = Lerp(group.startAlpha_, group.endAlpha_, time);
 
     group.instancingResource->Unmap(0, nullptr);
 

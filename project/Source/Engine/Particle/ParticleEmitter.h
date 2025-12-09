@@ -20,6 +20,8 @@ struct Emitter
     float frequency = 0.5f;//発生頻度
     float frequencyTime = 0.0f;//頻度用時刻
     Vector4 color = {1.0f,1.0f,1.0f,1.0f};//色
+    float startAlpha_ = 1.0f;
+    float endAlpha_ = 0.0f;
     BlendMode blendMode = BlendMode::kBlendModeAdd;//ブレンドモード
     ParticleMovements movement = ParticleMovements::kParticleNormal;//動き
     float lifeTime = -1.0f;//生存時間

@@ -163,9 +163,12 @@ EmitterManager::EmitterManager(
 	leafEmitter_->emitter_.frequency = 1.2f;
 	leafEmitter_->emitter_.lifeTime = 6.0f;
 	leafEmitter_->emitter_.blendMode = kBlendModeNormal;
+	leafEmitter_->emitter_.transform.scale_ = {0.5f,0.5f,0.5f};
 	leafEmitter_->emitter_.scaleOffset_ = 0.2f;
 	leafEmitter_->emitter_.rotateOffset_ = 3.14f;
 	leafEmitter_->emitter_.velocityAABB = { .min = {-5.0f,-1.0f,-1.0f} ,.max = {-3.0f,1.0f,1.0f} };
+	leafEmitter_->emitter_.startAlpha_ = 0.5f;
+	leafEmitter_->emitter_.endAlpha_ = 0.0f;
 
 	//マネージャーから加速度の数値をもらう
 	auto& leafGroup = leafEmitter_->GetGroup();
