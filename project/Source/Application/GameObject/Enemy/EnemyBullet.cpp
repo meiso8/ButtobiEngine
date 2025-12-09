@@ -37,7 +37,7 @@ void EnemyBullet::Initialize() {
     body_.Initialize();
     body_.worldTransform_.rotate_.x = 1.0f;
     moveDir_ = { 0.0f,0.0f,1.0f };
-    moveSpeed_ = 0.15f;
+    moveSpeed_ = 0.1f;
     lifeTimer_ = 0.0f;
     lifeDuration_ = 2.0f;
     isActive_ = false;

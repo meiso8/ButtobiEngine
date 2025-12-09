@@ -167,7 +167,7 @@ private:
     //フェイントするかどうか
     bool isFeint_ = false;
     //タックル中にプレイヤーに向くタイム
-    const float kTackleLookTime_ = 2.0f;
+    const float kTackleLookTime_ = 3.0f;
     //タックル中にぽよぽよするタイム
     const float kTacklePoyoTime_ = kTackleLookTime_;
     //タックル終了インターバル
@@ -206,11 +206,11 @@ private:
     //ファイアボールのクールタイム
     float fireBallCoolTimer_ = 0.0f;
     //ファイアボールのクールタイム
-    float kFireBallMaxCoolTime_ = 1.5f;
+    float kFireBallMaxCoolTime_ = 2.0f;
     //一回転する時間
     const float kFireBallRotateTime_ = 1.0f;
     //ファイアボール最大タイム　ここは後隙を含めた値にする
-    const float kFireBallPhaseMaxTime_ = 8.5f;
+    const float kFireBallPhaseMaxTime_ = 10.0f;
 
 	uint32_t fireBallAttackAreaID_ = UINT32_MAX;
 #pragma endregion
@@ -230,9 +230,9 @@ private:
     //波攻撃地点まで移動するタイム
     const float kWavePhaseMovePosTime_ = 1.0f;
     //波攻撃地点まで移動するタイム
-    const float kWaveShotTime_ = kWavePhaseMovePosTime_ + 0.5f;
+    const float kWaveShotTime_ = kWavePhaseMovePosTime_ + 1.0f;
     //波攻撃の終了タイム　ここは後隙を含めた値にする
-    const float kWavePhaseMaxTime_ = 5.0f;
+    const float kWavePhaseMaxTime_ = 5.5f;
 #pragma endregion
 #pragma region //四角移動
     //四角移動の初期地点の移動時間
