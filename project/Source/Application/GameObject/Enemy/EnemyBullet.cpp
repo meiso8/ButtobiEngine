@@ -11,7 +11,7 @@
 EnemyBullet::EnemyBullet() {
 
     body_.Create();
-    model_ = ModelManager::GetModel(ModelManager::FIRE_BALL);
+    model_ = ModelManager::GetModel(ModelManager::NATURE_OBJECT);
     body_.SetMesh(model_);
 
     SetRadius(0.5f);
@@ -35,6 +35,7 @@ void EnemyBullet::InitFlagAndPosAndTimer()
 
 void EnemyBullet::Initialize() {
     body_.Initialize();
+    body_.worldTransform_.rotate_.x = 1.0f;
     moveDir_ = { 0.0f,0.0f,1.0f };
     moveSpeed_ = 0.15f;
     lifeTimer_ = 0.0f;
@@ -74,7 +75,7 @@ void EnemyBullet::Update() {
         lifeTimer_ -= 0.016f;
     }
 
-    body_.worldTransform_.rotate_ = moveDir_;
+    body_.worldTransform_.rotate_.y += std::numbers::phi_v<float>*InverseFPS*3.0f;
     body_.worldTransform_.translate_ += moveDir_ * moveSpeed_;
     body_.Update();
 
@@ -90,7 +91,7 @@ void EnemyBullet::Draw(Camera& camera) {
 
     body_.Draw(camera, kBlendModeNormal);
 
-    ColliderDraw(camera);
+    //ColliderDraw(camera);
 }
 
 void EnemyBullet::Shot(const Vector3& position, const Vector3& direction, const float& speed, const float& size) {
@@ -98,7 +99,6 @@ void EnemyBullet::Shot(const Vector3& position, const Vector3& direction, const 
     moveDir_ = Normalize(direction);
     moveSpeed_ = speed;
     size_ = size;
-    body_.worldTransform_.rotate_ = moveDir_;
     body_.worldTransform_.scale_ = { size_,size_,size_ };
     lifeTimer_ = lifeDuration_;
     isActive_ = true;
