@@ -180,6 +180,7 @@ private:
     //タックル終了後初期地点に戻るタイム
     const float kTackleInitStartTime_ = kTackleGoPlayerTime_ + 1.0f;
 
+	uint32_t tackleAttackAreaID_ = UINT32_MAX;
 
 #pragma endregion
 
@@ -209,6 +210,8 @@ private:
     const float kFireBallRotateTime_ = 1.0f;
     //ファイアボール最大タイム　ここは後隙を含めた値にする
     const float kFireBallPhaseMaxTime_ = 8.5f;
+
+	uint32_t fireBallAttackAreaID_ = UINT32_MAX;
 #pragma endregion
 
 #pragma region //床攻撃

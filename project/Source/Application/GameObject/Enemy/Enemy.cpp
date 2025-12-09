@@ -14,6 +14,7 @@
 #include "MatsumotoObj/SceneStaticValue.h"
 #include "MatsumotoObj/GameSceneObj/HealItemSpawner.h"
 #include "MatsumotoObj/GameSceneObj/Data/MapData.h"
+#include "MatsumotoObj/GameSceneObj/AttackAreaEmitter.h"
 
 #define PI std::numbers::pi_v<float>
 #define QUARTER_PI PI*0.25f
@@ -160,6 +161,9 @@ void Enemy::Init() {
 
     bodyPos_.GetWaveData(0).time = 0.0f;
 
+	fireBallAttackAreaID_ = UINT32_MAX;
+	tackleAttackAreaID_ = UINT32_MAX;
+
 }
 
 void Enemy::InitState()
@@ -177,7 +181,6 @@ void Enemy::InitState()
     //速度
     float velocity = file[currentState_]["velocity"];
     velocity_ = { velocity ,velocity ,velocity };
-
 }
 
 
@@ -419,6 +422,21 @@ void Enemy::Tackle()
 
         PoyoPoyo(kTacklePoyoTime_);
 
+		if (tackleAttackAreaID_ == UINT32_MAX) {
+			tackleAttackAreaID_ = AttackAreaEmitter::GetInstance().EmitSquareForm(
+				bodyPos_.worldTransform_.GetWorldPosition(),
+				Vector2(1.0f,1.0f),
+                Vector2(3.0f,15.0f), kTacklePoyoTime_);
+		}
+
+        if (tackleAttackAreaID_ != UINT32_MAX) {
+            AttackAreaEmitter::GetInstance().ZmRotateEffect(
+                tackleAttackAreaID_,
+                bodyPos_.worldTransform_.GetWorldPosition(),
+                Vector2(cosf(bodyPos_.worldTransform_.rotate_.y), sinf(bodyPos_.worldTransform_.rotate_.y)),
+                Vector2(1.0f, 15.0f));
+        }
+
     } else if (phaseTimer_ <= kTackleInterval_) {
 
     } else if (phaseTimer_ <= kTackleGoPlayerTime_) {
@@ -440,6 +458,7 @@ void Enemy::Tackle()
                 if (damageStruct_.isHit) {
 
                     if (!isKnockBack_) {
+						tackleAttackAreaID_ = UINT32_MAX;
                         isKnockBack_ = true;
                         isKnockBackEmit_ = true;
                         LookTargetNormal(*playerPos_);
@@ -714,17 +733,34 @@ void Enemy::Fireball()
     } else {
 
         LookTargetNormal(*playerPos_);
+        if (fireBallAttackAreaID_ != UINT32_MAX) {
+            AttackAreaEmitter::GetInstance().ZmRotateEffect(
+                fireBallAttackAreaID_,
+                bodyPos_.worldTransform_.GetWorldPosition(),
+                Vector2(cosf(bodyPos_.worldTransform_.rotate_.y), sinf(bodyPos_.worldTransform_.rotate_.y)),
+                Vector2(1.0f, 15.0f));
+        }
 
         fireBallCoolTimer_ += InverseFPS;
 
         if (fireBallCoolTimer_ > kFireBallMaxCoolTime_) {
             fireBallCoolTimer_ = 0.0f;
             isShot_ = true;
+            fireBallAttackAreaID_ = UINT32_MAX;
+        }
+
+        if (fireBallAttackAreaID_ == UINT32_MAX) {
+			fireBallAttackAreaID_ = AttackAreaEmitter::GetInstance().EmitSquareForm(
+				bodyPos_.worldTransform_.GetWorldPosition(),
+				Vector2(sinf(bodyPos_.worldTransform_.rotate_.y), cosf(bodyPos_.worldTransform_.rotate_.y)),
+                Vector2(1.0f,15.0f), kFireBallMaxCoolTime_
+            );
         }
     }
 
     if (phaseTimer_ >= kFireBallPhaseMaxTime_) {
         isSelectRandomPhase_ = true;
+        fireBallAttackAreaID_ = UINT32_MAX;
     }
 
 }

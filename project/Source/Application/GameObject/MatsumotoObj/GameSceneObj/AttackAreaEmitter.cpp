@@ -95,6 +95,21 @@ void AttackAreaEmitter::RotateEffect(uint32_t effectID, const Vector3& position,
 	effectsPtr_[effectID]->RotateSquare(centerPos, dir, size);
 }
 
+void AttackAreaEmitter::ZmRotateEffect(uint32_t effectID, const Vector3& position, const Vector2& dir, const Vector2& size) {
+	if (effectID >= maxEffectNum_) return;
+	if (!effectsPtr_[effectID]->isActive_) return;
+
+	// -Zが正面の場合の四角形の中心座標を計算
+	float angle = MY_Utility::GetAngleFromDir(dir);
+	Vector3 centerPos = position;
+	// -Zが正面なのでz方向のオフセットを反転
+	centerPos.x += sinf(angle) * (size.y / 2.0f);
+	centerPos.z += cosf(angle) * (size.y / 2.0f);
+	centerPos.y = 0.0f;
+
+	effectsPtr_[effectID]->RotateSquare(centerPos, dir, size);
+}
+
 AttackAreaEmitter::AttackAreaEmitter()
 {
 	for (int i = 0; i < maxEffectNum_; i++) {

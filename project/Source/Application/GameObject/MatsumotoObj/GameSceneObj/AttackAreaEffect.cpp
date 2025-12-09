@@ -112,6 +112,7 @@ void AttackAreaEffect::RotateSquare(const Vector3& position, const Vector2& dir,
 	startPosition_ = position;
 
 	underBody_.worldTransform_.translate_ = position;
+	underBody_.worldTransform_.translate_.y -= 0.15f;
 	underBody_.worldTransform_.rotate_.y = angle;
 }
 
