@@ -50,6 +50,7 @@
 
 #include "MatsumotoObj/GameSceneObj/AttackAreaEmitter.h"
 #include "MatsumotoObj/GameSceneObj/FrameStopManager.h"
+#include "MatsumotoObj/GameSceneObj/FlashEffecter.h"
 GameScene::GameScene()
 {
     // 現在のカメラを設定
@@ -208,7 +209,7 @@ void GameScene::Update() {
 
     letterboxBars_->Update();
     uiManager_->Update();
-
+	FlashEffecter::GetInstance().Update();
 	
 }
 
@@ -246,6 +247,7 @@ void GameScene::Draw() {
     //ポーズ画面を描画する
     uiManager_->Draw();
     gameOverEvent_->Draw();
+	FlashEffecter::GetInstance().Draw();
  
 	
 #pragma endregion

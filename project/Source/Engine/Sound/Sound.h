@@ -61,6 +61,8 @@ public:
         kTrhowObj,
         kWindAttackCharge,
         kWindAttackShot,
+
+        zushaa,
         
         SOUNDS
     };

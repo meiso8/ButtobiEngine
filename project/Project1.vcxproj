@@ -163,6 +163,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBeak.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\AttackAreaEffect.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\AttackAreaEmitter.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FlashEffecter.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FrameStopManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\ResultSceneObj\PlayerDummy.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\SceneStaticClassManager.cpp" />
@@ -323,6 +324,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\AttackAreaEffect.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\AttackAreaEmitter.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FrameStopManager.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FlashEffecter.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\ResultSceneObj\PlayerDummy.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\SceneStaticClassManager.h" />
     <ClInclude Include="Source\Application\GameObject\PlayerDirectionSpotLight.h" />
