@@ -149,6 +149,7 @@ void FloorGameFloor::OnCollision(Collider* collider) {
 	}
 	if (collider->GetCollisionAttribute() == kCollisionEnemyBomb) {
 		SwapFloorType(FloorType::Bomb);
+
 		attackAreaEffectID_ = AttackAreaEmitter::GetInstance().EmitCircle(body_.worldTransform_.GetWorldPosition(), 3.0f, autoSwapDuration_);
 	}
 }
