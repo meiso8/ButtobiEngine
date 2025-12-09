@@ -364,7 +364,7 @@ private:
     //くらくらさせる
     void SpinBody();
     //くらくら終了時に戻す処理
-    void LerpSpinOriginBody();
+    void LerpSpinOriginBodyXZ();
 
     //羽を動かす
     void Winging(const float& speed);
