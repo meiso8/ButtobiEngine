@@ -30,6 +30,7 @@ PauseScreen::PauseScreen()
     sprites_[kBackToTitle]->Create(Texture::BUTTON_BACK_TO_TITL, { 0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f });
     sprites_[kButton]->Create(Texture::BUTTON_A, { 0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f });
     sprites_[kConfirm]->Create(Texture::CONFIRM_UI, { 0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f });
+    //sprites_[kConfirm]->SetScale({ 2.0f, 2.0f });
 
 
     float width = static_cast<float>(Window::GetClientWidth());
@@ -39,7 +40,7 @@ PauseScreen::PauseScreen()
     endPos_[kPauseBG] = { width - sprites_[kPauseBG]->GetSize().x,0.0f };
 
     startPos_[kPausing] = { width + 128.0f,64.0f };
-    endPos_[kPausing] = { width - sprites_[kPausing]->GetSize().x - 24.0f,startPos_[kPausing].y };
+    endPos_[kPausing] = { width - sprites_[kPausing]->GetSize().x + 8.0f,startPos_[kPausing].y };
 
     startPos_[kBackToGame] = { width + 256.0f,height * 0.5f - 32.0f };
     endPos_[kBackToGame] = { startPos_[kBackToGame].x - 128.0f - sprites_[kBackToGame]->GetSize().x,  startPos_[kBackToGame].y };
@@ -53,8 +54,8 @@ PauseScreen::PauseScreen()
     startPos_[kButton] = { width + 128.0f,height - sprites_[kButton]->GetSize().y - 40.0f };
     endPos_[kButton] = { width * 0.5f + sprites_[kButton]->GetSize().x + 256.0f, height - sprites_[kButton]->GetSize().y - 40.0f };
 
-    startPos_[kConfirm] = { width + 128.0f,height - sprites_[kConfirm]->GetSize().y - 64.0f };
-    endPos_[kConfirm] = { endPos_[kButton].x + 96.0f,  height - sprites_[kConfirm]->GetSize().y - 64.0f };
+    startPos_[kConfirm] = { width + 128.0f,height - sprites_[kConfirm]->GetSize().y - 48.0f };
+    endPos_[kConfirm] = { endPos_[kButton].x + 64.0f,  height - sprites_[kConfirm]->GetSize().y - 48.0f };
 
     for (int i = kButton; i < sprites_.size(); ++i) {
         sprites_[i]->SetPosition(endPos_[i]);
