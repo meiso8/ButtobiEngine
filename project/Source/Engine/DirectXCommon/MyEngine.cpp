@@ -118,6 +118,7 @@ void MyEngine::Debug()
     DebugUI::CheckSpotLight();
     DebugUI::CheckPointLightData(PointLightManager::GetPointLightData(0),"pointLight0");
     DebugUI::CheckPointLightData(PointLightManager::GetPointLightData(1), "pointLight1");
+    DebugUI::CheckPointLightData(PointLightManager::GetPointLightData(2), "pointLight2");
 #endif // USE_IMGUI
 
 

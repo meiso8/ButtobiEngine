@@ -71,6 +71,8 @@ struct ParticleGroup {
     ParticleMovements movement;
     AccelerationField accelerationField;
     BlendMode blendMode = BlendMode::kBlendModeAdd;
+    float startAlpha_ = 1.0f;
+    float endAlpha_ = 0.0f;
 };
 
 std::list<SphericalMove> EmitCoordinate(uint32_t count, const float& radius, const float& radiusSpeed, const float& polarSpeed, const MinMax& polarSpeedMinMax, const MinMax& radiusSpeedMinMax);

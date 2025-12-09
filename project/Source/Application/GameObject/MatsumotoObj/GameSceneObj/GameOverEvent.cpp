@@ -116,7 +116,7 @@ void GameOverEvent::Update() {
 	
 	// 決定ボタンで決定
 	if (key.IsTrigger("Shot")) {
-		Sound::PlaySE(Sound::kDecision);
+		Sound::PlaySE(Sound::kDecision,1.0f);
 		if (timer_ > 1.0f) {
 			isReqestedAction_ = true;
 		}

@@ -163,9 +163,12 @@ EmitterManager::EmitterManager(
 	leafEmitter_->emitter_.frequency = 1.2f;
 	leafEmitter_->emitter_.lifeTime = 6.0f;
 	leafEmitter_->emitter_.blendMode = kBlendModeNormal;
+	leafEmitter_->emitter_.transform.scale_ = {0.5f,0.5f,0.5f};
 	leafEmitter_->emitter_.scaleOffset_ = 0.2f;
 	leafEmitter_->emitter_.rotateOffset_ = 3.14f;
 	leafEmitter_->emitter_.velocityAABB = { .min = {-5.0f,-1.0f,-1.0f} ,.max = {-3.0f,1.0f,1.0f} };
+	leafEmitter_->emitter_.startAlpha_ = 0.5f;
+	leafEmitter_->emitter_.endAlpha_ = 0.0f;
 
 	//マネージャーから加速度の数値をもらう
 	auto& leafGroup = leafEmitter_->GetGroup();
@@ -211,6 +214,15 @@ EmitterManager::EmitterManager(
 	bobble->accelerationField.area = { .min = {-5.0f,10.0f,-5.0f},.max = {5.0f,10.0f,5.0f} };
 	bobble->accelerationField.acceleration = { 0.0f,-60.0f,0.0f };
 
+	// ====================================================================
+	//床相殺パーティクル
+	floorBreakEmitter_ = std::make_unique<ParticleEmitter>();
+	floorBreakEmitter_->SetName("floorParticle");
+
+	floorBreakEmitter_->emitter_.movement = ParticleMovements::kParticleShock;
+	floorBreakEmitter_->emitter_.radius = 0.1f;
+	floorBreakEmitter_->emitter_.radiusSpeed = InverseFPS * 10.0f;
+	floorBreakEmitter_->emitter_.rotateOffset_ = 3.14f;
 }
 
 void EmitterManager::Initialize()
@@ -241,6 +253,8 @@ void EmitterManager::Initialize()
 	starEmitter_->InitTimer();
 	ParticleManager::Reset(starEmitter_->emitter_.name);
 
+	floorBreakEmitter_->InitTimer();
+	ParticleManager::Reset(floorBreakEmitter_->emitter_.name);
 }
 
 
@@ -341,6 +355,14 @@ void EmitterManager::Update(Camera& camera)
 				starEmitter_->UpdateEmitter();
 				starEmitter_->Emit();
 			}
+		}
+	}
+
+	for (auto& floorBullet : floorBulletManager_->GetBullets()) {
+		if (floorBullet->isHit_) {
+			floorBreakEmitter_->emitter_.transform.Parent(floorBullet->body_.worldTransform_);
+			floorBreakEmitter_->UpdateEmitter();
+			floorBreakEmitter_->Emit();
 		}
 	}
 

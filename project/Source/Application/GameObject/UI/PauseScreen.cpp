@@ -108,7 +108,7 @@ void PauseScreen::Update()
     }
 
     if (KeyBindConfig::Instance().IsTrigger("Menu")) {
-        Sound::PlaySE(Sound::kPauseButton);
+        Sound::PlaySE(Sound::kPauseButton,0.5f);
         isPause_ = (isPause_) ? false : true;
         pauseTimer_ = 0.0f;
         isActive_ = true;
@@ -191,7 +191,7 @@ void PauseScreen::SelectButton()
     } else {
         if (key->IsTrigger("MoveForward") || (Input::IsControllerStickPosMove(BUTTON_LEFT, 0, &stickPos) && stickPos.y > 0.5f)) {
 
-            Sound::PlaySE(Sound::kMoveCursor);
+            Sound::PlaySE(Sound::kMoveCursor,1.0f);
             selectButtonNum_--;
             if (selectButtonNum_ < 0) {
                 selectButtonNum_ = kButtonMax - 1;
@@ -201,7 +201,7 @@ void PauseScreen::SelectButton()
         }
 
         if (key->IsTrigger("MoveBack") || (Input::IsControllerStickPosMove(BUTTON_LEFT, 0, &stickPos) && stickPos.y < -0.5f)) {
-            Sound::PlaySE(Sound::kMoveCursor);
+            Sound::PlaySE(Sound::kMoveCursor,1.0f);
             selectButtonNum_++;
             selectButtonNum_ %= kButtonMax;
             scaleTheta_ = 0.0f;
@@ -212,7 +212,7 @@ void PauseScreen::SelectButton()
 
     if (key->IsTrigger("Shot")) {
 
-        Sound::PlaySE(Sound::kDecision);
+        Sound::PlaySE(Sound::kDecision,0.5f);
         switch (selectButtonNum_)
         {
         case kBackToGameButton:

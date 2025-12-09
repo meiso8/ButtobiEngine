@@ -112,6 +112,7 @@ void GameScene::Initialize() {
     DirectionalLightManager::GetDirectionalLightData()->direction = Normalize({ 0.7f,-0.24f,-0.64f });
     DirectionalLightManager::GetDirectionalLightData()->intensity = 1.0f;
     PointLightManager::GetPointLightData(1).intensity = 0.0f;
+    PointLightManager::GetPointLightData(2).intensity = 1.0f;
     SpotLightManager::GetData()->direction = {0.0f,0.0f,1.0f};
     SpotLightManager::GetData()->position = { 0.0f,0.5f,0.0f };
 
@@ -274,8 +275,6 @@ void GameScene::Debug()
 void GameScene::UpdateLight()
 {
 
-
-
     if (enemy_->GetCurrentState() == "Second") {
 
         float& intensity0 = PointLightManager::GetPointLightData(0).intensity;
@@ -396,7 +395,7 @@ void GameScene::UpdateGameObject()
     floorPlayerStripTargetUI_->Update();
     floorActionManager_->Update();
     if (enemy_->isReqestClearFloor_) {
-        Sound::PlaySE(Sound::kFloorRespawn);
+        Sound::PlaySE(Sound::kFloorRespawn,1.0f);
         floorGameFloorManager_->DamageCleanUp();
         enemy_->isReqestClearFloor_ = false;
     }
@@ -428,7 +427,7 @@ void GameScene::UpdateBGM()
     if (IsGameOverBGMSound()) {
         if (!isSoundGameOverBGM_) {
             isSoundGameOverBGM_ = true;
-            Sound::PlaySE(Sound::gameOverBGM);
+            Sound::PlaySE(Sound::gameOverBGM,0.5f);
         }
     }
 

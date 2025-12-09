@@ -34,7 +34,7 @@ void FloorStripManager::Update() {
 
 	// 床剥がし
 	if (player_->isReqestStript_ && !player_->isStriptting_) {
-		Sound::PlaySE(Sound::kStripObj);
+		Sound::PlaySE(Sound::kStripObj,1.0f);
 		player_->isStriptting_ = true;
 		player_->isReqestStript_ = false;
 		player_->body_.worldTransform_.scale_ = { 1.5f,0.1f,1.5f };
