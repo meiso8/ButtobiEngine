@@ -154,7 +154,7 @@ void GameScene::Initialize() {
     collisionManager_->ClearColliders();
 
     uiManager_->Initialize();
-
+    uiManager_->isGameOverPtr_ = &floorGamePlayer_->IsDead();
     emitterManager_->Initialize();
 
     gameclearTimer_ = 0.0f;
@@ -238,16 +238,16 @@ void GameScene::Draw() {
     //エミッター
     emitterManager_->Draw();
     AttackAreaEmitter::GetInstance().Draw(*currentCamera_);
-
-    uiManager_->Draw();
+    //赤いピンチ画面
+    uiManager_->DrawRedScreen();
     actionUI_->Draw();
     letterboxBars_->Draw();
+    //ポーズ画面を描画する
+    uiManager_->Draw();
     gameOverEvent_->Draw();
-    
+ 
 	
 #pragma endregion
-
-
 
     //シーン遷移を描画する
     sceneChange_->Draw();
