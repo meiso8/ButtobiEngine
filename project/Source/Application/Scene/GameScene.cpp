@@ -357,6 +357,7 @@ void GameScene::UpdateCamera()
 void GameScene::UpdateGameObject()
 {
     if (enemy_->IsDead()) {
+        enemyBombManager_->ClearBombs();
         floorGameFloorManager_->ForceChangeAllFloorType(FloorType::Strong);
         floorGamePlayer_->SetCollisionAttribute(kCollisionNone);
     }

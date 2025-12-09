@@ -95,4 +95,6 @@ private:
 	float stickyFloorSlowRate_;
 
 	float deathRotate_;
+
+	bool isPressStript_ = false;
 };
