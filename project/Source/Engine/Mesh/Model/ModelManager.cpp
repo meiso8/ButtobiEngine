@@ -27,7 +27,7 @@ void ModelManager::LoadAllModel()
     LoadModel("Resource/Models/EnemyHouse", "EnemyHouse.obj", ENEMY_SLEEP);
 
     LoadModel("Resource/Models/BirdNest", "Nest.obj", NEST);
-    LoadModel("Resource/Models/FireBall", "FireBall.obj", FIRE_BALL);
+    LoadModel("Resource/Models/NatureObject", "NatureObject.obj", NATURE_OBJECT);
     LoadModel("Resource/Models/Bomb", "bomb.obj", BOMB);
 
     LoadModel("Resource/Models/Ground", "Ground.obj", GROUND);
@@ -36,7 +36,6 @@ void ModelManager::LoadAllModel()
 
     //床と床パーティクル
     LoadModel("Resource/Models/Floor", "Floor.obj", FLOOR);
-    LoadModel("Resource/Models/MeltFloor", "MeltFloor.obj", MELT_FLOOR);
     LoadModel("Resource/Models/FloorFrame", "FloorFrame.obj", FLOOR_FRAME);
     LoadModel("Resource/Models/BetoBetoFloor", "betobeto.obj", BETOBETO_FLOOR);
     LoadModel("Resource/Models/HardFloor", "HardFloor.obj", HARD_FLOOR);
@@ -58,7 +57,7 @@ void ModelManager::LoadAllModel()
     LoadModel("Resource/Models/Player", "Body.obj", PLAYER_BODY);
     LoadModel("Resource/Models/Player", "Leg_L.obj", PLAYER_LEG_L);
     LoadModel("Resource/Models/Player", "Leg_R.obj", PLAYER_LEG_R);
-    LoadModel("Resource/Models/Player", "PlayerModel.obj", PLAYER_MODEL);
+
 
     LoadModel("Resource/Models/HealItem", "HealItem.obj", HEAL_ITEM);
 

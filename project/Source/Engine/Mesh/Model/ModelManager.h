@@ -18,14 +18,12 @@ public:
         ENEMY_WING_R,
         ENEMY_SLEEP,
         
-    
         NEST,
-        FIRE_BALL,
+        NATURE_OBJECT,
         GROUND,
         BOMB,
 
         FLOOR,
-        MELT_FLOOR,
         HARD_FLOOR,
 		EXPLOTION_FLOOR,
         FLOOR_FRAME,
@@ -50,9 +48,9 @@ public:
 
         PLAYER_MODEL,//プレイヤーの全体
 
-		ARROW,
+		    ARROW,
 
-		HEAL_ITEM,
+		    HEAL_ITEM,
         WORLD,
         MODELS,
     };

@@ -20,7 +20,7 @@ FloorBullet::FloorBullet() {
 	models_ =
 	{
 	  { FloorType::Normal, ModelManager::GetModel(ModelManager::FLOOR)},
-	  { FloorType::Sticky, ModelManager::GetModel(ModelManager::MELT_FLOOR) },
+	  { FloorType::Sticky, ModelManager::GetModel(ModelManager::FLOOR_FRAME) },
 	  { FloorType::Strong, ModelManager::GetModel(ModelManager::HARD_FLOOR) },
 	  { FloorType::Bomb, ModelManager::GetModel(ModelManager::EXPLOTION_FLOOR) }
 	};
