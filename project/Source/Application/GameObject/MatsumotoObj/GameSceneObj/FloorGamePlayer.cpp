@@ -234,7 +234,7 @@ void FloorGamePlayer::ForceDamage() {
 }
 
 void FloorGamePlayer::Move() {
-	if (HPs().hp <= 0) return;
+	if (damageStruct_.isDead) return;
 
     // 移動方向決定
     isMove_ = false;
