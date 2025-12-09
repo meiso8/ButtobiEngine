@@ -34,20 +34,34 @@ void FloorStripManager::Update() {
 
 	// 床剥がし
 	if (player_->isReqestStript_ && !player_->isStriptting_) {
-		Sound::PlaySE(Sound::kStripObj);
-		player_->isStriptting_ = true;
-		player_->isReqestStript_ = false;
-		player_->body_.worldTransform_.scale_ = { 1.5f,0.1f,1.5f };
-		player_->animationState_ = PlayerAnimationState::Stript;
+		if (stripPower_ >= floorManager_->GetFloorStripHpAtPosition(player_->body_.worldTransform_.translate_)) {
+			Sound::PlaySE(Sound::kStripObj);
+			player_->isStriptting_ = true;
+			player_->isReqestStript_ = false;
+			player_->body_.worldTransform_.scale_ = { 1.5f,0.1f,1.5f };
+			player_->animationState_ = PlayerAnimationState::Stript;
 
-		// プレイヤーの位置から床タイプを取得
-		FloorType currentFloorType = floorManager_->GetFloorTypeAtPosition(player_->body_.worldTransform_.translate_);
-		std::pair<int, int> tempFloorIndex = floorManager_->GetFloorIndexAtPosition(player_->body_.worldTransform_.translate_);
-		player_->stripFloorPosX_ = tempFloorIndex.first;
-		player_->stripFloorPosY_ = tempFloorIndex.second;
-		player_->isOnStripedFloor_ = true;
-		// 床タイプに応じた剥がし処理を実行
-		striptTypeAction_[currentFloorType]();
+			// プレイヤーの位置から床タイプを取得
+			FloorType currentFloorType = floorManager_->GetFloorTypeAtPosition(player_->body_.worldTransform_.translate_);
+			std::pair<int, int> tempFloorIndex = floorManager_->GetFloorIndexAtPosition(player_->body_.worldTransform_.translate_);
+			player_->stripFloorPosX_ = tempFloorIndex.first;
+			player_->stripFloorPosY_ = tempFloorIndex.second;
+			player_->isOnStripedFloor_ = true;
+			// 床タイプに応じた剥がし処理を実行
+			striptTypeAction_[currentFloorType]();
+			stripPower_ = 0.0f;
+
+		} else {
+			std::pair<int, int> tempFloorIndex =floorManager_->GetFloorIndexAtPosition(player_->body_.worldTransform_.translate_);
+			if (stripX != tempFloorIndex.first || stripY != tempFloorIndex.second) {
+				stripX = tempFloorIndex.first;
+				stripY = tempFloorIndex.second;
+				stripPower_ = 0.0f;
+			} else {
+				floorManager_->StripAnimationAtPosition(player_->body_.worldTransform_.translate_, stripPower_ / floorManager_->GetFloorStripHpAtPosition(player_->body_.worldTransform_.translate_));
+			}
+			stripPower_ += 0.016f;
+		}
 	}
 }
 

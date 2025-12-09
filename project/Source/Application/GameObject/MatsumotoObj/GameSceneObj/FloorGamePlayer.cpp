@@ -211,7 +211,6 @@ void FloorGamePlayer::ForceDamage() {
 }
 
 void FloorGamePlayer::Move() {
-
     // 移動方向決定
     isMove_ = false;
     moveDir_ = { 0.0f,0.0f,0.0f };
@@ -263,6 +262,11 @@ void FloorGamePlayer::Move() {
     } else if (animationState_ != PlayerAnimationState::Stript && animationState_ != PlayerAnimationState::Shot) {
         animationState_ = PlayerAnimationState::Idle;
         moveSpeed_ = kMinMoveSpeed_;
+    }
+
+	// ひっぱってるときは移動速度半減
+    if (isReqestStript_) {
+		moveSpeed_ *= 0.5f;
     }
 
     // 移動制限

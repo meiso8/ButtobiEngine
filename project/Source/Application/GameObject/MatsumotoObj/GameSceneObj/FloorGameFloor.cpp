@@ -143,6 +143,10 @@ void FloorGameFloor::downFloor() {
 	isPopuping_ = false;
 }
 
+void FloorGameFloor::StripAnimation(float t) {
+	body_.worldTransform_.scale_ = { kHalfFloorSize * 2.0f, 20.0f * (t * t), kHalfFloorSize * 2.0f };
+}
+
 void FloorGameFloor::OnCollision(Collider* collider) {
 	if (floorType_ == FloorType::Bomb || floorType_ == FloorType::Strong) {
 		return;

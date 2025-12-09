@@ -25,4 +25,8 @@ private:
 	void StickyStript();
 	void StrongStript();
 	void BombStript();
+
+	float stripPower_ = 0.0f;
+	int stripX = 0;
+	int stripY = 0;
 };

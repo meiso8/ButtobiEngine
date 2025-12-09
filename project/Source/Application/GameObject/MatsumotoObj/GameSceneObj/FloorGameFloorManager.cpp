@@ -144,6 +144,43 @@ void FloorGameFloorManager::SwapFloorTypeAtPosition(const Vector3& position) {
 	floors_[yIndex][xIndex]->SwapNextFloorType();
 }
 
+float FloorGameFloorManager::GetFloorStripHpAtPosition(const Vector3& position) const {
+	std::pair<int, int> floorIndex = GetFloorIndexAtPosition(position);
+	int xIndex = floorIndex.first;
+	int yIndex = floorIndex.second;
+	FloorType floorType = floors_[yIndex][xIndex]->floorType_;
+	switch (floorType) {
+	case FloorType::Normal:
+		return FloorStripHp::kNormalFloorStripHp;
+	case FloorType::Sticky:
+		return FloorStripHp::kStickyFloorStripHp;
+	case FloorType::Strong:
+		return FloorStripHp::kStrongFloorStripHp;
+	case FloorType::Bomb:
+		return FloorStripHp::kBombFloorStripHp;
+	default:
+		break;
+	}
+	return 0.0f;
+}
+
+void FloorGameFloorManager::StripAnimationAtPosition(const Vector3& position, float t) {
+	FloorType floorType = GetFloorTypeAtPosition(position);
+	if (floorType == FloorType::Strong) {
+		std::vector<std::pair<int, int>> connectedFloors = GetConnectedFloorsAtPosition(position);
+		for (const auto& floorPos : connectedFloors) {
+			int xIndex = floorPos.first;
+			int yIndex = floorPos.second;
+			floors_[yIndex][xIndex]->StripAnimation(t);
+		}
+	} else {
+		std::pair<int, int> floorIndex = GetFloorIndexAtPosition(position);
+		int xIndex = floorIndex.first;
+		int yIndex = floorIndex.second;
+		floors_[yIndex][xIndex]->StripAnimation(t);
+	}
+}
+
 void FloorGameFloorManager::SwapFloorTypeAtPosition(const Vector3& position, const FloorType& floorType)
 {
 	std::pair<int, int> floorIndex = GetFloorIndexAtPosition(position);

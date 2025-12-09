@@ -62,6 +62,8 @@ void UIManager::Update()
             gage->UpdateHitAction();
         }
 
+        
+
         playerHpIcon_->Update();
         enemyHpIcon_->Update();
         redPinchScreen->Update();

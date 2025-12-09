@@ -1,6 +1,13 @@
 #pragma once
 #include <cstdint>
 
+namespace FloorStripHp {
+	extern float kNormalFloorStripHp;
+	extern float kStickyFloorStripHp;
+	extern float kStrongFloorStripHp;
+	extern float kBombFloorStripHp;
+};
+
 namespace FloorFlag {
 	extern bool isHitMultipleFloor;
 };
