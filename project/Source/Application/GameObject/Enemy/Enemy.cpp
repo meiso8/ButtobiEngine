@@ -15,6 +15,7 @@
 #include "MatsumotoObj/GameSceneObj/HealItemSpawner.h"
 #include "MatsumotoObj/GameSceneObj/Data/MapData.h"
 #include "MatsumotoObj/GameSceneObj/AttackAreaEmitter.h"
+#include "MatsumotoObj/GameSceneObj/FrameStopManager.h"
 
 #define PI std::numbers::pi_v<float>
 #define QUARTER_PI PI*0.25f
@@ -340,6 +341,7 @@ void Enemy::OnCollision(Collider* collider)
     }
 
     if (collider->GetCollisionAttribute() == kCollisionPlayerBullet) {
+		FrameStopManager::GetInstance().StopFrame(3);
 
         VibrateManager::SetTime(0.5f, 2000, 2000);
 
