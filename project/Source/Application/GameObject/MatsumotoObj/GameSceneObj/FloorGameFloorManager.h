@@ -24,6 +24,8 @@ public:
 	std::vector<std::pair<int, int>> GetConnectedFloorsAtPosition(const Vector3& position) const;
 	void SwapFloorTypeAtPosition(const int& xIndex, const int& yIndex);
 	void SwapFloorTypeAtPosition(const Vector3& position);
+	float GetFloorStripHpAtPosition(const Vector3& position) const;
+	void StripAnimationAtPosition(const Vector3& position,float t);
 
 	void SwapFloorTypeAtPosition(const Vector3& position, const FloorType& floorType);
 

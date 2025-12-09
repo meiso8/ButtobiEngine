@@ -26,6 +26,8 @@ public:
 	void popupFloor();
 	void downFloor();
 
+	void StripAnimation(float t);
+
 	void OnCollision(Collider* collider)override;
 	Vector3 GetWorldPosition() const override {
 		return body_.worldTransform_.GetWorldPosition();

@@ -142,6 +142,12 @@ void FloorGamePlayerAnimationManager::StriptAnimation() {
 	if (player_->body_.worldTransform_.scale_.y >= 1.0f) {
 		player_->animationState_ = PlayerAnimationState::Idle;
 	}
+
+	player_->body_.worldTransform_.rotate_.x = 1.2f * (1.0f - (player_->stripPower_ * player_->stripPower_));
+	player_->rightArmObject_.worldTransform_.translate_.y = MY_Utility::SimpleEaseIn(
+		player_->rightArmObject_.worldTransform_.translate_.y, 0.8f, 0.3f);
+	player_->leftArmObject_.worldTransform_.translate_.y = MY_Utility::SimpleEaseIn(
+		player_->leftArmObject_.worldTransform_.translate_.y, 0.8f, 0.3f);
 }
 
 void FloorGamePlayerAnimationManager::ShotAnimation() {

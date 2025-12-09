@@ -48,6 +48,7 @@ public:
 	bool isReqestShot_;
 	bool isOnStickyFloor_;
 	bool isOnStripedFloor_;
+	float stripPower_;
 	Object3d body_;
 	Object3d headObject_;
 	Object3d rightArmObject_;
