@@ -32,6 +32,8 @@ void ModelManager::LoadAllModel()
 
     LoadModel("Resource/Models/Ground", "Ground.obj", GROUND);
 
+	LoadModel("Resource/Models/Arrow", "Arrow.obj", ARROW);
+
     //床と床パーティクル
     LoadModel("Resource/Models/Floor", "Floor.obj", FLOOR);
     LoadModel("Resource/Models/FloorFrame", "FloorFrame.obj", FLOOR_FRAME);
