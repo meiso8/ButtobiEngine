@@ -116,14 +116,15 @@ void FloorGamePlayer::Initialize() {
     isReqestStript_ = false;
     isStriptting_ = false;
     striptTimer_ = 0.0f;
-    striptDuration_ = 0.5f;
+    striptDuration_ = 0.3f;
     isOnStripedFloor_ = false;
     strippedFloorMap_.clear();
 
     // 床投げ
     isReqestShot_ = false;
     shotTimer_ = 0.0f;
-    shotDuration_ = 0.3f;
+    shotDuration_ = 0.0f;
+	isPressStript_ = false;
 
     //べとべと床フラグ
     isOnStickyFloor_ = false;
@@ -298,6 +299,8 @@ void FloorGamePlayer::StriptFloor() {
 }
 
 void FloorGamePlayer::ShotFloor() {
+    isPressStript_ = KeyBindConfig::Instance().IsPress("Shot");
+
     // 床投げクールダウン
     if (shotTimer_ > 0.0f) {
         shotTimer_ -= 0.016f;
@@ -308,7 +311,7 @@ void FloorGamePlayer::ShotFloor() {
         return;
     }
     // 床投げ入力
-    if (KeyBindConfig::Instance().IsTrigger("Shot")) {
+    if (KeyBindConfig::Instance().IsRelease("Shot") || (isStriptting_ && !isPressStript_)) {
         VibrateManager::SetTime(0.1f, 1000, 1000);
         isReqestShot_ = true;
         isStriptting_ = false;
