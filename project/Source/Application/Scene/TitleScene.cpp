@@ -91,6 +91,11 @@ TitleScene::TitleScene()
     PointLightManager::GetPointLightData(1).decay = 0.9f;
     PointLightManager::GetPointLightData(1).position = {0.0f,10.0f,7.0f};
 
+    PointLightManager::GetPointLightData(2).color = {1.0f,1.0f,1.0f,1.0f };
+    PointLightManager::GetPointLightData(2).radius = 15.0f;
+    PointLightManager::GetPointLightData(2).decay = 0.56f;
+    PointLightManager::GetPointLightData(2).position = { 0.0f,0.0f,0.0f };
+    PointLightManager::GetPointLightData(2).intensity = 1.0f;
 #pragma endregion
 
 	eventTimer_ = 0.0f;
