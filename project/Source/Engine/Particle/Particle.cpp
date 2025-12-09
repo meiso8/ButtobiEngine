@@ -480,6 +480,14 @@ void ParticleManager::Reset(const std::string& name)
     }
 }
 
+void ParticleManager::ResetAll()
+{
+    for (auto& [name, group] : particleGroups) {
+        Reset(name);
+    }
+
+}
+
 
 std::unordered_map<std::string, std::unique_ptr<ParticleGroup>>& ParticleManager::GetParticleGroups()
 {
