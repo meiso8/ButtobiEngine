@@ -55,6 +55,7 @@ public:
 	Object3d leftArmObject_;
 	Object3d rightLegObject_;
 	Object3d leftLegObject_;
+	Object3d arrowObject_;
 
 	std::vector<std::pair<int, int>> strippedFloorMap_;
 	PlayerAnimationState animationState_ = PlayerAnimationState::Idle;

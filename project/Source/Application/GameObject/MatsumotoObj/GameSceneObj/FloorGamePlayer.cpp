@@ -25,6 +25,8 @@ FloorGamePlayer::FloorGamePlayer() {
     rightLegObject_.Create();
     leftLegObject_.Create();
 
+	arrowObject_.Create();
+
     body_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_BODY));
     headObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_HEAD));
     rightArmObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_ARM_R));
@@ -32,6 +34,7 @@ FloorGamePlayer::FloorGamePlayer() {
     rightLegObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_LEG_R));
     leftLegObject_.SetMesh(ModelManager::GetModel(ModelManager::PLAYER_LEG_L));
 
+	arrowObject_.SetMesh(ModelManager::GetModel(ModelManager::ARROW));
 
     headObject_.worldTransform_.Parent(body_.worldTransform_);
     rightArmObject_.worldTransform_.Parent(body_.worldTransform_);
@@ -39,11 +42,17 @@ FloorGamePlayer::FloorGamePlayer() {
     rightLegObject_.worldTransform_.Parent(body_.worldTransform_);
     leftLegObject_.worldTransform_.Parent(body_.worldTransform_);
 
+	arrowObject_.worldTransform_.Parent(body_.worldTransform_);
+
     headObject_.worldTransform_.translate_ = { 0.0f,0.5f,0.0f };
     rightArmObject_.worldTransform_.translate_ = { 0.5f,0.0f,0.0f };
     leftArmObject_.worldTransform_.translate_ = { -0.5f,0.0f,0.0f };
     rightLegObject_.worldTransform_.translate_ = { 0.3f,-0.5f,-0.3f };
     leftLegObject_.worldTransform_.translate_ = { -0.3f,-0.5f,-0.3f };
+
+	arrowObject_.worldTransform_.translate_ = { 0.0f,0.0f,1.5f };
+	arrowObject_.worldTransform_.rotate_.y = 3.14f;
+	arrowObject_.SetColor({ 1.0f,0.3f,0.3f,1.0f });
 
     SetRadius(kRadius_);
 
@@ -171,6 +180,13 @@ void FloorGamePlayer::Update() {
     rightLegObject_.Update();
     leftLegObject_.Update();
 
+    if (isStriptting_) {
+        arrowObject_.worldTransform_.scale_ = MY_Utility::SimpleEaseIn(arrowObject_.worldTransform_.scale_, { 1.5f,1.5f,1.5f }, 0.5f);
+    }else {
+        arrowObject_.worldTransform_.scale_ = MY_Utility::SimpleEaseIn(arrowObject_.worldTransform_.scale_, { 0.0f,0.0f,0.0f }, 0.5f);
+    }
+	arrowObject_.Update();
+
     ColliderUpdate();
 
 #ifdef USE_IMGUI
@@ -196,6 +212,10 @@ void FloorGamePlayer::Update() {
 }
 
 void FloorGamePlayer::Draw(Camera& camera) {
+
+    if (Length(arrowObject_.worldTransform_.scale_) > 0.0f) {
+        arrowObject_.Draw(camera);
+    }
 
     body_.Draw(camera);
     headObject_.Draw(camera);

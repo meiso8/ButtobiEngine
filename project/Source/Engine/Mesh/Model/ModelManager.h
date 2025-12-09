@@ -50,6 +50,8 @@ public:
 
         PLAYER_MODEL,//プレイヤーの全体
 
+		ARROW,
+
 		HEAL_ITEM,
         WORLD,
         MODELS,
