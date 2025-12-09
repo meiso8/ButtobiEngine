@@ -97,6 +97,16 @@ void PauseScreen::Initialize()
 void PauseScreen::Update()
 {
 
+    if (KeyBindConfig::Instance().IsTrigger("MenuExit")) {
+        if (isPause_) {
+            Sound::PlaySE(Sound::kPauseButton);
+            isPause_ = false;
+            pauseTimer_ = 0.0f;
+            isActive_ = true;
+            selectButtonNum_ = kBackToGameButton;
+        }
+    }
+
     if (KeyBindConfig::Instance().IsTrigger("Menu")) {
         Sound::PlaySE(Sound::kPauseButton);
         isPause_ = (isPause_) ? false : true;
