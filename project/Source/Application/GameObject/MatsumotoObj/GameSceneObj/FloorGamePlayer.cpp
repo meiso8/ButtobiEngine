@@ -60,7 +60,7 @@ FloorGamePlayer::~FloorGamePlayer() {
 void FloorGamePlayer::OnCollision(Collider* collider)
 {
     if (collider->GetCollisionAttribute() == kCollisionPlayerHealItem) {
-        Sound::PlaySE(Sound::kPlayerHeal);
+        Sound::PlaySE(Sound::kPlayerHeal,0.5f);
 
         if (damageStruct_.hps.hp <= damageStruct_.hps.maxHp - 20.0f) {
             damageStruct_.hps.hp += 20;  
@@ -254,11 +254,11 @@ void FloorGamePlayer::Move() {
         moveSpeed_ = std::clamp(moveSpeed_, kMinMoveSpeed_, kMaxMoveSpeed_);
         //べとべと床にいるときは移動速度を落とす
         if (isOnStickyFloor_) {
-            Sound::PlayOriginSE(Sound::kMeltFloor);
-            VibrateManager::SetTime(0.01f, 1000, 1000);
+            Sound::PlayOriginSE(Sound::kMeltFloor,1.0f);
+            VibrateManager::SetTime(0.0001f, 770, 770);
             body_.worldTransform_.translate_ += moveDir_ * moveSpeed_ * stickyFloorSlowRate_;
         } else {
-            Sound::PlayOriginSE(Sound::kPlayerWalk);
+            Sound::PlayOriginSE(Sound::kPlayerWalk,-0.6f);
             body_.worldTransform_.translate_ += moveDir_ * moveSpeed_;
         }
     } else if (animationState_ != PlayerAnimationState::Stript && animationState_ != PlayerAnimationState::Shot) {
@@ -382,7 +382,7 @@ void FloorGamePlayer::HitUpdate()
 
     damageStruct_.isHit = true;
     damageStruct_.isInvincible = true;
-     Sound::PlaySE(Sound::kPlayerDamage);
+     Sound::PlaySE(Sound::kPlayerDamage,0.5f);
     VibrateManager::SetTime(0.5f, 3000, 3000);
     damageStruct_.flashTimer = damageStruct_.invincibilityTime;
     //hpを減らす

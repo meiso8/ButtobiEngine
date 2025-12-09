@@ -19,7 +19,7 @@ void FloorPlayerShotBulletManager::Update() {
 
 	// 床投げ
 	if (player_->isReqestShot_) {
-		Sound::PlaySE(Sound::kTrhowObj);
+		Sound::PlaySE(Sound::kTrhowObj,0.5f);
 		player_->isReqestShot_ = false;
 		// プレイヤーの向いている方向に床を投げる
 		Vector3 shotDirection = player_->GetLookDir();

@@ -524,7 +524,7 @@ void Enemy::KnockBack()
         }
 
     } else if (phaseTimer_ < kKnockBackMaxTime_) {
-        LerpSpinOriginBody();
+        LerpSpinOriginBodyXZ();
         bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, startPos_, 0.05f);
     } else {
         isSelectRandomPhase_ = true;
@@ -551,6 +551,7 @@ void Enemy::LerpSquarePos()
     if (phaseTimer_ <= kLerpSquareInitPosTime_) {
         LerpPos({ 0.0f,kLerpSquareStartPosY_,0.0f }, 0.1f);
         LerpRotateY(PI, 0.1f);
+        LerpSpinOriginBodyXZ();
     } else if (phaseTimer_ <= kLerpSquareTime_) {
         LerpPos({ 0.0f,kLerpSquareEndPosY_,6.0f }, 0.1f);
     } else {
@@ -939,7 +940,7 @@ void Enemy::SpinBody()
     bodyPos_.worldTransform_.rotate_.x = cosf(theta);
 }
 
-void Enemy::LerpSpinOriginBody()
+void Enemy::LerpSpinOriginBodyXZ()
 {
     bodyPos_.worldTransform_.rotate_.z = Lerp(bodyPos_.worldTransform_.rotate_.z, 0.0f, 0.5f);
     bodyPos_.worldTransform_.rotate_.x = Lerp(bodyPos_.worldTransform_.rotate_.x, 0.0f, 0.5f);

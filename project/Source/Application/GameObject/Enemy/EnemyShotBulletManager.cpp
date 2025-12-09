@@ -19,7 +19,7 @@ void EnemyShotBulletManager::Update() {
 
 	// 弾投げ
 	if (enemy_->isShot_) {
-		Sound::PlaySE(Sound::kBossFireBall);
+		Sound::PlaySE(Sound::kBossFireBall,1.0f);
 		enemy_->isShot_ = false;
 		// playerに向かって投げる
 		Vector3 shotDirection = enemy_->GetToPlayer();

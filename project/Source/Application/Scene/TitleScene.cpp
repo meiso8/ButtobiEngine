@@ -76,7 +76,8 @@ TitleScene::TitleScene()
     house_ = std::make_unique<House>();
 
     house_->SetHitCounts(titleText_->GetHitCount(), titleText_->GetMaxHitCount());
-    tree_ = std::make_unique<Tree>();
+    backGround_ = std::make_unique<BackGround>();
+
     playerDirectionSpotLight_ = std::make_unique<PlayerDirectionSpotLight>();
     playerDirectionSpotLight_->dirPtr_ = &floorGamePlayer_->GetLookDir();
     playerDirectionSpotLight_->pos_.Parent(floorGamePlayer_->headObject_.worldTransform_);
@@ -91,6 +92,11 @@ TitleScene::TitleScene()
     PointLightManager::GetPointLightData(1).decay = 0.9f;
     PointLightManager::GetPointLightData(1).position = {0.0f,10.0f,7.0f};
 
+    PointLightManager::GetPointLightData(2).color = {1.0f,1.0f,1.0f,1.0f };
+    PointLightManager::GetPointLightData(2).radius = 15.0f;
+    PointLightManager::GetPointLightData(2).decay = 0.56f;
+    PointLightManager::GetPointLightData(2).position = { 0.0f,0.0f,0.0f };
+    PointLightManager::GetPointLightData(2).intensity = 1.0f;
 #pragma endregion
 
 	eventTimer_ = 0.0f;
@@ -133,8 +139,9 @@ void TitleScene::Initialize()
 	bossDummy_->Initialize();
 	letterboxBars_->Initialize();
 	actionUI_->Initialize();
+    
     house_->Initialize();
-    tree_->Initialize();
+    backGround_->Initialize();
 #pragma endregion
 
 	eventTimer_ = 0.0f;
@@ -160,7 +167,7 @@ void TitleScene::Draw()
 
     //家
     house_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
-    tree_->Draw(*currentCamera_);
+    backGround_->Draw(*currentCamera_);
 
     if (titleText_->GetIsBreak()) {
         bossDummy_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
@@ -235,7 +242,7 @@ void TitleScene::UpdateGameObject() {
 
     //家の更新
     house_->Update();
-    tree_->Update();
+    backGround_->Update();
 
 	letterboxBars_->isOpen_ = titleText_->GetIsBreak();
 	letterboxBars_->Update();

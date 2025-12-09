@@ -153,6 +153,7 @@ void FloorGameFloor::OnCollision(Collider* collider) {
 	}
 	if (collider->GetCollisionAttribute() == kCollisionEnemyBomb) {
 		SwapFloorType(FloorType::Bomb);
+
 		attackAreaEffectID_ = AttackAreaEmitter::GetInstance().EmitCircle(body_.worldTransform_.GetWorldPosition(), 3.0f, autoSwapDuration_);
 	}
 }
@@ -199,9 +200,6 @@ void FloorGameFloor::BombFloorUpdate() {
 
 	if (autoSwapTimer_ > 0.0f) {
 		autoSwapTimer_ -= 0.016f;
-		//振動させる　ヨシダ
-		WORD vibrate = 1000+(WORD)color * 1000;
-		VibrateManager::SetTime(0.016f, vibrate, vibrate);
 	} else {
 		SwapFloorType(nextFloorType_);
 		Sound::PlaySE(Sound::kExplosion);

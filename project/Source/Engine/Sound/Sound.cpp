@@ -22,13 +22,13 @@ std::vector<SoundData> Sound::soundDatas;
 std::vector<uint32_t> Sound::handles_;
 
 float Sound::bgmVolume_ = 0.375f;
-float Sound::seVolume_ = 0.5f;
+float Sound::seVolume_ = 0.75f;
 
 void Sound::LoadAllSound()
 {
 #ifdef _DEBUG
     bgmVolume_ = 0.375f;
-    seVolume_ = 0.5f;
+    seVolume_ = 0.75f;
 #endif // _DEBUG
 
     handles_.resize(SOUNDS);
