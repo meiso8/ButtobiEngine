@@ -26,6 +26,7 @@
 #include"BackGround/House/House.h"
 #include"BackGround/BackGround.h"
 #include"PlayerDirectionSpotLight.h"
+#include"EmitterManager/EmitterManager.h"
 
 #pragma endregion
 
@@ -66,8 +67,8 @@ private:
     std::unique_ptr<BackGround>backGround_ = nullptr;
 
     std::unique_ptr<PlayerDirectionSpotLight>playerDirectionSpotLight_ = nullptr;
-
-
+    //エミッター
+    std::unique_ptr<EmitterManager>emitterManager_ = nullptr;
 
 #pragma endregion
     float eventTimer_ = 0.0f;

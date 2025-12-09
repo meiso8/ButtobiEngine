@@ -121,6 +121,7 @@ public:
     void Create();
     static ParticleManager* GetInstance();
     static void Reset(const std::string& name);
+    static void ResetAll();
     static void Emit(Emitter& emitter);
 
     std::unordered_map<std::string, std::unique_ptr <ParticleGroup>>& GetParticleGroups();

@@ -95,9 +95,14 @@ GameScene::GameScene()
         enemy_->isKnockBack_
     );
 
-    emitterManager_ = std::make_unique<EmitterManager>(*floorGamePlayer_, *enemy_, *enemyShockWaveManager_, *floorBulletManager_,*floorGameFloorManager_);
+    emitterManager_ = std::make_unique<EmitterManager>();
 
-	
+    emitterManager_->SetPlayer(*floorGamePlayer_);
+    emitterManager_->SetEnemy(*enemy_);
+    emitterManager_->SetEnemyWaveShockManager(*enemyShockWaveManager_);
+    emitterManager_->SetFloorBuletManager(*floorBulletManager_);
+    emitterManager_->SetFloorGameFloorManager(*floorGameFloorManager_);
+    emitterManager_->Create();
 }
 
 void GameScene::Initialize() {

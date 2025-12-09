@@ -25,11 +25,70 @@ struct FloorBulletEmitterPair {
 class EmitterManager
 {
 public:
-    EmitterManager( FloorGamePlayer& player, Enemy&enemy, EnemyShockWaveManager& enemyShockWaveManager, FloorBulletManager& floorBulletManager, FloorGameFloorManager& floorGameFloorManager);
+    EmitterManager();
+
+    void Create();
+    void SetPlayerEmitter();
+    void SetEnemyEmitter();
+    void SetWaveShockEmitter();
+    void SetFloorBulletEmitter();
+    void SetFloorEmitter();
+    void SetLeafEmitter();
+    void SetHealItemEmitter();
+
+    void SetPlayer(FloorGamePlayer& player) {
+        player_ = &player;
+    };
+
+    void SetEnemy(Enemy& enemy) {
+        enemy_ = &enemy;
+    };
+    void SetEnemyWaveShockManager(EnemyShockWaveManager& enemyShockWaveManager) {
+        enemyShockWaveManager_ = &enemyShockWaveManager;
+    };
+    void SetFloorBuletManager(FloorBulletManager& floorBulletManager) {
+        floorBulletManager_ = &floorBulletManager;
+    };
+    void SetFloorGameFloorManager(FloorGameFloorManager& floorGameFloorManager) {
+        floorGameFloorManager_ = &floorGameFloorManager ;
+    }
+
     void Initialize();
     void Update(Camera& camera);
     void Draw();
     void Debug();
+
+    //プレイヤー
+   void InitPlayerEmitter();
+    // 敵
+   void InitEnemyEmitter();
+    //敵波攻撃
+   void InitWaveShockEmitter();
+    //床弾
+   void InitFloorBulletEmitter();
+    //ヒールアイテム
+   void InitHealItemEmitter();
+    //床
+   void InitFloorEmitter();
+    //葉っぱ
+   void InitLeafEmitter();
+
+
+   //プレイヤー
+   void UpdatePlayerEmitter();
+   // 敵
+   void UpdateEnemyEmitter();
+   //敵波攻撃
+   void UpdateWaveShockEmitter();
+   //床弾
+   void UpdateFloorBulletEmitter();
+   //ヒールアイテム
+   void UpdateHealItemEmitter();
+   //床
+   void UpdateFloorEmitter();
+   //葉っぱ
+   void UpdateLeafEmitter();
+
 private:
 
 

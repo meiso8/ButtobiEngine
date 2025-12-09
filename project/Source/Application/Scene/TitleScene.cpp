@@ -100,6 +100,16 @@ TitleScene::TitleScene()
 #pragma endregion
 
 	eventTimer_ = 0.0f;
+
+    emitterManager_ = std::make_unique<EmitterManager>();
+
+    emitterManager_->SetPlayer(*floorGamePlayer_);
+    //emitterManager_->SetEnemy(*enemy_);
+    //emitterManager_->SetEnemyWaveShockManager(*enemyShockWaveManager_);
+    emitterManager_->SetFloorBuletManager(*floorBulletManager_);
+    emitterManager_->SetFloorGameFloorManager(*floorGameFloorManager_);
+    emitterManager_->Create();
+
 }
 
 TitleScene::~TitleScene()
@@ -145,7 +155,7 @@ void TitleScene::Initialize()
 #pragma endregion
 
 	eventTimer_ = 0.0f;
-
+    emitterManager_->Initialize();
     Sound::Stop(Sound::resultBGM);
 }
 
@@ -179,6 +189,9 @@ void TitleScene::Draw()
         playerFloorStripManager_->Draw(*currentCamera_);
     }
   
+    //エミッター
+    emitterManager_->Draw();
+
 	letterboxBars_->Draw();
 	actionUI_->Draw();
 
@@ -191,6 +204,7 @@ void TitleScene::Debug()
 {
 
     DebugUI::CheckCamera(*camera_);
+    emitterManager_->Debug();
 }
 
 void TitleScene::SceneChangeUpdate()
@@ -258,6 +272,9 @@ void TitleScene::UpdateGameObject() {
 
     // アニメーション更新
     floorGamePlayerAnimationManager_->Update();
+
+    //エミッター
+    emitterManager_->Update(*currentCamera_);
 }
 
 void TitleScene::CheckAllCollision() {
