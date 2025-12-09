@@ -33,16 +33,21 @@ void FloorStripManager::Update() {
 	}
 
 	// 床剥がし
+	FloorType currentFloorType = floorManager_->GetFloorTypeAtPosition(player_->body_.worldTransform_.translate_);
+	if (currentFloorType == FloorType::Sticky) {
+		player_->isReqestStript_ = false;
+		return;
+	}
+
 	if (player_->isReqestStript_ && !player_->isStriptting_) {
 		if (stripPower_ >= floorManager_->GetFloorStripHpAtPosition(player_->body_.worldTransform_.translate_)) {
 			Sound::PlaySE(Sound::kStripObj);
 			player_->isStriptting_ = true;
 			player_->isReqestStript_ = false;
 			player_->body_.worldTransform_.scale_ = { 1.5f,0.1f,1.5f };
-			player_->animationState_ = PlayerAnimationState::Stript;
+			
 
 			// プレイヤーの位置から床タイプを取得
-			FloorType currentFloorType = floorManager_->GetFloorTypeAtPosition(player_->body_.worldTransform_.translate_);
 			std::pair<int, int> tempFloorIndex = floorManager_->GetFloorIndexAtPosition(player_->body_.worldTransform_.translate_);
 			player_->stripFloorPosX_ = tempFloorIndex.first;
 			player_->stripFloorPosY_ = tempFloorIndex.second;
@@ -52,6 +57,7 @@ void FloorStripManager::Update() {
 			stripPower_ = 0.0f;
 
 		} else {
+			player_->animationState_ = PlayerAnimationState::Stript;
 			std::pair<int, int> tempFloorIndex =floorManager_->GetFloorIndexAtPosition(player_->body_.worldTransform_.translate_);
 			if (stripX != tempFloorIndex.first || stripY != tempFloorIndex.second) {
 				stripX = tempFloorIndex.first;
@@ -61,6 +67,7 @@ void FloorStripManager::Update() {
 				floorManager_->StripAnimationAtPosition(player_->body_.worldTransform_.translate_, stripPower_ / floorManager_->GetFloorStripHpAtPosition(player_->body_.worldTransform_.translate_));
 			}
 			stripPower_ += 0.016f;
+			player_->stripPower_ = stripPower_ / floorManager_->GetFloorStripHpAtPosition(player_->body_.worldTransform_.translate_);
 		}
 	}
 }

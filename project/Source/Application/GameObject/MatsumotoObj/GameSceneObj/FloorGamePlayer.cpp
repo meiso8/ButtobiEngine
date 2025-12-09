@@ -132,6 +132,8 @@ void FloorGamePlayer::Initialize() {
 
     // 死んだときに回転する量
     deathRotate_ = 50.0f;
+
+    stripPower_ = 0.0f;
 }
 
 
@@ -266,7 +268,7 @@ void FloorGamePlayer::Move() {
 
 	// ひっぱってるときは移動速度半減
     if (isReqestStript_) {
-		moveSpeed_ *= 0.5f;
+        moveSpeed_ *= 0.5f * (1.0f - stripPower_);
     }
 
     // 移動制限

@@ -156,6 +156,7 @@ float FloorGameFloorManager::GetFloorStripHpAtPosition(const Vector3& position) 
 		return FloorStripHp::kStickyFloorStripHp;
 	case FloorType::Strong:
 		return FloorStripHp::kStrongFloorStripHp;
+		//return FloorStripHp::kStrongFloorStripHp * (1.0f + (static_cast<float>(GetConnectedFloorsAtPosition(position).size()) * 0.1f));
 	case FloorType::Bomb:
 		return FloorStripHp::kBombFloorStripHp;
 	default:
