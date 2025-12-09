@@ -23,7 +23,6 @@
 //平面のメッシュ
 #include"PlaneMesh.h"
 
-
 //円のメッシュ
 #include"CircleMesh.h"
 //立方体のメッシュ（AABBでセットするか8頂点でセット);
@@ -81,10 +80,9 @@ GameScene::GameScene()
     enemyShockWaveManager_ = std::make_unique<EnemyShockWaveManager>();
     enemyShotWaveManager_ = std::make_unique<EnemyShotWaveManager>(enemy_.get(), enemyShockWaveManager_.get(), floorGameFloorManager_.get());
 
-    tree_ = std::make_unique<Tree>();
-    ground_ = std::make_unique<Ground>();
+   
     nest_ = std::make_unique<Nest>();
-    betoBeto_ = std::make_unique<BetoBeto>();
+    backGround_ = std::make_unique<BackGround>();
 
 #pragma endregion
 
@@ -148,10 +146,10 @@ void GameScene::Initialize() {
     enemyShockWaveManager_->Initialize();
     enemyShotWaveManager_->Initialize();
 
-    tree_->Initialize();
-    ground_->Init();
+  
     nest_->Init();
-    betoBeto_->Initialize();
+    backGround_->Initialize();
+ 
 #pragma endregion
     collisionManager_->ClearColliders();
 
@@ -221,9 +219,7 @@ void GameScene::Draw() {
 
 #pragma region // オブジェクト描画
 
-    ground_->Draw(*currentCamera_);
-    tree_->Draw(*currentCamera_);
-    betoBeto_->Draw(*currentCamera_);
+    backGround_->Draw(*currentCamera_);
     nest_->Draw(*currentCamera_);
 
     enemy_->Draw(*currentCamera_);
@@ -371,10 +367,11 @@ void GameScene::UpdateGameObject()
     enemyBulletManager_->Update();
     enemyBombManager_->Update();
     enemyShockWaveManager_->Update();
-    tree_->Update();
-    ground_->Update();
+    
+    backGround_->Update();
     nest_->Update();
-    betoBeto_->Update();
+
+
     if (floorGamePlayer_->IsDead()) {
         gameOverTimer_ += InverseFPS;
     }

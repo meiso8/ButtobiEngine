@@ -118,8 +118,8 @@
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\Data\FloorData.cpp" />
     <ClCompile Include="Source\Engine\Input\VibrateManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\EmitterManager\EmitterManager.cpp" />
-    <ClCompile Include="Source\Application\GameObject\House\House.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Tree\Tree.cpp" />
+    <ClCompile Include="Source\Application\GameObject\BackGround\House\House.cpp" />
+    <ClCompile Include="Source\Application\GameObject\BackGround\Tree\Tree.cpp" />
     <ClCompile Include="Source\Engine\Lights\PointLightManager.cpp" />
     <ClCompile Include="Source\Engine\Lights\DirectionalLightManager.cpp" />
     <ClCompile Include="Source\Engine\Lights\SpotLightManager.cpp" />
@@ -127,16 +127,18 @@
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\SceneStaticValue.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\ExprostionParticle.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\ExprostionParticleEmitter.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Ground.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Nest\Nest.cpp" />
+    <ClCompile Include="Source\Application\GameObject\BackGround\Ground\Ground.cpp" />
+    <ClCompile Include="Source\Application\GameObject\BackGround\Nest\Nest.cpp" />
     <ClCompile Include="Source\Application\System\Shake.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\RedPinchScreen.cpp" />
     <ClCompile Include="Source\Application\GameObject\PlayerDirectionSpotLight.cpp" />
     <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBeak.cpp" />
-    <ClCompile Include="Source\Application\GameObject\BetoBeto\BetoBeto.cpp" />
+    <ClCompile Include="Source\Application\GameObject\BackGround\BetoBeto\BetoBeto.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\AttackAreaEffect.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\AttackAreaEmitter.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\SceneStaticClassManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\BackGround\SkyDome\SkyDome.cpp" />
+    <ClCompile Include="Source\Application\GameObject\BackGround\BackGround.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\GameObject\UI\PauseScreen.h" />
@@ -281,24 +283,26 @@
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\ResultSceneObj\ResultSprite.h" />
     <ClInclude Include="Source\Engine\Input\VibrateManager.h" />
     <ClInclude Include="Source\Application\GameObject\EmitterManager\EmitterManager.h" />
-    <ClInclude Include="Source\Application\GameObject\House\House.h" />
-    <ClInclude Include="Source\Application\GameObject\Tree\Tree.h" />
+    <ClInclude Include="Source\Application\GameObject\BackGround\House\House.h" />
+    <ClInclude Include="Source\Application\GameObject\BackGround\Tree\Tree.h" />
     <ClInclude Include="Source\Engine\Lights\PointLightManager.h" />
     <ClInclude Include="Source\Engine\Lights\DirectionalLightManager.h" />
     <ClInclude Include="Source\Engine\Lights\SpotLightManager.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\GameOverEvent.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\ExprostionParticle.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\ExprostionParticleEmitter.h" />
-    <ClInclude Include="Source\Application\GameObject\Ground.h" />
-    <ClInclude Include="Source\Application\GameObject\Nest\Nest.h" />
+    <ClInclude Include="Source\Application\GameObject\BackGround\Ground\Ground.h" />
+    <ClInclude Include="Source\Application\GameObject\BackGround\Nest\Nest.h" />
     <ClInclude Include="Source\Application\System\Shake.h" />
     <ClInclude Include="Source\Application\GameObject\UI\RedPinchScreen.h" />
     <ClInclude Include="Source\Application\GameObject\PlayerDirectionSpotLight.h" />
     <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBeak.h" />
-    <ClInclude Include="Source\Application\GameObject\BetoBeto\BetoBeto.h" />
+    <ClInclude Include="Source\Application\GameObject\BackGround\BetoBeto\BetoBeto.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\AttackAreaEffect.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\AttackAreaEmitter.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\SceneStaticClassManager.h" />
+    <ClInclude Include="Source\Application\GameObject\BackGround\SkyDome\SkyDome.h" />
+    <ClInclude Include="Source\Application\GameObject\BackGround\BackGround.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="externals\assimp\lib\Debug\assimp-vc143-mdd.lib" />
