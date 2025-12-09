@@ -48,7 +48,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     scenes["Result"] = std::make_unique < ResultScene>();
 
     //最初の位置を保持
-	std::string startSceneName = "Result";
+	std::string startSceneName = "Title";
 	SceneManager* currentScene = scenes[startSceneName].get();
 	auto currentIt = scenes.find(startSceneName);
     currentScene->Initialize();
