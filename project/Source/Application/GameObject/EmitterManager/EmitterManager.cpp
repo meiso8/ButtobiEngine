@@ -337,20 +337,13 @@ void EmitterManager::SetBossDummyEmitter()
     madEmitter_ = std::make_unique<ParticleEmitter>();
     madEmitter_->SetName("mad");
     madEmitter_->emitter_.transform.translate_ = { 0.0f,1.0f,-3.0f };
-    madEmitter_->emitter_.translateAABB_ = { .min = {-1.0f,0.0f,0.0f},.max = {1.0f,0.0f,0.0f} };
     madEmitter_->emitter_.transform.rotate_.z = 3.14f * 0.25f;
-    madEmitter_->emitter_.count = 3;
+    madEmitter_->emitter_.count = 1;
     madEmitter_->emitter_.movement = kParticleShock;
     madEmitter_->emitter_.radius = 1.0f;
     madEmitter_->emitter_.lifeTime = 1.0f;
     madEmitter_->emitter_.frequency = 1.0f;
 
-    if (bossDummy_) {
-        madEmitter_->emitter_.transform.Parent(bossDummy_->body_.worldTransform_);
-    }
-    if (enemy_) {
-        madEmitter_->emitter_.transform.Parent(enemy_->bodyPos_.worldTransform_);
-    }
 }
 
 void EmitterManager::Initialize()
@@ -603,9 +596,11 @@ void EmitterManager::UpdateMadEmitter()
 {
     if (bossDummy_) {
         madEmitter_->emitter_.transform.Parent(bossDummy_->body_.worldTransform_);
+        madEmitter_->emitter_.transform.translate_ = { -1.5f,3.0f,-3.0f };
     }
     if (enemy_) {
         madEmitter_->emitter_.transform.Parent(enemy_->enemyBeak_->beak_);
+        madEmitter_->emitter_.transform.translate_ = { -1.5f,1.0f,0.0f };
     }
    
     if (bossDummy_&&titleText_ &&titleText_->GetIsBreak()||enemy_&&enemy_->GetCurrentState() != "First") {
