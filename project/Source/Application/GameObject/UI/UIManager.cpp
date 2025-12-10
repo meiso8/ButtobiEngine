@@ -26,13 +26,6 @@ UIManager::UIManager(HPs& enemyHp,HPs& enemyTotalHp, HPs& playerHp,bool& isPlaye
     playerHpIcon_->SetTextureHandle(Texture::PLAYER_HP_ICON);
     playerHpIcon_->Setting({ 64.0f*1.2f,64.0f*1.2f }, { 32.0f,20.0f});
 
-    enemyHpIcon_ = std::make_unique<HPIcon>();
-    enemyHpIcon_->SetMaxIconNum(3);
-    enemyHpIcon_->SetHpPtr(&enemyTotalHp);
-    enemyHpIcon_->SetIsHitPtr(isEnemyHit);
-
-    enemyHpIcon_->SetTextureHandle(Texture::ENEMY_ACTION_PARTICLE);
-    enemyHpIcon_->Setting({ 64.0f,64.0f }, { static_cast<float>(Window::GetClientWidth()) - 512.0f-64.0f,8.0f });
 
     pauseScreen_ = std::make_unique<PauseScreen>();
 
@@ -48,7 +41,7 @@ void UIManager::Initialize()
     }
 
     playerHpIcon_->Initialize();
-    enemyHpIcon_->Initialize();
+
     pauseScreen_->Initialize();
     redPinchScreen->Init();
 }
@@ -64,7 +57,7 @@ void UIManager::Update()
         }
  
         playerHpIcon_->Update();
-        enemyHpIcon_->Update();
+
         redPinchScreen->Update();
     }
 
@@ -83,7 +76,6 @@ void UIManager::Draw()
     }
 
     playerHpIcon_->Draw();
-    enemyHpIcon_->Draw();
 
     if (isGameOverPtr_ && !*isGameOverPtr_) {
         pauseScreen_->Draw();
@@ -94,4 +86,9 @@ void UIManager::DrawRedScreen()
 {
     redPinchScreen->Draw();
  
+}
+
+void UIManager::SetGageColor(const Vector4& color)
+{
+    hpGages_[kEnemy]->SetColor(color);
 }

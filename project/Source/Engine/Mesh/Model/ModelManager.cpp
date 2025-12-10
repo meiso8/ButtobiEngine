@@ -19,7 +19,7 @@ void ModelManager::LoadAllModel()
     //モデルのファイルパスとタグを関連付けてください
     LoadModel("Resource/Models/Box", "Box.obj", BOX);
 	LoadModel("Resource/Models/Plate1x1", "Plate1x1.obj", PLATE);
-    LoadModel("Resource/Models/world", "world.obj", WORLD);
+
 
     LoadModel("Resource/Models/Enemy", "Body.obj", ENEMY_BODY);
     LoadModel("Resource/Models/Enemy", "WingL.obj", ENEMY_WING_L);

@@ -54,6 +54,7 @@ private:
     void UpdateCamera();
     void UpdateGameObject();
     void UpdateBGM();
+    void UpdatePhaseColor();
     bool IsGameOverBGMSound() { return(gameOverTimer_ >= 0.5f); }
     bool IsGameOverEventUpdate() { return(gameOverTimer_ >= 1.5f); }
     //全衝突判定

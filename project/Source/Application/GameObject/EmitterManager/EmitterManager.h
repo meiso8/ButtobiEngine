@@ -81,7 +81,7 @@ public:
    void InitPlayerEmitter();
     // 敵
    void InitEnemyEmitter();
-   void InitBossDummyEmitter();
+   void InitMadEmitter();
     //敵波攻撃
    void InitWaveShockEmitter();
     //床弾
@@ -112,8 +112,8 @@ public:
    void UpdateLeafEmitter();
    //鼻提灯
    void UpdateNoseLanternEmitter();
-   //タミーボス
-   void UpdateBossDummyEmitter();
+   //ぷんすか
+   void UpdateMadEmitter();
 private:
 
 

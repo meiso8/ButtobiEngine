@@ -319,14 +319,14 @@ void EmitterManager::SetHealItemEmitter()
 }
 
 void EmitterManager::SetNoseLanternEmitter() {
-	noseLanternEmitter_ = std::make_unique<ParticleEmitter>();
-	noseLanternEmitter_->SetName("NoseLanternParticle");
-	noseLanternEmitter_->emitter_.count = 1;
-	noseLanternEmitter_->emitter_.movement = ParticleMovements::kParticleNormal;
-	noseLanternEmitter_->emitter_.translateAABB_ = { .min = { -0.1f,0.1f,0.3f },.max = {0.1f,0.2f,0.6f} };
+    noseLanternEmitter_ = std::make_unique<ParticleEmitter>();
+    noseLanternEmitter_->SetName("NoseLanternParticle");
+    noseLanternEmitter_->emitter_.count = 1;
+    noseLanternEmitter_->emitter_.movement = ParticleMovements::kParticleNormal;
+    noseLanternEmitter_->emitter_.translateAABB_ = { .min = { -0.1f,0.1f,0.3f },.max = {0.1f,0.2f,0.6f} };
     noseLanternEmitter_->emitter_.velocityAABB = { .min = {0.0f,1.0f,0.0f},.max = {0.2f,2.0f,0.2f} };
-	noseLanternEmitter_->emitter_.rotateOffset_ = 0.0f;
-	noseLanternEmitter_->emitter_.transform.scale_ = { 1.0f,1.0f,1.0f };
+    noseLanternEmitter_->emitter_.rotateOffset_ = 0.0f;
+    noseLanternEmitter_->emitter_.transform.scale_ = { 1.0f,1.0f,1.0f };
     noseLanternEmitter_->emitter_.scaleOffset_ = { 0.5f };
     noseLanternEmitter_->emitter_.lifeTime = 1.35f;
 
@@ -334,13 +334,16 @@ void EmitterManager::SetNoseLanternEmitter() {
 
 void EmitterManager::SetBossDummyEmitter()
 {
-    if (bossDummy_) {
-        madEmitter_ = std::make_unique<ParticleEmitter>();
-        madEmitter_->SetName("mad");
-        madEmitter_->emitter_.transform.Parent(bossDummy_->body_.worldTransform_);
-        madEmitter_->emitter_.transform.translate_ = { 3.0f,3.0f,-1.0f };
-        madEmitter_->emitter_.count = 1;
-    }
+    madEmitter_ = std::make_unique<ParticleEmitter>();
+    madEmitter_->SetName("mad");
+    madEmitter_->emitter_.transform.translate_ = { 0.0f,1.0f,-3.0f };
+    madEmitter_->emitter_.transform.rotate_.z = 3.14f * 0.25f;
+    madEmitter_->emitter_.count = 1;
+    madEmitter_->emitter_.movement = kParticleShock;
+    madEmitter_->emitter_.radius = 1.0f;
+    madEmitter_->emitter_.lifeTime = 1.0f;
+    madEmitter_->emitter_.frequency = 1.0f;
+
 }
 
 void EmitterManager::Initialize()
@@ -360,10 +363,10 @@ void EmitterManager::Initialize()
     InitFloorEmitter();
     //葉っぱ
     InitLeafEmitter();
-	//鼻提灯
-	InitNoseLanternEmitter();
-	//ボスダミー
-	//InitBossDummyEmitter();
+    //鼻提灯
+    InitNoseLanternEmitter();
+    //ぷんすか
+    InitMadEmitter();
 
     ParticleManager::ResetAll();
 }
@@ -387,8 +390,8 @@ void EmitterManager::Update(Camera& camera)
     UpdateLeafEmitter();
 
     UpdateNoseLanternEmitter();
-    
-    UpdateBossDummyEmitter();
+
+    UpdateMadEmitter();
 
     ParticleEmitter::Update(camera);
 
@@ -589,32 +592,37 @@ void EmitterManager::UpdateLeafEmitter()
     }
 }
 
-void EmitterManager::UpdateBossDummyEmitter()
+void EmitterManager::UpdateMadEmitter()
 {
-    if (bossDummy_ == nullptr) {
-        return;
+    if (bossDummy_) {
+        madEmitter_->emitter_.transform.Parent(bossDummy_->body_.worldTransform_);
+        madEmitter_->emitter_.transform.translate_ = { -1.5f,3.0f,-3.0f };
     }
-
-    if (!bossDummy_->isAnimEnd_) {
+    if (enemy_) {
+        madEmitter_->emitter_.transform.Parent(enemy_->enemyBeak_->beak_);
+        madEmitter_->emitter_.transform.translate_ = { -1.5f,1.0f,0.0f };
+    }
+   
+    if (bossDummy_&&titleText_ &&titleText_->GetIsBreak()||enemy_&&enemy_->GetCurrentState() != "First") {
         madEmitter_->UpdateTimer();
         madEmitter_->UpdateEmitter();
     }
 }
 
 void EmitterManager::UpdateNoseLanternEmitter() {
-	if (titleText_ == nullptr) {
-		return;
-	}
-
-    if (titleText_->GetIsBreak()) {
-		return;
+    if (titleText_ == nullptr) {
+        return;
     }
 
-	//鼻提灯
+    if (titleText_->GetIsBreak()) {
+        return;
+    }
+
+    //鼻提灯
     noseLanternEmitter_->emitter_.transform.Parent(titleText_->body_.worldTransform_);
-	noseLanternEmitter_->emitter_.transform.translate_ = { 0.0f,0.7f,0.5f };
-	noseLanternEmitter_->UpdateTimer();
-	noseLanternEmitter_->UpdateEmitter();
+    noseLanternEmitter_->emitter_.transform.translate_ = { 0.0f,0.7f,0.5f };
+    noseLanternEmitter_->UpdateTimer();
+    noseLanternEmitter_->UpdateEmitter();
 }
 
 
@@ -633,11 +641,11 @@ void EmitterManager::Debug()
 
     //DebugUI::CheckParticle(*waveEmitters_[2].emitter, "waveEmitter2");
     //DebugUI::CheckParticle(*enemyKnockBackEmitter_, "KnockBack");
-    DebugUI::CheckParticle(*leafEmitter_, "leafEmitter");
-    DebugUI::CheckParticle(*betobetoEmitter_, "betobetoEmitter");
-    DebugUI::CheckParticle(*starEmitter_, "starEmitter");
-    DebugUI::CheckParticle(*spawnHealItemEmitters_[0], "spawnHealItemEmitter");
-
+    //DebugUI::CheckParticle(*leafEmitter_, "leafEmitter");
+    //DebugUI::CheckParticle(*betobetoEmitter_, "betobetoEmitter");
+    //DebugUI::CheckParticle(*starEmitter_, "starEmitter");
+    //DebugUI::CheckParticle(*spawnHealItemEmitters_[0], "spawnHealItemEmitter");
+    DebugUI::CheckParticle(*madEmitter_, "madEmitter_");
 
 }
 
@@ -664,9 +672,9 @@ void EmitterManager::InitEnemyEmitter()
 
 }
 
-void EmitterManager::InitBossDummyEmitter()
+void EmitterManager::InitMadEmitter()
 {
-    if (bossDummy_) {
+    if (bossDummy_ || enemy_) {
         madEmitter_->InitTimer();
     }
 }
@@ -728,8 +736,8 @@ void EmitterManager::InitLeafEmitter()
 }
 
 void EmitterManager::InitNoseLanternEmitter() {
-	//鼻提灯
-	noseLanternEmitter_->InitTimer();
+    //鼻提灯
+    noseLanternEmitter_->InitTimer();
 
 
 }

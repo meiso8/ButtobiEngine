@@ -18,6 +18,7 @@ public:
 
     HPGage();
     void SetHpPtr(HPs* hp) { hps_ = hp; };
+    void SetColor(const Vector4& color);
     void Setting(const Vector2& size, const Vector2& pos, const Vector2& anchorPoint);
     void Initialize();
     void Update();

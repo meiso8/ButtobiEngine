@@ -46,9 +46,8 @@ public:
         PLAYER_LEG_L,
         PLAYER_LEG_R,
 
-		ARROW,
-
-		HEAL_ITEM,
+		    ARROW,
+		    HEAL_ITEM,
         WORLD,
 
         TITLE_LOGO_1,
@@ -56,6 +55,7 @@ public:
         TITLE_LOGO_3,
         TITLE_LOGO_4,
         TITLE_LOGO_5,
+	      HEAL_ITEM,
 
         MODELS,
     };
