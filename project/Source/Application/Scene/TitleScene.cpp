@@ -111,10 +111,9 @@ TitleScene::TitleScene()
     //emitterManager_->SetEnemyWaveShockManager(*enemyShockWaveManager_);
     emitterManager_->SetFloorBuletManager(*floorBulletManager_);
     emitterManager_->SetFloorGameFloorManager(*floorGameFloorManager_);
-    emitterManager_->Create();
     emitterManager_->SetHouse(*house_);
     emitterManager_->SetBossDummy(*bossDummy_);
-
+    emitterManager_->Create();
 }
 
 TitleScene::~TitleScene()

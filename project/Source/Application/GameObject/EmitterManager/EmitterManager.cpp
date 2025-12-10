@@ -318,6 +318,17 @@ void EmitterManager::SetHealItemEmitter()
 }
 
 void EmitterManager::SetNoseLanternEmitter() {
+	noseLanternEmitter_ = std::make_unique<ParticleEmitter>();
+	noseLanternEmitter_->SetName("NoseLanternParticle");
+	noseLanternEmitter_->emitter_.count = 1;
+	noseLanternEmitter_->emitter_.movement = ParticleMovements::kParticleNormal;
+	noseLanternEmitter_->emitter_.translateAABB_ = { .min = { -0.1f,0.1f,0.3f },.max = {0.1f,0.2f,0.6f} };
+    noseLanternEmitter_->emitter_.velocityAABB = { .min = {0.0f,1.0f,0.0f},.max = {0.2f,2.0f,0.2f} };
+	noseLanternEmitter_->emitter_.rotateOffset_ = 0.0f;
+	noseLanternEmitter_->emitter_.transform.scale_ = { 1.0f,1.0f,1.0f };
+    noseLanternEmitter_->emitter_.scaleOffset_ = { 0.5f };
+    noseLanternEmitter_->emitter_.lifeTime = 1.35f;
+
 }
 
 void EmitterManager::SetBossDummyEmitter()
@@ -348,6 +359,10 @@ void EmitterManager::Initialize()
     InitFloorEmitter();
     //葉っぱ
     InitLeafEmitter();
+	//鼻提灯
+	InitNoseLanternEmitter();
+	//ボスダミー
+	//InitBossDummyEmitter();
 
     ParticleManager::ResetAll();
 }
@@ -371,7 +386,8 @@ void EmitterManager::Update(Camera& camera)
     UpdateLeafEmitter();
 
     UpdateNoseLanternEmitter();
-    //UpdateBossDummyEmitter();
+    
+    UpdateBossDummyEmitter();
 
     ParticleEmitter::Update(camera);
 

@@ -39,7 +39,7 @@ public:
     void SetFloorEmitter();
     void SetLeafEmitter();
     void SetHealItemEmitter();
-	  void SetNoseLanternEmitter();
+	void SetNoseLanternEmitter();
     void SetBossDummyEmitter();
 
     void SetPlayer(FloorGamePlayer& player) {
@@ -65,10 +65,6 @@ public:
     void SetHouse(House& house) {
         house_ = &house;
     }
-
-    void SetBossDummy(BossDummy& bossDummy) {
-        bossDummy_ = &bossDummy;
-    };
 
     void Initialize();
     void Update(Camera& camera);
