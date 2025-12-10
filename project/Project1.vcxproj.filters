@@ -141,6 +141,7 @@
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\ResultSceneObj\PlayerDummy.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FrameStopManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FlashEffecter.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\TitleLogo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\GameObject\UI\PauseScreen.h" />
@@ -308,6 +309,7 @@
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FrameStopManager.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FlashEffecter.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\SleapParticle.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\TitleLogo.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="externals\assimp\lib\Debug\assimp-vc143-mdd.lib" />

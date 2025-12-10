@@ -46,8 +46,6 @@ public:
         PLAYER_LEG_L,
         PLAYER_LEG_R,
 
-        PLAYER_MODEL,//プレイヤーの全体
-
 		ARROW,
 
 		HEAL_ITEM,

@@ -66,7 +66,7 @@ private:
     //家追加しましたヨシダ
     std::unique_ptr<House>house_ = nullptr;
     std::unique_ptr<BackGround>backGround_ = nullptr;
-	//std::unique_ptr<TitleLogo> titleLogo_ = nullptr;
+	std::unique_ptr<TitleLogo> titleLogo_ = nullptr;
 
     //エミッター
     std::unique_ptr<EmitterManager>emitterManager_ = nullptr;
