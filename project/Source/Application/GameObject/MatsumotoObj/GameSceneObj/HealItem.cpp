@@ -59,16 +59,16 @@ void HealItem::Update() {
 	}
 
 	if (body_.worldTransform_.translate_.x > static_cast<float>(kMapWidth) * kHalfFloorSize - kHalfFloorSize) {
-		velocity_.x = -1.0f;
+		velocity_.x = -0.3f;
 	}
 	if (body_.worldTransform_.translate_.x < -static_cast<float>(kMapWidth) * kHalfFloorSize + kHalfFloorSize) {
-		velocity_.x = 1.0f;
+		velocity_.x = 0.3f;
 	}
 	if (body_.worldTransform_.translate_.z > static_cast<float>(kMapHeight) * kHalfFloorSize - kHalfFloorSize) {
-		velocity_.z = -1.0f;
+		velocity_.z = -0.3f;
 	}
 	if (body_.worldTransform_.translate_.z < -static_cast<float>(kMapHeight) * kHalfFloorSize + kHalfFloorSize) {
-		velocity_.z = 1.0f;
+		velocity_.z = 0.3f;
 	}
 
 	velocity_.y -= 9.81f * 0.016f;
@@ -79,7 +79,7 @@ void HealItem::Update() {
 	if (body_.worldTransform_.translate_.y <= 1.0f) {
 		body_.worldTransform_.translate_.y = 1.0f;
 	}
-	velocity_ *= 0.95f;
+	velocity_ *= 0.9f;
 	body_.Update();
 	ColliderUpdate();
 }
