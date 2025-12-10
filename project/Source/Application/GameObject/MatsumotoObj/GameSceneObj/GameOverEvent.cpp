@@ -5,6 +5,8 @@
 #include"Sound.h"
 #include "Input/Input.h"
 
+#include <random>
+
 namespace {
 	const float kXOffset = 200.0f;
 	const float kYOffset = 200.0f;
@@ -49,6 +51,38 @@ void GameOverEvent::Initialize() {
 void GameOverEvent::Update() {
 	if (player_->GetDamageStruct().hps.hp <= 0 && !isGameOver_) {
 		isGameOver_ = true;
+
+		int r = rand() % 10;
+		if (r == 0) {
+			tips1Sprite_->SetTexture(Texture::GAMEOVER_TIPS_1);
+		}
+		else if (r == 1) {
+			tips1Sprite_->SetTexture(Texture::GAMEOVER_TIPS_2);
+		}
+		else if (r == 2) {
+			tips1Sprite_->SetTexture(Texture::GAMEOVER_TIPS_3);
+		}
+		else if (r == 3) {
+			tips1Sprite_->SetTexture(Texture::GAMEOVER_TIPS_4);
+		}
+		else if (r == 4) {
+			tips1Sprite_->SetTexture(Texture::GAMEOVER_TIPS_5);
+		}
+		else if (r == 5) {
+			tips1Sprite_->SetTexture(Texture::GAMEOVER_TIPS_6);
+		}
+		else if (r == 6) {
+			tips1Sprite_->SetTexture(Texture::GAMEOVER_TIPS_7);
+		}
+		else if (r == 7) {
+			tips1Sprite_->SetTexture(Texture::GAMEOVER_TIPS_8);
+		}
+		else if (r == 8) {
+			tips1Sprite_->SetTexture(Texture::GAMEOVER_TIPS_9);
+		}
+		else {
+			tips1Sprite_->SetTexture(Texture::GAMEOVER_TIPS_10);
+		}
 	}
 
 	if (!isGameOver_ || isReqestedAction_) {

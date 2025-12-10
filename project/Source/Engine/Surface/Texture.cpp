@@ -72,7 +72,16 @@ void Texture::LoadAllTexture() {
     handles[RESULT_GAMEOVER] = Load("Resource/Textures/GameOver.png");
 
     handles[GAMEOVER_STRING] = Load("Resource/Textures/GameOverString.png");
-    handles[GAMEOVER_TIPS_1] = Load("Resource/Textures/Tips1.png");
+    handles[GAMEOVER_TIPS_1] = Load("Resource/Textures/Tips01.png");
+	handles[GAMEOVER_TIPS_2] = Load("Resource/Textures/Tips02.png");
+	handles[GAMEOVER_TIPS_3] = Load("Resource/Textures/Tips03.png");
+	handles[GAMEOVER_TIPS_4] = Load("Resource/Textures/Tips04.png");
+	handles[GAMEOVER_TIPS_5] = Load("Resource/Textures/Tips05.png");
+	handles[GAMEOVER_TIPS_6] = Load("Resource/Textures/Tips06.png");
+	handles[GAMEOVER_TIPS_7] = Load("Resource/Textures/Tips07.png");
+	handles[GAMEOVER_TIPS_8] = Load("Resource/Textures/Tips08.png");
+	handles[GAMEOVER_TIPS_9] = Load("Resource/Textures/Tips09.png");
+	handles[GAMEOVER_TIPS_10] = Load("Resource/Textures/Tips10.png");
 }
 
 uint32_t Texture::Load(const std::string& filePath)
