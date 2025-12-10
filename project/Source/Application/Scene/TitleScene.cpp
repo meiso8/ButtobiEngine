@@ -160,6 +160,9 @@ void TitleScene::Initialize()
 	eventTimer_ = 0.0f;
     emitterManager_->Initialize();
     Sound::Stop(Sound::resultBGM);
+
+    SceneStaticValue::isClear = false;
+    SceneStaticValue::bossRound = 0;
 }
 
 void TitleScene::Update()
