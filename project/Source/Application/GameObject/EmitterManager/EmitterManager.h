@@ -11,15 +11,17 @@ class EnemyShockWave;
 class FloorBullet;
 class FloorBulletManager;
 class FloorGameFloorManager;
-class BossDummy;
 
+class FloorGameFloor;
+class House;
+class BossDummy;
 struct WaveEmitterPair {
     EnemyShockWave* wave;
     std::unique_ptr<ParticleEmitter> emitter;
 };
 
-struct FloorBulletEmitterPair {
-    FloorBullet* floorBullet;
+struct FloorStrongEmitterPair {
+    FloorGameFloor* floorGameFloor;
     std::unique_ptr<ParticleEmitter> emitter;
 };
 
@@ -37,7 +39,8 @@ public:
     void SetFloorEmitter();
     void SetLeafEmitter();
     void SetHealItemEmitter();
-	void SetNoseLanternEmitter();
+	  void SetNoseLanternEmitter();
+    void SetBossDummyEmitter();
 
     void SetPlayer(FloorGamePlayer& player) {
         player_ = &player;
@@ -59,6 +62,14 @@ public:
 		bossDummy_ = &bossDummy;
 	};
 
+    void SetHouse(House& house) {
+        house_ = &house;
+    }
+
+    void SetBossDummy(BossDummy& bossDummy) {
+        bossDummy_ = &bossDummy;
+    };
+
     void Initialize();
     void Update(Camera& camera);
     void Draw();
@@ -68,6 +79,7 @@ public:
    void InitPlayerEmitter();
     // 敵
    void InitEnemyEmitter();
+   void InitBossDummyEmitter();
     //敵波攻撃
    void InitWaveShockEmitter();
     //床弾
@@ -98,7 +110,8 @@ public:
    void UpdateLeafEmitter();
    //鼻提灯
    void UpdateNoseLanternEmitter();
-
+   //タミーボス
+   void UpdateBossDummyEmitter();
 private:
 
 
@@ -110,8 +123,8 @@ private:
     EnemyShockWaveManager* enemyShockWaveManager_ = nullptr;
     FloorBulletManager* floorBulletManager_ = nullptr;
     FloorGameFloorManager* floorGameFloorManager_ = nullptr;
-	BossDummy* bossDummy_ = nullptr;
-
+    House* house_ = nullptr;
+    BossDummy* bossDummy_ = nullptr;
     enum EmitterType {
         kPlayerWalkEmitter,
         kPlayerHitEmitter,
@@ -123,7 +136,7 @@ private:
 
     std::unique_ptr<ParticleEmitter> enemyKnockBackEmitter_ = nullptr;
 
-
+    std::unique_ptr<ParticleEmitter> madEmitter_ = nullptr;
     std::unique_ptr<ParticleEmitter> betobetoEmitter_ = nullptr;
 
     std::array< std::unique_ptr<ParticleEmitter>, kMaxEmitter>particleEmitters_;
@@ -131,6 +144,10 @@ private:
     std::unique_ptr<ParticleEmitter> starEmitter_ = nullptr;
 
     std::unique_ptr<ParticleEmitter> floorBreakEmitter_ = nullptr;
+
+    std::vector< FloorStrongEmitterPair> floorStrongEmitters_;
+
+
     std::vector< std::unique_ptr<ParticleEmitter>> spawnHealItemEmitters_;
 
 	std::unique_ptr<ParticleEmitter> noseLanternEmitter_ = nullptr;

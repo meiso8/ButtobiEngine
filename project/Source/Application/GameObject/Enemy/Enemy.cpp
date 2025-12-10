@@ -385,8 +385,8 @@ void Enemy::LeathalMoveUpdate() {
         isLeathalVec_ = true;
         velocity_ = { 5.0f,30.0f,350.0f };
         Sound::PlaySE(Sound::zushaa);
-		FrameStopManager::GetInstance().StopFrame(60);
-		FlashEffecter::GetInstance().StartFlash({ 1.0f,1.0f,1.0f,1.0f }, 0.5f, 0.1f);
+        FrameStopManager::GetInstance().StopFrame(60);
+        FlashEffecter::GetInstance().StartFlash({ 1.0f,1.0f,1.0f,1.0f }, 0.5f, 0.1f);
     }
 
     velocity_.y -= 9.8f * 0.016f;
@@ -555,14 +555,21 @@ void Enemy::KnockBack()
 
 void Enemy::LerpRoundPos()
 {
-
     sphericalPos_.polar = Lerp(sphericalPos_.polar, 0.0f, 0.05f);
     sphericalPos_.radius = Lerp(sphericalPos_.radius, kRoundRadius_, 0.05f);
-
     bodyPos_.worldTransform_.translate_ = TransformCoordinate(sphericalPos_);
-    if (fabs(sphericalPos_.polar) <= QUARTER_PI && sphericalPos_.radius >= kRoundRadius_ - 2.0f) {
-        SetPhase(ROUND);
+    LookTargetNormal(*playerPos_);
+
+    if (phaseTimer_ > 1.0f) {
+        const float polarThreshold = QUARTER_PI; // もしくは 0.5f とか
+        const float radiusThreshold = 0.2f; // より厳密に
+        if (fabs(sphericalPos_.polar) <= polarThreshold &&
+            fabs(sphericalPos_.radius - kRoundRadius_) <= radiusThreshold) {
+            SetPhase(ROUND);
+        }
     }
+
+
 }
 
 void Enemy::LerpSquarePos()
@@ -669,10 +676,11 @@ void Enemy::SetPhase(PHASE phase)
     phase_ = phase;
     poyoAnimTimer_ = 0.0f;
 
-    //フェーズがーLERP_ROUND_POSだったらここでreturn
-    if (phase_ == LERP_ROUND_POS || phase_ == LERP_SQUARE_POS
-        || phase_ == KNOCKBACK || phase_ == PLAYER_HIT_BACK) {
+    if (phase_ == LERP_ROUND_POS) {
         sphericalPos_ = TransformCoordinate(bodyPos_.worldTransform_.translate_);
+    }
+    //フェーズがーLERP_ROUND_POSだったらここでreturn
+    if (phase_ == LERP_ROUND_POS || phase_ == LERP_SQUARE_POS) {
         return;
     }
 
