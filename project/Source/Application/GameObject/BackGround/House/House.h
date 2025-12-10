@@ -12,7 +12,8 @@ class HouseCollider :public Collider {
 
 public:
     HouseCollider();
-    void Setting(AABB aabb,Model* model);
+    void SettingAABB(const AABB& aabb,Model* model);
+    void SettingSphere(const float& radius, Model* model);
     void Initialize();
     void Update();
     void Draw(Camera& camera);
@@ -27,7 +28,7 @@ class House
 public:
 
     enum Objects {
-        kHouse_floor,
+ /*       kHouse_floor,*/
         kHouse_wall_L,
         kHouse_wall_R,
         kHouse_wall_back,
@@ -54,5 +55,6 @@ private:
     float wallBreakTimer_ = 0.0f;
     bool isDoorOpen_ = false;
     bool isWallBrake_ = false;
-
+    Object3d floorPos_;
+    Object3d doorPos_;
 };
