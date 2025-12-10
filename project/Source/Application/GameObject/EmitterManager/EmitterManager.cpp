@@ -10,6 +10,7 @@
 #include"Enemy/EnemyShotWaveManager.h"
 #include "MatsumotoObj/GameSceneObj/Data/MapData.h"
 #include"MatsumotoObj/GameSceneObj/HealItemSpawner.h"
+#include"MatsumotoObj/TitleSceneObj/BossDummy.h"
 #include"BackGround/House/House.h"
 
 EmitterManager::EmitterManager()
@@ -32,7 +33,7 @@ void EmitterManager::Create()
     SetFloorEmitter();
     SetLeafEmitter();
     SetHealItemEmitter();
-
+    SetBossDummyEmitter();
 }
 
 void EmitterManager::SetPlayerEmitter()
@@ -315,6 +316,17 @@ void EmitterManager::SetHealItemEmitter()
 
 }
 
+void EmitterManager::SetBossDummyEmitter()
+{
+    if (bossDummy_) {
+        madEmitter_ = std::make_unique<ParticleEmitter>();
+        madEmitter_->SetName("mad");
+        madEmitter_->emitter_.transform.Parent(bossDummy_->body_.worldTransform_);
+        madEmitter_->emitter_.transform.translate_ = { 3.0f,3.0f,-1.0f };
+        madEmitter_->emitter_.count = 1;
+    }
+}
+
 void EmitterManager::Initialize()
 {
 
@@ -353,6 +365,8 @@ void EmitterManager::Update(Camera& camera)
     UpdateHealItemEmitter();
 
     UpdateLeafEmitter();
+
+    //UpdateBossDummyEmitter();
 
     ParticleEmitter::Update(camera);
 
@@ -553,6 +567,18 @@ void EmitterManager::UpdateLeafEmitter()
     }
 }
 
+void EmitterManager::UpdateBossDummyEmitter()
+{
+    if (bossDummy_ == nullptr) {
+        return;
+    }
+
+    if (!bossDummy_->isAnimEnd_) {
+        madEmitter_->UpdateTimer();
+        madEmitter_->UpdateEmitter();
+    }
+}
+
 
 void EmitterManager::Draw()
 {
@@ -600,6 +626,13 @@ void EmitterManager::InitEnemyEmitter()
 
 }
 
+void EmitterManager::InitBossDummyEmitter()
+{
+    if (bossDummy_) {
+        madEmitter_->InitTimer();
+    }
+}
+
 void EmitterManager::InitWaveShockEmitter()
 {
     if (enemyShockWaveManager_ == nullptr) {
@@ -610,8 +643,6 @@ void EmitterManager::InitWaveShockEmitter()
     for (auto& grop : waveEmitters_) {
         grop.emitter->InitTimer();
     }
-
-
 }
 
 void EmitterManager::InitFloorBulletEmitter()

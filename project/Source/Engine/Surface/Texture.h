@@ -38,6 +38,7 @@ public:
         FLOOR_PARTICLE,
         HEAL_PARTICLE,
         COMMON_PARTICLE,
+        MAD_PARTICLE,
         BLOOM,
 
         ENEMY_TEXTURE3,

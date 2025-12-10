@@ -30,6 +30,6 @@ void ResultSprite::Update() {
 }
 
 void ResultSprite::Draw() {
-	sprite_->PreDraw();
+	Sprite::PreDraw(kBlendModeNormal);
 	sprite_->Draw();
 }
