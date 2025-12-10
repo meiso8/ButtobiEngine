@@ -58,6 +58,11 @@ void ModelManager::LoadAllModel()
     LoadModel("Resource/Models/Player", "Leg_L.obj", PLAYER_LEG_L);
     LoadModel("Resource/Models/Player", "Leg_R.obj", PLAYER_LEG_R);
 
+    /*LoadModel("Resource/Models/TitleLogo", "Logo01.obj", TITLE_LOGO_1);
+	LoadModel("Resource/Models/TitleLogo", "Logo02.obj", TITLE_LOGO_2);
+	LoadModel("Resource/Models/TitleLogo", "Logo03.obj", TITLE_LOGO_3);
+	LoadModel("Resource/Models/TitleLogo", "Logo04.obj", TITLE_LOGO_4);
+	LoadModel("Resource/Models/TitleLogo", "Logo05.obj", TITLE_LOGO_5);*/
 
     LoadModel("Resource/Models/HealItem", "HealItem.obj", HEAL_ITEM);
 

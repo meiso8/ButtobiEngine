@@ -248,7 +248,9 @@ void GameScene::Draw() {
     AttackAreaEmitter::GetInstance().Draw(*currentCamera_);
     //赤いピンチ画面
     uiManager_->DrawRedScreen();
-    actionUI_->Draw();
+    if (!enemy_->IsDead()) {
+        actionUI_->Draw();
+    }
     letterboxBars_->Draw();
     //ポーズ画面を描画する
     uiManager_->Draw();

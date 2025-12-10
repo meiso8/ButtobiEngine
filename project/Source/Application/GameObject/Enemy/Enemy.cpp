@@ -116,9 +116,6 @@ void Enemy::Init() {
     actionCount_ = 0;
 
     currentState_ = "First";
-    if (SceneStaticValue::bossRound >= 2) {
-        currentState_ = "Second";
-    }
     phase_ = PHASE::ROUND;
 
     //体についての項目
@@ -161,13 +158,13 @@ void Enemy::Init() {
     fireBallAttackAreaID_ = UINT32_MAX;
     tackleAttackAreaID_ = UINT32_MAX;
 
+    if (SceneStaticValue::bossRound >= 2) {
+		SwitchState();
+    }
 }
 
 void Enemy::InitState()
 {
-
-
-
     SetTextures();
 
     Json file = JsonFile::GetJsonFiles("Boss");
