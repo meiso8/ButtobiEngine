@@ -22,7 +22,7 @@ SkyDome::SkyDome() {
 void SkyDome::Init()
 {
     object3d_->Initialize();
-    object3d_->worldTransform_.scale_ = { 100.0f,100.0f,100.0f };
+    object3d_->worldTransform_.scale_ = { 200.0f,50.0f,200.0f };
     object3d_->SetColor({ 1.0f, 1.0f, 1.0f, 1.0f });
 }
 
