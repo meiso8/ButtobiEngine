@@ -82,7 +82,7 @@ GameScene::GameScene()
     enemyShockWaveManager_ = std::make_unique<EnemyShockWaveManager>();
     enemyShotWaveManager_ = std::make_unique<EnemyShotWaveManager>(enemy_.get(), enemyShockWaveManager_.get(), floorGameFloorManager_.get());
 
-   
+
     nest_ = std::make_unique<Nest>();
     backGround_ = std::make_unique<BackGround>();
 
@@ -118,7 +118,7 @@ void GameScene::Initialize() {
     DirectionalLightManager::GetDirectionalLightData()->intensity = 1.0f;
     PointLightManager::GetPointLightData(1).intensity = 0.0f;
     PointLightManager::GetPointLightData(2).intensity = 1.0f;
-    SpotLightManager::GetData()->direction = {0.0f,0.0f,1.0f};
+    SpotLightManager::GetData()->direction = { 0.0f,0.0f,1.0f };
     SpotLightManager::GetData()->position = { 0.0f,0.5f,0.0f };
 
     sceneChange_->Initialize();
@@ -166,14 +166,14 @@ void GameScene::Initialize() {
     gameclearTimer_ = 0.0f;
     gameOverTimer_ = 0.0f;
 
-	SceneStaticValue::isPlayerAlive = true;
+    SceneStaticValue::isPlayerAlive = true;
 
-	AttackAreaEmitter::GetInstance().Initialize();
+    AttackAreaEmitter::GetInstance().Initialize();
 }
 
 void GameScene::Update() {
-	SceneStaticValue::isPlayerAlive = !floorGamePlayer_->IsDead();
-	FrameStopManager::GetInstance().Update();
+    SceneStaticValue::isPlayerAlive = !floorGamePlayer_->IsDead();
+    FrameStopManager::GetInstance().Update();
 
     UpdateBGM();
 
@@ -215,8 +215,8 @@ void GameScene::Update() {
 
     letterboxBars_->Update();
     uiManager_->Update();
-	FlashEffecter::GetInstance().Update();
-	
+    FlashEffecter::GetInstance().Update();
+
 }
 
 void GameScene::Draw() {
@@ -239,9 +239,9 @@ void GameScene::Draw() {
     floorBulletManager_->Draw(*currentCamera_);
     floorPlayerStripTargetUI_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
     playerFloorStripManager_->Draw(*currentCamera_);
-	HealItemSpawner::Instance().Draw(*currentCamera_);
+    HealItemSpawner::Instance().Draw(*currentCamera_);
     floorActionManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
-   //透明のため後処理
+    //透明のため後処理
     enemyShockWaveManager_->Draw(*currentCamera_);
     //エミッター
     emitterManager_->Draw();
@@ -255,9 +255,9 @@ void GameScene::Draw() {
     //ポーズ画面を描画する
     uiManager_->Draw();
     gameOverEvent_->Draw();
-	FlashEffecter::GetInstance().Draw();
- 
-	
+    FlashEffecter::GetInstance().Draw();
+
+
 #pragma endregion
 
     //シーン遷移を描画する
@@ -301,7 +301,7 @@ void GameScene::UpdateLight()
             float& intensity0 = PointLightManager::GetPointLightData(0).intensity;
             intensity0 = Lerp(intensity0, 4.0f, 0.01f);
 
-        }else{
+        } else {
             float& intensity0 = PointLightManager::GetPointLightData(0).intensity;
             intensity0 = Lerp(intensity0, 1.0f, 0.01f);
         }
@@ -333,22 +333,21 @@ void GameScene::UpdateCamera()
         }
 
         if (enemy_->isReqestOverheadView_) {
-			cameraController_->StartOverheadView();
-        }
-        else {
-			cameraController_->EndOverheadView();
+            cameraController_->StartOverheadView();
+        } else {
+            cameraController_->EndOverheadView();
         }
 
         if (enemy_->isFaseChange_) {
             cameraController_->FocusTarget(&enemy_->bodyPos_.worldTransform_.translate_);
-			enemyBombManager_->ClearBombs();
+            enemyBombManager_->ClearBombs();
         } else {
             cameraController_->ResetFocusTarget();
         }
 
         if (floorGamePlayer_->GetDamageStruct().hps.hp <= 0) {
             cameraController_->ResetFocusTarget();
-            cameraController_->FocusTarget(&floorGamePlayer_->body_.worldTransform_.translate_,0.2f);
+            cameraController_->FocusTarget(&floorGamePlayer_->body_.worldTransform_.translate_, 0.2f);
         }
 
         if (enemy_->IsDead()) {
@@ -370,19 +369,19 @@ void GameScene::UpdateGameObject()
         enemyBombManager_->ClearBombs();
         floorGameFloorManager_->ForceChangeAllFloorType(FloorType::Strong);
         floorGamePlayer_->SetCollisionAttribute(kCollisionNone);
-      
+
     }
 
     // オブジェクト個人の更新
     floorGamePlayer_->Update();
     floorGameFloorManager_->Update();
     floorBulletManager_->Update();
-	HealItemSpawner::Instance().Update();
+    HealItemSpawner::Instance().Update();
     enemy_->Update();
     enemyBulletManager_->Update();
     enemyBombManager_->Update();
     enemyShockWaveManager_->Update();
-    
+
     backGround_->Update();
     nest_->Update();
 
@@ -408,7 +407,7 @@ void GameScene::UpdateGameObject()
     floorPlayerStripTargetUI_->Update();
     floorActionManager_->Update();
     if (enemy_->isReqestClearFloor_) {
-        Sound::PlaySE(Sound::kFloorRespawn,1.0f);
+        Sound::PlaySE(Sound::kFloorRespawn, 1.0f);
         floorGameFloorManager_->DamageCleanUp();
         enemy_->isReqestClearFloor_ = false;
     }
@@ -434,41 +433,48 @@ void GameScene::UpdateGameObject()
     }
 }
 
+
 void GameScene::UpdateBGM()
 {
 
     if (IsGameOverBGMSound()) {
         if (!isSoundGameOverBGM_) {
             isSoundGameOverBGM_ = true;
-            Sound::PlaySE(Sound::gameOverBGM,0.5f);
+            Sound::PlaySE(Sound::gameOverBGM, 0.5f);
         }
     }
+
 
     if (floorGamePlayer_->IsDead() || SceneStaticValue::isClear) {
         Sound::Stop(Sound::inGameBGM01);
         Sound::Stop(Sound::inGameBGM02);
         Sound::Stop(Sound::playerHP1BGM);
     } else {
+        //ゲーム中の時
 
-        if (floorGamePlayer_->GetHpsPtr()->hp <= 35.0f) {
-
+        if (enemy_->GetCurrentState() == "Third")
+        {
+            //最終形態BGMを鳴らす
+            Sound::Stop(Sound::playerHP1BGM);
             Sound::Stop(Sound::inGameBGM01);
+            Sound::PlayBGM(Sound::inGameBGM02);
+        } else {
+            //最終形態じゃないとき
             Sound::Stop(Sound::inGameBGM02);
 
-            Sound::PlayBGM(Sound::playerHP1BGM);
-        } else {
+            //HPが35以下になった時
+            if (floorGamePlayer_->GetHpsPtr()->hp <= 35.0f) {
 
-            Sound::Stop(Sound::playerHP1BGM);
-
-            if (enemy_->GetCurrentState() != "Third") {
-                Sound::Stop(Sound::inGameBGM02);
-                Sound::PlayBGM(Sound::inGameBGM01);
-            } else {
                 Sound::Stop(Sound::inGameBGM01);
-                //仮に音声を鳴らす　全体のvolumeがあってオフセット分だけいじる
-                Sound::PlayBGM(Sound::inGameBGM02);
+                Sound::PlayBGM(Sound::playerHP1BGM);
+
+            } else {
+                Sound::Stop(Sound::playerHP1BGM);
+                Sound::PlayBGM(Sound::inGameBGM01);
+
             }
         }
+
     }
 
 
@@ -480,6 +486,7 @@ void GameScene::UpdateBGM()
 
 
 }
+
 
 void GameScene::UpdatePhaseColor()
 {
@@ -518,7 +525,7 @@ void GameScene::CheckAllCollision()
     }
     collisionManager_->AddCollider(enemy_.get());
 
-	HealItemSpawner::Instance().AddCollider(collisionManager_.get());
+    HealItemSpawner::Instance().AddCollider(collisionManager_.get());
     floorGameFloorManager_->AddCollider(collisionManager_.get());
 
     for (auto& bullet : floorBulletManager_->GetBullets()) {
@@ -532,5 +539,5 @@ void GameScene::CheckAllCollision()
 GameScene::~GameScene()
 {
     camera_ = nullptr;
-	HealItemSpawner::Instance().Release();
+    HealItemSpawner::Instance().Release();
 }
