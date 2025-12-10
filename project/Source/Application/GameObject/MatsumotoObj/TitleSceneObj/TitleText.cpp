@@ -41,6 +41,7 @@ void TitleText::OnCollision(Collider* collider) {
 		damageTimer_ = 0.4f;
 
 		VibrateManager::SetTime(0.2f, 3000, 3000);
+		Sound::PlaySE(Sound::kDefeatBoss);
 	}
 }
 

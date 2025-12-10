@@ -113,6 +113,7 @@ TitleScene::TitleScene()
     emitterManager_->SetFloorGameFloorManager(*floorGameFloorManager_);
     emitterManager_->SetHouse(*house_);
     emitterManager_->SetBossDummy(*bossDummy_);
+	emitterManager_->SetTitleText(*titleText_);
     emitterManager_->Create();
 }
 
@@ -233,8 +234,8 @@ void TitleScene::Debug()
 void TitleScene::SceneChangeUpdate()
 {
     if (titleText_->GetIsBreak()) {
-		camera_->rotate_ = MY_Utility::SimpleEaseIn(camera_->rotate_, { 0.0f,0.0f,0.0f }, 0.01f);
-		camera_->translate_ = MY_Utility::SimpleEaseIn(camera_->translate_, { 0.0f,1.5f,0.0f }, 0.01f);
+		camera_->rotate_ = MY_Utility::SimpleEaseIn(camera_->rotate_, { 0.0f,0.0f,0.0f }, 0.1f);
+		camera_->translate_ = MY_Utility::SimpleEaseIn(camera_->translate_, { 0.0f,1.6f,-0.5f }, 0.1f);
 
         if (bossDummy_->isAnimEnd_) {
 			sceneChange_->SetState(SceneChange::kFadeIn, 30);
@@ -314,7 +315,6 @@ void TitleScene::CheckAllCollision() {
             collisionManager_->AddCollider(house.get());
         }
     }
-
 
     for (auto& bullet : floorBulletManager_->GetBullets()) {
         if (bullet->isActive_) { collisionManager_->AddCollider(bullet.get()); }
