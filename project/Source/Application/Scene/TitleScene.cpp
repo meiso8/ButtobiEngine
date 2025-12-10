@@ -297,9 +297,13 @@ void TitleScene::CheckAllCollision() {
     collisionManager_->AddCollider(floorGamePlayer_.get());
 	collisionManager_->AddCollider(titleText_.get());
 
-    for (auto& [type,house] : house_->GetColliders()) {
-        collisionManager_->AddCollider(house.get());
+    if (!house_->isWallBrake_) {
+
+        for (auto& [type, house] : house_->GetColliders()) {
+            collisionManager_->AddCollider(house.get());
+        }
     }
+
 
     for (auto& bullet : floorBulletManager_->GetBullets()) {
         if (bullet->isActive_) { collisionManager_->AddCollider(bullet.get()); }
