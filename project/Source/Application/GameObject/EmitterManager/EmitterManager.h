@@ -12,6 +12,7 @@ class FloorBullet;
 class FloorBulletManager;
 class FloorGameFloorManager;
 class FloorGameFloor;
+class House;
 
 struct WaveEmitterPair {
     EnemyShockWave* wave;
@@ -53,6 +54,10 @@ public:
     };
     void SetFloorGameFloorManager(FloorGameFloorManager& floorGameFloorManager) {
         floorGameFloorManager_ = &floorGameFloorManager ;
+    }
+
+    void SetHouse(House& house) {
+        house_ = &house;
     }
 
     void Initialize();
@@ -102,6 +107,7 @@ private:
     EnemyShockWaveManager* enemyShockWaveManager_ = nullptr;
     FloorBulletManager* floorBulletManager_ = nullptr;
     FloorGameFloorManager* floorGameFloorManager_ = nullptr;
+    House* house_ = nullptr;
     enum EmitterType {
         kPlayerWalkEmitter,
         kPlayerHitEmitter,

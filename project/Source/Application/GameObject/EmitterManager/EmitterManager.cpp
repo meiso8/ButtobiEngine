@@ -10,6 +10,8 @@
 #include"Enemy/EnemyShotWaveManager.h"
 #include "MatsumotoObj/GameSceneObj/Data/MapData.h"
 #include"MatsumotoObj/GameSceneObj/HealItemSpawner.h"
+#include"BackGround/House/House.h"
+
 EmitterManager::EmitterManager()
 {
     ParticleEmitter::Create();
@@ -502,12 +504,6 @@ void EmitterManager::UpdateFloorEmitter()
     }
 
 
-    //for (auto& floors : floorGameFloorManager_->GetFloor()) {
-    //    for (auto& floor : floors) {
-
-    //    }
-    //}
-
     for (auto& emitters : floorStrongEmitters_) {
 
         if (emitters.floorGameFloor->isToStrong_) {
@@ -516,7 +512,7 @@ void EmitterManager::UpdateFloorEmitter()
             starEmitter_->UpdateEmitter();
         } else {
             if (emitters.floorGameFloor->floorType_ == FloorType::Strong) {
-               
+
                 emitters.emitter->UpdateTimer();
                 emitters.emitter->UpdateEmitter();
             }
@@ -548,9 +544,11 @@ void EmitterManager::UpdateFloorEmitter()
 
 void EmitterManager::UpdateLeafEmitter()
 {
-    //葉っぱ
-    leafEmitter_->UpdateTimer();
-    leafEmitter_->UpdateEmitter();
+    if (house_ && house_->isWallBrake_ || house_ == nullptr) {
+        //葉っぱ
+        leafEmitter_->UpdateTimer();
+        leafEmitter_->UpdateEmitter();
+    }
 }
 
 
