@@ -24,7 +24,7 @@ void Texture::LoadAllTexture() {
 
     handles.resize(TEXTURES);
     handles[WHITE_1X1] = Load("Resource/Textures/white1x1.png");
-	handles[WHITECIRCLE] = Load("Resource/Textures/WhiteCircle.png");
+    handles[WHITECIRCLE] = Load("Resource/Textures/WhiteCircle.png");
     handles[UV_CHECKER] = Load("Resource/Textures/uvChecker.png");
     handles[NUMBERS] = Load("Resource/Textures/Numbers_Pop.png");
 
@@ -42,10 +42,10 @@ void Texture::LoadAllTexture() {
     handles[LEAF_PARTICLE] = Load("Resource/Textures/LeafParticle.png");
     handles[FLOOR_PARTICLE] = Load("Resource/Textures/FloorParticle.png");
     handles[BUBBLE_PARTICLE] = Load("Resource/Textures/BubbleParticle03.png");
-    
+    handles[MAD_PARTICLE] = Load("Resource/Textures/MadParticle.png");
 
-   handles[HEAL_PARTICLE] = Load("Resource/Textures/HealParticle.png");
-   handles[COMMON_PARTICLE] = Load("Resource/Textures/CommonParticle01.png");
+    handles[HEAL_PARTICLE] = Load("Resource/Textures/HealParticle.png");
+    handles[COMMON_PARTICLE] = Load("Resource/Textures/CommonParticle01.png");
 
     handles[BLOOM] = Load("Resource/Textures/Bloom.png");
 
@@ -55,7 +55,7 @@ void Texture::LoadAllTexture() {
     handles[ACTION_UI_MOVE] = Load("Resource/Textures/ActionUI_Move_Pop.png");
     handles[ACTION_UI_STRIP] = Load("Resource/Textures/ActionUI_Strip_Pop.png");
     handles[ACTION_UI_SHOT] = Load("Resource/Textures/ActionUI_Shot_Pop.png");
-	handles[ACTION_UI_MENU] = Load("Resource/Textures/PauseUI_Pop.png");
+    handles[ACTION_UI_MENU] = Load("Resource/Textures/PauseUI_Pop.png");
 
     handles[PAUSING_BG] = Load("Resource/Textures/PausingBG_03.png");
     handles[PAUSING] = Load("Resource/Textures/PauseUI_Word.png");

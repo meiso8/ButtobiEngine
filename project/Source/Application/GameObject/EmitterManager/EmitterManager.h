@@ -13,7 +13,7 @@ class FloorBulletManager;
 class FloorGameFloorManager;
 class FloorGameFloor;
 class House;
-
+class BossDummy;
 struct WaveEmitterPair {
     EnemyShockWave* wave;
     std::unique_ptr<ParticleEmitter> emitter;
@@ -38,6 +38,7 @@ public:
     void SetFloorEmitter();
     void SetLeafEmitter();
     void SetHealItemEmitter();
+    void SetBossDummyEmitter();
 
     void SetPlayer(FloorGamePlayer& player) {
         player_ = &player;
@@ -60,6 +61,10 @@ public:
         house_ = &house;
     }
 
+    void SetBossDummy(BossDummy& bossDummy) {
+        bossDummy_ = &bossDummy;
+    };
+
     void Initialize();
     void Update(Camera& camera);
     void Draw();
@@ -69,6 +74,7 @@ public:
    void InitPlayerEmitter();
     // 敵
    void InitEnemyEmitter();
+   void InitBossDummyEmitter();
     //敵波攻撃
    void InitWaveShockEmitter();
     //床弾
@@ -95,7 +101,8 @@ public:
    void UpdateFloorEmitter();
    //葉っぱ
    void UpdateLeafEmitter();
-
+   //タミーボス
+   void UpdateBossDummyEmitter();
 private:
 
 
@@ -108,6 +115,7 @@ private:
     FloorBulletManager* floorBulletManager_ = nullptr;
     FloorGameFloorManager* floorGameFloorManager_ = nullptr;
     House* house_ = nullptr;
+    BossDummy* bossDummy_ = nullptr;
     enum EmitterType {
         kPlayerWalkEmitter,
         kPlayerHitEmitter,
@@ -119,7 +127,7 @@ private:
 
     std::unique_ptr<ParticleEmitter> enemyKnockBackEmitter_ = nullptr;
 
-
+    std::unique_ptr<ParticleEmitter> madEmitter_ = nullptr;
     std::unique_ptr<ParticleEmitter> betobetoEmitter_ = nullptr;
 
     std::array< std::unique_ptr<ParticleEmitter>, kMaxEmitter>particleEmitters_;
