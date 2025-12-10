@@ -11,13 +11,15 @@ class EnemyShockWave;
 class FloorBullet;
 class FloorBulletManager;
 class FloorGameFloorManager;
+class FloorGameFloor;
+
 struct WaveEmitterPair {
     EnemyShockWave* wave;
     std::unique_ptr<ParticleEmitter> emitter;
 };
 
-struct FloorBulletEmitterPair {
-    FloorBullet* floorBullet;
+struct FloorStrongEmitterPair {
+    FloorGameFloor* floorGameFloor;
     std::unique_ptr<ParticleEmitter> emitter;
 };
 
@@ -119,6 +121,10 @@ private:
     std::unique_ptr<ParticleEmitter> starEmitter_ = nullptr;
 
     std::unique_ptr<ParticleEmitter> floorBreakEmitter_ = nullptr;
+
+    std::vector< FloorStrongEmitterPair> floorStrongEmitters_;
+
+
     std::vector< std::unique_ptr<ParticleEmitter>> spawnHealItemEmitters_;
 
     
