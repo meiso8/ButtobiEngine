@@ -43,6 +43,8 @@
 #include "MatsumotoObj/MY_Utility.h"
 #include"Lights/PointLightManager.h"
 #include"Lights/DirectionalLightManager.h"
+#include"Lights/SpotLightManager.h"
+
 #include"Lerp.h"
 
 #include "MatsumotoObj/SceneStaticValue.h"
@@ -78,9 +80,10 @@ TitleScene::TitleScene()
     house_->SetHitCounts(titleText_->GetHitCount(), titleText_->GetMaxHitCount());
     backGround_ = std::make_unique<BackGround>();
 
-    playerDirectionSpotLight_ = std::make_unique<PlayerDirectionSpotLight>();
-    playerDirectionSpotLight_->dirPtr_ = &floorGamePlayer_->GetLookDir();
-    playerDirectionSpotLight_->pos_.Parent(floorGamePlayer_->headObject_.worldTransform_);
+    SpotLightManager::GetData()->intensity = 1.0f;
+    SpotLightManager::GetData()->cosAngle = 0.99f;
+    SpotLightManager::GetData()->direction = { 0.0f,0.0f,1.0f };
+    SpotLightManager::GetData()->position = { 0.0f,2.0f,-4.0f };
 
     PointLightManager::GetPointLightData(0).color = { 17.0f / 255.0f,68.0f / 255.0f,134.0f / 255.0f };
     PointLightManager::GetPointLightData(0).intensity = 6.1f;
@@ -281,7 +284,6 @@ void TitleScene::UpdateGameObject() {
     floorPlayerShotBulletManager_->Update();
     floorPlayerStripTargetUI_->Update();
     floorActionManager_->Update();
-    playerDirectionSpotLight_->Update();
 
     // アニメーション更新
     floorGamePlayerAnimationManager_->Update();

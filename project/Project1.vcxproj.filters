@@ -131,7 +131,6 @@
     <ClCompile Include="Source\Application\GameObject\BackGround\Nest\Nest.cpp" />
     <ClCompile Include="Source\Application\System\Shake.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\RedPinchScreen.cpp" />
-    <ClCompile Include="Source\Application\GameObject\PlayerDirectionSpotLight.cpp" />
     <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBeak.cpp" />
     <ClCompile Include="Source\Application\GameObject\BackGround\BetoBeto\BetoBeto.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\AttackAreaEffect.cpp" />
@@ -298,7 +297,6 @@
     <ClInclude Include="Source\Application\GameObject\BackGround\Nest\Nest.h" />
     <ClInclude Include="Source\Application\System\Shake.h" />
     <ClInclude Include="Source\Application\GameObject\UI\RedPinchScreen.h" />
-    <ClInclude Include="Source\Application\GameObject\PlayerDirectionSpotLight.h" />
     <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBeak.h" />
     <ClInclude Include="Source\Application\GameObject\BackGround\BetoBeto\BetoBeto.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\AttackAreaEffect.h" />

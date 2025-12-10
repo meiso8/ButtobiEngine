@@ -167,7 +167,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FrameStopManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\ResultSceneObj\PlayerDummy.cpp" />
     <ClCompile Include="Source\Application\GameObject\MatsumotoObj\SceneStaticClassManager.cpp" />
-    <ClCompile Include="Source\Application\GameObject\PlayerDirectionSpotLight.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\RedPinchScreen.cpp" />
     <ClCompile Include="Source\Application\System\Shake.cpp" />
     <ClCompile Include="Source\Application\GameObject\BackGround\Nest\Nest.cpp" />
@@ -327,7 +326,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FlashEffecter.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\ResultSceneObj\PlayerDummy.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\SceneStaticClassManager.h" />
-    <ClInclude Include="Source\Application\GameObject\PlayerDirectionSpotLight.h" />
     <ClInclude Include="Source\Application\GameObject\UI\RedPinchScreen.h" />
     <ClInclude Include="Source\Application\System\Shake.h" />
     <ClInclude Include="Source\Application\GameObject\BackGround\Nest\Nest.h" />
