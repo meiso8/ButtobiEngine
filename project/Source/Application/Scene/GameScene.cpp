@@ -155,7 +155,7 @@ void GameScene::Initialize() {
 
     nest_->Init();
     backGround_->Initialize();
- 
+
 #pragma endregion
     collisionManager_->ClearColliders();
 
@@ -206,6 +206,7 @@ void GameScene::Update() {
         UpdateLight();
         UpdateCamera();
         UpdateGameObject();
+        UpdatePhaseColor();
         CheckAllCollision();
         //エミッター
         emitterManager_->Update(*currentCamera_);
@@ -367,6 +368,7 @@ void GameScene::UpdateGameObject()
         enemyBombManager_->ClearBombs();
         floorGameFloorManager_->ForceChangeAllFloorType(FloorType::Strong);
         floorGamePlayer_->SetCollisionAttribute(kCollisionNone);
+      
     }
 
     // オブジェクト個人の更新
@@ -475,6 +477,19 @@ void GameScene::UpdateBGM()
     }
 
 
+}
+
+void GameScene::UpdatePhaseColor()
+{
+
+    if (enemy_->GetCurrentState() == "First") {
+        uiManager_->SetGageColor({ 1.0f,0.0f,0.0f,1.0f });
+    } else if (enemy_->GetCurrentState() == "Second") {
+        backGround_->SetSkyColor();
+        uiManager_->SetGageColor({ 1.0f,1.0f,0.0f,1.0f });
+    } else if (enemy_->GetCurrentState() == "Third") {
+        uiManager_->SetGageColor({ 0.0f,1.0f,0.0f,1.0f });
+    }
 }
 
 void GameScene::CheckAllCollision()

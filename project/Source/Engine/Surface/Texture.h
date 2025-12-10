@@ -63,7 +63,7 @@ public:
 
         GAMEOVER_STRING,
         GAMEOVER_TIPS_1,
-
+        SKY_DOME,
         TEXTURES,
     };
     static void LoadAllTexture();

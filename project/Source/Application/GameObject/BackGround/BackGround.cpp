@@ -33,3 +33,13 @@ void BackGround::Draw(Camera& camera)
     betoBeto_->Draw(camera);
 
 }
+
+void BackGround::SetSkyColor()
+{
+    skyDome_->SetColor(skyDome_->skyColor_);
+}
+
+void BackGround::ResetSkyColor()
+{
+    skyDome_->SetColor({1.0f,1.0f,1.0f,1.0f});
+}

@@ -14,6 +14,8 @@ public:
     void Initialize();
     void Update();
     void Draw(Camera& camera);
+    void SetSkyColor();
+    void ResetSkyColor();
 private:
     std::unique_ptr<Tree>tree_ = nullptr;
     std::unique_ptr<Ground> ground_ = nullptr;

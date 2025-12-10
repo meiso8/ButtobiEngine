@@ -56,6 +56,7 @@ ResultScene::ResultScene() {
 	nest_ = std::make_unique<Nest>();
 	bossDummy_ = std::make_unique<BossDummy>();
 	playerDummy_ = std::make_unique<PlayerDummy>();
+	skyDome_ = std::make_unique<SkyDome>();
 #pragma endregion
 
 }
@@ -72,6 +73,8 @@ void ResultScene::Initialize() {
 
 #pragma region // オブジェクト初期化
 	resultSprite_->Initialize();
+	skyDome_->Init();
+	skyDome_->SetColor(skyDome_->skyColor_);
 	tree_->Initialize();
     nest_->Init();
 	nest_->SetPosition({ 0.0f,-1.0f,10.0f });
@@ -110,11 +113,12 @@ void ResultScene::Draw() {
 #endif
 
 #pragma region // オブジェクト描画
-	resultSprite_->Draw();
+	skyDome_->Draw(*currentCamera_);
 	tree_->Draw(*currentCamera_);
 	nest_->Draw(*currentCamera_);
 	bossDummy_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
 	playerDummy_->Draw(*currentCamera_);
+	resultSprite_->Draw();
 #pragma endregion
 
     //シーン遷移を描画する
@@ -146,6 +150,7 @@ void ResultScene::UpdateCamera() {
 
 void ResultScene::UpdateGameObject() {
 	resultSprite_->Update();
+	skyDome_->Update();
 	tree_->Update();
 	nest_->Update();
 	bossDummy_->SorryUpdate();
