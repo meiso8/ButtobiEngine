@@ -485,12 +485,12 @@ void GameScene::UpdatePhaseColor()
 {
 
     if (enemy_->GetCurrentState() == "First") {
-        uiManager_->SetGageColor({ 1.0f,0.0f,0.0f,1.0f });
+        uiManager_->SetGageColor({ 0.15f,1.0f,0.15f,1.0f });
     } else if (enemy_->GetCurrentState() == "Second") {
         backGround_->SetSkyColor();
-        uiManager_->SetGageColor({ 1.0f,1.0f,0.0f,1.0f });
+        uiManager_->SetGageColor({ 1.0f,1.0f,0.15f,1.0f });
     } else if (enemy_->GetCurrentState() == "Third") {
-        uiManager_->SetGageColor({ 0.0f,1.0f,0.0f,1.0f });
+        uiManager_->SetGageColor({ 1.0f,0.15f,0.15f,1.0f });
     }
 }
 
