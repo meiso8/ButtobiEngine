@@ -315,7 +315,6 @@ void TitleScene::CheckAllCollision() {
         }
     }
 
-
     for (auto& bullet : floorBulletManager_->GetBullets()) {
         if (bullet->isActive_) { collisionManager_->AddCollider(bullet.get()); }
     }
