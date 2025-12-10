@@ -10,6 +10,7 @@
 #include "MatsumotoObj/ResultSceneObj/ResultSprite.h"
 #include "BackGround/Tree/Tree.h"
 #include "BackGround/Nest/Nest.h"
+#include "BackGround/SkyDome/SkyDome.h"
 #include "MatsumotoObj/TitleSceneObj/BossDummy.h"
 #include "MatsumotoObj/ResultSceneObj/PlayerDummy.h"
 #pragma endregion
@@ -39,4 +40,5 @@ private:
 	std::unique_ptr<Nest> nest_ = nullptr;
 	std::unique_ptr<BossDummy> bossDummy_ = nullptr;
 	std::unique_ptr<PlayerDummy> playerDummy_ = nullptr;
+    std::unique_ptr<SkyDome> skyDome_ = nullptr;
 };

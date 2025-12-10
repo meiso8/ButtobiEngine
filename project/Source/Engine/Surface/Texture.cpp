@@ -73,6 +73,10 @@ void Texture::LoadAllTexture() {
 
     handles[GAMEOVER_STRING] = Load("Resource/Textures/GameOverString.png");
     handles[GAMEOVER_TIPS_1] = Load("Resource/Textures/Tips1.png");
+
+       handles[SKY_DOME] = Load("Resource/Textures/skydome.png");
+
+    
 }
 
 uint32_t Texture::Load(const std::string& filePath)

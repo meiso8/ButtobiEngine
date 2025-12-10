@@ -140,6 +140,7 @@ void Object3d::Create()
 
     CreateWaveData();
     CreateBalloonData();
+    CreateUV();
 }
 
 void Object3d::Initialize()

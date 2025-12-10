@@ -46,12 +46,11 @@ public:
         PLAYER_LEG_L,
         PLAYER_LEG_R,
 
-        PLAYER_MODEL,//プレイヤーの全体
 
-		    ARROW,
+		ARROW,
 
-		    HEAL_ITEM,
-        WORLD,
+	HEAL_ITEM,
+
         MODELS,
     };
     /// @brief モデルを取得します
