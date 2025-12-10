@@ -38,15 +38,34 @@ void TitleLogo::Initialize()
     body_.worldTransform_.translate_ = { 0.0f,3.0f,15.0f };
     body_.worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
 
-    float logoSpacing = 1.5f;
+    float radius = 1.5f; // 円の半径
+    float angleStep = 2.0f * 3.14159265f / static_cast<float>(logos_.size());
     for (int i = 0; i < logos_.size(); i++) {
-        logos_[i]->worldTransform_.translate_ = { 0.0f,static_cast<float>(i) * logoSpacing,0.0f };
+        float angle = i * angleStep;
+        float x = radius * std::cos(angle);
+        float y = radius * std::sin(angle);
+        logos_[i]->worldTransform_.translate_ = { x, y, 0.0f };
         logos_[i]->worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
+        logos_[i]->worldTransform_.rotate_ = { -3.14f * 0.5f, 0.0f, 0.0f }; // X軸回転
     }
+
+	time_ = 0.0f;
 }
 
 void TitleLogo::Update()
 {
+	time_+= 0.016f;
+
+    float radius = 1.5f; // 円の半径
+    float angleStep = 2.0f * 3.14159265f / static_cast<float>(logos_.size());
+    for (int i = 0; i < logos_.size(); i++) {
+        float angle = i * angleStep;
+        float x = radius * std::cos(angle+ time_);
+        float y = radius * std::sin(angle+ time_);
+        logos_[i]->worldTransform_.translate_ = { x, y, 0.0f };
+        logos_[i]->worldTransform_.scale_ = { 1.0f + std::sin(angle + time_) * 0.1f,1.0f + std::sin(angle + time_) * 0.1f,1.0f + std::sin(angle + time_) * 0.1f };
+    }
+
     for (auto& logo : logos_) {
         logo->Update();
     }

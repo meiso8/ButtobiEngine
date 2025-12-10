@@ -46,8 +46,8 @@ public:
         PLAYER_LEG_L,
         PLAYER_LEG_R,
 
-
 		    ARROW,
+		    HEAL_ITEM,
         WORLD,
 
         TITLE_LOGO_1,
