@@ -66,14 +66,16 @@ void HPIcon::Update() {
 		if (timer_ > 0.0f) {
 			timer_ -= InverseFPS;
 			theta_ += std::numbers::phi_v<float>*InverseFPS * 12.0f;
-			float alpha = cosf(theta_) * 0.5f + 1.0f;
-			sprites_[layer1][(drawHpNum_ - 1) % maxIcon_]->SetColor({ 1.0f,1.0f,1.0f,alpha });
+			
 		} else {
 			timer_ = 0.0f;
 			theta_ = 0.0f;
 			drawHpNum_ = static_cast<size_t>(hps_->hp / (hps_->maxHp / static_cast<float>(maxIcon_)) + 0.9f);
 			drawHpNum_ = static_cast<size_t>(std::clamp(static_cast<float>(drawHpNum_), 0.0f, static_cast<float>(maxIcon_)));
 		}
+
+		float alpha = cosf(theta_) * 0.5f + 1.0f;
+		sprites_[layer1][(drawHpNum_ - 1) % maxIcon_]->SetColor({ 1.0f,1.0f,1.0f,alpha });
 
 		HitAction();
 
