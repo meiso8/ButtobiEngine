@@ -102,12 +102,12 @@ void GameOverEvent::Update() {
 	KeyBindConfig& key = KeyBindConfig::Instance();
 	Vector2 stickPos;
 	if (selectTimer_ <= 0.0f) {
-		if (key.IsTrigger("MoveForward") || (Input::IsControllerStickPosMove(BUTTON_LEFT, 0, &stickPos) && stickPos.y > 0.5f)) {
+		if (key.IsTrigger("MoveForward") || (Input::IsControllerStickPosMoveTrigger(BUTTON_LEFT, 0, &stickPos) && stickPos.y > 0.5f)) {
 			isRetrySelected_ = true;
 			Sound::PlaySE(Sound::kMoveCursor);
 			selectTimer_ = 0.2f;
 		}
-		if (key.IsTrigger("MoveBack") || (Input::IsControllerStickPosMove(BUTTON_LEFT, 0, &stickPos) && stickPos.y < -0.5f)) {
+		if (key.IsTrigger("MoveBack") || (Input::IsControllerStickPosMoveTrigger(BUTTON_LEFT, 0, &stickPos) && stickPos.y < -0.5f)) {
 			isRetrySelected_ = false;
 			Sound::PlaySE(Sound::kMoveCursor);
 			selectTimer_ = 0.2f;
