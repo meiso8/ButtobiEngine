@@ -66,6 +66,9 @@ void FloorGamePlayerAnimationManager::IdleAnimation() {
 	player_->leftLegObject_.worldTransform_.translate_ = MY_Utility::SimpleEaseIn(
 		player_->leftLegObject_.worldTransform_.translate_, leftLegBasePos, animSpeed);
 
+	player_->body_.worldTransform_.rotate_.x = MY_Utility::SimpleEaseIn(
+		player_->body_.worldTransform_.rotate_.x, 0.0f, animSpeed);
+
 	if (!(player_->isStriptting_ || player_->isReqestStript_)) {
 		float targetBodyScaleY = 1.0f + (groundOffsetY * sinf(animationTimer_ * 6.0f));
 		float targetBodyScaleX = 1.0f + (0.1f * sinf(animationTimer_ * 6.0f));
@@ -135,6 +138,9 @@ void FloorGamePlayerAnimationManager::WalkAnimation() {
 		player_->rightLegObject_.worldTransform_.rotate_.x, targetRightLegRotX, animSpeed);
 	player_->leftLegObject_.worldTransform_.rotate_.x = MY_Utility::SimpleEaseIn(
 		player_->leftLegObject_.worldTransform_.rotate_.x, targetLeftLegRotX, animSpeed);
+
+	player_->body_.worldTransform_.rotate_.x = MY_Utility::SimpleEaseIn(
+		player_->body_.worldTransform_.rotate_.x, 0.0f, animSpeed);
 }
 
 void FloorGamePlayerAnimationManager::StriptAnimation() {
