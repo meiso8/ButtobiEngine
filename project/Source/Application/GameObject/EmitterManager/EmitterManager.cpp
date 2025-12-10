@@ -12,6 +12,7 @@
 #include"MatsumotoObj/GameSceneObj/HealItemSpawner.h"
 #include"MatsumotoObj/TitleSceneObj/BossDummy.h"
 #include"BackGround/House/House.h"
+#include "MatsumotoObj/TitleSceneObj/TitleText.h"
 
 EmitterManager::EmitterManager()
 {
@@ -601,12 +602,19 @@ void EmitterManager::UpdateBossDummyEmitter()
 }
 
 void EmitterManager::UpdateNoseLanternEmitter() {
-	if (bossDummy_ == nullptr) {
+	if (titleText_ == nullptr) {
 		return;
 	}
 
+    if (titleText_->GetIsBreak()) {
+		return;
+    }
+
 	//鼻提灯
+    noseLanternEmitter_->emitter_.transform.Parent(titleText_->body_.worldTransform_);
+	noseLanternEmitter_->emitter_.transform.translate_ = { 0.0f,0.7f,0.5f };
 	noseLanternEmitter_->UpdateTimer();
+	noseLanternEmitter_->UpdateEmitter();
 }
 
 
@@ -722,6 +730,7 @@ void EmitterManager::InitLeafEmitter()
 void EmitterManager::InitNoseLanternEmitter() {
 	//鼻提灯
 	noseLanternEmitter_->InitTimer();
+
 
 }
 

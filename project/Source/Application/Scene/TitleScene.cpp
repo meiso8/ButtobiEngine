@@ -113,6 +113,7 @@ TitleScene::TitleScene()
     emitterManager_->SetFloorGameFloorManager(*floorGameFloorManager_);
     emitterManager_->SetHouse(*house_);
     emitterManager_->SetBossDummy(*bossDummy_);
+	emitterManager_->SetTitleText(*titleText_);
     emitterManager_->Create();
 }
 

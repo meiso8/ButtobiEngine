@@ -15,6 +15,8 @@ class FloorGameFloorManager;
 class FloorGameFloor;
 class House;
 class BossDummy;
+class TitleText;
+
 struct WaveEmitterPair {
     EnemyShockWave* wave;
     std::unique_ptr<ParticleEmitter> emitter;
@@ -65,6 +67,10 @@ public:
     void SetHouse(House& house) {
         house_ = &house;
     }
+
+    void SetTitleText(TitleText& titleText) {
+		titleText_ = &titleText;
+    };
 
     void Initialize();
     void Update(Camera& camera);
@@ -121,6 +127,8 @@ private:
     FloorGameFloorManager* floorGameFloorManager_ = nullptr;
     House* house_ = nullptr;
     BossDummy* bossDummy_ = nullptr;
+	TitleText* titleText_ = nullptr;
+
     enum EmitterType {
         kPlayerWalkEmitter,
         kPlayerHitEmitter,
