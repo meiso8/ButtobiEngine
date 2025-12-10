@@ -380,7 +380,7 @@ void Enemy::ForceSetBossRound(uint32_t round)
 void Enemy::LeathalMoveUpdate() {
     if (!isLeathalVec_) {
         isLeathalVec_ = true;
-        velocity_ = { 5.0f,30.0f,350.0f };
+        velocity_ = { 5.0f,30.0f,75.0f };
         Sound::PlaySE(Sound::zushaa);
         FrameStopManager::GetInstance().StopFrame(60);
         FlashEffecter::GetInstance().StartFlash({ 1.0f,1.0f,1.0f,1.0f }, 0.5f, 0.1f);
