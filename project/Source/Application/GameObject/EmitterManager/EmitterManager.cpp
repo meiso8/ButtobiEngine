@@ -324,10 +324,11 @@ void EmitterManager::SetNoseLanternEmitter() {
     noseLanternEmitter_->emitter_.count = 1;
     noseLanternEmitter_->emitter_.movement = ParticleMovements::kParticleNormal;
     noseLanternEmitter_->emitter_.translateAABB_ = { .min = { -0.1f,0.1f,0.3f },.max = {0.1f,0.2f,0.6f} };
-    noseLanternEmitter_->emitter_.velocityAABB = { .min = {0.0f,1.0f,0.0f},.max = {0.2f,2.0f,0.2f} };
+    noseLanternEmitter_->emitter_.velocityAABB = { .min = {-0.2f,1.0f,-0.1f},.max = {0.0f,2.0f,0.1f} };
     noseLanternEmitter_->emitter_.rotateOffset_ = 0.0f;
-    noseLanternEmitter_->emitter_.transform.scale_ = { 1.0f,1.0f,1.0f };
-    noseLanternEmitter_->emitter_.scaleOffset_ = { 0.5f };
+    noseLanternEmitter_->emitter_.transform.scale_ = { 0.6f,0.6f,0.6f };
+    noseLanternEmitter_->emitter_.scaleOffset_ = { 0.2f };
+    noseLanternEmitter_->emitter_.frequency = 0.7f;
     noseLanternEmitter_->emitter_.lifeTime = 1.35f;
 
 }
@@ -341,9 +342,9 @@ void EmitterManager::SetBossDummyEmitter()
     madEmitter_->emitter_.count = 1;
     madEmitter_->emitter_.movement = kParticleShock;
     madEmitter_->emitter_.radius = 1.0f;
-    madEmitter_->emitter_.lifeTime = 1.0f;
-    madEmitter_->emitter_.frequency = 1.0f;
-
+    madEmitter_->emitter_.lifeTime = 0.4f;
+    madEmitter_->emitter_.frequency = 0.5f;
+    madEmitter_->emitter_.scaleOffset_ = 0.1f;
 }
 
 void EmitterManager::Initialize()
@@ -600,7 +601,7 @@ void EmitterManager::UpdateMadEmitter()
     }
     if (enemy_) {
         madEmitter_->emitter_.transform.Parent(enemy_->enemyBeak_->beak_);
-        madEmitter_->emitter_.transform.translate_ = { -1.5f,1.0f,0.0f };
+        madEmitter_->emitter_.transform.translate_ = { -1.0f,1.0f,0.0f };
     }
    
     if (bossDummy_&&titleText_ &&titleText_->GetIsBreak()||enemy_&&enemy_->GetCurrentState() != "First") {
