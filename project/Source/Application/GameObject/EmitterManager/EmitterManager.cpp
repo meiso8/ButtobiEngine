@@ -199,7 +199,7 @@ void EmitterManager::SetFloorEmitter()
 //ベトベト床
         betobetoEmitter_ = std::make_unique<ParticleEmitter>();
         betobetoEmitter_->SetName("meltFloorParticle");
-        float size = kHalfFloorSize * 0.5f;
+
         betobetoEmitter_->emitter_.count = 5;
         betobetoEmitter_->emitter_.frequency = 0.45f;
         betobetoEmitter_->emitter_.rotateOffset_ = { 0.0f };
@@ -227,13 +227,33 @@ void EmitterManager::SetFloorEmitter()
         //starEmitter_->emitter_.velocityAABB = { .min = {0.0f,0.0f,0.0f},.max = {0.0f,10.0f,0.0f} };
         starEmitter_->emitter_.transform.scale_ = { 0.6f,0.6f,0.6f };
         //starEmitter_->emitter_.scaleOffset_ = { 0.2f };
-        starEmitter_->emitter_.translateAABB_ = {0.0f};
+        starEmitter_->emitter_.translateAABB_ = { 0.0f };
         starEmitter_->emitter_.color = { 1.0f,0.5f,0.0f,1.0f };
 
 
         auto& starGroup = starEmitter_->GetGroup();
         starGroup->accelerationField.area = { .min = {-5.0f,10.0f,-5.0f},.max = {5.0f,10.0f,5.0f} };
         starGroup->accelerationField.acceleration = { 0.0f,-60.0f,0.0f };
+
+
+        // 強化床====================================================================
+        float size = kHalfFloorSize * 0.5f;
+
+        for (auto& floors : floorGameFloorManager_->GetFloor()) {
+            for (auto& floor : floors) {
+                std::unique_ptr<ParticleEmitter> newEmitter = std::make_unique<ParticleEmitter>();
+                newEmitter->SetName("common");
+                newEmitter->emitter_.movement = ParticleMovements::kParticleNormal;
+                newEmitter->emitter_.transform.translate_.y = 0.2f;
+                newEmitter->emitter_.lifeTime = 1.0f;
+                newEmitter->emitter_.frequency = 0.5f;
+                newEmitter->emitter_.transform.scale_ = { 0.2f,0.2f,0.2f };
+                newEmitter->emitter_.velocityAABB = { .min = {0.0f,0.0f,0.0f},.max = {0.0f,1.0f,0.0f} };
+                newEmitter->emitter_.translateAABB_ = { .min = {-size,0.0f,-size},.max = {size,0.0f,size} };
+                newEmitter->emitter_.transform.Parent(floor->body_.worldTransform_);
+                floorStrongEmitters_.push_back({ floor.get(), std::move(newEmitter) });
+            }
+        }
 
     }
 }
@@ -481,14 +501,27 @@ void EmitterManager::UpdateFloorEmitter()
         return;
     }
 
-    for (auto& floors : floorGameFloorManager_->GetFloor()) {
-        for (auto& floor : floors) {
-            if (floor->isToStrong_) {
-                starEmitter_->emitter_.transform.Parent(floor->body_.worldTransform_);
-                starEmitter_->Emit();
-                starEmitter_->UpdateEmitter();
+
+    //for (auto& floors : floorGameFloorManager_->GetFloor()) {
+    //    for (auto& floor : floors) {
+
+    //    }
+    //}
+
+    for (auto& emitters : floorStrongEmitters_) {
+
+        if (emitters.floorGameFloor->isToStrong_) {
+            starEmitter_->emitter_.transform.Parent(emitters.floorGameFloor->body_.worldTransform_);
+            starEmitter_->Emit();
+            starEmitter_->UpdateEmitter();
+        } else {
+            if (emitters.floorGameFloor->floorType_ == FloorType::Strong) {
+               
+                emitters.emitter->UpdateTimer();
+                emitters.emitter->UpdateEmitter();
             }
         }
+
     }
 
 
@@ -612,6 +645,10 @@ void EmitterManager::InitFloorEmitter()
 
     betobetoEmitter_->InitTimer();
     starEmitter_->InitTimer();
+    for (auto& emitter : floorStrongEmitters_) {
+        emitter.emitter->InitTimer();
+    }
+
 
 }
 

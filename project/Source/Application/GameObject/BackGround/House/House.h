@@ -47,8 +47,7 @@ public:
         maxHitCount_ = maxHitCount;
     }
     std::unordered_map<Objects, std::unique_ptr<HouseCollider>>& GetColliders() {
-        return colliders_
-            ;
+        return colliders_;
     }
 
     bool isWallBrake_ = false;

@@ -43,7 +43,9 @@ void Texture::LoadAllTexture() {
     handles[FLOOR_PARTICLE] = Load("Resource/Textures/FloorParticle.png");
     handles[BUBBLE_PARTICLE] = Load("Resource/Textures/BubbleParticle03.png");
     
+
    handles[HEAL_PARTICLE] = Load("Resource/Textures/HealParticle.png");
+   handles[COMMON_PARTICLE] = Load("Resource/Textures/CommonParticle01.png");
 
     handles[BLOOM] = Load("Resource/Textures/Bloom.png");
 

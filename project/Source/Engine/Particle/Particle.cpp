@@ -47,6 +47,8 @@ void ParticleManager::CreateAll()
 
     //ヒールアイテムパーティクル
     CreateParticleGroup("SpawnHealItem", Texture::HEAL_PARTICLE);
+
+    CreateParticleGroup("common", Texture::COMMON_PARTICLE);
 }
 
 // ==========================================================================================================
