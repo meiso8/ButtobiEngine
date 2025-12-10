@@ -48,10 +48,17 @@ public:
 
         PLAYER_MODEL,//プレイヤーの全体
 
-		    ARROW,
+		ARROW,
 
-		    HEAL_ITEM,
+		HEAL_ITEM,
         WORLD,
+
+        TITLE_LOGO_1,
+        TITLE_LOGO_2,
+        TITLE_LOGO_3,
+        TITLE_LOGO_4,
+        TITLE_LOGO_5,
+
         MODELS,
     };
     /// @brief モデルを取得します

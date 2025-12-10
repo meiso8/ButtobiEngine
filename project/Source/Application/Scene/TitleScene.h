@@ -21,7 +21,7 @@
 #include "MatsumotoObj/TitleSceneObj/BossDummy.h"
 #include "MatsumotoObj/TitleSceneObj/LetterboxBars.h"
 #include "MatsumotoObj/TitleSceneObj/ActionUI.h"
-
+#include "MatsumotoObj/TitleSceneObj/TitleLogo.h"
 
 #include"BackGround/House/House.h"
 #include"BackGround/BackGround.h"
@@ -58,6 +58,7 @@ private:
     std::unique_ptr<FloorGamePlayerAnimationManager>floorGamePlayerAnimationManager_ = nullptr;
     std::unique_ptr<PlayerFloorStripManager>playerFloorStripManager_ = nullptr;
 
+
     std::unique_ptr<TitleText> titleText_ = nullptr;
     std::unique_ptr<BossDummy> bossDummy_ = nullptr;
     std::unique_ptr<LetterboxBars> letterboxBars_ = nullptr;
@@ -65,6 +66,7 @@ private:
     //家追加しましたヨシダ
     std::unique_ptr<House>house_ = nullptr;
     std::unique_ptr<BackGround>backGround_ = nullptr;
+	//std::unique_ptr<TitleLogo> titleLogo_ = nullptr;
 
     //エミッター
     std::unique_ptr<EmitterManager>emitterManager_ = nullptr;
