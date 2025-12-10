@@ -233,8 +233,8 @@ void TitleScene::Debug()
 void TitleScene::SceneChangeUpdate()
 {
     if (titleText_->GetIsBreak()) {
-		camera_->rotate_ = MY_Utility::SimpleEaseIn(camera_->rotate_, { 0.0f,0.0f,0.0f }, 0.01f);
-		camera_->translate_ = MY_Utility::SimpleEaseIn(camera_->translate_, { 0.0f,1.5f,0.0f }, 0.01f);
+		camera_->rotate_ = MY_Utility::SimpleEaseIn(camera_->rotate_, { 0.0f,0.0f,0.0f }, 0.1f);
+		camera_->translate_ = MY_Utility::SimpleEaseIn(camera_->translate_, { 0.0f,1.6f,-0.5f }, 0.1f);
 
         if (bossDummy_->isAnimEnd_) {
 			sceneChange_->SetState(SceneChange::kFadeIn, 30);
