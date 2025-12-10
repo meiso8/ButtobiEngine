@@ -47,6 +47,10 @@ void ParticleManager::CreateAll()
 
     //ヒールアイテムパーティクル
     CreateParticleGroup("SpawnHealItem", Texture::HEAL_PARTICLE);
+
+	// 鼻提灯パーティクル
+	CreateParticleGroup("NoseLanternParticle", Texture::NOSE_LANTERN_PARTICLE);
+
 }
 
 // ==========================================================================================================

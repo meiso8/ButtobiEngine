@@ -326,6 +326,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FlashEffecter.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\ResultSceneObj\PlayerDummy.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\SceneStaticClassManager.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\SleapParticle.h" />
     <ClInclude Include="Source\Application\GameObject\UI\RedPinchScreen.h" />
     <ClInclude Include="Source\Application\System\Shake.h" />
     <ClInclude Include="Source\Application\GameObject\BackGround\Nest\Nest.h" />

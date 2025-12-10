@@ -11,6 +11,8 @@ class EnemyShockWave;
 class FloorBullet;
 class FloorBulletManager;
 class FloorGameFloorManager;
+class BossDummy;
+
 struct WaveEmitterPair {
     EnemyShockWave* wave;
     std::unique_ptr<ParticleEmitter> emitter;
@@ -35,6 +37,7 @@ public:
     void SetFloorEmitter();
     void SetLeafEmitter();
     void SetHealItemEmitter();
+	void SetNoseLanternEmitter();
 
     void SetPlayer(FloorGamePlayer& player) {
         player_ = &player;
@@ -52,6 +55,9 @@ public:
     void SetFloorGameFloorManager(FloorGameFloorManager& floorGameFloorManager) {
         floorGameFloorManager_ = &floorGameFloorManager ;
     }
+	void SetBossDummy(BossDummy& bossDummy) {
+		bossDummy_ = &bossDummy;
+	};
 
     void Initialize();
     void Update(Camera& camera);
@@ -72,6 +78,8 @@ public:
    void InitFloorEmitter();
     //葉っぱ
    void InitLeafEmitter();
+    //鼻提灯
+   void InitNoseLanternEmitter();
 
 
    //プレイヤー
@@ -88,6 +96,8 @@ public:
    void UpdateFloorEmitter();
    //葉っぱ
    void UpdateLeafEmitter();
+   //鼻提灯
+   void UpdateNoseLanternEmitter();
 
 private:
 
@@ -100,6 +110,8 @@ private:
     EnemyShockWaveManager* enemyShockWaveManager_ = nullptr;
     FloorBulletManager* floorBulletManager_ = nullptr;
     FloorGameFloorManager* floorGameFloorManager_ = nullptr;
+	BossDummy* bossDummy_ = nullptr;
+
     enum EmitterType {
         kPlayerWalkEmitter,
         kPlayerHitEmitter,
@@ -121,7 +133,6 @@ private:
     std::unique_ptr<ParticleEmitter> floorBreakEmitter_ = nullptr;
     std::vector< std::unique_ptr<ParticleEmitter>> spawnHealItemEmitters_;
 
-    
-
+	std::unique_ptr<ParticleEmitter> noseLanternEmitter_ = nullptr;
 };
 

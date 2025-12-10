@@ -38,7 +38,7 @@ BossDummy::~BossDummy() {
 
 void BossDummy::Initialize() {
     body_.worldTransform_.translate_ = { 0.0f,1.5f,8.0f };
-    body_.worldTransform_.rotate_ = { 0.0f,0.0f,0.0f };
+    body_.worldTransform_.rotate_ = { 0.0f,4.0f,0.0f };
     body_.worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
     body_.SetColor({ 1.0f,1.0f,1.0f,1.0f });
     wingLPos_.SetColor({ 1.0f,1.0f,1.0f,1.0f });
@@ -50,6 +50,8 @@ void BossDummy::Initialize() {
         model->ResetTextureHandle();
     }
 
+	isVec = false;
+
 }
 
 void BossDummy::Update() {
@@ -58,21 +60,28 @@ void BossDummy::Update() {
         VibrateManager::SetTime(3.5f, 20000, 20000);
     }
     timer_ += 0.016f;
-    body_.worldTransform_.rotate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.rotate_.y, 3.14f, 0.1f);
-    body_.SetColor(MY_Utility::SimpleEaseIn(body_.GetColor(), { 1.0f,0.0f,0.0f,1.0f }, 0.1f));
-    wingLPos_.SetColor(MY_Utility::SimpleEaseIn(wingLPos_.GetColor(), { 1.0f,0.0f,0.0f,1.0f }, 0.1f));
-    wingRPos_.SetColor(MY_Utility::SimpleEaseIn(wingRPos_.GetColor(), { 1.0f,0.0f,0.0f,1.0f }, 0.1f));
+    body_.worldTransform_.rotate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.rotate_.y, 3.14f, 0.05f);
+    body_.SetColor(MY_Utility::SimpleEaseIn(body_.GetColor(), { 1.0f,0.0f,0.0f,1.0f }, 0.01f));
+    wingLPos_.SetColor(MY_Utility::SimpleEaseIn(wingLPos_.GetColor(), { 1.0f,0.0f,0.0f,1.0f }, 0.01f));
+    wingRPos_.SetColor(MY_Utility::SimpleEaseIn(wingRPos_.GetColor(), { 1.0f,0.0f,0.0f,1.0f }, 0.01f));
     body_.worldTransform_.scale_ = MY_Utility::SimpleEaseIn(body_.worldTransform_.scale_, { 1.3f, 1.3f, 1.3f }, 0.05f);
     body_.worldTransform_.translate_.x = sinf(timer_ * 30.0f) * 0.1f;
     body_.Update();
+
+    if (isVec) {
+        velocity_.y -= 9.8f * 0.016f;
+        body_.worldTransform_.translate_ += velocity_ * 0.016f;
+
+        if (body_.worldTransform_.translate_.y < 1.5f) {
+            body_.worldTransform_.translate_.y = 1.5f;
+            velocity_.y = 0.0f;
+        }
+    }
 
     wingLPos_.Update();
     wingRPos_.Update();
 
     Winging(2.0f);
-
-
-
 
     if (timer_ > 3.0f) {
         isAnimEnd_ = true;
