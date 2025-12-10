@@ -305,6 +305,12 @@ void TitleScene::UpdateGameObject() {
     // アニメーション更新
     floorGamePlayerAnimationManager_->Update();
 
+    if (titleText_->GetHitCount() >= 1) {
+		titleLogo_->isActive = false;
+    }
+    else {
+        titleLogo_->isActive = true;
+    }
 
 }
 
