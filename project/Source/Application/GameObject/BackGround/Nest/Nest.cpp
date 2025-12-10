@@ -5,6 +5,7 @@
 #include"Input.h"
 #include"Texture.h"
 #include"DebugUI.h"
+
 Nest::Nest() {
     model_ = ModelManager::GetModel(ModelManager::NEST);
 

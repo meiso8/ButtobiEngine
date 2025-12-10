@@ -46,11 +46,8 @@ public:
         PLAYER_LEG_L,
         PLAYER_LEG_R,
 
-        PLAYER_MODEL,//プレイヤーの全体
 
-		ARROW,
-
-		HEAL_ITEM,
+		    ARROW,
         WORLD,
 
         TITLE_LOGO_1,
@@ -58,6 +55,7 @@ public:
         TITLE_LOGO_3,
         TITLE_LOGO_4,
         TITLE_LOGO_5,
+	      HEAL_ITEM,
 
         MODELS,
     };

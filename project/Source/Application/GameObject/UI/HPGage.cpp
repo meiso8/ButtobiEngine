@@ -10,10 +10,15 @@ HPGage::HPGage()
     sprites_.emplace(SpriteTypes::MaxHp, std::make_unique<Sprite>());
 
 
-    sprites_[layer1]->Create(Texture::WHITE_1X1, { 512-32.0f,64.0f -32.0f}, { 1.0f,0.0f,0.0f,0.75f });
-    sprites_[layer2]->Create(Texture::WHITE_1X1, { 512.0-32.0f,64.0f-32.0f }, { 1.0f,1.0f,1.0f,0.5f });
+    sprites_[layer1]->Create(Texture::WHITE_1X1, { 512-32.0f,64.0f -32.0f}, { 1.0f,0.0f,0.0f,1.0f });
+    sprites_[layer2]->Create(Texture::WHITE_1X1, { 512.0-32.0f,64.0f-32.0f }, { 1.0f,1.0f,1.0f,1.0f });
     sprites_[MaxHp]->Create(Texture::GAUGE01, { 512.0f,64.0f }, { 1.0f,1.0f,1.0f,1.0f });
     shake_ = std::make_unique<Shake>();
+}
+
+void HPGage::SetColor(const Vector4& color)
+{
+    sprites_[layer1]->SetColor(color);
 }
 
 void HPGage::Setting(const Vector2& size, const Vector2& pos, const Vector2& anchorPoint)
@@ -66,9 +71,8 @@ void HPGage::Update()
     float scale = Easing::EaseInCubic(preScale_, { static_cast<float>(hps_->hp) / static_cast<float>(hps_->maxHp) }, timer_);
     float preHPScale = Lerp(preScale_, { static_cast<float>(preHP_) / static_cast<float>(hps_->maxHp) }, 1.0f);
     sprites_[layer1]->SetScale({ preHPScale,1.0f });
-
     sprites_[layer2]->SetScale({ scale,1.0f });
-    sprites_[layer1]->SetColor({ 1.0f - (static_cast<float>(hps_->hp) / static_cast<float>(hps_->maxHp)) ,static_cast<float>(hps_->hp) / static_cast<float>(hps_->maxHp) ,0.0f,0.75f });
+    //sprites_[layer1]->SetColor({ 1.0f - (static_cast<float>(hps_->hp) / static_cast<float>(hps_->maxHp)) ,static_cast<float>(hps_->hp) / static_cast<float>(hps_->maxHp) ,0.0f,0.75f });
 
     preScale_ = scale;
 
