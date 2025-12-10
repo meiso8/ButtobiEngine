@@ -580,7 +580,7 @@ void Enemy::LerpSquarePos()
         LerpRotateY(PI, 0.1f);
         LerpSpinOriginBodyXZ();
     } else if (phaseTimer_ <= kLerpSquareTime_) {
-        LerpPos({ 0.0f,kLerpSquareEndPosY_,6.0f }, 0.1f);
+        LerpPos({ 0.0f,kLerpSquareEndPosY_,7.0f }, 0.1f);
     } else {
         isFaseChange_ = false;
         SetPhase(SQUARE);
@@ -802,7 +802,7 @@ void Enemy::FloorChangeAttack()
     if (phaseTimer_ <= kFloorAttackPosMoveTime_) {
         isReqestOverheadView_ = true;
         LerpScale();
-        LerpPos({ 0.0f,kRadius_,6.0f }, 0.1f);
+        LerpPos({ 0.0f,kRadius_,7.0f }, 0.1f);
         LerpRotateY(PI, 0.3f);
     } else if (phaseTimer_ <= kFloorBombShotTime_) {
 
@@ -852,7 +852,7 @@ void Enemy::RandomFloorChangAttack()
 
     if (phaseTimer_ <= 1.0f) {
         //前隙
-        LerpPos({ 0.0f,kRadius_,6.0f }, 0.01f);
+        LerpPos({ 0.0f,kRadius_,7.0f }, 0.01f);
         LerpRotateY(PI, 0.3f);
 
         isGoToRanDomFloor_ = true;
@@ -878,7 +878,7 @@ void Enemy::RandomFloorChangAttack()
         //床から離れる
     } else if (phaseTimer_ <= 5.0f) {
 
-        LerpPos({ 0.0f,kRadius_,6.0f }, 0.1f);
+        LerpPos({ 0.0f,kRadius_,7.0f }, 0.1f);
         bodyPos_.worldTransform_.rotate_.x = Lerp(bodyPos_.worldTransform_.rotate_.x, 0.0f, 0.05f);
 
     } else if (phaseTimer_ <= 6.0f) {
@@ -892,7 +892,7 @@ void Enemy::RandomFloorChangAttack()
 }
 void Enemy::Exit()
 {
-    LerpPos({ 0.0f,kLerpSquareEndPosY_,6.0f }, 0.05f);
+    LerpPos({ 0.0f,kLerpSquareEndPosY_,7.0f }, 0.05f);
     if (phaseTimer_ <= kExitSpinTime_) {
         SpinBody();
     } else {

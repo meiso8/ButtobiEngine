@@ -46,7 +46,7 @@ void FloorActionManager::Update() {
 		}
 
 		// 爆発地点から十字にべとべと床にする
-		floorManager_->SwapFloorTypeAtPosition(floorPos, FloorType::Sticky);
+		//floorManager_->SwapFloorTypeAtPosition(floorPos, FloorType::Sticky);
 		//floorManager_->SwapFloorTypeCross(floorPos, FloorType::Sticky);
 	}
 
