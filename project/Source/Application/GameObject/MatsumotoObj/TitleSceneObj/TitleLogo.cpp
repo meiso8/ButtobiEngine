@@ -35,10 +35,10 @@ TitleLogo::~TitleLogo()
 
 void TitleLogo::Initialize()
 {
-    body_.worldTransform_.translate_ = { 0.0f,5.0f,15.0f };
-    body_.worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
+    body_.worldTransform_.translate_ = { 0.0f,5.0f,0.0f };
+    body_.worldTransform_.scale_ = { 2.0f,2.0f,2.0f };
 
-    float radius = 1.5f; // 円の半径
+    float radius = 1.3f; // 円の半径
     float angleStep = 2.0f * 3.14159265f / static_cast<float>(logos_.size());
     for (int i = 0; i < logos_.size(); i++) {
         float angle = i * angleStep;
@@ -50,11 +50,20 @@ void TitleLogo::Initialize()
     }
 
 	time_ = 0.0f;
+	isActive = true;
+	z = 0.0f;
 }
 
 void TitleLogo::Update()
 {
 	time_+= 0.016f;
+
+    if (isActive) {
+        body_.worldTransform_.translate_.z = MY_Utility::SimpleEaseIn(body_.worldTransform_.translate_.z, 0.0f, 0.1f);
+    }
+    else {
+        body_.worldTransform_.translate_.z =MY_Utility::SimpleEaseIn(body_.worldTransform_.translate_.z, -25.0f, 0.1f);
+    }
 
     float radius = 1.5f; // 円の半径
     float angleStep = 2.0f * 3.14159265f / static_cast<float>(logos_.size());
@@ -66,6 +75,7 @@ void TitleLogo::Update()
         logos_[i]->worldTransform_.scale_ = { 1.0f + std::sin(angle + time_) * 0.1f,1.0f + std::sin(angle + time_) * 0.1f,1.0f + std::sin(angle + time_) * 0.1f };
     }
 
+	body_.Update();
     for (auto& logo : logos_) {
         logo->Update();
     }

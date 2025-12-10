@@ -19,6 +19,9 @@ public:
 
 	Object3d body_;
 	std::vector<std::unique_ptr<Object3d>> logos_;
+
+	bool isActive = true;
 private:
 	float time_ = 0.0f;
+	float z;
 };
