@@ -52,7 +52,7 @@ void House::Initialize()
 {
     floorPos_.Initialize();
     floorPos_.worldTransform_.scale_ = { 4.0f,4.0f,4.0f };
-    floorPos_.worldTransform_.translate_.y = -1.0f;
+    floorPos_.worldTransform_.translate_.y = -0.75f;
 
     doorPos_.Initialize();
     doorPos_.worldTransform_.translate_ = { -0.98f,0.76f,0.0f };
@@ -66,8 +66,8 @@ void House::Initialize()
     colliders_[kHouse_wall_back_R]->Initialize();
     colliders_[kHouse_door]->Initialize();
 
-    colliders_[kHouse_wall_back_L]->pos_.worldTransform_.translate_.x = 1.5f;
-    colliders_[kHouse_wall_back_R]->pos_.worldTransform_.translate_.x = -1.5f;
+    colliders_[kHouse_wall_back_L]->pos_.worldTransform_.translate_.x = 1.8f;
+    colliders_[kHouse_wall_back_R]->pos_.worldTransform_.translate_.x = -1.8f;
 
     colliders_[kHouse_wall_L]->pos_.worldTransform_.translate_.x = -2.0f;
     colliders_[kHouse_wall_R]->pos_.worldTransform_.translate_.x = 2.0f;

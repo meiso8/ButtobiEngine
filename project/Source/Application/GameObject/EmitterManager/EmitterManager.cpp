@@ -227,7 +227,7 @@ void EmitterManager::SetFloorEmitter()
         //starEmitter_->emitter_.velocityAABB = { .min = {0.0f,0.0f,0.0f},.max = {0.0f,10.0f,0.0f} };
         starEmitter_->emitter_.transform.scale_ = { 0.6f,0.6f,0.6f };
         //starEmitter_->emitter_.scaleOffset_ = { 0.2f };
-        starEmitter_->emitter_.translateAABB_ = { .min = { -size ,0.0f,-size },.max = {size,0.0f,size} };
+        starEmitter_->emitter_.translateAABB_ = {0.0f};
         starEmitter_->emitter_.color = { 1.0f,0.5f,0.0f,1.0f };
 
 
@@ -485,8 +485,8 @@ void EmitterManager::UpdateFloorEmitter()
         for (auto& floor : floors) {
             if (floor->isToStrong_) {
                 starEmitter_->emitter_.transform.Parent(floor->body_.worldTransform_);
-                starEmitter_->UpdateEmitter();
                 starEmitter_->Emit();
+                starEmitter_->UpdateEmitter();
             }
         }
     }
