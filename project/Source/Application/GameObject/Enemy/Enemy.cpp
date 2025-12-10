@@ -709,6 +709,7 @@ void Enemy::SwitchPhase()
 {
     if (isSelectRandomPhase_) {
         isSelectRandomPhase_ = false;
+        AttackAreaEmitter::GetInstance().Initialize();
 
         if (actionCount_ < 1) {
             int randNum = rand() % 2;

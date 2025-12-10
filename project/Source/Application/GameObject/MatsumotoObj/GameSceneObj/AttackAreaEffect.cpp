@@ -14,7 +14,7 @@ AttackAreaEffect::AttackAreaEffect()
 
 	underBody_.Create();
 	underBody_.SetMesh(ModelManager::GetModel(ModelManager::PLATE));
-	underBody_.SetColor({ 1.0f,0.0f,0.0f,0.4f });
+	underBody_.SetColor({ 1.0f,0.0f,0.0f,0.3f });
 }
 
 AttackAreaEffect::~AttackAreaEffect()
