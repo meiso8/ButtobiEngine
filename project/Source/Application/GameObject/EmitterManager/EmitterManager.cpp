@@ -246,9 +246,11 @@ void EmitterManager::SetFloorEmitter()
                 newEmitter->emitter_.movement = ParticleMovements::kParticleNormal;
                 newEmitter->emitter_.transform.translate_.y = 0.2f;
                 newEmitter->emitter_.lifeTime = 1.0f;
-                newEmitter->emitter_.frequency = 0.5f;
+                newEmitter->emitter_.frequency = 0.6f;
+                newEmitter->emitter_.count = 1;
                 newEmitter->emitter_.transform.scale_ = { 0.2f,0.2f,0.2f };
-                newEmitter->emitter_.velocityAABB = { .min = {0.0f,0.0f,0.0f},.max = {0.0f,1.0f,0.0f} };
+                newEmitter->emitter_.scaleOffset_ = 0.1f;
+                newEmitter->emitter_.velocityAABB = { .min = {0.0f,0.5f,0.0f},.max = {0.0f,1.5f,0.0f} };
                 newEmitter->emitter_.translateAABB_ = { .min = {-size,0.0f,-size},.max = {size,0.0f,size} };
                 newEmitter->emitter_.transform.Parent(floor->body_.worldTransform_);
                 floorStrongEmitters_.push_back({ floor.get(), std::move(newEmitter) });
@@ -302,10 +304,10 @@ void EmitterManager::SetHealItemEmitter()
             emitter->emitter_.velocityAABB = { .min = {0.0f,2.0f,0.0f},.max = {0.0f,2.0f,0.0f} };
             emitter->emitter_.translateAABB_ = { .min = { -size * 1.5f ,-size,-size * 1.5f },.max = {size * 1.5f,size,size * 1.5f} };
             emitter->emitter_.transform.scale_ = { 0.25f,0.25f,0.25f };
-            emitter->emitter_.scaleOffset_ = { 0.1f };
-            emitter->emitter_.frequency = 0.35f;
+            emitter->emitter_.scaleOffset_ = { 0.15f };
+            emitter->emitter_.frequency = 0.2f;
             emitter->emitter_.lifeTime = 0.35f;
-            emitter->emitter_.count = 3;
+            emitter->emitter_.count = 2;
         }
     }
 
