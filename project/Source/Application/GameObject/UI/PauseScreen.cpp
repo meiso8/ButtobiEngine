@@ -54,8 +54,8 @@ PauseScreen::PauseScreen()
     startPos_[kButton] = { width + 128.0f,height - sprites_[kButton]->GetSize().y - 40.0f };
     endPos_[kButton] = { width * 0.5f + sprites_[kButton]->GetSize().x + 256.0f, height - sprites_[kButton]->GetSize().y - 40.0f };
 
-    startPos_[kConfirm] = { width + 128.0f,height - sprites_[kConfirm]->GetSize().y - 48.0f };
-    endPos_[kConfirm] = { endPos_[kButton].x + 64.0f,  height - sprites_[kConfirm]->GetSize().y - 48.0f };
+    startPos_[kConfirm] = { width + 128.0f,height - sprites_[kConfirm]->GetSize().y - 40.0f };
+    endPos_[kConfirm] = { endPos_[kButton].x + 64.0f,  height - sprites_[kConfirm]->GetSize().y - 40.0f };
 
     for (int i = kButton; i < sprites_.size(); ++i) {
         sprites_[i]->SetPosition(endPos_[i]);

@@ -35,10 +35,10 @@ void ModelManager::LoadAllModel()
 	LoadModel("Resource/Models/Arrow", "Arrow.obj", ARROW);
 
     //床と床パーティクル
-    LoadModel("Resource/Models/Floor", "Floor.obj", FLOOR);
+    LoadModel("Resource/Models/FloorRE", "FloorRE.obj", FLOOR);
     LoadModel("Resource/Models/FloorFrame", "FloorFrame.obj", FLOOR_FRAME);
     LoadModel("Resource/Models/BetoBetoFloor", "betobeto.obj", BETOBETO_FLOOR);
-    LoadModel("Resource/Models/HardFloor", "HardFloor.obj", HARD_FLOOR);
+    LoadModel("Resource/Models/HardFloorRE", "HardFloorRE.obj", HARD_FLOOR);
     LoadModel("Resource/Models/ExplosionFloor", "ExplosionFloor.obj", EXPLOTION_FLOOR);
 
     //家
