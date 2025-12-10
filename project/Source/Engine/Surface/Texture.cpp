@@ -52,6 +52,8 @@ void Texture::LoadAllTexture() {
     handles[ENEMY_TEXTURE2] = Load("Resource/Models/Enemy/Enemy02.png");
     handles[ENEMY_TEXTURE3] = Load("Resource/Models/Enemy/Enemy03.png");
 
+	handles[NOSE_LANTERN_PARTICLE] = Load("Resource/Textures/BubbleParticle.png");
+
     handles[ACTION_UI_MOVE] = Load("Resource/Textures/ActionUI_Move_Pop.png");
     handles[ACTION_UI_STRIP] = Load("Resource/Textures/ActionUI_Strip_Pop.png");
     handles[ACTION_UI_SHOT] = Load("Resource/Textures/ActionUI_Shot_Pop.png");

@@ -71,6 +71,7 @@ private:
 
 #pragma endregion
     float eventTimer_ = 0.0f;
+    bool isEventTrigger = false;
 
     std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
 };

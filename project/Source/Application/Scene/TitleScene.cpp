@@ -152,11 +152,13 @@ void TitleScene::Initialize()
 
 	titleText_->Initialize();
 	bossDummy_->Initialize();
-	letterboxBars_->Initialize();
+    bossDummy_->isVec = true;
+    letterboxBars_->Initialize();
 	actionUI_->Initialize();
     
     house_->Initialize();
     backGround_->Initialize();
+
 #pragma endregion
 
 	eventTimer_ = 0.0f;
@@ -165,6 +167,7 @@ void TitleScene::Initialize()
 
     SceneStaticValue::isClear = false;
     SceneStaticValue::bossRound = 0;
+	isEventTrigger = false;
 }
 
 void TitleScene::Update()
@@ -231,8 +234,8 @@ void TitleScene::Debug()
 void TitleScene::SceneChangeUpdate()
 {
     if (titleText_->GetIsBreak()) {
-		camera_->rotate_ = MY_Utility::SimpleEaseIn(camera_->rotate_, { 0.0f,0.0f,0.0f }, 0.1f);
-		camera_->translate_ = MY_Utility::SimpleEaseIn(camera_->translate_, { 0.0f,1.5f,0.0f }, 0.1f);
+		camera_->rotate_ = MY_Utility::SimpleEaseIn(camera_->rotate_, { 0.0f,0.0f,0.0f }, 0.01f);
+		camera_->translate_ = MY_Utility::SimpleEaseIn(camera_->translate_, { 0.0f,1.5f,0.0f }, 0.01f);
 
         if (bossDummy_->isAnimEnd_) {
 			sceneChange_->SetState(SceneChange::kFadeIn, 30);
@@ -265,6 +268,10 @@ void TitleScene::UpdateGameObject() {
         Sound::PlayBGM(Sound::inGameBGM01);
         bossDummy_->Update();
 		actionUI_->isHide_ = true;
+        if (!isEventTrigger) {
+			isEventTrigger = true;
+			bossDummy_->velocity_.y = 7.0f;
+        }
 
     } else {
     /*    Sound::Stop(Sound::inGameBGM01);*/

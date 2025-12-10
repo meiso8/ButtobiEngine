@@ -29,7 +29,12 @@ public:
 		WING_R
 	};
 
+	bool isVec = false;
+	Vector3 velocity_ = { 0.0f };
+
 private:
+	
+
 	Object3d wingLPos_;
 	Object3d wingRPos_;
 	void Winging(const float& speed);

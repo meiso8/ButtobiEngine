@@ -51,7 +51,8 @@ void TitleText::Initialize() {
 	force_.isGravity = false;
 	hitCount_ = 0;
 
-	body_.worldTransform_.translate_ = { 0.0f,2.0f,12.0f };
+	body_.worldTransform_.rotate_ = { 0.0f,4.0f,0.0f };
+	body_.worldTransform_.translate_ = { 0.0f,0.0f,12.0f };
 	body_.worldTransform_.scale_ = { 5.0f,5.0f,5.0f };
 	body_.SetColor({ 1.0f,1.0f,1.0f,1.0f });
 	timer_ = 0.0f;
@@ -79,10 +80,10 @@ void TitleText::Update() {
 
 	} else {
 		body_.SetColor({ 1.0f,1.0f,1.0f,1.0f });
-		body_.worldTransform_.scale_ = MY_Utility::SimpleEaseIn(body_.worldTransform_.scale_,{ hitScale,hitScale,hitScale }, 0.3f);
+		body_.worldTransform_.scale_ = MY_Utility::SimpleEaseIn(body_.worldTransform_.scale_,{ 5.0f,5.0f,5.0f }, 0.3f);
 	}
 
-	body_.worldTransform_.translate_.x = sinf(timer_ * (hitScale - 1.0f) * 10.0f) * 0.1f;
+	body_.worldTransform_.rotate_.x = sinf(timer_) * 0.1f;
 
 	force_.Update();
 	//body_.worldTransform_.rotate_.y += rotatePower_;

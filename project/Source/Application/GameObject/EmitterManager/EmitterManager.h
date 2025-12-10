@@ -11,6 +11,7 @@ class EnemyShockWave;
 class FloorBullet;
 class FloorBulletManager;
 class FloorGameFloorManager;
+
 class FloorGameFloor;
 class House;
 class BossDummy;
@@ -38,6 +39,7 @@ public:
     void SetFloorEmitter();
     void SetLeafEmitter();
     void SetHealItemEmitter();
+	  void SetNoseLanternEmitter();
     void SetBossDummyEmitter();
 
     void SetPlayer(FloorGamePlayer& player) {
@@ -56,6 +58,9 @@ public:
     void SetFloorGameFloorManager(FloorGameFloorManager& floorGameFloorManager) {
         floorGameFloorManager_ = &floorGameFloorManager ;
     }
+	void SetBossDummy(BossDummy& bossDummy) {
+		bossDummy_ = &bossDummy;
+	};
 
     void SetHouse(House& house) {
         house_ = &house;
@@ -85,6 +90,8 @@ public:
    void InitFloorEmitter();
     //葉っぱ
    void InitLeafEmitter();
+    //鼻提灯
+   void InitNoseLanternEmitter();
 
 
    //プレイヤー
@@ -101,6 +108,8 @@ public:
    void UpdateFloorEmitter();
    //葉っぱ
    void UpdateLeafEmitter();
+   //鼻提灯
+   void UpdateNoseLanternEmitter();
    //タミーボス
    void UpdateBossDummyEmitter();
 private:
@@ -141,7 +150,6 @@ private:
 
     std::vector< std::unique_ptr<ParticleEmitter>> spawnHealItemEmitters_;
 
-    
-
+	std::unique_ptr<ParticleEmitter> noseLanternEmitter_ = nullptr;
 };
 

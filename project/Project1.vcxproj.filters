@@ -307,6 +307,7 @@
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\ResultSceneObj\PlayerDummy.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FrameStopManager.h" />
     <ClInclude Include="Source\Application\GameObject\MatsumotoObj\GameSceneObj\FlashEffecter.h" />
+    <ClInclude Include="Source\Application\GameObject\MatsumotoObj\TitleSceneObj\SleapParticle.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="externals\assimp\lib\Debug\assimp-vc143-mdd.lib" />

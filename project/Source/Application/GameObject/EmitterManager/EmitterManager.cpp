@@ -33,6 +33,7 @@ void EmitterManager::Create()
     SetFloorEmitter();
     SetLeafEmitter();
     SetHealItemEmitter();
+    SetNoseLanternEmitter();
     SetBossDummyEmitter();
 }
 
@@ -316,6 +317,9 @@ void EmitterManager::SetHealItemEmitter()
 
 }
 
+void EmitterManager::SetNoseLanternEmitter() {
+}
+
 void EmitterManager::SetBossDummyEmitter()
 {
     if (bossDummy_) {
@@ -366,6 +370,7 @@ void EmitterManager::Update(Camera& camera)
 
     UpdateLeafEmitter();
 
+    UpdateNoseLanternEmitter();
     //UpdateBossDummyEmitter();
 
     ParticleEmitter::Update(camera);
@@ -579,6 +584,15 @@ void EmitterManager::UpdateBossDummyEmitter()
     }
 }
 
+void EmitterManager::UpdateNoseLanternEmitter() {
+	if (bossDummy_ == nullptr) {
+		return;
+	}
+
+	//鼻提灯
+	noseLanternEmitter_->UpdateTimer();
+}
+
 
 void EmitterManager::Draw()
 {
@@ -687,5 +701,11 @@ void EmitterManager::InitLeafEmitter()
 {
     //はっぱ
     leafEmitter_->InitTimer();
+}
+
+void EmitterManager::InitNoseLanternEmitter() {
+	//鼻提灯
+	noseLanternEmitter_->InitTimer();
+
 }
 
