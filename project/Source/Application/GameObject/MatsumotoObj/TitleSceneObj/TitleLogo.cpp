@@ -35,7 +35,7 @@ TitleLogo::~TitleLogo()
 
 void TitleLogo::Initialize()
 {
-    body_.worldTransform_.translate_ = { 0.0f,3.0f,15.0f };
+    body_.worldTransform_.translate_ = { 0.0f,5.0f,15.0f };
     body_.worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
 
     float radius = 1.5f; // 円の半径
