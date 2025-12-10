@@ -12,7 +12,8 @@ class HouseCollider :public Collider {
 
 public:
     HouseCollider();
-    void Setting(AABB aabb,Model* model);
+    void SettingAABB(const AABB& aabb,Model* model);
+    void SettingSphere(const float& radius, Model* model);
     void Initialize();
     void Update();
     void Draw(Camera& camera);
@@ -20,6 +21,7 @@ public:
     void OnCollision(Collider* collider)override;
     Vector3 GetWorldPosition() const override;
     Object3d pos_;
+    bool isHit_ = false;
 };
 
 class House
@@ -27,7 +29,7 @@ class House
 public:
 
     enum Objects {
-        kHouse_floor,
+ /*       kHouse_floor,*/
         kHouse_wall_L,
         kHouse_wall_R,
         kHouse_wall_back,
@@ -47,12 +49,16 @@ public:
         return colliders_
             ;
     }
+
+    bool isWallBrake_ = false;
+
 private:
     int* hitCount_ = nullptr;
     int maxHitCount_ = 0;
     std::unordered_map<Objects, std::unique_ptr<HouseCollider>> colliders_;
     float wallBreakTimer_ = 0.0f;
     bool isDoorOpen_ = false;
-    bool isWallBrake_ = false;
 
+    Object3d floorPos_;
+    Object3d doorPos_;
 };
