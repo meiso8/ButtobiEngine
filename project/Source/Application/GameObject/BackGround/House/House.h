@@ -32,7 +32,8 @@ public:
  /*       kHouse_floor,*/
         kHouse_wall_L,
         kHouse_wall_R,
-        kHouse_wall_back,
+        kHouse_wall_back_L,
+        kHouse_wall_back_R,
         kHouse_door,
     };
 
@@ -61,4 +62,5 @@ private:
 
     Object3d floorPos_;
     Object3d doorPos_;
+    Object3d wallBackPos_;
 };
