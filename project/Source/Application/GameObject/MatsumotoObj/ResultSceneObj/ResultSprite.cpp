@@ -16,6 +16,8 @@ ResultSprite::ResultSprite() {
 void ResultSprite::Initialize() {
 
 	if (SceneStaticValue::isClear) {
+
+		sprite_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 		sprite_->SetTexture(Texture::RESULT_CLEAR);
 	} else {
 		sprite_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
@@ -30,6 +32,6 @@ void ResultSprite::Update() {
 }
 
 void ResultSprite::Draw() {
-	Sprite::PreDraw(kBlendModeNormal);
+	sprite_->PreDraw(kBlendModeNormal);
 	sprite_->Draw();
 }
