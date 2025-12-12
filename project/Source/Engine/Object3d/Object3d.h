@@ -8,8 +8,9 @@
 #include"MaterialResource.h"  
 #include"Balloon.h"
 #include"Wave.h"
-
+#include"ModelData.h"
 #include<memory>
+class Model;
 enum LightMode;
 class Object3d
 {
@@ -22,6 +23,7 @@ private:
     TransformationMatrixFor3D* transformationMatrixData_ = nullptr;
     //メッシュ情報
     MeshCommon* meshCommon_ = nullptr;
+    ModelData* modelData_ = nullptr;
     //コマンドリスト 借り物
     static  ID3D12GraphicsCommandList* commandList_;
 
@@ -80,7 +82,8 @@ public:
     void InitWaveDataIndex(const uint32_t& index);
     void InitBalloonData();
    
-    void SetMesh(MeshCommon* mesh) { meshCommon_ = mesh; };
+    void SetMesh(MeshCommon* mesh) { meshCommon_ = mesh;};
+    void SetModelData(Model* model);
     void SetTextureHandle(const Texture::TEXTURE_HANDLE& handle) { meshCommon_->SetTextureHandle(handle); };
 private:
     void CreateUV();

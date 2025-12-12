@@ -4,6 +4,7 @@
 #include"Lights/PointLightManager.h"
 #include"Lights/DirectionalLightManager.h"
 #include"Lights/SpotLightManager.h"
+#include"Model.h"
 ID3D12GraphicsCommandList* Object3d::commandList_ = nullptr;
 
 
@@ -47,6 +48,11 @@ void Object3d::InitBalloonData()
     balloonData_->sphere = 0.0f;
     balloonData_->cube = 0.0f;
     balloonData_->isSphere = false;
+}
+
+void Object3d::SetModelData(Model* model)
+{
+    modelData_ = model->GetModelData();
 }
 
 void Object3d::InitWaveData()
@@ -108,8 +114,12 @@ void Object3d::UpdateUV() {
 
 void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode)
 {
-
-    *transformationMatrixData_ = { Multiply(worldTransform_.matWorld_, camera.GetViewProjectionMatrix()),worldTransform_.matWorld_,Transpose(Inverse(worldTransform_.matWorld_)) };
+    if (modelData_) {
+        Matrix4x4 worldMatrix = modelData_->rootNode.localMatrix * worldTransform_.matWorld_;
+        *transformationMatrixData_ = { Multiply(worldMatrix, camera.GetViewProjectionMatrix()),worldTransform_.matWorld_,Transpose(Inverse(worldMatrix)) };
+    } else {
+        *transformationMatrixData_ = { Multiply(worldTransform_.matWorld_, camera.GetViewProjectionMatrix()),worldTransform_.matWorld_,Transpose(Inverse(worldTransform_.matWorld_)) };
+    }
 
     if (meshCommon_) {
         meshCommon_->PreDraw(commandList_, blendMode, cullMode);
@@ -166,3 +176,4 @@ void Object3d::CreateTransformationMatrix() {
     transformationMatrixData_->WorldInverseTranspose = MakeIdentity4x4();
 
 }
+

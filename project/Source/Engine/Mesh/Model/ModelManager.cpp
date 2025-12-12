@@ -18,6 +18,7 @@ void ModelManager::LoadAllModel()
 {
     //モデルのファイルパスとタグを関連付けてください
     LoadModel("Resource/Models/Box", "Box.obj", BOX);
+    LoadModel("Resource/Models", "gltfTest.gltf", PLANE_GLTF);
     LoadModel("Resource/Models/player", "player.obj", PLAYER_BODY);
     LoadModel("Resource/Models/medjed", "medjed.obj", MEDJED);
     LoadModel("Resource/Models/people", "people.obj", PEOPLE);
@@ -58,7 +59,7 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
 
     //追加したテクスチャデータのポインタ
     std::unique_ptr<Model> model = std::make_unique<Model>();
-   
+
     std::unique_ptr<ModelData> modelData = std::make_unique<ModelData>();
 
     Assimp::Importer importer;
@@ -114,8 +115,13 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
 
     }
 
+
+    //モデルのNodeを読む
+    modelData->rootNode = ReadNode(scene->mRootNode);
+
     //モデルのテクスチャを読む
     modelData->material.textureSrvIndex = Texture::AddTextureHandle(modelData->material.textureFilePath);
+
     model->SetModelData(std::move(modelData));
     model->Create();
 
@@ -123,3 +129,28 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
     models_.insert(std::make_pair(handle, std::move(model)));
 
 }
+
+Node ModelManager::ReadNode(aiNode* node)
+{
+    Node result;
+    aiMatrix4x4 aiLocalMatrix = node->mTransformation;//nodeのlocalMatrixを取得
+    aiLocalMatrix.Transpose();//転置
+
+    for (uint32_t i = 0; i < 4; ++i) {
+        for (uint32_t j = 0; j < 4; ++j) {
+            result.localMatrix.m[i][j] = aiLocalMatrix[i][j];//他の要素も同様に
+        }
+    }
+
+    result.name = node->mName.C_Str();//Node名の格納
+    result.children.resize(node->mNumChildren);//子供の数だけ確保
+
+    for (uint32_t childrenIndex = 0; childrenIndex < node->mNumChildren; ++childrenIndex) {
+        //再帰的に読んで階層構造を作っていく
+        result.children[childrenIndex] = ReadNode(node->mChildren[childrenIndex]);
+    }
+
+    return result;
+}
+
+

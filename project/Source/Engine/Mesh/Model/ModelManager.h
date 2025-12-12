@@ -3,7 +3,7 @@
 #include<map>
 
 class Model;
-
+struct aiNode;
 class ModelManager
 {
 private:
@@ -11,7 +11,7 @@ public:
     /// @brief モデルのハンドルを宣言します
     enum MODEL_HANDLE {
         BOX,
-
+        PLANE_GLTF,
         //プレイヤーそれぞれのパーツ
         PLAYER_BODY,
 
@@ -33,6 +33,7 @@ public:
     static void Finalize();
 private:
     static void LoadModel(const std::string& directoryPath, const std::string& filename, const uint32_t& handle);
+    static Node ReadNode(aiNode* node);
 private:
     static std::map < const uint32_t, std::unique_ptr< Model> > models_;
 };
