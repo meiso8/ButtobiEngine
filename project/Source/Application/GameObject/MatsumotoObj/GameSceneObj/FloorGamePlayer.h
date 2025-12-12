@@ -60,7 +60,8 @@ public:
 	std::vector<std::pair<int, int>> strippedFloorMap_;
 	PlayerAnimationState animationState_ = PlayerAnimationState::Idle;
 	bool isMove_;
-
+	//形態変化
+	bool* isEnemyPhaseChangePtr_ = nullptr;
 	Vector3& GetStickyFloorPos();
 private:
 	void Move();
