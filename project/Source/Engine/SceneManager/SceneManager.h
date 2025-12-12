@@ -42,12 +42,12 @@ public:
     static void Draw();
     static void Debug();
     static void SetMap(const std::string& name, std::unique_ptr<BaseScene> scene);
-    static void SetItr(const std::string& name);
+    static void SetNestScene(const std::string& name);
     static void InitScene();
 private:
 
     static BaseScene* currentScene_;
-    //static BaseScene* nextScene_;
+    static BaseScene* nextScene_;
     static std::map < std::string, std::unique_ptr<BaseScene>> scenes_;
-    static std::map<std::string, std::unique_ptr<BaseScene>>::iterator currentIt_;
 };
+

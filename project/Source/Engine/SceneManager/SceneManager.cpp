@@ -55,12 +55,13 @@ void BaseScene::SwitchCamera()
 
 std::map < std::string, std::unique_ptr<BaseScene>> SceneManager::scenes_;
 BaseScene* SceneManager::currentScene_ = nullptr;
-std::map<std::string, std::unique_ptr<BaseScene>>::iterator SceneManager::currentIt_;
+BaseScene* SceneManager::nextScene_ = nullptr;
 
 void SceneManager::Finalize()
 {
     scenes_.clear();
     currentScene_ = nullptr;
+    nextScene_ = nullptr;
 }
 
 void SceneManager::Update()
@@ -69,12 +70,6 @@ void SceneManager::Update()
     currentScene_->SceneChangeUpdate();
 
     if (currentScene_->GetIsEndScene()) {
-
-        ++currentIt_; // 次のシーンへ
-
-        if (currentIt_ == scenes_.end()) {
-            currentIt_ = scenes_.begin(); // 最初に戻る
-        }
 
         InitScene();
     }
@@ -109,14 +104,19 @@ void SceneManager::SetMap(const std::string& name, std::unique_ptr<BaseScene> sc
     scenes_[name] = std::move(scene);
 }
 
-void SceneManager::SetItr(const std::string& name)
+void SceneManager::SetNestScene(const std::string& name)
 {
     //最初の位置を保持
-    currentIt_ = scenes_.find(name);
+    nextScene_ = scenes_[name].get();
 }
 
 void SceneManager::InitScene()
 {
-    currentScene_ = currentIt_->second.get();
+    //次のシーンがセットされていたら次のシーンにする
+    if (nextScene_) {
+        currentScene_ = nextScene_;
+        nextScene_ = nullptr;
+    }
+
     currentScene_->Initialize();
 }

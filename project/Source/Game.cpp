@@ -1,7 +1,5 @@
 #include "Game.h"
-#include"SampleScene.h"
-#include"TitleScene.h"
-#include"ResultScene.h"
+
 
 #define WIN_WIDTH 1280
 #define WIN_HEIGHT 720
@@ -10,16 +8,6 @@ void Game::Initialize()
 {
     //エンジンの生成
     MyEngine::Create(L"LE2A_19_ヨシダ_トモカ", WIN_WIDTH, WIN_HEIGHT);
-
-    // =============================================
-    // シーンの生成
-    // =============================================
-
-    SceneManager::SetMap("Title",std::move(std::make_unique < TitleScene>()));
-    SceneManager::SetMap("Sample",std::move(std::make_unique < SampleScene>()));
-
-    SceneManager::SetItr("Title");
-    SceneManager::InitScene();
 }
 
 void Game::Finalize()

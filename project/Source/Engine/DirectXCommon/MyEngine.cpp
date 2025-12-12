@@ -11,6 +11,7 @@
 #include"Lights/DirectionalLightManager.h"
 #include"Lights/SpotLightManager.h"
 #include"SceneManager.h"
+#include"SceneFactory.h"
 
 std::unique_ptr<PSO> MyEngine::pso = nullptr;
 std::unique_ptr <Input> MyEngine::input = nullptr;
@@ -105,6 +106,12 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     LogFile::Log("LoopStart");
 
 
+    // =============================================
+// シーンの生成
+// =============================================
+
+    SceneFactory::Create();
+
 }
 
 void MyEngine::Update() {
@@ -134,7 +141,7 @@ void MyEngine::Debug()
     DebugUI::CheckSound();
     DebugUI::CheckDirectionalLight();
     DebugUI::CheckSpotLight();
-    DebugUI::CheckPointLightData(PointLightManager::GetPointLightData(0),"pointLight0");
+    DebugUI::CheckPointLightData(PointLightManager::GetPointLightData(0), "pointLight0");
     DebugUI::CheckPointLightData(PointLightManager::GetPointLightData(1), "pointLight1");
 
     SceneManager::Debug();
@@ -155,7 +162,7 @@ void MyEngine::Run() {
         //ループを抜ける
         if (IsEndRequest()) {
             break;
-}
+        }
 
         Update();
 

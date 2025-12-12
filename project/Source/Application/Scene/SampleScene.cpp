@@ -167,6 +167,7 @@ void SampleScene::Update() {
     if (player_->GetHpsPtr()->hp <= 0) {
     
         sceneChange_->SetState(SceneChange::kFadeIn, 60);
+        SceneManager::SetNestScene("Title");
     }
 
 
