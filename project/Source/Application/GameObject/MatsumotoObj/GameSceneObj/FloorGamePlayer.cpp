@@ -77,6 +77,11 @@ void FloorGamePlayer::OnCollision(Collider* collider)
         }
     }
 
+    //プレイヤーに敵の形態変化フラグのポインタを渡して　形態変化時はリターンするように設定中　吉田
+    if (isEnemyPhaseChangePtr_ && *isEnemyPhaseChangePtr_) {
+        return;
+    }
+
     if (collider->GetCollisionAttribute() == kCollisionEnemy ||
         collider->GetCollisionAttribute() == kCollisionEnemyBullet|| 
         collider->GetCollisionAttribute() == kCollisionEnemyWave) {

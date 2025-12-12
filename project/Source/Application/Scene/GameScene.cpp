@@ -63,6 +63,8 @@ GameScene::GameScene()
 
     enemy_ = std::make_unique<Enemy>();
     floorGamePlayer_ = std::make_unique<FloorGamePlayer>();
+    //プレイヤーに敵の形態変化フラグのポインタを渡すついかしました吉田
+    floorGamePlayer_->isEnemyPhaseChangePtr_ = &enemy_->isFaseChange_;
     playerFloorStripManager_ = std::make_unique<PlayerFloorStripManager>(floorGamePlayer_.get());
     floorGameFloorManager_ = std::make_unique<FloorGameFloorManager>();
     floorStripManager_ = std::make_unique<FloorStripManager>(floorGamePlayer_.get(), floorGameFloorManager_.get(), playerFloorStripManager_.get());
@@ -81,6 +83,7 @@ GameScene::GameScene()
     enemyFloorChangeManager_ = std::make_unique<EnemyFloorChangeManager>(enemy_.get(), enemyBombManager_.get(), floorGameFloorManager_.get());
     enemyShockWaveManager_ = std::make_unique<EnemyShockWaveManager>();
     enemyShotWaveManager_ = std::make_unique<EnemyShotWaveManager>(enemy_.get(), enemyShockWaveManager_.get(), floorGameFloorManager_.get());
+
 
 
     nest_ = std::make_unique<Nest>();
