@@ -1,5 +1,9 @@
 #include "ResultScene.h"
 #include "MatsumotoObj/SceneStaticValue.h" 
+#include "MatsumotoObj/KeyBindConfig.h"
+#include"MatsumotoObj/GameSceneObj/HealItemSpawner.h"
+
+
 #define NOMINMAX
 
 //Debug用のImGui表示セット
@@ -11,10 +15,7 @@
 
 #include"Input.h"
 
-#include "MatsumotoObj/KeyBindConfig.h"
 
-#include "MatsumotoObj/SceneStaticValue.h"
-#include"MatsumotoObj/GameSceneObj/HealItemSpawner.h"
 
 ResultScene::ResultScene() {
 	// 現在のカメラを設定
@@ -31,6 +32,8 @@ ResultScene::ResultScene() {
 	skyDome_ = std::make_unique<SkyDome>();
 #pragma endregion
 
+	resultSceneEmitterManager_ = std::make_unique<ResultSceneEmitterManager>();
+	resultSceneEmitterManager_->Create();
 }
 
 ResultScene::~ResultScene() {
@@ -60,6 +63,7 @@ void ResultScene::Initialize() {
 	//ヒールアイテムをクリアする　ここでタイトルシーンのバグを解消できるはず…
 	HealItemSpawner::Instance().Release();
 
+	resultSceneEmitterManager_->Initialize();
 }
 
 void ResultScene::Update() {
@@ -68,7 +72,8 @@ void ResultScene::Update() {
     if (SceneStaticValue::isClear) {
         Sound::PlayBGM(Sound::resultBGM);
     } else {
-        sceneChange_->SetState(SceneChange::kFadeIn, 60);
+
+       sceneChange_->SetState(SceneChange::kFadeIn, 60);
     }
 
     if (KeyBindConfig::Instance().IsTrigger("Shot")) {
@@ -93,8 +98,13 @@ void ResultScene::Draw() {
 	nest_->Draw(*currentCamera_);
 	bossDummy_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
 	playerDummy_->Draw(*currentCamera_);
+	
+	//エミッター
+	resultSceneEmitterManager_->Draw();
+	
 	resultSprite_->Draw();
 #pragma endregion
+
 
     //シーン遷移を描画する
     sceneChange_->Draw();
@@ -108,8 +118,11 @@ void ResultScene::Debug() {
 #ifdef USE_IMGUI //ImGuiを使用する際はこれで囲んでください
     ImGui::Text("SwitchCamera : Q key");
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
+	ImGui::Checkbox("isClear",&SceneStaticValue::isClear);
     std::function<void()> func = [this]() { SwitchCamera(); };
     DebugUI::Button("ChangeCamera", func);
+
+	resultSceneEmitterManager_->Debug();
 #endif // !USE_IMGUI
 }
 
@@ -133,6 +146,8 @@ void ResultScene::UpdateGameObject() {
 }
 
 void ResultScene::UpdateEmitter() {
+	//エミッター
+	resultSceneEmitterManager_->Update(*currentCamera_);
 }
 
 void ResultScene::CheckAllCollision() {

@@ -56,6 +56,8 @@ void ParticleManager::CreateAll()
     CreateParticleGroup("mad", Texture::MAD_PARTICLE);
     //相殺
     CreateParticleGroup("offsetParticle", Texture::LEAF_PARTICLE);
+    //紙吹雪
+    CreateParticleGroup("white1x1Particle", Texture::WHITE_1X1);
 }
 
 // ==========================================================================================================
@@ -115,7 +117,13 @@ Particle MakeNewParticle(const AABB& velocityAABB, const WorldTransform& transfo
     particle.transform.rotate = Vector3{ Random::Get(), Random::Get(), Random::Get() } + transform.rotate_;
 
     particle.currentTime = 0;
-    particle.color = color;
+
+    if (color == Vector4{ 0.0f,0.0f,0.0f,0.0f }) {
+        Random::SetMinMax(0.0f, 1.0f);
+        particle.color = { Random::Get(),Random::Get(),Random::Get(),1.0f };
+    } else {
+        particle.color = color;
+    }
 
     return particle;
 }
