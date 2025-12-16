@@ -678,7 +678,6 @@ void EmitterManager::Draw()
 void EmitterManager::Debug()
 {
     //ここでデバック
-    DebugUI::CheckParticle(*madEmitter_, "madEmitter_");
     DebugUI::CheckParticle(*offsetEmitter_, "offsetEmitter");
 
 }

@@ -1,45 +1,16 @@
 #include "ResultScene.h"
 #include "MatsumotoObj/SceneStaticValue.h" 
 #define NOMINMAX
-//入力処理に必要なもの
-#include "Input.h"
 
 //Debug用のImGui表示セット
 #include"DebugUI.h"
-
 //グリッド表示
 #include"DrawGrid.h"
-
-//モデル読み込みに必要なもの
-#include"Model.h"
-#include"ModelManager.h"
-//スプライトに必要なもの
-#include"Texture.h"
-#include"Sprite.h"
 //音を鳴らすのに必要なもの
 #include"Sound.h"
 
-//球体のメッシュ
-#include"SphereMesh.h"
-//平面のメッシュ
-#include"PlaneMesh.h"
+#include"Input.h"
 
-
-//円のメッシュ
-#include"CircleMesh.h"
-//立方体のメッシュ（AABBでセットするか8頂点でセット);
-#include"CubeMesh.h"
-
-#include "ParticleEmitter.h"
-#include"Particle.h"
-
-#include"Random.h"
-#include"MakeMatrix.h"
-
-#include"Collision.h"
-#include"Circle.h"
-
-#include"MyEngine.h"
 #include "MatsumotoObj/KeyBindConfig.h"
 
 #include "MatsumotoObj/SceneStaticValue.h"
