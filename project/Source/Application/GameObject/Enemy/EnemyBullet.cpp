@@ -34,6 +34,7 @@ void EnemyBullet::InitFlagAndPosAndTimer()
 }
 
 void EnemyBullet::Initialize() {
+
     body_.Initialize();
     body_.worldTransform_.rotate_.x = 1.0f;
     moveDir_ = { 0.0f,0.0f,1.0f };
@@ -41,6 +42,7 @@ void EnemyBullet::Initialize() {
     lifeTimer_ = 0.0f;
     lifeDuration_ = 2.0f;
     isActive_ = false;
+    isBulletHit_ = false;
     size_ = 1.0f;
 }
 void EnemyBullet::OnCollision(Collider* collider)
@@ -50,7 +52,14 @@ void EnemyBullet::OnCollision(Collider* collider)
         return;
     }
 
-    if (collider->GetCollisionAttribute() == kCollisionPlayer|| collider->GetCollisionAttribute() == kCollisionPlayerBullet) {
+    if (collider->GetCollisionAttribute() == kCollisionPlayerBullet) {
+        //弾が衝突
+        isBulletHit_ = true;
+        //葉っぱの音を鳴らすよ
+        Sound::PlaySE(Sound::kPauseButton);
+    }
+
+    if (collider->GetCollisionAttribute() == kCollisionPlayer || collider->GetCollisionAttribute() == kCollisionPlayerBullet) {
         //デバック用
         InitFlagAndPosAndTimer();
         OnCollisionCollider();
@@ -75,11 +84,13 @@ void EnemyBullet::Update() {
         lifeTimer_ -= 0.016f;
     }
 
-    body_.worldTransform_.rotate_.y += std::numbers::phi_v<float>*InverseFPS*3.0f;
+    body_.worldTransform_.rotate_.y += std::numbers::phi_v<float>*InverseFPS * 3.0f;
     body_.worldTransform_.translate_ += moveDir_ * moveSpeed_;
     body_.Update();
 
     ColliderUpdate();
+
+
 
 }
 

@@ -24,6 +24,7 @@ public:
     bool isActive_ = false;
     Object3d body_;
     float size_;
+    bool isBulletHit_ = false;
 private:
     void InitFlagAndPosAndTimer();
     Model* model_;

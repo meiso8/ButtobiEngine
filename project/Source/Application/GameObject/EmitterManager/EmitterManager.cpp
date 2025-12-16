@@ -8,6 +8,7 @@
 #include"Input.h"
 #include"Enemy/EnemyShockWaveManager.h"
 #include"Enemy/EnemyShotWaveManager.h"
+#include"Enemy/EnemyBulletManager.h"
 #include "MatsumotoObj/GameSceneObj/Data/MapData.h"
 #include"MatsumotoObj/GameSceneObj/HealItemSpawner.h"
 #include"MatsumotoObj/TitleSceneObj/BossDummy.h"
@@ -36,6 +37,7 @@ void EmitterManager::Create()
     SetHealItemEmitter();
     SetNoseLanternEmitter();
     SetBossDummyEmitter();
+    SetOffsetEmitter();
 }
 
 void EmitterManager::SetPlayerEmitter()
@@ -105,7 +107,7 @@ void EmitterManager::SetEnemyEmitter()
         // ====================================================================
         //ノックバック
         enemyKnockBackEmitter_ = std::make_unique<ParticleEmitter>();
-        enemyKnockBackEmitter_->SetName("HitParticle");
+        enemyKnockBackEmitter_->SetName("enemyKnockBackParticle");
         enemyKnockBackEmitter_->emitter_.transform.Parent(enemy_->bodyPos_.worldTransform_);
 
         enemyKnockBackEmitter_->emitter_.transform.translate_ = { 0.0f,2.0f,1.0f };
@@ -347,6 +349,24 @@ void EmitterManager::SetBossDummyEmitter()
     madEmitter_->emitter_.scaleOffset_ = 0.1f;
 }
 
+void EmitterManager::SetOffsetEmitter()
+{
+
+    offsetEmitter_ = std::make_unique<ParticleEmitter>();
+    //一旦適当に代入
+    offsetEmitter_->SetName("offsetParticle");
+    offsetEmitter_->emitter_.count = 3 ;
+    offsetEmitter_->emitter_.transform.scale_ = { 1.0f,1.0f,1.0f };
+    //offsetEmitter_->emitter_.translateAABB_ = { .min = {-0.2f,-0.2f,-0.2f},.max = {0.2f,0.2f,0.2f} };
+    offsetEmitter_->emitter_.movement = kParticleNormal;
+    offsetEmitter_->emitter_.scaleOffset_ = 0.05f;
+    offsetEmitter_->emitter_.rotateOffset_ = 3.14f;
+    //offsetEmitter_->emitter_.radius = 1.0f;
+    offsetEmitter_->emitter_.lifeTime = 0.5f;
+    offsetEmitter_->emitter_.frequency = 0.5f;
+    offsetEmitter_->emitter_.velocityAABB = { .min = {-5.0f,-1.0f,-5.0f},.max = {5.0f,3.0f,5.0f} };
+}
+
 void EmitterManager::Initialize()
 {
 
@@ -368,6 +388,8 @@ void EmitterManager::Initialize()
     InitNoseLanternEmitter();
     //ぷんすか
     InitMadEmitter();
+    //相殺
+    InitOffsetEmitter();
 
     ParticleManager::ResetAll();
 }
@@ -393,6 +415,8 @@ void EmitterManager::Update(Camera& camera)
     UpdateNoseLanternEmitter();
 
     UpdateMadEmitter();
+
+    UpdateOffsetEmitter();
 
     ParticleEmitter::Update(camera);
 
@@ -603,11 +627,30 @@ void EmitterManager::UpdateMadEmitter()
         madEmitter_->emitter_.transform.Parent(enemy_->enemyBeak_->beak_);
         madEmitter_->emitter_.transform.translate_ = { -1.0f,1.0f,0.0f };
     }
-   
-    if (bossDummy_&&titleText_ &&titleText_->GetIsBreak()||enemy_&&enemy_->GetCurrentState() != "First") {
+
+    if (bossDummy_ && titleText_ && titleText_->GetIsBreak() || enemy_ && enemy_->GetCurrentState() != "First") {
         madEmitter_->UpdateTimer();
         madEmitter_->UpdateEmitter();
     }
+}
+
+void EmitterManager::UpdateOffsetEmitter()
+{
+    if (enemyBulletManager_ == nullptr) {
+        return;
+    }
+
+    for (auto& bullet : enemyBulletManager_->GetBullets()) {
+        if (bullet->isBulletHit_) {
+            bullet->isBulletHit_= false;
+            offsetEmitter_->emitter_.transform.Parent(bullet->body_.worldTransform_);
+            offsetEmitter_->Emit();
+            break;
+        }
+    }
+
+    offsetEmitter_->UpdateEmitter();
+
 }
 
 void EmitterManager::UpdateNoseLanternEmitter() {
@@ -635,18 +678,8 @@ void EmitterManager::Draw()
 void EmitterManager::Debug()
 {
     //ここでデバック
-
-    //DebugUI::CheckParticle(*particleEmitters_[kPlayerHitEmitter], "PlayerEmitter");
-    //DebugUI::CheckParticle(*particleEmitters_[kEnemyHitEmitter], "EnemyEmitter");
-    //DebugUI::CheckParticle(*particleEmitters_[kPlayerWalkEmitter], "PlayerEmitter");
-
-    //DebugUI::CheckParticle(*waveEmitters_[2].emitter, "waveEmitter2");
-    //DebugUI::CheckParticle(*enemyKnockBackEmitter_, "KnockBack");
-    //DebugUI::CheckParticle(*leafEmitter_, "leafEmitter");
-    //DebugUI::CheckParticle(*betobetoEmitter_, "betobetoEmitter");
-    //DebugUI::CheckParticle(*starEmitter_, "starEmitter");
-    //DebugUI::CheckParticle(*spawnHealItemEmitters_[0], "spawnHealItemEmitter");
     DebugUI::CheckParticle(*madEmitter_, "madEmitter_");
+    DebugUI::CheckParticle(*offsetEmitter_, "offsetEmitter");
 
 }
 
@@ -670,7 +703,6 @@ void EmitterManager::InitEnemyEmitter()
     particleEmitters_[kEnemyHitEmitter]->InitTimer();
     //ノックバック
     enemyKnockBackEmitter_->InitTimer();
-
 }
 
 void EmitterManager::InitMadEmitter()
@@ -699,12 +731,10 @@ void EmitterManager::InitFloorBulletEmitter()
     }
 
     floorBreakEmitter_->InitTimer();
-
 }
 
 void EmitterManager::InitHealItemEmitter()
 {
-
     if (floorBulletManager_ == nullptr) {
         return;
     }
@@ -712,7 +742,6 @@ void EmitterManager::InitHealItemEmitter()
     for (auto& emitter : spawnHealItemEmitters_) {
         emitter->InitTimer();
     }
-
 }
 
 void EmitterManager::InitFloorEmitter()
@@ -726,8 +755,6 @@ void EmitterManager::InitFloorEmitter()
     for (auto& emitter : floorStrongEmitters_) {
         emitter.emitter->InitTimer();
     }
-
-
 }
 
 void EmitterManager::InitLeafEmitter()
@@ -739,7 +766,15 @@ void EmitterManager::InitLeafEmitter()
 void EmitterManager::InitNoseLanternEmitter() {
     //鼻提灯
     noseLanternEmitter_->InitTimer();
+}
 
+void EmitterManager::InitOffsetEmitter()
+{
+    if (enemyBulletManager_ == nullptr) {
+        return;
+    }
+
+    offsetEmitter_->InitTimer();
 
 }
 

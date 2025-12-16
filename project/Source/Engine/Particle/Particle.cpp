@@ -26,6 +26,7 @@ void ParticleManager::CreateAll()
     CreateParticleGroup("enemyHitParticle", Texture::ENEMY_ACTION_PARTICLE/*, true, ModelManager::BOX*/);
 
     CreateParticleGroup("HitParticle", Texture::STAR_PARTICLE);
+    CreateParticleGroup("enemyKnockBackParticle", Texture::STAR_PARTICLE);
     CreateParticleGroup("playerWalkParticle", Texture::PLAYER_WALK_PARTICLE);
 
     //CreateParticleGroup("floorBombBlastParticle", Texture::PLAYER_WALK_PARTICLE);
@@ -37,14 +38,12 @@ void ParticleManager::CreateAll()
     //床
     CreateParticleGroup("floorParticle", Texture::FLOOR_PARTICLE);
 
+
+
     //ベトベト床
     CreateParticleGroup("meltFloorParticle", Texture::MELT_FLOOR_PARTICLE);
-
-
     //ほしパーティクル
     CreateParticleGroup("Star", Texture::STAR_PARTICLE);
-
-
     //ヒールアイテムパーティクル
     CreateParticleGroup("SpawnHealItem", Texture::HEAL_PARTICLE);
 
@@ -55,6 +54,8 @@ void ParticleManager::CreateAll()
     CreateParticleGroup("common", Texture::COMMON_PARTICLE);
     //ぷんすか
     CreateParticleGroup("mad", Texture::MAD_PARTICLE);
+    //相殺
+    CreateParticleGroup("offsetParticle", Texture::LEAF_PARTICLE);
 }
 
 // ==========================================================================================================

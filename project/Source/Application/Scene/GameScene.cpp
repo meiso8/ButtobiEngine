@@ -107,6 +107,7 @@ GameScene::GameScene()
     emitterManager_->SetEnemyWaveShockManager(*enemyShockWaveManager_);
     emitterManager_->SetFloorBuletManager(*floorBulletManager_);
     emitterManager_->SetFloorGameFloorManager(*floorGameFloorManager_);
+    emitterManager_->SetEnemyBulletManager(*enemyBulletManager_);
     emitterManager_->Create();
 }
 
@@ -543,4 +544,5 @@ GameScene::~GameScene()
 {
     camera_ = nullptr;
     HealItemSpawner::Instance().Release();
+
 }
