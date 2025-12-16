@@ -29,6 +29,7 @@ private:
 	FloorGameFloorManager* floorGameFloorManager_ = nullptr;
 	float shotSpeed_ = 0.3f;
 	float shotSize_ = 0.5f;
+	bool isSelectDirection_ = { false };
 
 	bool IsOccupied(int x, int y) {
 		return used[x][y];
@@ -38,6 +39,8 @@ private:
 	void Left(int& randX, int& randY);
 	void Right(int& randX, int& randY);
 	void Back(int& randX, int& randY);
+	void Shot();
+	void SelectDirection();
 	static void (EnemyShotWaveManager::* spFuncTable[])(int& randX, int& randY);
 
 	std::unordered_map<Direction, Vector3> enemyPoses_;

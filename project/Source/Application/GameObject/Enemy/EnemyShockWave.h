@@ -37,7 +37,7 @@ private:
     const float kMoveTime_ = 5.0f;
     const float kAabbWidth_ = 0.4f;
     Vector3 endPos_ = { 0.0f };
-    std::array<std::unique_ptr<CubeMesh>,kMaxAABB>cubeMesh_;
+    //std::array<std::unique_ptr<CubeMesh>,kMaxAABB>cubeMesh_;
     Vector3 moveDir_;
     float speed_;
 

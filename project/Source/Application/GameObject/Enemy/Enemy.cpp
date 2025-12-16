@@ -97,7 +97,8 @@ void Enemy::Init() {
     isShot_ = false;
     isBombShot_ = false;
     isWaveShot_ = false;
-    isWavePosSelect_ = false;
+    isWavePosSelectStart_ = false;
+
     isKnockBackEmit_ = false;
     isKnockBack_ = false;
 
@@ -834,20 +835,64 @@ void Enemy::FloorChangeAttack()
 }
 void Enemy::ShockWaveAttack()
 {
-    if (phaseTimer_ <= kWavePhaseMovePosTime_) {
+    if (phaseTimer_ <= kWavePhaseMoveFirstPosThinkingTime_) {
         isReqestOverheadView_ = true;
-        LookTargetNormal(*playerPos_);
-        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, *target_, 0.05f);
 
-    } else if (phaseTimer_ <= kWaveShotTime_) {
+        LookTargetNormal(*playerPos_);
+   
+    } else if (phaseTimer_ <= kWavePhaseMoveFirstPosTime_) {
+
+        if (!isWavePosSelectStart_) {
+            isWavePosSelectStart_ = true;
+        }
+
+        Vector3 pos = *target_*-1.0f;
+        LookTargetNormal(pos);
+        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, *target_, 0.05f);
+     
+    } else if (phaseTimer_ <= kWaveShotFirstTime_) {
+
+        if (isWavePosSelectStart_) {
+            if (!isWaveShot_) {
+                isWaveShot_ = true;
+            }
+            isWavePosSelectStart_ = false;
+        }
 
         //yを戻す
         bodyPos_.worldTransform_.translate_.y = Lerp(bodyPos_.worldTransform_.translate_.y, kRadius_, 0.1f);
 
-        if (!isWaveShot_) {
-            isWaveShot_ = true;
+
+    } else if (phaseTimer_ <= kWaveIntervalFirstTime_) {
+    
+        LookTargetNormal(*playerPos_);
+
+
+    } else if (phaseTimer_ <= kWavePhaseMoveSecondPosTime_) {
+
+        if (!isWavePosSelectStart_) {
+            isWavePosSelectStart_= true;
         }
-    } else if (phaseTimer_ < kWavePhaseMaxTime_) {
+
+        Vector3 pos = *target_ * -1.0f;
+        LookTargetNormal(pos);
+        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, *target_, 0.05f);
+        
+    } else if (phaseTimer_ <= kWaveShotSecondTime_) {
+
+        if (isWavePosSelectStart_) {
+            if (!isWaveShot_) {
+                isWaveShot_ = true;
+            }
+            isWavePosSelectStart_ = false;
+        }
+
+        //yを戻す
+        bodyPos_.worldTransform_.translate_.y = Lerp(bodyPos_.worldTransform_.translate_.y, kRadius_, 0.1f);
+
+    } else if (phaseTimer_ <= kWaveIntervalSecondTime_) {
+
+            LookTargetNormal(*playerPos_);
 
     } else {
         isSelectRandomPhase_ = true;
