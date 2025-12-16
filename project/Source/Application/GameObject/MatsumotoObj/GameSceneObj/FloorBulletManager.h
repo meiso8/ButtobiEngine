@@ -16,7 +16,6 @@ public:
 	const std::vector<std::unique_ptr<FloorBullet>>& GetBullets() const {
 		return bullets_;
 	};
-
 private:
 	Enemy* enemy_;
 	std::vector<std::unique_ptr<FloorBullet>> bullets_;
