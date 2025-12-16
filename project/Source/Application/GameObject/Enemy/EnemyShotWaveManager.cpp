@@ -44,6 +44,56 @@ void EnemyShotWaveManager::Back(int& randX, int& randY)
     endPos_.z -= endOffset_;
 }
 
+void EnemyShotWaveManager::Shot()
+{
+
+    if (!enemy_->isWaveShot_) {
+        return;
+    }
+
+    int randX = 0, randY = 0;
+
+    for (size_t j = 0; j < 4 ; ++j) {
+  
+        do {
+            //呼び出す
+            (this->*spFuncTable[static_cast<size_t>(direction_)])(randX, randY);
+
+        } while (IsOccupied(randX, randY)); // ← ここでかぶりチェック！
+
+        used[randX][randY] = true;
+
+        startPos_.y += 1.0f;
+        endPos_.y += 1.0f;
+
+        if (direction_ != BACK) {
+            shockWaveManager_->ShotWave(startPos_, endPos_, EnemyShockWave::kHorizontal);
+        } else {
+            shockWaveManager_->ShotWave(startPos_, endPos_, EnemyShockWave::kVertical);
+        }
+    }
+
+    isSelectDirection_ = false;
+    enemy_->isWaveShot_ = false;
+}
+
+void EnemyShotWaveManager::SelectDirection()
+{
+
+    if (isSelectDirection_) {
+        return;
+    }
+
+    isSelectDirection_ = true;
+
+    direction_ = static_cast<Direction>(rand() % 3);
+    //初期化する
+    Initialize();
+    //ターゲットを設定
+    enemy_->SetTarget(enemyPoses_[direction_]);
+   Sound::PlaySE(Sound::kWindAttackCharge);
+}
+
 
 EnemyShotWaveManager::EnemyShotWaveManager(Enemy* enemy, EnemyShockWaveManager* shockWaveManager, FloorGameFloorManager* floorGameFloorManager) :
     enemy_(enemy), shockWaveManager_(shockWaveManager), floorGameFloorManager_(floorGameFloorManager) {
@@ -64,7 +114,6 @@ void EnemyShotWaveManager::Initialize() {
             used[x][y] = false;
         }
     }
-    direction_ = static_cast<Direction>(rand() % 3);
 }
 
 void EnemyShotWaveManager::Update() {
@@ -72,54 +121,19 @@ void EnemyShotWaveManager::Update() {
         return;
     }
 
-    //enemy_->SetTarget(enemyPoses_[direction_]);
     // 弾投げ
     if (enemy_->phase_ == Enemy::SHOCKWAVEATTACK) {
+        //場所を選択するかどうか
+        if (enemy_->isWavePosSelectStart_) {
+            SelectDirection();
+       
+        };
 
-        if (!enemy_->isWavePosSelect_) {
-            //初期化する
-            Initialize();
-            //ターゲットを設定
-            enemy_->SetTarget(enemyPoses_[direction_]);
-            // 使ったらマーク
-            Sound::PlayOriginSE(Sound::kWindAttackCharge);
-            enemy_->isWavePosSelect_ = true;
+        //方向を設定したとき
+        if ( isSelectDirection_) {
+            Shot();
         }
-
-        if (enemy_->isWavePosSelect_) {
-            //ショットした時
-            if (enemy_->isWaveShot_) {
-
-                int randX = 0, randY = 0;
-
-                for (auto& wave : shockWaveManager_->GetWaves()) {
-
-                    do {
-                        //呼び出す
-                        (this->*spFuncTable[static_cast<size_t>(direction_)])(randX, randY);
-
-                    } while (IsOccupied(randX, randY)); // ← ここでかぶりチェック！
-
-
-                    used[randX][randY] = true;
-
-                    startPos_.y += 1.0f;
-                    endPos_.y += 1.0f;
-
-                    if (direction_ != BACK) {
-                        shockWaveManager_->ShotWave(startPos_, endPos_, EnemyShockWave::kHorizontal);
-                    } else {
-                        shockWaveManager_->ShotWave(startPos_, endPos_, EnemyShockWave::kVertical);
-                    }
-                }
-
-                enemy_->isWaveShot_ = false;
-                enemy_->isWavePosSelect_ = false;
-          
-            }
-        }
-  
-
     }
+
 
 }

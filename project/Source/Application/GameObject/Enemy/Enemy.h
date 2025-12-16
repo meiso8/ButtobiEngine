@@ -54,8 +54,8 @@ public:
     //ボムを投げる
     bool isBombShot_ = false;
     //波を発生させる
-    bool isWaveShot_ = false;
-    bool isWavePosSelect_ = false;
+    bool isWaveShot_ = { false };
+    bool isWavePosSelectStart_ = { false };
     //床を初期化する
     bool isReqestClearFloor_ = false;
     // フェーズを変えているかどうか
@@ -228,11 +228,21 @@ private:
 
 #pragma region //波攻撃
     //波攻撃地点まで移動するタイム
-    const float kWavePhaseMovePosTime_ = 1.0f;
+    const float kWavePhaseMoveFirstPosThinkingTime_ = 1.0f;
     //波攻撃地点まで移動するタイム
-    const float kWaveShotTime_ = kWavePhaseMovePosTime_ + 1.0f;
-    //波攻撃の終了タイム　ここは後隙を含めた値にする
-    const float kWavePhaseMaxTime_ = 5.5f;
+    const float kWavePhaseMoveFirstPosTime_ = kWavePhaseMoveFirstPosThinkingTime_ + 1.0f;
+    //波攻撃第一
+    const float kWaveShotFirstTime_ = kWavePhaseMoveFirstPosTime_ + 1.0f;
+
+    //波攻撃第一後の間隔
+    const float kWaveIntervalFirstTime_ = kWaveShotFirstTime_ + 5.0f;
+    //第二波攻撃地点まで移動するタイム
+    const float kWavePhaseMoveSecondPosTime_ = kWaveIntervalFirstTime_ + 1.0f;
+    //波攻撃地点まで移動するタイム
+    const float kWaveShotSecondTime_ = kWavePhaseMoveSecondPosTime_ + 1.0f;
+    //波攻撃第二後の間隔
+    const float kWaveIntervalSecondTime_ = kWaveShotSecondTime_ + 5.0f;
+
 #pragma endregion
 #pragma region //四角移動
     //四角移動の初期地点の移動時間
