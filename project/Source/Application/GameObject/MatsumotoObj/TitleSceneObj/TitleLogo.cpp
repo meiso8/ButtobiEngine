@@ -13,7 +13,7 @@ TitleLogo::TitleLogo()
     body_.Create();
     body_.Initialize();
 
-    logos_.resize(5);
+    logos_.resize(8);
     for (int i = 0; i < logos_.size(); ++i) {
         logos_[i] = std::make_unique<Object3d>();
         logos_[i]->Create();
@@ -21,11 +21,22 @@ TitleLogo::TitleLogo()
         logos_[i]->worldTransform_.Parent(body_.worldTransform_);
     }
 
+    //べ
     logos_[0]->SetMesh(ModelManager::GetModel(ModelManager::TITLE_LOGO_1));
+    //リ
     logos_[1]->SetMesh(ModelManager::GetModel(ModelManager::TITLE_LOGO_2));
-    logos_[2]->SetMesh(ModelManager::GetModel(ModelManager::TITLE_LOGO_3));
-    logos_[3]->SetMesh(ModelManager::GetModel(ModelManager::TITLE_LOGO_4));
-    logos_[4]->SetMesh(ModelManager::GetModel(ModelManager::TITLE_LOGO_5));
+    //べ
+    logos_[2]->SetMesh(ModelManager::GetModel(ModelManager::TITLE_LOGO_1));
+    //リ
+    logos_[3]->SetMesh(ModelManager::GetModel(ModelManager::TITLE_LOGO_2));
+    //べ
+    logos_[4]->SetMesh(ModelManager::GetModel(ModelManager::TITLE_LOGO_1));
+    //ン
+    logos_[5]->SetMesh(ModelManager::GetModel(ModelManager::TITLE_LOGO_3));
+    //ジ
+    logos_[6]->SetMesh(ModelManager::GetModel(ModelManager::TITLE_LOGO_4));
+    //！
+    logos_[7]->SetMesh(ModelManager::GetModel(ModelManager::TITLE_LOGO_5));
 }
 
 TitleLogo::~TitleLogo()
