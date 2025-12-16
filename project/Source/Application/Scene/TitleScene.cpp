@@ -259,6 +259,8 @@ void TitleScene::UpdateGameObject() {
 			isEventTrigger = true;
 			bossDummy_->velocity_.y = 7.0f;
         }
+        //ヒットを偽にする
+        floorBulletManager_->Initialize();
 
     } else {
     /*    Sound::Stop(Sound::inGameBGM01);*/
