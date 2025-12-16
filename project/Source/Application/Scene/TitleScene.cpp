@@ -81,26 +81,8 @@ TitleScene::TitleScene()
     house_->SetHitCounts(titleText_->GetHitCount(), titleText_->GetMaxHitCount());
     backGround_ = std::make_unique<BackGround>();
 
-    SpotLightManager::GetData()->intensity = 1.0f;
-    SpotLightManager::GetData()->cosAngle = 0.99f;
-    SpotLightManager::GetData()->direction = { 0.0f,0.0f,1.0f };
-    SpotLightManager::GetData()->position = { 0.0f,2.0f,-4.0f };
+    SettingLights();
 
-    PointLightManager::GetPointLightData(0).color = { 17.0f / 255.0f,68.0f / 255.0f,134.0f / 255.0f };
-    PointLightManager::GetPointLightData(0).intensity = 6.1f;
-    PointLightManager::GetPointLightData(0).radius = 94.0f;
-    PointLightManager::GetPointLightData(0).decay = 6.0f;
-
-    PointLightManager::GetPointLightData(1).color = { 0.9f,0.5f,0.0f,1.0f };
-    PointLightManager::GetPointLightData(1).radius = 94.0f;
-    PointLightManager::GetPointLightData(1).decay = 0.9f;
-    PointLightManager::GetPointLightData(1).position = {0.0f,10.0f,7.0f};
-
-    PointLightManager::GetPointLightData(2).color = {1.0f,1.0f,1.0f,1.0f };
-    PointLightManager::GetPointLightData(2).radius = 15.0f;
-    PointLightManager::GetPointLightData(2).decay = 0.56f;
-    PointLightManager::GetPointLightData(2).position = { 0.0f,0.0f,0.0f };
-    PointLightManager::GetPointLightData(2).intensity = 1.0f;
 #pragma endregion
 
 	eventTimer_ = 0.0f;
@@ -227,6 +209,7 @@ void TitleScene::Debug()
 
     ImGui::Text("SwitchCamera : Q key");
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
+  
     std::function<void()> func = [this]() { SwitchCamera(); };
     DebugUI::Button("ChangeCamera", func);
     DebugUI::CheckCamera(*camera_);
@@ -332,4 +315,29 @@ void TitleScene::CheckAllCollision() {
     }
 
     collisionManager_->CheckAllCollisions();
+}
+
+void TitleScene::SettingLights()
+{
+
+    SpotLightManager::GetData()->intensity = 1.0f;
+    SpotLightManager::GetData()->cosAngle = 0.99f;
+    SpotLightManager::GetData()->direction = { 0.0f,0.0f,1.0f };
+    SpotLightManager::GetData()->position = { 0.0f,2.0f,-4.0f };
+
+    PointLightManager::GetPointLightData(0).color = { 17.0f / 255.0f,68.0f / 255.0f,134.0f / 255.0f };
+    PointLightManager::GetPointLightData(0).intensity = 6.1f;
+    PointLightManager::GetPointLightData(0).radius = 94.0f;
+    PointLightManager::GetPointLightData(0).decay = 6.0f;
+
+    PointLightManager::GetPointLightData(1).color = { 0.9f,0.5f,0.0f,1.0f };
+    PointLightManager::GetPointLightData(1).radius = 94.0f;
+    PointLightManager::GetPointLightData(1).decay = 0.9f;
+    PointLightManager::GetPointLightData(1).position = { 0.0f,10.0f,7.0f };
+
+    PointLightManager::GetPointLightData(2).color = { 1.0f,1.0f,1.0f,1.0f };
+    PointLightManager::GetPointLightData(2).radius = 15.0f;
+    PointLightManager::GetPointLightData(2).decay = 0.56f;
+    PointLightManager::GetPointLightData(2).position = { 0.0f,0.0f,0.0f };
+    PointLightManager::GetPointLightData(2).intensity = 1.0f;
 }

@@ -279,6 +279,7 @@ void GameScene::Debug()
     }
 
     ImGui::Text("SwitchCamera : Q key");
+    ImGui::Checkbox("isClear", &SceneStaticValue::isClear);
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
     std::function<void()> func = [this]() { SwitchCamera(); };
     DebugUI::Button("ChangeCamera", func);

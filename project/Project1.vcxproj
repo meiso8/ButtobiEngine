@@ -157,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\EmitterManager\ResultSceneEmitterManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\BackGround\BackGround.cpp" />
     <ClCompile Include="Source\Application\GameObject\BackGround\SkyDome\SkyDome.cpp" />
     <ClCompile Include="Source\Application\GameObject\BackGround\BetoBeto\BetoBeto.cpp" />
@@ -317,6 +318,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Lights\SpotLightManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\EmitterManager\ResultSceneEmitterManager.h" />
     <ClInclude Include="Source\Application\GameObject\BackGround\BackGround.h" />
     <ClInclude Include="Source\Application\GameObject\BackGround\SkyDome\SkyDome.h" />
     <ClInclude Include="Source\Application\GameObject\BackGround\BetoBeto\BetoBeto.h" />

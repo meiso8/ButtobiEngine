@@ -45,7 +45,7 @@ private:
     void UpdateCamera();
     void UpdateGameObject();
     void CheckAllCollision();
-
+    void SettingLights();
 private:
 #pragma region//ゲームオブジェクト
     std::unique_ptr<FloorGamePlayer>floorGamePlayer_ = nullptr;

@@ -35,18 +35,6 @@ public:
     EmitterManager();
 
     void Create();
-    void SetPlayerEmitter();
-    void SetEnemyEmitter();
-    void SetWaveShockEmitter();
-    void SetFloorBulletEmitter();
-    void SetFloorEmitter();
-    void SetLeafEmitter();
-    void SetHealItemEmitter();
-	void SetNoseLanternEmitter();
-    void SetBossDummyEmitter();
-    //相殺エミッター
-    void SetOffsetEmitter();
-
 
     void SetPlayer(FloorGamePlayer& player) {
         player_ = &player;
@@ -86,48 +74,63 @@ public:
     void Draw();
     void Debug();
 
-    //プレイヤー
-   void InitPlayerEmitter();
-    // 敵
-   void InitEnemyEmitter();
-   void InitMadEmitter();
-    //敵波攻撃
-   void InitWaveShockEmitter();
-    //床弾
-   void InitFloorBulletEmitter();
-    //ヒールアイテム
-   void InitHealItemEmitter();
-    //床
-   void InitFloorEmitter();
-    //葉っぱ
-   void InitLeafEmitter();
-    //鼻提灯
-   void InitNoseLanternEmitter();
-
-   //相殺弾パーティクル
-   void InitOffsetEmitter();
-
-   //プレイヤー
-   void UpdatePlayerEmitter();
-   // 敵
-   void UpdateEnemyEmitter();
-   //敵波攻撃
-   void UpdateWaveShockEmitter();
-   //床弾
-   void UpdateFloorBulletEmitter();
-   //ヒールアイテム
-   void UpdateHealItemEmitter();
-   //床
-   void UpdateFloorEmitter();
-   //葉っぱ
-   void UpdateLeafEmitter();
-   //鼻提灯
-   void UpdateNoseLanternEmitter();
-   //ぷんすか
-   void UpdateMadEmitter();
-   //相殺
-   void UpdateOffsetEmitter();
 private:
+
+    void SetPlayerEmitter();
+    void SetEnemyEmitter();
+    void SetWaveShockEmitter();
+    void SetFloorBulletEmitter();
+    void SetFloorEmitter();
+    void SetLeafEmitter();
+    void SetHealItemEmitter();
+    void SetNoseLanternEmitter();
+    void SetBossDummyEmitter();
+    //相殺エミッター
+    void SetOffsetEmitter();
+
+    //プレイヤー
+    void InitPlayerEmitter();
+    // 敵
+    void InitEnemyEmitter();
+    void InitMadEmitter();
+    //敵波攻撃
+    void InitWaveShockEmitter();
+    //床弾
+    void InitFloorBulletEmitter();
+    //ヒールアイテム
+    void InitHealItemEmitter();
+    //床
+    void InitFloorEmitter();
+    //葉っぱ
+    void InitLeafEmitter();
+    //鼻提灯
+    void InitNoseLanternEmitter();
+
+    //相殺弾パーティクル
+    void InitOffsetEmitter();
+
+    //プレイヤー
+    void UpdatePlayerEmitter();
+    // 敵
+    void UpdateEnemyEmitter();
+    //敵波攻撃
+    void UpdateWaveShockEmitter();
+    //床弾
+    void UpdateFloorBulletEmitter();
+    //ヒールアイテム
+    void UpdateHealItemEmitter();
+    //床
+    void UpdateFloorEmitter();
+    //葉っぱ
+    void UpdateLeafEmitter();
+    //鼻提灯
+    void UpdateNoseLanternEmitter();
+    //ぷんすか
+    void UpdateMadEmitter();
+    //相殺
+    void UpdateOffsetEmitter();
+
+
 
 
     std::vector<WaveEmitterPair> waveEmitters_;
