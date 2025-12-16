@@ -558,10 +558,10 @@ void Enemy::LerpRoundPos()
     LookTargetNormal(*playerPos_);
 
     if (phaseTimer_ > 1.0f) {
-        const float polarThreshold = QUARTER_PI; // もしくは 0.5f とか
-        const float radiusThreshold = 0.2f; // より厳密に
+        const float polarThreshold = QUARTER_PI;
+        const float radiusThreshold = InverseFPS;
         if (fabs(sphericalPos_.polar) <= polarThreshold &&
-            fabs(sphericalPos_.radius - kRoundRadius_) <= radiusThreshold) {
+            sphericalPos_.radius  >= kRoundRadius_- radiusThreshold) {
             SetPhase(ROUND);
         }
     }
@@ -588,28 +588,40 @@ void Enemy::LerpSquarePos()
 void Enemy::SquareMove()
 {
 
-    float loopedTime = std::fmod(phaseTimer_, 4.0f * kSquareMoveInterval_);
+    if (phaseTimer_ <= kSquareMoveEndPosTime_) {
+    
+        float loopedTime = std::fmod(phaseTimer_, 4.0f * kSquareMoveInterval_);
 
-    Vector3 endPos = { 0.0f,0.0f,0.0f };
-    if (loopedTime <= 1.0f * kSquareMoveInterval_) {
-        endPos = { 6.0f,kRadius_,6.0f };
-        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, kSquareMoveSpeed_);
-    } else if (loopedTime <= 2.0f * kSquareMoveInterval_) {
-        endPos = { 6.0f,kRadius_,-6.0f };
-        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, kSquareMoveSpeed_);
-    } else if (loopedTime <= 3.0f * kSquareMoveInterval_) {
-        endPos = { -6.0f,kRadius_,-6.0f };
-        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, kSquareMoveSpeed_);
-    } else if (loopedTime <= 4.0f * kSquareMoveInterval_) {
-        endPos = { -6.0f,kRadius_,6.0f };
-        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, kSquareMoveSpeed_);
-    }
+        Vector3 endPos = { 0.0f,0.0f,0.0f };
+        if (loopedTime <= 1.0f * kSquareMoveInterval_) {
+            endPos = { 6.0f,kRadius_,6.0f };
+            bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, kSquareMoveSpeed_);
+        } else if (loopedTime <= 2.0f * kSquareMoveInterval_) {
+            endPos = { 6.0f,kRadius_,-6.0f };
+            bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, kSquareMoveSpeed_);
+        } else if (loopedTime <= 3.0f * kSquareMoveInterval_) {
+            endPos = { -6.0f,kRadius_,-6.0f };
+            bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, kSquareMoveSpeed_);
+        } else if (loopedTime <= 4.0f * kSquareMoveInterval_) {
+            endPos = { -6.0f,kRadius_,6.0f };
+            bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, endPos, kSquareMoveSpeed_);
+        }
 
-    LookTargetNormal(endPos);
+        LookTargetNormal(endPos);
+    
+    } else if (phaseTimer_ <= kSquareMoveMaxTime_) {
+ 
+        //最初の地点に戻る
+        LerpPos({ 0.0f,kLerpSquareEndPosY_,7.0f }, kSquareEndPosMoveSpeed_);
 
-    if (phaseTimer_ >= kSquareMoveMaxTime_) {
+        LookTargetNormal(*playerPos_);
+
+
+
+    } else {
         isSelectRandomPhase_ = true;
     }
+
 }
 
 void Enemy::LerpRotateY(const float& endRadius, const float& lerRotateSpeed)
