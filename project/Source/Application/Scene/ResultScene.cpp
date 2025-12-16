@@ -43,6 +43,7 @@
 #include "MatsumotoObj/KeyBindConfig.h"
 
 #include "MatsumotoObj/SceneStaticValue.h"
+#include"MatsumotoObj/GameSceneObj/HealItemSpawner.h"
 
 ResultScene::ResultScene() {
 	// 現在のカメラを設定
@@ -85,6 +86,9 @@ void ResultScene::Initialize() {
 	camera_->translate_ = { 12.0f, 3.0f, 0.0f };
 	camera_->rotate_ = { 0.2f, -1.3f, 0.0f };
 	
+	//ヒールアイテムをクリアする　ここでタイトルシーンのバグを解消できるはず…
+	HealItemSpawner::Instance().Release();
+
 }
 
 void ResultScene::Update() {

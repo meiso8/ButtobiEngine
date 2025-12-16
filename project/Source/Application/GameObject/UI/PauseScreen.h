@@ -35,7 +35,6 @@ private:
     };
 
     void TimerUpdate();
-    void TimerDown();
     void SelectButton();
     void ScalingButton();
 

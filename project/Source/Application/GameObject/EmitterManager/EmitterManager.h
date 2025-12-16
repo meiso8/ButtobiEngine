@@ -11,6 +11,7 @@ class EnemyShockWave;
 class FloorBullet;
 class FloorBulletManager;
 class FloorGameFloorManager;
+class EnemyBulletManager;
 
 class FloorGameFloor;
 class House;
@@ -43,6 +44,9 @@ public:
     void SetHealItemEmitter();
 	void SetNoseLanternEmitter();
     void SetBossDummyEmitter();
+    //相殺エミッター
+    void SetOffsetEmitter();
+
 
     void SetPlayer(FloorGamePlayer& player) {
         player_ = &player;
@@ -57,6 +61,11 @@ public:
     void SetFloorBuletManager(FloorBulletManager& floorBulletManager) {
         floorBulletManager_ = &floorBulletManager;
     };
+
+    void SetEnemyBulletManager(EnemyBulletManager& enemyBulletManager) {
+        enemyBulletManager_ = &enemyBulletManager;
+    }
+
     void SetFloorGameFloorManager(FloorGameFloorManager& floorGameFloorManager) {
         floorGameFloorManager_ = &floorGameFloorManager ;
     }
@@ -95,6 +104,8 @@ public:
     //鼻提灯
    void InitNoseLanternEmitter();
 
+   //相殺弾パーティクル
+   void InitOffsetEmitter();
 
    //プレイヤー
    void UpdatePlayerEmitter();
@@ -114,6 +125,8 @@ public:
    void UpdateNoseLanternEmitter();
    //ぷんすか
    void UpdateMadEmitter();
+   //相殺
+   void UpdateOffsetEmitter();
 private:
 
 
@@ -123,6 +136,7 @@ private:
     FloorGamePlayer* player_ = nullptr;
     Enemy* enemy_ = nullptr;
     EnemyShockWaveManager* enemyShockWaveManager_ = nullptr;
+    EnemyBulletManager* enemyBulletManager_ = nullptr;
     FloorBulletManager* floorBulletManager_ = nullptr;
     FloorGameFloorManager* floorGameFloorManager_ = nullptr;
     House* house_ = nullptr;
@@ -155,5 +169,10 @@ private:
     std::vector< std::unique_ptr<ParticleEmitter>> spawnHealItemEmitters_;
 
 	std::unique_ptr<ParticleEmitter> noseLanternEmitter_ = nullptr;
+
+
+    std::unique_ptr<ParticleEmitter> offsetEmitter_ = nullptr;
+
+
 };
 

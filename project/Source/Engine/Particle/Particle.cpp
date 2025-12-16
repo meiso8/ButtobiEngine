@@ -38,14 +38,12 @@ void ParticleManager::CreateAll()
     //床
     CreateParticleGroup("floorParticle", Texture::FLOOR_PARTICLE);
 
+
+
     //ベトベト床
     CreateParticleGroup("meltFloorParticle", Texture::MELT_FLOOR_PARTICLE);
-
-
     //ほしパーティクル
     CreateParticleGroup("Star", Texture::STAR_PARTICLE);
-
-
     //ヒールアイテムパーティクル
     CreateParticleGroup("SpawnHealItem", Texture::HEAL_PARTICLE);
 
@@ -56,6 +54,8 @@ void ParticleManager::CreateAll()
     CreateParticleGroup("common", Texture::COMMON_PARTICLE);
     //ぷんすか
     CreateParticleGroup("mad", Texture::MAD_PARTICLE);
+    //相殺
+    CreateParticleGroup("offsetParticle", Texture::LEAF_PARTICLE);
 }
 
 // ==========================================================================================================
