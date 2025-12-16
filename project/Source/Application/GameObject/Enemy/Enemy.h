@@ -243,9 +243,14 @@ private:
     const float kLerpSquareStartPosY_ = 4.0f + kRadius_;
     const float kLerpSquareEndPosY_ = 1.0f + kRadius_ * 2.0f;
     //四角移動する際の速度
-    const float kSquareMoveSpeed_ = 0.05f;
+    const float kSquareMoveSpeed_ = 0.04f;
+
+    //四角移動から定位置にもどる際の速度
+    const float kSquareEndPosMoveSpeed_ = 0.05f;
+
     //一つの移動についての間隔
-    const float kSquareMoveInterval_ = 2.0f;
+    const float kSquareMoveInterval_ = 1.5f;
+    const float kSquareMoveEndPosTime_ = 7.0f;
     const float kSquareMoveMaxTime_ = 8.0f;
 #pragma endregion
 
