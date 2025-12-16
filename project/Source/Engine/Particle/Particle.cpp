@@ -26,6 +26,7 @@ void ParticleManager::CreateAll()
     CreateParticleGroup("enemyHitParticle", Texture::ENEMY_ACTION_PARTICLE/*, true, ModelManager::BOX*/);
 
     CreateParticleGroup("HitParticle", Texture::STAR_PARTICLE);
+    CreateParticleGroup("enemyKnockBackParticle", Texture::STAR_PARTICLE);
     CreateParticleGroup("playerWalkParticle", Texture::PLAYER_WALK_PARTICLE);
 
     //CreateParticleGroup("floorBombBlastParticle", Texture::PLAYER_WALK_PARTICLE);
