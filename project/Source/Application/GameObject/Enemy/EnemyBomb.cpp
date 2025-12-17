@@ -8,7 +8,7 @@
 #include"CubeMesh.h"
 #include"CollisionConfig.h"
 #include"Sound.h"
-
+#include"Random.h"
 
 EnemyBomb::EnemyBomb() {
     body_.Create();
@@ -20,7 +20,7 @@ EnemyBomb::EnemyBomb() {
     SetRadius(kRadius_);
     SetCollisionAttribute(kCollisionNone);
     // 弾は「PlayerとPlayerの弾」とだけ衝突したい
-    SetCollisionMask(kCollisionPlayer | kCollisionFloor);
+    SetCollisionMask(kCollisionPlayer | kCollisionFloor | kCollisionStrongFloor);
     ////全部と衝突したい時
     //SetCollisionMask(~kCollisionEnemyBullet);
 }
@@ -30,14 +30,16 @@ EnemyBomb::~EnemyBomb() {
 
 void EnemyBomb::Initialize() {
     body_.Initialize();
+    body_.worldTransform_.rotate_.y = std::numbers::pi_v<float>;
+    body_.worldTransform_.rotate_.x = -1.0f;
     speed_ = 0.1f;
     lifeTimer_ = 0.0f;
     lifeDuration_ = 4.5f;
     isActive_ = false;
-    isGroundHit_ = false;
     size_ = 1.0f;
     lifeDelay_ = 0.0f;
-
+    isBound_ = false;
+    velocity_ = { 0.0f };
 }
 void EnemyBomb::OnCollision(Collider* collider)
 {
@@ -46,17 +48,28 @@ void EnemyBomb::OnCollision(Collider* collider)
         return;
     }
 
-    if (collider->GetCollisionAttribute() == kCollisionPlayerBullet) {
-        //デバック用
-        OnCollisionCollider();
-    }
-
     if (collider->GetCollisionAttribute() == kCollisionFloor) {
         if (lifeTimer_ <= 3.8f) {
             isActive_ = false;
-            isGroundHit_ = false;
         }
     }
+
+    if (collider->GetCollisionAttribute() == kCollisionStrongFloor) {
+
+        if (isBound_) {
+            velocity_.y = 0.5f;
+            return;
+        }
+
+        isBound_ = true;
+        Random::SetMinMax(-0.5f, 0.5f);
+
+        velocity_ = { Random::Get(),-0.1f,Random::Get() };
+        Sound::PlaySE(Sound::kFloorRespawn);
+    }
+
+
+
 }
 Vector3 EnemyBomb::GetWorldPosition() const
 {
@@ -68,10 +81,10 @@ void EnemyBomb::Update() {
         return;
     }
 
-    if (lifeTimer_ <= 0.0f) {
+    if (lifeTimer_ <= 2.5f) {
 
         lifeTimer_ = 0.0f;
-
+        isActive_ = false;
     } else {
         lifeTimer_ -= 0.016f;
     }
@@ -83,15 +96,23 @@ void EnemyBomb::Update() {
     float color = lifeTimer_ / lifeDuration_ + lifeDelay_;
     body_.SetColor({ color,color,color,1.0f });
 
-    if (lifeTimer_ <= 3.8f) {
-        SetCollisionAttribute(kCollisionEnemyBomb);
-        body_.worldTransform_.translate_ = Lerp(body_.worldTransform_.translate_, endPos_, speed_);
+
+    if (isBound_) {
+        body_.worldTransform_.translate_ += velocity_;
+        body_.worldTransform_.rotate_.y += std::numbers::pi_v<float>*0.25f;
     } else {
-        SetCollisionAttribute(kCollisionNone);
-        Vector3 endPos = endPos_;
-        endPos.y += 2.0f;
-        body_.worldTransform_.translate_ = Lerp(body_.worldTransform_.translate_, endPos, speed_);
+
+        if (lifeTimer_ <= 3.8f) {
+            SetCollisionAttribute(kCollisionEnemyBomb);
+            body_.worldTransform_.translate_ = Lerp(body_.worldTransform_.translate_, endPos_, speed_);
+        } else {
+            SetCollisionAttribute(kCollisionNone);
+            Vector3 endPos = endPos_;
+            endPos.y += 2.0f;
+            body_.worldTransform_.translate_ = Lerp(body_.worldTransform_.translate_, endPos, speed_);
+        }
     }
+
 
 }
 
@@ -112,10 +133,14 @@ void EnemyBomb::Shot(const Vector3& startPos, const Vector3& endPos, const float
     endPos_ = endPos;
     size_ = size;
     body_.worldTransform_.scale_ = { size_,size_,size_ };
+    body_.worldTransform_.rotate_.y = std::numbers::pi_v<float>;
+    body_.worldTransform_.rotate_.x = -1.0f;
+
+
     lifeDelay_ = std::fabsf(Length(endPos - startPos) / 5.0f);
     lifeTimer_ = lifeDuration_ + lifeDelay_;
     isActive_ = true;
-    isGroundHit_ = false;
+    isBound_ = false;
     body_.Update();
     ColliderUpdate();
 }

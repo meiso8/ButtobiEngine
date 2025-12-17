@@ -24,14 +24,16 @@ public:
     bool isActive_ = false;
     Object3d body_;
     float size_;
-	bool isGroundHit_ = false;
+
 private:
     int explosionFrame_ = 0;
     float kRadius_ = {0.5f};
     Vector3 endPos_ = { 0.0f };
+    Vector3 velocity_ = { 0.0f };
     Model* model_ = nullptr;
     float speed_;
     float lifeTimer_;
     float lifeDuration_;
 	float lifeDelay_;
+    bool isBound_ = false;
 };

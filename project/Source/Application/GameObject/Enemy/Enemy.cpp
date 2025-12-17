@@ -877,8 +877,6 @@ void Enemy::ShockWaveAttack()
 
     } else if (phaseTimer_ <= kWaveIntervalFirstTime_) {
 
-        LookTargetNormal(*playerPos_);
-
 
     } else if (phaseTimer_ <= kWavePhaseMoveSecondPosTime_) {
 
@@ -903,8 +901,6 @@ void Enemy::ShockWaveAttack()
         bodyPos_.worldTransform_.translate_.y = Lerp(bodyPos_.worldTransform_.translate_.y, kRadius_, 0.1f);
 
     } else if (phaseTimer_ <= kWaveIntervalSecondTime_) {
-
-        LookTargetNormal(*playerPos_);
 
     } else {
         isSelectRandomPhase_ = true;
