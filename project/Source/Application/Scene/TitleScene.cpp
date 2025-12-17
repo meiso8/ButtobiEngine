@@ -9,36 +9,9 @@
 //グリッド表示
 #include"DrawGrid.h"
 
-//モデル読み込みに必要なもの
-#include"Model.h"
-#include"ModelManager.h"
-//スプライトに必要なもの
-#include"Texture.h"
-#include"Sprite.h"
 //音を鳴らすのに必要なもの
 #include"Sound.h"
 
-//球体のメッシュ
-#include"SphereMesh.h"
-//平面のメッシュ
-#include"PlaneMesh.h"
-
-
-//円のメッシュ
-#include"CircleMesh.h"
-//立方体のメッシュ（AABBでセットするか8頂点でセット);
-#include"CubeMesh.h"
-
-#include "ParticleEmitter.h"
-#include"Particle.h"
-
-#include"Random.h"
-#include"MakeMatrix.h"
-
-#include"Collision.h"
-#include"Circle.h"
-
-#include"MyEngine.h"
 
 #include "MatsumotoObj/MY_Utility.h"
 #include"Lights/PointLightManager.h"
@@ -48,6 +21,8 @@
 #include"Lerp.h"
 
 #include "MatsumotoObj/SceneStaticValue.h"
+#include"MatsumotoObj/GameSceneObj/HealItemSpawner.h"
+
 TitleScene::TitleScene()
 {
 	SceneStaticValue::isClear = false;
@@ -82,6 +57,9 @@ TitleScene::TitleScene()
     backGround_ = std::make_unique<BackGround>();
 
     SettingLights();
+
+    //ヒールアイテムをクリアする　ここでタイトルシーンのバグを解消できるはず…
+    HealItemSpawner::Instance().Initialize();
 
 #pragma endregion
 

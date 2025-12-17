@@ -3,6 +3,7 @@
 #include"HPIcon.h"
 #include<unordered_map>
 #include"PauseScreen.h"
+#include"BossName.h"
 #include"RedPinchScreen.h"
 class UIManager
 {
@@ -24,6 +25,6 @@ private:
     std::unique_ptr<HPIcon>playerHpIcon_= nullptr;
     std::unique_ptr<PauseScreen>pauseScreen_ = nullptr;
     std::unique_ptr<RedPinchScreen> redPinchScreen = nullptr;
-
+    std::unique_ptr<BossName> bossName_ = nullptr;
 };
 

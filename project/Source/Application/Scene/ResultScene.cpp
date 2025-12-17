@@ -57,8 +57,8 @@ void ResultScene::Initialize() {
 	playerDummy_->Initialize();
 #pragma endregion
 
-	camera_->translate_ = { 12.0f, 3.0f, 0.0f };
-	camera_->rotate_ = { 0.2f, -1.3f, 0.0f };
+	camera_->translate_ = { 7.0f, 2.0f, -5.5f };
+	camera_->rotate_ = { 0.0f, -0.7f, 0.092f };
 	
 	//ヒールアイテムをクリアする　ここでタイトルシーンのバグを解消できるはず…
 	HealItemSpawner::Instance().Initialize();
@@ -121,7 +121,7 @@ void ResultScene::Debug() {
 	ImGui::Checkbox("isClear",&SceneStaticValue::isClear);
     std::function<void()> func = [this]() { SwitchCamera(); };
     DebugUI::Button("ChangeCamera", func);
-
+	DebugUI::CheckCamera(*currentCamera_);
 	resultSceneEmitterManager_->Debug();
 #endif // !USE_IMGUI
 }
@@ -130,7 +130,7 @@ void ResultScene::UpdateCamera() {
     if (isDebugCameraActive_) {
         debugCamera_->UpdateMatrix();
     } else {
-		camera_->rotate_ = { 0.2f + sinf(timer_) * 0.01f, -1.3f + cosf(timer_) * 0.01f, 0.0f};
+		camera_->rotate_ = { sinf(timer_) * 0.01f,  -0.7f+ cosf(timer_) * 0.01f, 0.092f };
 
 		camera_->UpdateMatrix();
     }
