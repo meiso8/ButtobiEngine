@@ -123,8 +123,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     
 
    
-    // Discard pixel if texture alpha is 0.5
-    or less
+    // Discard pixel if texture alpha is 0.5 or less
     if (textureColor.a <= 0.5)
     {
         discard;
