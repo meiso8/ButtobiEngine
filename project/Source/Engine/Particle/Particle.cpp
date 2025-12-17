@@ -55,7 +55,7 @@ void ParticleManager::CreateAll()
     //ぷんすか
     CreateParticleGroup("mad", Texture::MAD_PARTICLE);
     //相殺
-    CreateParticleGroup("offsetParticle", Texture::LEAF_PARTICLE);
+    CreateParticleGroup("offsetParticle", Texture::WHITECIRCLE);
     //紙吹雪
     CreateParticleGroup("white1x1Particle", Texture::WHITE_1X1);
 }

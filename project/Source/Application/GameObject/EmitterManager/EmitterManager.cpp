@@ -355,16 +355,17 @@ void EmitterManager::SetOffsetEmitter()
     offsetEmitter_ = std::make_unique<ParticleEmitter>();
     //一旦適当に代入
     offsetEmitter_->SetName("offsetParticle");
-    offsetEmitter_->emitter_.count = 3 ;
-    offsetEmitter_->emitter_.transform.scale_ = { 1.0f,1.0f,1.0f };
+    offsetEmitter_->emitter_.count = 9;
+    offsetEmitter_->emitter_.transform.scale_ = { 0.3f,0.3f,0.3f };
     //offsetEmitter_->emitter_.translateAABB_ = { .min = {-0.2f,-0.2f,-0.2f},.max = {0.2f,0.2f,0.2f} };
     offsetEmitter_->emitter_.movement = kParticleNormal;
-    offsetEmitter_->emitter_.scaleOffset_ = 0.05f;
+    offsetEmitter_->emitter_.scaleOffset_ = 0.0f;
     offsetEmitter_->emitter_.rotateOffset_ = 3.14f;
     //offsetEmitter_->emitter_.radius = 1.0f;
-    offsetEmitter_->emitter_.lifeTime = 0.5f;
+    offsetEmitter_->emitter_.lifeTime = 0.3f;
     offsetEmitter_->emitter_.frequency = 0.5f;
-    offsetEmitter_->emitter_.velocityAABB = { .min = {-5.0f,-1.0f,-5.0f},.max = {5.0f,3.0f,5.0f} };
+    offsetEmitter_->emitter_.color = { 0.5f,0.35f,0.2f,1.0f };
+    offsetEmitter_->emitter_.velocityAABB = { .min = {-20.0f,-1.0f,-20.0f},.max = {20.0f,3.0f,20.0f} };
 }
 
 void EmitterManager::Initialize()
