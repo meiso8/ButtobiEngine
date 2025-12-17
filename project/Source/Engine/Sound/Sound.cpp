@@ -67,7 +67,10 @@ void Sound::LoadAllSound()
     handles_[kWindAttackCharge] = Load("Resource/Sounds/SE/windAttackCharge.mp3");
     handles_[kWindAttackShot] = Load("Resource/Sounds/SE/windAttackShot.mp3");
 
-	handles_[zushaa] = Load("Resource/Sounds/SE/zushaa.mp3");
+    handles_[zushaa] = Load("Resource/Sounds/SE/zushaa.mp3");
+
+    handles_[kKarasu_S] = Load("Resource/Sounds/SE/karasu_s.mp3");
+    handles_[kKarasu_L] = Load("Resource/Sounds/SE/karasu_l.mp3");
 
 }
 

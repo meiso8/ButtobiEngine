@@ -64,6 +64,9 @@ public:
 
         zushaa,
         
+        kKarasu_S,
+        kKarasu_L,
+
         SOUNDS
     };
 
