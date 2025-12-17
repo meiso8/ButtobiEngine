@@ -235,7 +235,7 @@ private:
     //波攻撃第一
     const float kWaveShotFirstTime_ = kWavePhaseMoveFirstPosTime_ + 1.0f;
     //波攻撃第二後の間隔
-    const float kWaveMaxTime_ = kWaveShotFirstTime_ + 5.0f;
+    const float kWaveMaxTime_ = kWaveShotFirstTime_ + 3.5f;
 
 #pragma endregion
 #pragma region //四角移動
