@@ -10,6 +10,11 @@ UIManager::UIManager(HPs& enemyHp,HPs& enemyTotalHp, HPs& playerHp,bool& isPlaye
     hpGages_[kEnemy]->Setting({ 512.0f*1.25f,32.0f*1.25f }, { static_cast<float>(Window::GetClientWidth())-32.0f,80.0f}, { 1.0f,1.0f });
     hpGages_[kEnemy]->isHitPtr_ = &isEnemyHit;
     hpGages_[kEnemy]->isKnockBackPtr_ = &isEnemyKnockBack;
+
+
+    bossName_ = std::make_unique<BossName>();
+    bossName_->SetPosition({ static_cast<float>(Window::GetClientWidth())*0.5f,16.0f });
+
 #ifdef _DEBUG
     isDrawPlayerGage_ = true;
 #endif
@@ -32,6 +37,8 @@ UIManager::UIManager(HPs& enemyHp,HPs& enemyTotalHp, HPs& playerHp,bool& isPlaye
     redPinchScreen = std::make_unique<RedPinchScreen>();
     redPinchScreen->SetHitPtr(isPlayerHit);
     redPinchScreen->hpPtr_ = &playerHp;
+
+
 }
 
 void UIManager::Initialize()
@@ -74,6 +81,8 @@ void UIManager::Draw()
     for (const auto& [type, gage] : hpGages_) {
         gage->Draw();
     }
+
+    bossName_->Draw();
 
     playerHpIcon_->Draw();
 

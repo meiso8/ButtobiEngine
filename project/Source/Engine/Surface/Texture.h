@@ -44,6 +44,7 @@ public:
 
         ENEMY_TEXTURE3,
         ENEMY_TEXTURE2,
+        KARAMATSU,
 
         ACTION_UI_MOVE,
 		ACTION_UI_STRIP,
@@ -74,6 +75,7 @@ public:
 		GAMEOVER_TIPS_10,
 
         SKY_DOME,
+
         TEXTURES,
     };
     static void LoadAllTexture();
