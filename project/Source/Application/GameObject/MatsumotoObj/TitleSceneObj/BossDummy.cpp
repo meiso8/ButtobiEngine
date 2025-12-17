@@ -61,7 +61,6 @@ void BossDummy::Update() {
     if (timer_ == 0.0f) {
         VibrateManager::SetTime(3.5f, 20000, 20000);
     }
-    VoiceUpdate(Sound::kKarasu_S,5);
 
     timer_ += 0.016f;
     body_.worldTransform_.rotate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.rotate_.y, 3.14f, 0.05f);
@@ -86,6 +85,7 @@ void BossDummy::Update() {
     wingRPos_.Update();
 
     Winging(10.0f);
+    VoiceUpdate(Sound::kKarasu_S, 5);
 
     if (timer_ > 3.0f) {
         isAnimEnd_ = true;

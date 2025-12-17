@@ -231,7 +231,6 @@ void Enemy::Update()
 
 
     damageStruct_.isHit = false;
-    isKnockBack_ = false;
 
     HitAnimation();
     bodyPos_.GetWaveData(0).time += InverseFPS * 4.0f;
@@ -489,6 +488,7 @@ void Enemy::Tackle()
                         tackleAttackAreaID_ = UINT32_MAX;
                         isKnockBack_ = true;
                         isKnockBackEmit_ = true;
+                      
                         LookTargetNormal(*playerPos_);
 
                         Sound::PlayOriginSE(Sound::kBossTackle);
@@ -542,6 +542,7 @@ void Enemy::PlayerHitBack()
 
 void Enemy::KnockBack()
 {
+    isKnockBack_ = false;
 
     if (phaseTimer_ <= kHitBackTime_) {
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(bodyPos_.worldTransform_.translate_, startPos_, 0.05f);
