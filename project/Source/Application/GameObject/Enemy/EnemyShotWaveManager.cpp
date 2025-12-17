@@ -126,7 +126,6 @@ void EnemyShotWaveManager::Update() {
         //場所を選択するかどうか
         if (enemy_->isWavePosSelectStart_) {
             SelectDirection();
-       
         };
 
         //方向を設定したとき

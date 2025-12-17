@@ -880,33 +880,7 @@ void Enemy::ShockWaveAttack()
         //yを戻す
         bodyPos_.worldTransform_.translate_.y = Lerp(bodyPos_.worldTransform_.translate_.y, kRadius_, 0.1f);
 
-
-    } else if (phaseTimer_ <= kWaveIntervalFirstTime_) {
-
-
-    } else if (phaseTimer_ <= kWavePhaseMoveSecondPosTime_) {
-
-        if (!isWavePosSelectStart_) {
-            isWavePosSelectStart_ = true;
-        }
-
-        Vector3 pos = *target_ * -1.0f;
-        LookTargetNormal(pos);
-        bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, *target_, 0.05f);
-
-    } else if (phaseTimer_ <= kWaveShotSecondTime_) {
-
-        if (isWavePosSelectStart_) {
-            if (!isWaveShot_) {
-                isWaveShot_ = true;
-            }
-            isWavePosSelectStart_ = false;
-        }
-
-        //yを戻す
-        bodyPos_.worldTransform_.translate_.y = Lerp(bodyPos_.worldTransform_.translate_.y, kRadius_, 0.1f);
-
-    } else if (phaseTimer_ <= kWaveIntervalSecondTime_) {
+    } else if (phaseTimer_ <= kWaveMaxTime_) {
 
     } else {
         isSelectRandomPhase_ = true;
