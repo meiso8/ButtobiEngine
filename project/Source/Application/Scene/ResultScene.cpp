@@ -61,7 +61,7 @@ void ResultScene::Initialize() {
 	camera_->rotate_ = { 0.2f, -1.3f, 0.0f };
 	
 	//ヒールアイテムをクリアする　ここでタイトルシーンのバグを解消できるはず…
-	HealItemSpawner::Instance().Release();
+	HealItemSpawner::Instance().Initialize();
 
 	resultSceneEmitterManager_->Initialize();
 }
