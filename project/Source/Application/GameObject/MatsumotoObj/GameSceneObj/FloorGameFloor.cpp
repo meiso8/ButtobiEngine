@@ -104,7 +104,9 @@ void FloorGameFloor::SwapFloorType(FloorType type) {
 
 	prevFloorType_ = floorType_;
 	floorType_ = type;
-	
+
+	SetCollisionAttribute(kCollisionFloor);
+
 	switch (floorType_)
 	{
 	case FloorType::Normal:
@@ -119,6 +121,8 @@ void FloorGameFloor::SwapFloorType(FloorType type) {
 
 		//ヨシダ　復活かどうかのフラグ　追加しました。
 		isToStrong_ = true;
+ 		SetCollisionAttribute(kCollisionStrongFloor);
+
 		//Sound::PlayOriginSE(Sound::kFloorRespawn);
 		nextFloorType_ = FloorType::Normal;
 		break;
@@ -174,6 +178,7 @@ void FloorGameFloor::StickyFloorUpdate() {
 	} else {
 		body_.worldTransform_.translate_.y = -1.0f;
 		SwapFloorType(nextFloorType_);
+
 	}
 }
 
