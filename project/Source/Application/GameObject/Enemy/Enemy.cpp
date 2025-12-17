@@ -517,7 +517,7 @@ void Enemy::Tackle()
     } else {
         isSelectRandomPhase_ = true;
         //音声カウントの初期化
-        voiceCount_ = 0;
+
     }
 
 }
@@ -652,6 +652,7 @@ void Enemy::SwitchState()
 {
     AttackAreaEmitter::GetInstance().Initialize();
 
+
     isReqestOverheadView_ = false;
     isKnockBack_ = false;
 
@@ -706,15 +707,20 @@ void Enemy::SetPhase(PHASE phase)
     phase_ = phase;
     poyoAnimTimer_ = 0.0f;
 
+    voiceCount_ = 0;
+    tackleAttackAreaID_ = UINT32_MAX;
+
     if (phase_ == LERP_ROUND_POS) {
         sphericalPos_ = TransformCoordinate(bodyPos_.worldTransform_.translate_);
     }
     //フェーズがーLERP_ROUND_POSだったらここでreturn
-    if (phase_ == LERP_ROUND_POS || phase_ == LERP_SQUARE_POS) {
+    if (phase_ == LERP_ROUND_POS || phase_ == LERP_SQUARE_POS|| phase_ == KNOCKBACK || phase_ == PLAYER_HIT_BACK) {
+        
+
         return;
     }
 
-    if (phase_ == FIREBALL || phase_ == KNOCKBACK) {
+    if (phase_ == FIREBALL) {
         //くるっと一回転するよ
         startRotateY_ = bodyPos_.worldTransform_.rotate_.y;
         endRotateY_ = startRotateY_ + PI_2;
