@@ -653,6 +653,7 @@ void Enemy::SwitchState()
     AttackAreaEmitter::GetInstance().Initialize();
 
     isReqestOverheadView_ = false;
+    isKnockBack_ = false;
 
     if (currentState_ != "Third") {
         //最終形態じゃなかったらスポーン
