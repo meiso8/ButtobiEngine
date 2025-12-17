@@ -37,6 +37,8 @@ BossDummy::~BossDummy() {
 }
 
 void BossDummy::Initialize() {
+    voiceCount_ = 0;
+    voiceTimer_ = 0.0f;
     body_.worldTransform_.translate_ = { 0.0f,1.5f,8.0f };
     body_.worldTransform_.rotate_ = { 0.0f,4.0f,0.0f };
     body_.worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
@@ -59,6 +61,8 @@ void BossDummy::Update() {
     if (timer_ == 0.0f) {
         VibrateManager::SetTime(3.5f, 20000, 20000);
     }
+    VoiceUpdate(Sound::kKarasu_S,5);
+
     timer_ += 0.016f;
     body_.worldTransform_.rotate_.y = MY_Utility::SimpleEaseIn(body_.worldTransform_.rotate_.y, 3.14f, 0.05f);
     body_.SetColor(MY_Utility::SimpleEaseIn(body_.GetColor(), { 1.0f,0.0f,0.0f,1.0f }, 0.01f));
@@ -81,7 +85,7 @@ void BossDummy::Update() {
     wingLPos_.Update();
     wingRPos_.Update();
 
-    Winging(2.0f);
+    Winging(10.0f);
 
     if (timer_ > 3.0f) {
         isAnimEnd_ = true;
@@ -96,6 +100,15 @@ void BossDummy::Update() {
 
 void BossDummy::SorryUpdate()
 {
+    VoiceUpdate(Sound::kKarasu_L, 1);
+
+    voiceTimer_ += 0.016f;
+
+    if (voiceTimer_ > 4.5f) {
+        voiceCount_ = 0;
+        voiceTimer_ = 0.0f;
+    }
+
 	timer_ += 0.016f;
     body_.worldTransform_.translate_.y = 0.5f;
 	body_.worldTransform_.rotate_.x = sinf(timer_ * 3.0f) * 0.5f + 0.5f;
@@ -127,4 +140,14 @@ void BossDummy::Winging(const float& speed)
     float theta = timer_ * speed;
     wingLPos_.worldTransform_.rotate_.z = sinf(theta);
     wingRPos_.worldTransform_.rotate_.z = -sinf(theta);
+}
+
+void BossDummy::VoiceUpdate(const Sound::TAG& tag,const int maxVoiceCount)
+{
+    if (voiceCount_ < maxVoiceCount) {
+        if (!Sound::IsPlaying(tag)) {
+            Sound::PlaySE(tag);
+            voiceCount_++;
+        }
+    }
 }

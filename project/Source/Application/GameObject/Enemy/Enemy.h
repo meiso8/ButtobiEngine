@@ -108,6 +108,7 @@ public:
 
 private:
 
+    int voiceCount_ = 0;
 
     // 死亡時のぶっ飛び
     bool isLeathalVec_;

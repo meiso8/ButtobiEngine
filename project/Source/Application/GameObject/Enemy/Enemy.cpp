@@ -119,6 +119,9 @@ void Enemy::Init() {
     currentState_ = "First";
     phase_ = PHASE::ROUND;
 
+    //何回再生したか
+    voiceCount_ = 0;
+
     //体についての項目
     bodyPos_.worldTransform_.Initialize();
     bodyPos_.worldTransform_.translate_.y = GetRadius();
@@ -160,7 +163,7 @@ void Enemy::Init() {
     tackleAttackAreaID_ = UINT32_MAX;
 
     if (SceneStaticValue::bossRound >= 2) {
-		SwitchState();
+        SwitchState();
     }
 }
 
@@ -434,6 +437,13 @@ void Enemy::Tackle()
 
     if (phaseTimer_ <= kTacklePoyoTime_) {
 
+        if (voiceCount_ < 5) {
+            if (!Sound::IsPlaying(Sound::kKarasu_S)) {
+                Sound::PlaySE(Sound::kKarasu_S);
+                voiceCount_++;
+            }
+        }
+
         if (phaseTimer_ <= kTackleLookTime_) {
             LookTargetAndSetPos(*playerPos_);
         }
@@ -506,6 +516,8 @@ void Enemy::Tackle()
         bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(bodyPos_.worldTransform_.translate_, startPos_, 0.5f);
     } else {
         isSelectRandomPhase_ = true;
+        //音声カウントの初期化
+        voiceCount_ = 0;
     }
 
 }
@@ -562,7 +574,7 @@ void Enemy::LerpRoundPos()
         const float polarThreshold = QUARTER_PI;
         const float radiusThreshold = InverseFPS;
         if (fabs(sphericalPos_.polar) <= polarThreshold &&
-            sphericalPos_.radius  >= kRoundRadius_- radiusThreshold) {
+            sphericalPos_.radius >= kRoundRadius_ - radiusThreshold) {
             SetPhase(ROUND);
         }
     }
@@ -590,7 +602,7 @@ void Enemy::SquareMove()
 {
 
     if (phaseTimer_ <= kSquareMoveEndPosTime_) {
-    
+
         float loopedTime = std::fmod(phaseTimer_, 4.0f * kSquareMoveInterval_);
 
         Vector3 endPos = { 0.0f,0.0f,0.0f };
@@ -609,9 +621,9 @@ void Enemy::SquareMove()
         }
 
         LookTargetNormal(endPos);
-    
+
     } else if (phaseTimer_ <= kSquareMoveMaxTime_) {
- 
+
         //最初の地点に戻る
         LerpPos({ 0.0f,kLerpSquareEndPosY_,7.0f }, kSquareEndPosMoveSpeed_);
 
@@ -839,17 +851,17 @@ void Enemy::ShockWaveAttack()
         isReqestOverheadView_ = true;
 
         LookTargetNormal(*playerPos_);
-   
+
     } else if (phaseTimer_ <= kWavePhaseMoveFirstPosTime_) {
 
         if (!isWavePosSelectStart_) {
             isWavePosSelectStart_ = true;
         }
 
-        Vector3 pos = *target_*-1.0f;
+        Vector3 pos = *target_ * -1.0f;
         LookTargetNormal(pos);
         bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, *target_, 0.05f);
-     
+
     } else if (phaseTimer_ <= kWaveShotFirstTime_) {
 
         if (isWavePosSelectStart_) {
@@ -864,20 +876,20 @@ void Enemy::ShockWaveAttack()
 
 
     } else if (phaseTimer_ <= kWaveIntervalFirstTime_) {
-    
+
         LookTargetNormal(*playerPos_);
 
 
     } else if (phaseTimer_ <= kWavePhaseMoveSecondPosTime_) {
 
         if (!isWavePosSelectStart_) {
-            isWavePosSelectStart_= true;
+            isWavePosSelectStart_ = true;
         }
 
         Vector3 pos = *target_ * -1.0f;
         LookTargetNormal(pos);
         bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, *target_, 0.05f);
-        
+
     } else if (phaseTimer_ <= kWaveShotSecondTime_) {
 
         if (isWavePosSelectStart_) {
@@ -892,7 +904,7 @@ void Enemy::ShockWaveAttack()
 
     } else if (phaseTimer_ <= kWaveIntervalSecondTime_) {
 
-            LookTargetNormal(*playerPos_);
+        LookTargetNormal(*playerPos_);
 
     } else {
         isSelectRandomPhase_ = true;
