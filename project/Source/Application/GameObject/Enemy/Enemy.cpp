@@ -652,12 +652,18 @@ void Enemy::SwitchState()
     AttackAreaEmitter::GetInstance().Initialize();
 
     isReqestOverheadView_ = false;
+
+    if (currentState_ != "Third") {
+        //最終形態じゃなかったらスポーン
+        Vector3 spawnPos = { 0.0f ,10.0f, 0.0f };
+        HealItemSpawner::Instance().SpawnHealItem(spawnPos);
+    }
+
     if (currentState_ == "First") {
         currentState_ = "Second";
         isFaseChange_ = true;
     } else if (currentState_ == "Second") {
-        Vector3 spawnPos = { 0.0f ,10.0f, 0.0f };
-        HealItemSpawner::Instance().SpawnHealItem(spawnPos);
+ 
 
         currentState_ = "Third";
         isFaseChange_ = true;
