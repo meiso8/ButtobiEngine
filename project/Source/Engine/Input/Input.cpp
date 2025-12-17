@@ -233,6 +233,8 @@ Vector2 Input::NormalizeButtonCount(SHORT& buttonX, SHORT& buttonY)
     float normX = (static_cast<float>(buttonX) / SHRT_MAX);
     float normY = (static_cast<float>(buttonY) / SHRT_MAX);
 
+
+
     if (normX > 1.0f - deadZone_) {
         normX = 1.0f;
     } else if (normX < -1.0f + deadZone_) {
@@ -245,8 +247,6 @@ Vector2 Input::NormalizeButtonCount(SHORT& buttonX, SHORT& buttonY)
         normY = -1.0f;
     }
 
-    Vector2 normalize = Normalize(Vector2{ normX,normY });
-
     //if (absX == 1.0f || absY < deadZone_) {
     //    normY = 0.0f;
     //}
@@ -255,7 +255,7 @@ Vector2 Input::NormalizeButtonCount(SHORT& buttonX, SHORT& buttonY)
     //    normX = 0.0f;
     //}
 
-    return normalize;
+    return Normalize(Vector2{ normX,normY });
 
 }
 

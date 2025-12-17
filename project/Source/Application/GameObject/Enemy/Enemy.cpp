@@ -716,7 +716,6 @@ void Enemy::SetPhase(PHASE phase)
     //フェーズがーLERP_ROUND_POSだったらここでreturn
     if (phase_ == LERP_ROUND_POS || phase_ == LERP_SQUARE_POS|| phase_ == KNOCKBACK || phase_ == PLAYER_HIT_BACK) {
         
-
         return;
     }
 
