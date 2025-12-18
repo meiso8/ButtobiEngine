@@ -52,7 +52,7 @@ void ResultScene::Initialize() {
 	skyDome_->SetColor(skyDome_->skyColor_);
 	tree_->Initialize();
     nest_->Init();
-	nest_->SetPosition({ 0.0f,-1.0f,10.0f });
+	nest_->SetPosition({ 0.0f,-1.0f,16.0f });
 	bossDummy_->Initialize();
 	playerDummy_->Initialize();
 #pragma endregion

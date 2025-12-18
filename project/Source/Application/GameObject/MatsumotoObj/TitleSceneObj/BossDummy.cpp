@@ -110,7 +110,7 @@ void BossDummy::SorryUpdate()
     }
 
 	timer_ += 0.016f;
-    body_.worldTransform_.translate_.y = 0.5f;
+    body_.worldTransform_.translate_.y = 0.25f;
 	body_.worldTransform_.rotate_.x = sinf(timer_ * 3.0f) * 0.5f + 0.5f;
     body_.worldTransform_.rotate_.y = 3.14f;
 
