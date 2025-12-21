@@ -36,7 +36,7 @@ Puzzle::Puzzle()
     Vector2 size = sprite_->GetSize();
     size_ = { size.x / horizontal_,size.y / vertical_ };
 
-    centerPos_ -= size_ * horizontal_* 0.375f;
+    centerPos_ -= size_ * horizontal_ * 0.375f;
 
     rep(i, maxArrayNum_) sprites_[i] = make_unique<Sprite>(),
         sprites_[i]->Create(Texture::MEMO1, { 0.0f,0.0f });
@@ -56,6 +56,7 @@ Puzzle::Puzzle()
 void Puzzle::Init()
 {
     isClear_ = false;
+    clearTimer_ = maxTimer_;
     Shuffle();
 }
 
@@ -67,13 +68,18 @@ void Puzzle::Shuffle()
 
 void Puzzle::Game()
 {
+
+    if (isClear_) {
+        return;
+    }
+
     Vector2 pos = Input::GetCursorPosition();
 
     int clickedIndex = -1;
 
     for (int i = 0; i < maxArrayNum_; ++i) {
         Vector2 spritePos = sprites_[panel_[i]]->GetPosition();
-        Rect rect = { .left = spritePos.x - size_.x*0.5f,.width = size_.x,.top = spritePos.y - size_.y * 0.5f,.height = size_.y };
+        Rect rect = { .left = spritePos.x - size_.x * 0.5f,.width = size_.x,.top = spritePos.y - size_.y * 0.5f,.height = size_.y };
         if (IsCollision(pos, rect)) {
             sprites_[panel_[i]]->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 
@@ -105,6 +111,21 @@ void Puzzle::Game()
             sprites_[panel_[i]]->SetPosition({ centerPos_.x + col * size_.x,centerPos_.y + row * size_.y });
         }
     }
+
+}
+
+void Puzzle::Update()
+{
+
+    if (isClear_) {
+        clearTimer_ -= InverseFPS;
+        if (clearTimer_ <= 0.0f) {
+            clearTimer_ = 0.0f;
+        }
+    }
+
+    Game();
+
 }
 
 void Puzzle::Draw()
@@ -118,5 +139,5 @@ void Puzzle::Draw()
             sprites_[panel_[i]]->Draw();
         }
     }
-  
+
 }

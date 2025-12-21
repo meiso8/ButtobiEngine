@@ -21,6 +21,9 @@ public:
         LOCKER,
         BUILDING,
         WORLD,
+
+        KEY,
+
         MODELS,
     };
     /// @brief モデルを取得します

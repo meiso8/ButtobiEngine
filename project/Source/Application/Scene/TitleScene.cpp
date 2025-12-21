@@ -3,6 +3,7 @@
 #include"SampleScene.h"
 #include"MakeMatrix.h"
 #include"DebugUI.h"
+#include"Sound.h"
 TitleScene::TitleScene()
 {
     puzzle_ = std::make_unique<Puzzle>();
@@ -19,6 +20,7 @@ void TitleScene::Initialize()
 {
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 60);
+    Sound::StopAllSound();
     puzzle_->Init();
 }
 
@@ -42,7 +44,7 @@ void TitleScene::Update()
     float angle = 0.44f;
     Matrix4x4 rotateMatrix = MakeRotateAxisAngle(axis, angle);
 
-    puzzle_->Game();
+    puzzle_->Update();
 
 #ifdef _DEBUG
     DebugUI::ShowMatrix4x4(rotateMatrix0,"rotateMatrix0");
@@ -51,7 +53,7 @@ void TitleScene::Update()
     DebugUI::ShowMatrix4x4(rotateMatrix, "rotateMatrix");
 #endif // _DEBUG
 
-    if (puzzle_->GetIsClear()) {
+    if (puzzle_->GetIsGameEnd()) {
         sceneChange_->SetState(SceneChange::kFadeIn, 30);
         SceneManager::SetNestScene("Sample");
     }

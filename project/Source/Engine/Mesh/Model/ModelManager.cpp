@@ -26,6 +26,7 @@ void ModelManager::LoadAllModel()
     LoadModel("Resource/Models/locker", "locker.obj", LOCKER);
     LoadModel("Resource/Models/building", "building.obj", BUILDING);
     LoadModel("Resource/Models/world", "world.obj", WORLD);
+    LoadModel("Resource/Models/key", "key.obj", KEY);
 
 }
 

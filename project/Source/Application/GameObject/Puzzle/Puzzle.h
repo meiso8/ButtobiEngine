@@ -18,6 +18,9 @@ private:
     bool isClear_ = false;
     Vector2 size_ = { 0.0f };
     Vector2 centerPos_ = { 0.0 };
+    const float maxTimer_ = 5.0f;
+    float clearTimer_ = maxTimer_;
+
 private:
     //シャッフル
     void Shuffle();
@@ -27,7 +30,8 @@ public:
     Puzzle();
     void Init();
     void Game();
+    void Update();
     void Draw();
-    bool GetIsClear() { return isClear_; };
+    bool GetIsGameEnd() { return clearTimer_ <= 0.0f; };
 };
 

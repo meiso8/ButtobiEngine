@@ -37,6 +37,7 @@ public:
         FIRE_BALL,
         THROW_FLOOR,
 
+        SWITCH_ON,
 
         SOUNDS
     };
