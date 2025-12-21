@@ -66,10 +66,15 @@ void Sprite::UpdateAnchorPoint()
     vertexData_[3].position = { right,top,0.0f,1.0f };//右上
 
     const DirectX::TexMetadata& metadata = Texture::GetMetaData(textureHandle_);
-    float tex_left = textureLeftTop.x / metadata.width;
-    float tex_right = (textureLeftTop.x + textureSize.x) / metadata.width;
-    float tex_top = textureLeftTop.y / metadata.height;
-    float tex_bottom = (textureLeftTop.y + textureSize.y) / metadata.height;
+
+    float texelWidth = 1.0f / metadata.width;
+    float texelHeight = 1.0f / metadata.height;
+    float offset = 0.5f;
+    float tex_left = (textureLeftTop.x + offset) * texelWidth;
+    float tex_right = (textureLeftTop.x + textureSize.x - offset) * texelWidth;
+    float tex_top = (textureLeftTop.y + offset) * texelHeight;
+    float tex_bottom = (textureLeftTop.y + textureSize.y - offset) * texelHeight;
+
 
     vertexData_[0].texcoord = { tex_left,tex_bottom };
     vertexData_[1].texcoord = { tex_left,tex_top };

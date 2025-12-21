@@ -1,10 +1,10 @@
 #include"Camera.h"
 #include"MakeMatrix.h"
 #include"DirectXCommon.h"
-#include<numbers>
+
 float Camera::width_;
 float Camera::height_;
-float Camera::kFovAngleY = std::numbers::pi_v<float>*0.25f;
+
 void Camera::Initialize(const PROJECTION_TYPE& type) {
 
     projectionType_ = type;

@@ -7,7 +7,7 @@
 
 class WorldTransform {
 public://一旦public
-    Vector3 scale_ = { 0.0f };
+    Vector3 scale_ = { 1.0f,1.0f,1.0f };
     Vector3 rotate_ = {0.0f};
     Vector3 translate_ = { 0.0f };
     Matrix4x4 matWorld_ = {0.0f};

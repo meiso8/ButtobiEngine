@@ -64,6 +64,13 @@ public:
     /// @param dwUserIndex コントローラーのインデックス
     /// @return 正規化されたスティックの座標(-1~1)
     static bool IsControllerStickPosMove(ButtonType index, DWORD dwUserIndex, Vector2* pos);
+
+    /// @brief コントローラーの正規化されたスティックの座標(-1~1)とトリガーを得る
+/// @param type BUTTON_LEFTかBUTTON_RIGHTをいれる
+/// @param dwUserIndex コントローラーのインデックス
+/// @return 正規化されたスティックの座標(-1~1)
+    static bool IsControllerStickPosMoveTrigger(ButtonType index, DWORD dwUserIndex, Vector2* pos);
+
     /// @brief コントローラーを振動させる
     /// @param dwUserIndex コントローラーのインデックス
     /// @param leftMotor 左モーターの振動値

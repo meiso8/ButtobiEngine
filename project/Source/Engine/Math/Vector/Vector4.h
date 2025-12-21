@@ -2,6 +2,10 @@
 
 struct Vector4 {
     float x, y, z, w;
+
+    bool operator==(const Vector4& other) const {
+        return x == other.x && y == other.y && z == other.z && w == other.w;
+    }
 };
 
 Vector4 Add(const Vector4& v1, const Vector4& v2);

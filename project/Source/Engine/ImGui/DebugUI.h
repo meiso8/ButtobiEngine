@@ -24,6 +24,7 @@ class Object3d;
 struct Material;
 struct PointLight;
 class MeshCommon;
+struct Damage;
 
 class DebugUI
 {
@@ -31,6 +32,7 @@ public:
     static void CheckFPS();
     static void CheckSound();
     static void CheckJsonFile();
+    static void CheckDamageStruct(Damage& damage, const char* label);
     /// @brief 入力
     /// @param input 
     static void CheckInput();

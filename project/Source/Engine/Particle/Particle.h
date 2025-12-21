@@ -30,6 +30,17 @@ struct Particle {
     float currentTime;
 };
 
+struct MinMax {
+    float min;
+    float max;
+};
+
+struct SphericalMove {
+    SphericalCoordinate coordinate;
+    float radiusSpeed;
+    float polarSpeed;
+};
+
 struct ParticleForGPU {
     Matrix4x4 WVP;
     Matrix4x4 World;
@@ -46,7 +57,7 @@ enum ParticleMovements {
 struct ParticleGroup {
     MaterialData materialData;
     std::list<Particle>particles;
-    std::list<SphericalCoordinate>sphericalCoordinates;
+    std::list<SphericalMove>sphericalCoordinates;
     uint32_t instanceSrvIndex;
     Microsoft::WRL::ComPtr<ID3D12Resource> instancingResource;
     uint32_t numInstance;//インスタンス数
@@ -59,20 +70,23 @@ struct ParticleGroup {
     const WorldTransform* parentPos_ = nullptr;
     ParticleMovements movement;
     AccelerationField accelerationField;
+    BlendMode blendMode = BlendMode::kBlendModeAdd;
+    float startAlpha_ = 1.0f;
+    float endAlpha_ = 0.0f;
 };
 
-std::list<SphericalCoordinate> EmitCoordinate(const bool& isRandom, uint32_t count, const float& radius = 3.0f);
-std::list<SphericalCoordinate> EmitCoordinateForShock(uint32_t count, const float& radius);
+std::list<SphericalMove> EmitCoordinate(uint32_t count, const float& radius, const float& radiusSpeed, const float& polarSpeed, const MinMax& polarSpeedMinMax, const MinMax& radiusSpeedMinMax);
 
-std::list<Particle> EmitParticles(const bool& isRandomTranslate, const bool& isRandomRotate, const WorldTransform& transform, uint32_t count, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f },const float& lifeTime = -1.0f);
-Particle MakeNewParticle(const bool& isRandomTranslate, const bool& isRandomRotate, const WorldTransform& transform, const Vector4& color, const float& lifeTime = -1.0f);
-SphericalCoordinate MakeNewSphericalCoordinate(const bool& isRandom = true,const float& radius = 3.0f);
-SphericalCoordinate MakeNewSphericalCoordinateForShock( const float& radius, const int& count, const int& maxCount);
+std::list<Particle> EmitParticles(const AABB& velocityAABB, const WorldTransform& transform, uint32_t count, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const float& rotateOffset, const float& scaleOffset);
+Particle MakeNewParticle(const AABB& velocityAABB,
+    const WorldTransform& transform, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const float& rotateOffset, const float& scaleOffset);
+
+SphericalMove MakeNewSphericalCoordinate(const float& radius, const int& count, const int& maxCount, const float& radiusSpeed, const float& polarSpeed, const MinMax& polarSpeedMinMax, const MinMax& radiusSpeedMinMax);
 
 class ParticleManager
 {
 public:
-    const uint32_t kNumMaxInstance = 100;//インスタンス数
+    static const uint32_t kNumMaxInstance = 100;//インスタンス数
 private:
     RootSignature* rootSignature_ = nullptr;
     static ID3D12GraphicsCommandList* commandList_;
@@ -106,14 +120,19 @@ public:
     ParticleManager& operator=(ParticleManager&) = delete;
     void Create();
     static ParticleManager* GetInstance();
-
-static void Emit(Emitter& emitter);
+    static void Reset(const std::string& name);
+    static void ResetAll();
+    static void Emit(Emitter& emitter);
 
     std::unordered_map<std::string, std::unique_ptr <ParticleGroup>>& GetParticleGroups();
+    std::unique_ptr <ParticleGroup>& GetParticleGroup(const std::string& name) {
+        assert(particleGroups.contains(name));
+        return particleGroups[name];
+    };
     void CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle, const bool& useModel = false, const ModelManager::MODEL_HANDLE& modelHandle = ModelManager::MODEL_HANDLE::BOX);
 
     void Update(Camera& camera);
-    void Draw(uint32_t blendMode = BlendMode::kBlendModeAdd);
+    void Draw();
     void InitAccelerationField(ParticleGroup& group);
     void Finalize();
 
@@ -130,7 +149,7 @@ private:
     void CreateModelData();
     void CreateVertexBufferResource();
 
-    void IsCollisionFieldArea(Particle& particleItr ,ParticleGroup& group);
+    void IsCollisionFieldArea(Particle& particleItr, ParticleGroup& group);
     void UpdateWorldMatrixForBillBord(Particle& particleItr, ParticleGroup& group);
     void UpdateWorldMatrix(Particle& particleItr, ParticleGroup& group);
     void UpdateWVPMatrix(Camera& camera, ParticleGroup& group);

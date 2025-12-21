@@ -86,10 +86,14 @@ SampleScene::SampleScene()
         particleEmitters_[i] = std::make_unique<ParticleEmitter>();
     }
 
+    ParticleManager::GetInstance()->Create();
+
     particleEmitters_[0]->SetName("medjedParticle");
     particleEmitters_[0]->emitter_.transform.Parent(medjed_->GetWorldTransform());
 
     particleEmitters_[1]->SetName("people");
+
+
 
     hpGage_ = std::make_unique<HPGage>();
     hpGage_->SetHpPtr(player_->GetHpsPtr());
@@ -196,7 +200,7 @@ void SampleScene::Update() {
         currentCamera_->UpdateMatrix();
     } else {
         camera_->worldMat_ = player_->GetEyeMatrix();
-        camera_->fovAngleY_ =Easing::EaseOutBack(camera_->kFovAngleY, camera_->kFovAngleY*0.5f, player_->zoomTimer_);
+        camera_->fovAngleY_ =Easing::EaseOutBack(camera_->kFovAngle_, camera_->kFovAngle_ *0.5f, player_->zoomTimer_);
         camera_->UpdateViewProjectionMatrix();
     }
 
@@ -209,11 +213,13 @@ void SampleScene::Update() {
     if (enemy_->isApper_) {
         for (int i = 0; i < particleEmitters_.size(); ++i) {
             particleEmitters_[i]->UpdateTimer();
-            particleEmitters_[i]->Update(*currentCamera_);
+            particleEmitters_[i]->UpdateEmitter();
         }
         hpGage_->Update();
     }
 
+
+    ParticleManager::GetInstance()->Update(*currentCamera_);
 
     for (int i = 0; i < lockers1_.size(); ++i) {
         lockers1_[i]->Update();
@@ -315,11 +321,6 @@ void SampleScene::Draw() {
 
     world_->Draw(*currentCamera_);
 
-    if (enemy_->isApper_) {
-        particleEmitters_[1]->Draw();
-    }
-
-
     filed_->Draw(*currentCamera_);
     building_->Draw(*currentCamera_);
 
@@ -337,9 +338,9 @@ void SampleScene::Draw() {
 
     enemyBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
 
-    if (enemy_->isApper_) {
+    ParticleManager::GetInstance()->Draw();
 
-        particleEmitters_[0]->Draw();
+    if (enemy_->isApper_) {
         hpGage_->Draw();
     }
 
@@ -349,6 +350,7 @@ void SampleScene::Draw() {
             sprite_[i]->Draw();
         }
     }
+
 
 
     Sprite::PreDraw(kBlendModeMultiply);

@@ -7,7 +7,6 @@
 #include"Model.h"
 ID3D12GraphicsCommandList* Object3d::commandList_ = nullptr;
 
-
 void Object3d::CreateMaterial(const Vector4& color, const uint32_t& lightType) {
     //マテリアルリソースを作成
     materialResource_ = std::make_unique<MaterialResource>();

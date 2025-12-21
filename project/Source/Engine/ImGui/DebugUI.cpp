@@ -72,7 +72,7 @@ void DebugUI::CheckCamera(Camera& camera) {
         ImGui::SliderFloat2("ofsset", &camera.offset_.x, -1000.0f, 1000.0f);
         ImGui::SliderFloat("nearZ", &camera.nearZ_, 0.0f, 1000.0f);
         ImGui::SliderFloat("farZ", &camera.farZ_, 0.0f, 1000.0f);
-
+        ImGui::SliderFloat("fovAngleY", &camera.fovAngleY_, -6.28f, 6.28f);
         ImGui::Text("Type : %s", (camera.projectionType_ == Camera::PERSPECTIVE) ? "PERSPECTIVE" : "PARALLEL");
 
         if (ImGui::Button("ChangeType")) {
@@ -208,12 +208,30 @@ void DebugUI::CheckJsonFile()
 #endif
 }
 
+void DebugUI::CheckDamageStruct(Damage& damage, const char* label)
+{
+#ifdef USE_IMGUI
 
+
+    if (ImGui::TreeNode(label)) {
+        ImGui::SliderFloat("cannotControlTime", &damage.cannotControlTime, 0.0f, 10.0f);
+        ImGui::SliderFloat("flashTimer", &damage.flashTimer, 0.0f, 10.0f);
+        ImGui::SliderFloat("flashTimer", &damage.invincibilityTime, 0.0f, 10.0f);
+        ImGui::Checkbox("isHit", &damage.isHit);
+        ImGui::Checkbox("isInvincible", &damage.isInvincible);
+        ImGui::DragInt("HP", &damage.hps.hp, 1, 0, 100);
+        ImGui::DragInt("MaxHP", &damage.hps.maxHp, 1, 0, 100);
+        ImGui::DragInt("hpDecrease", &damage.hps.hpDecrease, 1, 0, 100);
+        ImGui::TreePop();
+    }
+
+#endif
+}
 
 void DebugUI::CheckSpotLight()
 {
 #ifdef USE_IMGUI
-    SpotLight& spotLight = SpotLightManager::GetData();
+    SpotLight& spotLight = *SpotLightManager::GetData();
     Vector3& direction = spotLight.direction;
 
     if (ImGui::TreeNode("SpotLight")) {
@@ -225,9 +243,6 @@ void DebugUI::CheckSpotLight()
         ImGui::SliderFloat("distance", &spotLight.distance, 0.0f, 100.0f);
         ImGui::SliderFloat("decay", &spotLight.decay, 0.0f, 100.0f);
         ImGui::SliderFloat("cosAngle", &spotLight.cosAngle, -6.28f, 6.28f);
-        ImGui::SliderFloat("cosFalloffStart", &spotLight.cosFalloffStart, -6.28f, 6.28f);
-        assert(spotLight.cosAngle != spotLight.cosFalloffStart);
-
         ImGui::TreePop();
     }
 #endif
@@ -434,13 +449,15 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter, const char* label)
     Emitter& emitter = particleEmitter.emitter_;
 
     if (ImGui::TreeNode(label)) {
-        ImGui::Checkbox("isRandomTranslate", &emitter.isRandomTranslate);
-        ImGui::Checkbox("isRandomRotate", &emitter.isRandomRotate);
         int movement = static_cast<int>(emitter.movement);
         ImGui::SliderInt("movement", &movement, 0, 2);
         emitter.movement = static_cast<ParticleMovements>(movement);
         ImGui::SliderFloat("radius", &emitter.radius, 0.1f, 10.0f);
         ImGui::SliderFloat("lifeTime", &emitter.lifeTime, -1.0f, 50.0f);
+        ImGui::SliderFloat3("translateMin", &emitter.translateAABB_.min.x, -20.0f, 0.0f);
+        ImGui::SliderFloat3("translateMax", &emitter.translateAABB_.max.x, 0.0f, 20.0f);
+        ImGui::SliderFloat("rotateOffset", &emitter.rotateOffset_, 0.0f, 20.0f);
+        ImGui::SliderFloat("scaleOffset", &emitter.scaleOffset_, 0.0f, 20.0f);
         CheckBlendMode(emitter.blendMode);
         CheckColor(emitter.color, "color");
 

@@ -11,6 +11,15 @@ using namespace StringUtility;
 
 std::unordered_map<std::string, Texture::TextureData> Texture::textureDatas;
 
+void Texture::Initialize()
+{
+    textureDatas.reserve(SrvManager::kMaxSRVCount);
+
+    // handles 配列を初期化（未ロード状態を示すために 0 で埋める）
+    handles.resize(TEXTURES, 0);
+}
+
+
 void Texture::LoadAllTexture() {
 
     handles.resize(TEXTURES);
@@ -49,13 +58,6 @@ uint32_t Texture::AddTextureHandle(const std::string& filePath) {
 void Texture::Finalize()
 {
     textureDatas.clear();
-}
-
-void Texture::Initialize()
-{
-    //SRVの和と同数
-    textureDatas.reserve(SrvManager::kMaxSRVCount);
-
 }
 
 void Texture::LoadTexture(const std::string& filePath)
