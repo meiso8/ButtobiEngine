@@ -51,7 +51,10 @@ void TitleScene::Update()
     DebugUI::ShowMatrix4x4(rotateMatrix, "rotateMatrix");
 #endif // _DEBUG
 
-
+    if (puzzle_->GetIsClear()) {
+        sceneChange_->SetState(SceneChange::kFadeIn, 30);
+        SceneManager::SetNestScene("Sample");
+    }
 }
 
 void TitleScene::Draw()

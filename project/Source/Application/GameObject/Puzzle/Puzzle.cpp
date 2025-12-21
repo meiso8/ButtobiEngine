@@ -5,6 +5,7 @@ using namespace std;
 #include"DebugUI.h"
 #include"Collision.h"
 #include"Sound.h"
+
 void Puzzle::Change(int x, int y)
 {
     int p1 = y * vertical_ + x;
@@ -26,16 +27,16 @@ void Puzzle::Change(int x, int y)
 
 Puzzle::Puzzle()
 {
+    centerPos_ = { float(Window::GetClientWidth() * 0.5f),float(Window::GetClientHeight() * 0.5f) };
 
-    pic_ = make_unique<Sprite>();
-    pic_->Create(Texture::MEMO1, { 0.0f,0.0f });
-    pic_->SetAnchorPoint({ 0.5f,0.5f });
+    sprite_ = make_unique<Sprite>();
+    sprite_->Create(Texture::MEMO1, centerPos_);
+    sprite_->SetAnchorPoint({ 0.5f,0.5f });
 
-    Vector2 size = pic_->GetSize();
+    Vector2 size = sprite_->GetSize();
     size_ = { size.x / horizontal_,size.y / vertical_ };
 
-    centerPos_ = { float(Window::GetClientWidth() * 0.5f),float(Window::GetClientHeight() * 0.5f) };
-    centerPos_ -= size_ * horizontal_ * 0.5f;
+    centerPos_ -= size_ * horizontal_* 0.375f;
 
     rep(i, maxArrayNum_) sprites_[i] = make_unique<Sprite>(),
         sprites_[i]->Create(Texture::MEMO1, { 0.0f,0.0f });
@@ -78,7 +79,7 @@ void Puzzle::Game()
 
             if (Input::IsTriggerMouse(0)) {
                 clickedIndex = i;
-                Sound::PlaySE(Sound::CRACKER);
+                Sound::PlaySE(Sound::PICO);
             }
 
         } else {
@@ -104,24 +105,18 @@ void Puzzle::Game()
             sprites_[panel_[i]]->SetPosition({ centerPos_.x + col * size_.x,centerPos_.y + row * size_.y });
         }
     }
-
-
-    for (int i = 0; i < maxArrayNum_; ++i) {
-        string label = "Sprite " + std::to_string(i);
-        DebugUI::CheckSprite(*sprites_[i], label.c_str());
-    }
-
-    if (isClear_) {
-
-    }
-
-
 }
 
 void Puzzle::Draw()
 {
     Sprite::PreDraw();
-    rep(i, maxArrayNum_)   if (panel_[i] < 15) {
-        sprites_[panel_[i]]->Sprite::Draw();
+
+    if (isClear_) {
+        sprite_->Draw();
+    } else {
+        rep(i, maxArrayNum_)   if (panel_[i] < 15) {
+            sprites_[panel_[i]]->Draw();
+        }
     }
+  
 }

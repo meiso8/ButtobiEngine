@@ -14,10 +14,10 @@ private:
     //画像
     std::array< std::unique_ptr<Sprite>, maxArrayNum_>sprites_;
     //画像全て
-    std::unique_ptr<Sprite> pic_ = nullptr;
+    std::unique_ptr<Sprite>  sprite_ = nullptr;
     bool isClear_ = false;
-    Vector2 size_ = {0.0f};
-    Vector2 centerPos_ = { 0.0f };
+    Vector2 size_ = { 0.0f };
+    Vector2 centerPos_ = { 0.0 };
 private:
     //シャッフル
     void Shuffle();
@@ -28,5 +28,6 @@ public:
     void Init();
     void Game();
     void Draw();
+    bool GetIsClear() { return isClear_; };
 };
 
