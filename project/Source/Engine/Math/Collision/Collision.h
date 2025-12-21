@@ -4,7 +4,8 @@
 #include "Line.h"
 #include "Triangle.h"
 #include "AABB.h"
-
+#include"Rect.h"
+#include"Vector2.h"
 struct Circle;
 
 /// @brief 反射ベクトルを求める関数
@@ -179,3 +180,6 @@ bool IsCollision(const Sphere& sphere, const Plane& plane);
 /// @param largeCircle 
 /// @return 判定結果
 bool IsCollisionInCircleLine(const Circle& smallCircle, const Circle& largeCircle);
+
+//点と矩形
+bool IsCollision(const Vector2& p, const Rect& r);

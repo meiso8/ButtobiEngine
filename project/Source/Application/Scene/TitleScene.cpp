@@ -5,7 +5,7 @@
 #include"DebugUI.h"
 TitleScene::TitleScene()
 {
-
+    puzzle_ = std::make_unique<Puzzle>();
 
 
 
@@ -19,6 +19,7 @@ void TitleScene::Initialize()
 {
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 60);
+    puzzle_->Init();
 }
 
 void TitleScene::Update()
@@ -40,6 +41,9 @@ void TitleScene::Update()
     Vector3 axis = Normalize({1.0f,1.0f,1.0f});
     float angle = 0.44f;
     Matrix4x4 rotateMatrix = MakeRotateAxisAngle(axis, angle);
+
+    puzzle_->Game();
+
 #ifdef _DEBUG
     DebugUI::ShowMatrix4x4(rotateMatrix0,"rotateMatrix0");
     DebugUI::ShowMatrix4x4(rotateMatrix1,"rotateMatrix1");
@@ -52,6 +56,7 @@ void TitleScene::Update()
 
 void TitleScene::Draw()
 {
+    puzzle_->Draw();
     sceneChange_->Draw();
 }
 

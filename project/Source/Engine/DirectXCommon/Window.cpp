@@ -16,7 +16,6 @@
 
 int32_t Window::clientWidth_ = 1280;
 int32_t Window::clientHeight_ = 720;
-
 // ウィンドウプロシージャ
 LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 

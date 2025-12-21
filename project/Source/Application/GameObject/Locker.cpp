@@ -13,7 +13,7 @@ void Locker::Init()
     isSetMesh_ = false;
     object3d_->Initialize();
     object3d_->worldTransform_.rotate_.y = std::numbers::pi_v<float>;
-    model_ = ModelManager::GetModel(ModelManager::PLANE_GLTF);
+    model_ = ModelManager::GetModel(ModelManager::MEDJED);
     object3d_->SetMesh(model_);
     object3d_->SetModelData(model_);
 }

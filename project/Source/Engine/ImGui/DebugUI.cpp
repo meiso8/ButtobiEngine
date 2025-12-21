@@ -271,6 +271,7 @@ void DebugUI::CheckInput() {
 #ifdef USE_IMGUI
     ImGui::Begin("Input");
     ImGui::SliderFloat2("mousePos", &Input::GetMousePos().x, 0.0f, 1280.0f);
+    ImGui::SliderFloat2("cursorPos", &Input::GetCursorPosition().x, 0.0f, 1280.0f);
 
     for (int i = 0; i < 4; ++i) {
         CheckXInput(i);

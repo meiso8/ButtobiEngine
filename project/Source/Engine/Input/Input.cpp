@@ -16,6 +16,7 @@ DIMOUSESTATE Input::preMouseState_;
 
 std::array <XINPUT_STATE, 4>Input::xinputState_;
 std::array <XINPUT_STATE, 4>Input::preXinputState_;
+ Window* Input::window_ = nullptr;
 
 std::array <bool, 4>Input::isControllerConnected_;
 
@@ -359,6 +360,16 @@ BYTE Input::GetControllerTriggerCount(ButtonType index, DWORD dwUserIndex)
 bool Input::IsControllerDeadZone(BYTE& triggerButton)
 {
     return triggerButton > XINPUT_GAMEPAD_TRIGGER_THRESHOLD;
+}
+
+Vector2& Input::GetCursorPosition()
+{
+    static Vector2 cursorPos; // 静的変数を使用して左辺値を確保  
+    POINT pos;
+    GetCursorPos(&pos);
+    ScreenToClient(window_->GetHwnd(), &pos);
+    cursorPos = { static_cast<float>(pos.x), static_cast<float>(pos.y) };
+    return cursorPos;
 }
 
 bool Input::IsPressMouse(uint32_t index) {

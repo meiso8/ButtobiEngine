@@ -157,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\Puzzle\Puzzle.cpp" />
     <ClCompile Include="Source\Engine\SceneManager\SceneFactory.cpp" />
     <ClCompile Include="Source\Application\System\LightingManager.cpp" />
     <ClCompile Include="Source\Engine\Input\VibrateManager.cpp" />
@@ -275,6 +276,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\UI\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\Puzzle\Puzzle.h" />
+    <ClInclude Include="Source\Engine\Math\Structs\Rect.h" />
     <ClInclude Include="Source\Engine\SceneManager\SceneFactory.h" />
     <ClInclude Include="Source\Application\System\LightingManager.h" />
     <ClInclude Include="Source\Engine\Input\VibrateManager.h" />
