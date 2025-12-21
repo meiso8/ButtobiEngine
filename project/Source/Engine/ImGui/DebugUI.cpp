@@ -208,30 +208,30 @@ void DebugUI::CheckJsonFile()
 #endif
 }
 
-void DebugUI::CheckDamageStruct(Damage& damage, const char* label)
-{
-#ifdef USE_IMGUI
-
-
-    if (ImGui::TreeNode(label)) {
-        ImGui::SliderFloat("cannotControlTime", &damage.cannotControlTime, 0.0f, 10.0f);
-        ImGui::SliderFloat("flashTimer", &damage.flashTimer, 0.0f, 10.0f);
-        ImGui::SliderFloat("flashTimer", &damage.invincibilityTime, 0.0f, 10.0f);
-        ImGui::Checkbox("isHit", &damage.isHit);
-        ImGui::Checkbox("isInvincible", &damage.isInvincible);
-        ImGui::DragInt("HP", &damage.hps.hp, 1, 0, 100);
-        ImGui::DragInt("MaxHP", &damage.hps.maxHp, 1, 0, 100);
-        ImGui::DragInt("hpDecrease", &damage.hps.hpDecrease, 1, 0, 100);
-        ImGui::TreePop();
-    }
-
-#endif
-}
+//void DebugUI::CheckDamageStruct(Damage& damage, const char* label)
+//{
+//#ifdef USE_IMGUI
+//
+//
+//    if (ImGui::TreeNode(label)) {
+//        ImGui::SliderFloat("cannotControlTime", &damage.cannotControlTime, 0.0f, 10.0f);
+//        ImGui::SliderFloat("flashTimer", &damage.flashTimer, 0.0f, 10.0f);
+//        ImGui::SliderFloat("flashTimer", &damage.invincibilityTime, 0.0f, 10.0f);
+//        ImGui::Checkbox("isHit", &damage.isHit);
+//        ImGui::Checkbox("isInvincible", &damage.isInvincible);
+//        ImGui::DragInt("HP", &damage.hps.hp, 1, 0, 100);
+//        ImGui::DragInt("MaxHP", &damage.hps.maxHp, 1, 0, 100);
+//        ImGui::DragInt("hpDecrease", &damage.hps.hpDecrease, 1, 0, 100);
+//        ImGui::TreePop();
+//    }
+//
+//#endif
+//}
 
 void DebugUI::CheckSpotLight()
 {
 #ifdef USE_IMGUI
-    SpotLight& spotLight = *SpotLightManager::GetData();
+    SpotLight& spotLight = SpotLightManager::GetData();
     Vector3& direction = spotLight.direction;
 
     if (ImGui::TreeNode("SpotLight")) {
