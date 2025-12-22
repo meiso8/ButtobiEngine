@@ -11,14 +11,13 @@ public:
 public:
     void Create(const std::wstring& title, const int32_t& clientWidth, const int32_t& clientHeight);
     HINSTANCE GetHInstance()const { return wc_.hInstance; }
-    HWND GetHwnd() const{ return hwnd_; }
+    HWND GetHwnd() { return hwnd_; }
     static int32_t GetClientWidth(){
         return clientWidth_;
     }
     static int32_t GetClientHeight(){
         return clientHeight_;
     }
-    
     //メッセージを受け取る処理
     static bool ProcessMassage();
 
@@ -27,7 +26,7 @@ private:
     /// @brief ウィンドウクラス  
     WNDCLASS wc_{};
     /// @brief ウィンドウハンドル  
-    HWND hwnd_ = nullptr;
+   HWND hwnd_ = nullptr;
     //クライアント領域のサイズ  
    static int32_t clientWidth_;
     static int32_t clientHeight_;

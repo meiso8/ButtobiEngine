@@ -103,8 +103,9 @@ public:
     static BYTE GetControllerTriggerCount(ButtonType type, DWORD dwUserIndex);
 
     static bool IsControllerDeadZone(BYTE& triggerButton);
+    static Vector2& GetCursorPosition();
 private:
-    Window* window_ = nullptr;
+    static Window* window_;
     IDirectInputDevice8* keyboard_ = nullptr;
     //全キー入力状態を取得する
     static BYTE key_[256];
@@ -113,7 +114,6 @@ private:
     IDirectInputDevice8* mouse_ = nullptr;
     static DIMOUSESTATE mouseState_;
     static DIMOUSESTATE preMouseState_;	// マウス情報(変化検知用)
-
     //ゲームパッド
     static float deadZone_;
     static std::array <bool ,4>isControllerConnected_;
