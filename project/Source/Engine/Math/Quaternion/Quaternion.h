@@ -1,5 +1,6 @@
 #pragma once
-
+struct Matrix4x4;
+struct Vector3;
 //四元数
 struct Quaternion {
     float x;
@@ -36,4 +37,9 @@ Quaternion Normalize(const Quaternion& quaternion);
 /// @param quaternion 
 /// @return 
 Quaternion Inverse(const Quaternion& quaternion);
-
+//任意軸回移転を表すQuaternionの生成
+Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, const float& angle);
+//ベクトルをQuaternionで回転させた結果のベクトルを求める
+Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion);
+//Quaternionから回転行列を求める
+Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion);
