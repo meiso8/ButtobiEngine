@@ -138,7 +138,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)externals\assimp\include;$(ProjectDir)Source;$(ProjectDir)Source\Engine;$(ProjectDir)Source\Engine\DirectXCommon;$(ProjectDir)Source\Engine\Math;$(ProjectDir)Source\Engine\Mesh;$(ProjectDir)Source\Engine\Mesh\MeshCommon;$(ProjectDir)Source\Engine\Object3d;$(ProjectDir)Source\Engine\Surface;$(ProjectDir)Source\Engine\PSO;$(ProjectDir)Source\Engine\Sound;$(ProjectDir)Source\Engine\Particle;$(ProjectDir)Source\Engine\Input;$(ProjectDir)Source\Engine\ImGui;$(ProjectDir)Source\Engine\Camera;$(ProjectDir)Source\Application/Scene;$(ProjectDir)Source\Application/Object;$(ProjectDir)Source\Application/GameObject;$(ProjectDir)Source\Application/Physics;$(ProjectDir)Source\Application/System;$(ProjectDir)Source\Engine\Math\Lerp;$(ProjectDir)Source\Engine\Mesh\Sphere;$(ProjectDir)Source\Engine\Mesh\Circle;$(ProjectDir)Source\Engine\Math\Random;$(ProjectDir)Source\Engine\Math\Structs;$(ProjectDir)Source\Engine\Math\Collision;$(ProjectDir)Source\Engine\Math\Matrix;$(ProjectDir)Source\Engine\Math\Vector;$(ProjectDir)Source\Engine\Mesh\Grid;$(ProjectDir)Source\Engine\Mesh\Model;$(ProjectDir)Source\Engine\Mesh\Cube;$(ProjectDir)Source\Engine\Mesh\Sprite;$(ProjectDir)Source\Engine\Math\SphericalCoordinate;$(ProjectDir)Source\Engine\Math\WorldTransform;$(ProjectDir)Source\Engine\Mesh\Line;$(ProjectDir)Source\Engine\Math\Cotangent;$(ProjectDir)Source\Engine\Math\CoordinateTransform;$(ProjectDir)Source\Engine\Mesh\Plane;$(ProjectDir)Source\Engine\SceneManager;$(ProjectDir)externals\;$(ProjectDir)Source\Engine\JsonFile</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)externals\assimp\include;$(ProjectDir)Source;$(ProjectDir)Source\Engine;$(ProjectDir)Source\Engine\DirectXCommon;$(ProjectDir)Source\Engine\Math;$(ProjectDir)Source\Engine\Mesh;$(ProjectDir)Source\Engine\Mesh\MeshCommon;$(ProjectDir)Source\Engine\Object3d;$(ProjectDir)Source\Engine\Surface;$(ProjectDir)Source\Engine\PSO;$(ProjectDir)Source\Engine\Sound;$(ProjectDir)Source\Engine\Particle;$(ProjectDir)Source\Engine\Input;$(ProjectDir)Source\Engine\ImGui;$(ProjectDir)Source\Engine\Camera;$(ProjectDir)Source\Application/Scene;$(ProjectDir)Source\Application/Object;$(ProjectDir)Source\Application/GameObject;$(ProjectDir)Source\Application/Physics;$(ProjectDir)Source\Application/System;$(ProjectDir)Source\Engine\Math\Lerp;$(ProjectDir)Source\Engine\Mesh\Sphere;$(ProjectDir)Source\Engine\Mesh\Circle;$(ProjectDir)Source\Engine\Math\Random;$(ProjectDir)Source\Engine\Math\Structs;$(ProjectDir)Source\Engine\Math\Collision;$(ProjectDir)Source\Engine\Math\Matrix;$(ProjectDir)Source\Engine\Math\Vector;$(ProjectDir)Source\Engine\Mesh\Grid;$(ProjectDir)Source\Engine\Mesh\Model;$(ProjectDir)Source\Engine\Mesh\Cube;$(ProjectDir)Source\Engine\Mesh\Sprite;$(ProjectDir)Source\Engine\Math\SphericalCoordinate;$(ProjectDir)Source\Engine\Math\Quaternion;$(ProjectDir)Source\Engine\Math\WorldTransform;$(ProjectDir)Source\Engine\Mesh\Line;$(ProjectDir)Source\Engine\Math\Cotangent;$(ProjectDir)Source\Engine\Math\CoordinateTransform;$(ProjectDir)Source\Engine\Mesh\Plane;$(ProjectDir)Source\Engine\SceneManager;$(ProjectDir)externals\;$(ProjectDir)Source\Engine\JsonFile</AdditionalIncludeDirectories>
       <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
@@ -158,6 +158,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application\GameObject\Puzzle\Puzzle.cpp" />
+    <ClCompile Include="Source\Engine\Math\Quaternion\Quaternion.cpp" />
     <ClCompile Include="Source\Engine\SceneManager\SceneFactory.cpp" />
     <ClCompile Include="Source\Application\System\LightingManager.cpp" />
     <ClCompile Include="Source\Engine\Input\VibrateManager.cpp" />
@@ -277,6 +278,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\GameObject\Puzzle\Puzzle.h" />
+    <ClInclude Include="Source\Engine\Animation\Keyframe.h" />
+    <ClInclude Include="Source\Engine\Math\Quaternion\Quaternion.h" />
     <ClInclude Include="Source\Engine\Math\Structs\Rect.h" />
     <ClInclude Include="Source\Engine\SceneManager\SceneFactory.h" />
     <ClInclude Include="Source\Application\System\LightingManager.h" />

@@ -4,7 +4,7 @@
 #include"MakeMatrix.h"
 Medjed::Medjed() {
 
-    model_ = ModelManager::GetModel(ModelManager::KEY);
+    model_ = ModelManager::GetModel(ModelManager::MEDJED);
     object3d_ = std::make_unique<Object3d>();
     object3d_->Create();
     object3d_->SetMesh(model_);
