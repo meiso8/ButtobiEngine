@@ -13,7 +13,6 @@ void Object3d::CreateMaterial(const Vector4& color, const uint32_t& lightType) {
     materialResource_->CreateMaterial(color, lightType);
 }
 
-
 void Object3d::CreateUV()
 {
     uvTransform_ = {
@@ -49,10 +48,6 @@ void Object3d::InitBalloonData()
     balloonData_->isSphere = false;
 }
 
-void Object3d::SetModelData(Model* model)
-{
-    modelData_ = model->GetModelData();
-}
 
 void Object3d::InitWaveData()
 {
@@ -113,12 +108,7 @@ void Object3d::UpdateUV() {
 
 void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode)
 {
-    if (modelData_) {
-        Matrix4x4 worldMatrix = modelData_->rootNode.localMatrix * worldTransform_.matWorld_;
-        *transformationMatrixData_ = { Multiply(worldMatrix, camera.GetViewProjectionMatrix()),worldTransform_.matWorld_,Transpose(Inverse(worldMatrix)) };
-    } else {
-        *transformationMatrixData_ = { Multiply(worldTransform_.matWorld_, camera.GetViewProjectionMatrix()),worldTransform_.matWorld_,Transpose(Inverse(worldTransform_.matWorld_)) };
-    }
+    transformationMatrixData_->WVP = Multiply(worldTransform_.matWorld_, camera.GetViewProjectionMatrix());
 
     if (meshCommon_) {
         meshCommon_->PreDraw(commandList_, blendMode, cullMode);
@@ -159,6 +149,9 @@ void Object3d::Initialize()
 void Object3d::Update()
 {
     WorldTransformUpdate(worldTransform_);
+    //データを書き込む
+    transformationMatrixData_->World = worldTransform_.matWorld_;
+    transformationMatrixData_->WorldInverseTranspose = Transpose(Inverse(worldTransform_.matWorld_));
 }
 
 
@@ -171,7 +164,6 @@ void Object3d::CreateTransformationMatrix() {
     transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
     transformationMatrixData_->WVP = MakeIdentity4x4();
     transformationMatrixData_->World = MakeIdentity4x4();
-
     transformationMatrixData_->WorldInverseTranspose = MakeIdentity4x4();
 
 }

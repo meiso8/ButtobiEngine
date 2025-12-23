@@ -3,6 +3,7 @@
 #include<cmath>
 #include"Matrix4x4.h"
 #include"Vector4.h"
+#include"MakeMatrix.h"
 Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs)
 {
     Quaternion result;
@@ -109,6 +110,14 @@ Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion)
 
     return result;
 }
+
+
+//3次元アフィン変換行列の生成
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& quaternion, const Vector3& translate) {
+
+   return MakeScaleMatrix(scale)* MakeRotateMatrix(quaternion)*MakeTranslateMatrix(translate);
+};
+
 
 Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, const float& t)
 {
