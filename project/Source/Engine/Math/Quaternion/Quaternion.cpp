@@ -2,7 +2,7 @@
 #include"Vector3.h"
 #include<cmath>
 #include"Matrix4x4.h"
-
+#include"Vector4.h"
 Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs)
 {
     Quaternion result;
@@ -109,3 +109,40 @@ Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion)
 
     return result;
 }
+
+Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, const float& t)
+{
+    float dot = Dot(q0, q1);
+    Quaternion q0L = q0;
+
+    //最短経路を探索
+    if (dot < 0.0f) {
+        q0L = -q0;
+        dot = -dot;
+    }
+
+    float theta = acosf(dot);
+    float sin = sinf(theta);
+    float scale0 = sinf((1.0f - t) * theta) / sin;
+    float scale1 = sinf(t * theta) / sin;
+
+    return scale0 * q0L + scale1 * q1;
+}
+
+float Dot(const Quaternion& q0, const Quaternion& q1)
+{
+    return Dot(Vector4{ q0.x,q0.y,q0.z,q0.w }, Vector4{ q1.x,q1.y,q1.z,q1.w });
+}
+
+Quaternion Subtract(const Quaternion& q0, const Quaternion& q1) {
+    return { q0.x - q1.x,q0.y - q1.y ,q0.z - q1.z,q0.w - q1.w };
+};
+
+Quaternion Add(const Quaternion& q0, const Quaternion& q1) {
+    return { q0.x + q1.x,q0.y + q1.y ,q0.z + q1.z ,q0.w + q1.w };
+};
+
+Quaternion operator-(const Quaternion& q) { return { -q.x,-q.y,-q.z ,-q.w }; }
+Quaternion operator*(const Quaternion& v, float s) { return { v.x * s,v.y * s,v.z * s ,v.w * s }; }
+Quaternion operator*(float s, const Quaternion& v) { return v * s; }
+Quaternion operator+(const Quaternion& q0, const Quaternion& q1){return Add(q0, q1);}

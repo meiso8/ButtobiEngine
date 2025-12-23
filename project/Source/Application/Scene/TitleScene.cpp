@@ -33,19 +33,23 @@ void TitleScene::Update()
 
     puzzle_->Update();
 
-    Quaternion rotation = MakeRotateAxisAngleQuaternion(Normalize(Vector3{ 1.0f,0.4f,-0.2f }), 0.45f);
-    Vector3 pointY = { 2.1f,-0.9f,1.3f };
-    Matrix4x4 rotateMatrix = MakeRotateMatrix(rotation);
-    Vector3 rotateByQuaternion = RotateVector(pointY, rotation);
-    Vector3 rotateByMatrix = CoordinateTransform(pointY, rotateMatrix);
+    Quaternion rotation0 = MakeRotateAxisAngleQuaternion({ 0.71f,0.71f,0.0f }, 0.3f);
+    Quaternion rotation1 = MakeRotateAxisAngleQuaternion({ 0.71f,0.0f,0.71f }, 3.141592f);
+
+    Quaternion interpolate0 = Slerp(rotation0, rotation1, 0.0f);
+    Quaternion interpolate1 = Slerp(rotation0, rotation1, 0.3f);
+    Quaternion interpolate2 = Slerp(rotation0, rotation1, 0.5f);
+    Quaternion interpolate3 = Slerp(rotation0, rotation1, 0.7f);
+    Quaternion interpolate4 = Slerp(rotation0, rotation1, 1.0f);
+
 
 #ifdef _DEBUG
 
-
-    ImGui::SliderFloat4("rotation", &rotation.x, -100.0f, 100.0f);
-    DebugUI::ShowMatrix4x4(rotateMatrix, "rotateMatrix");
-    ImGui::SliderFloat3("rotateByQuaternion", &rotateByQuaternion.x, -100.0f, 100.0f);
-    ImGui::SliderFloat3("rotateByMatrix", &rotateByMatrix.x, -100.0f, 100.0f);
+    ImGui::SliderFloat4("interpolate0 , Slerp(q0,q1,0.0f)", &interpolate0.x, -100.0f, 100.0f);
+    ImGui::SliderFloat4("interpolate1 , Slerp(q0,q1,0.3f)", &interpolate1.x, -100.0f, 100.0f);
+    ImGui::SliderFloat4("interpolate2 , Slerp(q0,q1,0.5f)", &interpolate2.x, -100.0f, 100.0f);
+    ImGui::SliderFloat4("interpolate3 , Slerp(q0,q1,0.7f)", &interpolate3.x, -100.0f, 100.0f);
+    ImGui::SliderFloat4("interpolate4 , Slerp(q0,q1,1.0f)", &interpolate4.x, -100.0f, 100.0f);
 
 
 #endif // _DEBUG

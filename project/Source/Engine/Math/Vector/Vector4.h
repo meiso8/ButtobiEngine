@@ -11,6 +11,8 @@ struct Vector4 {
 Vector4 Add(const Vector4& v1, const Vector4& v2);
 Vector4 Subtract(const Vector4& v1, const Vector4& v2);
 Vector4 Multiply(const float scalar, const Vector4& v);
+float Dot(const Vector4& v1, const Vector4& v2);
+
 
 //二項演算子 Binary Operator
 Vector4 operator+(const Vector4& v1, const Vector4& v2);

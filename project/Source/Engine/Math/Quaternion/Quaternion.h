@@ -7,6 +7,10 @@ struct Quaternion {
     float y;
     float z;
     float w;
+
+    bool operator==(const Quaternion& other) const {
+        return x == other.x && y == other.y && z == other.z && w == other.w;
+    }
 };
 
 //xyzw は実数　ijkは虚数単位
@@ -43,3 +47,16 @@ Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, const float& angle
 Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion);
 //Quaternionから回転行列を求める
 Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion);
+
+//球面線形補間
+Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, const float& t);
+
+Quaternion Subtract(const Quaternion& q0, const Quaternion& q1);
+Quaternion Add(const Quaternion& q0, const Quaternion& q1);
+float Dot(const Quaternion& q0, const Quaternion& q1);
+
+Quaternion operator+(const Quaternion& q0, const Quaternion& q1);
+
+Quaternion operator-(const Quaternion& q);
+Quaternion operator*(const Quaternion& v, float s);
+Quaternion operator*(float s, const Quaternion& v);
