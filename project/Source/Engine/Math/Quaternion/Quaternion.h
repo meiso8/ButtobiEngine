@@ -47,7 +47,8 @@ Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, const float& angle
 Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion);
 //Quaternionから回転行列を求める
 Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion);
-
+//3次元アフィン変換行列の生成
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& quaternion, const Vector3& translate);
 //球面線形補間
 Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, const float& t);
 

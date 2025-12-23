@@ -8,7 +8,7 @@
 #include"MaterialResource.h"  
 #include"Balloon.h"
 #include"Wave.h"
-#include"ModelData.h"
+
 #include<memory>
 class Model;
 enum LightMode;
@@ -17,13 +17,13 @@ class Object3d
 
 public:
     WorldTransform worldTransform_;
-private:
+protected:
     //位置情報
     Microsoft::WRL::ComPtr <ID3D12Resource> transformationMatrixResource_ = nullptr;
     TransformationMatrixFor3D* transformationMatrixData_ = nullptr;
     //メッシュ情報
     MeshCommon* meshCommon_ = nullptr;
-    ModelData* modelData_ = nullptr;
+
     //コマンドリスト 借り物
     static  ID3D12GraphicsCommandList* commandList_;
 
@@ -72,18 +72,17 @@ public:
 
     void SetLightMode(const LightMode& lightMode) { materialResource_->SetLightMode(lightMode); }
 
-
     void Create();
     void Initialize();
-    void Update();
-    void Draw(Camera& camera, const BlendMode& blendMode = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack);
-    
+    virtual void Update();
+    virtual void Draw(Camera& camera, const BlendMode& blendMode = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack);
+
     void InitWaveData();
     void InitWaveDataIndex(const uint32_t& index);
     void InitBalloonData();
-   
-    void SetMesh(MeshCommon* mesh) { meshCommon_ = mesh;};
-    void SetModelData(Model* model);
+
+    void SetMesh(MeshCommon* mesh) { meshCommon_ = mesh; };
+
     void SetTextureHandle(const Texture::TEXTURE_HANDLE& handle) { meshCommon_->SetTextureHandle(handle); };
 private:
     void CreateUV();

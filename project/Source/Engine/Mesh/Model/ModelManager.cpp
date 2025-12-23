@@ -18,7 +18,7 @@ void ModelManager::LoadAllModel()
 {
     //モデルのファイルパスとタグを関連付けてください
     LoadModel("Resource/Models/Box", "Box.obj", BOX);
-    LoadModel("Resource/Models", "gltfTest.gltf", PLANE_GLTF);
+    LoadModel("Resource/Models/AnimatedCube", "AnimatedCube.gltf", Ani_GLTF);
     LoadModel("Resource/Models/player", "player.obj", PLAYER_BODY);
     LoadModel("Resource/Models/medjed", "medjed.obj", MEDJED);
     LoadModel("Resource/Models/people", "people.obj", PEOPLE);

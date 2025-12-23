@@ -7,6 +7,10 @@ Locker::Locker()
     object3d_ = std::make_unique<Object3d>();
     object3d_->Create();
 
+    aniObj_ = std::make_unique<AnimationObject3d>();
+    aniObj_->Create();
+    aniObj_->SetMeshAndData(ModelManager::GetModel(ModelManager::Ani_GLTF));
+
 }
 void Locker::Init()
 {
@@ -15,13 +19,15 @@ void Locker::Init()
     object3d_->worldTransform_.rotate_.y = std::numbers::pi_v<float>;
     model_ = ModelManager::GetModel(ModelManager::MEDJED);
     object3d_->SetMesh(model_);
-    object3d_->SetModelData(model_);
+
 }
 
 void Locker::Draw(Camera& camera)
 {
     object3d_->SetLightMode(kLightModeHalfL);
     object3d_->Draw(camera);
+
+    aniObj_->Draw(camera);
 }
 
 void Locker::Update()
@@ -30,6 +36,7 @@ void Locker::Update()
     UpdateSetMesh();
     object3d_->Update();
 
+    aniObj_->Update();
 
 }
 
@@ -38,6 +45,6 @@ void Locker::UpdateSetMesh()
     if (isSetMesh_) {
         model_ = ModelManager::GetModel(ModelManager::MUMMY);
         object3d_->SetMesh(model_);
-    } 
+    }
 
 }

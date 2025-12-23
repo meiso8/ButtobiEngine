@@ -11,7 +11,7 @@ public:
     /// @brief モデルのハンドルを宣言します
     enum MODEL_HANDLE {
         BOX,
-        PLANE_GLTF,
+        Ani_GLTF,
         //プレイヤーそれぞれのパーツ
         PLAYER_BODY,
 

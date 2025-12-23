@@ -2,11 +2,13 @@
 
 #include<memory>
 #include"Object3d.h"
+#include"AnimationObject3d.h"
 #include"AABB.h"
 class Model;
 class Locker
 {
 private:
+    std::unique_ptr<AnimationObject3d> aniObj_ = nullptr;
     std::unique_ptr < Object3d> object3d_;
     Model* model_ = nullptr;
 public:
