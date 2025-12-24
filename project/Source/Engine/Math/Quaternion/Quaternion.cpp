@@ -4,6 +4,7 @@
 #include"Matrix4x4.h"
 #include"Vector4.h"
 #include"MakeMatrix.h"
+#include<algorithm>
 Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs)
 {
     Quaternion result;
@@ -130,7 +131,12 @@ Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, const float& t)
         dot = -dot;
     }
 
+    dot = std::clamp(dot, -1.0f, 1.0f);
+
     float theta = acosf(dot);
+    // しきい値以下ならLerpで近似
+    if (std::abs(theta) < 1e-5f) { return Normalize((1.0f - t) * q0 + t * q1); }
+
     float sin = sinf(theta);
     float scale0 = sinf((1.0f - t) * theta) / sin;
     float scale1 = sinf(t * theta) / sin;

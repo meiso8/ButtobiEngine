@@ -8,7 +8,7 @@
 #include"MaterialResource.h"  
 #include"Balloon.h"
 #include"Wave.h"
-
+#include"Transform.h"
 #include<memory>
 class Model;
 enum LightMode;
@@ -29,7 +29,7 @@ protected:
 
     //マテリアルリソース
     std::unique_ptr<MaterialResource> materialResource_ = nullptr;
-    Transform uvTransform_ = { 0.0f };
+    EulerTransform uvTransform_ = { 0.0f };
     Matrix4x4 uvTransformMatrix_{};
 
 
@@ -48,7 +48,7 @@ public:
     }
     Wave& GetWaveData(size_t index) { return waveData_[index]; };
 
-    void SetUV(const Transform& transform) { uvTransform_ = transform; };
+    void SetUV(const EulerTransform& transform) { uvTransform_ = transform; };
     void UpdateUV();
 
     Material& GetMaterial() { return *materialResource_->GetMaterial(); };
@@ -57,7 +57,7 @@ public:
     Vector3& GetUVRotate() { return uvTransform_.rotate; };
     Vector3& GetUVTranslate() { return uvTransform_.translate; };
 
-    Transform& GetUVTransform() {
+    EulerTransform& GetUVTransform() {
         return uvTransform_;
     }
 

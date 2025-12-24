@@ -66,7 +66,7 @@ public:
 
     virtual void UpdateViewProjectionMatrix();
     Matrix4x4& GetViewProjectionMatrix();
-    void SetTransform(const Transform& transform) {
+    void SetTransform(const EulerTransform& transform) {
         scale_ = transform.scale;
         rotate_ = transform.rotate;
         translate_ = transform.translate;

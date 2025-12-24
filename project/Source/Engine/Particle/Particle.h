@@ -22,7 +22,7 @@ class ShaderResourceView;
 struct Emitter;
 
 struct Particle {
-    Transform transform;
+    EulerTransform transform;
     Vector3 velocity;
     Vector4 color;
 

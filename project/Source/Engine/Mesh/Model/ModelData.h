@@ -1,13 +1,8 @@
 #pragma once
-#include<vector>
+
 #include"VertexData.h"
 #include"MaterialData.h"
-
-struct Node {
-    Matrix4x4 localMatrix;
-    std::string name;
-    std::vector<Node>children;
-};
+#include"Node.h"
 
 struct ModelData {
     std::vector<VertexData> vertices;

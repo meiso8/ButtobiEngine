@@ -108,6 +108,9 @@ void Object3d::UpdateUV() {
 
 void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode)
 {
+    //データを書き込む
+    transformationMatrixData_->World = worldTransform_.matWorld_;
+    transformationMatrixData_->WorldInverseTranspose = Transpose(Inverse(worldTransform_.matWorld_));
     transformationMatrixData_->WVP = Multiply(worldTransform_.matWorld_, camera.GetViewProjectionMatrix());
 
     if (meshCommon_) {
@@ -149,9 +152,7 @@ void Object3d::Initialize()
 void Object3d::Update()
 {
     WorldTransformUpdate(worldTransform_);
-    //データを書き込む
-    transformationMatrixData_->World = worldTransform_.matWorld_;
-    transformationMatrixData_->WorldInverseTranspose = Transpose(Inverse(worldTransform_.matWorld_));
+
 }
 
 

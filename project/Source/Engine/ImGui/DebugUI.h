@@ -23,6 +23,7 @@ class ParticleEmitter;
 class Object3d;
 struct Material;
 struct PointLight;
+struct QuaternionTransform;
 class MeshCommon;
 //struct Damage;
 
@@ -70,9 +71,16 @@ public:
     /// @param rotate 
     /// @param translate 
     /// @param label 
-    static void CheckTransform(Transform& transform, const char* label);
+    static void CheckTransform(EulerTransform& transform, const char* label);
 
     static void CheckTransforms(Vector3& scale, Vector3& rotate, Vector3& translate, const char* label);
+
+    /// @brief 
+    /// @param worldTransform 
+    /// @param label 
+    static void CheckQuaternionTransform(QuaternionTransform& quaternionTransform, const char* label);
+
+
     //行列の要素を見る関数
     static void ShowMatrix4x4(const Matrix4x4& matrix, const char* label = "Matrix4x4");
 
