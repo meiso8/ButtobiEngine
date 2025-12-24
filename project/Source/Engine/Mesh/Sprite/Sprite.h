@@ -87,11 +87,11 @@ private:
     float rotate_ = 0.0f;
     Vector2 size_ = { 0.0f,0.0f };
     Vector2 scale_ = { 1.0f,1.0f };
-    Transform transform_{};
+    EulerTransform transform_{};
     Matrix4x4 worldMatrix_{};
     TransformationMatrixFor2D* transformationMatrixData_ = nullptr;
 
-    Transform uvTransform_ = { 0.0f };
+    EulerTransform uvTransform_ = { 0.0f };
     Matrix4x4 uvTransformMatrix_{};
 
     MaterialResource materialResource_{};

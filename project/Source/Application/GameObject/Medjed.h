@@ -2,6 +2,7 @@
 
 #include<memory>
 #include"Object3d.h"
+#include"AnimationObject3d.h"
 #include"AABB.h"
 class Model;
 class Medjed
@@ -10,7 +11,7 @@ class Medjed
     std::unique_ptr < Object3d> object3d_;
     Model* model_ = nullptr;
     Vector3* targetPos_ = nullptr;
-
+    std::unique_ptr<AnimationObject3d> aniObj_ = nullptr;
 public:
     Medjed();
     void Init();

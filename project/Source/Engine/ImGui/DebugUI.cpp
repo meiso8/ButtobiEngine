@@ -356,6 +356,18 @@ void DebugUI::CheckSprite(Sprite& sprite, const char* label) {
 #endif
 }
 
+void DebugUI::CheckQuaternionTransform(QuaternionTransform& quaternionTransform, const char* label)
+{
+#ifdef USE_IMGUI
+    if (ImGui::TreeNode(label)) {
+        ImGui::SliderFloat3("scale", &quaternionTransform.scale.x, 0.0f, 10.0f);
+        ImGui::SliderFloat4("rotation", &quaternionTransform.rotate.x, 0.0f, std::numbers::pi_v<float>*2.0f);
+        ImGui::SliderFloat3("translation", &quaternionTransform.translate.x, -1000.0f, 1000.0f);
+        ImGui::TreePop();
+    }
+#endif
+}
+
 void DebugUI::ShowMatrix4x4(const Matrix4x4& matrix, const char* label) {
 #ifdef USE_IMGUI
     if (ImGui::TreeNode(label)) {
@@ -537,7 +549,7 @@ void DebugUI::CheckMaterial(Material& material, const char* label) {
 }
 
 
-void DebugUI::CheckTransform(Transform& transform, const char* label)
+void DebugUI::CheckTransform(EulerTransform& transform, const char* label)
 {
     CheckTransforms(transform.scale, transform.rotate, transform.translate, label);
 }

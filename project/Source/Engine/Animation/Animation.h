@@ -3,7 +3,7 @@
 #include<string>
 #include"NodeAnimation.h"
 #include"Lerp.h"
-
+struct Skeleton;
 struct Animation {
     float duration;//アニメーション全体の尺
     //NodeAnimationの集合。Node名でひけるようにしておく
@@ -40,3 +40,6 @@ template <typename T> T CalculateValue(const  std::vector<Keyframe<T>>& keyframe
     //最後まで行っちゃっった場合は最後の値を返すよ
     return static_cast<T>((*keyframes.rbegin()).value);
 };
+
+
+void ApplyAnimation(Skeleton& skeleton, const Animation& animation, const float animationTime);

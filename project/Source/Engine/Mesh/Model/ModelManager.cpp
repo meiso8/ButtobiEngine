@@ -11,6 +11,7 @@
 
 #include"Texture.h"
 #include"Model.h"
+#include"Quaternion/Quaternion.h"
 
 std::map<const uint32_t, std::unique_ptr< Model> >ModelManager::models_;
 
@@ -18,7 +19,7 @@ void ModelManager::LoadAllModel()
 {
     //モデルのファイルパスとタグを関連付けてください
     LoadModel("Resource/Models/Box", "Box.obj", BOX);
-    LoadModel("Resource/Models/AnimatedCube", "AnimatedCube.gltf", Ani_GLTF);
+    LoadModel("Resource/Models/human", "walk.gltf", Ani_GLTF);
     LoadModel("Resource/Models/player", "player.obj", PLAYER_BODY);
     LoadModel("Resource/Models/medjed", "medjed.obj", MEDJED);
     LoadModel("Resource/Models/people", "people.obj", PEOPLE);
@@ -141,14 +142,18 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
 Node ModelManager::ReadNode(aiNode* node)
 {
     Node result;
-    aiMatrix4x4 aiLocalMatrix = node->mTransformation;//nodeのlocalMatrixを取得
-    aiLocalMatrix.Transpose();//転置
+    aiVector3D scale, translate;
 
-    for (uint32_t i = 0; i < 4; ++i) {
-        for (uint32_t j = 0; j < 4; ++j) {
-            result.localMatrix.m[i][j] = aiLocalMatrix[i][j];//他の要素も同様に
-        }
-    }
+    aiQuaternion rotate;
+    //assimpの行列からSRTを抽出する関数を利用
+    node->mTransformation.Decompose(scale, rotate, translate);
+    //Scale
+    result.transform.scale = { scale.x,scale.y,scale.z };
+    //x軸を反転、さらに回転方向が逆なので軸を反転させる
+    result.transform.rotate = { rotate.x,-rotate.y,-rotate.z,rotate.w };
+    //x軸を反転
+    result.transform.translate = { -translate.x,translate.y,translate.z };
+    result.localMatrix = MakeAffineMatrix(result.transform.scale, result.transform.rotate, result.transform.translate);
 
     result.name = node->mName.C_Str();//Node名の格納
     result.children.resize(node->mNumChildren);//子供の数だけ確保

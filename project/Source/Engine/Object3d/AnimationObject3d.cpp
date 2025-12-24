@@ -12,12 +12,18 @@ AnimationObject3d::AnimationObject3d() {
     animationTime_ = 0.0f;
     rotate_ = IdentityQuaternion();
     worldMatrix_ = MakeIdentity4x4();
+
+#ifdef _DEBUG
+    debugBone_ = std::make_unique<DebugBone>();
+#endif
+
 }
 
 void AnimationObject3d::Update()
 {
     WorldTransformUpdate(worldTransform_);
     UpdateAnimation();
+
 }
 
 void AnimationObject3d::InitTime()
@@ -28,32 +34,50 @@ void AnimationObject3d::InitTime()
 void AnimationObject3d::UpdateAnimation()
 {
     animationTime_ += InverseFPS;
-    animationTime_ = std::fmod(animationTime_, animation.duration);
+    animationTime_ = std::fmod(animationTime_, animation_.duration);
 
     if (modelData_ != nullptr) {
-        NodeAnimation& rootNodeAnimation = animation.nodeAnimations[modelData_->rootNode.name];
-        Vector3 translate = CalculateValue(rootNodeAnimation.translate.keyframes, animationTime_);
-        Quaternion rotate = CalculateValue(rootNodeAnimation.rotate.keyframes, animationTime_);
-        Vector3 scale = CalculateValue(rootNodeAnimation.scale.keyframes, animationTime_);
-        Matrix4x4 localMatrix = MakeAffineMatrix(scale, rotate, translate);
 
-        worldMatrix_ = localMatrix * modelData_->rootNode.localMatrix * worldTransform_.matWorld_;
-        transformationMatrixData_->World = worldMatrix_;
-        transformationMatrixData_->WorldInverseTranspose = Transpose(Inverse(worldMatrix_));
+        ApplyAnimation(skeleton_, animation_, animationTime_);
+        UpdateSkeleton(skeleton_);
+
+        //Matrix4x4 localMatrix = skeleton_.joints[skeleton_.root].localMatrix;
+
+        if (isSkinning_) {
+            worldMatrix_ =  worldTransform_.matWorld_;
+        } else {
+            worldMatrix_ = modelData_->rootNode.localMatrix * worldTransform_.matWorld_;
+        }
+
     }
+
+#ifdef _DEBUG
+    debugBone_->Update(worldTransform_.matWorld_);
+#endif
 }
+
+
+
 
 void AnimationObject3d::SetMeshAndData(Model* model)
 {
     modelData_ = model->GetModelData();
     meshCommon_ = model;
     //試しにここでセットしてみる　
-    animation = LoadAnimationFileForFilePath(modelData_->filePath);
+    animation_ = LoadAnimationFileForFilePath(modelData_->filePath);
+    skeleton_ = CreateSkeleton(modelData_->rootNode);
+
+#ifdef _DEBUG
+
+    debugBone_->Create(skeleton_);
+
+#endif
 }
 
 void AnimationObject3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode)
 {
-
+    transformationMatrixData_->World = worldMatrix_;
+    transformationMatrixData_->WorldInverseTranspose = Transpose(Inverse(worldMatrix_));
     transformationMatrixData_->WVP = Multiply(worldMatrix_, camera.GetViewProjectionMatrix());
 
     if (meshCommon_) {
@@ -74,4 +98,9 @@ void AnimationObject3d::Draw(Camera& camera, const BlendMode& blendMode, const C
         SpotLightManager::SetGraphicsRootConstantBufferView();
         meshCommon_->Draw(commandList_);
     }
+
+#ifdef _DEBUG
+    debugBone_->Draw(camera);
+#endif
 }
+
