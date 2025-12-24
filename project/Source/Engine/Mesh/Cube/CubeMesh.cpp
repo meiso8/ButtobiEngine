@@ -229,7 +229,7 @@ void CubeMesh::Draw(ID3D12GraphicsCommandList* commandList)
 
     //頂点バッファビューを設定
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
-    ////IBVを設定new
+    //IBVを設定
     commandList->IASetIndexBuffer(&indexBufferView_);//IBVを設定
  
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。

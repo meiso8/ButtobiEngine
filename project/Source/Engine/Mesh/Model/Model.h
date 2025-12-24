@@ -24,6 +24,8 @@ public:
     };
 private:
     void CreateVertex()override;
+   void CreateIndexResource()override;
 private:
     std::unique_ptr<ModelData> modelData_ = nullptr;
+    
 };
