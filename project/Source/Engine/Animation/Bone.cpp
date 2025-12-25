@@ -63,6 +63,10 @@ void DebugBone::Draw(Camera& camera)
 
 void DebugBone::Create(Skeleton& skeleton)
 {
+
+    bones_.clear();   
+    assert(!skeleton.joints.empty());
+
     for (Joint& joint : skeleton.joints) {
 
         std::unique_ptr<BoneValue> value = std::make_unique<BoneValue>();
@@ -84,11 +88,13 @@ void DebugBone::Create(Skeleton& skeleton)
     }
 
 }
+
 #include"DebugUI.h"
 
 void DebugBone::Update(const Matrix4x4& parentMatrix)
 {
     for (auto& [joint, value] : bones_) {
+        value->lineMesh->SetVertexData({ 0.0f,0.0f,0.0f }, joint->transform.translate);
         value->object3d->worldTransform_.matWorld_ = joint->skeletonSpaceMatrix * parentMatrix;
 
 #ifdef USE_IMGUI

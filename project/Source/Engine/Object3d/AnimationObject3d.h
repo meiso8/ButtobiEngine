@@ -15,6 +15,8 @@ public:
 
     void InitTime();
     void SetMeshAndData(SkinningModel* skinningModel);
+    void SetAnimation(Model* model);
+    void SetModel(Model* model);
     void SetTextureHandle(const Texture::TEXTURE_HANDLE& handle)override;
     //オーバーライド
     void Update()override;
@@ -30,9 +32,7 @@ private:
     bool isSkinning_ = true;
 
     SkinningModel* skinningModel_ = nullptr;
-    ModelData* boneModelData_ = nullptr;
-    Skeleton* skeleton_ = nullptr;
-    SkinCluster* skinCluster_ = nullptr;
+
 #ifdef _DEBUG
     std::unique_ptr< DebugBone> debugBone_;
 #endif

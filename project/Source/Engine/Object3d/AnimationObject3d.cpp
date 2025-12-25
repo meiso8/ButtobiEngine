@@ -37,21 +37,25 @@ void AnimationObject3d::UpdateAnimation()
     animationTime_ += InverseFPS;
     animationTime_ = std::fmod(animationTime_, animation_.duration);
 
-    assert(boneModelData_);
-    assert( skeleton_ );
-    assert(skinCluster_);
+    ModelData* boneModelData = skinningModel_->GetBoneModelData();
+    Skeleton* skeleton = skinningModel_->GetSkeleton();
+    SkinCluster* skinCluster = skinningModel_->GetSkinCluster();
+
+    assert(boneModelData);
+    assert( skeleton );
+    assert(skinCluster);
 
     //アニメーションの更新を行って、骨ごとのLocal情報を更新する
-    ApplyAnimation(*skeleton_, animation_, animationTime_);
+    ApplyAnimation(*skeleton, animation_, animationTime_);
     //現在の骨ごとのLocal情報を基にSkeletonSpaceの情報を更新する
-    UpdateSkeleton(*skeleton_);
+    UpdateSkeleton(*skeleton);
     //SkeletonSpaceの情報を基に、SkinClusterのMatrixPaletteを更新する
-    UpdateSkinCluster(*skinCluster_, *skeleton_);
+    UpdateSkinCluster(*skinCluster, *skeleton);
 
     if (isSkinning_) {
         worldMatrix_ = worldTransform_.matWorld_;
     } else {
-        worldMatrix_ = boneModelData_->rootNode.localMatrix * worldTransform_.matWorld_;
+        worldMatrix_ = boneModelData->rootNode.localMatrix * worldTransform_.matWorld_;
     }
 
 #ifdef _DEBUG
@@ -60,21 +64,27 @@ void AnimationObject3d::UpdateAnimation()
 }
 void AnimationObject3d::SetMeshAndData(SkinningModel* skinningModel)
 {
-
     skinningModel_ = skinningModel;
-
-    boneModelData_ = skinningModel_->GetBoneModelData();
-    skeleton_ = skinningModel_->GetSkeleton();
-    skinCluster_ = skinningModel_->GetSkinCluster();
-
-    //試しにここでセットしてみる　
-    animation_ = AnimationManager::GetAnimation(boneModelData_->filePath);
-
 #ifdef _DEBUG
-
-    debugBone_->Create(*skeleton_);
-
+    debugBone_->Create(*skinningModel_->GetSkeleton());
 #endif
+    //試しにここでセットしてみる　
+    animation_ = AnimationManager::GetAnimation(skinningModel_->GetBoneModelData()->filePath);
+}
+
+void AnimationObject3d::SetAnimation(Model* model)
+{
+    skinningModel_->SetBoneModel(model);
+#ifdef _DEBUG
+    debugBone_->Create(*skinningModel_->GetSkeleton());
+#endif
+    //試しにここでセットしてみる　
+    animation_ = AnimationManager::GetAnimation(skinningModel_->GetBoneModelData()->filePath);
+}
+
+void AnimationObject3d::SetModel(Model* model)
+{
+    skinningModel_->SetModel(model);
 }
 
 void AnimationObject3d::SetTextureHandle(const Texture::TEXTURE_HANDLE& handle)

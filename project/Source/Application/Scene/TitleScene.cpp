@@ -9,9 +9,6 @@
 TitleScene::TitleScene()
 {
     puzzle_ = std::make_unique<Puzzle>();
-
-
-
 }
 
 TitleScene::~TitleScene()
