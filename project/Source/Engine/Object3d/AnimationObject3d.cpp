@@ -37,41 +37,38 @@ void AnimationObject3d::UpdateAnimation()
     animationTime_ += InverseFPS;
     animationTime_ = std::fmod(animationTime_, animation_.duration);
 
-    if (modelData_ != nullptr) {
-        //アニメーションの更新を行って、骨ごとのLocal情報を更新する
-        ApplyAnimation(*skeleton_, animation_, animationTime_);
-        //現在の骨ごとのLocal情報を基にSkeletonSpaceの情報を更新する
-        UpdateSkeleton(*skeleton_);
-        //SkeletonSpaceの情報を基に、SkinClusterのMatrixPaletteを更新する
-        UpdateSkinCluster(*skinCluster_, *skeleton_);
-        //Matrix4x4 localMatrix = skeleton_.joints[skeleton_.root].localMatrix;
+    assert(boneModelData_);
+    assert( skeleton_ );
+    assert(skinCluster_);
 
-        if (isSkinning_) {
-            worldMatrix_ = worldTransform_.matWorld_;
-        } else {
-            worldMatrix_ = modelData_->rootNode.localMatrix * worldTransform_.matWorld_;
-        }
+    //アニメーションの更新を行って、骨ごとのLocal情報を更新する
+    ApplyAnimation(*skeleton_, animation_, animationTime_);
+    //現在の骨ごとのLocal情報を基にSkeletonSpaceの情報を更新する
+    UpdateSkeleton(*skeleton_);
+    //SkeletonSpaceの情報を基に、SkinClusterのMatrixPaletteを更新する
+    UpdateSkinCluster(*skinCluster_, *skeleton_);
 
+    if (isSkinning_) {
+        worldMatrix_ = worldTransform_.matWorld_;
+    } else {
+        worldMatrix_ = boneModelData_->rootNode.localMatrix * worldTransform_.matWorld_;
     }
 
 #ifdef _DEBUG
     debugBone_->Update(worldTransform_.matWorld_);
 #endif
 }
-
-
-
-
 void AnimationObject3d::SetMeshAndData(SkinningModel* skinningModel)
 {
+
     skinningModel_ = skinningModel;
 
-    modelData_ = skinningModel->GetModelData();
-    skeleton_ = skinningModel->GetSkeleton();
-    skinCluster_ = skinningModel->GetSkinCluster();
+    boneModelData_ = skinningModel_->GetBoneModelData();
+    skeleton_ = skinningModel_->GetSkeleton();
+    skinCluster_ = skinningModel_->GetSkinCluster();
 
     //試しにここでセットしてみる　
-    animation_ = LoadAnimationFileForFilePath(modelData_->filePath);
+    animation_ = AnimationManager::GetAnimation(boneModelData_->filePath);
 
 #ifdef _DEBUG
 
@@ -82,7 +79,7 @@ void AnimationObject3d::SetMeshAndData(SkinningModel* skinningModel)
 
 void AnimationObject3d::SetTextureHandle(const Texture::TEXTURE_HANDLE& handle)
 {
-    skinningModel_->SetTextureHandle(handle); 
+    skinningModel_->SetTextureHandle(handle);
 }
 
 void AnimationObject3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode)

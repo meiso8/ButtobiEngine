@@ -18,6 +18,7 @@ class Object3d
 public:
     WorldTransform worldTransform_;
 protected:
+
     //位置情報
     Microsoft::WRL::ComPtr <ID3D12Resource> transformationMatrixResource_ = nullptr;
     TransformationMatrixFor3D* transformationMatrixData_ = nullptr;
@@ -41,6 +42,7 @@ protected:
 private:
     //メッシュ情報
     MeshCommon* meshCommon_ = nullptr;
+
 public:
     ~Object3d();
 

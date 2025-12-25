@@ -21,8 +21,6 @@ public:
     void Draw(Camera& camera, const BlendMode& blendMode = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack)override;
 private:
 
-    SkinningModel* skinningModel_ = nullptr;
-
     void UpdateAnimation();
     float animationTime_ = 0.0f;
     Quaternion rotate_ = { 0.0f };
@@ -31,8 +29,8 @@ private:
     Matrix4x4 worldMatrix_ = { 0.0f };
     bool isSkinning_ = true;
 
-    //借り物
-    ModelData* modelData_ = nullptr;
+    SkinningModel* skinningModel_ = nullptr;
+    ModelData* boneModelData_ = nullptr;
     Skeleton* skeleton_ = nullptr;
     SkinCluster* skinCluster_ = nullptr;
 #ifdef _DEBUG

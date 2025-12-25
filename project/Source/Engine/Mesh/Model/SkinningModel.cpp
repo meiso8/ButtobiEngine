@@ -12,15 +12,27 @@ SkinningModel::~SkinningModel()
     Finalize();
 }
 
-void SkinningModel::CreateDatas(Model* model)
+void SkinningModel::SetModel(Model* model)
 {
+    //モデルのメッシュ
     modelData_ = model->GetModelData();
     vertexBufferView_ = model->GetVBV();
     indexBufferView_ = model->GetIBV();
-
     textureHandle_ = modelData_->material.textureSrvIndex;
-    *skeleton_ = CreateSkeleton(modelData_->rootNode);
-    *skinCluster_ = CreateSkinCluster(*skeleton_, *modelData_);
+}
+
+void SkinningModel::SetBoneModel(Model* boneModel)
+{
+    //骨の情報
+    boneData_ = boneModel->GetModelData();
+    *skeleton_ = CreateSkeleton(boneData_->rootNode);
+    *skinCluster_ = CreateSkinCluster(*skeleton_, *boneData_);
+}
+
+void SkinningModel::CreateDatas(Model* model, Model* boneModel)
+{
+    SetModel(model);
+    SetBoneModel(boneModel);
 }
 
 void SkinningModel::PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode& blendMode, const CullMode& cullMode)

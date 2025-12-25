@@ -15,7 +15,7 @@ Medjed::Medjed() {
     aniObj_->Create();
 
     skinningModel = std::make_unique<SkinningModel>();
-    skinningModel->CreateDatas(ModelManager::GetModel(ModelManager::Ani_GLTF));
+    skinningModel->CreateDatas(ModelManager::GetModel(ModelManager::human_GLTF),ModelManager::GetModel(ModelManager::Ani_GLTF));
     aniObj_->SetMeshAndData(skinningModel.get());
 
 }
