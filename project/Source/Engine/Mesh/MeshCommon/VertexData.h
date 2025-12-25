@@ -6,3 +6,4 @@ struct VertexData {
     float32_t2 texcoord;
     float32_t3 normal;
 };
+

@@ -32,7 +32,10 @@ public:
         return graphicsPipelineStates_[blendMode][cullMode];
         ;
     }
-
+    static Microsoft::WRL::ComPtr <ID3D12PipelineState>& GetGraphicsPipelineStatesSkinning(uint32_t blendMode, uint32_t cullMode) {
+        return graphicsPipelineStatesSkinning_[blendMode][cullMode];
+        ;
+    }
     static Microsoft::WRL::ComPtr <ID3D12PipelineState>& GetGraphicsPipelineStateParticle(uint32_t blendMode) {
         return graphicsPipelineStatesParticle_[blendMode];
         ;
@@ -55,11 +58,16 @@ private:
         InputLayout& inputLayout,
         BlendState& blendState,
         RasterizerState& rasterizerState,
-        DepthStencil& depthStencil, const ShaderType shaderType, const TopologyType topologyType);
+        DepthStencil& depthStencil, const ShaderType shaderType, const TopologyType topologyType,const InputLayout::InputLayoutType inputLayoutType);
 public:
     static std::unique_ptr<RootSignature>rootSignature;
 private:
     static std::array<std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfCullMode>, kCountOfBlendMode> graphicsPipelineStates_;
+
+    static std::array<std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfCullMode>, kCountOfBlendMode> graphicsPipelineStatesSkinning_;
+
+
+
     static std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState> ,kCountOfBlendMode> graphicsPipelineStatesParticle_;
     static Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineStatesLine_;
     static std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> graphicsPipelineStateSprite_;

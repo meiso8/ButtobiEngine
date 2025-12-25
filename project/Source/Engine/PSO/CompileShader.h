@@ -10,6 +10,7 @@ enum ShaderType {
     kNormal,
     kParticle,
     kSprite,
+    kSkinning,
     Shaders,
 };
 

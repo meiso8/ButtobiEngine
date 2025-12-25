@@ -21,8 +21,7 @@ protected:
     //位置情報
     Microsoft::WRL::ComPtr <ID3D12Resource> transformationMatrixResource_ = nullptr;
     TransformationMatrixFor3D* transformationMatrixData_ = nullptr;
-    //メッシュ情報
-    MeshCommon* meshCommon_ = nullptr;
+
 
     //コマンドリスト 借り物
     static  ID3D12GraphicsCommandList* commandList_;
@@ -39,7 +38,9 @@ protected:
     //波データ
     Microsoft::WRL::ComPtr<ID3D12Resource> waveResource_;
     Wave* waveData_ = nullptr;
-
+private:
+    //メッシュ情報
+    MeshCommon* meshCommon_ = nullptr;
 public:
     ~Object3d();
 
@@ -81,9 +82,8 @@ public:
     void InitWaveDataIndex(const uint32_t& index);
     void InitBalloonData();
 
-    void SetMesh(MeshCommon* mesh) { meshCommon_ = mesh; };
-
-    void SetTextureHandle(const Texture::TEXTURE_HANDLE& handle) { meshCommon_->SetTextureHandle(handle); };
+   void SetMesh(MeshCommon* mesh) { meshCommon_ = mesh; };
+    virtual void SetTextureHandle(const Texture::TEXTURE_HANDLE& handle) { meshCommon_->SetTextureHandle(handle); };
 private:
     void CreateUV();
     void CreateTransformationMatrix();

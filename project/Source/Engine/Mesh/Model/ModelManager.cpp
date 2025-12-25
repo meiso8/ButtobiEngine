@@ -12,6 +12,7 @@
 #include"Texture.h"
 #include"Model.h"
 #include"Quaternion/Quaternion.h"
+#include"MakeMatrix.h"
 
 std::map<const uint32_t, std::unique_ptr< Model> >ModelManager::models_;
 
@@ -19,7 +20,7 @@ void ModelManager::LoadAllModel()
 {
     //モデルのファイルパスとタグを関連付けてください
     LoadModel("Resource/Models/Box", "Box.obj", BOX);
-    LoadModel("Resource/Models/human", "walk.gltf", Ani_GLTF);
+    LoadModel("Resource/Models/human", "sneakWalk.gltf", Ani_GLTF);
     LoadModel("Resource/Models/player", "player.obj", PLAYER_BODY);
     LoadModel("Resource/Models/medjed", "medjed.obj", MEDJED);
     LoadModel("Resource/Models/people", "people.obj", PEOPLE);
@@ -85,15 +86,15 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
 
 
     // 全メッシュの合計頂点数とインデックス数を先に数える 
-    
-    size_t totalVertices = 0; 
-    size_t totalIndices = 0; 
 
-    for (uint32_t meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex){
+    size_t totalVertices = 0;
+    size_t totalIndices = 0;
+
+    for (uint32_t meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex) {
         aiMesh* mesh = scene->mMeshes[meshIndex];
-        totalVertices += mesh->mNumVertices; 
-        totalIndices += mesh->mNumFaces * 3; 
-    } 
+        totalVertices += mesh->mNumVertices;
+        totalIndices += mesh->mNumFaces * 3;
+    }
 
     modelData->vertices.reserve(totalVertices);
     modelData->indices.reserve(totalIndices);
@@ -121,14 +122,40 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
 
         // インデックス追加（オフセットを加える！）
         for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex) {
-            aiFace& face = mesh->mFaces[faceIndex]; assert(face.mNumIndices == 3); 
+            aiFace& face = mesh->mFaces[faceIndex]; assert(face.mNumIndices == 3);
             for (uint32_t element = 0; element < face.mNumIndices; ++element) {
                 uint32_t vertexIndex = face.mIndices[element]; modelData->indices.push_back(vertexOffset + vertexIndex); // ← ここが重要！ 
-            } 
+            }
         }
-     
+
+
+        //SkinCluster骨の解析
+        for (uint32_t boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex) {
+            //Jointごとの格納領域を作る
+            aiBone* bone = mesh->mBones[boneIndex];
+            std::string jointName = bone->mName.C_Str();
+            JointWeightData& jointWeightData = modelData->skinClusterData[jointName];
+            //InverseBinePoseMatrixの抽出
+            aiMatrix4x4 bindPoseMatrixAssimp = bone->mOffsetMatrix.Inverse();
+            aiVector3D scale, translate;
+            aiQuaternion rotate;
+            bindPoseMatrixAssimp.Decompose(scale, rotate, translate);
+            //左手系のBindPoseを作る
+            Matrix4x4 bindPoseMatrix = MakeAffineMatrix(
+                { scale.x,scale.y,scale.z }, { rotate.x,-rotate.y,-rotate.z,rotate.w }, { -translate.x,translate.y,translate.z });
+            //InverseBindPosemMatrixにする
+            jointWeightData.inverseBindPoseMatrix = Inverse(bindPoseMatrix);
+            //Wight情報を取り出す
+            for (uint32_t weightIndex = 0; weightIndex < bone->mNumWeights; ++weightIndex) {
+                //mVertexIdは該当Mesh内でのIndexである MultiMesh/MuitiMaterial対応する際にはこのまま保存するのではなく、全体を通して改良が必要である。
+                jointWeightData.vertexWeights.push_back({ bone->mWeights[weightIndex].mWeight,bone->mWeights[weightIndex].mVertexId });
+            }
+
+        }
+
     }
 
+    //マテリアルの解析
     for (uint32_t materialIndex = 0; materialIndex < scene->mNumMaterials; ++materialIndex) {
         aiMaterial* material = scene->mMaterials[materialIndex];
 

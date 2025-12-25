@@ -1,40 +1,35 @@
 
-#include "object3d.hlsli"
-
-struct TransformationMatrix
-{
-    float32_t4x4 WVP;
-    float32_t4x4 World;
-    float32_t4x4 WorldInverseTranspose;
-};
-
-struct Wave
-{
-    float32_t4 direction;
-    float time; 
-    float amplitude; 
-    float frequency;
-};
-
-struct Balloon
-{
-    float expansion;
-    float sphere;
-    float cube;
-    bool isSphere;
-};
+#include "SkinningObject.hlsli"
 
 ConstantBuffer<TransformationMatrix> gTransformationMatrix : register(b0);
 ConstantBuffer<Balloon> gBalloon : register(b1);
 StructuredBuffer<Wave> gWave : register(t1);
 
+StructuredBuffer<Well> gMatrixPalette : register(t5);
 
-struct VertexShaderInput
+
+Skinned Skinning(VertexShaderInput input)
 {
-    float32_t4 position : POSITION0;
-    float32_t2 texcoord : TEXCOORD0;
-    float32_t3 normal : NORMAL0;
-};
+    Skinned skinned;
+    //位置の変換
+    skinned.position = mul(input.position, gMatrixPalette[input.index.x].skeletonSpaceMatrix) * input.weight.x;
+    skinned.position += mul(input.position, gMatrixPalette[input.index.y].skeletonSpaceMatrix) * input.weight.y;
+    skinned.position += mul(input.position, gMatrixPalette[input.index.z].skeletonSpaceMatrix) * input.weight.z;
+    skinned.position += mul(input.position, gMatrixPalette[input.index.w].skeletonSpaceMatrix) * input.weight.w;
+    skinned.position.w = 1.0f;
+    
+    //法線の変換
+    skinned.normal = mul(input.normal, (float32_t3x3) gMatrixPalette[input.index.x].skeletonSpaceMatrix) * input.weight.x;
+    skinned.normal += mul(input.normal, (float32_t3x3) gMatrixPalette[input.index.y].skeletonSpaceMatrix) * input.weight.y;
+    skinned.normal += mul(input.normal, (float32_t3x3) gMatrixPalette[input.index.z].skeletonSpaceMatrix) * input.weight.z;
+    skinned.normal += mul(input.normal, (float32_t3x3) gMatrixPalette[input.index.w].skeletonSpaceMatrix) * input.weight.w;
+    skinned.normal = normalize(skinned.normal);
+    
+    
+    return skinned;
+
+}
+
 
 float WaveUpdate(VertexShaderInput input)
 {
@@ -84,8 +79,10 @@ VertexShaderOutput main(VertexShaderInput input)
 {
     VertexShaderOutput output;
 
+    Skinned skinned = Skinning(input);
+    input.position = skinned.position;
+    input.normal = skinned.normal;
     input.position.y += WaveUpdate(input);
-     
     input.position.xyz += BalloonUpdate(input);
 
     if (gBalloon.isSphere)
@@ -97,9 +94,9 @@ VertexShaderOutput main(VertexShaderInput input)
         output.position = mul(CubeUpdate(input), gTransformationMatrix.WVP);
     }
 
-    
+    output.worldPosition = mul(input.position, gTransformationMatrix.World).xyz;
     output.texcoord = input.texcoord;
     output.normal = normalize(mul(input.normal, (float32_t3x3) gTransformationMatrix.WorldInverseTranspose));
-    output.worldPosition = mul(input.position, gTransformationMatrix.World).xyz;
+
     return output;
 }

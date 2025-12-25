@@ -11,7 +11,7 @@ std::array<std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfCullM
 std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode>PSO::graphicsPipelineStatesParticle_;
 Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::graphicsPipelineStatesLine_;
 std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> PSO::graphicsPipelineStateSprite_;
-
+std::array<std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfCullMode>, kCountOfBlendMode>PSO::graphicsPipelineStatesSkinning_;
 Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
     RootSignature& rootSignature,
     InputLayout& inputLayout,
@@ -19,12 +19,13 @@ Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
     RasterizerState& rasterizerState,
     DepthStencil& depthStencil,
     const ShaderType shaderType,
-    const TopologyType topologyType) {
+    const TopologyType topologyType,
+    const InputLayout::InputLayoutType inputLayoutType ) {
 
     D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
 
     graphicsPipelineStateDesc.pRootSignature = rootSignature.GetRootSignature(shaderType);//RootSignature
-    graphicsPipelineStateDesc.InputLayout = inputLayout.GetDesc();//InputLayout
+    graphicsPipelineStateDesc.InputLayout = inputLayout.GetDescs(inputLayoutType);//InputLayout
     graphicsPipelineStateDesc.VS = { DirectXCommon::GetDxcCompiler()->GetVertexShaderBlob(shaderType)->GetBufferPointer(),
     DirectXCommon::GetDxcCompiler()->GetVertexShaderBlob(shaderType)->GetBufferSize() };//VertexShader
     graphicsPipelineStateDesc.PS = { DirectXCommon::GetDxcCompiler()->GetPixelShaderBlob(shaderType)->GetBufferPointer(),
@@ -115,7 +116,8 @@ void PSO::CreateALLPSO()
                 rasterizerStates[c],
                 depthStencils[kAll],
                 kNormal,
-                kTriangle
+                kTriangle,
+                InputLayout::kInputLayoutTypeNormal
             );
         }
     }
@@ -126,7 +128,7 @@ void PSO::CreateALLPSO()
             *inputLayout,
             blendStates[b],
             rasterizerStates[kCullModeNone],
-            depthStencils[kZero], kParticle, kTriangle
+            depthStencils[kZero], kParticle, kTriangle, InputLayout::kInputLayoutTypeNormal
         );
     }
 
@@ -139,7 +141,7 @@ void PSO::CreateALLPSO()
             rasterizerStates[kCullModeBack],
             depthStencils[kAll],
             kNormal,
-            kLine);
+            kLine, InputLayout::kInputLayoutTypeNormal);
 
     for (int b = 0; b < kCountOfBlendMode; ++b) {
         graphicsPipelineStateSprite_[b] = Create(
@@ -147,33 +149,55 @@ void PSO::CreateALLPSO()
             *inputLayout,
             blendStates[b],
             rasterizerStates[kCullModeBack],
-            depthStencils[kAll], kSprite, kTriangle
+            depthStencils[kAll], kSprite, kTriangle, InputLayout::kInputLayoutTypeNormal
         );
     }
 
+    for (uint32_t b = 0; b < kCountOfBlendMode; ++b) {
+        for (uint32_t c = 0; c < kCountOfCullMode; ++c) {
+            graphicsPipelineStatesSkinning_[b][c] = Create(
+                *rootSignature,
+                *inputLayout,
+                blendStates[b],
+                rasterizerStates[c],
+                depthStencils[kAll],
+                kSkinning,
+                kTriangle, InputLayout::kInputLayoutTypeSkinning
+            );
+        }
+    }
 }
 
 PSO::~PSO()
 {
-    for (auto& pso : PSO::graphicsPipelineStateSprite_) {
+
+    for (auto& blendModes : graphicsPipelineStatesSkinning_) {
+        for (auto& pso : blendModes) {
+            if (pso) {
+                pso.Reset(); // Release() と同じ効果
+            }
+        }
+    }
+
+    for (auto& pso : graphicsPipelineStateSprite_) {
         if (pso) {
             pso.Reset();
         }
     }
 
-    if (PSO::graphicsPipelineStatesLine_) {
-        PSO::graphicsPipelineStatesLine_.Reset();
+    if (graphicsPipelineStatesLine_) {
+        graphicsPipelineStatesLine_.Reset();
     }
 
 
-    for (auto& pso : PSO::graphicsPipelineStatesParticle_) {
+    for (auto& pso : graphicsPipelineStatesParticle_) {
         if (pso) {
             pso.Reset();
         }
     }
 
 
-    for (auto& blendModes : PSO::graphicsPipelineStates_) {
+    for (auto& blendModes : graphicsPipelineStates_) {
         for (auto& pso : blendModes) {
             if (pso) {
                 pso.Reset(); // Release() と同じ効果

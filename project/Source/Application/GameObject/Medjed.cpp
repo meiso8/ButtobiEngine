@@ -1,7 +1,8 @@
 #include "Medjed.h"
 #include"ModelManager.h"
-#include"Model.h"
+//#include"Model.h"
 #include"MakeMatrix.h"
+#include"SkinningModel.h"
 Medjed::Medjed() {
 
     model_ = ModelManager::GetModel(ModelManager::MEDJED);
@@ -12,7 +13,10 @@ Medjed::Medjed() {
 
     aniObj_ = std::make_unique<AnimationObject3d>();
     aniObj_->Create();
-    aniObj_->SetMeshAndData(ModelManager::GetModel(ModelManager::Ani_GLTF));
+
+    skinningModel = std::make_unique<SkinningModel>();
+    skinningModel->CreateDatas(ModelManager::GetModel(ModelManager::Ani_GLTF));
+    aniObj_->SetMeshAndData(skinningModel.get());
 
 }
 

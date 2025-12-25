@@ -20,8 +20,6 @@ void MeshCommon::PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode
 void MeshCommon::SetTextureHandle(const Texture::TEXTURE_HANDLE& textureHandle)
 {
     textureHandle_ = Texture::GetHandle(textureHandle);
-
-
 }
 
 void MeshCommon::CreateIndexResource()
