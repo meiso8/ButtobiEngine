@@ -11,8 +11,8 @@ void RootSignature::Create() {
 
 #pragma region//rootSignature
     //rootSignature作成
-    D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature[3]{};
-    for (uint32_t i = 0; i < 3; ++i) {
+    D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature[TYPES]{};
+    for (uint32_t i = 0; i < TYPES; ++i) {
         descriptionRootSignature[i].Flags =
             D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
     }
@@ -22,7 +22,7 @@ void RootSignature::Create() {
 #pragma region//DescriptorRange
     //DescriptorRange
     D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
-    descriptorRange[0].BaseShaderRegister = 2;//2から始める
+    descriptorRange[0].BaseShaderRegister = 2;//2から始める Texture2D<float32_t4> gTexture : register(t2); 
     descriptorRange[0].NumDescriptors = 1;//1つ
     descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SRV
     descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//オフセット自動計算
@@ -42,9 +42,17 @@ void RootSignature::Create() {
     descriptorRangeForPointLight[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
     descriptorRangeForPointLight[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
+    //MatrixPalette用
+    D3D12_DESCRIPTOR_RANGE descriptorRangeForMatrixPalette[1] = {};
+    descriptorRangeForMatrixPalette[0].BaseShaderRegister = 5;// StructuredBuffer<Well> gMatrixPalette : register(t5);
+    descriptorRangeForMatrixPalette[0].NumDescriptors = 1;
+    descriptorRangeForMatrixPalette[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+    descriptorRangeForMatrixPalette[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+
 
     //D3D12_DESCRIPTOR_RANGE waveDescriptorRange[1] = {};
-    //waveDescriptorRange[0].BaseShaderRegister = 1; // gWave : register(t1)
+    //waveDescriptorRange[0].BaseShaderRegister = 1; // StructuredBuffer<Wave> gWave : register(t1);
     //waveDescriptorRange[0].NumDescriptors = 1;
     //waveDescriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
     //waveDescriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
@@ -63,7 +71,7 @@ void RootSignature::Create() {
     staticSamplers[0].ShaderRegister = 0;
     staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
 
-    for (uint32_t i = 0; i < 3; ++i) {
+    for (uint32_t i = 0; i < TYPES; ++i) {
         //同じサンプラーをセットする
         descriptionRootSignature[i].pStaticSamplers = staticSamplers;
         descriptionRootSignature[i].NumStaticSamplers = _countof(staticSamplers);
@@ -125,6 +133,23 @@ void RootSignature::Create() {
 
 #pragma endregion
 
+#pragma region//rootParametersForSkinning
+
+    D3D12_ROOT_PARAMETER rootParametersForSkinning[10] = {};
+
+    for (int i = 0; i < 9; ++i) {
+        rootParametersForSkinning[i] = rootParameters[i];
+    }
+
+    //MatrixPalette t5
+    rootParametersForSkinning[9].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParametersForSkinning[9].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
+    rootParametersForSkinning[9].DescriptorTable.pDescriptorRanges = descriptorRangeForMatrixPalette;//Tableの中身の配列を指定
+    rootParametersForSkinning[9].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForMatrixPalette);//Tableで利用する数
+#pragma endregion
+
+
+
 #pragma region//ParticleRootParameters
     //CBufferを利用することになったので、RootParameterに設定を追加する
    /* RootParameter作成。PixelShaderのMaterialとVertexShaderのTransform*/
@@ -167,15 +192,17 @@ void RootSignature::Create() {
 
 #pragma endregion
 
-    descriptionRootSignature[0].pParameters = rootParameters;//ルートパラメータ配列へのポインタ
-    descriptionRootSignature[0].NumParameters = _countof(rootParameters);//配列の長さ
+    descriptionRootSignature[kNormal].pParameters = rootParameters;//ルートパラメータ配列へのポインタ
+    descriptionRootSignature[kNormal].NumParameters = _countof(rootParameters);//配列の長さ
 
-    descriptionRootSignature[1].pParameters = rootParametersForInstancing;//ルートパラメータ配列へのポインタ
-    descriptionRootSignature[1].NumParameters = _countof(rootParametersForInstancing);//配列の長さ
+    descriptionRootSignature[kParticle].pParameters = rootParametersForInstancing;//ルートパラメータ配列へのポインタ
+    descriptionRootSignature[kParticle].NumParameters = _countof(rootParametersForInstancing);//配列の長さ
 
-    descriptionRootSignature[2].pParameters = rootParametersForSprite;//ルートパラメータ配列へのポインタ
-    descriptionRootSignature[2].NumParameters = _countof(rootParametersForSprite);//配列の長さ
+    descriptionRootSignature[kSprite].pParameters = rootParametersForSprite;//ルートパラメータ配列へのポインタ
+    descriptionRootSignature[kSprite].NumParameters = _countof(rootParametersForSprite);//配列の長さ
 
+    descriptionRootSignature[kSkinning].pParameters = rootParametersForSkinning;//ルートパラメータ配列へのポインタ
+    descriptionRootSignature[kSkinning].NumParameters = _countof(rootParametersForSkinning);//配列の長さ
 
     //シリアライズしてバイナリにする
     Microsoft::WRL::ComPtr <ID3DBlob> signatureBlob = nullptr;
@@ -183,7 +210,7 @@ void RootSignature::Create() {
 
 #pragma region//NormalRootParameterシリアライズしてバイナリにする
 
-    for (uint32_t i = 0; i < 3; ++i) {
+    for (uint32_t i = 0; i < TYPES; ++i) {
 
         HRESULT result = D3D12SerializeRootSignature(&descriptionRootSignature[i],
             D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);

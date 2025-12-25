@@ -53,6 +53,13 @@ void DxcCompiler::ShaderSetting() {
         L"ps_6_0"));
     assert(pixelShaderBlobs_[kSprite] != nullptr);
 
+    vertexShaderBlobs_.push_back(CompileShader(L"Resource/shader/SkinningObject3d.VS.hlsl",
+        L"vs_6_0"));
+    assert(vertexShaderBlobs_[kSkinning] != nullptr);
+
+    //Normalと同じなので
+    pixelShaderBlobs_.push_back(pixelShaderBlobs_[kNormal]);
+    assert(pixelShaderBlobs_[kSkinning] != nullptr);
 
 }
 

@@ -157,7 +157,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\Mesh\Model\SkinningModel.cpp" />
     <ClCompile Include="Source\Engine\Animation\Bone.cpp" />
+    <ClCompile Include="Source\Engine\Animation\SkinCluster.cpp" />
     <ClCompile Include="Source\Engine\Object3d\AnimationObject3d.cpp" />
     <ClCompile Include="Source\Engine\Animation\Animation.cpp" />
     <ClCompile Include="Source\Application\GameObject\Puzzle\Puzzle.cpp" />
@@ -280,8 +282,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\UI\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\Mesh\Model\SkinningModel.h" />
+    <ClInclude Include="Source\Engine\Animation\Animation.h" />
     <ClInclude Include="Source\Engine\Animation\Bone.h" />
     <ClInclude Include="Source\Engine\Animation\Node.h" />
+    <ClInclude Include="Source\Engine\Animation\SkinCluster.h" />
     <ClInclude Include="Source\Engine\Object3d\AnimationObject3d.h" />
     <ClInclude Include="Source\Application\GameObject\Puzzle\Puzzle.h" />
     <ClInclude Include="Source\Engine\Animation\Keyframe.h" />

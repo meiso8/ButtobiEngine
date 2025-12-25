@@ -1,3 +1,4 @@
+#pragma once
 #include"MeshCommon.h"
 #include"ModelManager.h"
 #include"ModelData.h"
@@ -16,6 +17,10 @@ public:
     }
 
     D3D12_VERTEX_BUFFER_VIEW& GetVBV() { return vertexBufferView_; };
+    //インデックスデータ
+    D3D12_INDEX_BUFFER_VIEW& GetIBV() { return indexBufferView_; };
+    
+ 
     void Draw(ID3D12GraphicsCommandList* commandList)override;
     
     /// @brief テクスチャをモデルオリジナルのものに戻す

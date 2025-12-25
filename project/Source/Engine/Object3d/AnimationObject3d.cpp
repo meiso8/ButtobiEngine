@@ -6,7 +6,8 @@
 #include"Lights/DirectionalLightManager.h"
 #include"Lights/SpotLightManager.h"
 #include"MakeMatrix.h"
-
+#include"SkinningModel.h"
+#include"Bone.h"
 AnimationObject3d::AnimationObject3d() {
 
     animationTime_ = 0.0f;
@@ -37,14 +38,16 @@ void AnimationObject3d::UpdateAnimation()
     animationTime_ = std::fmod(animationTime_, animation_.duration);
 
     if (modelData_ != nullptr) {
-
-        ApplyAnimation(skeleton_, animation_, animationTime_);
-        UpdateSkeleton(skeleton_);
-
+        //アニメーションの更新を行って、骨ごとのLocal情報を更新する
+        ApplyAnimation(*skeleton_, animation_, animationTime_);
+        //現在の骨ごとのLocal情報を基にSkeletonSpaceの情報を更新する
+        UpdateSkeleton(*skeleton_);
+        //SkeletonSpaceの情報を基に、SkinClusterのMatrixPaletteを更新する
+        UpdateSkinCluster(*skinCluster_, *skeleton_);
         //Matrix4x4 localMatrix = skeleton_.joints[skeleton_.root].localMatrix;
 
         if (isSkinning_) {
-            worldMatrix_ =  worldTransform_.matWorld_;
+            worldMatrix_ = worldTransform_.matWorld_;
         } else {
             worldMatrix_ = modelData_->rootNode.localMatrix * worldTransform_.matWorld_;
         }
@@ -59,19 +62,27 @@ void AnimationObject3d::UpdateAnimation()
 
 
 
-void AnimationObject3d::SetMeshAndData(Model* model)
+void AnimationObject3d::SetMeshAndData(SkinningModel* skinningModel)
 {
-    modelData_ = model->GetModelData();
-    meshCommon_ = model;
+    skinningModel_ = skinningModel;
+
+    modelData_ = skinningModel->GetModelData();
+    skeleton_ = skinningModel->GetSkeleton();
+    skinCluster_ = skinningModel->GetSkinCluster();
+
     //試しにここでセットしてみる　
     animation_ = LoadAnimationFileForFilePath(modelData_->filePath);
-    skeleton_ = CreateSkeleton(modelData_->rootNode);
 
 #ifdef _DEBUG
 
-    debugBone_->Create(skeleton_);
+    debugBone_->Create(*skeleton_);
 
 #endif
+}
+
+void AnimationObject3d::SetTextureHandle(const Texture::TEXTURE_HANDLE& handle)
+{
+    skinningModel_->SetTextureHandle(handle); 
 }
 
 void AnimationObject3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode)
@@ -80,8 +91,8 @@ void AnimationObject3d::Draw(Camera& camera, const BlendMode& blendMode, const C
     transformationMatrixData_->WorldInverseTranspose = Transpose(Inverse(worldMatrix_));
     transformationMatrixData_->WVP = Multiply(worldMatrix_, camera.GetViewProjectionMatrix());
 
-    if (meshCommon_) {
-        meshCommon_->PreDraw(commandList_, blendMode, cullMode);
+    if (skinningModel_) {
+        skinningModel_->PreDraw(commandList_, blendMode, cullMode);
         //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
         commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定
@@ -96,11 +107,12 @@ void AnimationObject3d::Draw(Camera& camera, const BlendMode& blendMode, const C
         DirectionalLightManager::SetGraphicsRootConstantBufferView();
         PointLightManager::SetGraphicsRootDescriptorTable();
         SpotLightManager::SetGraphicsRootConstantBufferView();
-        meshCommon_->Draw(commandList_);
+        skinningModel_->Draw(commandList_);
     }
 
 #ifdef _DEBUG
     debugBone_->Draw(camera);
 #endif
+
 }
 

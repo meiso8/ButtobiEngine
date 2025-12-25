@@ -4,7 +4,9 @@
 #include"Object3d.h"
 #include"AnimationObject3d.h"
 #include"AABB.h"
-class Model;
+#include"SkinningModel.h"
+#include"Model.h"
+
 class Medjed
 {
  
@@ -12,6 +14,8 @@ class Medjed
     Model* model_ = nullptr;
     Vector3* targetPos_ = nullptr;
     std::unique_ptr<AnimationObject3d> aniObj_ = nullptr;
+    std::unique_ptr < SkinningModel> skinningModel = nullptr;
+
 public:
     Medjed();
     void Init();

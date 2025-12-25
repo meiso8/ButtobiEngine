@@ -13,6 +13,7 @@ public:
         NORMAL,
         PARTICLE,
         SPRITE,
+        SKINNING,
         TYPES
     };
 
