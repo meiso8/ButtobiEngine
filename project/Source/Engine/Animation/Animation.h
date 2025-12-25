@@ -3,15 +3,13 @@
 #include<string>
 #include"NodeAnimation.h"
 #include"Lerp.h"
+#include<unordered_map>
 struct Skeleton;
 struct Animation {
     float duration;//アニメーション全体の尺
     //NodeAnimationの集合。Node名でひけるようにしておく
     std::map<std::string, NodeAnimation> nodeAnimations;
 };
-
-Animation LoadAnimationFile(const std::string& directoryPath, const std::string& fliename);
-Animation LoadAnimationFileForFilePath(const std::string& filePath);
 
 
 // Vector3用のLerp
@@ -43,3 +41,13 @@ template <typename T> T CalculateValue(const  std::vector<Keyframe<T>>& keyframe
 
 
 void ApplyAnimation(Skeleton& skeleton, const Animation& animation, const float animationTime);
+
+class AnimationManager {
+public:
+    static Animation LoadAnimationFile(const std::string& directoryPath, const std::string& fliename);
+    static  Animation LoadAnimationFileForFilePath(const std::string& filePath);
+    ~AnimationManager();
+    static Animation GetAnimation(const std::string& filePath);
+private:
+    static std::unordered_map<std::string, Animation> animations_;
+};

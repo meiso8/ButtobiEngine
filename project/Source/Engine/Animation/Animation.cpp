@@ -5,14 +5,37 @@
 #include<cassert>
 #include"Bone.h"
 #include<iostream>
-Animation LoadAnimationFile(const std::string& directoryPath, const std::string& filename)
+
+std::unordered_map<std::string, Animation> AnimationManager::animations_;
+AnimationManager::~AnimationManager()
 {
-    std::string filePath = directoryPath + "/" + filename;
-    return  LoadAnimationFileForFilePath(filePath);
+    animations_.clear();
 }
 
-Animation LoadAnimationFileForFilePath(const std::string& filePath)
+Animation AnimationManager::GetAnimation(const std::string& filePath)
 {
+
+    if (animations_.contains(filePath)) {
+        return animations_.at(filePath);
+    }
+
+    return LoadAnimationFileForFilePath(filePath);
+}
+
+
+Animation AnimationManager::LoadAnimationFile(const std::string& directoryPath, const std::string& filename)
+{
+    std::string filePath = directoryPath + "/" + filename;
+    return LoadAnimationFileForFilePath(filePath);
+}
+
+Animation AnimationManager::LoadAnimationFileForFilePath(const std::string& filePath)
+{
+
+    if (animations_.contains(filePath)) {
+        return animations_.at(filePath);
+    }
+
     Animation animation;
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(filePath.c_str(), 0);
@@ -59,8 +82,13 @@ Animation LoadAnimationFileForFilePath(const std::string& filePath)
 
     }
 
+
+    //ハンドルとモデルをセットにする
+    animations_.insert(std::make_pair(filePath, animation));
+
     return animation;
 }
+
 
 // Vector3用のLerp
 Vector3 Interpolate(const Vector3& a, const Vector3& b, float t) {

@@ -15,13 +15,13 @@ public:
 
     void InitTime();
     void SetMeshAndData(SkinningModel* skinningModel);
+    void SetAnimation(Model* model);
+    void SetModel(Model* model);
     void SetTextureHandle(const Texture::TEXTURE_HANDLE& handle)override;
     //オーバーライド
     void Update()override;
     void Draw(Camera& camera, const BlendMode& blendMode = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack)override;
 private:
-
-    SkinningModel* skinningModel_ = nullptr;
 
     void UpdateAnimation();
     float animationTime_ = 0.0f;
@@ -31,10 +31,8 @@ private:
     Matrix4x4 worldMatrix_ = { 0.0f };
     bool isSkinning_ = true;
 
-    //借り物
-    ModelData* modelData_ = nullptr;
-    Skeleton* skeleton_ = nullptr;
-    SkinCluster* skinCluster_ = nullptr;
+    SkinningModel* skinningModel_ = nullptr;
+
 #ifdef _DEBUG
     std::unique_ptr< DebugBone> debugBone_;
 #endif

@@ -10,7 +10,9 @@ class SkinningModel :public MeshCommon
 public:
     SkinningModel();
     ~SkinningModel();
-    void CreateDatas(Model* model);
+    void SetModel(Model* model);
+    void SetBoneModel(Model* boneModel);
+    void CreateDatas(Model* model,Model* boneData);
     void PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode& blendMode = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack)override;
     void Draw(ID3D12GraphicsCommandList* commandList)override;
     Skeleton* GetSkeleton() {
@@ -24,12 +26,15 @@ public:
     ModelData* GetModelData() {
         return modelData_;
     }
+    ModelData* GetBoneModelData() {
+        return boneData_;
+    }
 
 private:
     void CreateVertex()override;
-    SkinningModel* skinningModel_ = nullptr;
     std::unique_ptr< Skeleton> skeleton_;
     std::unique_ptr< SkinCluster> skinCluster_;
     ModelData* modelData_ = nullptr;
+    ModelData* boneData_ = nullptr;
 };
 

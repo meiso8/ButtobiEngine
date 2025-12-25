@@ -3,6 +3,7 @@
 //#include"Model.h"
 #include"MakeMatrix.h"
 #include"SkinningModel.h"
+#include"Input.h"
 Medjed::Medjed() {
 
     model_ = ModelManager::GetModel(ModelManager::MEDJED);
@@ -15,7 +16,7 @@ Medjed::Medjed() {
     aniObj_->Create();
 
     skinningModel = std::make_unique<SkinningModel>();
-    skinningModel->CreateDatas(ModelManager::GetModel(ModelManager::Ani_GLTF));
+    skinningModel->CreateDatas(ModelManager::GetModel(ModelManager::human_GLTF),ModelManager::GetModel(ModelManager::Ani_GLTF));
     aniObj_->SetMeshAndData(skinningModel.get());
 
 }
@@ -23,7 +24,6 @@ Medjed::Medjed() {
 
 void Medjed::LookTarget()
 {
-
     Vector3 direction = *targetPos_- GetWorldPos();
     object3d_->worldTransform_.rotate_.y = std::atan2(direction.x, direction.z); // Y軸回転（ラジアン）
     aniObj_->worldTransform_.rotate_.y=   object3d_->worldTransform_.rotate_.y;
@@ -36,6 +36,16 @@ void Medjed::Update()
     object3d_->Update();
 
     aniObj_->Update();
+
+    if (Input::IsTriggerKey(DIK_SPACE)) {
+        aniObj_->InitTime();
+        aniObj_->SetAnimation(ModelManager::GetModel(ModelManager::Ani_GLTF));
+    }
+    if (Input::IsTriggerKey(DIK_RETURN)) {
+        aniObj_->InitTime();
+        aniObj_->SetAnimation(ModelManager::GetModel(ModelManager::human_GLTF));
+    }
+
 
 }
 void Medjed::Init()
