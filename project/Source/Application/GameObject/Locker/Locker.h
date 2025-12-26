@@ -2,13 +2,12 @@
 
 #include<memory>
 #include"Object3d.h"
-
+#include"Collider.h"
 #include"AABB.h"
 class Model;
-class Locker
-{
-private:
+class Locker :public Collider {
 
+private:
     std::unique_ptr < Object3d> object3d_;
     Model* model_ = nullptr;
 public:
@@ -19,5 +18,8 @@ public:
     void Draw(Camera& camera);
     void Update();
     void UpdateSetMesh();
+
+    void OnCollision(Collider* collider)override;
+    Vector3 GetWorldPosition() const override;
 };
 

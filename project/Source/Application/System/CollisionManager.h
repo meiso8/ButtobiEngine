@@ -10,6 +10,13 @@ public:
     /// @param collider コライダー
     void AddCollider(Collider* collider) { colliders_.emplace_back(collider); }
 
+    template <typename Container>
+    void AddColliders(const Container& colliders) { 
+        for (auto& collider : colliders) { 
+            colliders_.emplace_back(collider);
+        } }
+
+
     /// @brief コライダーをクリアする
     void ClearColliders() { colliders_.clear(); }
 

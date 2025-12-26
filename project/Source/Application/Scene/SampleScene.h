@@ -9,7 +9,7 @@
 #pragma region//ゲームオブジェクト
 #include"Player.h"
 #include"World.h"
-#include"Locker.h"
+#include"Locker/LockerManager.h"
 #include"Medjed.h"
 #include"Enemy/Enemy.h"
 #include"Field.h"
@@ -19,6 +19,9 @@
 #include "Enemy/EnemyShotBulletManager.h"
 #include"LightingManager.h"
 #pragma endregion
+
+
+#include"CollisionManager.h"
 
 class Sprite;
 class PlaneMesh;
@@ -44,8 +47,7 @@ public:
     std::unique_ptr<Player>player_ = nullptr;
     std::unique_ptr<World>world_ = nullptr;
     std::unique_ptr<Field>filed_ = nullptr;
-    std::array < std::unique_ptr<Locker>, 23>lockers1_;
-    std::array < std::unique_ptr<Locker>, 23>lockers2_;
+
     std::unique_ptr<Medjed>medjed_ = nullptr;
     std::unique_ptr<Enemy>enemy_ = nullptr;
     std::unique_ptr<Building>building_ = nullptr;
@@ -54,8 +56,14 @@ public:
     std::unique_ptr<EnemyShotBulletManager>enemyShotBulletManager_ = nullptr;
 
     std::unique_ptr<LightingManager>lightingManager_ = nullptr;
+
+    std::unique_ptr<LockerManager>lockerManager_ = nullptr;
+
 #pragma endregion
 
     std::array<std::unique_ptr<ParticleEmitter>, 2>particleEmitters_;
     std::unique_ptr<HPGage>hpGage_;
+
+    std::unique_ptr<CollisionManager>collisionManager_ = nullptr;
+
 };

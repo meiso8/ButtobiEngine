@@ -63,18 +63,15 @@ SampleScene::SampleScene()
     world_ = std::make_unique<World>();
     filed_ = std::make_unique<Field>();
 
-    for (int i = 0; i < lockers1_.size(); ++i) {
-        lockers1_[i] = std::make_unique<Locker>();
-    }
-    for (int i = 0; i < lockers2_.size(); ++i) {
-        lockers2_[i] = std::make_unique<Locker>();
-    }
+    lockerManager_ = std::make_unique<LockerManager>();
+
+    enemy_ = std::make_unique<Enemy>();
+    enemy_->SetTarget(player_->GetBodyPos());
 
     medjed_ = std::make_unique<Medjed>();
     medjed_->SetTarget(player_->GetBodyPos());
 
-    enemy_ = std::make_unique<Enemy>();
-    enemy_->SetTarget(player_->GetBodyPos());
+    medjed_->SetIsEnemyApperPtr(&enemy_->isApper_);
 
     enemyBulletManager_ = std::make_unique<EnemyBulletManager>();
     enemyShotBulletManager_ = std::make_unique<EnemyShotBulletManager>(enemy_.get(), enemyBulletManager_.get());
@@ -101,15 +98,18 @@ SampleScene::SampleScene()
 
 
     lightingManager_ = std::make_unique<LightingManager>();
-    lightingManager_->playerHandPos_.Parent(player_->GetBodyWorldTransform());
+    lightingManager_->playerHandPos_.Parent(player_->GetEyeWorldTransform());
     lightingManager_->direction_ = &player_->GetForward();
+
+    collisionManager_ = std::make_unique<CollisionManager>();
+
 }
 
 void SampleScene::Initialize() {
 
 
     lightingManager_->Initialize();
-    
+
     Sound::bgmVolume_ = 0.1f;
 
 
@@ -130,6 +130,8 @@ void SampleScene::Initialize() {
     particleEmitters_[0]->emitter_.blendMode = kBlendModeAdd;
     particleEmitters_[0]->emitter_.movement = ParticleMovements::kParticleSphere;
     particleEmitters_[0]->emitter_.radius = 3.0f;
+    particleEmitters_[0]->emitter_.rotateOffset_ = 3.14f;
+    particleEmitters_[0]->emitter_.radiusSpeed = 1.0f;
 
     particleEmitters_[1]->emitter_.transform.translate_.y = 30.0f;
     particleEmitters_[1]->emitter_.transform.scale_ = { 10.0f,10.0f,10.0f };
@@ -138,20 +140,14 @@ void SampleScene::Initialize() {
     particleEmitters_[1]->emitter_.frequencyTime = 0.1f;
     particleEmitters_[1]->emitter_.lifeTime = 10.0f;
     particleEmitters_[1]->emitter_.blendMode = kBlendModeNormal;
+    particleEmitters_[1]->emitter_.velocityAABB = { { -1.0f,-1.0f,1.0f }, { 1.0f,1.0f,1.0f } };
+    particleEmitters_[1]->emitter_.rotateOffset_ = 3.14f;
 
     player_->Init();
     world_->Init();
     filed_->Init();
 
-
-    for (int i = 0; i < lockers1_.size(); ++i) {
-        lockers1_[i]->Init();
-        lockers1_[i]->SetPosX(i * 1.0f + 1.0f);
-    }
-    for (int i = 0; i < lockers2_.size(); ++i) {
-        lockers2_[i]->Init();
-        lockers2_[i]->SetPosX(i * -1.0f - 1.0f);
-    }
+    lockerManager_->Initialize();
 
     medjed_->Init();
     enemy_->Init();
@@ -169,7 +165,7 @@ void SampleScene::Initialize() {
 void SampleScene::Update() {
 
     if (player_->GetHpsPtr()->hp <= 0) {
-    
+
         sceneChange_->SetState(SceneChange::kFadeIn, 60);
         SceneManager::SetNestScene("Title");
     }
@@ -178,7 +174,7 @@ void SampleScene::Update() {
     lightingManager_->UpdatePointLight();
     if (enemy_->isApper_) {
         lightingManager_->DirectionalLightUpdate();
-    
+
 
         Locker::isSetMesh_ = true;
 
@@ -200,12 +196,11 @@ void SampleScene::Update() {
         currentCamera_->UpdateMatrix();
     } else {
         camera_->worldMat_ = player_->GetEyeMatrix();
-        camera_->fovAngleY_ =Easing::EaseOutBack(camera_->kFovAngle_, camera_->kFovAngle_ *0.5f, player_->zoomTimer_);
+        camera_->fovAngleY_ = Easing::EaseOutBack(camera_->kFovAngle_, camera_->kFovAngle_ * 0.5f, player_->zoomTimer_);
         camera_->UpdateViewProjectionMatrix();
     }
 
     player_->Update();
-
     medjed_->Update();
     enemy_->Update();
     enemyBulletManager_->Update();
@@ -221,12 +216,7 @@ void SampleScene::Update() {
 
     ParticleManager::GetInstance()->Update(*currentCamera_);
 
-    for (int i = 0; i < lockers1_.size(); ++i) {
-        lockers1_[i]->Update();
-    }
-    for (int i = 0; i < lockers2_.size(); ++i) {
-        lockers2_[i]->Update();
-    }
+    lockerManager_->Update();
 
     building_->Update();
 
@@ -260,7 +250,7 @@ void SampleScene::Debug()
     DebugUI::CheckCamera(*currentCamera_);
 
     DebugUI::Button("ChangeCamera", func);
-    DebugUI::CheckParticle(*particleEmitters_[0],"Emitter0");
+    DebugUI::CheckParticle(*particleEmitters_[0], "Emitter0");
     DebugUI::CheckSprite(*sprite_[0], "sprite0");
 
 
@@ -270,43 +260,39 @@ void SampleScene::Debug()
 void SampleScene::CheckAllCollision()
 {
 
-    /*   if (IsCollisionInCircleLine(player_->GetCircle(), filed_->circle_)) {
+    collisionManager_->ClearColliders();
 
-           player_->OnCollision(filed_->circle_);
-           Sound::PlayOriginSE(Sound::CRACKER);
-       };*/
+    collisionManager_->AddCollider(player_.get());
+    collisionManager_->AddCollider(medjed_.get());
 
-    if (IsCollision(medjed_->GetWorldAABB(), player_->GetWorldAABB())) {
-        player_->OnCollisionEnemy();
-        enemy_->isApper_ = true;
+    for (auto& bullet : enemyBulletManager_->GetBullets()) {
+        if (bullet->isActive_) {
+            collisionManager_->AddCollider(bullet.get());
+        }  
     }
 
     if (!enemy_->isApper_) {
-
-        AABB locker1AABB = { .min = {1.0f,0.0f,-0.5f},.max = {25.0f,2.0f,0.5f} };
-
-        if (IsCollision(locker1AABB, player_->GetWorldAABB())) {
-            player_->OnCollisionWall(locker1AABB);
+        for (auto& locker : lockerManager_->GetLockers1()) {
+            collisionManager_->AddCollider(locker.get());
         }
-
-        AABB locker2AABB = { .min = {-25.0f,0.0f,-0.5f},.max = {-1.0f,2.0f,0.5f} };
-
-        if (IsCollision(locker2AABB, player_->GetWorldAABB())) {
-            player_->OnCollisionWall(locker2AABB);
+        for (auto& locker : lockerManager_->GetLockers2()) {
+            collisionManager_->AddCollider(locker.get());
         }
     }
 
-
- /*   for (const auto& [type, aabb] : building_->aabbs_) {
-        if (type != Building::AABBType::Floor) {
-            if (IsCollision(building_->GetWorldAABB(type), player_->GetWorldAABB())) {
-                player_->OnCollisionWall(building_->GetWorldAABB(type));
-            }
-
-        }
+    collisionManager_->CheckAllCollisions();
 
 
-    }*/
+    /*   for (const auto& [type, aabb] : building_->aabbs_) {
+           if (type != Building::AABBType::Floor) {
+               if (IsCollision(building_->GetWorldAABB(type), player_->GetWorldAABB())) {
+                   player_->OnCollisionWall(building_->GetWorldAABB(type));
+               }
+
+           }
+
+
+       }*/
 }
 
 
@@ -323,16 +309,9 @@ void SampleScene::Draw() {
 
     filed_->Draw(*currentCamera_);
     building_->Draw(*currentCamera_);
-
-    for (int i = 0; i < lockers1_.size(); ++i) {
-        lockers1_[i]->Draw(*currentCamera_);
-    }
-    for (int i = 0; i < lockers2_.size(); ++i) {
-        lockers2_[i]->Draw(*currentCamera_);
-    }
+    lockerManager_->Draw(*currentCamera_);
 
     medjed_->Draw(*currentCamera_);
-
     player_->Draw(*currentCamera_, kLightModeHalfL);
     enemy_->Draw(*currentCamera_, kLightModeHalfL);
 
@@ -350,8 +329,6 @@ void SampleScene::Draw() {
             sprite_[i]->Draw();
         }
     }
-
-
 
     Sprite::PreDraw(kBlendModeMultiply);
     sprite_[2]->Draw();
