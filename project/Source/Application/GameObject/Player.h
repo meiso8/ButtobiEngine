@@ -6,27 +6,39 @@
 #include"CharacterState.h"
 #include"AABB.h"
 
-
+#include"Collider.h"
 class Model;
 class Camera;
 enum LightMode;
 class CircleMesh;
 class CubeMesh;
 class Sprite;
-class Player
+
+class Player :public Collider
 {
 public:
+    void OnCollision(Collider* collider)override;
+
+    /// @brief ワールド座標を取得する
+    /// @return ワールド座標
+    Vector3 GetWorldPosition() const  override;
     Player();
     void Init();
-    void UpdateRay();
+ 
     void Draw(Camera& camera, const LightMode& lightType);
     void Update();
+    
+    
+    void UpdateRay();
     void Move();
     void Zoom();
     void PointLightSwitch();
-    Vector3& GetForward();
     void LookBack();
     void MouseLook();
+
+    Vector3& GetForward();
+
+
     Matrix4x4& GetEyeMatrix() {
         return eyePos_.worldTransform_.matWorld_;
     };
@@ -37,15 +49,14 @@ public:
         return bodyPos_.worldTransform_.translate_;
     };
 
-    AABB GetWorldAABB();
     Circle& GetCircle() {
         return circle_;
     };
-    HPs* GetHpsPtr() {return &characterState_.hps; }
+    HPs* GetHpsPtr() { return &characterState_.hps; }
     void OnCollision(const Circle& circle);
     void ResolveCollision(const AABB& wallAABB, const AABB& playerAABB);
-    void OnCollisionWall(const AABB& aabb);
-    void OnCollisionEnemy();
+    void OnCollisionWall();
+
 
     float cameraSpeed_ = 1.0f;
     bool isPressSpace_ = false;
@@ -74,15 +85,14 @@ private:
     Object3d bodyPos_;
     Object3d eyePos_;
     Object3d rayEndPos_;
-   
+
     float cameraRotateY_ = 0.0f;
     float cameraRotateX_ = 0.0f;
 
     CharacterState characterState_;
 
-
-
     std::unique_ptr<Sprite>centerSprite_ = nullptr;
 
+    void OnCollisionEnemy();
 };
 

@@ -157,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\Locker\LockerManager.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Model\SkinningModel.cpp" />
     <ClCompile Include="Source\Engine\Animation\Bone.cpp" />
     <ClCompile Include="Source\Engine\Animation\SkinCluster.cpp" />
@@ -172,7 +173,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Lights\SpotLightManager.cpp" />
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\Application\GameObject\Building.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Locker.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Locker\Locker.cpp" />
     <ClCompile Include="Source\Application\GameObject\Medjed.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\HPIcon.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\HPGage.cpp" />
@@ -282,6 +283,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\UI\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\Locker\LockerManager.h" />
     <ClInclude Include="Source\Engine\Mesh\Model\SkinningModel.h" />
     <ClInclude Include="Source\Engine\Animation\Animation.h" />
     <ClInclude Include="Source\Engine\Animation\Bone.h" />
@@ -302,7 +304,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Lights\SpotLightManager.h" />
     <ClInclude Include="Source\Game.h" />
     <ClInclude Include="Source\Application\GameObject\Building.h" />
-    <ClInclude Include="Source\Application\GameObject\Locker.h" />
+    <ClInclude Include="Source\Application\GameObject\Locker\Locker.h" />
     <ClInclude Include="Source\Application\GameObject\Medjed.h" />
     <ClInclude Include="Source\Application\GameObject\UI\HPIcon.h" />
     <ClInclude Include="Source\Application\GameObject\UI\HPGage.h" />

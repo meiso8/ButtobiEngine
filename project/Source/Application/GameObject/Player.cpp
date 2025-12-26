@@ -14,14 +14,38 @@
 #include"MakeMatrix.h"
 #include"CoordinateTransform.h"
 #include"Sprite.h"
+#include"CollisionConfig.h"
+void Player::OnCollision(Collider* collider)
+{
+
+    if (collider->GetCollisionAttribute() == kCollisionEnemy|| collider->GetCollisionAttribute() == kCollisionEnemyBullet || collider->GetCollisionAttribute() == kCollisionMedjed) {
+        OnCollisionEnemy();
+    }
+
+    if (collider->GetCollisionAttribute() == kCollisionWall) {
+        OnCollisionWall();
+    }
+
+    OnCollisionCollider();
+
+}
+Vector3 Player::GetWorldPosition() const
+{
+    return bodyPos_.worldTransform_.GetWorldPosition();
+}
 Player::Player() {
 
     //モデルを取得する
     model_ = ModelManager::GetModel(ModelManager::PLAYER_BODY);
 
-    circle_.radius = 0.5f;
+    circle_.radius = 0.25f;
     localAabb_.min = { -circle_.radius , 0.0f ,-circle_.radius };
     localAabb_.max = { circle_.radius , 1.5f ,circle_.radius };
+
+    SetType(ColliderType::kAABB);
+    SetAABB(localAabb_);
+    SetCollisionAttribute(kCollisionPlayer);
+    SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet| kCollisionMedjed);
 
     centerSprite_ = std::make_unique<Sprite>();
     centerSprite_->Create(Texture::HART, { 0.0f,0.0f });
@@ -44,7 +68,7 @@ Player::Player() {
 
 void Player::Init()
 {
-                       
+
     isPressSpace_ = false;
     zoomTimer_ = 0.0f;
 
@@ -78,7 +102,7 @@ void Player::Init()
 
 void Player::UpdateRay()
 {
-    Ray ray = { .origin = eyePos_.worldTransform_.GetWorldPosition() ,.diff = GetForward()};
+    Ray ray = { .origin = eyePos_.worldTransform_.GetWorldPosition() ,.diff = GetForward() };
 
 #ifdef USE_IMGUI
     DebugUI::CheckFlag(isLookBack_, "isLookBack_");
@@ -102,6 +126,8 @@ void Player::Draw(Camera& camera, const LightMode& lightType)
     rayEndPos_.Draw(camera);
     Sprite::PreDraw();
     centerSprite_->Draw();
+
+    ColliderDraw(camera);
 }
 
 void Player::Update()
@@ -129,7 +155,10 @@ void Player::Update()
     eyePos_.Update();
     rayEndPos_.Update();
 
-    circle_.center = bodyPos_.worldTransform_.GetWorldPosition();
+    ColliderUpdate();
+
+
+    circle_.center = GetWorldPosition();
 
     DWORD controllerIndex = 0; // 0〜3の範囲で指定
 
@@ -147,7 +176,6 @@ void Player::Update()
         //SEを鳴らす
         Sound::PlaySE(Sound::CRACKER);
     }
-
 
 }
 
@@ -318,15 +346,6 @@ void Player::MouseLook()
 
 }
 
-AABB Player::GetWorldAABB()
-{
-    Vector3 pos = bodyPos_.worldTransform_.GetWorldPosition();
-    return AABB{
-        .min = {pos + localAabb_.min},
-        .max = {pos + localAabb_.max}
-    };
-}
-
 void Player::OnCollision(const Circle& circle)
 {
     //中心に向かって移動する
@@ -383,14 +402,13 @@ void Player::ResolveCollision(const AABB& wallAABB, const AABB& playerAABB) {
     pos += push;
 }
 
-void Player::OnCollisionWall(const AABB& aabb)
+void Player::OnCollisionWall()
 {
     if (isWallHit) {
         return;
     }
     isWallHit = true;
 
-    ResolveCollision(aabb, GetWorldAABB());
 }
 
 void Player::OnCollisionEnemy()
