@@ -11,12 +11,11 @@ public:
     /// @brief モデルのハンドルを宣言します
     enum MODEL_HANDLE {
         BOX,
-        human_GLTF,
-        Ani_GLTF,
+      normalMedjed_GLTF,
+        medJed_GLTF,
         //プレイヤーそれぞれのパーツ
         PLAYER_BODY,
 
-        MEDJED,
         PEOPLE,
         MUMMY,
         LOCKER,

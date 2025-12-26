@@ -25,9 +25,6 @@ void TitleScene::Initialize()
 
 void TitleScene::Update()
 {
-
-
-
     puzzle_->Update();
 
     Quaternion rotation0 = MakeRotateAxisAngleQuaternion({ 0.71f,0.71f,0.0f }, 0.3f);
