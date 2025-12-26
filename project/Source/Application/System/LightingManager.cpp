@@ -24,7 +24,6 @@ void LightingManager::Initialize()
     SpotLightManager::GetData().decay = 0.5f;
 
     playerHandPos_.Initialize();
-    playerHandPos_.translate_ = { 0.0f,2.0f,1.0f };
     isPointLightOn_ = false;
 }
 

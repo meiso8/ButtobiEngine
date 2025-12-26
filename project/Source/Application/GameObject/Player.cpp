@@ -11,7 +11,9 @@
 #include"CubeMesh.h"
 #include"JsonFile.h"
 #include"LightingManager.h"
-
+#include"MakeMatrix.h"
+#include"CoordinateTransform.h"
+#include"Sprite.h"
 Player::Player() {
 
     //モデルを取得する
@@ -21,35 +23,44 @@ Player::Player() {
     localAabb_.min = { -circle_.radius , 0.0f ,-circle_.radius };
     localAabb_.max = { circle_.radius , 1.5f ,circle_.radius };
 
-    circleMesh_ = std::make_unique<CircleMesh>();
-    cubeMesh_ = std::make_unique<CubeMesh>();
-    cubeMesh_->Create();
-    cubeMesh_->SetMinMax(localAabb_);
-    circleMesh_->Create();
+    centerSprite_ = std::make_unique<Sprite>();
+    centerSprite_->Create(Texture::HART, { 0.0f,0.0f });
+    centerSprite_->SetAnchorPoint({ 0.5f,0.5f });
+    const float width = float(Window::GetClientWidth());
+    const float height = float(Window::GetClientHeight());
+    centerSprite_->SetPosition({ width * 0.5f,height * 0.5f });
 
-    //それぞれのObject3d（WorldTransform）を作る
     eyePos_.Create();
+    //それぞれのObject3d（WorldTransform）を作る
+
     bodyPos_.Create();
     //モデルやメッシュをセットする
     bodyPos_.SetMesh(model_);
 
+    rayEndPos_.Create();
+    rayEndPos_.SetMesh(ModelManager::GetModel(ModelManager::KEY_A));
+    rayEndPos_.worldTransform_.Parent(eyePos_.worldTransform_);
 }
 
 void Player::Init()
 {
+                       
     isPressSpace_ = false;
     zoomTimer_ = 0.0f;
+
     //体の位置初期化
-    bodyPos_.worldTransform_.Initialize();
+    bodyPos_.Initialize();
     bodyPos_.worldTransform_.translate_.z = -15.0f;
     //目の位置初期化
     eyePos_.Initialize();
     eyePos_.worldTransform_.Initialize();
     eyePos_.worldTransform_.translate_.y = 1.5f;
     eyePos_.worldTransform_.translate_.z = 0.5f;
-
     //体の位置を親に設定
     eyePos_.worldTransform_.Parent(bodyPos_.worldTransform_);
+
+    rayEndPos_.Initialize();
+    rayEndPos_.worldTransform_.translate_.z = 3.0f;
 
     velocity_ = { 0.0f,0.0f,0.0f };
     kSpeed_ = { 0.5f };
@@ -62,13 +73,35 @@ void Player::Init()
     characterState_.hps.maxHp = file["CharacterState"]["hp"];
     characterState_.isAttack = file["CharacterState"]["isAttack"];
     characterState_.isHit = file["CharacterState"]["isHit"];
+
+}
+
+void Player::UpdateRay()
+{
+    Ray ray = { .origin = eyePos_.worldTransform_.GetWorldPosition() ,.diff = GetForward()};
+
+#ifdef USE_IMGUI
+    DebugUI::CheckFlag(isLookBack_, "isLookBack_");
+    DebugUI::CheckFlag(isLookBackEnd_, "isEnd_");
+
+    DebugUI::CheckMesh(*model_, "PlayerModel");
+    DebugUI::CheckObject3d(rayEndPos_, "rayEndPos_");
+
+    ImGui::SliderFloat3("origin", &ray.origin.x, -10000.0f, 10000.0f);
+    ImGui::SliderFloat3("diff", &ray.diff.x, -10000.0f, 10000.0f);
+    ImGui::SliderFloat3("forward", &GetForward().x, 0.0f, 100.0f);
+#endif
 }
 
 void Player::Draw(Camera& camera, const LightMode& lightType)
 {
+
     bodyPos_.SetLightMode(lightType);
     bodyPos_.Draw(camera, kBlendModeNormal);
     eyePos_.Draw(camera, kBlendModeNormal);
+    rayEndPos_.Draw(camera);
+    Sprite::PreDraw();
+    centerSprite_->Draw();
 }
 
 void Player::Update()
@@ -90,9 +123,12 @@ void Player::Update()
     PointLightSwitch();
     LookBack();
     MouseLook();
+    UpdateRay();
 
     bodyPos_.Update();
     eyePos_.Update();
+    rayEndPos_.Update();
+
     circle_.center = bodyPos_.worldTransform_.GetWorldPosition();
 
     DWORD controllerIndex = 0; // 0〜3の範囲で指定
@@ -193,7 +229,7 @@ void Player::Zoom()
 void Player::PointLightSwitch()
 {
     if (Input::IsTriggerMouse(0)) {
-        Sound::PlaySE(Sound::SWITCH_ON);  
+        Sound::PlaySE(Sound::SWITCH_ON);
         LightingManager::isPointLightOn_ = LightingManager::isPointLightOn_ ? false : true;
     }
 }
@@ -210,13 +246,6 @@ Vector3& Player::GetForward()
 void Player::LookBack()
 {
 
-#ifdef USE_IMGUI
-    DebugUI::CheckFlag(isLookBack_, "isLookBack_");
-    DebugUI::CheckFlag(isLookBackEnd_, "isEnd_");
-    ImGui::SliderFloat3("forward", &GetForward().x, 0.0f, 100.0f);
-    DebugUI::CheckMesh(*cubeMesh_, "PlayerCube");
-    DebugUI::CheckMesh(*model_, "PlayerModel");
-#endif // USE_IMGUI
 
     if (Input::IsTriggerMouse(1) || Input::IsControllerTriggerLTRT(BUTTON_RIGHT, 0)) {
         isLookBack_ = true;

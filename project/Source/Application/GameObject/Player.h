@@ -12,12 +12,13 @@ class Camera;
 enum LightMode;
 class CircleMesh;
 class CubeMesh;
-
+class Sprite;
 class Player
 {
 public:
     Player();
     void Init();
+    void UpdateRay();
     void Draw(Camera& camera, const LightMode& lightType);
     void Update();
     void Move();
@@ -29,13 +30,13 @@ public:
     Matrix4x4& GetEyeMatrix() {
         return eyePos_.worldTransform_.matWorld_;
     };
+    WorldTransform& GetEyeWorldTransform() {
+        return eyePos_.worldTransform_;
+    }
     Vector3& GetBodyPos() {
         return bodyPos_.worldTransform_.translate_;
     };
 
-    WorldTransform& GetBodyWorldTransform() {
-        return bodyPos_.worldTransform_;
-    }
     AABB GetWorldAABB();
     Circle& GetCircle() {
         return circle_;
@@ -69,14 +70,19 @@ private:
     float walkingTheta_ = 0.0f;
     float soundTimer_ = 0.0f;
     Model* model_;
-    Object3d eyePos_;
-    Object3d bodyPos_;
 
+    Object3d bodyPos_;
+    Object3d eyePos_;
+    Object3d rayEndPos_;
+   
     float cameraRotateY_ = 0.0f;
     float cameraRotateX_ = 0.0f;
 
     CharacterState characterState_;
-    std::unique_ptr<CircleMesh>circleMesh_ = nullptr;
-    std::unique_ptr<CubeMesh>cubeMesh_ = nullptr;
+
+
+
+    std::unique_ptr<Sprite>centerSprite_ = nullptr;
+
 };
 

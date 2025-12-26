@@ -101,7 +101,7 @@ SampleScene::SampleScene()
 
 
     lightingManager_ = std::make_unique<LightingManager>();
-    lightingManager_->playerHandPos_.Parent(player_->GetBodyWorldTransform());
+    lightingManager_->playerHandPos_.Parent(player_->GetEyeWorldTransform());
     lightingManager_->direction_ = &player_->GetForward();
 }
 
@@ -205,7 +205,6 @@ void SampleScene::Update() {
     }
 
     player_->Update();
-
     medjed_->Update();
     enemy_->Update();
     enemyBulletManager_->Update();
@@ -269,13 +268,6 @@ void SampleScene::Debug()
 
 void SampleScene::CheckAllCollision()
 {
-
-    /*   if (IsCollisionInCircleLine(player_->GetCircle(), filed_->circle_)) {
-
-           player_->OnCollision(filed_->circle_);
-           Sound::PlayOriginSE(Sound::CRACKER);
-       };*/
-
     if (IsCollision(medjed_->GetWorldAABB(), player_->GetWorldAABB())) {
         player_->OnCollisionEnemy();
         enemy_->isApper_ = true;
@@ -350,8 +342,6 @@ void SampleScene::Draw() {
             sprite_[i]->Draw();
         }
     }
-
-
 
     Sprite::PreDraw(kBlendModeMultiply);
     sprite_[2]->Draw();
