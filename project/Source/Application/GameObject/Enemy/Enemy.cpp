@@ -23,7 +23,7 @@ Enemy::Enemy()
          {PHASE::EXIT, std::bind(&Enemy::Exit, this)},
     };
 
-    model_ = ModelManager::GetModel(ModelManager::MEDJED);
+    model_ = ModelManager::GetModel(ModelManager::normalMedjed_GLTF);
     bodyPos_.Create();
     bodyPos_.SetMesh(model_);
     float scale = 15.0f;

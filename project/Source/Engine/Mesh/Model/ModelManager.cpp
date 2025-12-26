@@ -20,10 +20,10 @@ void ModelManager::LoadAllModel()
 {
     //モデルのファイルパスとタグを関連付けてください
     LoadModel("Resource/Models/Box", "Box.obj", BOX);
-    LoadModel("Resource/Models/human", "walk.gltf", human_GLTF);
-    LoadModel("Resource/Models/human", "sneakWalk.gltf", Ani_GLTF);
+
+    LoadModel("Resource/Models/medjed", "normalMed.gltf", normalMedjed_GLTF);
+    LoadModel("Resource/Models/medjed", "medjedAnimation.gltf", medJed_GLTF);
     LoadModel("Resource/Models/player", "player.obj", PLAYER_BODY);
-    LoadModel("Resource/Models/medjed", "medjed.obj", MEDJED);
     LoadModel("Resource/Models/people", "people.obj", PEOPLE);
     LoadModel("Resource/Models/mummy", "mummy.obj", MUMMY);
     LoadModel("Resource/Models/locker", "locker.obj", LOCKER);

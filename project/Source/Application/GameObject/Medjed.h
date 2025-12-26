@@ -11,7 +11,6 @@
 class Medjed :public Collider
 {
 private:
-    std::unique_ptr < Object3d> object3d_;
     Model* model_ = nullptr;
     Vector3* targetPos_ = nullptr;
     std::unique_ptr<AnimationObject3d> aniObj_ = nullptr;
@@ -33,7 +32,7 @@ public:
 
     WorldTransform& GetWorldTransform()
     {
-        return object3d_->worldTransform_;
+        return aniObj_->worldTransform_;
     }
 
     void SetTarget(Vector3& target) {
