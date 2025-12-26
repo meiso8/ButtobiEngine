@@ -27,6 +27,7 @@ public:
         HART,
 
         MEMO1,
+        PUZZLE,
         TEXTURES,
     };
     static void LoadAllTexture();
