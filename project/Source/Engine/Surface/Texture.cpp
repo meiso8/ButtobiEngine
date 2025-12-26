@@ -31,6 +31,7 @@ void Texture::LoadAllTexture() {
     handles[TEST3] = Load("Resource/Textures/test3.png");
     handles[HART] = Load("Resource/Textures/hart.png");
     handles[MEMO1] = Load("Resource/Textures/memo01.png");
+    handles[PUZZLE] = Load("Resource/Textures/puzzle.png");
 }
 
 uint32_t Texture::Load(const std::string& filePath)

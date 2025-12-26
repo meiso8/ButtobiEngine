@@ -33,5 +33,6 @@ public:
     void Update();
     void Draw();
     bool GetIsGameEnd() { return clearTimer_ <= 0.0f; };
+    void SetTexture(const Texture::TEXTURE_HANDLE& handle);
 };
 
