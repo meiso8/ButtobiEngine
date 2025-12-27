@@ -1,7 +1,12 @@
 #pragma once
 #include <list>
-
+#include"Sphere.h"
+#include"AABB.h"
 class Collider;
+
+Sphere GetSphereWorldPos(Collider* sphere);
+AABB GetAABBWorldPos(Collider* aabb);
+
 
 /// @brief 衝突マネージャ
 class CollisionManager {
@@ -45,4 +50,7 @@ private:
 /// @param colliderB コライダーB
 /// @param score スコアポインタ
     void CheckCollisionSphereAABBPair(Collider* colliderA, Collider* colliderB);
+
+
+
 };

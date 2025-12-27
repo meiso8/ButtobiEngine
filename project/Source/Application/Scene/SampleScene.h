@@ -18,6 +18,7 @@
 #include "Enemy/EnemyBulletManager.h"
 #include "Enemy/EnemyShotBulletManager.h"
 #include"LightingManager.h"
+#include"Item/ItemManager.h"
 #pragma endregion
 
 
@@ -58,6 +59,8 @@ public:
     std::unique_ptr<LightingManager>lightingManager_ = nullptr;
 
     std::unique_ptr<LockerManager>lockerManager_ = nullptr;
+    std::unique_ptr<ItemManager>itemManager_ = nullptr;
+
 
 #pragma endregion
 

@@ -103,6 +103,9 @@ SampleScene::SampleScene()
 
     collisionManager_ = std::make_unique<CollisionManager>();
 
+
+    itemManager_ = std::make_unique<ItemManager>();
+
 }
 
 void SampleScene::Initialize() {
@@ -160,16 +163,16 @@ void SampleScene::Initialize() {
 
     hpGage_->Initialize();
 
+    itemManager_->Init();
 }
 
 void SampleScene::Update() {
 
-    if (player_->GetHpsPtr()->hp <= 0) {
 
+    if (player_->GetHpsPtr()->hp <= 0) {
         sceneChange_->SetState(SceneChange::kFadeIn, 60);
         SceneManager::SetNestScene("Title");
     }
-
 
     lightingManager_->UpdatePointLight();
     if (enemy_->isApper_) {
@@ -224,6 +227,8 @@ void SampleScene::Update() {
 
     enemyShotBulletManager_->Update();
 
+    itemManager_->Update();
+
     CheckAllCollision();
 
 
@@ -253,6 +258,7 @@ void SampleScene::Debug()
     DebugUI::CheckParticle(*particleEmitters_[0], "Emitter0");
     DebugUI::CheckSprite(*sprite_[0], "sprite0");
 
+    itemManager_->DrawInfoUI();
 
 #endif // !USE_IMGUI
 }
@@ -268,7 +274,7 @@ void SampleScene::CheckAllCollision()
     for (auto& bullet : enemyBulletManager_->GetBullets()) {
         if (bullet->isActive_) {
             collisionManager_->AddCollider(bullet.get());
-        }  
+        }
     }
 
     if (!enemy_->isApper_) {
@@ -283,16 +289,9 @@ void SampleScene::CheckAllCollision()
     collisionManager_->CheckAllCollisions();
 
 
-    /*   for (const auto& [type, aabb] : building_->aabbs_) {
-           if (type != Building::AABBType::Floor) {
-               if (IsCollision(building_->GetWorldAABB(type), player_->GetWorldAABB())) {
-                   player_->OnCollisionWall(building_->GetWorldAABB(type));
-               }
+    auto hitItem = itemManager_->RaycastHitItem(player_->GetRay());
+    if (hitItem) { itemManager_->GetItemSlot().OnTriggerItemPickup(hitItem); }
 
-           }
-
-
-       }*/
 }
 
 
@@ -317,7 +316,11 @@ void SampleScene::Draw() {
 
     enemyBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
 
+
+
     ParticleManager::GetInstance()->Draw();
+
+    itemManager_->Draw(*currentCamera_);
 
     if (enemy_->isApper_) {
         hpGage_->Draw();

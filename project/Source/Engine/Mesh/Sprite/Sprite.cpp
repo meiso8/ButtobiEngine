@@ -217,3 +217,17 @@ void Sprite::AdjustTextureSize()
     textureSize.y = static_cast<float>(metadata.height);
     size_ = textureSize;
 }
+
+
+bool IsCollision(const Vector2& pos, Sprite& sprite) {
+    Vector2 spritePos = sprite.GetPosition();
+    Vector2 spriteSize = sprite.GetSize(); // サイズが取得できる前提！
+
+    float left = spritePos.x - spriteSize.x * 0.5f;
+    float right = spritePos.x + spriteSize.x * 0.5f;
+    float top = spritePos.y - spriteSize.y * 0.5f;
+    float bottom = spritePos.y + spriteSize.y * 0.5f;
+
+    return (pos.x >= left && pos.x <= right &&
+        pos.y >= top && pos.y <= bottom);
+}

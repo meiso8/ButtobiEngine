@@ -157,7 +157,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\Item\ItemManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\SoundManager\SoundManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Item\GoldHeart.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Item\CrowbarItem.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Item\ItemSlot.cpp" />
     <ClCompile Include="Source\Application\GameObject\Locker\LockerManager.cpp" />
+    <ClCompile Include="Source\Engine\Math\Structs\Line.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Model\SkinningModel.cpp" />
     <ClCompile Include="Source\Engine\Animation\Bone.cpp" />
     <ClCompile Include="Source\Engine\Animation\SkinCluster.cpp" />
@@ -281,8 +287,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\World.cpp" />
     <ClCompile Include="Source\Application\Scene\TitleScene.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\UIManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Item\SunMedal.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Item\SunRod.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\Item\ItemManager.h" />
+    <ClInclude Include="Source\Application\GameObject\SoundManager\SoundManager.h" />
+    <ClInclude Include="Source\Application\GameObject\Item\GoldHeart.h" />
+    <ClInclude Include="Source\Application\GameObject\Item\CrowbarItem.h" />
+    <ClInclude Include="Source\Application\GameObject\Item\ItemSlot.h" />
     <ClInclude Include="Source\Application\GameObject\Locker\LockerManager.h" />
     <ClInclude Include="Source\Engine\Mesh\Model\SkinningModel.h" />
     <ClInclude Include="Source\Engine\Animation\Animation.h" />
@@ -417,6 +430,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\GameObject\World.h" />
     <ClInclude Include="Source\Application\Scene\TitleScene.h" />
     <ClInclude Include="Source\Application\GameObject\UI\UIManager.h" />
+    <ClInclude Include="Source\Application\GameObject\Item\SunMedal.h" />
+    <ClInclude Include="Source\Application\GameObject\Item\SunRod.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />

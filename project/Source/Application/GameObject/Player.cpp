@@ -18,7 +18,7 @@
 void Player::OnCollision(Collider* collider)
 {
 
-    if (collider->GetCollisionAttribute() == kCollisionEnemy|| collider->GetCollisionAttribute() == kCollisionEnemyBullet || collider->GetCollisionAttribute() == kCollisionMedjed) {
+    if (collider->GetCollisionAttribute() == kCollisionEnemy || collider->GetCollisionAttribute() == kCollisionEnemyBullet || collider->GetCollisionAttribute() == kCollisionMedjed) {
         OnCollisionEnemy();
     }
 
@@ -45,7 +45,7 @@ Player::Player() {
     SetType(ColliderType::kAABB);
     SetAABB(localAabb_);
     SetCollisionAttribute(kCollisionPlayer);
-    SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet| kCollisionMedjed);
+    SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet | kCollisionMedjed);
 
     centerSprite_ = std::make_unique<Sprite>();
     centerSprite_->Create(Texture::HART, { 0.0f,0.0f });
@@ -102,7 +102,7 @@ void Player::Init()
 
 void Player::UpdateRay()
 {
-    Ray ray = { .origin = eyePos_.worldTransform_.GetWorldPosition() ,.diff = GetForward() };
+    Ray ray = GetRay();
 
 #ifdef USE_IMGUI
     DebugUI::CheckFlag(isLookBack_, "isLookBack_");
@@ -157,25 +157,7 @@ void Player::Update()
 
     ColliderUpdate();
 
-
     circle_.center = GetWorldPosition();
-
-    DWORD controllerIndex = 0; // 0〜3の範囲で指定
-
-    //コントローラーのボタンのトリガーを得る
-    if (Input::IsControllerTriggerButton(XINPUT_GAMEPAD_A, controllerIndex))
-    {
-        Input::VibrateController(controllerIndex, 10000, 10000);
-        // 少し待ってから振動停止（例：1秒）
-        Sleep(1000);
-        Input::VibrateController(controllerIndex, 0, 0);
-
-    };
-    //コントローラーのLTRTが押されているかを得る
-    if (Input::IsControllerTriggerLTRT(BUTTON_LEFT, controllerIndex)) {
-        //SEを鳴らす
-        Sound::PlaySE(Sound::CRACKER);
-    }
 
 }
 
@@ -409,6 +391,11 @@ void Player::OnCollisionWall()
     }
     isWallHit = true;
 
+}
+
+Ray Player::GetRay()
+{
+    return  Ray{ .origin = eyePos_.worldTransform_.GetWorldPosition(), .diff = GetForward() };
 }
 
 void Player::OnCollisionEnemy()

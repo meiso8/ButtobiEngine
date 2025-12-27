@@ -98,3 +98,6 @@ private:
 
 
 };
+
+//Spriteとposとの当たり判定
+bool IsCollision(const Vector2& pos, Sprite& sprite);
