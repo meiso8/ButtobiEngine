@@ -24,10 +24,17 @@ public:
         TEST,
         TEST2,
         TEST3,
-        HART,
+
 
         MEMO1,
+        MEMO2,
+        MEMO3,
+
         PUZZLE,
+
+        SLOT,
+        EYE,
+
         TEXTURES,
     };
     static void LoadAllTexture();
