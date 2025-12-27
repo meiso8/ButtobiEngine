@@ -48,8 +48,9 @@ Player::Player() {
     SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet | kCollisionMedjed);
 
     centerSprite_ = std::make_unique<Sprite>();
-    centerSprite_->Create(Texture::HART, { 0.0f,0.0f });
+    centerSprite_->Create(Texture::EYE, { 0.0f,0.0f });
     centerSprite_->SetAnchorPoint({ 0.5f,0.5f });
+
     const float width = float(Window::GetClientWidth());
     const float height = float(Window::GetClientHeight());
     centerSprite_->SetPosition({ width * 0.5f,height * 0.5f });
@@ -61,9 +62,6 @@ Player::Player() {
     //モデルやメッシュをセットする
     bodyPos_.SetMesh(model_);
 
-    rayEndPos_.Create();
-    rayEndPos_.SetMesh(ModelManager::GetModel(ModelManager::KEY_A));
-    rayEndPos_.worldTransform_.Parent(eyePos_.worldTransform_);
 }
 
 void Player::Init()
@@ -83,8 +81,6 @@ void Player::Init()
     //体の位置を親に設定
     eyePos_.worldTransform_.Parent(bodyPos_.worldTransform_);
 
-    rayEndPos_.Initialize();
-    rayEndPos_.worldTransform_.translate_.z = 3.0f;
 
     velocity_ = { 0.0f,0.0f,0.0f };
     kSpeed_ = { 0.5f };
@@ -107,9 +103,8 @@ void Player::UpdateRay()
 #ifdef USE_IMGUI
     DebugUI::CheckFlag(isLookBack_, "isLookBack_");
     DebugUI::CheckFlag(isLookBackEnd_, "isEnd_");
-
     DebugUI::CheckMesh(*model_, "PlayerModel");
-    DebugUI::CheckObject3d(rayEndPos_, "rayEndPos_");
+
 
     ImGui::SliderFloat3("origin", &ray.origin.x, -10000.0f, 10000.0f);
     ImGui::SliderFloat3("diff", &ray.diff.x, -10000.0f, 10000.0f);
@@ -123,7 +118,7 @@ void Player::Draw(Camera& camera, const LightMode& lightType)
     bodyPos_.SetLightMode(lightType);
     bodyPos_.Draw(camera, kBlendModeNormal);
     eyePos_.Draw(camera, kBlendModeNormal);
-    rayEndPos_.Draw(camera);
+
     Sprite::PreDraw();
     centerSprite_->Draw();
 
@@ -153,7 +148,6 @@ void Player::Update()
 
     bodyPos_.Update();
     eyePos_.Update();
-    rayEndPos_.Update();
 
     ColliderUpdate();
 

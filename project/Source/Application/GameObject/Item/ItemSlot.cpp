@@ -8,6 +8,7 @@
 using namespace std;
 #define rep(i,n)for(int i =0;i < n;++i)
 #include"CollisionConfig.h"
+#include"Window.h"
 Item::Item()
 {
     object_ = std::make_shared<Object3d>();
@@ -63,9 +64,14 @@ void Item::Update()
 
 ItemSlot::ItemSlot()
 {
-    rep(i, slotSprites_.size()) {
+    const float kWidth = static_cast<float>(Window::GetClientWidth());
+    const float kHeight= static_cast<float>(Window::GetClientHeight());
+    rep(i, kMaxSlots_) {
         slotSprites_[i] = make_unique<Sprite>();
-        slotSprites_[i]->Create(Texture::HART, { 0.0f,0.0f });
+        slotSprites_[i]->Create(Texture::SLOT, {0.0f,0.0f});
+        slotSprites_[i]->SetAnchorPoint({0.5f,0.5f});
+        float sizeX = slotSprites_[i]->GetSize().x;
+        slotSprites_[i]->SetPosition({ (kWidth-sizeX*kMaxSlots_+ sizeX)*0.5f + i * sizeX,kHeight - 64.0f });
     }
 }
 
@@ -140,6 +146,15 @@ void ItemSlot::DrawInfoUI()
 
 void ItemSlot::Draw(Camera& camera)
 {
+    Sprite::PreDraw();
+    for (auto& sprite : slotSprites_) {
+        if (sprite) {
+            sprite->Draw();
+        }
+
+    }
+
+
     for (auto& item : slots_) {
         if (item) {
             item->Draw(camera);

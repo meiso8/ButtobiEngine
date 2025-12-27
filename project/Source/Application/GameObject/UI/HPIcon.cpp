@@ -14,7 +14,7 @@ HPIcon::HPIcon()
 
     for (auto& [type, spriteList] : sprites_) {
         for (auto& sprite : spriteList) {
-            sprite->Create(Texture::HART, { 64.0f,128.0f }, { 0.0f,0.0f,0.0f,0.5f });
+            sprite->Create(Texture::SLOT, { 64.0f,128.0f }, { 0.0f,0.0f,0.0f,0.5f });
         }
     }
 

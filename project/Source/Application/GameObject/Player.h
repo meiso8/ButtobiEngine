@@ -87,7 +87,6 @@ private:
 
     Object3d bodyPos_;
     Object3d eyePos_;
-    Object3d rayEndPos_;
 
     float cameraRotateY_ = 0.0f;
     float cameraRotateX_ = 0.0f;
