@@ -27,6 +27,7 @@ Vector3 Cross(const Vector3& v1, const Vector3& v2);
 //c・(a×b)<= 0; 上記の外積と内積で判断
 //長さ(ノルム)
 float Length(const Vector3& v);
+float Distance(const Vector3& v0, const Vector3& v1);
 
 Vector3 Normalize(const Vector3& v);
 

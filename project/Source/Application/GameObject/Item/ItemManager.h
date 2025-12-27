@@ -1,0 +1,26 @@
+#pragma once
+#include "ItemSlot.h"
+#include "CrowbarItem.h"
+#include "SunMedal.h"
+#include "GoldHeart.h"
+#include"Line.h"
+class ItemManager {
+public:
+    void Init();
+    void Update();
+    void Draw(Camera& camera);
+    void DrawInfoUI();
+
+    std::shared_ptr<Item> GetItem(const std::string& name);
+
+    // プレイヤーのアイテムスロットにアクセス
+    ItemSlot& GetItemSlot() { return itemSlot_; }
+
+    // 指定アイテムをスロットに追加（名前で）
+    bool AddItemToSlot(const std::string& name);
+    std::shared_ptr<Item> RaycastHitItem(const Ray& ray, float maxDistance = 5.0f);
+
+private:
+    std::map<std::string, std::shared_ptr<Item>> items_;
+    ItemSlot itemSlot_;
+};

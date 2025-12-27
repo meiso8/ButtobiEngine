@@ -5,7 +5,7 @@
 #include"Circle.h"
 #include"CharacterState.h"
 #include"AABB.h"
-
+#include"Line.h"
 #include"Collider.h"
 class Model;
 class Camera;
@@ -57,9 +57,11 @@ public:
     void ResolveCollision(const AABB& wallAABB, const AABB& playerAABB);
     void OnCollisionWall();
 
+    Ray GetRay();
 
     float cameraSpeed_ = 1.0f;
     bool isPressSpace_ = false;
+
     float zoomTimer_ = 1.0f;
     bool isZoom_ = false;
 private:
@@ -72,6 +74,7 @@ private:
     bool isLookBack_ = false;
 
     bool isWallHit = false;
+
 
     //AABB
     AABB localAabb_;
