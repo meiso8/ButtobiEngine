@@ -62,9 +62,6 @@ std::shared_ptr<Item> ItemManager::RaycastHitItem(const Ray& ray, float maxDista
     float tMin = 0.0f;
     float tMax = 1.0f;
 
-    Ray newRay  = ray;
-    ImGui::SliderFloat3("ray",& newRay.diff.x ,-100.0f,100.0f);
-
     for (auto& [name, item] : items_) {
         if (!item) continue;
 
