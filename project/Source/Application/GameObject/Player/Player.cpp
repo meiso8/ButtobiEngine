@@ -156,7 +156,8 @@ void Player::Move()
 
     if (fabs(velocity_.x) > 0.0f || fabs(velocity_.z) > 0.0f) {
         if (soundTimer_ == 0.0f) {
-            Sound::PlaySE(Sound::FOOT_STEP);
+            if (kSpeed_ == 0.25f) {};
+            Sound::PlaySE(Sound::FOOT_STEP, (kSpeed_ == 0.25f)?0.5f: 0.0f);
         }
 
         if (soundTimer_ < 7.5f) {

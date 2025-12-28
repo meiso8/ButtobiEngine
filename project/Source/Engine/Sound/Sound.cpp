@@ -28,7 +28,7 @@ void Sound::LoadAllSound()
 {
 #ifdef _DEBUG
     bgmVolume_ = 0.0f;
-    seVolume_ = 0.75f;
+    seVolume_ = 0.5f;
 #endif // _DEBUG
 
     handles_.resize(SOUNDS);
