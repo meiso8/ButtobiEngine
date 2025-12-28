@@ -4,6 +4,8 @@
 #include "SunMedal.h"
 #include "GoldHeart.h"
 #include"Line.h"
+class RaySprite;
+
 class ItemManager {
 public:
     void Init();
@@ -18,7 +20,7 @@ public:
 
     // 指定アイテムをスロットに追加（名前で）
     bool AddItemToSlot(const std::string& name);
-    std::shared_ptr<Item> RaycastHitItem(const Ray& ray, float maxDistance = 5.0f);
+    std::shared_ptr<Item> RaycastHitItem(RaySprite& raySprite, float maxDistance = 5.0f);
 
 private:
     std::map<std::string, std::shared_ptr<Item>> items_;

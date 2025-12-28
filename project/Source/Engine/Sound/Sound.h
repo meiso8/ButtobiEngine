@@ -39,6 +39,8 @@ public:
 
         SWITCH_ON,
 
+        CORRECT,
+
         SOUNDS
     };
 

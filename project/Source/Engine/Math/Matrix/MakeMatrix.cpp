@@ -444,6 +444,12 @@ Matrix3x3 Inverse(const Matrix3x3& m) {
         - m.m[0][2] * m.m[1][1] * m.m[2][0]
         - m.m[0][1] * m.m[1][0] * m.m[2][2]
         - m.m[0][0] * m.m[1][2] * m.m[2][1];
+
+    if (std::abs(abs) < 1e-6f) {
+        // 逆行列が作れない！→ 単位行列を返す or エラー処理
+        return MakeIdentity3x3(); // または assert(false);
+    }
+
     Matrix3x3 result;
     result.m[0][0] = (m.m[1][1] * m.m[2][2] - m.m[1][2] * m.m[2][1]) / abs;
     result.m[0][1] = (m.m[0][2] * m.m[2][1] - m.m[0][1] * m.m[2][2]) / abs;
@@ -491,6 +497,12 @@ Matrix4x4 Inverse(const Matrix4x4& m) {
         + m.m[0][3] * m.m[1][2] * m.m[2][1] * m.m[3][0]
         + m.m[0][2] * m.m[1][1] * m.m[2][3] * m.m[3][0]
         + m.m[0][1] * m.m[1][3] * m.m[2][2] * m.m[3][0];
+
+
+    if (std::abs(abs) < 1e-6f) {
+        // 逆行列が作れない！→ 単位行列を返す or エラー処理
+        return MakeIdentity4x4(); // または assert(false);
+    }
 
     Matrix4x4 result;
 

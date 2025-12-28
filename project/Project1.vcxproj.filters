@@ -297,13 +297,13 @@
     <ClCompile Include="Source\Engine\Particle\ParticleEmitter.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Player.cpp">
+    <ClCompile Include="Source\Application\GameObject\Player\Player.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\World.cpp">
+    <ClCompile Include="Source\Application\GameObject\BackGround\World.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Field.cpp">
+    <ClCompile Include="Source\Application\GameObject\BackGround\Field.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -348,10 +348,10 @@
     <ClCompile Include="Source\Application\GameObject\Locker\Locker.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Medjed.cpp">
+    <ClCompile Include="Source\Application\GameObject\Medjed\Medjed.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Building.cpp">
+    <ClCompile Include="Source\Application\GameObject\BackGround\Building.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game.cpp">
@@ -421,6 +421,12 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Math\Structs\Line.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\GameObject\Player\RaySprite.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\GameObject\TransformAni\TransformAni.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -710,13 +716,13 @@
     <ClInclude Include="Source\Engine\Particle\ParticleEmitter.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Player.h">
+    <ClInclude Include="Source\Application\GameObject\Player\Player.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\World.h">
+    <ClInclude Include="Source\Application\GameObject\BackGround\World.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Field.h">
+    <ClInclude Include="Source\Application\GameObject\BackGround\Field.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Mesh\Circle\CircleMesh.h">
@@ -761,10 +767,10 @@
     <ClInclude Include="Source\Application\GameObject\Locker\Locker.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Medjed.h">
+    <ClInclude Include="Source\Application\GameObject\Medjed\Medjed.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Building.h">
+    <ClInclude Include="Source\Application\GameObject\BackGround\Building.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game.h">
@@ -846,6 +852,12 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\Item\ItemManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\GameObject\Player\RaySprite.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\GameObject\TransformAni\TransformAni.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

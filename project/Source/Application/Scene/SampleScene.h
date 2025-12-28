@@ -7,21 +7,25 @@
 #include"Object3d.h"
 
 #pragma region//ゲームオブジェクト
-#include"Player.h"
-#include"World.h"
+#include"Player/Player.h"
+
+#include"Medjed/Medjed.h"
 #include"Locker/LockerManager.h"
-#include"Medjed.h"
 #include"Enemy/Enemy.h"
-#include"Field.h"
-#include "Building.h"
-#include"UI/HPGage.h"
+
 #include "Enemy/EnemyBulletManager.h"
 #include "Enemy/EnemyShotBulletManager.h"
+
+#include"UI/HPGage.h"
+
 #include"LightingManager.h"
 #include"Item/ItemManager.h"
+
+#include"BackGround/Field.h"
+#include "BackGround/Building.h"
+#include"BackGround/World.h"
+
 #pragma endregion
-
-
 #include"CollisionManager.h"
 
 class Sprite;

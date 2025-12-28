@@ -4,6 +4,8 @@
 #include"Vector3.h"
 #include "CollisionManager.h"
 #include"Input.h"
+#include"DebugUI.h"
+#include"Player/RaySprite.h"
 void ItemManager::Init() {
     auto crowbar = std::make_shared<CrowbarItem>();
     crowbar->Init();
@@ -55,12 +57,9 @@ bool ItemManager::AddItemToSlot(const std::string& name) {
     }
     return false;
 }
-#include"DebugUI.h"
-// ItemManager.cpp
-std::shared_ptr<Item> ItemManager::RaycastHitItem(const Ray& ray, float maxDistance) {
-   
-    float tMin = 0.0f;
-    float tMax = 1.0f;
+
+std::shared_ptr<Item> ItemManager::RaycastHitItem(RaySprite& raySprite, float maxDistance) {
+
 
     for (auto& [name, item] : items_) {
         if (!item) continue;
@@ -71,8 +70,9 @@ std::shared_ptr<Item> ItemManager::RaycastHitItem(const Ray& ray, float maxDista
         AABB box = GetAABBWorldPos(item.get()); // AABBなど
         Vector3 itemPos = item->GetWorldPosition();
 
-        if (RayIntersectsAABB(ray, box, tMin, tMax)) {
-            float dist = Distance(ray.origin, itemPos);
+        if (raySprite.IntersectsAABB(box)) {
+
+            float dist = Distance(raySprite.ray_.origin, itemPos);
             if (dist <= maxDistance) {
                 obj->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 
