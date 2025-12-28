@@ -76,18 +76,18 @@ void Item::GetStartPos()
 
 void Item::UpdateAniTimer()
 {
-    if (aniTimer_ == 5.0f) {
+    if (aniTimer_ == 4.0f) {
         return;
     }
 
     aniTimer_ += InverseFPS;
-    aniTimer_ = std::clamp(aniTimer_, 0.0f, 5.0f);
+    aniTimer_ = std::clamp(aniTimer_, 0.0f, 4.0f);
 }
 
 void Item::LerpScreenPos(const Vector2& screenPos, const Matrix4x4& matInverseVPV)
 {
 
-    float localTime = (aniTimer_ - 3.0f) / 2.0f;
+    float localTime = (aniTimer_ - 3.0f) /1.0f;
     // スクリーン座標 → ワールド座標に変換（Z=0.5f くらいがちょうど中間）
     Vector3 screenPoint = { screenPos.x, screenPos.y, 7.0f };
     Vector3 worldPos = CoordinateTransform(screenPoint, matInverseVPV);

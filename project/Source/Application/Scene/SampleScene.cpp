@@ -46,19 +46,11 @@ SampleScene::SampleScene()
     // 現在のカメラを設定
     currentCamera_ = camera_.get();
 
-    for (int i = 0; i < sprite_.size(); ++i) {
-        sprite_[i] = std::make_unique<Sprite>();
-    }
+ 
+  sprite_= std::make_unique<Sprite>();
+    sprite_->Create(Texture::WHITE_1X1, { 0.0f,0.0f }, { 1.0f,0.75f,0.75f,1.0f });
+    sprite_->SetSize({ 1280.0f,720.0f });
 
-    sprite_[0]->Create(Texture::TEST, { 0.0f,0.0f });
-    sprite_[0]->SetSize({ 320.0f,64.0f });
-    sprite_[1]->Create(Texture::TEST2, { 640.0f,360.0f });
-    sprite_[1]->SetSize({ 320.0f,32.0f });
-    sprite_[1]->SetAnchorPoint({ 0.5f,0.5f });
-    sprite_[1]->UpdateAnchorPoint();
-
-    sprite_[2]->Create(Texture::WHITE_1X1, { 0.0f,0.0f }, { 1.0f,0.75f,0.75f,1.0f });
-    sprite_[2]->SetSize({ 1280.0f,720.0f });
     player_ = std::make_unique<Player>();
     world_ = std::make_unique<World>();
     filed_ = std::make_unique<Field>();
@@ -256,7 +248,6 @@ void SampleScene::Debug()
 
     DebugUI::Button("ChangeCamera", func);
     DebugUI::CheckParticle(*particleEmitters_[0], "Emitter0");
-    DebugUI::CheckSprite(*sprite_[0], "sprite0");
 
     itemManager_->DrawInfoUI();
 
@@ -316,8 +307,6 @@ void SampleScene::Draw() {
 
     enemyBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
 
-
-
     ParticleManager::GetInstance()->Draw();
 
     itemManager_->Draw(*currentCamera_);
@@ -326,15 +315,8 @@ void SampleScene::Draw() {
         hpGage_->Draw();
     }
 
-    if (!player_->isPressSpace_ && !enemy_->isApper_) {
-        for (int i = 0; i < sprite_.size() - 1; ++i) {
-            Sprite::PreDraw();
-            sprite_[i]->Draw();
-        }
-    }
-
     Sprite::PreDraw(kBlendModeMultiply);
-    sprite_[2]->Draw();
+    sprite_->Draw();
 
     sceneChange_->Draw();
 }
