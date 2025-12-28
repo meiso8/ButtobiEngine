@@ -89,7 +89,7 @@ private:
 
     Object3d bodyPos_;
     Object3d eyePos_;
-
+    const float   kEyeDefaultPosY_ = 1.5f;
     float cameraRotateY_ = 0.0f;
     float cameraRotateX_ = 0.0f;
 
