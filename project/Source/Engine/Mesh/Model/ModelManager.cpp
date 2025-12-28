@@ -29,14 +29,7 @@ void ModelManager::LoadAllModel()
     LoadModel("Resource/Models/locker", "locker.obj", LOCKER);
     LoadModel("Resource/Models/building", "building.obj", BUILDING);
     LoadModel("Resource/Models/key", "key.obj", KEY);
-
-    LoadModel("Resource/Models/keyboard", "a.obj", KEY_A);
-    LoadModel("Resource/Models/keyboard", "d.obj", KEY_D);
-    LoadModel("Resource/Models/keyboard", "esc.obj", KEY_ESC);
-    LoadModel("Resource/Models/keyboard", "s.obj", KEY_S);
-    LoadModel("Resource/Models/keyboard", "space.obj", KEY_SPACE);
-    LoadModel("Resource/Models/keyboard", "w.obj", KEY_W);
-
+    LoadModel("Resource/Models/hart", "hart.obj", HART);
 }
 
 // ========================================================================================================

@@ -20,16 +20,9 @@ public:
         MUMMY,
         LOCKER,
         BUILDING,
-
+        HART,
 
         KEY,
-
-        KEY_A,
-        KEY_D,
-        KEY_ESC,
-        KEY_S,
-        KEY_SPACE,
-        KEY_W,
 
         MODELS,
     };

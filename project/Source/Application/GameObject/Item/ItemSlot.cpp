@@ -69,7 +69,7 @@ void Item::Rotate()
 
 void Item::GetStartPos()
 {
-    object_->worldTransform_.translate_.z = 5.0f;
+    object_->worldTransform_.translate_.z = 1.0f;
     startPos_ = object_->worldTransform_.translate_;
     object_->Update();
 }
@@ -89,7 +89,7 @@ void Item::LerpScreenPos(const Vector2& screenPos, const Matrix4x4& matInverseVP
 
     float localTime = (aniTimer_ - 3.0f) /1.0f;
     // スクリーン座標 → ワールド座標に変換（Z=0.5f くらいがちょうど中間）
-    Vector3 screenPoint = { screenPos.x, screenPos.y, 7.0f };
+    Vector3 screenPoint = { screenPos.x, screenPos.y,20.0f };
     Vector3 worldPos = CoordinateTransform(screenPoint, matInverseVPV);
     // アイテムの位置を更新！ Trigger時に格納したstartPos
     object_->worldTransform_.translate_ = Lerp(startPos_, worldPos, localTime);
@@ -113,11 +113,14 @@ ItemSlot::ItemSlot()
     //カメラについての
     itemCamera_ = std::make_unique<Camera>();
     itemCamera_->Initialize();
+    itemCamera_->nearZ_ = 100.0f;
     float scales = 0.005f;
     itemCamera_->scale_ = { scales,scales,scales };
-    itemCamera_->nearZ_ = 100.0f;
-    //itemCamera_->translate_.z = -5.0f;
+    itemCamera_->UpdateMatrix();
 
+
+    matViewport = MakeViewportMatrix(0, 0, width, height, 0, 1);
+    matInverseVPV = Inverse(itemCamera_->GetViewProjectionMatrix() * matViewport);
     const float sizeX = 96.0f;
 
     rep(i, kMaxSlots_) {
@@ -140,10 +143,7 @@ void ItemSlot::OnTriggerItemPickup(const std::shared_ptr<Item>& item)
 
 void ItemSlot::Update()
 {
-    itemCamera_->UpdateMatrix();
 
-    matViewport = MakeViewportMatrix(0, 0, width, height, 0, 1);
-    matInverseVPV = Inverse(itemCamera_->GetViewProjectionMatrix() * matViewport);
 
     ToScreen();
 
@@ -169,6 +169,7 @@ void ItemSlot::Update()
 
 void ItemSlot::ToScreen()
 {
+
     for (int i = 0; i < slotSprites_.size(); ++i) {
         if (!slots_[i]) continue;
         // スプライトのスクリーン座標を取得（2D）
@@ -186,6 +187,7 @@ bool ItemSlot::AddItem(const std::shared_ptr<Item>& item)
             slot = item;
             slot->Init();
             slot->GetStartPos();
+
             return true;
         }
     }
@@ -245,12 +247,14 @@ void ItemSlot::Draw(Camera& camera)
 
 void ItemSlot::GetAnimation(const std::shared_ptr<Item>& item, const Vector2& screenPos)
 {
-    item->UpdateAniTimer();
+    item->UpdateAniTimer();    
 
     if (item->aniTimer_ <= 3.0f) {
         item->Rotate();
+    
     } else {
         item->LerpScreenPos(screenPos, matInverseVPV);
+
     }
 
 }

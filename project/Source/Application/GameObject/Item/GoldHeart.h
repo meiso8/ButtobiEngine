@@ -6,7 +6,7 @@ public:
     GoldHeart() {
         name_ = "GoldHeart";
         description_ = "何かにはめ込むことで力を発揮する。";
-        SetModel(ModelManager::KEY_D);
+        SetModel(ModelManager::HART);
     }
     void Use() override {
         //TryOpenNearbyDoor();
