@@ -20,7 +20,7 @@ public:
         MUMMY,
         LOCKER,
         BUILDING,
-        WORLD,
+
 
         KEY,
 

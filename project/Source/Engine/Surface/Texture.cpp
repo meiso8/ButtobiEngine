@@ -38,6 +38,7 @@ void Texture::LoadAllTexture() {
 
     handles[SLOT] = Load("Resource/Textures/slot.png");
     handles[EYE] = Load("Resource/Textures/eye.png");
+    handles[WORLD] = Load("Resource/Textures/world.png");
 }
 
 uint32_t Texture::Load(const std::string& filePath)

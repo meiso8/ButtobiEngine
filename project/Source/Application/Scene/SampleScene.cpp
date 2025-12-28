@@ -289,7 +289,7 @@ void SampleScene::CheckAllCollision()
     collisionManager_->CheckAllCollisions();
 
 
-    auto hitItem = itemManager_->RaycastHitItem(player_->GetRay());
+    auto hitItem = itemManager_->RaycastHitItem(*player_->raySprite_);
     if (hitItem) { itemManager_->GetItemSlot().OnTriggerItemPickup(hitItem); }
 
 }

@@ -157,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\Player\RaySprite.cpp" />
     <ClCompile Include="Source\Application\GameObject\Item\ItemManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\SoundManager\SoundManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\Item\GoldHeart.cpp" />
@@ -178,9 +179,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Lights\PointLightManager.cpp" />
     <ClCompile Include="Source\Engine\Lights\SpotLightManager.cpp" />
     <ClCompile Include="Source\Game.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Building.cpp" />
+    <ClCompile Include="Source\Application\GameObject\BackGround\Building.cpp" />
     <ClCompile Include="Source\Application\GameObject\Locker\Locker.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Medjed.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Medjed\Medjed.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\HPIcon.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\HPGage.cpp" />
     <ClCompile Include="Source\Application\GameObject\Enemy\EnemyShotBulletManager.cpp" />
@@ -191,8 +192,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Field.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Player.cpp" />
+    <ClCompile Include="Source\Application\GameObject\BackGround\Field.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Player\Player.cpp" />
     <ClCompile Include="Source\Application\System\Collider.cpp" />
     <ClCompile Include="Source\Engine\JsonFile\JsonFile.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Circle\CircleMesh.cpp" />
@@ -284,13 +285,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Surface\Texture.cpp" />
     <ClCompile Include="Source\Engine\Camera\SpriteCamera.cpp" />
     <ClCompile Include="Source\Engine\SRVmanager\SrvManager.cpp" />
-    <ClCompile Include="Source\Application\GameObject\World.cpp" />
+    <ClCompile Include="Source\Application\GameObject\BackGround\World.cpp" />
     <ClCompile Include="Source\Application\Scene\TitleScene.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\UIManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\Item\SunMedal.cpp" />
     <ClCompile Include="Source\Application\GameObject\Item\SunRod.cpp" />
+    <ClCompile Include="Source\Application\GameObject\TransformAni\TransformAni.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\Player\RaySprite.h" />
     <ClInclude Include="Source\Application\GameObject\Item\ItemManager.h" />
     <ClInclude Include="Source\Application\GameObject\SoundManager\SoundManager.h" />
     <ClInclude Include="Source\Application\GameObject\Item\GoldHeart.h" />
@@ -316,9 +319,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Lights\PointLightManager.h" />
     <ClInclude Include="Source\Engine\Lights\SpotLightManager.h" />
     <ClInclude Include="Source\Game.h" />
-    <ClInclude Include="Source\Application\GameObject\Building.h" />
+    <ClInclude Include="Source\Application\GameObject\BackGround\Building.h" />
     <ClInclude Include="Source\Application\GameObject\Locker\Locker.h" />
-    <ClInclude Include="Source\Application\GameObject\Medjed.h" />
+    <ClInclude Include="Source\Application\GameObject\Medjed\Medjed.h" />
     <ClInclude Include="Source\Application\GameObject\UI\HPIcon.h" />
     <ClInclude Include="Source\Application\GameObject\UI\HPGage.h" />
     <ClInclude Include="Source\Application\GameObject\Enemy\EnemyShotBulletManager.h" />
@@ -327,8 +330,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\Scene\ResultScene.h" />
     <ClInclude Include="Source\Application\GameObject\Enemy\Enemy.h" />
     <ClInclude Include="Source\Application\GameObject\CharacterState.h" />
-    <ClInclude Include="Source\Application\GameObject\Field.h" />
-    <ClInclude Include="Source\Application\GameObject\Player.h" />
+    <ClInclude Include="Source\Application\GameObject\BackGround\Field.h" />
+    <ClInclude Include="Source\Application\GameObject\Player\Player.h" />
     <ClInclude Include="Source\Engine\JsonFile\JsonFile.h" />
     <ClInclude Include="Source\Engine\Math\Structs\Circle.h" />
     <ClInclude Include="Source\Engine\Mesh\Circle\CircleMesh.h" />
@@ -427,11 +430,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Surface\Texture.h" />
     <ClInclude Include="Source\Engine\Camera\SpriteCamera.h" />
     <ClInclude Include="Source\Engine\SRVmanager\SrvManager.h" />
-    <ClInclude Include="Source\Application\GameObject\World.h" />
+    <ClInclude Include="Source\Application\GameObject\BackGround\World.h" />
     <ClInclude Include="Source\Application\Scene\TitleScene.h" />
     <ClInclude Include="Source\Application\GameObject\UI\UIManager.h" />
     <ClInclude Include="Source\Application\GameObject\Item\SunMedal.h" />
     <ClInclude Include="Source\Application\GameObject\Item\SunRod.h" />
+    <ClInclude Include="Source\Application\GameObject\TransformAni\TransformAni.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />

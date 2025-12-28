@@ -35,6 +35,7 @@ public:
         SLOT,
         EYE,
 
+        WORLD,
         TEXTURES,
     };
     static void LoadAllTexture();

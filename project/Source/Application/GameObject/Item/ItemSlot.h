@@ -35,23 +35,38 @@ public:
     Vector3 GetWorldPosition() const {
         return object_->worldTransform_.GetWorldPosition();
     };
-
-
-
+    void Rotate();
+    void GetStartPos();
+    void UpdateAniTimer();
+   float aniTimer_ = 0.0f;
+   Vector3 startPos_ = { 0.0f };
+   void LerpScreenPos(const Vector2& screenPos, const Matrix4x4& matInverseVPV);
 };
 
 // ====================================================================
 class ItemSlot {
 public:
+    
     ItemSlot();
     static const int kMaxSlots_ = 8;
     std::array<std::shared_ptr<Item>, kMaxSlots_> slots_;
     std::array<std::unique_ptr<Sprite>, kMaxSlots_> slotSprites_;
     void OnTriggerItemPickup(const std::shared_ptr<Item>& item);
     void Update();
+    void ToScreen();
     bool AddItem(const std::shared_ptr<Item>& item);
     void UseItem(int index);
     void CombineItems(int indexA, int indexB);
     void DrawInfoUI();
     void Draw(Camera& camera);
+    void GetAnimation(const std::shared_ptr<Item>& item, const Vector2& screenPos);
+private:
+    std::unique_ptr<Camera> itemCamera_ = nullptr;
+
+    Matrix4x4 matViewport;
+    Matrix4x4 matInverseVPV;
+
+    float width = 0.0f;
+    float height = 0.0f;
+
 };

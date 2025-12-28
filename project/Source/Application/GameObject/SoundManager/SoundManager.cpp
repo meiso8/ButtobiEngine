@@ -2,7 +2,7 @@
 #include"Sound.h"
 void SoundManager::PlayCorrectSE()
 {
-    Sound::PlaySE(Sound::CRACKER);
+    Sound::PlaySE(Sound::CORRECT);
 }
 
 void SoundManager::PlayCancelSE()

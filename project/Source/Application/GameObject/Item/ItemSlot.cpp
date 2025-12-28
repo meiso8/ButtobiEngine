@@ -9,6 +9,11 @@ using namespace std;
 #define rep(i,n)for(int i =0;i < n;++i)
 #include"CollisionConfig.h"
 #include"Window.h"
+#include"TransformAni/TransformAni.h"
+#include"CoordinateTransform.h"
+#include"MakeMatrix.h"
+#include<algorithm>
+#include"Easing.h"
 Item::Item()
 {
     object_ = std::make_shared<Object3d>();
@@ -18,7 +23,7 @@ Item::Item()
 
     SetCollisionAttribute(kCollisionItem);
 
-   SetCollisionMask(!kCollisionItem);
+    SetCollisionMask(!kCollisionItem);
 }
 void Item::SetModel(const ModelManager::MODEL_HANDLE& handle)
 {
@@ -27,7 +32,9 @@ void Item::SetModel(const ModelManager::MODEL_HANDLE& handle)
 }
 void Item::Init()
 {
+    aniTimer_ = 0.0f;
     object_->Initialize();
+
 }
 void Item::DrawInfoUI()
 {
@@ -54,6 +61,41 @@ void Item::OnCollision(Collider* collider)
     OnCollisionCollider();
 }
 
+void Item::Rotate()
+{
+ 
+    TransformAni::RotateY(object_->worldTransform_, 1.0f);
+}
+
+void Item::GetStartPos()
+{
+    object_->worldTransform_.translate_.z = 5.0f;
+    startPos_ = object_->worldTransform_.translate_;
+    object_->Update();
+}
+
+void Item::UpdateAniTimer()
+{
+    if (aniTimer_ == 5.0f) {
+        return;
+    }
+
+    aniTimer_ += InverseFPS;
+    aniTimer_ = std::clamp(aniTimer_, 0.0f, 5.0f);
+}
+
+void Item::LerpScreenPos(const Vector2& screenPos, const Matrix4x4& matInverseVPV)
+{
+
+    float localTime = (aniTimer_ - 3.0f) / 2.0f;
+    // スクリーン座標 → ワールド座標に変換（Z=0.5f くらいがちょうど中間）
+    Vector3 screenPoint = { screenPos.x, screenPos.y, 7.0f };
+    Vector3 worldPos = CoordinateTransform(screenPoint, matInverseVPV);
+    // アイテムの位置を更新！ Trigger時に格納したstartPos
+    object_->worldTransform_.translate_ = Lerp(startPos_, worldPos, localTime);
+
+}
+
 void Item::Update()
 {
     object_->Update();
@@ -61,23 +103,35 @@ void Item::Update()
     ColliderUpdate();
 }
 
-
 ItemSlot::ItemSlot()
 {
-    const float kWidth = static_cast<float>(Window::GetClientWidth());
-    const float kHeight= static_cast<float>(Window::GetClientHeight());
+
+
+    width = static_cast<float>(Window::GetClientWidth());
+    height = static_cast<float>(Window::GetClientHeight());
+
+    //カメラについての
+    itemCamera_ = std::make_unique<Camera>();
+    itemCamera_->Initialize();
+    float scales = 0.005f;
+    itemCamera_->scale_ = { scales,scales,scales };
+    itemCamera_->nearZ_ = 100.0f;
+    //itemCamera_->translate_.z = -5.0f;
+
+    const float sizeX = 96.0f;
+
     rep(i, kMaxSlots_) {
         slotSprites_[i] = make_unique<Sprite>();
-        slotSprites_[i]->Create(Texture::SLOT, {0.0f,0.0f});
-        slotSprites_[i]->SetAnchorPoint({0.5f,0.5f});
-        float sizeX = slotSprites_[i]->GetSize().x;
-        slotSprites_[i]->SetPosition({ (kWidth-sizeX*kMaxSlots_+ sizeX)*0.5f + i * sizeX,kHeight - 64.0f });
+        slotSprites_[i]->Create(Texture::SLOT, { 0.0f,0.0f });
+        slotSprites_[i]->SetSize({ sizeX,sizeX });
+        slotSprites_[i]->SetAnchorPoint({ 0.5f,0.5f });
+        slotSprites_[i]->SetPosition({ (width - sizeX * kMaxSlots_ + sizeX) * 0.5f + i * sizeX,height - 64.0f });
     }
 }
 
 void ItemSlot::OnTriggerItemPickup(const std::shared_ptr<Item>& item)
 {
-    if (!AddItem(item)) {
+    if (AddItem(item)) {
         SoundManager::PlayCorrectSE();
     } else {
         SoundManager::PlayCancelSE();
@@ -86,9 +140,13 @@ void ItemSlot::OnTriggerItemPickup(const std::shared_ptr<Item>& item)
 
 void ItemSlot::Update()
 {
+    itemCamera_->UpdateMatrix();
 
-    for (auto& slot : slots_) {
-    }
+    matViewport = MakeViewportMatrix(0, 0, width, height, 0, 1);
+    matInverseVPV = Inverse(itemCamera_->GetViewProjectionMatrix() * matViewport);
+
+    ToScreen();
+
     Vector2 pos = Input::GetCursorPosition();
 
     for (auto& sprite : slotSprites_) {
@@ -99,6 +157,26 @@ void ItemSlot::Update()
         }
 
     }
+
+
+
+
+#ifdef USE_IMGUI
+    DebugUI::CheckCamera(*itemCamera_);
+#endif
+
+}
+
+void ItemSlot::ToScreen()
+{
+    for (int i = 0; i < slotSprites_.size(); ++i) {
+        if (!slots_[i]) continue;
+        // スプライトのスクリーン座標を取得（2D）
+        Vector2 screenPos = slotSprites_[i]->GetPosition();
+        GetAnimation(slots_[i], screenPos);
+
+    }
+
 }
 
 bool ItemSlot::AddItem(const std::shared_ptr<Item>& item)
@@ -106,6 +184,8 @@ bool ItemSlot::AddItem(const std::shared_ptr<Item>& item)
     for (auto& slot : slots_) {
         if (!slot) {
             slot = item;
+            slot->Init();
+            slot->GetStartPos();
             return true;
         }
     }
@@ -151,15 +231,26 @@ void ItemSlot::Draw(Camera& camera)
         if (sprite) {
             sprite->Draw();
         }
-
     }
 
 
     for (auto& item : slots_) {
         if (item) {
-            item->Draw(camera);
+            item->Draw(*itemCamera_);
         }
 
+    }
+
+}
+
+void ItemSlot::GetAnimation(const std::shared_ptr<Item>& item, const Vector2& screenPos)
+{
+    item->UpdateAniTimer();
+
+    if (item->aniTimer_ <= 3.0f) {
+        item->Rotate();
+    } else {
+        item->LerpScreenPos(screenPos, matInverseVPV);
     }
 
 }
