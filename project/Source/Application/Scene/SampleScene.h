@@ -46,7 +46,7 @@ public:
     void Debug()override;
     void CheckAllCollision();
 
-    std::array < std::unique_ptr<Sprite>, 3> sprite_;
+    std::unique_ptr<Sprite> sprite_;
 
 #pragma region//ゲームオブジェクト
     std::unique_ptr<Player>player_ = nullptr;

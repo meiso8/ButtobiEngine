@@ -21,14 +21,14 @@ public:
         WHITE_1X1,
         UV_CHECKER,
         NUMBERS,
-        TEST,
-        TEST2,
+     
         TEST3,
 
 
         MEMO1,
         MEMO2,
         MEMO3,
+        MEMO4,
 
         PUZZLE,
 

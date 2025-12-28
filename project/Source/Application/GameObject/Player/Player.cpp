@@ -69,7 +69,7 @@ void Player::Init()
     //目の位置初期化
     eyePos_.Initialize();
     eyePos_.worldTransform_.Initialize();
-    eyePos_.worldTransform_.translate_.y = 1.5f;
+    eyePos_.worldTransform_.translate_.y = kEyeDefaultPosY_;
     eyePos_.worldTransform_.translate_.z = 0.5f;
     //体の位置を親に設定
     eyePos_.worldTransform_.Parent(bodyPos_.worldTransform_);
@@ -175,7 +175,7 @@ void Player::Move()
 
         //移動時の縦揺れを再現　速さによって揺れの周期を変更
         walkingTheta_ += std::numbers::pi_v<float>*InverseFPS * 15.0f * kSpeed_;
-        bodyPos_.worldTransform_.translate_.y = sinf(walkingTheta_) * 0.25f;
+        eyePos_.worldTransform_.translate_.y = kEyeDefaultPosY_ + sinf(walkingTheta_) * 0.25f;
 
         //速度を正規化しそれぞれ足す
         velocity_ = Normalize(velocity_);

@@ -26,13 +26,13 @@ void Texture::LoadAllTexture() {
     handles[WHITE_1X1] = Load("Resource/Textures/white1x1.png");
     handles[UV_CHECKER] = Load("Resource/Textures/uvChecker.png");
     handles[NUMBERS] = Load("Resource/Textures/numbers.png");
-    handles[TEST] = Load("Resource/Textures/test.png");
-    handles[TEST2] = Load("Resource/Textures/test2.png");
+
     handles[TEST3] = Load("Resource/Textures/test3.png");
 
     handles[MEMO1] = Load("Resource/Textures/memo01.png");
-    handles[MEMO2] = Load("Resource/Textures/memo01.png");
-    handles[MEMO3] = Load("Resource/Textures/memo01.png");
+    handles[MEMO2] = Load("Resource/Textures/memo02.png");
+    handles[MEMO3] = Load("Resource/Textures/memo03.png");
+    handles[MEMO4] = Load("Resource/Textures/memo04.png");
 
     handles[PUZZLE] = Load("Resource/Textures/puzzle.png");
 
