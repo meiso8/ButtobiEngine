@@ -38,6 +38,11 @@ Vector2 Normalize(const Vector2& v) {
     } else {
         return { 0.0f, 0.0f };
     }
+}
+
+float Distance(const Vector2& v0, const Vector2& v1)
+{
+    return Length(v0 - v1);
 };
 
 //二項演算子 Binary Operator
@@ -51,7 +56,7 @@ Vector2 operator/(const Vector2& v, float s) { return Multiply(1.0f / s, v); }
 
 Vector2 operator*(const Vector2& v1, const Vector2& v2)
 {
-    return Multiply(v1,v2);
+    return Multiply(v1, v2);
 }
 
 //単項演算子 Unary Operator

@@ -345,7 +345,7 @@
     <ClCompile Include="Source\Application\GameObject\UI\HPIcon.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Locker\Locker.cpp">
+    <ClCompile Include="Source\Application\GameObject\Medjed\DummyMedjed.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\Medjed\Medjed.cpp">
@@ -396,7 +396,7 @@
     <ClCompile Include="Source\Engine\Mesh\Model\SkinningModel.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Locker\LockerManager.cpp">
+    <ClCompile Include="Source\Application\GameObject\Medjed\MedjedManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\Item\ItemSlot.cpp">
@@ -764,7 +764,7 @@
     <ClInclude Include="Source\Application\GameObject\UI\HPIcon.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Locker\Locker.h">
+    <ClInclude Include="Source\Application\GameObject\Medjed\DummyMedjed.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\Medjed\Medjed.h">
@@ -830,7 +830,7 @@
     <ClInclude Include="Source\Engine\Mesh\Model\SkinningModel.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Locker\LockerManager.h">
+    <ClInclude Include="Source\Application\GameObject\Medjed\MedjedManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\Item\ItemSlot.h">

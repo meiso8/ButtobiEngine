@@ -6,14 +6,9 @@
 
 void Medjed::OnCollision(Collider* collider)
 {
+    //ここはは後でRayと当たったとき且つクリックしたときに変更する
     if (collider->GetCollisionAttribute() == kCollisionPlayer) {
-        if (isEnemyApperPtr_) {
-            if (!*isEnemyApperPtr_) {
-                aniObj_->InitTime();
-                aniObj_->SetAnimation(ModelManager::GetModel(ModelManager::medJed_GLTF));
-                *isEnemyApperPtr_ = true;
-            }
-        }
+ 
     }
 
     OnCollisionCollider();
@@ -24,11 +19,15 @@ Vector3 Medjed::GetWorldPosition() const
     return aniObj_->worldTransform_.GetWorldPosition();
 }
 
+void Medjed::MoveStart()
+{
+    aniObj_->InitTime();
+    aniObj_->SetAnimation(ModelManager::GetModel(ModelManager::medJed_GLTF));
+}
+
 Medjed::Medjed() {
 
     model_ = ModelManager::GetModel(ModelManager::normalMedjed_GLTF);
-
-
 
     aniObj_ = std::make_unique<AnimationObject3d>();
     aniObj_->Create();
@@ -44,31 +43,27 @@ Medjed::Medjed() {
 
 }
 
-
-void Medjed::LookTarget()
+void Medjed::LookTarget(const Vector3& target)
 {
-    Vector3 direction = *targetPos_ - GetWorldPosition();
+    Vector3 direction = target - GetWorldPosition();
     aniObj_->worldTransform_.rotate_.y = std::atan2(direction.x, direction.z); // Y軸回転（ラジアン）
 }
 
-
 void Medjed::Update()
 {
-    LookTarget();
     aniObj_->Update();
     ColliderUpdate();
-
-
 }
 void Medjed::Init()
 {
     aniObj_->Initialize();
+    aniObj_->SetAnimation(model_);
 }
 
 void Medjed::Draw(Camera& camera)
 {
- /*   ColliderDraw(camera);*/
+    /*   ColliderDraw(camera);*/
     aniObj_->Draw(camera);
-   
+
 
 }

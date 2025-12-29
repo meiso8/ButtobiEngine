@@ -15,7 +15,7 @@ namespace {
     // 壁
     constexpr uint64_t kCollisionWall = 0b1 << 5;
     // ロッカー
-    constexpr uint64_t kCollisionLocker = 0b1 << 6;
+    constexpr uint64_t kCollisionDummyMedjed = 0b1 << 6;
     // アイテム
     constexpr uint64_t kCollisionItem = 0b1 << 7;
     // 何の陣営にも属さない

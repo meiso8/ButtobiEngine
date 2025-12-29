@@ -9,8 +9,8 @@
 #pragma region//ゲームオブジェクト
 #include"Player/Player.h"
 
-#include"Medjed/Medjed.h"
-#include"Locker/LockerManager.h"
+
+#include"Medjed/MedjedManager.h"
 #include"Enemy/Enemy.h"
 
 #include "Enemy/EnemyBulletManager.h"
@@ -53,7 +53,6 @@ public:
     std::unique_ptr<World>world_ = nullptr;
     std::unique_ptr<Field>filed_ = nullptr;
 
-    std::unique_ptr<Medjed>medjed_ = nullptr;
     std::unique_ptr<Enemy>enemy_ = nullptr;
     std::unique_ptr<Building>building_ = nullptr;
 
@@ -62,7 +61,7 @@ public:
 
     std::unique_ptr<LightingManager>lightingManager_ = nullptr;
 
-    std::unique_ptr<LockerManager>lockerManager_ = nullptr;
+    std::unique_ptr<MedjedManager>medjedManager_ = nullptr;
     std::unique_ptr<ItemManager>itemManager_ = nullptr;
 
 

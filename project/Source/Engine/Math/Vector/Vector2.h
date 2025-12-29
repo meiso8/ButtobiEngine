@@ -22,6 +22,8 @@ float Cross(const Vector2& v1, const Vector2& v2);
 //長さ(ノルム)
 float Length(const Vector2& v);
 Vector2 Normalize(const Vector2& v);
+float Distance(const Vector2& v0, const Vector2& v1);
+
 
 //二項演算子 Binary Operator
 Vector2 operator+(const Vector2& v1, const Vector2& v2);

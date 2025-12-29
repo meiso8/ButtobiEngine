@@ -46,8 +46,8 @@ SampleScene::SampleScene()
     // 現在のカメラを設定
     currentCamera_ = camera_.get();
 
- 
-  sprite_= std::make_unique<Sprite>();
+
+    sprite_ = std::make_unique<Sprite>();
     sprite_->Create(Texture::WHITE_1X1, { 0.0f,0.0f }, { 1.0f,0.75f,0.75f,1.0f });
     sprite_->SetSize({ 1280.0f,720.0f });
 
@@ -55,15 +55,11 @@ SampleScene::SampleScene()
     world_ = std::make_unique<World>();
     filed_ = std::make_unique<Field>();
 
-    lockerManager_ = std::make_unique<LockerManager>();
+    medjedManager_ = std::make_unique<MedjedManager>();
+    medjedManager_->SetTarget(player_->GetBodyPos());
 
     enemy_ = std::make_unique<Enemy>();
     enemy_->SetTarget(player_->GetBodyPos());
-
-    medjed_ = std::make_unique<Medjed>();
-    medjed_->SetTarget(player_->GetBodyPos());
-
-    medjed_->SetIsEnemyApperPtr(&enemy_->isApper_);
 
     enemyBulletManager_ = std::make_unique<EnemyBulletManager>();
     enemyShotBulletManager_ = std::make_unique<EnemyShotBulletManager>(enemy_.get(), enemyBulletManager_.get());
@@ -77,12 +73,14 @@ SampleScene::SampleScene()
 
     ParticleManager::GetInstance()->Create();
 
+    Medjed* medjed = medjedManager_->GetMedjed();
     particleEmitters_[0]->SetName("medjedParticle");
-    particleEmitters_[0]->emitter_.transform.Parent(medjed_->GetWorldTransform());
+
+    if (medjed) {
+        particleEmitters_[0]->emitter_.transform.Parent(medjed->GetWorldTransform());
+    }
 
     particleEmitters_[1]->SetName("people");
-
-
 
     hpGage_ = std::make_unique<HPGage>();
     hpGage_->SetHpPtr(player_->GetHpsPtr());
@@ -142,9 +140,7 @@ void SampleScene::Initialize() {
     world_->Init();
     filed_->Init();
 
-    lockerManager_->Initialize();
-
-    medjed_->Init();
+    medjedManager_->Initialize();
     enemy_->Init();
 
     enemyBulletManager_->Initialize();
@@ -170,9 +166,6 @@ void SampleScene::Update() {
     if (enemy_->isApper_) {
         lightingManager_->DirectionalLightUpdate();
 
-
-        Locker::isSetMesh_ = true;
-
         if (Sound::bgmVolume_ < 1.0f) {
             Sound::bgmVolume_ += InverseFPS * 0.25f;
         }
@@ -196,7 +189,6 @@ void SampleScene::Update() {
     }
 
     player_->Update();
-    medjed_->Update();
     enemy_->Update();
     enemyBulletManager_->Update();
 
@@ -211,7 +203,7 @@ void SampleScene::Update() {
 
     ParticleManager::GetInstance()->Update(*currentCamera_);
 
-    lockerManager_->Update();
+    medjedManager_->Update();
 
     building_->Update();
 
@@ -258,9 +250,7 @@ void SampleScene::CheckAllCollision()
 {
 
     collisionManager_->ClearColliders();
-
     collisionManager_->AddCollider(player_.get());
-    collisionManager_->AddCollider(medjed_.get());
 
     for (auto& bullet : enemyBulletManager_->GetBullets()) {
         if (bullet->isActive_) {
@@ -268,17 +258,22 @@ void SampleScene::CheckAllCollision()
         }
     }
 
-    if (!enemy_->isApper_) {
-        for (auto& locker : lockerManager_->GetLockers1()) {
+    // ========================//メジェド　見つかってないときとそうではないとき================================
+    if (enemy_->isApper_) {
+        Medjed* medjed = medjedManager_->GetMedjed();
+        collisionManager_->AddCollider(medjed);
+    } else {
+        for (auto& locker : medjedManager_->GetAllMedjeds()) {
             collisionManager_->AddCollider(locker.get());
         }
-        for (auto& locker : lockerManager_->GetLockers2()) {
-            collisionManager_->AddCollider(locker.get());
-        }
+
     }
 
-    collisionManager_->CheckAllCollisions();
+    medjedManager_->RayCastHit(*player_->raySprite_);
 
+    // ========================//メジェド　見つかってないときとそうではないとき================================
+
+    collisionManager_->CheckAllCollisions();
 
     auto hitItem = itemManager_->RaycastHitItem(*player_->raySprite_);
     if (hitItem) { itemManager_->GetItemSlot().OnTriggerItemPickup(hitItem); }
@@ -299,9 +294,8 @@ void SampleScene::Draw() {
 
     filed_->Draw(*currentCamera_);
     building_->Draw(*currentCamera_);
-    lockerManager_->Draw(*currentCamera_);
+    medjedManager_->Draw(*currentCamera_);
 
-    medjed_->Draw(*currentCamera_);
     player_->Draw(*currentCamera_, kLightModeHalfL);
     enemy_->Draw(*currentCamera_, kLightModeHalfL);
 

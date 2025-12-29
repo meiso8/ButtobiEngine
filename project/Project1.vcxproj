@@ -163,7 +163,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\Item\GoldHeart.cpp" />
     <ClCompile Include="Source\Application\GameObject\Item\CrowbarItem.cpp" />
     <ClCompile Include="Source\Application\GameObject\Item\ItemSlot.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Locker\LockerManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Medjed\MedjedManager.cpp" />
     <ClCompile Include="Source\Engine\Math\Structs\Line.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Model\SkinningModel.cpp" />
     <ClCompile Include="Source\Engine\Animation\Bone.cpp" />
@@ -180,7 +180,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Lights\SpotLightManager.cpp" />
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\Application\GameObject\BackGround\Building.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Locker\Locker.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Medjed\DummyMedjed.cpp" />
     <ClCompile Include="Source\Application\GameObject\Medjed\Medjed.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\HPIcon.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\HPGage.cpp" />
@@ -299,7 +299,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\GameObject\Item\GoldHeart.h" />
     <ClInclude Include="Source\Application\GameObject\Item\CrowbarItem.h" />
     <ClInclude Include="Source\Application\GameObject\Item\ItemSlot.h" />
-    <ClInclude Include="Source\Application\GameObject\Locker\LockerManager.h" />
+    <ClInclude Include="Source\Application\GameObject\Medjed\MedjedManager.h" />
     <ClInclude Include="Source\Engine\Mesh\Model\SkinningModel.h" />
     <ClInclude Include="Source\Engine\Animation\Animation.h" />
     <ClInclude Include="Source\Engine\Animation\Bone.h" />
@@ -320,7 +320,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Lights\SpotLightManager.h" />
     <ClInclude Include="Source\Game.h" />
     <ClInclude Include="Source\Application\GameObject\BackGround\Building.h" />
-    <ClInclude Include="Source\Application\GameObject\Locker\Locker.h" />
+    <ClInclude Include="Source\Application\GameObject\Medjed\DummyMedjed.h" />
     <ClInclude Include="Source\Application\GameObject\Medjed\Medjed.h" />
     <ClInclude Include="Source\Application\GameObject\UI\HPIcon.h" />
     <ClInclude Include="Source\Application\GameObject\UI\HPGage.h" />
