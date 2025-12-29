@@ -43,6 +43,11 @@ void Sound::LoadAllSound()
     handles_[THROW_FLOOR] = Load("Resource/Sounds/externals/throwFloor.mp3");
     handles_[SWITCH_ON] = Load("Resource/Sounds/externals/maou_se_sound_switch01.mp3");
     handles_[CORRECT] = Load("Resource/Sounds/correct.mp3");
+
+    handles_[ASOBIMASYO] = Load("Resource/Sounds/externals/asobimasyo.mp3");
+    handles_[SOTTIZYANAIWA] = Load("Resource/Sounds/externals/sottizyanaiwa.mp3");
+
+
 }
 
 void Sound::PlayBGM(const TAG& tag, const float& volumeOffset, const bool& loop)

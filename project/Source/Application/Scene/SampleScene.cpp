@@ -58,11 +58,6 @@ SampleScene::SampleScene()
     medjedManager_ = std::make_unique<MedjedManager>();
     medjedManager_->SetTarget(player_->GetBodyPos());
 
-    enemy_ = std::make_unique<Enemy>();
-    enemy_->SetTarget(player_->GetBodyPos());
-
-    enemyBulletManager_ = std::make_unique<EnemyBulletManager>();
-    enemyShotBulletManager_ = std::make_unique<EnemyShotBulletManager>(enemy_.get(), enemyBulletManager_.get());
 
 
     building_ = std::make_unique<Building>();
@@ -141,10 +136,7 @@ void SampleScene::Initialize() {
     filed_->Init();
 
     medjedManager_->Initialize();
-    enemy_->Init();
 
-    enemyBulletManager_->Initialize();
-    enemyShotBulletManager_->Initialize();
 
     building_->Init();
 
@@ -163,14 +155,19 @@ void SampleScene::Update() {
     }
 
     lightingManager_->UpdatePointLight();
-    if (enemy_->isApper_) {
+
+    if (medjedManager_->GetIsFindMedjed()) {
+
         lightingManager_->DirectionalLightUpdate();
 
-        if (Sound::bgmVolume_ < 1.0f) {
-            Sound::bgmVolume_ += InverseFPS * 0.25f;
+        if (medjedManager_->GetIsApperMedjed()) {
+            if (Sound::bgmVolume_ < 1.0f) {
+                Sound::bgmVolume_ += InverseFPS * 0.25f;
+            }
+            Sound::Stop(Sound::BGM1);
+            Sound::PlayBGM(Sound::BGM2);
+
         }
-        Sound::Stop(Sound::BGM1);
-        Sound::PlayBGM(Sound::BGM2);
 
         world_->UpdateColor();
         filed_->Update();
@@ -189,10 +186,9 @@ void SampleScene::Update() {
     }
 
     player_->Update();
-    enemy_->Update();
-    enemyBulletManager_->Update();
 
-    if (enemy_->isApper_) {
+
+    if (medjedManager_->GetIsFindMedjed()) {
         for (int i = 0; i < particleEmitters_.size(); ++i) {
             particleEmitters_[i]->UpdateTimer();
             particleEmitters_[i]->UpdateEmitter();
@@ -209,7 +205,6 @@ void SampleScene::Update() {
 
     world_->Update();
 
-    enemyShotBulletManager_->Update();
 
     itemManager_->Update();
 
@@ -249,19 +244,26 @@ void SampleScene::Debug()
 void SampleScene::CheckAllCollision()
 {
 
+    auto hitItem = itemManager_->RaycastHitItem(*player_->raySprite_);
+    if (hitItem) { itemManager_->GetItemSlot().OnTriggerItemPickup(hitItem); }
+
+    medjedManager_->RayCastHit(*player_->raySprite_);
+
     collisionManager_->ClearColliders();
     collisionManager_->AddCollider(player_.get());
 
-    for (auto& bullet : enemyBulletManager_->GetBullets()) {
-        if (bullet->isActive_) {
-            collisionManager_->AddCollider(bullet.get());
-        }
-    }
-
     // ========================//メジェド　見つかってないときとそうではないとき================================
-    if (enemy_->isApper_) {
-        Medjed* medjed = medjedManager_->GetMedjed();
-        collisionManager_->AddCollider(medjed);
+    if (medjedManager_->GetIsFindMedjed()) {
+
+        collisionManager_->AddCollider(medjedManager_->GetMedjed());
+
+        //巨大メジェド出現し、弾を打ってくる
+        for (auto& bullet : medjedManager_->GetBulletManager()->GetBullets()) {
+            if (bullet->isActive_) {
+                collisionManager_->AddCollider(bullet.get());
+            }
+        }
+        collisionManager_->AddCollider(medjedManager_->GetEnemy());
     } else {
         for (auto& locker : medjedManager_->GetAllMedjeds()) {
             collisionManager_->AddCollider(locker.get());
@@ -269,15 +271,10 @@ void SampleScene::CheckAllCollision()
 
     }
 
-    medjedManager_->RayCastHit(*player_->raySprite_);
 
     // ========================//メジェド　見つかってないときとそうではないとき================================
 
     collisionManager_->CheckAllCollisions();
-
-    auto hitItem = itemManager_->RaycastHitItem(*player_->raySprite_);
-    if (hitItem) { itemManager_->GetItemSlot().OnTriggerItemPickup(hitItem); }
-
 }
 
 
@@ -297,15 +294,13 @@ void SampleScene::Draw() {
     medjedManager_->Draw(*currentCamera_);
 
     player_->Draw(*currentCamera_, kLightModeHalfL);
-    enemy_->Draw(*currentCamera_, kLightModeHalfL);
 
-    enemyBulletManager_->Draw(*currentCamera_, LightMode::kLightModeHalfL);
 
     ParticleManager::GetInstance()->Draw();
 
     itemManager_->Draw(*currentCamera_);
 
-    if (enemy_->isApper_) {
+    if (medjedManager_->GetIsFindMedjed()) {
         hpGage_->Draw();
     }
 

@@ -58,7 +58,7 @@ bool ItemManager::AddItemToSlot(const std::string& name) {
     return false;
 }
 
-std::shared_ptr<Item> ItemManager::RaycastHitItem(RaySprite& raySprite, float maxDistance) {
+std::shared_ptr<Item> ItemManager::RaycastHitItem(RaySprite& raySprite) {
 
 
     for (auto& [name, item] : items_) {
@@ -70,17 +70,15 @@ std::shared_ptr<Item> ItemManager::RaycastHitItem(RaySprite& raySprite, float ma
         AABB box = GetAABBWorldPos(item.get()); // AABBなど
         Vector3 itemPos = item->GetWorldPosition();
 
-        if (raySprite.IntersectsAABB(box)) {
+        if (raySprite.IntersectsAABB(box, itemPos)) {
 
-            float dist = Distance(raySprite.ray_.origin, itemPos);
-            if (dist <= maxDistance) {
-                obj->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+            obj->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 
-                if (Input::IsTriggerMouse(0)) {
-                    return item;
-                }
-
+            if (Input::IsTriggerMouse(0)) {
+                return item;
             }
+
+
         }
     }
     return nullptr;

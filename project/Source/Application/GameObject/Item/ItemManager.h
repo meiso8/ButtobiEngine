@@ -20,7 +20,7 @@ public:
 
     // 指定アイテムをスロットに追加（名前で）
     bool AddItemToSlot(const std::string& name);
-    std::shared_ptr<Item> RaycastHitItem(RaySprite& raySprite, float maxDistance = 5.0f);
+    std::shared_ptr<Item> RaycastHitItem(RaySprite& raySprite);
 
 private:
     std::map<std::string, std::shared_ptr<Item>> items_;

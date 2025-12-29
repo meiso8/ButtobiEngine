@@ -10,7 +10,7 @@ private:
     float tMin_ = 0.0f;
     float tMax_ = 1.0f;
     void Update();
-
+    const float kMaxDistance_ = 5.0f;
 public:
 
     RaySprite();
@@ -20,7 +20,7 @@ public:
     };
 
     void Draw();
-    bool IntersectsAABB(const AABB& aabb);
+    bool IntersectsAABB(const AABB& aabb,const Vector3& pos);
     Ray ray_ = {};
 
 
