@@ -6,8 +6,8 @@
 #include "CubeMesh.h"
 class Camera;
 class Model;
-struct AABB;
 
+#include"AABB.h"
 
 class Building
 {

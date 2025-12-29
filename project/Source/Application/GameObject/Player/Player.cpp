@@ -119,9 +119,9 @@ void Player::Update()
         }
     }
 
+
     Move();
     Zoom();
-    PointLightSwitch();
     LookBack();
     MouseLook();
     UpdateRay();
@@ -209,14 +209,6 @@ void Player::Zoom()
         }
     }
 
-}
-
-void Player::PointLightSwitch()
-{
-    if (Input::IsTriggerMouse(0)) {
-        Sound::PlaySE(Sound::SWITCH_ON);
-        LightingManager::isPointLightOn_ = LightingManager::isPointLightOn_ ? false : true;
-    }
 }
 
 Vector3& Player::GetForward()

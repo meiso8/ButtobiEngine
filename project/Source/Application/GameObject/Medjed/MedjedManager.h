@@ -20,18 +20,19 @@ private:
     Vector3* targetPos_ = nullptr;
     float enemyApperTime_ = 0.0f;
     std::unique_ptr<EnemyManager>enemyManager_;
-    void UpdateApperTime();
-
+    void UpdateEnemyApperTime();
+    void UpdateMedjedIfNotFind();
+    void UpdateMedjedIfFind();
+    void PlaceLockersRandomly();
+    bool IsOverlapping(const Vector2& pos, const std::vector<Vector2>& placedPositions);
 public:
     MedjedManager();
     void SetTarget(Vector3& target) { targetPos_ = &target;};
     void RayCastHit(RaySprite& raySprite);
 
     void Initialize();
-    void PlaceLockersRandomly();
     void Draw(Camera& camera);
     void Update();
-    bool IsOverlapping(const Vector2& pos, const std::vector<Vector2>& placedPositions);
 
     std::vector < std::unique_ptr<DummyMedjed>>& GetAllMedjeds() { return dummyMedjeds_; };
     Medjed* GetMedjed();

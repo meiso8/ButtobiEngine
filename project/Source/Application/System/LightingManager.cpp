@@ -24,12 +24,11 @@ void LightingManager::Initialize()
     SpotLightManager::GetData().decay = 0.5f;
 
     playerHandPos_.Initialize();
-    isPointLightOn_ = false;
+    isPointLightOn_ = true;
 }
 
 void LightingManager::UpdatePointLight()
 {
-    DebugUI::CheckWorldTransform(playerHandPos_, "handPos");
 
     if (isPointLightOn_) {
         WorldTransformUpdate(playerHandPos_);

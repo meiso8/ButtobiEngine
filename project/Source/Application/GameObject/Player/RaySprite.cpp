@@ -1,5 +1,9 @@
 #include "RaySprite.h"
 #include"Vector3.h"
+
+#include"Input.h"
+#include"Sound.h"
+
 RaySprite::RaySprite()
 {
     sprite_ = std::make_unique<Sprite>();
@@ -36,4 +40,8 @@ bool RaySprite::IntersectsAABB(const AABB& aabb, const Vector3& pos)
 void RaySprite::Update()
 {
     sprite_->SetColor({ 1.0f,1.0f,1.0f,0.5f });
+
+    if (Input::IsTriggerMouse(0)) {
+        Sound::PlaySE(Sound::SWITCH_ON);
+    }
 }

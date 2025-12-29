@@ -5,7 +5,7 @@ using namespace std;
 #include"DebugUI.h"
 #include"Collision.h"
 #include"Sound.h"
-
+#include"SoundManager/SoundManager.h"
 void Puzzle::Change(int x, int y)
 {
     int p1 = y * vertical_ + x;
@@ -85,7 +85,7 @@ void Puzzle::Game()
 
             if (Input::IsTriggerMouse(0)) {
                 clickedIndex = i;
-                Sound::PlaySE(Sound::PICO);
+                Sound::PlaySE(Sound::THROW);
             }
 
         } else {
@@ -118,10 +118,13 @@ void Puzzle::Update()
 {
 
     if (isClear_) {
+        Sound::PlayOriginSE(Sound::CORRECT);
+
         clearTimer_ -= InverseFPS;
         if (clearTimer_ <= 0.0f) {
             clearTimer_ = 0.0f;
         }
+    
     }
 
     Game();
