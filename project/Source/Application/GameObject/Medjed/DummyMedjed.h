@@ -12,6 +12,8 @@ private:
     float rotateRange_ = 6.28f;
     float aniTimer_ = 0.0f;
     float startRotateY_ = 0.0f;
+    float startPosY_ = 0.0f;
+    float hideTimer_ = 0.0f;
 protected:
     Model* model_ = nullptr;
     static inline const  AABB localAABB_ = { .min = {-0.2f,0.0f,-0.2f},.max = {0.2f,1.5f,0.2f} };
@@ -28,6 +30,7 @@ public:
     {
         return object3d_->worldTransform_;
     }
-
+    void Hide();
+    const bool IsHide() { return hideTimer_ >= 1.0f; };
 };
 

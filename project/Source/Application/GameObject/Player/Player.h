@@ -34,7 +34,7 @@ public:
     void UpdateRay();
     void Move();
     void Zoom();
-    void PointLightSwitch();
+
     void LookBack();
     void MouseLook();
 

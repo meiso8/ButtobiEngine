@@ -28,21 +28,46 @@ public:
 
     //TAGを宣言する
     enum TAG {
-        BGM1,
-        BGM2,
-        PICO,
+        // ======================================
+        //BGM
+        BGM_ArabRuins,
+        BGM_Ethnic,
+        BGM_SandCity,
+        BGM_Sea,
+        BGM_Sun,
+        // ======================================
+       
+        //ホラーアクセント
+        HORROR1,
+        HORROR2,
+        //物が落ちる
+        FALL,
+        //水
+        WATER_DROP,
+        //メモ用
+        BOOK,
+        //スライドするとか
+        THROW,
+        //クラッカー
         CRACKER,
+        //足音
         FOOT_STEP,
-
-        FIRE_BALL,
-        THROW_FLOOR,
-
+        //スイッチ
         SWITCH_ON,
-
+        //正解
         CORRECT,
+        //キャンセル
+        BUZZER,
+        //ごごごごごご
+        GOGOGO,
+        //ファイアボール
+        FIRE_BALL,
 
-        ASOBIMASYO,
-        SOTTIZYANAIWA,
+        // ======================================
+        //ボイス
+        VOICE_Asobimasyo,
+        VOICE_Sottizyanaiwa,
+        // ======================================
 
         SOUNDS
     };

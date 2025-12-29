@@ -15,7 +15,6 @@ MedjedManager::MedjedManager()
     enemyManager_ = std::make_unique<EnemyManager>();
 
     dummyMedjeds_.clear();
-
     dummyMedjeds_.resize(46);
 
     for (int i = 0; i < dummyMedjeds_.size(); ++i) {
@@ -30,6 +29,10 @@ MedjedManager::MedjedManager()
 
 void MedjedManager::RayCastHit(RaySprite& raySprite) {
 
+    if (GetIsApperMedjed()) {
+        return;//一旦ここでリターンする
+    }
+
     for (auto& medjed : dummyMedjeds_) {
 
         AABB aabb = GetAABBWorldPos(medjed.get());
@@ -42,16 +45,17 @@ void MedjedManager::RayCastHit(RaySprite& raySprite) {
                 if (Input::IsTriggerMouse(0)) {
 
                     if (auto correctMedjed = dynamic_cast<Medjed*>(medjed.get())) {
+                        correctMedjed->MoveStart();
 
                         SetIsFindMedjed(true);
-                        correctMedjed->MoveStart();
                         SoundManager::PlayCorrectSE();
+                        Sound::PlaySE(Sound::GOGOGO);
                         return;
 
                     } else {
 
                         SoundManager::PlayCancelSE();
-                        Sound::PlaySE(Sound::SOTTIZYANAIWA);
+                        Sound::PlaySE(Sound::VOICE_Sottizyanaiwa, 0.5f);
                         PlaceLockersRandomly();
                         return;
                     }
@@ -81,12 +85,13 @@ void MedjedManager::Initialize()
 void MedjedManager::Draw(Camera& camera)
 {
     for (auto& locker : dummyMedjeds_) {
+
         locker->Draw(camera);
     }
     enemyManager_->Draw(camera);
 }
 
-void MedjedManager::UpdateApperTime()
+void MedjedManager::UpdateEnemyApperTime()
 {
     if (enemyApperTime_ == 5.0f) {
         return;
@@ -100,44 +105,53 @@ void MedjedManager::UpdateApperTime()
     }
 }
 
+void MedjedManager::UpdateMedjedIfNotFind()
+{
+    //メジェド一つだけ
+    GetMedjed()->LookTarget(*targetPos_);
+
+    if (GetMedjed()->GetIsHit()) {
+        //ランダム
+        PlaceLockersRandomly();
+    }
+}
+
+void MedjedManager::UpdateMedjedIfFind()
+{
+    for (auto& medjed : dummyMedjeds_) {
+
+        medjed->LookTarget(*targetPos_);
+
+        if (GetIsApperMedjed()) {
+            if (auto dummy = dynamic_cast<DummyMedjed*>(medjed.get())) {
+                dummy->Hide();
+            }
+        }
+
+    }
+}
+
 void MedjedManager::Update()
 {
 
     if (GetIsFindMedjed()) {
 
-        UpdateApperTime();
-
-        for (auto& locker : dummyMedjeds_) {
-            locker->LookTarget(*targetPos_);
-        }
-
+        UpdateEnemyApperTime();
+        UpdateMedjedIfFind();
         enemyManager_->Update();
 
     } else {
-        //メジェド一つだけ
-        GetMedjed()->LookTarget(*targetPos_);
-
-        if (GetMedjed()->GetIsHit()) {
-            //ランダム
-            PlaceLockersRandomly();
-        }
+        UpdateMedjedIfNotFind();
     }
 
-
     for (auto& locker : dummyMedjeds_) {
-
         locker->Update();
     }
 
-
 }
-
-
 
 void MedjedManager::PlaceLockersRandomly() {
     std::vector<Vector2> placedPositions;
-
-
 
     for (auto& locker : dummyMedjeds_) {
         locker->Init();

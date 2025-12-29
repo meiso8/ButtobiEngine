@@ -33,20 +33,32 @@ void Sound::LoadAllSound()
 
     handles_.resize(SOUNDS);
 
-    //サウンドの読み込み
-    handles_[BGM1] = Load("Resource/Sounds/externals/sea.mp3");
-    handles_[BGM2] = Load("Resource/Sounds/externals/maou_bgm_ethnic08.mp3");
-    handles_[PICO] = Load("Resource/Sounds/pico.mp3");
+    // ======================================
+    handles_[BGM_ArabRuins] = Load("Resource/Sounds/BGM/ArabRuins.mp3");
+    handles_[BGM_Ethnic] = Load("Resource/Sounds/BGM/maou_bgm_ethnic08.mp3");
+    handles_[BGM_SandCity] = Load("Resource/Sounds/BGM/SandCity.mp3");
+    handles_[BGM_Sea] = Load("Resource/Sounds/BGM/sea.mp3");
+    handles_[BGM_Sun] = Load("Resource/Sounds/BGM/Sun.mp3");
+    // ======================================
+
+    handles_[HORROR1] = Load("Resource/Sounds/externals/Horror_Accent02-1(Far).mp3");
+    handles_[HORROR2] = Load("Resource/Sounds/externals/Horror_Accent16-2(Mid-Long).mp3");
+    handles_[FALL] = Load("Resource/Sounds/externals/maou_se_sound_fall02.mp3");
+    handles_[WATER_DROP] = Load("Resource/Sounds/externals/Water_Drop02-1(Low-Reverb).mp3");
+    handles_[BOOK] = Load("Resource/Sounds/externals/Book01-1(Flip).mp3");
+    handles_[THROW] = Load("Resource/Sounds/externals/throwFloor.mp3");
     handles_[CRACKER] = Load("Resource/Sounds/cracker_short.mp3");
     handles_[FOOT_STEP] = Load("Resource/Sounds/externals/maou_se_sound_footstep02.mp3");
-    handles_[FIRE_BALL] = Load("Resource/Sounds/externals/fireBall.mp3");
-    handles_[THROW_FLOOR] = Load("Resource/Sounds/externals/throwFloor.mp3");
     handles_[SWITCH_ON] = Load("Resource/Sounds/externals/maou_se_sound_switch01.mp3");
     handles_[CORRECT] = Load("Resource/Sounds/correct.mp3");
+    handles_[BUZZER] = Load("Resource/Sounds/externals/Quiz-Buzzer03-2(Short).mp3");
+    handles_[GOGOGO] = Load("Resource/Sounds/externals/Onoma-Rumble02-2(Hard-Short).mp3");
+    handles_[FIRE_BALL] = Load("Resource/Sounds/externals/fireBall.mp3");
 
-    handles_[ASOBIMASYO] = Load("Resource/Sounds/externals/asobimasyo.mp3");
-    handles_[SOTTIZYANAIWA] = Load("Resource/Sounds/externals/sottizyanaiwa.mp3");
-
+    // ======================================
+    handles_[VOICE_Asobimasyo] = Load("Resource/Sounds/externals/asobimasyo.mp3");
+    handles_[VOICE_Sottizyanaiwa] = Load("Resource/Sounds/externals/sottizyanaiwa.mp3");
+    // ======================================
 
 }
 

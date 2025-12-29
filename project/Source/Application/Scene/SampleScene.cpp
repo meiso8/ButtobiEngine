@@ -39,28 +39,22 @@
 #include"Lerp.h"
 
 #include"Easing.h"
-
+#include"SoundManager/SoundManager.h"
 
 SampleScene::SampleScene()
 {
     // 現在のカメラを設定
     currentCamera_ = camera_.get();
 
-
     sprite_ = std::make_unique<Sprite>();
     sprite_->Create(Texture::WHITE_1X1, { 0.0f,0.0f }, { 1.0f,0.75f,0.75f,1.0f });
     sprite_->SetSize({ 1280.0f,720.0f });
 
     player_ = std::make_unique<Player>();
-    world_ = std::make_unique<World>();
-    filed_ = std::make_unique<Field>();
+    backGround_ = std::make_unique<BackGround>();
 
     medjedManager_ = std::make_unique<MedjedManager>();
     medjedManager_->SetTarget(player_->GetBodyPos());
-
-
-
-    building_ = std::make_unique<Building>();
 
     for (int i = 0; i < particleEmitters_.size(); ++i) {
         particleEmitters_[i] = std::make_unique<ParticleEmitter>();
@@ -95,31 +89,31 @@ SampleScene::SampleScene()
 
 void SampleScene::Initialize() {
 
-
+    ParticleManager::ResetAll();
+    SoundManager::InitMedjedScene();
     lightingManager_->Initialize();
-
-    Sound::bgmVolume_ = 0.1f;
-
 
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kWipeOut, 60);
     camera_->Initialize();
     camera_->UpdateMatrix();
 
-
     for (int i = 0; i < particleEmitters_.size(); ++i) {
         particleEmitters_[i]->Initialize();
     }
 
-    particleEmitters_[0]->emitter_.count = 16;
+    particleEmitters_[0]->emitter_.count = 8;
     particleEmitters_[0]->emitter_.color = { 1.0f,0.75f,0.75f,1.0f };
     particleEmitters_[0]->emitter_.frequencyTime = 0.25f;
     particleEmitters_[0]->emitter_.lifeTime = 6.0f;
-    particleEmitters_[0]->emitter_.blendMode = kBlendModeAdd;
+    particleEmitters_[0]->emitter_.blendMode = kBlendModeNormal;
     particleEmitters_[0]->emitter_.movement = ParticleMovements::kParticleSphere;
     particleEmitters_[0]->emitter_.radius = 3.0f;
     particleEmitters_[0]->emitter_.rotateOffset_ = 3.14f;
-    particleEmitters_[0]->emitter_.radiusSpeed = 1.0f;
+    //particleEmitters_[0]->emitter_.radiusSpeed = ;
+    auto & group = ParticleManager::GetInstance()->GetParticleGroup(particleEmitters_[0]->emitter_.name);
+    group->accelerationField.acceleration.y = 5.0f;
+    group->accelerationField.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,40.0f,25.0f} };
 
     particleEmitters_[1]->emitter_.transform.translate_.y = 30.0f;
     particleEmitters_[1]->emitter_.transform.scale_ = { 10.0f,10.0f,10.0f };
@@ -127,22 +121,16 @@ void SampleScene::Initialize() {
     particleEmitters_[1]->emitter_.color = { 1.0f,0.75f,0.75f,1.0f };
     particleEmitters_[1]->emitter_.frequencyTime = 0.1f;
     particleEmitters_[1]->emitter_.lifeTime = 10.0f;
-    particleEmitters_[1]->emitter_.blendMode = kBlendModeNormal;
-    particleEmitters_[1]->emitter_.velocityAABB = { { -1.0f,-1.0f,1.0f }, { 1.0f,1.0f,1.0f } };
+    particleEmitters_[1]->emitter_.blendMode = kBlendModeScreen;
+    particleEmitters_[1]->emitter_.velocityAABB = { { -10.0f,-10.0f,-10.0f }, { 10.0f,0.0f,10.0f } };
     particleEmitters_[1]->emitter_.rotateOffset_ = 3.14f;
 
+
+
     player_->Init();
-    world_->Init();
-    filed_->Init();
-
+    backGround_->Initialize();
     medjedManager_->Initialize();
-
-
-    building_->Init();
-
-
     hpGage_->Initialize();
-
     itemManager_->Init();
 }
 
@@ -159,21 +147,15 @@ void SampleScene::Update() {
     if (medjedManager_->GetIsFindMedjed()) {
 
         lightingManager_->DirectionalLightUpdate();
+        backGround_->UpdateApperMedjed();
 
         if (medjedManager_->GetIsApperMedjed()) {
-            if (Sound::bgmVolume_ < 1.0f) {
-                Sound::bgmVolume_ += InverseFPS * 0.25f;
-            }
-            Sound::Stop(Sound::BGM1);
-            Sound::PlayBGM(Sound::BGM2);
-
+            //メジェド出現！
+            SoundManager::ApperMedjedUpdate();
         }
-
-        world_->UpdateColor();
-        filed_->Update();
+      
     } else {
-        Sound::Stop(Sound::BGM2);
-        Sound::PlayBGM(Sound::BGM1);
+        SoundManager::NotFindMedjedUpdate();
     }
 
 
@@ -187,7 +169,6 @@ void SampleScene::Update() {
 
     player_->Update();
 
-
     if (medjedManager_->GetIsFindMedjed()) {
         for (int i = 0; i < particleEmitters_.size(); ++i) {
             particleEmitters_[i]->UpdateTimer();
@@ -196,20 +177,13 @@ void SampleScene::Update() {
         hpGage_->Update();
     }
 
-
     ParticleManager::GetInstance()->Update(*currentCamera_);
 
     medjedManager_->Update();
-
-    building_->Update();
-
-    world_->Update();
-
-
+    backGround_->Update();
     itemManager_->Update();
 
     CheckAllCollision();
-
 
 }
 
@@ -287,14 +261,9 @@ void SampleScene::Draw() {
 
 #endif
 
-    world_->Draw(*currentCamera_);
-
-    filed_->Draw(*currentCamera_);
-    building_->Draw(*currentCamera_);
+    backGround_->Draw(*currentCamera_);
     medjedManager_->Draw(*currentCamera_);
-
     player_->Draw(*currentCamera_, kLightModeHalfL);
-
 
     ParticleManager::GetInstance()->Draw();
 

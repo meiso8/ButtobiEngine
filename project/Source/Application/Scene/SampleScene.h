@@ -8,18 +8,11 @@
 
 #pragma region//ゲームオブジェクト
 #include"Player/Player.h"
-
-
 #include"Medjed/MedjedManager.h"
-
 #include"UI/HPGage.h"
-
 #include"LightingManager.h"
 #include"Item/ItemManager.h"
-
-#include"BackGround/Field.h"
-#include "BackGround/Building.h"
-#include"BackGround/World.h"
+#include"BackGround/BackGround.h"
 
 #pragma endregion
 #include"CollisionManager.h"
@@ -46,20 +39,10 @@ public:
 
 #pragma region//ゲームオブジェクト
     std::unique_ptr<Player>player_ = nullptr;
-    std::unique_ptr<World>world_ = nullptr;
-    std::unique_ptr<Field>filed_ = nullptr;
-
-
-    std::unique_ptr<Building>building_ = nullptr;
-
-
-
+    std::unique_ptr<BackGround>backGround_ = nullptr;
     std::unique_ptr<LightingManager>lightingManager_ = nullptr;
-
     std::unique_ptr<MedjedManager>medjedManager_ = nullptr;
     std::unique_ptr<ItemManager>itemManager_ = nullptr;
-
-
 #pragma endregion
 
     std::array<std::unique_ptr<ParticleEmitter>, 2>particleEmitters_;
