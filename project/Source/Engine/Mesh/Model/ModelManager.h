@@ -18,7 +18,8 @@ public:
 
         PEOPLE,
         MUMMY,
-        LOCKER,
+        COFFIN_GLTF,
+
         BUILDING,
         HART,
 

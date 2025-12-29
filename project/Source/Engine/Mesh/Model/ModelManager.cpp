@@ -26,7 +26,7 @@ void ModelManager::LoadAllModel()
     LoadModel("Resource/Models/player", "player.obj", PLAYER_BODY);
     LoadModel("Resource/Models/people", "people.obj", PEOPLE);
     LoadModel("Resource/Models/mummy", "mummy.obj", MUMMY);
-    LoadModel("Resource/Models/locker", "locker.obj", LOCKER);
+    LoadModel("Resource/Models/mummy", "coffin.gltf", COFFIN_GLTF);
     LoadModel("Resource/Models/building", "building.obj", BUILDING);
     LoadModel("Resource/Models/key", "key.obj", KEY);
     LoadModel("Resource/Models/hart", "hart.obj", HART);
