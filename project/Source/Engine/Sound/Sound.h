@@ -41,6 +41,9 @@ public:
 
         CORRECT,
 
+        ASOBIMASYO,
+        SOTTIZYANAIWA,
+
         SOUNDS
     };
 

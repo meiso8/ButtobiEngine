@@ -14,7 +14,8 @@ class Medjed :public DummyMedjed
 private:
     std::unique_ptr<AnimationObject3d> aniObj_ = nullptr;
     std::unique_ptr <SkinningModel> skinningModel = nullptr;
-
+    bool isFind_ = false;
+    bool isHit_ = false;
 private:
 
 public:
@@ -30,5 +31,8 @@ public:
         return aniObj_->worldTransform_;
     }
     void MoveStart();
+    const bool& GetIsFind()const { return isFind_; };
+    void SetIsFind(const bool& f) { isFind_ = f; };
+    const  bool& GetIsHit() const{ return isHit_; };
 };
 

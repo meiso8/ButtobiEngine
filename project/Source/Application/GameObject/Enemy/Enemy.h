@@ -14,13 +14,14 @@ enum LightMode;
 class Enemy :public Collider
 {
 public:
-    bool isApper_ = false;
+
     Enemy();
     void Init();
     void Draw(Camera& camera, const LightMode& lightMode);
     void Update();
     Vector3 GetWorldPosition()const override;
-
+    void SetIsApper(const bool& flag) { isApper_ = flag; }
+    const bool& GetIsApper() { return isApper_; }
     Vector3 GetWorldPos()const
     {
         return bodyPos_.worldTransform_.GetWorldPosition();
@@ -39,6 +40,7 @@ public:
     Object3d bodyPos_;
     HPs* GetHpsPtr() { return &characterState_.hps; }
 private:
+    bool isApper_ = false;
     float timer_ = 0.0f;
     float actionTime_ = 0.0f;
     float fireBallCoolTime_ = 0.0f;

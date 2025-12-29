@@ -1,5 +1,5 @@
 #include "RaySprite.h"
-
+#include"Vector3.h"
 RaySprite::RaySprite()
 {
     sprite_ = std::make_unique<Sprite>();
@@ -17,12 +17,19 @@ void RaySprite::Draw()
     sprite_->Draw();
 }
 
-bool RaySprite::IntersectsAABB(const AABB& aabb)
+bool RaySprite::IntersectsAABB(const AABB& aabb, const Vector3& pos)
 {
+
     if (RayIntersectsAABB(ray_, aabb, tMin_, tMax_)) {
-        sprite_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-        return true;
+
+        float dist = Distance(ray_.origin, pos);
+        if (dist <= kMaxDistance_) {
+            sprite_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+            return true;
+        }
+
     }
+
     return false;
 }
 

@@ -3,12 +3,20 @@
 #include"MakeMatrix.h"
 #include"SkinningModel.h"
 #include"CollisionConfig.h"
-
+#include"Sound.h"
 void Medjed::OnCollision(Collider* collider)
 {
-    //ここはは後でRayと当たったとき且つクリックしたときに変更する
+  
     if (collider->GetCollisionAttribute() == kCollisionPlayer) {
- 
+
+        if (!isHit_) {
+            isHit_ = true;
+        }
+
+        if (!isFind_) {
+           Sound::PlaySE(Sound::ASOBIMASYO);         
+        }
+       
     }
 
     OnCollisionCollider();
@@ -51,11 +59,14 @@ void Medjed::LookTarget(const Vector3& target)
 
 void Medjed::Update()
 {
+    isHit_ = false;
     aniObj_->Update();
     ColliderUpdate();
 }
 void Medjed::Init()
 {
+    isHit_ = false;
+    isFind_ = false;
     aniObj_->Initialize();
     aniObj_->SetAnimation(model_);
 }

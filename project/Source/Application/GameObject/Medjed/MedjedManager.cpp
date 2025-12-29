@@ -9,14 +9,17 @@
 #include"CollisionManager.h"
 #include"Input.h"
 #include"SoundManager/SoundManager.h"
+#include"Sound.h"
 MedjedManager::MedjedManager()
 {
+    enemyManager_ = std::make_unique<EnemyManager>();
+
     dummyMedjeds_.clear();
 
     dummyMedjeds_.resize(46);
 
     for (int i = 0; i < dummyMedjeds_.size(); ++i) {
-        if (i == 2) {
+        if (i == 0) {
             // 最初の1体だけ本物のメジェド様を生成！
             dummyMedjeds_[i] = std::make_unique<Medjed>();
         } else {
@@ -25,27 +28,54 @@ MedjedManager::MedjedManager()
     }
 }
 
-void MedjedManager::RayCastHit(RaySprite& raySprite)
-{
-    Medjed* medjed = GetMedjed();
-    AABB aabb = GetAABBWorldPos(medjed);
-    if (raySprite.IntersectsAABB(aabb)) {
+void MedjedManager::RayCastHit(RaySprite& raySprite) {
 
-        //Mouseをクリックしたら
-        if (Input::IsTriggerMouse(0)) {
-            if (!isBigMedjedApper_) {
-                isBigMedjedApper_ = true;
-                medjed->MoveStart();
-                SoundManager::PlayCorrectSE();
+    for (auto& medjed : dummyMedjeds_) {
+
+        AABB aabb = GetAABBWorldPos(medjed.get());
+
+        if (raySprite.IntersectsAABB(aabb, medjed->GetWorldPosition())) {
+
+            //メジェドざまを当ててないとき
+            if (!GetIsFindMedjed()) {
+                //Mouseをクリックしたら
+                if (Input::IsTriggerMouse(0)) {
+
+                    if (auto correctMedjed = dynamic_cast<Medjed*>(medjed.get())) {
+
+                        SetIsFindMedjed(true);
+                        correctMedjed->MoveStart();
+                        SoundManager::PlayCorrectSE();
+                        return;
+
+                    } else {
+
+                        SoundManager::PlayCancelSE();
+                        Sound::PlaySE(Sound::SOTTIZYANAIWA);
+                        PlaceLockersRandomly();
+                        return;
+                    }
+
+
+                }
+
+
             }
+
         }
+
+
     }
+
+
 }
 
 void MedjedManager::Initialize()
 {
-    isBigMedjedApper_ = false;
+    enemyApperTime_ = false;
     PlaceLockersRandomly();
+    enemyManager_->Initialize();
+    enemyManager_->SetTarget(*targetPos_);
 }
 
 void MedjedManager::Draw(Camera& camera)
@@ -53,19 +83,44 @@ void MedjedManager::Draw(Camera& camera)
     for (auto& locker : dummyMedjeds_) {
         locker->Draw(camera);
     }
+    enemyManager_->Draw(camera);
+}
+
+void MedjedManager::UpdateApperTime()
+{
+    if (enemyApperTime_ == 5.0f) {
+        return;
+    }
+
+    enemyApperTime_ += InverseFPS;
+    enemyApperTime_ = std::clamp(enemyApperTime_, 0.0f, 5.0f);
+
+    if (enemyApperTime_ >= 5.0f) {
+        GetEnemy()->SetIsApper(true);
+    }
 }
 
 void MedjedManager::Update()
 {
 
-    if (isBigMedjedApper_) {
+    if (GetIsFindMedjed()) {
+
+        UpdateApperTime();
+
         for (auto& locker : dummyMedjeds_) {
             locker->LookTarget(*targetPos_);
         }
 
+        enemyManager_->Update();
+
     } else {
         //メジェド一つだけ
         GetMedjed()->LookTarget(*targetPos_);
+
+        if (GetMedjed()->GetIsHit()) {
+            //ランダム
+            PlaceLockersRandomly();
+        }
     }
 
 
@@ -73,6 +128,7 @@ void MedjedManager::Update()
 
         locker->Update();
     }
+
 
 }
 
