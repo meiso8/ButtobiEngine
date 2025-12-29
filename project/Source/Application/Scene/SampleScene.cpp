@@ -73,7 +73,7 @@ SampleScene::SampleScene()
 
     hpGage_ = std::make_unique<HPGage>();
     hpGage_->SetHpPtr(player_->GetHpsPtr());
-    hpGage_->Setting({ 640.0f,32.0f }, { 640.0f,720.0f - 64.0f }, { 0.5f,0.0f });
+    hpGage_->Setting({ 640.0f,16.0f }, { 640.0f,720.0f - 128.0f-8.0f }, { 0.5f,0.0f });
 
 
     lightingManager_ = std::make_unique<LightingManager>();
@@ -106,7 +106,7 @@ void SampleScene::Initialize() {
     particleEmitters_[0]->emitter_.color = { 1.0f,0.75f,0.75f,1.0f };
     particleEmitters_[0]->emitter_.frequencyTime = 0.25f;
     particleEmitters_[0]->emitter_.lifeTime = 6.0f;
-    particleEmitters_[0]->emitter_.blendMode = kBlendModeNormal;
+    particleEmitters_[0]->emitter_.blendMode = kBlendModeMultiply;
     particleEmitters_[0]->emitter_.movement = ParticleMovements::kParticleSphere;
     particleEmitters_[0]->emitter_.radius = 3.0f;
     particleEmitters_[0]->emitter_.rotateOffset_ = 3.14f;
@@ -125,7 +125,9 @@ void SampleScene::Initialize() {
     particleEmitters_[1]->emitter_.velocityAABB = { { -10.0f,-10.0f,-10.0f }, { 10.0f,0.0f,10.0f } };
     particleEmitters_[1]->emitter_.rotateOffset_ = 3.14f;
 
-
+    auto& enemyGroup = ParticleManager::GetInstance()->GetParticleGroup(particleEmitters_[1]->emitter_.name);
+    enemyGroup->accelerationField.acceleration.y = 10.0f;
+    enemyGroup->accelerationField.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,15.0f,25.0f} };
 
     player_->Init();
     backGround_->Initialize();

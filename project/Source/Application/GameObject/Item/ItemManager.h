@@ -8,6 +8,7 @@ class RaySprite;
 
 class ItemManager {
 public:
+    ItemManager();
     void Init();
     void Update();
     void Draw(Camera& camera);

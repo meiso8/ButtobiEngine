@@ -12,7 +12,7 @@ Field::Field()
     object3d_ = std::make_unique<Object3d>();
     object3d_->Create();
     object3d_->SetMesh(circleMesh_.get());
-
+    object3d_->SetLightMode(kLightModeNone);
 }
 
 void Field::Init()

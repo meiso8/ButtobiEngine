@@ -51,6 +51,7 @@ public:
     static const int kMaxSlots_ = 8;
     std::array<std::shared_ptr<Item>, kMaxSlots_> slots_;
     std::array<std::unique_ptr<Sprite>, kMaxSlots_> slotSprites_;
+    void Init();
     void OnTriggerItemPickup(const std::shared_ptr<Item>& item);
     void Update();
     void ToScreen();
