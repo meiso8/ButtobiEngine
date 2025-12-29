@@ -7,37 +7,28 @@
 #include"SkinningModel.h"
 #include"Model.h"
 #include"Collider.h"
+#include"DummyMedjed.h"
 
-class Medjed :public Collider
+class Medjed :public DummyMedjed
 {
 private:
-    Model* model_ = nullptr;
-    Vector3* targetPos_ = nullptr;
     std::unique_ptr<AnimationObject3d> aniObj_ = nullptr;
-    std::unique_ptr < SkinningModel> skinningModel = nullptr;
-    AABB localAABB_ = { .min = {-0.5f,0.0f,-0.5f},.max = {0.5f,1.4f,0.5f} };
+    std::unique_ptr <SkinningModel> skinningModel = nullptr;
 
-    bool* isEnemyApperPtr_ = nullptr;
 private:
-    void LookTarget();
-public:
 
+public:
     Medjed();
-    void SetIsEnemyApperPtr(bool* flag) { isEnemyApperPtr_ = flag; }
-    void Init();
-    void Update();
-    void Draw(Camera& camera);
+    void LookTarget(const Vector3& target)override;
+    void Init()override;
+    void Update()override;
+    void Draw(Camera& camera)override;
     void OnCollision(Collider* collider)override;
     Vector3 GetWorldPosition() const override;
-
-    WorldTransform& GetWorldTransform()
+    WorldTransform& GetWorldTransform()override
     {
         return aniObj_->worldTransform_;
     }
-
-    void SetTarget(Vector3& target) {
-        targetPos_ = &target;
-    };
-
+    void MoveStart();
 };
 

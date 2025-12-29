@@ -1,0 +1,33 @@
+#pragma once
+
+#include<memory>
+#include"Object3d.h"
+#include"Collider.h"
+#include"AABB.h"
+class Model;
+class DummyMedjed :public Collider {
+
+private:
+    std::unique_ptr < Object3d> object3d_;
+    float rotateRange_ = 6.28f;
+    float aniTimer_ = 0.0f;
+    float startRotateY_ = 0.0f;
+protected:
+    Model* model_ = nullptr;
+    static inline const  AABB localAABB_ = { .min = {-0.2f,0.0f,-0.2f},.max = {0.2f,1.5f,0.2f} };
+
+public:
+    DummyMedjed();
+    virtual void Init();
+    virtual void Draw(Camera& camera);
+    virtual void Update();
+    void OnCollision(Collider* collider)override;
+    Vector3 GetWorldPosition() const override;
+    virtual void LookTarget(const Vector3& target);
+    virtual WorldTransform& GetWorldTransform()
+    {
+        return object3d_->worldTransform_;
+    }
+
+};
+

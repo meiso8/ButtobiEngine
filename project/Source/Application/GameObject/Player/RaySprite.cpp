@@ -23,7 +23,10 @@ bool RaySprite::IntersectsAABB(const AABB& aabb)
         sprite_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
         return true;
     }
-    //当たってないときα値を下げる
-    sprite_->SetColor({ 1.0f,1.0f,1.0f,0.5f });
     return false;
+}
+
+void RaySprite::Update()
+{
+    sprite_->SetColor({ 1.0f,1.0f,1.0f,0.5f });
 }
