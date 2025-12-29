@@ -63,7 +63,7 @@ void Item::OnCollision(Collider* collider)
 
 void Item::Rotate()
 {
- 
+
     TransformAni::RotateY(object_->worldTransform_, 1.0f);
 }
 
@@ -87,7 +87,7 @@ void Item::UpdateAniTimer()
 void Item::LerpScreenPos(const Vector2& screenPos, const Matrix4x4& matInverseVPV)
 {
 
-    float localTime = (aniTimer_ - 2.0f) /2.0f;
+    float localTime = (aniTimer_ - 2.0f) / 2.0f;
     // スクリーン座標 → ワールド座標に変換（Z=0.5f くらいがちょうど中間）
     Vector3 screenPoint = { screenPos.x, screenPos.y, -0.92f };
     Vector3 worldPos = CoordinateTransform(screenPoint, matInverseVPV);
@@ -118,7 +118,7 @@ ItemSlot::ItemSlot()
     float scales = 0.005f;
     itemCamera_->scale_ = { scales,scales,scales };
     itemCamera_->translate_.z = -10.0f;
-    itemCamera_->UpdateMatrix(); 
+    itemCamera_->UpdateMatrix();
 
 
     matViewport = MakeViewportMatrix(0, 0, width, height, 0, 1);
@@ -131,6 +131,15 @@ ItemSlot::ItemSlot()
         slotSprites_[i]->SetSize({ sizeX,sizeX });
         slotSprites_[i]->SetAnchorPoint({ 0.5f,0.5f });
         slotSprites_[i]->SetPosition({ (width - sizeX * kMaxSlots_ + sizeX) * 0.5f + i * sizeX,height - 64.0f });
+    }
+}
+
+void ItemSlot::Init()
+{
+    
+    for (auto& slot : slots_) {
+        slot.reset();
+        slot = nullptr;
     }
 }
 
@@ -251,12 +260,12 @@ void ItemSlot::Draw(Camera& camera)
 
 void ItemSlot::GetAnimation(const std::shared_ptr<Item>& item, const Vector2& screenPos)
 {
-    item->UpdateAniTimer();    
+    item->UpdateAniTimer();
 
-    if (item->aniTimer_ <= 2.0f) {
+    if (item->aniTimer_ <= 2.1f) {
         item->Rotate();
-    
-    } else {
+    }
+    if (item->aniTimer_ > 2.0f) {
         item->LerpScreenPos(screenPos, matInverseVPV);
 
     }

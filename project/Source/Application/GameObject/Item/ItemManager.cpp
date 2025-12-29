@@ -6,6 +6,10 @@
 #include"Input.h"
 #include"DebugUI.h"
 #include"Player/RaySprite.h"
+ItemManager::ItemManager()
+{
+ 
+}
 void ItemManager::Init() {
     auto crowbar = std::make_shared<CrowbarItem>();
     crowbar->Init();
@@ -18,6 +22,8 @@ void ItemManager::Init() {
     auto goldHeart = std::make_shared<GoldHeart>();
     goldHeart->Init();
     items_["金の心臓"] = goldHeart;
+
+    itemSlot_.Init();
 }
 
 void ItemManager::Update() {
