@@ -87,9 +87,9 @@ void Item::UpdateAniTimer()
 void Item::LerpScreenPos(const Vector2& screenPos, const Matrix4x4& matInverseVPV)
 {
 
-    float localTime = (aniTimer_ - 3.0f) /1.0f;
+    float localTime = (aniTimer_ - 2.0f) /2.0f;
     // スクリーン座標 → ワールド座標に変換（Z=0.5f くらいがちょうど中間）
-    Vector3 screenPoint = { screenPos.x, screenPos.y,20.0f };
+    Vector3 screenPoint = { screenPos.x, screenPos.y, -0.92f };
     Vector3 worldPos = CoordinateTransform(screenPoint, matInverseVPV);
     // アイテムの位置を更新！ Trigger時に格納したstartPos
     object_->worldTransform_.translate_ = Lerp(startPos_, worldPos, localTime);
@@ -113,10 +113,12 @@ ItemSlot::ItemSlot()
     //カメラについての
     itemCamera_ = std::make_unique<Camera>();
     itemCamera_->Initialize();
-    itemCamera_->nearZ_ = 100.0f;
+    itemCamera_->nearZ_ = 0.2f;
+    itemCamera_->farZ_ = 1000.0f;
     float scales = 0.005f;
     itemCamera_->scale_ = { scales,scales,scales };
-    itemCamera_->UpdateMatrix();
+    itemCamera_->translate_.z = -10.0f;
+    itemCamera_->UpdateMatrix(); 
 
 
     matViewport = MakeViewportMatrix(0, 0, width, height, 0, 1);
@@ -151,15 +153,12 @@ void ItemSlot::Update()
 
     for (auto& sprite : slotSprites_) {
         if (IsCollision(pos, *sprite)) {
-            sprite->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+            sprite->SetColor({ 1.0f,0.0f,0.0f,0.5f });
         } else {
-            sprite->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+            sprite->SetColor({ 1.0f,1.0f,1.0f,0.5f });
         }
 
     }
-
-
-
 
 #ifdef USE_IMGUI
     DebugUI::CheckCamera(*itemCamera_);
@@ -169,6 +168,10 @@ void ItemSlot::Update()
 
 void ItemSlot::ToScreen()
 {
+
+    itemCamera_->UpdateMatrix(); // ← カメラ行列を更新！
+    matViewport = MakeViewportMatrix(0, 0, width, height, 0, 1);
+    matInverseVPV = Inverse(itemCamera_->GetViewProjectionMatrix() * matViewport);
 
     for (int i = 0; i < slotSprites_.size(); ++i) {
         if (!slots_[i]) continue;
@@ -235,7 +238,6 @@ void ItemSlot::Draw(Camera& camera)
         }
     }
 
-
     for (auto& item : slots_) {
         if (item) {
             item->Draw(*itemCamera_);
@@ -243,13 +245,15 @@ void ItemSlot::Draw(Camera& camera)
 
     }
 
+
+
 }
 
 void ItemSlot::GetAnimation(const std::shared_ptr<Item>& item, const Vector2& screenPos)
 {
     item->UpdateAniTimer();    
 
-    if (item->aniTimer_ <= 3.0f) {
+    if (item->aniTimer_ <= 2.0f) {
         item->Rotate();
     
     } else {
