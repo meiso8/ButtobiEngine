@@ -8,6 +8,7 @@
 #include"Line.h"
 #include"Collider.h"
 #include"RaySprite.h"
+#include"EyeCollider.h"
 
 class Model;
 class Camera;
@@ -26,11 +27,11 @@ public:
     Vector3 GetWorldPosition() const  override;
     Player();
     void Init();
- 
+
     void Draw(Camera& camera, const LightMode& lightType);
     void Update();
-    
-    
+
+
     void UpdateRay();
     void Move();
     void Zoom();
@@ -41,24 +42,21 @@ public:
     Vector3& GetForward();
 
 
-    Matrix4x4& GetEyeMatrix() {
-        return eyePos_.worldTransform_.matWorld_;
+    const Matrix4x4& GetEyeMatrix() {
+        return eyeCollider_->GetWorldMatrix();
     };
     WorldTransform& GetEyeWorldTransform() {
-        return eyePos_.worldTransform_;
+        return eyeCollider_->GetWorldTransform();
     }
     Vector3& GetBodyPos() {
         return bodyPos_.worldTransform_.translate_;
     };
 
-    Circle& GetCircle() {
-        return circle_;
-    };
     HPs* GetHpsPtr() { return &characterState_.hps; }
-    void OnCollision(const Circle& circle);
-    void ResolveCollision(const AABB& wallAABB, const AABB& playerAABB);
-    void OnCollisionWall();
 
+    EyeCollider* GetEyeCollider() {
+        return eyeCollider_.get();
+    }
     float cameraSpeed_ = 1.0f;
     bool isPressSpace_ = false;
 
@@ -75,26 +73,21 @@ private:
 
     bool isLookBack_ = false;
 
-    bool isWallHit = false;
-
-
     //AABB
     AABB localAabb_;
-    Circle circle_;
     Vector3 velocity_;
     float kSpeed_;
-    float walkingTheta_ = 0.0f;
+
     float soundTimer_ = 0.0f;
     Model* model_;
 
     Object3d bodyPos_;
-    Object3d eyePos_;
-    const float   kEyeDefaultPosY_ = 1.5f;
+
+    std::unique_ptr<EyeCollider>eyeCollider_ = nullptr;
     float cameraRotateY_ = 0.0f;
     float cameraRotateX_ = 0.0f;
 
     CharacterState characterState_;
-
 
     void OnCollisionEnemy();
 };

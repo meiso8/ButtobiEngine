@@ -4,20 +4,32 @@
 #include"Object3d.h"
 #include<unordered_map>
 #include "CubeMesh.h"
+#include"Collider.h"
 class Camera;
 class Model;
 
-#include"AABB.h"
+class FieldCollider :public Collider {
+public:
+    FieldCollider();
+    void Update();
+    void Draw(Camera& camera);
+    void Initialize();
+    void OnCollision(Collider* collider)override;
+    Vector3 GetWorldPosition() const override {
+        return object_->worldTransform_.GetWorldPosition();
+    };
+    void SetingAABB(const AABB& aabb);
+    void SetPos(const Vector3& pos);
+    void SetTexture(const Texture::TEXTURE_HANDLE& handle) { object_->SetTextureHandle(handle); }
+
+private:
+    std::unique_ptr <Object3d> object_;
+    std::unique_ptr < CubeMesh > cube_;
+};
 
 class Building
 {
-private:
-
-
-    std::unique_ptr <Object3d> buildingPos;
-    Model* model_ = nullptr;
 public:
-
     enum AABBType {
         Wall0,
         Wall1,
@@ -25,14 +37,16 @@ public:
         Wall3,
         Floor,
     };
-
+private:
+    std::unique_ptr <Object3d> buildingPos;
+    Model* model_ = nullptr;
+    std::unordered_map<AABBType, AABB>aabbs_;
+    std::unordered_map<AABBType, std::unique_ptr <FieldCollider>>fieldPoses_;
+public:
     Building();
     void Init();
     void Update();
     void Draw(Camera& camera);
-    AABB GetWorldAABB(const AABBType& type);
-    std::unordered_map<AABBType, std::unique_ptr < CubeMesh>>cubes_;
-    std::unordered_map<AABBType, std::unique_ptr <Object3d>>wallPos_;
-    std::unordered_map<AABBType, AABB>aabbs_;
+    std::unordered_map<AABBType, std::unique_ptr <FieldCollider>>& GetFieldPoses() { return fieldPoses_; };
 };
 

@@ -20,9 +20,7 @@ Item::Item()
     object_->Create();
     SetType(kAABB);
     SetAABB({ .min = { -0.5f,-0.5f,-0.5f},.max = { 0.5f,0.5f,0.5f } });
-
     SetCollisionAttribute(kCollisionItem);
-
     SetCollisionMask(!kCollisionItem);
 }
 void Item::SetModel(const ModelManager::MODEL_HANDLE& handle)

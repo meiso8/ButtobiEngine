@@ -1,7 +1,9 @@
 #pragma once
+
 #include <list>
 #include"Sphere.h"
 #include"AABB.h"
+
 class Collider;
 
 Sphere GetSphereWorldPos(Collider* sphere);
@@ -16,12 +18,12 @@ public:
     void AddCollider(Collider* collider) { colliders_.emplace_back(collider); }
 
     template <typename Container>
-    void AddColliders(const Container& colliders) { 
-        for (auto& collider : colliders) { 
+    void AddColliders(const Container& colliders)
+    {
+        for (auto& collider : colliders) {
             colliders_.emplace_back(collider);
-        } }
-
-
+        }
+    }
     /// @brief コライダーをクリアする
     void ClearColliders() { colliders_.clear(); }
 
@@ -50,7 +52,5 @@ private:
 /// @param colliderB コライダーB
 /// @param score スコアポインタ
     void CheckCollisionSphereAABBPair(Collider* colliderA, Collider* colliderB);
-
-
 
 };

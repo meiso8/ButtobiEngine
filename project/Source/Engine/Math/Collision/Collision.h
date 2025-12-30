@@ -183,3 +183,4 @@ bool IsCollisionInCircleLine(const Circle& smallCircle, const Circle& largeCircl
 
 //点と矩形
 bool IsCollision(const Vector2& p, const Rect& r);
+

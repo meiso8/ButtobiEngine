@@ -22,9 +22,6 @@ Sphere GetSphereWorldPos(Collider* sphere)
     };
 }
 
-
-
-
 void CollisionManager::CheckAllCollisions() {
     // リスト内のペアを総当たり
     std::list<Collider*>::iterator itrA = colliders_.begin();
@@ -45,16 +42,6 @@ void CollisionManager::CheckAllCollisions() {
 
 void CollisionManager::CheckCollisionSpherePair(Collider* colliderA, Collider* colliderB)
 {
-    //Sphere sphereA = {
-    //    .center = colliderA->GetWorldPosition(),
-    //    .radius = colliderA->GetRadius()
-    //};
-
-    //Sphere sphereB = {
-    //    .center = colliderB->GetWorldPosition(),
-    //    .radius = colliderB->GetRadius()
-    //};
-
     // 衝突判定
     if (IsCollision(GetSphereWorldPos(colliderA), GetSphereWorldPos(colliderB))) {
         colliderA->OnCollision(colliderB);
@@ -64,36 +51,22 @@ void CollisionManager::CheckCollisionSpherePair(Collider* colliderA, Collider* c
 
 void CollisionManager::CheckCollisionAABBPair(Collider* colliderA, Collider* colliderB)
 {
+    AABB worldPosA = GetAABBWorldPos(colliderA);
+    AABB worldPosB = GetAABBWorldPos(colliderB);
 
-    //Vector3 posA = colliderA->GetWorldPosition();
-    //AABB aabbA = colliderA->GetAABB();
-    //aabbA.min += posA;
-    //aabbA.max += posA;
-
-    //Vector3 posB = colliderB->GetWorldPosition();
-    //AABB aabbB = colliderB->GetAABB();
-    //aabbB.min += posB;
-    //aabbB.max += posB;
+    colliderA->SetCollisionInfo(GetCollisionInfo(worldPosA, worldPosB));
+    colliderB->SetCollisionInfo(GetCollisionInfo(worldPosA, worldPosB));
 
     // 衝突判定
-    if (IsCollision(GetAABBWorldPos(colliderA), GetAABBWorldPos(colliderB))) {
+    if (colliderA->GetCollisionInfo().collided&& colliderB->GetCollisionInfo().collided) {
         colliderA->OnCollision(colliderB);
         colliderB->OnCollision(colliderA);
+
     }
 }
 
 void CollisionManager::CheckCollisionSphereAABBPair(Collider* sphereC, Collider* aabbC)
 {
-    //Sphere sphere = {
-    //.center = sphereC->GetWorldPosition(),
-    //.radius = sphereC->GetRadius()
-    //};
-
-    //Vector3 pos = aabbC->GetWorldPosition();
-    //AABB aabb = aabbC->GetAABB();
-    //aabb.min += pos;
-    //aabb.max += pos;
-
     // 衝突判定
     if (IsCollision(GetAABBWorldPos(aabbC), GetSphereWorldPos(sphereC))) {
         sphereC->OnCollision(aabbC);
