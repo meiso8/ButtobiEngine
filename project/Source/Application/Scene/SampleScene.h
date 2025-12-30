@@ -16,6 +16,7 @@
 #include"Bullet/RhythmBullet.h"
 #pragma endregion
 #include"CollisionManager.h"
+#include"Mummy/MummyStage.h"
 
 class Sprite;
 class PlaneMesh;
@@ -45,6 +46,10 @@ public:
     std::unique_ptr<ItemManager>itemManager_ = nullptr;
 
     std::unique_ptr<RhythmBullet>rhythmBullet_ = nullptr;
+#pragma endregion
+
+#pragma region//ステージ
+    std::unique_ptr<MummyStage> mummyStage_ = nullptr;
 #pragma endregion
 
     std::array<std::unique_ptr<ParticleEmitter>, 2>particleEmitters_;
