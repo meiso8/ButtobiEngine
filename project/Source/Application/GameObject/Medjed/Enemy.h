@@ -15,6 +15,10 @@ enum LightMode;
 
 class Enemy :public Collider
 {
+private:
+    //キャラクターの共通でもつ状態
+    CharacterState characterState_;
+
 public:
 
     Enemy();
@@ -43,6 +47,7 @@ public:
     //体の位置
     AnimationObject3d bodyPos_;
     HPs* GetHpsPtr() { return &characterState_.hps; }
+    const bool& GetIsDead() { return characterState_.isDead; }
 private:
     bool isApper_ = false;
     float timer_ = 0.0f;
@@ -57,12 +62,9 @@ private:
     //モデル
     Model* moveModel_;
     std::unique_ptr<SkinningModel>skinningModel_ = nullptr;
-    //キャラクターの共通でもつ状態
-    CharacterState characterState_;
 
     Circle enemyRoundCircle_ = { {0.0f,0.0f,0.0f} ,10.0f};
     Circle enemyFieldCircle_ = { {0.0f,0.0f,0.0f} ,9.0f };
-
 
     enum PHASE {
         ROUND,
@@ -75,7 +77,7 @@ private:
     std::unordered_map<PHASE, std::function<void()>> UpdateActions_;
     PHASE phase_ = PHASE::ROUND;
     Vector3 velocity_ = { 0.0f };
-    SphericalCoordinate sphericalPos_;
+
     Vector3 startPos_ = { 0.0f };
     Vector3 endPos_ = { 0.0f };
     float poyoAnimTimer_ = 0.0f;

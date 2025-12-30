@@ -73,6 +73,7 @@ void Puzzle::Game()
         return;
     }
 
+
     Vector2 pos = Input::GetCursorPosition();
 
     int clickedIndex = -1;

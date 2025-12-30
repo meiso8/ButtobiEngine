@@ -30,10 +30,7 @@ Enemy::Enemy()
     bodyPos_.SetMeshAndData(skinningModel_.get());
     bodyPos_.Create();
 
-
-
-
-    float scale = 1.0f;
+    float scale = 5.0f;
     bodyPos_.worldTransform_.scale_ = { scale,scale,scale };
     Init();
 
@@ -49,10 +46,9 @@ void Enemy::Init()
     actionTime_ = file["First"]["ActionTimer"];
     characterState_.hps.maxHp = file["First"]["HP"];
     characterState_.hps.hp = characterState_.hps.maxHp;
-    characterState_.isAttack = false;
+    characterState_.isDead = false;
     characterState_.isHit = false;
     velocity_ = { 10.0f,10.0f,10.0f };
-    sphericalPos_ = { .radius = 0.0f,.azimuthal = 0.0f ,.polar = 0.0f };
     startPos_ = { 0.0f };
     isApper_ = false;
 }
@@ -117,19 +113,21 @@ void Enemy::OnCollision(Collider* collider)
 
             if (characterState_.hps.hp > 0) {
                 characterState_.hps.hp--;
+            } else {
+                characterState_.isDead;
             }
+
+            poyoAnimTimer_ = 0.0f;
         }
 
-        poyoAnimTimer_ = 0.0f;
+        if (collider->GetCollisionAttribute() == kCollisionPlayer) {
+
+            Sound::PlaySE(Sound::VOICE_Asobimasyo);
+
+        }
+
     }
-
-    if (collider->GetCollisionAttribute() == kCollisionPlayer) {
-
-        Sound::PlaySE(Sound::VOICE_Asobimasyo);
-
-    }
-
-}
+};
 
 
 void Enemy::SetPhase(PHASE phase)
@@ -141,8 +139,6 @@ void Enemy::SetPhase(PHASE phase)
     bodyPos_.InitTime();
 
     if (phase_ == ROUND) {
-        sphericalPos_.azimuthal = 0.0f;
-        sphericalPos_.polar = 0.0f;
         bodyPos_.SetAnimation(dancingModel_);
     }
 
@@ -156,14 +152,16 @@ void Enemy::SetPhase(PHASE phase)
 
 void Enemy::Round()
 {
-    sphericalPos_.radius = Lerp(sphericalPos_.radius, enemyRoundCircle_.radius, 0.5f);
-    //sphericalPos_.azimuthal += InverseFPS * roundSpeedY;
-    sphericalPos_.polar += InverseFPS * roundSpeedY;
-    if (sphericalPos_.polar > std::numbers::pi_v<float> / 2.0f || sphericalPos_.polar < -std::numbers::pi_v<float> / 2.0f) {
-        roundSpeedY *= -1.0f;
-    }
+
+    bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, { 0.0f,0.0f,0.0f }, 0.5f);
+    //sphericalPos_.radius = Lerp(sphericalPos_.radius, enemyRoundCircle_.radius, 0.5f);
+    ////sphericalPos_.azimuthal += InverseFPS * roundSpeedY;
+    //sphericalPos_.polar += InverseFPS * roundSpeedY;
+    //if (sphericalPos_.polar > std::numbers::pi_v<float> / 2.0f || sphericalPos_.polar < -std::numbers::pi_v<float> / 2.0f) {
+    //    roundSpeedY *= -1.0f;
+    //}
     Look();
-    bodyPos_.worldTransform_.translate_ = TransformCoordinate(sphericalPos_);
+  /*  bodyPos_.worldTransform_.translate_ = TransformCoordinate(sphericalPos_);*/
 
     if (timer_ >= actionTime_) {
         SetPhase(FIREBALL);
@@ -229,10 +227,6 @@ void Enemy::HitUpdate()
     } else {
         LerpScale();
     }
-
-
-    float scale = 1.0f;
-    bodyPos_.worldTransform_.scale_ = { scale,scale,scale };
 }
 
 void Enemy::LerpScale()

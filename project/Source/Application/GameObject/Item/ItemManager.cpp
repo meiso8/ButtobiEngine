@@ -80,7 +80,7 @@ std::shared_ptr<Item> ItemManager::RaycastHitItem(RaySprite& raySprite) {
 
             obj->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 
-            if (Input::IsTriggerMouse(0)) {
+            if (Input::IsTriggerMouse(0)||Input::IsControllerTriggerButton(XINPUT_GAMEPAD_A,0)) {
                 return item;
             }
 

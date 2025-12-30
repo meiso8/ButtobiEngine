@@ -7,6 +7,6 @@ struct HPs {
 
 struct CharacterState {
     bool isHit;
-    bool isAttack;
+    bool isDead;
     HPs hps;
 };

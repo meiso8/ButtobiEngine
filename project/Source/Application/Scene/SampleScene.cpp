@@ -141,7 +141,7 @@ void SampleScene::Initialize() {
 void SampleScene::Update() {
 
 
-    if (player_->GetHpsPtr()->hp <= 0) {
+    if (player_->IsDead()|| medjedManager_->GetIsEnemyDead()) {
         sceneChange_->SetState(SceneChange::kFadeIn, 60);
         SceneManager::SetNestScene("Title");
     }
