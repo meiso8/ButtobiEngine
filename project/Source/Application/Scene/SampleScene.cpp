@@ -73,7 +73,7 @@ SampleScene::SampleScene()
 
     hpGage_ = std::make_unique<HPGage>();
     hpGage_->SetHpPtr(player_->GetHpsPtr());
-    hpGage_->Setting({ 640.0f,16.0f }, { 640.0f,720.0f - 128.0f-8.0f }, { 0.5f,0.0f });
+    hpGage_->Setting({ 640.0f,16.0f }, { 640.0f,720.0f - 128.0f - 8.0f }, { 0.5f,0.0f });
 
 
     lightingManager_ = std::make_unique<LightingManager>();
@@ -111,7 +111,7 @@ void SampleScene::Initialize() {
     particleEmitters_[0]->emitter_.radius = 3.0f;
     particleEmitters_[0]->emitter_.rotateOffset_ = 3.14f;
     //particleEmitters_[0]->emitter_.radiusSpeed = ;
-    auto & group = ParticleManager::GetInstance()->GetParticleGroup(particleEmitters_[0]->emitter_.name);
+    auto& group = ParticleManager::GetInstance()->GetParticleGroup(particleEmitters_[0]->emitter_.name);
     group->accelerationField.acceleration.y = 5.0f;
     group->accelerationField.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,40.0f,25.0f} };
 
@@ -155,7 +155,7 @@ void SampleScene::Update() {
             //メジェド出現！
             SoundManager::ApperMedjedUpdate();
         }
-      
+
     } else {
         SoundManager::NotFindMedjedUpdate();
     }
@@ -219,14 +219,22 @@ void SampleScene::Debug()
 
 void SampleScene::CheckAllCollision()
 {
-
+    // ========================//Ray================================
     auto hitItem = itemManager_->RaycastHitItem(*player_->raySprite_);
     if (hitItem) { itemManager_->GetItemSlot().OnTriggerItemPickup(hitItem); }
 
     medjedManager_->RayCastHit(*player_->raySprite_);
+    // ========================//Ray================================
+
 
     collisionManager_->ClearColliders();
     collisionManager_->AddCollider(player_.get());
+    collisionManager_->AddCollider(player_->GetEyeCollider());
+
+    // 壁との当たり判定
+    for (auto& [type, object] : backGround_->GetBuilding()->GetFieldPoses()) {
+        collisionManager_->AddCollider(object.get());
+    }
 
     // ========================//メジェド　見つかってないときとそうではないとき================================
     if (medjedManager_->GetIsFindMedjed()) {

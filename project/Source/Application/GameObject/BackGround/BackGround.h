@@ -17,5 +17,9 @@ public:
     void Update();
     void Draw(Camera& camera);
     void UpdateApperMedjed();
+    Building* GetBuilding() {
+        return building_
+            .get();
+    };
 };
 

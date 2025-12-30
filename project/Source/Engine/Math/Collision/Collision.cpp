@@ -6,8 +6,6 @@
 #include<algorithm>
 #include<cmath>
 
-
-
 Vector3 ClosestPoint(const Vector3& point, const Plane& plane) {
     return point - Distance(point, plane) * plane.normal;
 }
@@ -419,4 +417,6 @@ bool IsCollision(const Vector2& p, const Rect& r) {
     return (p.x >= r.left && p.x <= r.left + r.width &&
         p.y >= r.top && p.y <= r.top + r.height);
 }
+
+Vector3 Center(const AABB& aabb) { return (aabb.min + aabb.max) * 0.5f; };
 

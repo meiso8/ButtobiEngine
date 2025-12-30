@@ -22,8 +22,8 @@ void Player::OnCollision(Collider* collider)
         OnCollisionEnemy();
     }
 
-    if (collider->GetCollisionAttribute() == kCollisionWall) {
-        OnCollisionWall();
+    if (collider->GetCollisionAttribute() == kCollisionDummyMedjed|| collider->GetCollisionAttribute() == kCollisionWall|| collider->GetCollisionAttribute() == kCollisionMedjed) {
+        ResolveCollision(bodyPos_.worldTransform_.translate_, velocity_,GetCollisionInfo());
     }
 
     OnCollisionCollider();
@@ -38,23 +38,22 @@ Player::Player() {
     //モデルを取得する
     model_ = ModelManager::GetModel(ModelManager::PLAYER_BODY);
 
-    circle_.radius = 0.25f;
-    localAabb_.min = { -circle_.radius , 0.0f ,-circle_.radius };
-    localAabb_.max = { circle_.radius , 1.5f ,circle_.radius };
+    float radius = 0.25f;
+    localAabb_.min = { -radius , 0.0f ,-radius };
+    localAabb_.max = { radius , 1.5f ,radius };
 
     SetType(ColliderType::kAABB);
     SetAABB(localAabb_);
     SetCollisionAttribute(kCollisionPlayer);
-    SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet | kCollisionMedjed);
+    SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet | kCollisionMedjed| kCollisionDummyMedjed| kCollisionWall);
 
     //それぞれのObject3d（WorldTransform）を作る
-    eyePos_.Create();
     bodyPos_.Create();
     //モデルやメッシュをセットする
     bodyPos_.SetMesh(model_);
 
     raySprite_ = std::make_unique<RaySprite>();
-
+    eyeCollider_ = std::make_unique<EyeCollider>();
 }
 
 void Player::Init()
@@ -67,13 +66,10 @@ void Player::Init()
     bodyPos_.Initialize();
     bodyPos_.worldTransform_.translate_.z = -15.0f;
     //目の位置初期化
-    eyePos_.Initialize();
-    eyePos_.worldTransform_.Initialize();
-    eyePos_.worldTransform_.translate_.y = kEyeDefaultPosY_;
-    eyePos_.worldTransform_.translate_.z = 0.5f;
-    //体の位置を親に設定
-    eyePos_.worldTransform_.Parent(bodyPos_.worldTransform_);
 
+    eyeCollider_->Initialize();
+    //体の位置を親に設定
+    eyeCollider_->SetParent(bodyPos_.worldTransform_);
 
     velocity_ = { 0.0f,0.0f,0.0f };
     kSpeed_ = { 0.5f };
@@ -91,14 +87,14 @@ void Player::Init()
 
 void Player::UpdateRay()
 {
-    raySprite_->UpdateRay(Ray{ .origin = eyePos_.worldTransform_.GetWorldPosition(), .diff = GetForward() });
+    raySprite_->UpdateRay(Ray{ .origin = eyeCollider_->GetWorldPosition(),.diff = GetForward() });
 }
 
 void Player::Draw(Camera& camera, const LightMode& lightType)
 {
     bodyPos_.SetLightMode(lightType);
     bodyPos_.Draw(camera, kBlendModeNormal);
-    eyePos_.Draw(camera, kBlendModeNormal);
+    eyeCollider_->Draw(camera);
 
     raySprite_->Draw();
 
@@ -107,8 +103,6 @@ void Player::Draw(Camera& camera, const LightMode& lightType)
 
 void Player::Update()
 {
-
-    isWallHit = false;
 
     if (characterState_.isHit) {
         if (hitTimer_ > 0.0f) {
@@ -119,7 +113,6 @@ void Player::Update()
         }
     }
 
-
     Move();
     Zoom();
     LookBack();
@@ -127,11 +120,9 @@ void Player::Update()
     UpdateRay();
 
     bodyPos_.Update();
-    eyePos_.Update();
+    eyeCollider_->Update();
 
     ColliderUpdate();
-
-    circle_.center = GetWorldPosition();
 
 }
 
@@ -173,10 +164,9 @@ void Player::Move()
         // forwardに垂直な右方向ベクトルを計算
         Vector3 right = Cross(Vector3(0, 1, 0), forward);
         right = Normalize(right);
-
+      
         //移動時の縦揺れを再現　速さによって揺れの周期を変更
-        walkingTheta_ += std::numbers::pi_v<float>*InverseFPS * 15.0f * kSpeed_;
-        eyePos_.worldTransform_.translate_.y = kEyeDefaultPosY_ + sinf(walkingTheta_) * 0.25f;
+        eyeCollider_->Walk(kSpeed_);
 
         //速度を正規化しそれぞれ足す
         velocity_ = Normalize(velocity_);
@@ -213,11 +203,7 @@ void Player::Zoom()
 
 Vector3& Player::GetForward()
 {
-    static Vector3 forward;
-    forward = Normalize(Vector3{ eyePos_.worldTransform_.matWorld_.m[2][0],
-        eyePos_.worldTransform_.matWorld_.m[2][1],  eyePos_.worldTransform_.matWorld_.m[2][2] });
-    return forward;
-    ;
+    return eyeCollider_->GetForward();
 }
 
 void Player::LookBack()
@@ -283,78 +269,7 @@ void Player::MouseLook()
     cameraRotateX_ += Input::GetMousePosFiltered().y * InverseFPS / cameraSpeed_;
 
     bodyPos_.worldTransform_.rotate_.y = Lerp(bodyPos_.worldTransform_.rotate_.y, cameraRotateY_, 0.5f);
-    eyePos_.worldTransform_.rotate_.x = Lerp(eyePos_.worldTransform_.rotate_.y, cameraRotateX_, 0.5f);
-
-
-    eyePos_.worldTransform_.rotate_.x = std::clamp(
-        eyePos_.worldTransform_.rotate_.x,
-        -std::numbers::pi_v<float> / 2.0f,
-        std::numbers::pi_v<float> / 2.0f);
-
-}
-
-void Player::OnCollision(const Circle& circle)
-{
-    //中心に向かって移動する
-    bodyPos_.worldTransform_.translate_ =
-        Easing::EaseInOut(
-            bodyPos_.worldTransform_.translate_,
-            circle_.center + Normalize(circle.center - circle_.center) * circle_.radius
-            , 0.5f);
-    //仮に音を鳴らす
-    Sound::PlayOriginSE(Sound::CRACKER);
-}
-
-void Player::ResolveCollision(const AABB& wallAABB, const AABB& playerAABB) {
-    Vector3& pos = bodyPos_.worldTransform_.translate_;
-
-    // 各軸のオーバーラップ量を計算
-    float overlapX1 = wallAABB.max.x - playerAABB.min.x;
-    float overlapX2 = playerAABB.max.x - wallAABB.min.x;
-    //float overlapY1 = wallAABB.max.y - playerAABB.min.y;
-    //float overlapY2 = playerAABB.max.y - wallAABB.min.y;
-    float overlapZ1 = wallAABB.max.z - playerAABB.min.z;
-    float overlapZ2 = playerAABB.max.z - wallAABB.min.z;
-
-    // 最小のオーバーラップ方向を探す
-    float minOverlap = std::numeric_limits<float>::max();
-    Vector3 push{};
-
-    if (overlapX1 > 0.0f && overlapX1 < minOverlap) {
-        minOverlap = overlapX1;
-        push = { overlapX1, 0.0f, 0.0f };
-    }
-    if (overlapX2 > 0.0f && overlapX2 < minOverlap) {
-        minOverlap = overlapX2;
-        push = { -overlapX2, 0.0f, 0.0f };
-    }
-    //if (overlapY1 > 0.0f && overlapY1 < minOverlap) {
-    //    minOverlap = overlapY1;
-    //    push = { 0.0f, overlapY1, 0.0f };
-    //}
-    //if (overlapY2 > 0.0f && overlapY2 < minOverlap) {
-    //    minOverlap = overlapY2;
-    //    push = { 0.0f, -overlapY2, 0.0f };
-    //}
-    if (overlapZ1 > 0.0f && overlapZ1 < minOverlap) {
-        minOverlap = overlapZ1;
-        push = { 0.0f, 0.0f, overlapZ1 };
-    }
-    if (overlapZ2 > 0.0f && overlapZ2 < minOverlap) {
-        minOverlap = overlapZ2;
-        push = { 0.0f, 0.0f, -overlapZ2 };
-    }
-
-    // 押し戻し！
-    pos += push;
-}
-
-void Player::OnCollisionWall()
-{
-    if (isWallHit) {
-        return;
-    }
-    isWallHit = true;
+    eyeCollider_->MouseLook(cameraRotateX_);
 
 }
 
