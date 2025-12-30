@@ -26,10 +26,12 @@ struct PointLight;
 struct QuaternionTransform;
 class MeshCommon;
 //struct Damage;
+struct CharacterState;
 
 class DebugUI
 {
 public:
+    static void CheckCaracterState(CharacterState& characterState, const char* label);
     static void CheckFPS();
     static void CheckSound();
     static void CheckJsonFile();

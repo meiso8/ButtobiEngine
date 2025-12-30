@@ -52,6 +52,7 @@ private:
     bool isApper_ = false;
     float timer_ = 0.0f;
     float actionTime_ = 0.0f;
+    float attackTime_ = 10.0f;
     //目標地点
     Vector3* target_ = nullptr;
 

@@ -136,12 +136,19 @@ void SampleScene::Initialize() {
     hpGage_->Initialize();
     itemManager_->Init();
     rhythmBullet_->Initialize();
+
+    //ミイラのステージ
+    mummyStage_ = std::make_unique<MummyStage>();
+    mummyStage_->Initialize();
 }
 
 void SampleScene::Update() {
 
 
-    if (player_->IsDead()|| medjedManager_->GetIsEnemyDead()) {
+    if (mummyStage_) { mummyStage_->Update(); }
+
+
+    if (player_->IsDead() || medjedManager_->GetIsEnemyDead()) {
         sceneChange_->SetState(SceneChange::kFadeIn, 60);
         SceneManager::SetNestScene("Title");
     }
@@ -277,6 +284,11 @@ void SampleScene::Draw() {
 #endif
 
     backGround_->Draw(*currentCamera_);
+    
+    if (mummyStage_) {
+        mummyStage_->Draw(*currentCamera_);
+    }
+
     medjedManager_->Draw(*currentCamera_);
     rhythmBullet_->Draw(*currentCamera_);
     player_->Draw(*currentCamera_, kLightModeHalfL);

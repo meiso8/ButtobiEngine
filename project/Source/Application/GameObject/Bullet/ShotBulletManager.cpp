@@ -7,7 +7,8 @@
 #include"CollisionManager.h"
 #include"Input.h"
 
-
+#include"MakeMatrix.h"
+#include"CoordinateTransform.h"
 ShotBulletManager::ShotBulletManager(Enemy* enemy, BulletManager* bulletManager, RhythmManager* rhythmManager)
     :enemy_(enemy), bulletManager_(bulletManager), rhythmManager_(rhythmManager)
 {
@@ -15,22 +16,40 @@ ShotBulletManager::ShotBulletManager(Enemy* enemy, BulletManager* bulletManager,
 
 void ShotBulletManager::Initialize() {
     currentTime_ = 0.0f;
-    isReflect_ = false;
+
 }
 
 // Update内で時間を進める
 void ShotBulletManager::Update() {
-    isReflect_ = false;
+
     currentTime_ += InverseFPS;
 
-    rhythmManager_->Update();
-
     if (enemy_->isShotStart_) {
+
         if (rhythmManager_->IsOnBeat(currentTime_)) {
+
+            Vector3 toTarget = enemy_->GetToTarget();
             Sound::PlaySE(Sound::FIRE_BALL);
-            Vector3 shotDirection = enemy_->GetToTarget();
-            Vector3 shotPosition = enemy_->GetWorldPosition() + shotDirection * 0.5f;
-            bulletManager_->ShotBullet(shotPosition, shotDirection, shotSpeed_, shotSize_, Bullet::kEnemy);
+
+            if (rand() % 2 == 0) {
+                const int bulletCount = 5;
+                const float spreadAngle = std::numbers::pi_v<float> / 6.0f; // ±30度の範囲
+
+                for (int i = 0; i < bulletCount; ++i) {
+                    float angleOffset = spreadAngle * ((float)i / (bulletCount - 1) - 0.5f); // -0.5〜+0.5
+                    Matrix4x4 rotY = MakeRotateYMatrix(angleOffset);
+                    Vector3 shotDirection = CoordinateTransform(toTarget, rotY);
+                    shotDirection = Normalize(shotDirection);
+
+                    Vector3 shotPosition = enemy_->GetWorldPosition() + shotDirection * 0.5f;
+                    bulletManager_->ShotBullet(shotPosition, shotDirection, shotSpeed_, shotSize_, Bullet::kEnemy);
+                }
+            } else {
+                Vector3 shotPosition = enemy_->GetWorldPosition() + toTarget * 0.5f;
+                bulletManager_->ShotBullet(shotPosition, toTarget, shotSpeed_, shotSize_, Bullet::kEnemy);
+            }
+
+
         }
     }
 }
@@ -45,9 +64,9 @@ void ShotBulletManager::CheckRayHit(RaySprite& raySprite)
 
         if (raySprite.IntersectsAABB(aabb, bullet->GetWorldPosition())) {
 
-            if (Input::IsTriggerMouse(0)||Input::IsControllerTriggerButton(XINPUT_GAMEPAD_A,0)) {
+            if (Input::IsTriggerMouse(0) || Input::IsControllerTriggerButton(XINPUT_GAMEPAD_A, 0)) {
                 if (bullet->type_ != Bullet::kPlayer) {
-                    Sound::PlaySE(Sound::CRACKER,0.5f);
+                    Sound::PlaySE(Sound::CRACKER, 0.5f);
                     Vector3 shotDirection = raySprite.ray_.diff;
                     Vector3 shotPosition = raySprite.ray_.origin;
                     bullet->Shot(shotPosition, shotDirection, shotSpeed_, shotSize_, Bullet::kPlayer);

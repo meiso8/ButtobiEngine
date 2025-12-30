@@ -1,7 +1,7 @@
 #include "BulletManager.h"
 
 namespace {
-	const int kMaxBullets = 8;
+	const int kMaxBullets = 16;
 }
 
 BulletManager::BulletManager() {

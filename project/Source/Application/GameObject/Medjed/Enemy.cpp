@@ -48,6 +48,9 @@ void Enemy::Init()
     characterState_.hps.hp = characterState_.hps.maxHp;
     characterState_.isDead = false;
     characterState_.isHit = false;
+
+    attackTime_ = 10.0f;
+
     velocity_ = { 10.0f,10.0f,10.0f };
     startPos_ = { 0.0f };
     isApper_ = false;
@@ -82,7 +85,9 @@ void Enemy::Update()
         phase_ = ROUND;
     }
 
+    DebugUI::CheckCaracterState(characterState_, "enemy");
 #endif // _DEBUG  
+
 
     UpdateTimer();
     // 呼び出す  
@@ -114,7 +119,7 @@ void Enemy::OnCollision(Collider* collider)
             if (characterState_.hps.hp > 0) {
                 characterState_.hps.hp--;
             } else {
-                characterState_.isDead;
+                characterState_.isDead = true;
             }
 
             poyoAnimTimer_ = 0.0f;
@@ -161,7 +166,7 @@ void Enemy::Round()
     //    roundSpeedY *= -1.0f;
     //}
     Look();
-  /*  bodyPos_.worldTransform_.translate_ = TransformCoordinate(sphericalPos_);*/
+    /*  bodyPos_.worldTransform_.translate_ = TransformCoordinate(sphericalPos_);*/
 
     if (timer_ >= actionTime_) {
         SetPhase(FIREBALL);
@@ -181,7 +186,7 @@ void Enemy::Fireball()
         Look();
     }
 
-    if (timer_ >= actionTime_) {
+    if (timer_ >= attackTime_) {
         isShotStart_ = false;
         SetPhase(ROUND);
     }
@@ -196,11 +201,9 @@ void Enemy::Exit()
 
 void Enemy::UpdateTimer()
 {
-    if (timer_ < actionTime_) {
-        timer_ += InverseFPS;
-    } else {
-        timer_ = actionTime_;
-    }
+
+    timer_ += InverseFPS;
+ 
 
 }
 

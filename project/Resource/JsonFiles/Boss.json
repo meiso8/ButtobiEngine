@@ -1,17 +1,8 @@
 {
     "First": {
-        "ActionTimer": 8.0,
-        "HP": 30,
+        "ActionTimer": 4.0,
+        "HP": 60,
         "velocity": 3.0
-    },
-    "Second": {
-        "ActionTimer": 6.0,
-        "HP": 50,
-        "velocity": 3.5
-    },
-    "Third": {
-        "ActionTimer": 3.0,
-        "HP": 70,
-        "velocity": 4.0
     }
+
 }

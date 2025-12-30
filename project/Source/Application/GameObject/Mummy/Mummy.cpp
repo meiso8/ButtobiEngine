@@ -23,7 +23,7 @@ Mummy::Mummy() {
     SetCollisionMask(kCollisionPlayer | kCollisionEnemy); // プレイヤーや壁と衝突
 
     // ミイラのサイズに合わせてAABBを設定（仮のサイズ）
-    SetAABB({ {-0.5f, 0.0f, -0.5f}, {0.5f, 1.5f, 0.5f} });
+    SetAABB({ {-0.5f, 0.0f, -0.75f}, {0.5f, 0.5f, 0.75f} });
 }
 
 void Mummy::Initialize() {
@@ -38,7 +38,7 @@ void Mummy::Update() {
 }
 
 void Mummy::Draw(Camera& camera) {
-    aniObj_->Draw(camera);
+    aniObj_->Draw(camera,kBlendModeNormal,kCullModeNone);
     object_->Draw(camera);
     ColliderDraw(camera);
 }

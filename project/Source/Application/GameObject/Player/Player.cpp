@@ -124,6 +124,12 @@ void Player::Update()
 
     ColliderUpdate();
 
+#ifdef _DEBUG
+    DebugUI::CheckCaracterState(characterState_, "player");
+#endif // _DEBUG
+
+
+
 }
 
 void Player::Move()
@@ -265,8 +271,10 @@ void Player::MouseLook()
         cameraRotateX_ -= controllerPos.y * InverseFPS * cameraSpeed_;
     }
 
-    cameraRotateY_ += Input::GetMousePosFiltered().x * InverseFPS / cameraSpeed_*0.25f;
-    cameraRotateX_ += Input::GetMousePosFiltered().y * InverseFPS / cameraSpeed_*0.25f;
+    if (!Input::IsPressMouse(0)) {
+        cameraRotateY_ += Input::GetMousePosFiltered().x * InverseFPS / cameraSpeed_;
+        cameraRotateX_ += Input::GetMousePosFiltered().y * InverseFPS / cameraSpeed_ ;
+    }
 
     bodyPos_.worldTransform_.rotate_.y = Lerp(bodyPos_.worldTransform_.rotate_.y, cameraRotateY_, 0.5f);
     eyeCollider_->MouseLook(cameraRotateX_);
