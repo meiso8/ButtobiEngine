@@ -4,6 +4,7 @@
 #include"SkinningModel.h"
 #include"CollisionConfig.h"
 #include"Sound.h"
+#include"TransformAni/TransformAni.h"
 void Medjed::OnCollision(Collider* collider)
 {
   
@@ -51,7 +52,7 @@ Medjed::Medjed() {
 
 }
 
-void Medjed::LookTarget(const Vector3& target)
+void Medjed::Look(const Vector3& target)
 {
     Vector3 direction = target - GetWorldPosition();
     aniObj_->worldTransform_.rotate_.y = std::atan2(direction.x, direction.z); // Y軸回転（ラジアン）

@@ -20,7 +20,7 @@ private:
 
 public:
     Medjed();
-    void LookTarget(const Vector3& target)override;
+    void Look(const Vector3& target)override;
     void Init()override;
     void Update()override;
     void Draw(Camera& camera)override;

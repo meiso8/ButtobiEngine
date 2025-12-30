@@ -13,6 +13,11 @@ class CubeMesh;
 class EnemyBullet :public Collider
 {
 public:
+    enum BulletType {
+        kEnemy,
+        kPlayer
+    };
+
     EnemyBullet();
     ~EnemyBullet();
     void OnCollision(Collider* collider)override;
@@ -20,7 +25,8 @@ public:
     void Initialize();
     void Update();
     void Draw(Camera& camera, const LightMode& lightType);
-    void Shot(const Vector3& position, const Vector3& direction, const float& speed, const float& size);
+    void SetBulletType(const BulletType& type);
+    void Shot(const Vector3& position, const Vector3& direction, const float& speed, const float& size, const EnemyBullet::BulletType& type);
     bool isActive_ = false;
     Object3d body_;
     float size_;

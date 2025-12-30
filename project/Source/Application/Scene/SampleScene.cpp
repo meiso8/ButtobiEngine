@@ -224,8 +224,9 @@ void SampleScene::CheckAllCollision()
     if (hitItem) { itemManager_->GetItemSlot().OnTriggerItemPickup(hitItem); }
 
     medjedManager_->RayCastHit(*player_->raySprite_);
-    // ========================//Ray================================
+    medjedManager_->GetShotBulletManager()->CheckRayHit(*player_->raySprite_);
 
+    // ========================//Ray================================
 
     collisionManager_->ClearColliders();
     collisionManager_->AddCollider(player_.get());

@@ -152,8 +152,6 @@ void ItemSlot::OnTriggerItemPickup(const std::shared_ptr<Item>& item)
 
 void ItemSlot::Update()
 {
-
-
     ToScreen();
 
     Vector2 pos = Input::GetCursorPosition();

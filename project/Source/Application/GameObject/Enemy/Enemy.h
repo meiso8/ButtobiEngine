@@ -26,7 +26,9 @@ public:
     {
         return bodyPos_.worldTransform_.GetWorldPosition();
     }
+
     void OnCollision(Collider* collder)override;
+
     void SetTarget(Vector3& target) { target_ = &target; };
     Vector3 GetToTarget() { 
         if (target_ != nullptr) {
@@ -56,19 +58,10 @@ private:
     Circle enemyRoundCircle_ = { {0.0f,0.0f,0.0f} ,15.0f};
     Circle enemyFieldCircle_ = { {0.0f,0.0f,0.0f} ,9.0f };
 
-    enum State {
-        FIRST,
-        SECOND,
-        END,
-    };
 
     enum PHASE {
         ROUND,
         FIREBALL,
-        FLOORCHANGEATTACK,
-        TACKLE,
-        KNOCKBACK,
-        SHOCKWAVEATTACK,
         EXIT,
         MAX_PHASE
     };
@@ -86,15 +79,13 @@ private:
     float roundSpeedY = 1.0f;
 private:
     void SetPhase(PHASE phase);
+
     void Round();
     void Fireball();
-    void FloorChangeAttack();
-    void Tackle();
-    void Knockback();
-    void ShockWaveAttack();
     void Exit();
+
     void UpdateTimer();
-    void LookTarget();
+    void Look();
     void PoyoPoyo(const float& endTimer = 0.25f);
     void HitUpdate();
     void LerpScale();
