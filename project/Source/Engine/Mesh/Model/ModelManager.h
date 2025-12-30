@@ -23,6 +23,8 @@ public:
 
         BUILDING,
         HART,
+        SUN_MEDAL,
+        CROW_BAR_ITEM,
 
         KEY,
 
