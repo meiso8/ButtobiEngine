@@ -30,6 +30,7 @@ void Item::SetModel(const ModelManager::MODEL_HANDLE& handle)
 }
 void Item::Init()
 {
+    used_ = false;
     aniTimer_ = 0.0f;
     object_->Initialize();
 
@@ -94,6 +95,11 @@ void Item::LerpScreenPos(const Vector2& screenPos, const Matrix4x4& matInverseVP
 
 }
 
+void Item::SetWorldPos(const Vector3& pos)
+{
+    object_->worldTransform_.translate_ = pos;
+}
+
 void Item::Update()
 {
     object_->Update();
@@ -134,7 +140,7 @@ ItemSlot::ItemSlot()
 
 void ItemSlot::Init()
 {
-    
+
     for (auto& slot : slots_) {
         slot.reset();
         slot = nullptr;
@@ -190,6 +196,11 @@ void ItemSlot::ToScreen()
 
 bool ItemSlot::AddItem(const std::shared_ptr<Item>& item)
 {
+    //すでに使われていたら入れない
+    if (item->used_) {
+        return false;
+    }
+
     for (auto& slot : slots_) {
         if (!slot) {
             slot = item;
@@ -205,6 +216,7 @@ bool ItemSlot::AddItem(const std::shared_ptr<Item>& item)
 void ItemSlot::UseItem(int index)
 {
     slots_[index]->Use();
+    slots_[index].reset();
 }
 
 void ItemSlot::CombineItems(int indexA, int indexB)
@@ -244,7 +256,7 @@ void ItemSlot::Draw(Camera& camera)
     }
 
     for (auto& item : slots_) {
-        if (item) {
+        if (item && !item->used_) {
             item->Draw(*itemCamera_);
         }
 
@@ -256,6 +268,11 @@ void ItemSlot::Draw(Camera& camera)
 
 void ItemSlot::GetAnimation(const std::shared_ptr<Item>& item, const Vector2& screenPos)
 {
+    //すでに使われていたら入れない
+    if (item->used_) {
+        return;
+    }
+
     item->UpdateAniTimer();
 
     if (item->aniTimer_ <= 2.1f) {
@@ -267,4 +284,3 @@ void ItemSlot::GetAnimation(const std::shared_ptr<Item>& item, const Vector2& sc
     }
 
 }
-

@@ -6,6 +6,7 @@
 #include"Input.h"
 #include"DebugUI.h"
 #include"Player/RaySprite.h"
+#include"SoundManager/SoundManager.h"
 ItemManager::ItemManager()
 {
  
@@ -88,4 +89,20 @@ std::shared_ptr<Item> ItemManager::RaycastHitItem(RaySprite& raySprite) {
         }
     }
     return nullptr;
+}
+
+void ItemManager::UseItemFromSlot(const Vector3& pos)
+{
+    for (auto& item : itemSlot_.GetItemInSlot()) {
+        if (Input::IsTriggerMouse(0)) {
+            if (item && item->name_ == "GoldHeart") {
+                SoundManager::PlayCorrectSE();
+                item->Use();
+                Vector3 offset = { 0.0f,0.5f,-0.3f };
+             /*   Vector3 offset = { 0.0f,0.3f,-0.3f };*/
+                item->SetWorldPos(pos+ offset);
+                item->SetRotateY(3.14f);
+            }
+        }
+    }
 }

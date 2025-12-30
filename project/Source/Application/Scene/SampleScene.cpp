@@ -231,6 +231,12 @@ void SampleScene::Debug()
 void SampleScene::CheckAllCollision()
 {
     // ========================//Ray================================
+
+    if (mummyStage_->IsColliderRay(*player_->raySprite_)) {
+ 
+        itemManager_->UseItemFromSlot(mummyStage_->GetMummy()->GetWorldPosition());
+    }
+
     auto hitItem = itemManager_->RaycastHitItem(*player_->raySprite_);
     if (hitItem) { itemManager_->GetItemSlot().OnTriggerItemPickup(hitItem); }
 
@@ -284,7 +290,7 @@ void SampleScene::Draw() {
 #endif
 
     backGround_->Draw(*currentCamera_);
-    
+
     if (mummyStage_) {
         mummyStage_->Draw(*currentCamera_);
     }

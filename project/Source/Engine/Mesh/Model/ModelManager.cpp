@@ -31,6 +31,9 @@ void ModelManager::LoadAllModel()
     LoadModel("Resource/Models/building", "building.obj", BUILDING);
     LoadModel("Resource/Models/key", "key.obj", KEY);
     LoadModel("Resource/Models/hart", "hart.obj", HART);
+    LoadModel("Resource/Models/sunMedal", "sunMedal.obj", SUN_MEDAL);
+    LoadModel("Resource/Models/sunMedal", "crowbarItem.obj", CROW_BAR_ITEM);
+   
 }
 
 // ========================================================================================================

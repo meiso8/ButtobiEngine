@@ -9,7 +9,5 @@ public:
         SetModel(ModelManager::HART);
         object_->SetLightMode(kLightModeLReflectance);
     }
-    void Use() override {
-        //TryOpenNearbyDoor();
-    }
+    void Use() override;
 };

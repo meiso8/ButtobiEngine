@@ -10,7 +10,7 @@ void SoundManager::InitMedjedScene()
 
 void SoundManager::PlayCorrectSE()
 {
-    Sound::PlaySE(Sound::CORRECT);
+    Sound::PlayOriginSE(Sound::CORRECT);
 }
 
 void SoundManager::PlayCancelSE()

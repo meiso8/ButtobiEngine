@@ -20,7 +20,7 @@ public:
     // 使用時の効果（プレイヤーや環境に作用）
     virtual void Use() = 0;
     // 他のアイテムと組み合わせたときの処理 
-
+    bool used_ = false;
     virtual std::shared_ptr<Item> CombineWith(const std::shared_ptr<Item>& other) {
         return nullptr; // デフォルトは組み合わせ不可 
     }
@@ -36,11 +36,13 @@ public:
         return object_->worldTransform_.GetWorldPosition();
     };
     void Rotate();
+    void SetRotateY(const float& rotate) { object_->worldTransform_.rotate_.y = rotate; };
     void GetStartPos();
     void UpdateAniTimer();
    float aniTimer_ = 0.0f;
    Vector3 startPos_ = { 0.0f };
    void LerpScreenPos(const Vector2& screenPos, const Matrix4x4& matInverseVPV);
+   void SetWorldPos(const Vector3& pos);
 };
 
 // ====================================================================
@@ -61,6 +63,7 @@ public:
     void DrawInfoUI();
     void Draw(Camera& camera);
     void GetAnimation(const std::shared_ptr<Item>& item, const Vector2& screenPos);
+    std::array<std::shared_ptr<Item>, kMaxSlots_>& GetItemInSlot() {return  slots_; };
 private:
     std::unique_ptr<Camera> itemCamera_ = nullptr;
 
