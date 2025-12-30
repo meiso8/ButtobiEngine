@@ -7,6 +7,8 @@
 #include"Collider.h"
 #include<memory>
 
+#include"AnimationObject3d.h"
+#include"Model/SkinningModel.h"
 class Model;
 class Camera;
 enum LightMode;
@@ -39,7 +41,7 @@ public:
     }
     bool isShotStart_ = false;
     //体の位置
-    Object3d bodyPos_;
+    AnimationObject3d bodyPos_;
     HPs* GetHpsPtr() { return &characterState_.hps; }
 private:
     bool isApper_ = false;
@@ -50,7 +52,11 @@ private:
 
     //モデル
     Model* model_;
-
+    //モデル
+    Model* dancingModel_;
+    //モデル
+    Model* moveModel_;
+    std::unique_ptr<SkinningModel>skinningModel_ = nullptr;
     //キャラクターの共通でもつ状態
     CharacterState characterState_;
 

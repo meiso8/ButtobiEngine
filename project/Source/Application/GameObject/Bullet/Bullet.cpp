@@ -15,7 +15,7 @@ Bullet::Bullet() {
     body_.SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
 
     SetType(kAABB);
-    SetAABB({ {-0.6f,-0.6f,-0.6f} ,{0.6f,0.6f,0.6f} });
+    SetAABB({ {-1.0f,-1.0f,-1.0f} ,{1.0f,1.0f,1.0f} });
     SetBulletType(kEnemy);
 }
 

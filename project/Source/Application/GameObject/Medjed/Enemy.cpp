@@ -20,9 +20,20 @@ Enemy::Enemy()
     };
 
     model_ = ModelManager::GetModel(ModelManager::normalMedjed_GLTF);
+    //モデル
+    dancingModel_ = ModelManager::GetModel(ModelManager::medJedDance_GLTF);
+    //モデル
+    moveModel_ = ModelManager::GetModel(ModelManager::medJed_GLTF);
+
+    skinningModel_ = std::make_unique<SkinningModel>();
+    skinningModel_->CreateDatas(model_, dancingModel_);
+    bodyPos_.SetMeshAndData(skinningModel_.get());
     bodyPos_.Create();
-    bodyPos_.SetMesh(model_);
-    float scale = 10.0f;
+
+
+
+
+    float scale = 1.0f;
     bodyPos_.worldTransform_.scale_ = { scale,scale,scale };
     Init();
 
@@ -87,7 +98,7 @@ void Enemy::Update()
 
 Vector3 Enemy::GetWorldPosition()const
 {
-    return bodyPos_.worldTransform_.GetWorldPosition() + Vector3{ 0.0f, GetRadius()*0.5f, 0.0f };
+    return bodyPos_.worldTransform_.GetWorldPosition() + Vector3{ 0.0f, GetRadius() * 0.5f, 0.0f };
 }
 
 void Enemy::OnCollision(Collider* collider)
@@ -127,15 +138,19 @@ void Enemy::SetPhase(PHASE phase)
     phase_ = phase;
     poyoAnimTimer_ = 0.0f;
     isShotStart_ = false;
+    bodyPos_.InitTime();
 
     if (phase_ == ROUND) {
         sphericalPos_.azimuthal = 0.0f;
         sphericalPos_.polar = 0.0f;
+        bodyPos_.SetAnimation(dancingModel_);
     }
 
     if (phase_ == FIREBALL) {
         startRotateY_ = bodyPos_.worldTransform_.rotate_.y;
         endRotateY_ = startRotateY_ + std::numbers::pi_v<float>*2.0f;
+
+        bodyPos_.SetAnimation(moveModel_);
     }
 }
 
@@ -214,6 +229,10 @@ void Enemy::HitUpdate()
     } else {
         LerpScale();
     }
+
+
+    float scale = 1.0f;
+    bodyPos_.worldTransform_.scale_ = { scale,scale,scale };
 }
 
 void Enemy::LerpScale()

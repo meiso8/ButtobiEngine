@@ -13,6 +13,7 @@ public:
         BOX,
       normalMedjed_GLTF,
         medJed_GLTF,
+        medJedDance_GLTF,
         //プレイヤーそれぞれのパーツ
         PLAYER_BODY,
 
