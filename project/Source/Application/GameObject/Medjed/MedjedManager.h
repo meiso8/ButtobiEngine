@@ -3,7 +3,7 @@
 #include<memory>
 #include <vector>
 #include "Medjed.h"
-#include"Enemy/EnemyManager.h"
+#include"Enemy.h"
 class Camera;
 class RaySprite;
 
@@ -12,6 +12,8 @@ class MedjedManager
 
 private:
     std::vector < std::unique_ptr<DummyMedjed>>dummyMedjeds_;
+    std::unique_ptr<Enemy>enemy_ = nullptr;
+
     float lockerWidth = 1.0f;
     float spacing = 0.2f;
     float minDistance = lockerWidth + spacing;
@@ -19,7 +21,7 @@ private:
     float rangeMax = 10.0f;
     Vector3* targetPos_ = nullptr;
     float enemyApperTime_ = 0.0f;
-    std::unique_ptr<EnemyManager>enemyManager_;
+
     void UpdateEnemyApperTime();
     void UpdateMedjedIfNotFind();
     void UpdateMedjedIfFind();
@@ -45,14 +47,10 @@ public:
     };
 
     void SetIsFindMedjed(const bool& flag) { GetMedjed()->SetIsFind(flag); }
-    EnemyBulletManager* GetBulletManager() {
-        return enemyManager_->GetBulletManager();
-    }
+
     Enemy* GetEnemy() {
-        return enemyManager_->GetEnemy();
+        return enemy_.get();
     }
-    EnemyShotBulletManager* GetShotBulletManager() {
-        return enemyManager_->GetEnemyShotBulletManager();
-    }
+
 };
 

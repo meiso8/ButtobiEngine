@@ -1,0 +1,18 @@
+#pragma once
+#include<vector>
+struct RhythmBeat {
+    float time;     // ビートの発生時間（秒）
+    bool hit;       // すでに処理されたか
+};
+
+class RhythmManager {
+public:
+    void Initialize();
+    void Update();
+    void AddBeat(float time); // 任意のタイミングでビートを追加
+    bool IsOnBeat(float currentTime, float tolerance = 0.2f); // 許容範囲内かチェック
+
+private:
+    std::vector<RhythmBeat> beats_;
+    float timer_ = 0.0f;
+};

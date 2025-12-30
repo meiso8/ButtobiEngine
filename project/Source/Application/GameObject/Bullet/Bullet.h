@@ -10,7 +10,7 @@ class Camera;
 enum LightMode;
 class CubeMesh;
 
-class EnemyBullet :public Collider
+class Bullet :public Collider
 {
 public:
     enum BulletType {
@@ -18,18 +18,20 @@ public:
         kPlayer
     };
 
-    EnemyBullet();
-    ~EnemyBullet();
+    Bullet();
+    ~Bullet();
     void OnCollision(Collider* collider)override;
     Vector3 GetWorldPosition() const;
     void Initialize();
     void Update();
-    void Draw(Camera& camera, const LightMode& lightType);
+    void Draw(Camera& camera);
     void SetBulletType(const BulletType& type);
-    void Shot(const Vector3& position, const Vector3& direction, const float& speed, const float& size, const EnemyBullet::BulletType& type);
+    void Shot(const Vector3& position, const Vector3& direction, const float& speed, const float& size, const Bullet::BulletType& type);
+
     bool isActive_ = false;
     Object3d body_;
     float size_;
+    BulletType type_;
 private:
     Model* model_ = nullptr;
     Vector3 moveDir_;

@@ -87,7 +87,7 @@ void Enemy::Update()
 
 Vector3 Enemy::GetWorldPosition()const
 {
-    return bodyPos_.worldTransform_.GetWorldPosition() + Vector3{ 0.0f, GetRadius(), 0.0f };
+    return bodyPos_.worldTransform_.GetWorldPosition() + Vector3{ 0.0f, GetRadius()*0.5f, 0.0f };
 }
 
 void Enemy::OnCollision(Collider* collider)
@@ -107,14 +107,15 @@ void Enemy::OnCollision(Collider* collider)
             if (characterState_.hps.hp > 0) {
                 characterState_.hps.hp--;
             }
-            poyoAnimTimer_ = 0.0f;
         }
+
+        poyoAnimTimer_ = 0.0f;
     }
 
     if (collider->GetCollisionAttribute() == kCollisionPlayer) {
-     
-      /*SetPhase(ROUND);*/
-        
+
+        Sound::PlaySE(Sound::VOICE_Asobimasyo);
+
     }
 
 }
@@ -125,6 +126,7 @@ void Enemy::SetPhase(PHASE phase)
     timer_ = 0.0f;
     phase_ = phase;
     poyoAnimTimer_ = 0.0f;
+    isShotStart_ = false;
 
     if (phase_ == ROUND) {
         sphericalPos_.azimuthal = 0.0f;
@@ -140,7 +142,7 @@ void Enemy::SetPhase(PHASE phase)
 void Enemy::Round()
 {
     sphericalPos_.radius = Lerp(sphericalPos_.radius, enemyRoundCircle_.radius, 0.5f);
-    sphericalPos_.azimuthal += InverseFPS * roundSpeedY;
+    //sphericalPos_.azimuthal += InverseFPS * roundSpeedY;
     sphericalPos_.polar += InverseFPS * roundSpeedY;
     if (sphericalPos_.polar > std::numbers::pi_v<float> / 2.0f || sphericalPos_.polar < -std::numbers::pi_v<float> / 2.0f) {
         roundSpeedY *= -1.0f;
@@ -149,7 +151,7 @@ void Enemy::Round()
     bodyPos_.worldTransform_.translate_ = TransformCoordinate(sphericalPos_);
 
     if (timer_ >= actionTime_) {
-       SetPhase(FIREBALL);   
+        SetPhase(FIREBALL);
     }
 }
 
@@ -157,20 +159,17 @@ void Enemy::Fireball()
 {
     if (timer_ <= 1.0f) {
         RotateY(timer_);
-        fireBallCoolTime_ = 0.0f;
     } else {
 
-        Look();
-
-        fireBallCoolTime_ += InverseFPS;
-
-        if (fireBallCoolTime_ > 1.0f) {
-            fireBallCoolTime_ = 0.0f;
-            isShot_ = true;
+        if (!isShotStart_) {
+            isShotStart_ = true;
         }
+
+        Look();
     }
 
     if (timer_ >= actionTime_) {
+        isShotStart_ = false;
         SetPhase(ROUND);
     }
 

@@ -37,7 +37,7 @@ public:
         
         return { 0.0f };
     }
-    bool isShot_ = false;
+    bool isShotStart_ = false;
     //体の位置
     Object3d bodyPos_;
     HPs* GetHpsPtr() { return &characterState_.hps; }
@@ -45,7 +45,6 @@ private:
     bool isApper_ = false;
     float timer_ = 0.0f;
     float actionTime_ = 0.0f;
-    float fireBallCoolTime_ = 0.0f;
     //目標地点
     Vector3* target_ = nullptr;
 
@@ -55,7 +54,7 @@ private:
     //キャラクターの共通でもつ状態
     CharacterState characterState_;
 
-    Circle enemyRoundCircle_ = { {0.0f,0.0f,0.0f} ,15.0f};
+    Circle enemyRoundCircle_ = { {0.0f,0.0f,0.0f} ,10.0f};
     Circle enemyFieldCircle_ = { {0.0f,0.0f,0.0f} ,9.0f };
 
 

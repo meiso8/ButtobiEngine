@@ -84,7 +84,8 @@ SampleScene::SampleScene()
 
 
     itemManager_ = std::make_unique<ItemManager>();
-
+    rhythmBullet_ = std::make_unique<RhythmBullet>();
+    rhythmBullet_->SetEnemy(medjedManager_->GetEnemy());
 }
 
 void SampleScene::Initialize() {
@@ -134,6 +135,7 @@ void SampleScene::Initialize() {
     medjedManager_->Initialize();
     hpGage_->Initialize();
     itemManager_->Init();
+    rhythmBullet_->Initialize();
 }
 
 void SampleScene::Update() {
@@ -155,6 +157,8 @@ void SampleScene::Update() {
             //メジェド出現！
             SoundManager::ApperMedjedUpdate();
         }
+
+        rhythmBullet_->Update();
 
     } else {
         SoundManager::NotFindMedjedUpdate();
@@ -224,7 +228,7 @@ void SampleScene::CheckAllCollision()
     if (hitItem) { itemManager_->GetItemSlot().OnTriggerItemPickup(hitItem); }
 
     medjedManager_->RayCastHit(*player_->raySprite_);
-    medjedManager_->GetShotBulletManager()->CheckRayHit(*player_->raySprite_);
+    rhythmBullet_->GetShotBulletManager()->CheckRayHit(*player_->raySprite_);
 
     // ========================//Ray================================
 
@@ -243,7 +247,7 @@ void SampleScene::CheckAllCollision()
         collisionManager_->AddCollider(medjedManager_->GetMedjed());
 
         //巨大メジェド出現し、弾を打ってくる
-        for (auto& bullet : medjedManager_->GetBulletManager()->GetBullets()) {
+        for (auto& bullet : rhythmBullet_->GetBulletManager()->GetBullets()) {
             if (bullet->isActive_) {
                 collisionManager_->AddCollider(bullet.get());
             }
@@ -274,6 +278,7 @@ void SampleScene::Draw() {
 
     backGround_->Draw(*currentCamera_);
     medjedManager_->Draw(*currentCamera_);
+    rhythmBullet_->Draw(*currentCamera_);
     player_->Draw(*currentCamera_, kLightModeHalfL);
 
     ParticleManager::GetInstance()->Draw();
