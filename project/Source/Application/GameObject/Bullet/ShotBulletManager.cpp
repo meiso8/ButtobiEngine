@@ -47,9 +47,9 @@ void ShotBulletManager::CheckRayHit(RaySprite& raySprite)
 
             if (Input::IsTriggerMouse(0)) {
                 if (bullet->type_ != Bullet::kPlayer) {
-                    Sound::PlaySE(Sound::FIRE_BALL);
+                    Sound::PlaySE(Sound::CRACKER,0.5f);
                     Vector3 shotDirection = raySprite.ray_.diff;
-                    Vector3 shotPosition = raySprite.ray_.origin + shotDirection * 1.0f;
+                    Vector3 shotPosition = raySprite.ray_.origin;
                     bullet->Shot(shotPosition, shotDirection, shotSpeed_, shotSize_, Bullet::kPlayer);
                 }
             }

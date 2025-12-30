@@ -23,6 +23,7 @@ void ModelManager::LoadAllModel()
 
     LoadModel("Resource/Models/medjed", "normalMed.gltf", normalMedjed_GLTF);
     LoadModel("Resource/Models/medjed", "medjedAnimation.gltf", medJed_GLTF);
+    LoadModel("Resource/Models/medjed", "medjedDance.gltf", medJedDance_GLTF);
     LoadModel("Resource/Models/player", "player.obj", PLAYER_BODY);
     LoadModel("Resource/Models/people", "people.obj", PEOPLE);
     LoadModel("Resource/Models/mummy", "mummy.obj", MUMMY);
