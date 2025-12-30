@@ -910,6 +910,7 @@
     </None>
     <None Include="Resource\JsonFiles\config.json" />
     <None Include="Resource\JsonFiles\Boss.json" />
+    <None Include="Resource\JsonFiles\notes.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png">

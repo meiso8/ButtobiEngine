@@ -9,6 +9,7 @@ RhythmBullet::RhythmBullet()
 void RhythmBullet::Initialize()
 {
     rhythmManager_->Initialize();
+
     bulletManager_->Initialize();
     shotBulletManager_->Initialize();
 }

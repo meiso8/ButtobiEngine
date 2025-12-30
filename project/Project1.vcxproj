@@ -463,6 +463,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <None Include="externals\assimp\lib\Debug\assimp-vc143-mtd.pdb" />
     <None Include="Resource\JsonFiles\Boss.json" />
     <None Include="Resource\JsonFiles\config.json" />
+    <None Include="Resource\JsonFiles\notes.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png" />

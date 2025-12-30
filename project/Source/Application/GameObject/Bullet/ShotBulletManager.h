@@ -20,5 +20,4 @@ private:
 	float shotSize_ = 3.0f;
 	float currentTime_ = 0.0f;
 
-	bool isReflect_ = false;
 };

@@ -23,7 +23,7 @@
 #include<numbers>
 #include<algorithm>
 
-
+#include"CharacterState.h"
 struct Param {
     char name[128];
     char value[128];
@@ -613,6 +613,25 @@ void DebugUI::CheckBlendMode(BlendMode& blendMode) {
     }
 #endif
 };
+
+void DebugUI::CheckCaracterState(CharacterState& characterState, const char* label)
+{
+#ifdef USE_IMGUI
+    ImGui::Begin(label);
+    if (ImGui::TreeNode(label)) {
+
+        ImGui::SliderInt("Maxhp",&characterState.hps.maxHp,0,500);
+        ImGui::SliderInt("hp",&characterState.hps.hp,0, characterState.hps.maxHp);
+
+        ImGui::Checkbox("isDead", &characterState.isDead);
+        ImGui::Checkbox( "isHit", &characterState.isHit );
+
+        ImGui::TreePop();
+    }
+    ImGui::End();
+#endif
+
+}
 
 void DebugUI::CheckFPS() {
 #ifdef USE_IMGUI
