@@ -312,7 +312,7 @@
     <ClCompile Include="Source\Engine\Mesh\Circle\CircleMesh.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Enemy\Enemy.cpp">
+    <ClCompile Include="Source\Application\GameObject\Medjed\Enemy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\Scene\TitleScene.cpp">
@@ -327,13 +327,13 @@
     <ClCompile Include="Source\Application\System\Collider.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBullet.cpp">
+    <ClCompile Include="Source\Application\GameObject\Bullet\Bullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBulletManager.cpp">
+    <ClCompile Include="Source\Application\GameObject\Bullet\BulletManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyShotBulletManager.cpp">
+    <ClCompile Include="Source\Application\GameObject\Bullet\ShotBulletManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\UI\HPGage.cpp">
@@ -429,7 +429,7 @@
     <ClCompile Include="Source\Application\GameObject\TransformAni\TransformAni.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyManager.cpp">
+    <ClCompile Include="Source\Application\GameObject\Bullet\RhythmBullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\BackGround\BackGround.cpp">
@@ -439,6 +439,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\Mummy\Mummy.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\GameObject\Bullet\RhythmManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -746,7 +749,7 @@
     <ClInclude Include="Source\Application\GameObject\CharacterState.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Enemy\Enemy.h">
+    <ClInclude Include="Source\Application\GameObject\Medjed\Enemy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\Scene\TitleScene.h">
@@ -758,13 +761,13 @@
     <ClInclude Include="Source\Engine\JsonFile\JsonFile.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBullet.h">
+    <ClInclude Include="Source\Application\GameObject\Bullet\Bullet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBulletManager.h">
+    <ClInclude Include="Source\Application\GameObject\Bullet\BulletManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyShotBulletManager.h">
+    <ClInclude Include="Source\Application\GameObject\Bullet\ShotBulletManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\UI\HPGage.h">
@@ -872,7 +875,7 @@
     <ClInclude Include="Source\Application\GameObject\TransformAni\TransformAni.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyManager.h">
+    <ClInclude Include="Source\Application\GameObject\Bullet\RhythmBullet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\BackGround\BackGround.h">
@@ -882,6 +885,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\Mummy\Mummy.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\GameObject\Bullet\RhythmManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

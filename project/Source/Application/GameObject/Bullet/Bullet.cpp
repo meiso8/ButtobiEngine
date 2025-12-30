@@ -1,4 +1,4 @@
-#include "EnemyBullet.h"
+#include "Bullet.h"
 #include"ModelManager.h"
 #include"Model.h"
 #include"MyEngine.h"
@@ -8,7 +8,7 @@
 #include"CubeMesh.h"
 #include"CollisionConfig.h"
 
-EnemyBullet::EnemyBullet() {
+Bullet::Bullet() {
     model_ = ModelManager::GetModel(ModelManager::PEOPLE);
     body_.Create();
     body_.SetMesh(model_);
@@ -19,10 +19,10 @@ EnemyBullet::EnemyBullet() {
     SetBulletType(kEnemy);
 }
 
-EnemyBullet::~EnemyBullet() {
+Bullet::~Bullet() {
 }
 
-void EnemyBullet::Initialize() {
+void Bullet::Initialize() {
     body_.Initialize();
     moveDir_ = { 0.0f,0.0f,1.0f };
     moveSpeed_ = 0.2f;
@@ -31,7 +31,7 @@ void EnemyBullet::Initialize() {
     isActive_ = false;
     size_ = 3.0f;
 }
-void EnemyBullet::OnCollision(Collider* collider)
+void Bullet::OnCollision(Collider* collider)
 {
     if (!isActive_) {
         return;
@@ -39,11 +39,11 @@ void EnemyBullet::OnCollision(Collider* collider)
     //デバック用
     OnCollisionCollider();
 }
-Vector3 EnemyBullet::GetWorldPosition() const
+Vector3 Bullet::GetWorldPosition() const
 {
     return body_.worldTransform_.GetWorldPosition();
 }
-void EnemyBullet::Update() {
+void Bullet::Update() {
 
     if (!isActive_) {
         return;
@@ -64,18 +64,17 @@ void EnemyBullet::Update() {
 
 }
 
-void EnemyBullet::Draw(Camera& camera, const LightMode& lightType) {
-
+void Bullet::Draw(Camera& camera) {
 
     if (!isActive_) {
         return;
     }
-    body_.SetLightMode(lightType);
+
     body_.Draw(camera, kBlendModeNormal);
     ColliderDraw(camera);
 }
 
-void EnemyBullet::SetBulletType(const BulletType& type)
+void Bullet::SetBulletType(const BulletType& type)
 {
     if (type == kPlayer) {
         SetCollisionAttribute(kCollisionPlayerBullet);
@@ -87,8 +86,9 @@ void EnemyBullet::SetBulletType(const BulletType& type)
     }
 }
 
-void EnemyBullet::Shot(const Vector3& position, const Vector3& direction, const float& speed, const float& size, const EnemyBullet::BulletType& type) {
+void Bullet::Shot(const Vector3& position, const Vector3& direction, const float& speed, const float& size, const Bullet::BulletType& type) {
     
+    type_ = type;
     SetBulletType(type);
     body_.worldTransform_.translate_ = position;
     moveDir_ = Normalize(direction);
@@ -98,4 +98,6 @@ void EnemyBullet::Shot(const Vector3& position, const Vector3& direction, const 
     body_.worldTransform_.scale_ = { size_,size_,size_ };
     lifeTimer_ = lifeDuration_;
     isActive_ = true;
+
+;
 }

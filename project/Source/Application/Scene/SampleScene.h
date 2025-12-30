@@ -13,7 +13,7 @@
 #include"LightingManager.h"
 #include"Item/ItemManager.h"
 #include"BackGround/BackGround.h"
-
+#include"Bullet/RhythmBullet.h"
 #pragma endregion
 #include"CollisionManager.h"
 
@@ -43,6 +43,8 @@ public:
     std::unique_ptr<LightingManager>lightingManager_ = nullptr;
     std::unique_ptr<MedjedManager>medjedManager_ = nullptr;
     std::unique_ptr<ItemManager>itemManager_ = nullptr;
+
+    std::unique_ptr<RhythmBullet>rhythmBullet_ = nullptr;
 #pragma endregion
 
     std::array<std::unique_ptr<ParticleEmitter>, 2>particleEmitters_;

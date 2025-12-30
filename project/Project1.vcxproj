@@ -157,10 +157,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\Bullet\RhythmManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\Mummy\Mummy.cpp" />
     <ClCompile Include="Source\Application\GameObject\Player\EyeCollider.cpp" />
     <ClCompile Include="Source\Application\GameObject\BackGround\BackGround.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Bullet\RhythmBullet.cpp" />
     <ClCompile Include="Source\Application\GameObject\Player\RaySprite.cpp" />
     <ClCompile Include="Source\Application\GameObject\Item\ItemManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\SoundManager\SoundManager.cpp" />
@@ -188,11 +189,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\Medjed\Medjed.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\HPIcon.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\HPGage.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyShotBulletManager.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBulletManager.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Enemy\EnemyBullet.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Bullet\ShotBulletManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Bullet\BulletManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Bullet\Bullet.cpp" />
     <ClCompile Include="Source\Application\Scene\ResultScene.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Enemy\Enemy.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Medjed\Enemy.cpp" />
     <ClCompile Include="externals\imgui\imgui.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -297,10 +298,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\TransformAni\TransformAni.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\Bullet\RhythmManager.h" />
     <ClInclude Include="Source\Application\GameObject\Mummy\Mummy.h" />
     <ClInclude Include="Source\Application\GameObject\Player\EyeCollider.h" />
     <ClInclude Include="Source\Application\GameObject\BackGround\BackGround.h" />
-    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyManager.h" />
+    <ClInclude Include="Source\Application\GameObject\Bullet\RhythmBullet.h" />
     <ClInclude Include="Source\Application\GameObject\Player\RaySprite.h" />
     <ClInclude Include="Source\Application\GameObject\Item\ItemManager.h" />
     <ClInclude Include="Source\Application\GameObject\SoundManager\SoundManager.h" />
@@ -332,11 +334,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\GameObject\Medjed\Medjed.h" />
     <ClInclude Include="Source\Application\GameObject\UI\HPIcon.h" />
     <ClInclude Include="Source\Application\GameObject\UI\HPGage.h" />
-    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyShotBulletManager.h" />
-    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBulletManager.h" />
-    <ClInclude Include="Source\Application\GameObject\Enemy\EnemyBullet.h" />
+    <ClInclude Include="Source\Application\GameObject\Bullet\ShotBulletManager.h" />
+    <ClInclude Include="Source\Application\GameObject\Bullet\BulletManager.h" />
+    <ClInclude Include="Source\Application\GameObject\Bullet\Bullet.h" />
     <ClInclude Include="Source\Application\Scene\ResultScene.h" />
-    <ClInclude Include="Source\Application\GameObject\Enemy\Enemy.h" />
+    <ClInclude Include="Source\Application\GameObject\Medjed\Enemy.h" />
     <ClInclude Include="Source\Application\GameObject\CharacterState.h" />
     <ClInclude Include="Source\Application\GameObject\BackGround\Field.h" />
     <ClInclude Include="Source\Application\GameObject\Player\Player.h" />

@@ -12,7 +12,7 @@
 #include"Sound.h"
 MedjedManager::MedjedManager()
 {
-    enemyManager_ = std::make_unique<EnemyManager>();
+    enemy_ = std::make_unique<Enemy>();
 
     dummyMedjeds_.clear();
     dummyMedjeds_.resize(46);
@@ -78,17 +78,19 @@ void MedjedManager::Initialize()
 {
     enemyApperTime_ = false;
     PlaceLockersRandomly();
-    enemyManager_->Initialize();
-    enemyManager_->SetTarget(*targetPos_);
+    enemy_->Init();
+    enemy_->SetTarget(*targetPos_);
 }
 
 void MedjedManager::Draw(Camera& camera)
 {
-    for (auto& locker : dummyMedjeds_) {
-
-        locker->Draw(camera);
+    for (auto& medjed : dummyMedjeds_) {
+        medjed->Draw(camera);
     }
-    enemyManager_->Draw(camera);
+
+    enemy_->Draw(camera, kLightModeHalfL);
+
+
 }
 
 void MedjedManager::UpdateEnemyApperTime()
@@ -138,7 +140,7 @@ void MedjedManager::Update()
 
         UpdateEnemyApperTime();
         UpdateMedjedIfFind();
-        enemyManager_->Update();
+        enemy_->Update();
 
     } else {
         UpdateMedjedIfNotFind();
