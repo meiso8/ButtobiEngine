@@ -42,7 +42,7 @@ void MedjedManager::RayCastHit(RaySprite& raySprite) {
             //メジェドざまを当ててないとき
             if (!GetIsFindMedjed()) {
                 //Mouseをクリックしたら
-                if (Input::IsTriggerMouse(0)) {
+                if (Input::IsTriggerMouse(0) || Input::IsControllerTriggerButton(XINPUT_GAMEPAD_A, 0)) {
 
                     if (auto correctMedjed = dynamic_cast<Medjed*>(medjed.get())) {
                         correctMedjed->MoveStart();
@@ -141,6 +141,7 @@ void MedjedManager::Update()
         UpdateEnemyApperTime();
         UpdateMedjedIfFind();
         enemy_->Update();
+
 
     } else {
         UpdateMedjedIfNotFind();

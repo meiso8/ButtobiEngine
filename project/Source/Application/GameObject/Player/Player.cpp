@@ -80,7 +80,7 @@ void Player::Init()
 
     characterState_.hps.hp = file["CharacterState"]["hp"];
     characterState_.hps.maxHp = file["CharacterState"]["hp"];
-    characterState_.isAttack = file["CharacterState"]["isAttack"];
+    characterState_.isDead = false;
     characterState_.isHit = file["CharacterState"]["isHit"];
 
 }
@@ -179,7 +179,7 @@ void Player::Move()
 
 void Player::Zoom()
 {
-    if (Input::IsPushKey(DIK_SPACE)) {
+    if (Input::IsPushKey(DIK_SPACE)||Input::IsControllerPressButton(XINPUT_GAMEPAD_LEFT_SHOULDER, 0)){
 
         isZoom_ = true;
         if (zoomTimer_ < 1.0f) {
@@ -265,8 +265,8 @@ void Player::MouseLook()
         cameraRotateX_ -= controllerPos.y * InverseFPS * cameraSpeed_;
     }
 
-    cameraRotateY_ += Input::GetMousePosFiltered().x * InverseFPS / cameraSpeed_;
-    cameraRotateX_ += Input::GetMousePosFiltered().y * InverseFPS / cameraSpeed_;
+    cameraRotateY_ += Input::GetMousePosFiltered().x * InverseFPS / cameraSpeed_*0.25f;
+    cameraRotateX_ += Input::GetMousePosFiltered().y * InverseFPS / cameraSpeed_*0.25f;
 
     bodyPos_.worldTransform_.rotate_.y = Lerp(bodyPos_.worldTransform_.rotate_.y, cameraRotateY_, 0.5f);
     eyeCollider_->MouseLook(cameraRotateX_);
@@ -284,5 +284,9 @@ void Player::OnCollisionEnemy()
     characterState_.isHit = true;
     characterState_.hps.hp -= 10;
     hitTimer_ = 1.0f;
+
+    if (characterState_.hps.hp <= 0.0f) {
+        characterState_.isDead = true;
+    }
 
 }

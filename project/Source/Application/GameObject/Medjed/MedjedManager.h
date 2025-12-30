@@ -29,12 +29,15 @@ private:
     bool IsOverlapping(const Vector2& pos, const std::vector<Vector2>& placedPositions);
 public:
     MedjedManager();
-    void SetTarget(Vector3& target) { targetPos_ = &target;};
+    void SetTarget(Vector3& target) { targetPos_ = &target; };
     void RayCastHit(RaySprite& raySprite);
 
     void Initialize();
     void Draw(Camera& camera);
     void Update();
+    const bool& GetIsEnemyDead() {
+        return enemy_->GetIsDead();
+    }
 
     std::vector < std::unique_ptr<DummyMedjed>>& GetAllMedjeds() { return dummyMedjeds_; };
     Medjed* GetMedjed();

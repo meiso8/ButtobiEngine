@@ -45,7 +45,7 @@ void ShotBulletManager::CheckRayHit(RaySprite& raySprite)
 
         if (raySprite.IntersectsAABB(aabb, bullet->GetWorldPosition())) {
 
-            if (Input::IsTriggerMouse(0)) {
+            if (Input::IsTriggerMouse(0)||Input::IsControllerTriggerButton(XINPUT_GAMEPAD_A,0)) {
                 if (bullet->type_ != Bullet::kPlayer) {
                     Sound::PlaySE(Sound::CRACKER,0.5f);
                     Vector3 shotDirection = raySprite.ray_.diff;

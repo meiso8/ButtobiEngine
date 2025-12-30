@@ -64,6 +64,7 @@ public:
     bool isZoom_ = false;
 
     std::unique_ptr<RaySprite> raySprite_ = nullptr;
+    const bool& IsDead() { return characterState_.isDead; }
 private:
     float hitTimer_ = 0.0f;
     float endRotateY_ = 0.0f;
