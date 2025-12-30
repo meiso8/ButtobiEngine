@@ -10,23 +10,19 @@
 #include"Collision.h"
 #include"Easing.h"
 #include"DebugUI.h"
-
+#include"TransformAni/TransformAni.h"
 Enemy::Enemy()
 {
     UpdateActions_ = {
          {PHASE::ROUND, std::bind(&Enemy::Round, this)},
          {PHASE::FIREBALL, std::bind(&Enemy::Fireball, this)},
-         {PHASE::FLOORCHANGEATTACK, std::bind(&Enemy::FloorChangeAttack, this)},
-         {PHASE::TACKLE, std::bind(&Enemy::Tackle, this)},
-         {PHASE::KNOCKBACK, std::bind(&Enemy::Knockback, this)},
-         {PHASE::SHOCKWAVEATTACK, std::bind(&Enemy::ShockWaveAttack, this)},
          {PHASE::EXIT, std::bind(&Enemy::Exit, this)},
     };
 
     model_ = ModelManager::GetModel(ModelManager::normalMedjed_GLTF);
     bodyPos_.Create();
     bodyPos_.SetMesh(model_);
-    float scale = 15.0f;
+    float scale = 10.0f;
     bodyPos_.worldTransform_.scale_ = { scale,scale,scale };
     Init();
 
@@ -76,7 +72,7 @@ void Enemy::Update()
     }
 
     if (Input::IsTriggerKey(DIK_V)) {
-        phase_ = FLOORCHANGEATTACK;
+        phase_ = ROUND;
     }
 
 #endif // _DEBUG  
@@ -106,7 +102,6 @@ void Enemy::OnCollision(Collider* collider)
         if (!characterState_.isHit) {
             characterState_.isHit = true;
 
-
             Sound::PlaySE(Sound::CRACKER);
 
             if (characterState_.hps.hp > 0) {
@@ -117,54 +112,13 @@ void Enemy::OnCollision(Collider* collider)
     }
 
     if (collider->GetCollisionAttribute() == kCollisionPlayer) {
-        if (phase_ == TACKLE) {
-            SetPhase(KNOCKBACK);
-        }
+     
+      /*SetPhase(ROUND);*/
+        
     }
 
 }
 
-void Enemy::Tackle()
-{
-    if (timer_ <= 3.0f) {
-
-        if (timer_ <= 2.0f) {
-            LookTarget();
-            endPos_ = *target_;
-        }
-
-        PoyoPoyo(3.0f);
-        startPos_ = bodyPos_.worldTransform_.translate_;
-    } else if (timer_ < 3.7f) {
-        Sound::PlayOriginSE(Sound::FIRE_BALL);
-        float localTimer = (timer_ - 3.0f) / 0.7f;
-        LerpScale();
-        bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(startPos_, endPos_, localTimer);
-    } else {
-        SetPhase(KNOCKBACK);
-        return;
-    }
-
-}
-
-void Enemy::Knockback()
-{
-    if (timer_ <= 1.0f) {
-        RotateY(timer_);
-    }
-
-    if (timer_ < 0.25f) {
-
-    } else if (timer_ >= 0.25f && timer_ <= 2.0f) {
-        bodyPos_.worldTransform_.translate_ = Easing::EaseOutBack(bodyPos_.worldTransform_.translate_, startPos_, 0.5f);
-        LookTarget();
-
-    } else {
-        SetPhase(ROUND);
-    }
-
-
-}
 
 void Enemy::SetPhase(PHASE phase)
 {
@@ -176,7 +130,8 @@ void Enemy::SetPhase(PHASE phase)
         sphericalPos_.azimuthal = 0.0f;
         sphericalPos_.polar = 0.0f;
     }
-    if (phase_ == FIREBALL || phase_ == KNOCKBACK) {
+
+    if (phase_ == FIREBALL) {
         startRotateY_ = bodyPos_.worldTransform_.rotate_.y;
         endRotateY_ = startRotateY_ + std::numbers::pi_v<float>*2.0f;
     }
@@ -190,18 +145,11 @@ void Enemy::Round()
     if (sphericalPos_.polar > std::numbers::pi_v<float> / 2.0f || sphericalPos_.polar < -std::numbers::pi_v<float> / 2.0f) {
         roundSpeedY *= -1.0f;
     }
-    LookTarget();
+    Look();
     bodyPos_.worldTransform_.translate_ = TransformCoordinate(sphericalPos_);
 
     if (timer_ >= actionTime_) {
-
-        int randNum = rand() % 2;
-        if (randNum == 0) {
-            SetPhase(TACKLE);
-        } else {
-            SetPhase(FIREBALL);
-        }
-
+       SetPhase(FIREBALL);   
     }
 }
 
@@ -212,7 +160,7 @@ void Enemy::Fireball()
         fireBallCoolTime_ = 0.0f;
     } else {
 
-        LookTarget();
+        Look();
 
         fireBallCoolTime_ += InverseFPS;
 
@@ -226,21 +174,9 @@ void Enemy::Fireball()
         SetPhase(ROUND);
     }
 
-
 }
 
-void Enemy::FloorChangeAttack()
-{
-    //bodyPos_.worldTransform_.rotate_.y += std::numbers::pi_v<float> *InverseFPS;
-    //bodyPos_.SetColor({ 0.0f,0.0f,1.0f,1.0f });
 
-}
-void Enemy::ShockWaveAttack()
-{
-    //bodyPos_.worldTransform_.rotate_.y += std::numbers::pi_v<float> *InverseFPS;
-  /*  bodyPos_.SetColor({ 0.0f,1.0f,0.0f,1.0f });*/
-
-}
 void Enemy::Exit()
 {
     //bodyPos_.SetColor({ 0.0f,0.0f,0.0f,1.0f });
@@ -256,30 +192,16 @@ void Enemy::UpdateTimer()
 
 }
 
-void Enemy::LookTarget()
+void Enemy::Look()
 {
-    Vector3 direction = *target_ - GetWorldPos();
-
-    // 正規化して方向ベクトルにする
-    direction = Normalize(direction);
-
-    // Y軸回転（左右）
-    bodyPos_.worldTransform_.rotate_.y = std::atan2(direction.x, direction.z);
-
-    // X軸回転（上下）
-    bodyPos_.worldTransform_.rotate_.x = -std::asin(direction.y); // 上を向くとマイナスになるように
+    TransformAni::LookTarget(bodyPos_.worldTransform_, *target_);
 }
 
 void Enemy::PoyoPoyo(const float& endTimer)
 {
     poyoAnimTimer_ += InverseFPS;
     poyoAnimTimer_ = std::clamp(poyoAnimTimer_, 0.0f, endTimer);
-
-    float theta = std::numbers::pi_v<float>*10.0f * poyoAnimTimer_;
-    float scale = GetRadius() * 2.0f;
-    bodyPos_.worldTransform_.scale_.x = scale + cos(theta) * 0.5f;
-    bodyPos_.worldTransform_.scale_.y = scale + sin(theta) * 0.5f;
-
+    TransformAni::PoyoPoyo(bodyPos_.worldTransform_, poyoAnimTimer_, GetRadius() * 2.0f);
 }
 
 void Enemy::HitUpdate()

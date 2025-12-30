@@ -14,10 +14,12 @@ namespace {
     constexpr uint64_t kCollisionEnemyBullet = 0b1 << 3;
     // 敵陣営
     constexpr uint32_t kCollisionMedjed = 0b1 << 4;
+    // ダミーメジェド
+    constexpr uint64_t kCollisionDummyMedjed = 0b1 << 6;
+    //みいら
+    constexpr uint64_t kCollisionMummy = 0b1 << 9;
     // 壁
     constexpr uint64_t kCollisionWall = 0b1 << 5;
-    // ロッカー
-    constexpr uint64_t kCollisionDummyMedjed = 0b1 << 6;
     // アイテム
     constexpr uint64_t kCollisionItem = 0b1 << 7;
     // 何の陣営にも属さない

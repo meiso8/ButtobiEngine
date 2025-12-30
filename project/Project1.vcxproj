@@ -157,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\Mummy\Mummy.cpp" />
     <ClCompile Include="Source\Application\GameObject\Player\EyeCollider.cpp" />
     <ClCompile Include="Source\Application\GameObject\BackGround\BackGround.cpp" />
     <ClCompile Include="Source\Application\GameObject\Enemy\EnemyManager.cpp" />
@@ -296,6 +297,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\TransformAni\TransformAni.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\Mummy\Mummy.h" />
     <ClInclude Include="Source\Application\GameObject\Player\EyeCollider.h" />
     <ClInclude Include="Source\Application\GameObject\BackGround\BackGround.h" />
     <ClInclude Include="Source\Application\GameObject\Enemy\EnemyManager.h" />
