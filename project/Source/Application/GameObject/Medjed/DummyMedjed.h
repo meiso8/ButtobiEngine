@@ -25,7 +25,7 @@ public:
     virtual void Update();
     void OnCollision(Collider* collider)override;
     Vector3 GetWorldPosition() const override;
-    virtual void LookTarget(const Vector3& target);
+    virtual void Look(const Vector3& target);
     virtual WorldTransform& GetWorldTransform()
     {
         return object3d_->worldTransform_;

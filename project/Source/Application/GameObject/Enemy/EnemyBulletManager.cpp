@@ -33,10 +33,10 @@ void EnemyBulletManager::Draw(Camera& camera, const LightMode& lightType) {
 	}
 }
 
-void EnemyBulletManager::ShotBullet(const Vector3& position, const Vector3& direction, const float& speed, const float& size) {
+void EnemyBulletManager::ShotBullet(const Vector3& position, const Vector3& direction, const float& speed, const float& size,const EnemyBullet::BulletType& type) {
 	for (auto& bullet : bullets_) {
 		if (!bullet->isActive_) {
-			bullet->Shot(position, direction, speed, size);
+			bullet->Shot(position, direction, speed, size,type);
 			break;
 		}
 	}

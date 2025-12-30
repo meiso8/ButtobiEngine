@@ -1,4 +1,4 @@
-
+#include"Player/RaySprite.h"
 #pragma once
 class Enemy;
 class EnemyBulletManager;
@@ -10,6 +10,7 @@ public:
 	EnemyShotBulletManager(Enemy* enemy, EnemyBulletManager* bulletManager);
 	void Initialize();
 	void Update();
+	void CheckRayHit(RaySprite& raySprite);
 private:
 	Enemy* enemy_ = nullptr;
 	EnemyBulletManager* bulletManager_ = nullptr;

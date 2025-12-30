@@ -16,8 +16,9 @@ public:
     void Initialize();
     void Update();
     void Draw(Camera& camera);
-    void SetTarget( Vector3& target);
+    void SetTarget(Vector3& target);
     EnemyBulletManager* GetBulletManager() { return enemyBulletManager_.get(); };
     Enemy* GetEnemy() { return enemy_.get(); }
+    EnemyShotBulletManager* GetEnemyShotBulletManager() { return enemyShotBulletManager_.get();}
 };
 

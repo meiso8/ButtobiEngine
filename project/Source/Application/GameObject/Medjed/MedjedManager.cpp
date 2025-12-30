@@ -108,7 +108,7 @@ void MedjedManager::UpdateEnemyApperTime()
 void MedjedManager::UpdateMedjedIfNotFind()
 {
     //メジェド一つだけ
-    GetMedjed()->LookTarget(*targetPos_);
+    GetMedjed()->Look(*targetPos_);
 
     if (GetMedjed()->GetIsHit()) {
         //ランダム
@@ -120,7 +120,7 @@ void MedjedManager::UpdateMedjedIfFind()
 {
     for (auto& medjed : dummyMedjeds_) {
 
-        medjed->LookTarget(*targetPos_);
+        medjed->Look(*targetPos_);
 
         if (GetIsApperMedjed()) {
             if (auto dummy = dynamic_cast<DummyMedjed*>(medjed.get())) {

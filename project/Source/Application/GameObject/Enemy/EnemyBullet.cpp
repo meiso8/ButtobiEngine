@@ -14,10 +14,9 @@ EnemyBullet::EnemyBullet() {
     body_.SetMesh(model_);
     body_.SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
 
-    SetRadius(1.5f);
-    SetCollisionAttribute(kCollisionEnemyBullet);
-    // 弾は「Player」とだけ衝突したい
-    SetCollisionMask(kCollisionPlayer);
+    SetType(kAABB);
+    SetAABB({ {-0.6f,-0.6f,-0.6f} ,{0.6f,0.6f,0.6f} });
+    SetBulletType(kEnemy);
 }
 
 EnemyBullet::~EnemyBullet() {
@@ -74,11 +73,23 @@ void EnemyBullet::Draw(Camera& camera, const LightMode& lightType) {
     body_.SetLightMode(lightType);
     body_.Draw(camera, kBlendModeNormal);
     ColliderDraw(camera);
-
-
 }
 
-void EnemyBullet::Shot(const Vector3& position, const Vector3& direction, const float& speed, const float& size) {
+void EnemyBullet::SetBulletType(const BulletType& type)
+{
+    if (type == kPlayer) {
+        SetCollisionAttribute(kCollisionPlayerBullet);
+        SetCollisionMask(kCollisionEnemy | kCollisionMedjed);
+    } else {
+        SetCollisionAttribute(kCollisionEnemyBullet);
+        // 弾は「Player」とだけ衝突したい
+        SetCollisionMask(kCollisionPlayer);
+    }
+}
+
+void EnemyBullet::Shot(const Vector3& position, const Vector3& direction, const float& speed, const float& size, const EnemyBullet::BulletType& type) {
+    
+    SetBulletType(type);
     body_.worldTransform_.translate_ = position;
     moveDir_ = Normalize(direction);
     moveSpeed_ = speed;

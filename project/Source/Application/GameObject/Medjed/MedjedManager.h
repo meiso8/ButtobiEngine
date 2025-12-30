@@ -51,5 +51,8 @@ public:
     Enemy* GetEnemy() {
         return enemyManager_->GetEnemy();
     }
+    EnemyShotBulletManager* GetShotBulletManager() {
+        return enemyManager_->GetEnemyShotBulletManager();
+    }
 };
 

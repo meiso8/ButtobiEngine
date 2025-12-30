@@ -6,7 +6,7 @@
 #include"Easing.h"
 #include"Window.h"
 #include<algorithm>
-void DummyMedjed::LookTarget(const Vector3& target)
+void DummyMedjed::Look(const Vector3& target)
 {
 
     aniTimer_ += InverseFPS * 0.25f;
