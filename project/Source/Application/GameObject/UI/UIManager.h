@@ -14,9 +14,8 @@ public:
     void Initialize();
     void Update();
     void Draw();
-    bool isDrawPlayerGage_ = false;
+
 private:
     std::unordered_map<GageType, std::unique_ptr<HPGage>>hpGages_;
-    std::unique_ptr<HPIcon>playerHpIcon_= nullptr;
 };
 

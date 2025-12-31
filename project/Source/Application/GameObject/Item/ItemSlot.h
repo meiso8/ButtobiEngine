@@ -41,7 +41,7 @@ public:
     void UpdateAniTimer();
    float aniTimer_ = 0.0f;
    Vector3 startPos_ = { 0.0f };
-   void LerpScreenPos(const Vector2& screenPos, const Matrix4x4& matInverseVPV);
+   virtual void LerpScreenPos(const Vector2& screenPos, const Matrix4x4& matInverseVPV);
    void SetWorldPos(const Vector3& pos);
 };
 

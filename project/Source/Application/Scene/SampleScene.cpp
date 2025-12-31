@@ -71,10 +71,7 @@ SampleScene::SampleScene()
 
     particleEmitters_[1]->SetName("people");
 
-    hpGage_ = std::make_unique<HPGage>();
-    hpGage_->SetHpPtr(player_->GetHpsPtr());
-    hpGage_->Setting({ 640.0f,16.0f }, { 640.0f,720.0f - 128.0f - 8.0f }, { 0.5f,0.0f });
-
+    uIManager_ = std::make_unique<UIManager>(*medjedManager_->GetEnemy()->GetHpsPtr(),*player_->GetHpsPtr());
 
     lightingManager_ = std::make_unique<LightingManager>();
     lightingManager_->playerHandPos_.Parent(player_->GetEyeWorldTransform());
@@ -133,7 +130,7 @@ void SampleScene::Initialize() {
     player_->Init();
     backGround_->Initialize();
     medjedManager_->Initialize();
-    hpGage_->Initialize();
+    uIManager_->Initialize();
     itemManager_->Init();
     rhythmBullet_->Initialize();
 
@@ -187,7 +184,7 @@ void SampleScene::Update() {
             particleEmitters_[i]->UpdateTimer();
             particleEmitters_[i]->UpdateEmitter();
         }
-        hpGage_->Update();
+        uIManager_->Update();
     }
 
     ParticleManager::GetInstance()->Update(*currentCamera_);
@@ -304,7 +301,7 @@ void SampleScene::Draw() {
     itemManager_->Draw(*currentCamera_);
 
     if (medjedManager_->GetIsFindMedjed()) {
-        hpGage_->Draw();
+        uIManager_->Draw();
     }
 
     Sprite::PreDraw(kBlendModeMultiply);

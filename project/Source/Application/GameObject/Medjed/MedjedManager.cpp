@@ -56,7 +56,6 @@ void MedjedManager::RayCastHit(RaySprite& raySprite) {
 
                         SoundManager::PlayCancelSE();
                         Sound::PlaySE(Sound::VOICE_Sottizyanaiwa, 0.5f);
-                        PlaceLockersRandomly();
                         return;
                     }
 

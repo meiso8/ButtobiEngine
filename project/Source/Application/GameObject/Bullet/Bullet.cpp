@@ -24,6 +24,7 @@ Bullet::~Bullet() {
 
 void Bullet::Initialize() {
     body_.Initialize();
+    body_.SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
     moveDir_ = { 0.0f,0.0f,1.0f };
     moveSpeed_ = 0.2f;
     lifeTimer_ = 0.0f;
@@ -87,7 +88,7 @@ void Bullet::SetBulletType(const BulletType& type)
 }
 
 void Bullet::Shot(const Vector3& position, const Vector3& direction, const float& speed, const float& size, const Bullet::BulletType& type) {
-    
+    body_.SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
     type_ = type;
     SetBulletType(type);
     body_.worldTransform_.translate_ = position;
@@ -98,6 +99,9 @@ void Bullet::Shot(const Vector3& position, const Vector3& direction, const float
     body_.worldTransform_.scale_ = { size_,size_,size_ };
     lifeTimer_ = lifeDuration_;
     isActive_ = true;
+}
 
-;
+void Bullet::SetColor(const Vector4& color)
+{
+    body_.SetColor(color);
 }

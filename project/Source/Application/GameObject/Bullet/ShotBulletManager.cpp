@@ -63,7 +63,7 @@ void ShotBulletManager::CheckRayHit(RaySprite& raySprite)
         AABB aabb = GetAABBWorldPos(bullet.get());
 
         if (raySprite.IntersectsAABB(aabb, bullet->GetWorldPosition())) {
-
+            bullet->SetColor({ 1.0f,0.0f,0.0f,1.0f });
             if (Input::IsTriggerMouse(0) || Input::IsControllerTriggerButton(XINPUT_GAMEPAD_A, 0)) {
                 if (bullet->type_ != Bullet::kPlayer) {
                     Sound::PlaySE(Sound::CRACKER, 0.5f);
@@ -72,6 +72,8 @@ void ShotBulletManager::CheckRayHit(RaySprite& raySprite)
                     bullet->Shot(shotPosition, shotDirection, shotSpeed_, shotSize_, Bullet::kPlayer);
                 }
             }
+        } else {
+            bullet->SetColor({ 1.0f,1.0f,1.0f,1.0f });
         }
     }
 }

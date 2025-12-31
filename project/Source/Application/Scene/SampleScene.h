@@ -9,7 +9,7 @@
 #pragma region//ゲームオブジェクト
 #include"Player/Player.h"
 #include"Medjed/MedjedManager.h"
-#include"UI/HPGage.h"
+#include"UI/UIManager.h"
 #include"LightingManager.h"
 #include"Item/ItemManager.h"
 #include"BackGround/BackGround.h"
@@ -44,7 +44,7 @@ public:
     std::unique_ptr<LightingManager>lightingManager_ = nullptr;
     std::unique_ptr<MedjedManager>medjedManager_ = nullptr;
     std::unique_ptr<ItemManager>itemManager_ = nullptr;
-
+    std::unique_ptr<UIManager> uIManager_ = nullptr;
     std::unique_ptr<RhythmBullet>rhythmBullet_ = nullptr;
 #pragma endregion
 
@@ -53,7 +53,6 @@ public:
 #pragma endregion
 
     std::array<std::unique_ptr<ParticleEmitter>, 2>particleEmitters_;
-    std::unique_ptr<HPGage>hpGage_;
 
     std::unique_ptr<CollisionManager>collisionManager_ = nullptr;
 
