@@ -8,23 +8,26 @@
 #include"MakeMatrix.h"
 #include"SkinningModel.h"
 #include"Bone.h"
+#include<algorithm>
 AnimationObject3d::AnimationObject3d() {
-
     animationTime_ = 0.0f;
-    rotate_ = IdentityQuaternion();
     worldMatrix_ = MakeIdentity4x4();
 
 #ifdef _DEBUG
     debugBone_ = std::make_unique<DebugBone>();
 #endif
+}
 
+void AnimationObject3d::Initialize()
+{
+    animationTime_ = 0.0f;
+    worldTransform_.Initialize();
 }
 
 void AnimationObject3d::Update()
 {
-    WorldTransformUpdate(worldTransform_);
     UpdateAnimation();
-
+    WorldTransformUpdate(worldTransform_);
 }
 
 void AnimationObject3d::InitTime()
@@ -34,15 +37,12 @@ void AnimationObject3d::InitTime()
 
 void AnimationObject3d::UpdateAnimation()
 {
-    animationTime_ += InverseFPS;
-    animationTime_ = std::fmod(animationTime_, animation_.duration);
-
     ModelData* boneModelData = skinningModel_->GetBoneModelData();
     Skeleton* skeleton = skinningModel_->GetSkeleton();
     SkinCluster* skinCluster = skinningModel_->GetSkinCluster();
 
     assert(boneModelData);
-    assert( skeleton );
+    assert(skeleton);
     assert(skinCluster);
 
     //アニメーションの更新を行って、骨ごとのLocal情報を更新する
@@ -61,6 +61,15 @@ void AnimationObject3d::UpdateAnimation()
 #ifdef _DEBUG
     debugBone_->Update(worldTransform_.matWorld_);
 #endif
+}
+void AnimationObject3d::UpdateAniTimer(const bool& isLoop)
+{
+    animationTime_ += InverseFPS;
+    if (isLoop) {
+        animationTime_ = std::fmod(animationTime_, animation_.duration);
+    } else {
+        animationTime_ = std::clamp(animationTime_, 0.0f, animation_.duration);
+    }
 }
 void AnimationObject3d::SetMeshAndData(SkinningModel* skinningModel)
 {

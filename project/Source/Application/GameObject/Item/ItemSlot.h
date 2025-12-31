@@ -36,13 +36,17 @@ public:
         return object_->worldTransform_.GetWorldPosition();
     };
     void Rotate();
-    void SetRotateY(const float& rotate) { object_->worldTransform_.rotate_.y = rotate; };
-    void GetStartPos();
-    void UpdateAniTimer();
-   float aniTimer_ = 0.0f;
-   Vector3 startPos_ = { 0.0f };
+    void SetRotate(const Vector3& rotate) { object_->worldTransform_.rotate_ = rotate; };
+    void SetStartPos();
+    void UpdateAniTimer(const float& endTime = 4.0f);
+    float aniTimer_ = 0.0f;
    virtual void LerpScreenPos(const Vector2& screenPos, const Matrix4x4& matInverseVPV);
-   void SetWorldPos(const Vector3& pos);
+   void SetStartEndPos(const Vector3& start, const Vector3& end);
+protected:
+
+
+   Vector3 startPos_ = { 0.0f };
+   Vector3 endPos_ = { 0.0f };
 };
 
 // ====================================================================

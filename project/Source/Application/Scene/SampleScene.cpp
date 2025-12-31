@@ -1,6 +1,6 @@
 #define NOMINMAX
 #include "SampleScene.h"
-#include"MyEngine.h"
+
 //入力処理に必要なもの
 #include "Input.h"
 //Debug用のImGui表示セット
@@ -13,18 +13,20 @@
 #include"DrawGrid.h"
 
 //モデル読み込みに必要なもの
-#include"Model.h"
-#include"ModelManager.h"
+//#include"Model.h"
+//#include"ModelManager.h"
 //スプライトに必要なもの
-#include"Texture.h"
-#include"Sprite.h"
+//#include"Texture.h"
+//#include"Sprite.h"
 //音を鳴らすのに必要なもの
 #include"Sound.h"
 
 //球体のメッシュ
-#include"SphereMesh.h"
+//#include"SphereMesh.h"
 //平面のメッシュ
-#include"Plane/PlaneMesh.h"
+//#include"Plane/PlaneMesh.h"
+//#include"Circle/CircleMesh.h"
+//#include"Circle.h"
 
 #include "ParticleEmitter.h"
 #include"Particle.h"
@@ -33,11 +35,8 @@
 #include"MakeMatrix.h"
 
 #include"Collision.h"
-#include"Circle/CircleMesh.h"
-#include"Circle.h"
 
-#include"Lerp.h"
-
+//#include"Lerp.h"
 #include"Easing.h"
 #include"SoundManager/SoundManager.h"
 
@@ -46,32 +45,10 @@ SampleScene::SampleScene()
     // 現在のカメラを設定
     currentCamera_ = camera_.get();
 
-    sprite_ = std::make_unique<Sprite>();
-    sprite_->Create(Texture::WHITE_1X1, { 0.0f,0.0f }, { 1.0f,0.75f,0.75f,1.0f });
-    sprite_->SetSize({ 1280.0f,720.0f });
-
     player_ = std::make_unique<Player>();
     backGround_ = std::make_unique<BackGround>();
 
-    medjedManager_ = std::make_unique<MedjedManager>();
-    medjedManager_->SetTarget(player_->GetBodyPos());
-
-    for (int i = 0; i < particleEmitters_.size(); ++i) {
-        particleEmitters_[i] = std::make_unique<ParticleEmitter>();
-    }
-
-    ParticleManager::GetInstance()->Create();
-
-    Medjed* medjed = medjedManager_->GetMedjed();
-    particleEmitters_[0]->SetName("medjedParticle");
-
-    if (medjed) {
-        particleEmitters_[0]->emitter_.transform.Parent(medjed->GetWorldTransform());
-    }
-
-    particleEmitters_[1]->SetName("people");
-
-    uIManager_ = std::make_unique<UIManager>(*medjedManager_->GetEnemy()->GetHpsPtr(),*player_->GetHpsPtr());
+    uIManager_ = std::make_unique<UIManager>();
 
     lightingManager_ = std::make_unique<LightingManager>();
     lightingManager_->playerHandPos_.Parent(player_->GetEyeWorldTransform());
@@ -79,10 +56,9 @@ SampleScene::SampleScene()
 
     collisionManager_ = std::make_unique<CollisionManager>();
 
-
     itemManager_ = std::make_unique<ItemManager>();
-    rhythmBullet_ = std::make_unique<RhythmBullet>();
-    rhythmBullet_->SetEnemy(medjedManager_->GetEnemy());
+    memoManager_ = std::make_unique<MemoManager>();
+
 }
 
 void SampleScene::Initialize() {
@@ -96,78 +72,46 @@ void SampleScene::Initialize() {
     camera_->Initialize();
     camera_->UpdateMatrix();
 
-    for (int i = 0; i < particleEmitters_.size(); ++i) {
-        particleEmitters_[i]->Initialize();
-    }
-
-    particleEmitters_[0]->emitter_.count = 8;
-    particleEmitters_[0]->emitter_.color = { 1.0f,0.75f,0.75f,1.0f };
-    particleEmitters_[0]->emitter_.frequencyTime = 0.25f;
-    particleEmitters_[0]->emitter_.lifeTime = 6.0f;
-    particleEmitters_[0]->emitter_.blendMode = kBlendModeMultiply;
-    particleEmitters_[0]->emitter_.movement = ParticleMovements::kParticleSphere;
-    particleEmitters_[0]->emitter_.radius = 3.0f;
-    particleEmitters_[0]->emitter_.rotateOffset_ = 3.14f;
-    //particleEmitters_[0]->emitter_.radiusSpeed = ;
-    auto& group = ParticleManager::GetInstance()->GetParticleGroup(particleEmitters_[0]->emitter_.name);
-    group->accelerationField.acceleration.y = 5.0f;
-    group->accelerationField.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,40.0f,25.0f} };
-
-    particleEmitters_[1]->emitter_.transform.translate_.y = 30.0f;
-    particleEmitters_[1]->emitter_.transform.scale_ = { 10.0f,10.0f,10.0f };
-    particleEmitters_[1]->emitter_.count = 4;
-    particleEmitters_[1]->emitter_.color = { 1.0f,0.75f,0.75f,1.0f };
-    particleEmitters_[1]->emitter_.frequencyTime = 0.1f;
-    particleEmitters_[1]->emitter_.lifeTime = 10.0f;
-    particleEmitters_[1]->emitter_.blendMode = kBlendModeScreen;
-    particleEmitters_[1]->emitter_.velocityAABB = { { -10.0f,-10.0f,-10.0f }, { 10.0f,0.0f,10.0f } };
-    particleEmitters_[1]->emitter_.rotateOffset_ = 3.14f;
-
-    auto& enemyGroup = ParticleManager::GetInstance()->GetParticleGroup(particleEmitters_[1]->emitter_.name);
-    enemyGroup->accelerationField.acceleration.y = 10.0f;
-    enemyGroup->accelerationField.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,15.0f,25.0f} };
-
     player_->Init();
     backGround_->Initialize();
-    medjedManager_->Initialize();
+
     uIManager_->Initialize();
     itemManager_->Init();
-    rhythmBullet_->Initialize();
+    //メモマネージャー
+    memoManager_->Initialize();
+
+    //メジェドのステージ
+    medjedStage_ = std::make_unique<MedjedStage>();
+    medjedStage_->SetPlayer(player_.get());
+    medjedStage_->Initialize();
+    uIManager_->CreateHpGage(*medjedStage_->GetEnemy()->GetHpsPtr(), *player_->GetHpsPtr());
+
+    //player_->SetBodyPos({ 0.0f,0.0f,-15.0f });
+
+    if (medjedStage_) {
+        CreateParticle();
+    }
 
     //ミイラのステージ
     mummyStage_ = std::make_unique<MummyStage>();
     mummyStage_->Initialize();
+    //player_->SetBodyPos({ 0.0f,0.0f,-15.0f });
+
+    //水のステージ
+    waterStage_ = std::make_unique<WaterStage>();
+    waterStage_->Initialize();
+    player_->SetBodyPos({ 0.0f,0.0f,-5.0f });
 }
 
 void SampleScene::Update() {
 
-
-    if (mummyStage_) { mummyStage_->Update(); }
-
-
-    if (player_->IsDead() || medjedManager_->GetIsEnemyDead()) {
+    if (player_->IsDead() || medjedStage_->MedjedDead()) {
         sceneChange_->SetState(SceneChange::kFadeIn, 60);
         SceneManager::SetNestScene("Title");
     }
 
+
     lightingManager_->UpdatePointLight();
-
-    if (medjedManager_->GetIsFindMedjed()) {
-
-        lightingManager_->DirectionalLightUpdate();
-        backGround_->UpdateApperMedjed();
-
-        if (medjedManager_->GetIsApperMedjed()) {
-            //メジェド出現！
-            SoundManager::ApperMedjedUpdate();
-        }
-
-        rhythmBullet_->Update();
-
-    } else {
-        SoundManager::NotFindMedjedUpdate();
-    }
-
 
     if (isDebugCameraActive_) {
         currentCamera_->UpdateMatrix();
@@ -177,22 +121,33 @@ void SampleScene::Update() {
         camera_->UpdateViewProjectionMatrix();
     }
 
+
     player_->Update();
 
-    if (medjedManager_->GetIsFindMedjed()) {
-        for (int i = 0; i < particleEmitters_.size(); ++i) {
-            particleEmitters_[i]->UpdateTimer();
-            particleEmitters_[i]->UpdateEmitter();
+    if (mummyStage_) { mummyStage_->Update(); }
+    if (waterStage_) { waterStage_->Update(); }
+
+    if (medjedStage_) {
+        medjedStage_->Update();
+        if (medjedStage_->FindMedjed()) {
+            lightingManager_->DirectionalLightUpdate();
+            backGround_->UpdateApperMedjed();
+
+            for (int i = 0; i < particleEmitters_.size(); ++i) {
+                particleEmitters_[i]->UpdateTimer();
+                particleEmitters_[i]->UpdateEmitter();
+            }
+            uIManager_->Update();
         }
-        uIManager_->Update();
+
     }
+
 
     ParticleManager::GetInstance()->Update(*currentCamera_);
 
-    medjedManager_->Update();
     backGround_->Update();
     itemManager_->Update();
-
+    memoManager_->Update();
     CheckAllCollision();
 
 }
@@ -229,51 +184,95 @@ void SampleScene::CheckAllCollision()
 {
     // ========================//Ray================================
 
-    if (mummyStage_->IsColliderRay(*player_->raySprite_)) {
- 
-        itemManager_->UseItemFromSlot(mummyStage_->GetMummy()->GetWorldPosition());
-    }
-
+    //アイテムがヒットしているか
     auto hitItem = itemManager_->RaycastHitItem(*player_->raySprite_);
     if (hitItem) { itemManager_->GetItemSlot().OnTriggerItemPickup(hitItem); }
 
-    medjedManager_->RayCastHit(*player_->raySprite_);
-    rhythmBullet_->GetShotBulletManager()->CheckRayHit(*player_->raySprite_);
+    //メモがヒットしているかどうか
+    memoManager_->RayCastHit(*player_->raySprite_);
 
     // ========================//Ray================================
 
     collisionManager_->ClearColliders();
+
+    if (medjedStage_) {
+        medjedStage_->CheckCollision(collisionManager_.get());
+    }
+
     collisionManager_->AddCollider(player_.get());
     collisionManager_->AddCollider(player_->GetEyeCollider());
+
+    if (mummyStage_) {
+        //ミイラ
+        if (mummyStage_->IsRayCastHit(*player_->raySprite_)) {
+            //心臓を使う
+            itemManager_->UseItemFromSlot(mummyStage_->GetMummy()->GetWorldPosition());
+        }
+
+        //ミイラの台も一緒に
+        collisionManager_->AddCollider(mummyStage_->GetMummy());
+        collisionManager_->AddCollider(mummyStage_->GetMummy()->GetPlatform());
+    }
+
+    if (waterStage_) {
+        //Waterのかべ
+        for (auto& [type, object] : waterStage_->GetBuilding()->GetFieldPoses()) {
+            collisionManager_->AddCollider(object.get());
+        }
+        collisionManager_->AddCollider(waterStage_->GetWater());
+    }
 
     // 壁との当たり判定
     for (auto& [type, object] : backGround_->GetBuilding()->GetFieldPoses()) {
         collisionManager_->AddCollider(object.get());
     }
 
-    // ========================//メジェド　見つかってないときとそうではないとき================================
-    if (medjedManager_->GetIsFindMedjed()) {
+    collisionManager_->CheckAllCollisions();
+}
 
-        collisionManager_->AddCollider(medjedManager_->GetMedjed());
-
-        //巨大メジェド出現し、弾を打ってくる
-        for (auto& bullet : rhythmBullet_->GetBulletManager()->GetBullets()) {
-            if (bullet->isActive_) {
-                collisionManager_->AddCollider(bullet.get());
-            }
-        }
-        collisionManager_->AddCollider(medjedManager_->GetEnemy());
-    } else {
-        for (auto& locker : medjedManager_->GetAllMedjeds()) {
-            collisionManager_->AddCollider(locker.get());
-        }
-
+void SampleScene::CreateParticle()
+{
+    for (int i = 0; i < particleEmitters_.size(); ++i) {
+        particleEmitters_[i] = std::make_unique<ParticleEmitter>();
+        particleEmitters_[i]->Initialize();
     }
 
+    ParticleManager::GetInstance()->Create();
 
-    // ========================//メジェド　見つかってないときとそうではないとき================================
+    if (medjedStage_) {
+        particleEmitters_[0]->emitter_.transform.Parent(medjedStage_->GetMedjed()->GetWorldTransform());
+    }
 
-    collisionManager_->CheckAllCollisions();
+    particleEmitters_[0]->SetName("medjedParticle");
+    particleEmitters_[1]->SetName("people");
+
+
+    particleEmitters_[0]->emitter_.count = 8;
+    particleEmitters_[0]->emitter_.color = { 1.0f,0.75f,0.75f,1.0f };
+    particleEmitters_[0]->emitter_.frequencyTime = 0.25f;
+    particleEmitters_[0]->emitter_.lifeTime = 6.0f;
+    particleEmitters_[0]->emitter_.blendMode = kBlendModeMultiply;
+    particleEmitters_[0]->emitter_.movement = ParticleMovements::kParticleSphere;
+    particleEmitters_[0]->emitter_.radius = 3.0f;
+    particleEmitters_[0]->emitter_.rotateOffset_ = 3.14f;
+    //particleEmitters_[0]->emitter_.radiusSpeed = ;
+    auto& group = ParticleManager::GetInstance()->GetParticleGroup(particleEmitters_[0]->emitter_.name);
+    group->accelerationField.acceleration.y = 5.0f;
+    group->accelerationField.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,40.0f,25.0f} };
+
+    particleEmitters_[1]->emitter_.transform.translate_.y = 30.0f;
+    particleEmitters_[1]->emitter_.transform.scale_ = { 10.0f,10.0f,10.0f };
+    particleEmitters_[1]->emitter_.count = 4;
+    particleEmitters_[1]->emitter_.color = { 1.0f,0.75f,0.75f,1.0f };
+    particleEmitters_[1]->emitter_.frequencyTime = 0.1f;
+    particleEmitters_[1]->emitter_.lifeTime = 10.0f;
+    particleEmitters_[1]->emitter_.blendMode = kBlendModeScreen;
+    particleEmitters_[1]->emitter_.velocityAABB = { { -10.0f,-10.0f,-10.0f }, { 10.0f,0.0f,10.0f } };
+    particleEmitters_[1]->emitter_.rotateOffset_ = 3.14f;
+
+    auto& enemyGroup = ParticleManager::GetInstance()->GetParticleGroup(particleEmitters_[1]->emitter_.name);
+    enemyGroup->accelerationField.acceleration.y = 10.0f;
+    enemyGroup->accelerationField.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,15.0f,25.0f} };
 }
 
 
@@ -292,20 +291,28 @@ void SampleScene::Draw() {
         mummyStage_->Draw(*currentCamera_);
     }
 
-    medjedManager_->Draw(*currentCamera_);
-    rhythmBullet_->Draw(*currentCamera_);
+    if (waterStage_) {
+        waterStage_->Draw(*currentCamera_);
+    }
+
+    if (medjedStage_) {
+        medjedStage_->Draw(*currentCamera_);
+    }
+
     player_->Draw(*currentCamera_, kLightModeHalfL);
 
     ParticleManager::GetInstance()->Draw();
 
     itemManager_->Draw(*currentCamera_);
+    memoManager_->Draw(*currentCamera_);
 
-    if (medjedManager_->GetIsFindMedjed()) {
-        uIManager_->Draw();
+
+    if (medjedStage_&&medjedStage_->FindMedjed()) {
+        //今のところHPゲージのみなのでここで描画
+        uIManager_->DrawHPGage();
     }
 
-    Sprite::PreDraw(kBlendModeMultiply);
-    sprite_->Draw();
+    uIManager_->DrawEffect();
 
     sceneChange_->Draw();
 }

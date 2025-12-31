@@ -19,7 +19,7 @@ void RhythmManager::Initialize() {
 void RhythmManager::Update() {
 
     timer_ += InverseFPS;
-    if (timer_ >= 67.0f) {
+    if (timer_ >= kEndSoundTime_) {
         Initialize();
     }
 #ifdef USE_IMGUI

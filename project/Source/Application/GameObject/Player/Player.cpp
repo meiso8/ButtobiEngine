@@ -15,6 +15,8 @@
 #include"CoordinateTransform.h"
 #include"Sprite.h"
 #include"CollisionConfig.h"
+#include"InputBind.h"
+
 void Player::OnCollision(Collider* collider)
 {
 
@@ -22,8 +24,14 @@ void Player::OnCollision(Collider* collider)
         OnCollisionEnemy();
     }
 
-    if (collider->GetCollisionAttribute() == kCollisionDummyMedjed|| collider->GetCollisionAttribute() == kCollisionWall|| collider->GetCollisionAttribute() == kCollisionMedjed) {
-        ResolveCollision(bodyPos_.worldTransform_.translate_, velocity_,GetCollisionInfo());
+    if (collider->GetCollisionAttribute() == kCollisionDummyMedjed 
+        || collider->GetCollisionAttribute() == kCollisionWall 
+        || collider->GetCollisionAttribute() == kCollisionMedjed
+        || collider->GetCollisionAttribute() == kCollisionEnemy
+        || collider->GetCollisionAttribute() == kCollisionMummy
+        
+        ) {
+        ResolveCollision(bodyPos_.worldTransform_.translate_, velocity_, GetCollisionInfo());
     }
 
     OnCollisionCollider();
@@ -45,7 +53,7 @@ Player::Player() {
     SetType(ColliderType::kAABB);
     SetAABB(localAabb_);
     SetCollisionAttribute(kCollisionPlayer);
-    SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet | kCollisionMedjed| kCollisionDummyMedjed| kCollisionWall);
+    SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet | kCollisionMedjed | kCollisionDummyMedjed | kCollisionWall| kCollisionMummy);
 
     //それぞれのObject3d（WorldTransform）を作る
     bodyPos_.Create();
@@ -64,7 +72,6 @@ void Player::Init()
 
     //体の位置初期化
     bodyPos_.Initialize();
-    bodyPos_.worldTransform_.translate_.z = -15.0f;
     //目の位置初期化
 
     eyeCollider_->Initialize();
@@ -83,6 +90,8 @@ void Player::Init()
     characterState_.isDead = false;
     characterState_.isHit = file["CharacterState"]["isHit"];
 
+    cameraRotateY_ = 0.0f;
+    cameraRotateX_ = 0.0f;
 }
 
 void Player::UpdateRay()
@@ -118,6 +127,10 @@ void Player::Update()
     LookBack();
     MouseLook();
     UpdateRay();
+    //クリックしたらサウンド
+    if (InputBind::IsClick()) {
+        Sound::PlaySE(Sound::SWITCH_ON);
+    }
 
     bodyPos_.Update();
     eyeCollider_->Update();
@@ -144,17 +157,17 @@ void Player::Move()
         velocity_.z = controllerPos.y;
     }
 
-    if (Input::IsPushKey(DIK_A)) { velocity_.x = -1.0f; }
-    if (Input::IsPushKey(DIK_D)) { velocity_.x = 1.0f; }
-    if (Input::IsPushKey(DIK_W)) { velocity_.z = 1.0f; }
-    if (Input::IsPushKey(DIK_S)) { velocity_.z = -1.0f; }
+    if (InputBind::IsPressMoveL()) { velocity_.x = -1.0f; }
+    if (InputBind::IsPressMoveR()) { velocity_.x = 1.0f; }
+    if (InputBind::IsPressMoveF()) { velocity_.z = 1.0f; }
+    if (InputBind::IsPressMoveB()) { velocity_.z = -1.0f; }
 
-    kSpeed_ = (Input::IsPushKey(DIK_LSHIFT) || Input::IsControllerPressButton(XINPUT_GAMEPAD_X, 0)) ? 0.125f : 0.25f;
+    kSpeed_ = (InputBind::IsPressSpeedButton()) ? 0.125f : 0.25f;
 
     if (fabs(velocity_.x) > 0.0f || fabs(velocity_.z) > 0.0f) {
         if (soundTimer_ == 0.0f) {
             if (kSpeed_ == 0.25f) {};
-            Sound::PlaySE(Sound::FOOT_STEP, (kSpeed_ == 0.25f)?0.5f: 0.0f);
+            Sound::PlaySE(Sound::FOOT_STEP, (kSpeed_ == 0.25f) ? 0.5f : 0.0f);
         }
 
         if (soundTimer_ < 7.5f) {
@@ -170,7 +183,7 @@ void Player::Move()
         // forwardに垂直な右方向ベクトルを計算
         Vector3 right = Cross(Vector3(0, 1, 0), forward);
         right = Normalize(right);
-      
+
         //移動時の縦揺れを再現　速さによって揺れの周期を変更
         eyeCollider_->Walk(kSpeed_);
 
@@ -178,6 +191,8 @@ void Player::Move()
         velocity_ = Normalize(velocity_);
         bodyPos_.worldTransform_.translate_ += forward * velocity_.z * kSpeed_;
         bodyPos_.worldTransform_.translate_ += right * velocity_.x * kSpeed_;
+    } else {
+        eyeCollider_->WalkStop();
     }
 
 
@@ -185,7 +200,7 @@ void Player::Move()
 
 void Player::Zoom()
 {
-    if (Input::IsPushKey(DIK_SPACE)||Input::IsControllerPressButton(XINPUT_GAMEPAD_LEFT_SHOULDER, 0)){
+    if (InputBind::IsPressZoom()) {
 
         isZoom_ = true;
         if (zoomTimer_ < 1.0f) {
@@ -214,7 +229,7 @@ Vector3& Player::GetForward()
 
 void Player::LookBack()
 {
-    if (Input::IsTriggerMouse(1) || Input::IsControllerTriggerLTRT(BUTTON_RIGHT, 0)) {
+    if (InputBind::IsClickR()) {
         isLookBack_ = true;
 
         if (isLookBackEnd_) {
@@ -230,7 +245,7 @@ void Player::LookBack()
         return;
     }
 
-    if (Input::IsPressMouse(1) || Input::IsControllerPressLTRT(BUTTON_RIGHT, 0)) {
+    if (InputBind::IsClickPressR()) {
 
         if (!isLookBackEnd_) {
             if (lookBackTime_ < 1.0f) {
@@ -271,9 +286,9 @@ void Player::MouseLook()
         cameraRotateX_ -= controllerPos.y * InverseFPS * cameraSpeed_;
     }
 
-    if (!Input::IsPressMouse(0)) {
+    if (!InputBind::IsClickPress()) {
         cameraRotateY_ += Input::GetMousePosFiltered().x * InverseFPS / cameraSpeed_;
-        cameraRotateX_ += Input::GetMousePosFiltered().y * InverseFPS / cameraSpeed_ ;
+        cameraRotateX_ += Input::GetMousePosFiltered().y * InverseFPS / cameraSpeed_;
     }
 
     bodyPos_.worldTransform_.rotate_.y = Lerp(bodyPos_.worldTransform_.rotate_.y, cameraRotateY_, 0.5f);

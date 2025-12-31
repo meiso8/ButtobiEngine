@@ -1,0 +1,44 @@
+#include "Platform.h"
+#include "ModelManager.h"
+#include"Model.h"
+#include"CollisionConfig.h"
+
+Platform::Platform() {
+   
+    SetType(kAABB);
+    SetCollisionAttribute(kCollisionWall);
+    SetCollisionMask(kCollisionPlayer);
+
+    // 台のサイズ（仮）
+    SetAABB({ { -0.75f, 0.0f, -1.5f },{ 0.5f, 0.75f, 1.5f } });
+
+    cubeMesh_ = std::make_unique<CubeMesh>();
+    cubeMesh_->Create();
+    cubeMesh_->SetMinMax(GetAABB());
+    object_ = std::make_unique<Object3d>();
+    object_->Create();
+    object_->SetMesh(cubeMesh_.get()); // 台座用モデル
+    object_->SetTextureHandle(Texture::PUZZLE);
+}
+
+void Platform::Initialize() {
+    object_->Initialize();
+}
+
+void Platform::Update() {
+    object_->Update();
+
+}
+
+void Platform::Draw(Camera& camera) {
+    object_->Draw(camera);
+}
+
+Vector3 Platform::GetWorldPosition() const {
+    return object_->worldTransform_.GetWorldPosition();
+}
+
+void Platform::OnCollision(Collider* collider)
+{
+
+}

@@ -10,7 +10,8 @@ public:
 	ShotBulletManager(Enemy* enemy, BulletManager* bulletManager, RhythmManager* rhythmManager);
 	void Initialize();
 	void Update();
-	void CheckRayHit(RaySprite& raySprite);
+	void RayCastHit(RaySprite& raySprite);
+
 private:
 	Enemy* enemy_ = nullptr;
 	BulletManager* bulletManager_ = nullptr;

@@ -76,7 +76,7 @@ public:
     void SetLightMode(const LightMode& lightMode) { materialResource_->SetLightMode(lightMode); }
 
     void Create();
-    void Initialize();
+    virtual void Initialize();
     virtual void Update();
     virtual void Draw(Camera& camera, const BlendMode& blendMode = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack);
 

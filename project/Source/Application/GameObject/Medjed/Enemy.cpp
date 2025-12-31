@@ -76,15 +76,6 @@ void Enemy::Update()
 
 
 #ifdef _DEBUG  
-
-    if (Input::IsTriggerKey(DIK_C)) {
-        phase_ = FIREBALL;
-    }
-
-    if (Input::IsTriggerKey(DIK_V)) {
-        phase_ = ROUND;
-    }
-
     DebugUI::CheckCaracterState(characterState_, "enemy");
 #endif // _DEBUG  
 
@@ -93,6 +84,7 @@ void Enemy::Update()
     // 呼び出す  
     UpdateActions_[phase_]();
     HitUpdate();
+    bodyPos_.UpdateAniTimer();
     bodyPos_.Update();
     ColliderUpdate();
 }

@@ -33,7 +33,8 @@ void Item::Init()
     used_ = false;
     aniTimer_ = 0.0f;
     object_->Initialize();
-
+    startPos_ = { 0.0f };
+    endPos_ = { 0.0f };
 }
 void Item::DrawInfoUI()
 {
@@ -66,21 +67,21 @@ void Item::Rotate()
     TransformAni::RotateY(object_->worldTransform_, 1.0f);
 }
 
-void Item::GetStartPos()
+void Item::SetStartPos()
 {
     object_->worldTransform_.translate_.z = 1.0f;
     startPos_ = object_->worldTransform_.translate_;
     object_->Update();
 }
 
-void Item::UpdateAniTimer()
+void Item::UpdateAniTimer(const float& endTime)
 {
-    if (aniTimer_ == 4.0f) {
+    if (aniTimer_ == endTime) {
         return;
     }
 
     aniTimer_ += InverseFPS;
-    aniTimer_ = std::clamp(aniTimer_, 0.0f, 4.0f);
+    aniTimer_ = std::clamp(aniTimer_, 0.0f, endTime);
 }
 
 void Item::LerpScreenPos(const Vector2& screenPos, const Matrix4x4& matInverseVPV)
@@ -95,9 +96,10 @@ void Item::LerpScreenPos(const Vector2& screenPos, const Matrix4x4& matInverseVP
 
 }
 
-void Item::SetWorldPos(const Vector3& pos)
+void Item::SetStartEndPos(const Vector3& start, const Vector3& end)
 {
-    object_->worldTransform_.translate_ = pos;
+    startPos_ = start;
+    endPos_ = end;
 }
 
 void Item::Update()
@@ -109,8 +111,6 @@ void Item::Update()
 
 ItemSlot::ItemSlot()
 {
-
-
     width = static_cast<float>(Window::GetClientWidth());
     height = static_cast<float>(Window::GetClientHeight());
 
@@ -123,7 +123,6 @@ ItemSlot::ItemSlot()
     itemCamera_->scale_ = { scales,scales,scales };
     itemCamera_->translate_.z = -10.0f;
     itemCamera_->UpdateMatrix();
-
 
     matViewport = MakeViewportMatrix(0, 0, width, height, 0, 1);
     matInverseVPV = Inverse(itemCamera_->GetViewProjectionMatrix() * matViewport);
@@ -179,7 +178,6 @@ void ItemSlot::Update()
 
 void ItemSlot::ToScreen()
 {
-
     itemCamera_->UpdateMatrix(); // ← カメラ行列を更新！
     matViewport = MakeViewportMatrix(0, 0, width, height, 0, 1);
     matInverseVPV = Inverse(itemCamera_->GetViewProjectionMatrix() * matViewport);
@@ -205,8 +203,7 @@ bool ItemSlot::AddItem(const std::shared_ptr<Item>& item)
         if (!slot) {
             slot = item;
             slot->Init();
-            slot->GetStartPos();
-
+            slot->SetStartPos();
             return true;
         }
     }
@@ -259,10 +256,7 @@ void ItemSlot::Draw(Camera& camera)
         if (item && !item->used_) {
             item->Draw(*itemCamera_);
         }
-
     }
-
-
 
 }
 

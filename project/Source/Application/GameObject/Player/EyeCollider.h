@@ -27,5 +27,6 @@ public:
      Vector3& GetForward();
 
      void Walk(const float& speed);
+     void WalkStop();
      void MouseLook(const float& rotateX);
 };

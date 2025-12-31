@@ -51,7 +51,7 @@ public:
     Vector3& GetBodyPos() {
         return bodyPos_.worldTransform_.translate_;
     };
-
+    void SetBodyPos(const Vector3& pos) { bodyPos_.worldTransform_.translate_ = pos; };
     HPs* GetHpsPtr() { return &characterState_.hps; }
 
     EyeCollider* GetEyeCollider() {

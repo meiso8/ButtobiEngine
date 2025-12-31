@@ -5,7 +5,7 @@
 
 #include"Sound.h"
 #include"CollisionManager.h"
-#include"Input.h"
+#include"InputBind.h"
 
 #include"MakeMatrix.h"
 #include"CoordinateTransform.h"
@@ -23,6 +23,10 @@ void ShotBulletManager::Initialize() {
 void ShotBulletManager::Update() {
 
     currentTime_ += InverseFPS;
+
+    if (currentTime_ >= rhythmManager_-> kEndSoundTime_) {
+        Initialize();
+    }
 
     if (enemy_->isShotStart_) {
 
@@ -54,7 +58,7 @@ void ShotBulletManager::Update() {
     }
 }
 
-void ShotBulletManager::CheckRayHit(RaySprite& raySprite)
+void ShotBulletManager::RayCastHit(RaySprite& raySprite)
 {
 
     for (auto& bullet : bulletManager_->GetBullets()) {
@@ -64,7 +68,8 @@ void ShotBulletManager::CheckRayHit(RaySprite& raySprite)
 
         if (raySprite.IntersectsAABB(aabb, bullet->GetWorldPosition())) {
             bullet->SetColor({ 1.0f,0.0f,0.0f,1.0f });
-            if (Input::IsTriggerMouse(0) || Input::IsControllerTriggerButton(XINPUT_GAMEPAD_A, 0)) {
+
+            if (InputBind::IsClick()) {
                 if (bullet->type_ != Bullet::kPlayer) {
                     Sound::PlaySE(Sound::CRACKER, 0.5f);
                     Vector3 shotDirection = raySprite.ray_.diff;

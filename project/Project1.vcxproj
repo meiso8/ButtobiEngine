@@ -157,9 +157,16 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Application\GameObject\Mummy\MummyStage.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Medjed\MedjedStage.cpp" />
+    <ClCompile Include="Source\Application\Stage\WaterStage\PapyrusWall.cpp" />
+    <ClCompile Include="Source\Application\Stage\Mummy\Papyrus.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Memo\MemoManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Memo\Memo.cpp" />
+    <ClCompile Include="Source\Application\Stage\Mummy\Platform.cpp" />
+    <ClCompile Include="Source\Application\System\InputBind.cpp" />
+    <ClCompile Include="Source\Application\Stage\Mummy\MummyStage.cpp" />
     <ClCompile Include="Source\Application\GameObject\Bullet\RhythmManager.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Mummy\Mummy.cpp" />
+    <ClCompile Include="Source\Application\Stage\Mummy\Mummy.cpp" />
     <ClCompile Include="Source\Application\GameObject\Player\EyeCollider.cpp" />
     <ClCompile Include="Source\Application\GameObject\BackGround\BackGround.cpp" />
     <ClCompile Include="Source\Application\GameObject\Bullet\RhythmBullet.cpp" />
@@ -297,11 +304,21 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\Item\SunMedal.cpp" />
     <ClCompile Include="Source\Application\GameObject\Item\SunRod.cpp" />
     <ClCompile Include="Source\Application\GameObject\TransformAni\TransformAni.cpp" />
+    <ClCompile Include="Source\Application\Stage\WaterStage\Water.cpp" />
+    <ClCompile Include="Source\Application\Stage\WaterStage\WaterStage.cpp" />
+    <ClCompile Include="Source\Application\Stage\Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Application\GameObject\Mummy\MummyStage.h" />
+    <ClInclude Include="Source\Application\GameObject\Medjed\MedjedStage.h" />
+    <ClInclude Include="Source\Application\Stage\WaterStage\PapyrusWall.h" />
+    <ClInclude Include="Source\Application\Stage\Mummy\Papyrus.h" />
+    <ClInclude Include="Source\Application\GameObject\Memo\MemoManager.h" />
+    <ClInclude Include="Source\Application\GameObject\Memo\Memo.h" />
+    <ClInclude Include="Source\Application\Stage\Mummy\Platform.h" />
+    <ClInclude Include="Source\Application\System\InputBind.h" />
+    <ClInclude Include="Source\Application\Stage\Mummy\MummyStage.h" />
     <ClInclude Include="Source\Application\GameObject\Bullet\RhythmManager.h" />
-    <ClInclude Include="Source\Application\GameObject\Mummy\Mummy.h" />
+    <ClInclude Include="Source\Application\Stage\Mummy\Mummy.h" />
     <ClInclude Include="Source\Application\GameObject\Player\EyeCollider.h" />
     <ClInclude Include="Source\Application\GameObject\BackGround\BackGround.h" />
     <ClInclude Include="Source\Application\GameObject\Bullet\RhythmBullet.h" />
@@ -448,6 +465,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\GameObject\Item\SunMedal.h" />
     <ClInclude Include="Source\Application\GameObject\Item\SunRod.h" />
     <ClInclude Include="Source\Application\GameObject\TransformAni\TransformAni.h" />
+    <ClInclude Include="Source\Application\Stage\WaterStage\Water.h" />
+    <ClInclude Include="Source\Application\Stage\WaterStage\WaterStage.h" />
+    <ClInclude Include="Source\Application\Stage\Stage.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />
@@ -465,6 +485,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <None Include="externals\assimp\lib\Debug\assimp-vc143-mtd.pdb" />
     <None Include="Resource\JsonFiles\Boss.json" />
     <None Include="Resource\JsonFiles\config.json" />
+    <None Include="Resource\JsonFiles\memo.json" />
     <None Include="Resource\JsonFiles\notes.json" />
   </ItemGroup>
   <ItemGroup>

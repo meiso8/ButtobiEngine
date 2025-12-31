@@ -438,13 +438,43 @@
     <ClCompile Include="Source\Application\GameObject\Player\EyeCollider.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Mummy\Mummy.cpp">
+    <ClCompile Include="Source\Application\Stage\Mummy\Mummy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\Bullet\RhythmManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Mummy\MummyStage.cpp">
+    <ClCompile Include="Source\Application\Stage\Mummy\MummyStage.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\System\InputBind.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\Stage\Mummy\Platform.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\GameObject\Memo\Memo.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\GameObject\Memo\MemoManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\Stage\Mummy\Papyrus.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\Stage\WaterStage\Water.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\Stage\WaterStage\PapyrusWall.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\Stage\WaterStage\WaterStage.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\Stage\Stage.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\GameObject\Medjed\MedjedStage.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -887,13 +917,43 @@
     <ClInclude Include="Source\Application\GameObject\Player\EyeCollider.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Mummy\Mummy.h">
+    <ClInclude Include="Source\Application\Stage\Mummy\Mummy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\Bullet\RhythmManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Mummy\MummyStage.h">
+    <ClInclude Include="Source\Application\Stage\Mummy\MummyStage.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\System\InputBind.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\Stage\Mummy\Platform.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\GameObject\Memo\Memo.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\GameObject\Memo\MemoManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\Stage\Mummy\Papyrus.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\Stage\WaterStage\Water.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\Stage\WaterStage\PapyrusWall.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\Stage\WaterStage\WaterStage.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\Stage\Stage.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\GameObject\Medjed\MedjedStage.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -917,6 +977,7 @@
     <None Include="Resource\JsonFiles\config.json" />
     <None Include="Resource\JsonFiles\Boss.json" />
     <None Include="Resource\JsonFiles\notes.json" />
+    <None Include="Resource\JsonFiles\memo.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png">

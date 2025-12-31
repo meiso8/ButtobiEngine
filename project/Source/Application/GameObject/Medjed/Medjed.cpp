@@ -61,6 +61,7 @@ void Medjed::Look(const Vector3& target)
 void Medjed::Update()
 {
     isHit_ = false;
+    aniObj_->UpdateAniTimer();
     aniObj_->Update();
     ColliderUpdate();
 }

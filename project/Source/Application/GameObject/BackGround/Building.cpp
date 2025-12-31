@@ -7,42 +7,13 @@
 #include"AABB.h"
 Building::Building() {
 
-    model_ = ModelManager::GetModel(ModelManager::BUILDING);
+    model_ = ModelManager::GetModel(ModelManager::MUMMY_ROOM);
 
     buildingPos = std::make_unique<Object3d>();
     buildingPos->Create();
     buildingPos->SetMesh(model_);
     buildingPos->SetLightMode(kLightModeNone);
 
-    // 奥の壁（厚み2.0f）
-    aabbs_[Wall0] = {
-        {-30.0f,-1.0f, -19.0f},
-        { 30.0f, 5.0f,  -9.0f}
-    };
-
-    // 手前の壁
-    aabbs_[Wall1] = {
-        {-30.0f, -1.0f,  9.0f},
-        { 30.0f, 5.0f, 19.0f}
-    };
-
-    // 左の壁（厚み2.0f）
-    aabbs_[Wall2] = {
-        {-19.0f,-1.0f,-30.0f},
-        { -9.0f, 5.0f, 30.0f}
-    };
-
-    // 右の壁
-    aabbs_[Wall3] = {
-        { 9.0f, -1.0f, -30.0f},
-        {19.0f, 5.0f,   30.0f}
-    };
-
-    // 床
-    aabbs_[Floor] = {
-        {-30.0f, -1.0f, -30.0f},
-        { 30.0f, 0.5f,  30.0f}
-    };
 
     fieldPoses_[Wall0] = std::make_unique<FieldCollider>();
     fieldPoses_[Wall1] = std::make_unique<FieldCollider>();
@@ -56,8 +27,8 @@ Building::Building() {
         } else {
             object->SetTexture(Texture::TEST3);
         }
-        object->SetingAABB(aabbs_[type]);
     }
+
 
 }
 
@@ -70,11 +41,49 @@ void Building::Init()
         pos->Initialize();
     }
 
+    SetWallAABB();
+    
+    SetWallPos();
+}
+
+void Building::SetWallAABB()
+{
+    // 奥の壁（厚み2.0f）
+    aabbs_[Wall0] = {
+        {-30.0f,-1.0f, -0.5f},
+        { 30.0f, 5.0f,  0.5f}
+    };
+
+    // 手前の壁
+    aabbs_[Wall1] = aabbs_[Wall0];
+
+    // 左の壁（厚み2.0f）
+    aabbs_[Wall2] = {
+        {-0.5f,-1.0f,-30.0f},
+        { 0.5f, 5.0f, 30.0f}
+    };
+
+    // 右の壁
+    aabbs_[Wall3] = aabbs_[Wall2];
+
+    // 床
+    aabbs_[Floor] = {
+        {-30.0f, -1.0f, -30.0f},
+        { 30.0f, 0.5f,  30.0f}
+    };
+
+    for (const auto& [type, pos] : fieldPoses_) {
+        pos->SetingAABB(aabbs_[type]);
+    }
+}
+
+void Building::SetWallPos()
+{
     // 前後左右の壁と床の位置を設定
-    fieldPoses_[Wall0]->SetPos({ 0.0f, 0.0f, -15.0f }); // 奥の壁
-    fieldPoses_[Wall1]->SetPos({ 0.0f, 0.0f,  15.0f }); // 手前の壁
-    fieldPoses_[Wall2]->SetPos({ -15.0f, 0.0f, 0.0f }); // 左の壁
-    fieldPoses_[Wall3]->SetPos({ 15.0f, 0.0f, 0.0f });  // 右の壁
+    fieldPoses_[Wall0]->SetPos({ 0.0f, 0.0f, -25.0f }); // 奥の壁
+    fieldPoses_[Wall1]->SetPos({ 0.0f, 0.0f,  25.0f }); // 手前の壁
+    fieldPoses_[Wall2]->SetPos({ -25.0f, 0.0f, 0.0f }); // 左の壁
+    fieldPoses_[Wall3]->SetPos({ 25.0f, 0.0f, 0.0f });  // 右の壁
     fieldPoses_[Floor]->SetPos({ 0.0f, -0.6f, 0.0f });  // 床
 }
 
@@ -106,7 +115,7 @@ FieldCollider::FieldCollider()
 
     SetType(kAABB);
     SetCollisionAttribute(kCollisionWall);
-    SetCollisionMask(kCollisionPlayer| kCollisionPlayerEye);
+    SetCollisionMask(kCollisionPlayer | kCollisionPlayerEye);
 }
 
 void FieldCollider::Update()
@@ -139,7 +148,6 @@ void FieldCollider::OnCollision(Collider* collider)
 void FieldCollider::SetingAABB(const AABB& aabb)
 {
     SetAABB(aabb);
-
     cube_->SetMinMax(aabb);
 
 }

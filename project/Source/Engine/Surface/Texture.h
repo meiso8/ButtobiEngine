@@ -24,11 +24,11 @@ public:
      
         TEST3,
 
-
         MEMO1,
         MEMO2,
         MEMO3,
         MEMO4,
+        BOOK,
 
         PUZZLE,
 
