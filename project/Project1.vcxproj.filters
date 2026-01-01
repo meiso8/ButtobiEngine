@@ -438,19 +438,19 @@
     <ClCompile Include="Source\Application\GameObject\Player\EyeCollider.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Stage\Mummy\Mummy.cpp">
+    <ClCompile Include="Source\Application\Stage\MummyStage\Mummy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\Bullet\RhythmManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Stage\Mummy\MummyStage.cpp">
+    <ClCompile Include="Source\Application\Stage\MummyStage\MummyStage.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\System\InputBind.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Stage\Mummy\Platform.cpp">
+    <ClCompile Include="Source\Application\Stage\Platform.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\Memo\Memo.cpp">
@@ -459,7 +459,7 @@
     <ClCompile Include="Source\Application\GameObject\Memo\MemoManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Stage\Mummy\Papyrus.cpp">
+    <ClCompile Include="Source\Application\Stage\MummyStage\Papyrus.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\Stage\WaterStage\Water.cpp">
@@ -474,7 +474,10 @@
     <ClCompile Include="Source\Application\Stage\Stage.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Medjed\MedjedStage.cpp">
+    <ClCompile Include="Source\Application\Stage\MedjedStage\MedjedStage.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\Stage\WaterStage\Block.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -917,19 +920,19 @@
     <ClInclude Include="Source\Application\GameObject\Player\EyeCollider.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Stage\Mummy\Mummy.h">
+    <ClInclude Include="Source\Application\Stage\MummyStage\Mummy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\Bullet\RhythmManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Stage\Mummy\MummyStage.h">
+    <ClInclude Include="Source\Application\Stage\MummyStage\MummyStage.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\System\InputBind.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Stage\Mummy\Platform.h">
+    <ClInclude Include="Source\Application\Stage\Platform.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\Memo\Memo.h">
@@ -938,7 +941,7 @@
     <ClInclude Include="Source\Application\GameObject\Memo\MemoManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Stage\Mummy\Papyrus.h">
+    <ClInclude Include="Source\Application\Stage\MummyStage\Papyrus.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\Stage\WaterStage\Water.h">
@@ -953,7 +956,10 @@
     <ClInclude Include="Source\Application\Stage\Stage.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Medjed\MedjedStage.h">
+    <ClInclude Include="Source\Application\Stage\MedjedStage\MedjedStage.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\Stage\WaterStage\Block.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

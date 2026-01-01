@@ -14,17 +14,10 @@ Papyrus::Papyrus() {
     Json file = JsonFile::GetJsonFiles("memo");
     std::string sizeKeys = "bookSize";
 
-    AABB aabb; // AABBの読み込み 
-    aabb.min.x = file[sizeKeys]["min"]["x"];
-    aabb.min.y = file[sizeKeys]["min"]["y"];
-    aabb.min.z = file[sizeKeys]["min"]["z"];
-
-    aabb.max.x = file[sizeKeys]["max"]["x"];
-    aabb.max.y = file[sizeKeys]["max"]["y"];
-    aabb.max.z = file[sizeKeys]["max"]["z"];
+    AABB aabb = { {-2.5f,-1.0f,-0.063f}, {2.5f,1.0f,0.063f} };
 
     SetType(kAABB);
-    SetCollisionAttribute(kCollisionWall); // ミイラの衝突属性
+    SetCollisionAttribute(kCollisionWall); //かべ
     SetCollisionMask(kCollisionPlayer | kCollisionEnemy); // プレイヤーや壁と衝突
 
     // memoのサイズに合わせる
@@ -38,11 +31,13 @@ void Papyrus::Initialize() {
 
 void Papyrus::Update() {
     object_->Update();
-    DebugUI::CheckObject3d(*object_,"Papyrus");
+    DebugUI::CheckObject3d(*object_, "Papyrus");
+    ColliderUpdate();
 }
 
 void Papyrus::Draw(Camera& camera) {
     object_->Draw(camera);
+    ColliderDraw(camera);
 
 }
 
@@ -50,5 +45,6 @@ void Papyrus::OnCollision(Collider* collider) {
     if (collider->GetCollisionAttribute() == kCollisionPlayer) {
         // プレイヤーとぶつかったときの処理（必要なら）
     }
+    OnCollisionCollider();
 
 }

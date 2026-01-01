@@ -18,9 +18,9 @@
 
 #include "Memo/MemoManager.h" 
 
-#include"../Stage/Mummy/MummyStage.h"
+#include"../Stage/MummyStage/MummyStage.h"
 #include"../Stage/WaterStage/WaterStage.h"
-#include"Medjed/MedjedStage.h"
+#include"../Stage/MedjedStage/MedjedStage.h"
 
 class Sprite;
 class PlaneMesh;

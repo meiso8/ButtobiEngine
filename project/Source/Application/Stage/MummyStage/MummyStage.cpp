@@ -48,6 +48,7 @@ void MummyStage::CheckCollision(CollisionManager& collisionManager)
     //ミイラの台も一緒に
     collisionManager.AddCollider(GetMummy());
     collisionManager.AddCollider(GetMummy()->GetPlatform());
+    collisionManager.AddCollider(papyrus_.get());
 }
 
 void MummyStage::Draw(Camera& camera) {

@@ -39,6 +39,12 @@ void Texture::LoadAllTexture() {
 
     handles[PUZZLE] = Load("Resource/Textures/puzzle.png");
 
+    handles[HIERO_S] = Load("Resource/Textures/s.png");
+    handles[HIERO_P] = Load("Resource/Textures/p.png");
+    handles[HIERO_D] = Load("Resource/Textures/d.png");
+    handles[HIERO_T] = Load("Resource/Textures/t.png");
+
+
     handles[SLOT] = Load("Resource/Textures/slot.png");
     handles[EYE] = Load("Resource/Textures/eye.png");
     handles[WORLD] = Load("Resource/Textures/world.png");

@@ -101,6 +101,12 @@ void AnimationObject3d::SetTextureHandle(const Texture::TEXTURE_HANDLE& handle)
     skinningModel_->SetTextureHandle(handle);
 }
 
+const Texture::TEXTURE_HANDLE AnimationObject3d::GetTextureHandle()
+{
+    return  //一旦TextureHandleとして返す
+        static_cast<Texture::TEXTURE_HANDLE>(skinningModel_->GetTextureHandle());
+};
+
 void AnimationObject3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode)
 {
     transformationMatrixData_->World = worldMatrix_;

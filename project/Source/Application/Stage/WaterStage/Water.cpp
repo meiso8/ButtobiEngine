@@ -22,7 +22,7 @@ Water::Water() {
 
     AABB aabb = { .min = {-12.5f,-0.5f,-12.5f},.max = {12.5f,0.5f,12.5f} };
     SetType(kAABB);
-    SetCollisionAttribute(kCollisionWall); // ミイラの衝突属性
+    SetCollisionAttribute(kCollisionWater); // ミイラの衝突属性
     SetCollisionMask(kCollisionPlayer | kCollisionEnemy); // プレイヤーや壁と衝突
 
     // memoのサイズに合わせる
@@ -30,6 +30,7 @@ Water::Water() {
 }
 
 void Water::Initialize() {
+    isDrain_ = false;
     object_->GetWaveData(0).time = 0.0f;
     object_->GetWaveData(1).time = 0.0f;
     object_->Initialize();

@@ -3,6 +3,7 @@
 
 #include "PapyrusWall.h"
 #include"Water.h"
+#include"Block.h"
 #include<memory>
 
 class WaterStage :public Stage
@@ -10,6 +11,7 @@ class WaterStage :public Stage
 private:
     std::unique_ptr<Water>water_ = nullptr;
     std::unique_ptr<PapyrusWall>papyrusWall_ = nullptr;
+    std::unique_ptr<BlockMap>blockMap_ = nullptr;
 public:
     WaterStage();
     void Initialize()override;

@@ -3,7 +3,7 @@
 #include <memory>
 #include"AnimationObject3d.h"
 #include"SkinningModel.h"
-#include "Platform.h" // 追加
+#include "../Platform.h" // 追加
 
 class Mummy : public Collider {
 public:

@@ -18,6 +18,7 @@ public:
     void SetAnimation(Model* model);
     void SetModel(Model* model);
     void SetTextureHandle(const Texture::TEXTURE_HANDLE& handle)override;
+    const Texture::TEXTURE_HANDLE GetTextureHandle()override;
     //オーバーライド
     void Update()override;
     void UpdateAniTimer(const bool& isLoop = true);

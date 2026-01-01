@@ -33,6 +33,11 @@ public:
 
         PUZZLE,
 
+       HIERO_S,
+       HIERO_P,
+       HIERO_D,
+       HIERO_T,
+
         SLOT,
         EYE,
 

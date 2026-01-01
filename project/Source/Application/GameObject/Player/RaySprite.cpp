@@ -40,5 +40,5 @@ bool RaySprite::IntersectsAABB(const AABB& aabb, const Vector3& pos)
 
 void RaySprite::Update()
 {
-    sprite_->SetColor({ 1.0f,1.0f,1.0f,0.5f });
+    sprite_->SetColor({ 1.0f,1.0f,1.0f,0.125f });
 }
