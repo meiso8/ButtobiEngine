@@ -21,6 +21,10 @@ public:
         return isOpen_
             ;
     };
+    const bool& GetIsOpenEnd() {
+        return isOpenEnd_
+            ;
+    };
 private:
     std::unique_ptr<Object3d> object_;
     std::unique_ptr<AnimationObject3d> aniObj_;
@@ -28,4 +32,5 @@ private:
     std::unique_ptr<SkinningModel>skinningModel_ = nullptr;
     std::unique_ptr<Platform> platform_; // 台のコライダーを追加
     bool isOpen_ = false;
+    bool isOpenEnd_ = false;
 };

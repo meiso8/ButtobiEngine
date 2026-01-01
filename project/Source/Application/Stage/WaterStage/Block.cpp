@@ -40,9 +40,8 @@ void Block::OnCollision(Collider* collider)
     if (cubeMesh_->GetSrvIndex() == Texture::GetHandle(Texture::PUZZLE)) {
         return;
     };
-    cubeMesh_->GetSrvIndex();
 
-    Sound::PlaySE(Sound::THROW);
+    Sound::PlaySE(Sound::MOVE_ROCK);
     aniTimer_ = 0.0f;
     isHit_ = true;
 

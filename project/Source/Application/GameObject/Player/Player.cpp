@@ -105,9 +105,14 @@ void Player::Draw(Camera& camera, const LightMode& lightType)
     bodyPos_.Draw(camera, kBlendModeNormal);
     eyeCollider_->Draw(camera);
 
-    raySprite_->Draw();
+  
 
     ColliderDraw(camera);
+}
+
+void Player::DrawUI()
+{
+    raySprite_->Draw();
 }
 
 void Player::Update()

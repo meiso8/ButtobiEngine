@@ -46,7 +46,7 @@ void Sound::LoadAllSound()
     handles_[FALL] = Load("Resource/Sounds/externals/maou_se_sound_fall02.mp3");
     handles_[WATER_DROP] = Load("Resource/Sounds/externals/Water_Drop02-1(Low-Reverb).mp3");
     handles_[BOOK] = Load("Resource/Sounds/externals/Book01-1(Flip).mp3");
-    handles_[THROW] = Load("Resource/Sounds/externals/throwFloor.mp3");
+    handles_[MOVE_ROCK] = Load("Resource/Sounds/moveRock.mp3");
     handles_[CRACKER] = Load("Resource/Sounds/cracker_short.mp3");
     handles_[FOOT_STEP] = Load("Resource/Sounds/externals/maou_se_sound_footstep02.mp3");
     handles_[SWITCH_ON] = Load("Resource/Sounds/externals/maou_se_sound_switch01.mp3");
