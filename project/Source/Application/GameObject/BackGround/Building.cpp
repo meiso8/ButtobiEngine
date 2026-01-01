@@ -80,10 +80,10 @@ void Building::SetWallAABB()
 void Building::SetWallPos()
 {
     // 前後左右の壁と床の位置を設定
-    fieldPoses_[Wall0]->SetPos({ 0.0f, 0.0f, -25.0f }); // 奥の壁
-    fieldPoses_[Wall1]->SetPos({ 0.0f, 0.0f,  25.0f }); // 手前の壁
-    fieldPoses_[Wall2]->SetPos({ -25.0f, 0.0f, 0.0f }); // 左の壁
-    fieldPoses_[Wall3]->SetPos({ 25.0f, 0.0f, 0.0f });  // 右の壁
+    fieldPoses_[Wall0]->SetPos({ 0.0f, 0.0f, -26.0f }); // 奥の壁
+    fieldPoses_[Wall1]->SetPos({ 0.0f, 0.0f,  26.0f }); // 手前の壁
+    fieldPoses_[Wall2]->SetPos({ -26.0f, 0.0f, 0.0f }); // 左の壁
+    fieldPoses_[Wall3]->SetPos({ 26.0f, 0.0f, 0.0f });  // 右の壁
     fieldPoses_[Floor]->SetPos({ 0.0f, -0.6f, 0.0f });  // 床
 }
 

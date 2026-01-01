@@ -35,6 +35,7 @@ void Texture::LoadAllTexture() {
     handles[MEMO4] = Load("Resource/Textures/memo04.png");
 
     handles[BOOK] = Load("Resource/Textures/book.png");
+    handles[BOOK2] = Load("Resource/Textures/book02.png");
 
     handles[PUZZLE] = Load("Resource/Textures/puzzle.png");
 

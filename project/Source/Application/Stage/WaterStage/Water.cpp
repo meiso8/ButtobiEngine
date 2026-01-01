@@ -13,10 +13,10 @@ Water::Water() {
     object_->Create();
     object_->SetMesh(ModelManager::GetModel(ModelManager::WATER));
 
-    object_->GetWaveData(0).amplitude = 0.3f;
+    object_->GetWaveData(0).amplitude = 0.2f;
     object_->GetWaveData(0).direction = Normalize(Vector3{ 0.134f,0.12f,0.98f });
     object_->GetWaveData(0).frequency = 2.0f;
-    object_->GetWaveData(1).amplitude = 0.2f;
+    object_->GetWaveData(1).amplitude = 0.1f;
     object_->GetWaveData(1).direction = { 1.0f,0.0f,0.0f };
     object_->GetWaveData(1).frequency = 4.0f;
 
@@ -33,7 +33,7 @@ void Water::Initialize() {
     object_->GetWaveData(0).time = 0.0f;
     object_->GetWaveData(1).time = 0.0f;
     object_->Initialize();
-    object_->worldTransform_.translate_ = { 0.0f,1.0f,0.0f };
+    object_->worldTransform_.translate_ = { 0.0f,0.5f,0.0f };
 
 }
 

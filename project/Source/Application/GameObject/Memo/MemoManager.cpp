@@ -15,7 +15,7 @@ MemoManager::MemoManager()
     sprite_->SetAnchorPoint({ 0.5f,0.5f });
 
     Json file = JsonFile::GetJsonFiles("memo");
-    std::vector<std::string> keys = { "memo1", "memo2", "memo3", "memo4", "book" };
+    std::vector<std::string> keys = { "memo1", "memo2", "memo3", "memo4", "book1","book2" };
     std::unordered_map<std::string, WorldTransform> memoTransforms;
 
 
@@ -58,10 +58,11 @@ MemoManager::MemoManager()
     memos_[Texture::MEMO3] = std::make_unique<Memo>();
     memos_[Texture::MEMO4] = std::make_unique<Memo>();
     memos_[Texture::BOOK] = std::make_unique<Memo>();
+    memos_[Texture::BOOK2] = std::make_unique<Memo>();
 
     for (auto& [handle, memo] : memos_) {
         memo->SetTexture(handle);
-        if (handle == Texture::BOOK) {
+        if (handle == Texture::BOOK|| handle == Texture::BOOK2) {
             memo->SetCubeSize(memoAABB["bookSize"]);
         } else {
             memo->SetCubeSize(memoAABB["memoSize"]);
@@ -72,7 +73,8 @@ MemoManager::MemoManager()
     memos_[Texture::MEMO2]->GetWorldTransform() = memoTransforms["memo2"];
     memos_[Texture::MEMO3]->GetWorldTransform() = memoTransforms["memo3"];
     memos_[Texture::MEMO4]->GetWorldTransform() = memoTransforms["memo4"];
-    memos_[Texture::BOOK]->GetWorldTransform() = memoTransforms["book"];
+    memos_[Texture::BOOK]->GetWorldTransform() = memoTransforms["book1"];
+    memos_[Texture::BOOK2]->GetWorldTransform() = memoTransforms["book2"];
 }
 
 void MemoManager::Initialize()

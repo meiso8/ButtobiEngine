@@ -29,6 +29,7 @@ public:
         MEMO3,
         MEMO4,
         BOOK,
+        BOOK2,
 
         PUZZLE,
 
