@@ -40,7 +40,7 @@ void MedjedManager::RayCastHit(RaySprite& raySprite) {
         AABB aabb = GetAABBWorldPos(medjed.get());
 
         if (raySprite.IntersectsAABB(aabb, medjed->GetWorldPosition())) {
-
+            medjed->SetColor({ 1.0f,1.0f,1.0f,0.5f });
             //メジェドざまを当ててないとき
             if (!GetIsFindMedjed()) {
                 //Mouseをクリックしたら

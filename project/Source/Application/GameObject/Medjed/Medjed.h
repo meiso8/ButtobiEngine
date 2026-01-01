@@ -33,6 +33,7 @@ public:
     void MoveStart();
     const bool& GetIsFind()const { return isFind_; };
     void SetIsFind(const bool& f) { isFind_ = f; };
-    const  bool& GetIsHit() const{ return isHit_; };
+    const  bool& GetIsHit() const { return isHit_; };
+    void SetColor(const Vector4& color) { aniObj_->SetColor(color); };
 };
 

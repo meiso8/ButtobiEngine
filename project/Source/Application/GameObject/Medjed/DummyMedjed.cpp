@@ -68,7 +68,7 @@ void DummyMedjed::Update()
     if (IsHide()) {
         return;
     }
-
+    SetColor({ 1.0f,1.0f,1.0f,1.0f });
     object3d_->Update();
     ColliderUpdate();
 }

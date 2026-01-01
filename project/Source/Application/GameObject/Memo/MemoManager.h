@@ -9,6 +9,7 @@ class MemoManager
 private:
     std::map< Texture::TEXTURE_HANDLE, std::unique_ptr<Memo>>memos_;
     std::unique_ptr<Sprite> sprite_;
+    std::unique_ptr<Sprite> backSprite_;
 public:
     static bool isLookItem_;
     MemoManager();
