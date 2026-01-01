@@ -37,7 +37,7 @@ void Block::OnCollision(Collider* collider)
         return;
     }
     // 通常ブロックなら無視 
-    if (cubeMesh_->GetSrvIndex() == Texture::GetHandle(Texture::PUZZLE)) {
+    if (cubeMesh_->GetSrvIndex() == Texture::GetHandle(Texture::PUZZLE)|| cubeMesh_->GetSrvIndex() == Texture::GetHandle(Texture::NONE)) {
         return;
     };
 
@@ -62,7 +62,7 @@ void Block::SetEndPos(const float& endOffset)
 void Block::Reset()
 {
     // 通常ブロックなら無視 
-    if (cubeMesh_->GetSrvIndex() == Texture::GetHandle(Texture::PUZZLE)) {
+    if (cubeMesh_->GetSrvIndex() == Texture::GetHandle(Texture::PUZZLE)|| cubeMesh_->GetSrvIndex() == Texture::GetHandle(Texture::NONE)) {
         return;
     };
 
@@ -91,7 +91,12 @@ BlockMap::BlockMap()
 
             map_[y][x]->SetPos(pos);
             map_[y][x]->SetCubeAABB(aabb);
-            map_[y][x]->SetTextureHandle(Texture::PUZZLE);
+            if (rand() % 2 == 0) {
+                map_[y][x]->SetTextureHandle(Texture::PUZZLE);
+            } else {
+                map_[y][x]->SetTextureHandle(Texture::NONE);
+            }
+       
         }
     }
 

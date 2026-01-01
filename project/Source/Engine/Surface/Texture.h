@@ -31,7 +31,7 @@ public:
         BOOK,
         BOOK2,
         BOOK3,
-
+        NONE,
         PUZZLE,
 
        HIERO_S,

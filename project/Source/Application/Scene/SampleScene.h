@@ -47,10 +47,10 @@ private:
 
     std::unique_ptr<LightingManager>lightingManager_ = nullptr;
 
-    std::unique_ptr<ItemManager>itemManager_ = nullptr;
+    std::shared_ptr<ItemManager> itemManager_;
+
     std::unique_ptr<UIManager> uIManager_ = nullptr;
 
-    std::unique_ptr<MemoManager> memoManager_ = nullptr;
 #pragma endregion
 
 #pragma region//ステージ

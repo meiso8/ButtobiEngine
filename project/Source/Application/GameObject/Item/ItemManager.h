@@ -3,6 +3,7 @@
 #include "CrowbarItem.h"
 #include "SunMedal.h"
 #include "GoldHeart.h"
+#include"SunRod.h"
 #include"Line.h"
 class RaySprite;
 
@@ -14,6 +15,7 @@ public:
     void Draw(Camera& camera);
     void DrawInfoUI();
     bool HasItem(const std::string& name);
+    void GenerateItems(const std::vector<std::string>& itemNames);
 
     std::shared_ptr<Item> GetItem(const std::string& name);
 

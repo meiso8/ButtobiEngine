@@ -7,6 +7,7 @@ MedjedStage::MedjedStage()
     medjedManager_ = std::make_unique<MedjedManager>();
     rhythmBullet_ = std::make_unique<RhythmBullet>();
     rhythmBullet_->SetEnemy(medjedManager_->GetEnemy());
+    memoManager_ = std::make_unique<MemoManager>();
 }
 
 void MedjedStage::Initialize()
@@ -15,6 +16,13 @@ void MedjedStage::Initialize()
     medjedManager_->Initialize();
     rhythmBullet_->Initialize();
     medjedManager_->SetTarget(player_->GetBodyPos());
+
+    memoManager_->GenerateMemos({Texture::BOOK3 });
+    //メモマネージャー
+    memoManager_->Initialize();
+
+    itemManager_->GenerateItems({ "SunRod" });
+
 }
 
 void MedjedStage::Update()
@@ -22,7 +30,7 @@ void MedjedStage::Update()
 
     medjedManager_->Update();
     backGround_->Update();
- 
+
 
     if (FindMedjed()) {
         backGround_->UpdateApperMedjed();
@@ -35,6 +43,7 @@ void MedjedStage::Update()
 
     } else {
         SoundManager::NotFindMedjedUpdate();
+        memoManager_->Update();
     }
 
 }
@@ -42,12 +51,21 @@ void MedjedStage::Update()
 void MedjedStage::Draw(Camera& camera)
 {
     backGround_->Draw(camera);
+
+    if (FindMedjed()) {
+        rhythmBullet_->Draw(camera);
+    } else {
+        memoManager_->Draw(camera);
+    }
+
     medjedManager_->Draw(camera);
-    rhythmBullet_->Draw(camera);
+
 }
 
 void MedjedStage::CheckCollision(CollisionManager& collisionManager)
 {
+    //メモがヒットしているかどうか
+    memoManager_->RayCastHit(*player_->raySprite_);
     //メジェドたちがヒットしているかどうか
     medjedManager_->RayCastHit(*player_->raySprite_);
     //弾がヒットしているかどうか

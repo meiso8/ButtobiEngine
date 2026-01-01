@@ -18,72 +18,71 @@ MemoManager::MemoManager()
     backSprite_->Create(Texture::WHITE_1X1, {0.0f,0.0f},{0.0f,0.0f,0.0f,0.5f});
     backSprite_->SetSize({width,height});
 
-
-    Json file = JsonFile::GetJsonFiles("memo");
-    std::vector<std::string> keys = { "memo1", "memo2", "memo3", "memo4", "book1","book2","book3"};
-    std::unordered_map<std::string, WorldTransform> memoTransforms;
-
-
-    for (const auto& key : keys) {
-        if (file.contains(key)) {
-            WorldTransform worldTransform;
-
-            worldTransform.translate_.x = file[key]["translate"]["x"];
-            worldTransform.translate_.y = file[key]["translate"]["y"];
-            worldTransform.translate_.z = file[key]["translate"]["z"];
-
-            worldTransform.rotate_.x = file[key]["rotate"]["x"];
-            worldTransform.rotate_.y = file[key]["rotate"]["y"];
-            worldTransform.rotate_.z = file[key]["rotate"]["z"];
-
-            memoTransforms[key] = worldTransform;
-        }
-    }
-
-    std::unordered_map<std::string, AABB> memoAABB;
+    //Json file = JsonFile::GetJsonFiles("memo");
+    //std::vector<std::string> keys = { "memo1", "memo2", "memo3", "memo4", "book1","book2","book3" };
+    //std::unordered_map<std::string, WorldTransform> memoTransforms;
 
 
-    std::vector<std::string> sizeKeys = { "memoSize", "bookSize","noteSize"};
-    for (const auto& key : sizeKeys) {
-        if (file.contains(key)) {
-            AABB aabb; // AABBの読み込み 
-            aabb.min.x = file[key]["min"]["x"];
-            aabb.min.y = file[key]["min"]["y"];
-            aabb.min.z = file[key]["min"]["z"];
+    //for (const auto& key : keys) {
+    //    if (file.contains(key)) {
+    //        WorldTransform worldTransform;
 
-            aabb.max.x = file[key]["max"]["x"];
-            aabb.max.y = file[key]["max"]["y"];
-            aabb.max.z = file[key]["max"]["z"];
-            memoAABB[key] = aabb;
-        }
-    }
+    //        worldTransform.translate_.x = file[key]["translate"]["x"];
+    //        worldTransform.translate_.y = file[key]["translate"]["y"];
+    //        worldTransform.translate_.z = file[key]["translate"]["z"];
 
-    memos_[Texture::MEMO1] = std::make_unique<Memo>();
-    memos_[Texture::MEMO2] = std::make_unique<Memo>();
-    memos_[Texture::MEMO3] = std::make_unique<Memo>();
-    memos_[Texture::MEMO4] = std::make_unique<Memo>();
-    memos_[Texture::BOOK] = std::make_unique<Memo>();
-    memos_[Texture::BOOK2] = std::make_unique<Memo>();
-    memos_[Texture::BOOK3] = std::make_unique<Memo>();
+    //        worldTransform.rotate_.x = file[key]["rotate"]["x"];
+    //        worldTransform.rotate_.y = file[key]["rotate"]["y"];
+    //        worldTransform.rotate_.z = file[key]["rotate"]["z"];
 
-    for (auto& [handle, memo] : memos_) {
-        memo->SetTexture(handle);
-        if (handle == Texture::BOOK|| handle == Texture::BOOK2) {
-            memo->SetCubeSize(memoAABB["bookSize"]);
-        } else if(handle == Texture::BOOK3) {
-            memo->SetCubeSize(memoAABB["noteSize"]);
-        } else {
-            memo->SetCubeSize(memoAABB["memoSize"]);
-        }
-    }
+    //        memoTransforms[key] = worldTransform;
+    //    }
+    //}
 
-    memos_[Texture::MEMO1]->GetWorldTransform() = memoTransforms["memo1"];
-    memos_[Texture::MEMO2]->GetWorldTransform() = memoTransforms["memo2"];
-    memos_[Texture::MEMO3]->GetWorldTransform() = memoTransforms["memo3"];
-    memos_[Texture::MEMO4]->GetWorldTransform() = memoTransforms["memo4"];
-    memos_[Texture::BOOK]->GetWorldTransform() = memoTransforms["book1"];
-    memos_[Texture::BOOK2]->GetWorldTransform() = memoTransforms["book2"];
-    memos_[Texture::BOOK3]->GetWorldTransform() = memoTransforms["book3"];
+    //std::unordered_map<std::string, AABB> memoAABB;
+
+
+    //std::vector<std::string> sizeKeys = { "memoSize", "bookSize","noteSize" };
+    //for (const auto& key : sizeKeys) {
+    //    if (file.contains(key)) {
+    //        AABB aabb; // AABBの読み込み 
+    //        aabb.min.x = file[key]["min"]["x"];
+    //        aabb.min.y = file[key]["min"]["y"];
+    //        aabb.min.z = file[key]["min"]["z"];
+
+    //        aabb.max.x = file[key]["max"]["x"];
+    //        aabb.max.y = file[key]["max"]["y"];
+    //        aabb.max.z = file[key]["max"]["z"];
+    //        memoAABB[key] = aabb;
+    //    }
+    //}
+
+    //memos_[Texture::MEMO1] = std::make_unique<Memo>();
+    //memos_[Texture::MEMO2] = std::make_unique<Memo>();
+    //memos_[Texture::MEMO3] = std::make_unique<Memo>();
+    //memos_[Texture::MEMO4] = std::make_unique<Memo>();
+    //memos_[Texture::BOOK] = std::make_unique<Memo>();
+    //memos_[Texture::BOOK2] = std::make_unique<Memo>();
+    //memos_[Texture::BOOK3] = std::make_unique<Memo>();
+
+    //for (auto& [handle, memo] : memos_) {
+    //    memo->SetTexture(handle);
+    //    if (handle == Texture::BOOK || handle == Texture::BOOK2) {
+    //        memo->SetCubeSize(memoAABB["bookSize"]);
+    //    } else if (handle == Texture::BOOK3) {
+    //        memo->SetCubeSize(memoAABB["noteSize"]);
+    //    } else {
+    //        memo->SetCubeSize(memoAABB["memoSize"]);
+    //    }
+    //}
+
+    //memos_[Texture::MEMO1]->GetWorldTransform() = memoTransforms["memo1"];
+    //memos_[Texture::MEMO2]->GetWorldTransform() = memoTransforms["memo2"];
+    //memos_[Texture::MEMO3]->GetWorldTransform() = memoTransforms["memo3"];
+    //memos_[Texture::MEMO4]->GetWorldTransform() = memoTransforms["memo4"];
+    //memos_[Texture::BOOK]->GetWorldTransform() = memoTransforms["book1"];
+    //memos_[Texture::BOOK2]->GetWorldTransform() = memoTransforms["book2"];
+    //memos_[Texture::BOOK3]->GetWorldTransform() = memoTransforms["book3"];
 }
 
 void MemoManager::Initialize()
@@ -111,6 +110,70 @@ void MemoManager::Draw(Camera& camera)
         Sprite::PreDraw();
         backSprite_->Draw();
         sprite_->Draw();
+    }
+}
+
+
+void MemoManager::GenerateMemos(const std::vector<Texture::TEXTURE_HANDLE>& handles)
+{
+    memos_.clear(); // 既存のメモをクリア
+
+    Json file = JsonFile::GetJsonFiles("memo");
+
+    std::unordered_map<std::string, WorldTransform> memoTransforms;
+    std::unordered_map<std::string, AABB> memoAABB;
+
+    // サイズ読み込み
+    std::vector<std::string> sizeKeys = { "memoSize", "bookSize", "noteSize" };
+    for (const auto& key : sizeKeys) {
+        if (file.contains(key)) {
+            AABB aabb;
+            aabb.min.x = file[key]["min"]["x"];
+            aabb.min.y = file[key]["min"]["y"];
+            aabb.min.z = file[key]["min"]["z"];
+            aabb.max.x = file[key]["max"]["x"];
+            aabb.max.y = file[key]["max"]["y"];
+            aabb.max.z = file[key]["max"]["z"];
+            memoAABB[key] = aabb;
+        }
+    }
+
+    for (const auto& handle : handles) {
+        auto memo = std::make_unique<Memo>();
+        memo->SetTexture(handle);
+
+        std::string key;
+        switch (handle) {
+        case Texture::MEMO1: key = "memo1"; break;
+        case Texture::MEMO2: key = "memo2"; break;
+        case Texture::MEMO3: key = "memo3"; break;
+        case Texture::MEMO4: key = "memo4"; break;
+        case Texture::BOOK:  key = "book1"; break;
+        case Texture::BOOK2: key = "book2"; break;
+        case Texture::BOOK3: key = "book3"; break;
+        default: continue;
+        }
+
+        if (file.contains(key)) {
+            WorldTransform wt;
+            wt.translate_.x = file[key]["translate"]["x"];
+            wt.translate_.y = file[key]["translate"]["y"];
+            wt.translate_.z = file[key]["translate"]["z"];
+            wt.rotate_.x = file[key]["rotate"]["x"];
+            wt.rotate_.y = file[key]["rotate"]["y"];
+            wt.rotate_.z = file[key]["rotate"]["z"];
+            memo->GetWorldTransform() = wt;
+        }
+
+        if (handle == Texture::BOOK || handle == Texture::BOOK2) {
+            memo->SetCubeSize(memoAABB["bookSize"]);
+        } else if (handle == Texture::BOOK3) {
+            memo->SetCubeSize(memoAABB["noteSize"]);
+        } else {
+            memo->SetCubeSize(memoAABB["memoSize"]);
+        }
+
+        memos_[handle] = std::move(memo);
     }
 }
 
