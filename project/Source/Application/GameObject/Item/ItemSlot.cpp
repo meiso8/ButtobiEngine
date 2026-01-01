@@ -30,7 +30,8 @@ void Item::SetModel(const ModelManager::MODEL_HANDLE& handle)
 }
 void Item::Init()
 {
-    used_ = false;
+    isGet_ = false;
+    isUsed_ = false;
     aniTimer_ = 0.0f;
     object_->Initialize();
     startPos_ = { 0.0f };
@@ -71,7 +72,7 @@ void Item::SetScreenStartPos()
 {
     object_->Initialize();
     object_->worldTransform_.translate_.z = 1.0f;
-  
+
     startPos_ = object_->worldTransform_.translate_;
     object_->Update();
 }
@@ -197,7 +198,7 @@ void ItemSlot::ToScreen()
 bool ItemSlot::AddItem(const std::shared_ptr<Item>& item)
 {
     //すでに使われていたら入れない
-    if (item->used_) {
+    if (item->isUsed_ || item->isGet_) {
         return false;
     }
 
@@ -206,6 +207,7 @@ bool ItemSlot::AddItem(const std::shared_ptr<Item>& item)
             slot = item;
             slot->Init();
             slot->SetScreenStartPos();
+            slot->isGet_ = true;
             return true;
         }
     }
@@ -255,7 +257,7 @@ void ItemSlot::Draw(Camera& camera)
     }
 
     for (auto& item : slots_) {
-        if (item && !item->used_) {
+        if (item &&!item->isUsed_) {
             item->Draw(*itemCamera_);
         }
     }
@@ -265,7 +267,7 @@ void ItemSlot::Draw(Camera& camera)
 void ItemSlot::GetAnimation(const std::shared_ptr<Item>& item, const Vector2& screenPos)
 {
     //すでに使われていたら入れない
-    if (item->used_) {
+    if (item->isGet_&&item->aniTimer_ >= 5.0f||item->isUsed_) {
         return;
     }
 

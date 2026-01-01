@@ -1,6 +1,10 @@
 #include "WaterStage.h"
 #include"SoundManager/SoundManager.h"
 
+const bool WaterStage::IsClear()
+{
+    return (blockMap_->IsClear() && itemManager_->HasItem("GoldHeart"));
+}
 WaterStage::WaterStage()
 {
     water_ = std::make_unique<Water>();
@@ -17,7 +21,7 @@ void WaterStage::Initialize()
 
 void WaterStage::Update()
 {
-   SoundManager::NotFindMedjedUpdate();
+    SoundManager::NotFindMedjedUpdate();
 
     water_->Update();
     papyrusWall_->Update();

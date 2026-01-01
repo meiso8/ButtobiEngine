@@ -13,6 +13,10 @@ private:
     std::unique_ptr<Papyrus> papyrus_ = nullptr;
 
 public:
+    const float maxTime_ = 5.0f;
+    float medjedApperTime_ = maxTime_;
+    void TimerUpdate();
+    bool IsEndTime() { return medjedApperTime_ <= 0.0f; };
     MummyStage();
     void Initialize()override;
     void Update()override;
