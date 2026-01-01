@@ -81,6 +81,7 @@ void Enemy::Update()
 
 
     UpdateTimer();
+    bodyPos_.SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInBounce(0.0f,1.0f,fmod(timer_,1.0f)) });
     // 呼び出す  
     UpdateActions_[phase_]();
     HitUpdate();
@@ -149,17 +150,8 @@ void Enemy::SetPhase(PHASE phase)
 
 void Enemy::Round()
 {
-
     bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, { 0.0f,0.0f,0.0f }, 0.5f);
-    //sphericalPos_.radius = Lerp(sphericalPos_.radius, enemyRoundCircle_.radius, 0.5f);
-    ////sphericalPos_.azimuthal += InverseFPS * roundSpeedY;
-    //sphericalPos_.polar += InverseFPS * roundSpeedY;
-    //if (sphericalPos_.polar > std::numbers::pi_v<float> / 2.0f || sphericalPos_.polar < -std::numbers::pi_v<float> / 2.0f) {
-    //    roundSpeedY *= -1.0f;
-    //}
     Look();
-    /*  bodyPos_.worldTransform_.translate_ = TransformCoordinate(sphericalPos_);*/
-
     if (timer_ >= actionTime_) {
         SetPhase(FIREBALL);
     }
@@ -193,10 +185,7 @@ void Enemy::Exit()
 
 void Enemy::UpdateTimer()
 {
-
     timer_ += InverseFPS;
- 
-
 }
 
 void Enemy::Look()

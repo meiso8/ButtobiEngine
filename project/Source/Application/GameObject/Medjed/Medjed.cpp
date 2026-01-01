@@ -5,9 +5,12 @@
 #include"CollisionConfig.h"
 #include"Sound.h"
 #include"TransformAni/TransformAni.h"
+#include"Window.h"
+#include<algorithm>
+#include"Easing.h"
 void Medjed::OnCollision(Collider* collider)
 {
-  
+
     if (collider->GetCollisionAttribute() == kCollisionPlayer) {
 
         if (!isHit_) {
@@ -15,9 +18,9 @@ void Medjed::OnCollision(Collider* collider)
         }
 
         if (!isFind_) {
-           Sound::PlaySE(Sound::VOICE_Asobimasyo,0.5f);         
+            Sound::PlaySE(Sound::VOICE_Asobimasyo, 0.5f);
         }
-       
+
     }
 
     OnCollisionCollider();
@@ -61,16 +64,25 @@ void Medjed::Look(const Vector3& target)
 void Medjed::Update()
 {
     isHit_ = false;
+    if (isFind_) {
+        aniTimer_ += InverseFPS*0.25f;
+        aniObj_->SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInOut(0.0f,1.0f,fmod(aniTimer_,1.0f)) });
+    } else {
+        SetColor({ 1.0f,1.0f,1.0f,0.0f });
+    }
+
     aniObj_->UpdateAniTimer();
     aniObj_->Update();
     ColliderUpdate();
 }
 void Medjed::Init()
 {
+    aniTimer_ = 0.0f;
     isHit_ = false;
     isFind_ = false;
     aniObj_->Initialize();
     aniObj_->SetAnimation(model_);
+    aniObj_->SetColor({1.0f,1.0f,1.0f,0.0f});
 }
 
 void Medjed::Draw(Camera& camera)
