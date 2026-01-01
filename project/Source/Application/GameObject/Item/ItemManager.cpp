@@ -14,15 +14,15 @@ ItemManager::ItemManager()
 void ItemManager::Init() {
     auto crowbar = std::make_shared<CrowbarItem>();
     crowbar->Init();
-    items_["バールのようなもの"] = crowbar;
+    items_[crowbar->name_] = crowbar;
 
     auto sunMedal = std::make_shared<SunMedal>();
     sunMedal->Init();
-    items_["太陽のメダル"] = sunMedal;
+    items_[sunMedal->name_] = sunMedal;
 
     auto goldHeart = std::make_shared<GoldHeart>();
     goldHeart->Init();
-    items_["金の心臓"] = goldHeart;
+    items_[goldHeart->name_] = goldHeart;
 
     itemSlot_.Init();
 }
@@ -46,6 +46,11 @@ void ItemManager::DrawInfoUI() {
         item->DrawInfoUI();
     }
     itemSlot_.DrawInfoUI();
+}
+
+bool ItemManager::HasItem(const std::string& name) {
+    auto item = GetItem(name);
+    return item && item->isGet_;
 }
 
 std::shared_ptr<Item> ItemManager::GetItem(const std::string& name) {
@@ -93,21 +98,19 @@ std::shared_ptr<Item> ItemManager::RaycastHitItem(RaySprite& raySprite) {
 
 void ItemManager::UseItemFromSlot(const Vector3& pos)
 {
-    for (auto& item : itemSlot_.GetItemInSlot()) {
 
-        if (InputBind::IsClick()) {
-            if (item&& !item->used_) {
-                if (item->name_ == "GoldHeart") {
-                    SoundManager::PlayCorrectSE();
-                    item->Use();
-                    Vector3 offset = { 0.0f,0.5f,-0.3f };
-                    Vector3 endOffset = { 0.0f,0.3f,-0.3f };
-                    item->SetStartEndPos(pos + offset, pos + endOffset);
-                    item->SetRotate({ 4.7f,0.0f,0.0f });
-                }
-            }
+    auto item = GetItem("GoldHeart");
 
-         
+    if (InputBind::IsClick()) {
+        if (item && !item->isUsed_ && item->isGet_) {
+            SoundManager::PlayCorrectSE();
+            item->Use();
+            Vector3 offset = { 0.0f,0.5f,-0.3f };
+            Vector3 endOffset = { 0.0f,0.3f,-0.3f };
+            item->SetStartEndPos(pos + offset, pos + endOffset);
+            item->SetRotate({ 4.7f,0.0f,0.0f });
+
         }
     }
+
 }

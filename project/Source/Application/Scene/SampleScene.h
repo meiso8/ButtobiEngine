@@ -41,7 +41,7 @@ public:
 
 private:
     void CreateParticle();
-
+    enum class StagePhase { Water, Mummy, Medjed }; StagePhase currentPhase_ = StagePhase::Water;
 #pragma region//ゲームオブジェクト
     std::unique_ptr<Player>player_ = nullptr;
 
@@ -56,7 +56,7 @@ private:
 #pragma region//ステージ
     std::unique_ptr<MummyStage> mummyStage_ = nullptr;
     std::unique_ptr<WaterStage> waterStage_ = nullptr;
-    //std::unique_ptr<MedjedStage> medjedStage_ = nullptr;
+    std::unique_ptr<MedjedStage> medjedStage_ = nullptr;
 #pragma endregion
 
     std::array<std::unique_ptr<ParticleEmitter>, 2>particleEmitters_;

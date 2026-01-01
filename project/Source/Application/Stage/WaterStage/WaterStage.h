@@ -8,11 +8,13 @@
 
 class WaterStage :public Stage
 {
+
 private:
     std::unique_ptr<Water>water_ = nullptr;
     std::unique_ptr<PapyrusWall>papyrusWall_ = nullptr;
     std::unique_ptr<BlockMap>blockMap_ = nullptr;
 public:
+    const bool IsClear();
     WaterStage();
     void Initialize()override;
     void Update()override;

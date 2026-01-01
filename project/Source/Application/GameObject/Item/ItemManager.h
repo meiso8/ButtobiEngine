@@ -13,6 +13,7 @@ public:
     void Update();
     void Draw(Camera& camera);
     void DrawInfoUI();
+    bool HasItem(const std::string& name);
 
     std::shared_ptr<Item> GetItem(const std::string& name);
 

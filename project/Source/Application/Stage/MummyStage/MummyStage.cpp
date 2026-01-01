@@ -2,6 +2,12 @@
 
 #include"SoundManager/SoundManager.h"
 #include"InputBind.h"
+#include<algorithm>
+void MummyStage::TimerUpdate()
+{
+    medjedApperTime_ -= InverseFPS;
+    medjedApperTime_ = std::clamp(medjedApperTime_, 0.0f, maxTime_);
+}
 
 MummyStage::MummyStage()
 {
@@ -10,11 +16,19 @@ MummyStage::MummyStage()
 }
 void MummyStage::Initialize() {
 
+    medjedApperTime_ = maxTime_;
     papyrus_->Initialize();
     mummy_->Initialize();
 }
 
 void MummyStage::Update() {
+
+    auto item = itemManager_->GetItem("GoldHeart");
+    if (itemManager_&& item&&item->isUsed_) {
+        //メジェドあらわる
+        TimerUpdate();
+    };
+
     papyrus_->Update();
     mummy_->Update();
 }

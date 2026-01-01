@@ -3,7 +3,8 @@
 
 void GoldHeart::Init()
 {
-    used_ = false;
+    isUsed_ = false;
+    isGet_ = false;
     aniTimer_ = 0.0f;
     object_->Initialize();
     object_->worldTransform_.translate_.y = -1.2f;
@@ -13,7 +14,7 @@ void GoldHeart::Init()
 
 void GoldHeart::Update()
 {
-    if (used_) {
+    if (isUsed_) {
         UpdateAniTimer(2.0f);
         float localTimer = aniTimer_ * 0.5f;
         object_->worldTransform_.translate_ = Lerp(startPos_, endPos_, localTimer);
@@ -27,6 +28,6 @@ void GoldHeart::Update()
 void GoldHeart::Use()
 {
     aniTimer_ = 0.0f;
-    used_ = true;
+    isUsed_ = true;
     //ミイラにはめ込む
 }
