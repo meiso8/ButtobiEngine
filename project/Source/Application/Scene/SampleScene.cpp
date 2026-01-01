@@ -6,37 +6,16 @@
 //Debug用のImGui表示セット
 
 #include"DebugUI.h"
-//ImGuiだけ使用したかったら以下をインクルードすること
-//#include"ImGuiClass.h"
-
 //グリッド表示
 #include"DrawGrid.h"
-
-//モデル読み込みに必要なもの
-//#include"Model.h"
-//#include"ModelManager.h"
-//スプライトに必要なもの
-//#include"Texture.h"
-//#include"Sprite.h"
-//音を鳴らすのに必要なもの
 #include"Sound.h"
-
-//球体のメッシュ
-//#include"SphereMesh.h"
-//平面のメッシュ
-//#include"Plane/PlaneMesh.h"
-//#include"Circle/CircleMesh.h"
-//#include"Circle.h"
-
 #include "ParticleEmitter.h"
 #include"Particle.h"
 
 #include"Random.h"
 #include"MakeMatrix.h"
-
 #include"Collision.h"
 
-//#include"Lerp.h"
 #include"Easing.h"
 #include"SoundManager/SoundManager.h"
 
@@ -46,7 +25,6 @@ SampleScene::SampleScene()
     currentCamera_ = camera_.get();
 
     player_ = std::make_unique<Player>();
-    backGround_ = std::make_unique<BackGround>();
 
     uIManager_ = std::make_unique<UIManager>();
 
@@ -73,7 +51,6 @@ void SampleScene::Initialize() {
     camera_->UpdateMatrix();
 
     player_->Init();
-    backGround_->Initialize();
 
     uIManager_->Initialize();
     itemManager_->Init();
@@ -84,15 +61,15 @@ void SampleScene::Initialize() {
     Stage::SetPlayer(player_.get());
 
     //メジェドのステージ
-    medjedStage_ = std::make_unique<MedjedStage>();
-    medjedStage_->Initialize();
-    uIManager_->CreateHpGage(*medjedStage_->GetEnemy()->GetHpsPtr(), *player_->GetHpsPtr());
+    //medjedStage_ = std::make_unique<MedjedStage>();
+    //medjedStage_->Initialize();
+    //uIManager_->CreateHpGage(*medjedStage_->GetEnemy()->GetHpsPtr(), *player_->GetHpsPtr());
 
     //player_->SetBodyPos({ 0.0f,0.0f,-15.0f });
 
-    if (medjedStage_) {
-        CreateParticle();
-    }
+    //if (medjedStage_) {
+    //    CreateParticle();
+    //}
 
     //ミイラのステージ
     mummyStage_ = std::make_unique<MummyStage>();
@@ -108,7 +85,7 @@ void SampleScene::Initialize() {
 
 void SampleScene::Update() {
 
-    if (player_->IsDead() || medjedStage_->MedjedDead()) {
+    if (player_->IsDead() /*|| medjedStage_&& medjedStage_->MedjedDead()*/) {
         sceneChange_->SetState(SceneChange::kFadeIn, 60);
         SceneManager::SetNestScene("Title");
     }
@@ -130,25 +107,25 @@ void SampleScene::Update() {
     if (mummyStage_) { mummyStage_->Update(); }
     if (waterStage_) { waterStage_->Update(); }
 
-    if (medjedStage_) {
-        medjedStage_->Update();
-        if (medjedStage_->FindMedjed()) {
-            lightingManager_->DirectionalLightUpdate();
-            backGround_->UpdateApperMedjed();
-
-            for (int i = 0; i < particleEmitters_.size(); ++i) {
-                particleEmitters_[i]->UpdateTimer();
-                particleEmitters_[i]->UpdateEmitter();
-            }
-            uIManager_->Update();
-        }
-
-    }
+    //if (medjedStage_) {
+    //    medjedStage_->Update();
+    //    if (medjedStage_->FindMedjed()) {
+    //        lightingManager_->DirectionalLightUpdate();
 
 
-    ParticleManager::GetInstance()->Update(*currentCamera_);
+    //        for (int i = 0; i < particleEmitters_.size(); ++i) {
+    //            particleEmitters_[i]->UpdateTimer();
+    //            particleEmitters_[i]->UpdateEmitter();
+    //        }
+    //        uIManager_->Update();
+    //    }
 
-    backGround_->Update();
+    //}
+
+
+    //ParticleManager::GetInstance()->Update(*currentCamera_);
+
+
     itemManager_->Update();
     memoManager_->Update();
     CheckAllCollision();
@@ -201,9 +178,9 @@ void SampleScene::CheckAllCollision()
     collisionManager_->AddCollider(player_.get());
     collisionManager_->AddCollider(player_->GetEyeCollider());
 
-    if (medjedStage_) {
-        medjedStage_->CheckCollision(*collisionManager_);
-    }
+    //if (medjedStage_) {
+    //    medjedStage_->CheckCollision(*collisionManager_);
+    //}
 
     if (mummyStage_) {
         mummyStage_->CheckCollision(*collisionManager_);
@@ -213,10 +190,7 @@ void SampleScene::CheckAllCollision()
         waterStage_->CheckCollision(*collisionManager_);
     }
 
-    // 壁との当たり判定
-    for (auto& [type, object] : backGround_->GetBuilding()->GetFieldPoses()) {
-        collisionManager_->AddCollider(object.get());
-    }
+
 
     collisionManager_->CheckAllCollisions();
 }
@@ -230,9 +204,9 @@ void SampleScene::CreateParticle()
 
     ParticleManager::GetInstance()->Create();
 
-    if (medjedStage_) {
-        particleEmitters_[0]->emitter_.transform.Parent(medjedStage_->GetMedjed()->GetWorldTransform());
-    }
+    //if (medjedStage_) {
+    //    particleEmitters_[0]->emitter_.transform.Parent(medjedStage_->GetMedjed()->GetWorldTransform());
+    //}
 
     particleEmitters_[0]->SetName("medjedParticle");
     particleEmitters_[1]->SetName("people");
@@ -276,17 +250,13 @@ void SampleScene::Draw() {
 
 #endif
 
-    backGround_->Draw(*currentCamera_);
-
     if (mummyStage_) {
         mummyStage_->Draw(*currentCamera_);
     }
 
- 
-
-    if (medjedStage_) {
-        medjedStage_->Draw(*currentCamera_);
-    }
+    //if (medjedStage_) {
+    //    medjedStage_->Draw(*currentCamera_);
+    //}
 
     if (waterStage_) {
         waterStage_->Draw(*currentCamera_);
@@ -294,16 +264,15 @@ void SampleScene::Draw() {
 
     player_->Draw(*currentCamera_, kLightModeHalfL);
 
-    ParticleManager::GetInstance()->Draw();
+    //ParticleManager::GetInstance()->Draw();
 
     itemManager_->Draw(*currentCamera_);
     memoManager_->Draw(*currentCamera_);
 
-
-    if (medjedStage_ && medjedStage_->FindMedjed()) {
-        //今のところHPゲージのみなのでここで描画
-        uIManager_->DrawHPGage();
-    }
+    //if (medjedStage_ && medjedStage_->FindMedjed()) {
+    //    //今のところHPゲージのみなのでここで描画
+    //    uIManager_->DrawHPGage();
+    //}
 
     uIManager_->DrawEffect();
 

@@ -4,10 +4,10 @@
 #include"CollisionConfig.h"
 
 Platform::Platform() {
-   
+
     SetType(kAABB);
     SetCollisionAttribute(kCollisionWall);
-    SetCollisionMask(kCollisionPlayer);
+    SetCollisionMask(kCollisionPlayer | kCollisionEnemy | kCollisionMedjed | kCollisionDummyMedjed);
 
     // 台のサイズ（仮）
     SetAABB({ { -0.75f, 0.0f, -1.5f },{ 0.5f, 0.75f, 1.5f } });

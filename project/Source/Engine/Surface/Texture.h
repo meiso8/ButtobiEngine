@@ -50,7 +50,7 @@ public:
 
     static uint32_t GetHandle(const TEXTURE_HANDLE& handle) { return handles[handle]; }
     static std::string& GetFilePath(const TEXTURE_HANDLE& handle) { return handleToPath_[handles[handle]]; }
-
+    static Texture::TEXTURE_HANDLE GetTextureHandle(const uint32_t& srvIndex);
     //SRVインデックスの開始番号
     static uint32_t kSRVIndexTop;
     struct TextureData {

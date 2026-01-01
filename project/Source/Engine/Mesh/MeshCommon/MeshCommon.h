@@ -20,7 +20,7 @@ public:
         return vertexData_[index];
     }
     void SetTextureHandle(const Texture::TEXTURE_HANDLE& textureHandle);
-    uint32_t GetTextureHandle() { return textureHandle_; }
+    uint32_t GetSrvIndex() { return textureHandle_; }
 protected:
     /// @brief テクスチャハンドル
     uint32_t textureHandle_ = 0;

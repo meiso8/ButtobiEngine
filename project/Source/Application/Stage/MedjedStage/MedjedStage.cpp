@@ -1,9 +1,9 @@
 #include "MedjedStage.h"
 #include"SoundManager/SoundManager.h"
 
-
 MedjedStage::MedjedStage()
 {
+    backGround_ = std::make_unique<BackGround>();
     medjedManager_ = std::make_unique<MedjedManager>();
     rhythmBullet_ = std::make_unique<RhythmBullet>();
     rhythmBullet_->SetEnemy(medjedManager_->GetEnemy());
@@ -11,6 +11,7 @@ MedjedStage::MedjedStage()
 
 void MedjedStage::Initialize()
 {
+    backGround_->Initialize();
     medjedManager_->Initialize();
     rhythmBullet_->Initialize();
     medjedManager_->SetTarget(player_->GetBodyPos());
@@ -20,8 +21,11 @@ void MedjedStage::Update()
 {
 
     medjedManager_->Update();
-    if (FindMedjed()) {
+    backGround_->Update();
+ 
 
+    if (FindMedjed()) {
+        backGround_->UpdateApperMedjed();
         if (medjedManager_->GetIsApperMedjed()) {
             //メジェド出現！
             SoundManager::ApperMedjedUpdate();
@@ -37,6 +41,7 @@ void MedjedStage::Update()
 
 void MedjedStage::Draw(Camera& camera)
 {
+    backGround_->Draw(camera);
     medjedManager_->Draw(camera);
     rhythmBullet_->Draw(camera);
 }
@@ -66,5 +71,10 @@ void MedjedStage::CheckCollision(CollisionManager& collisionManager)
             collisionManager.AddCollider(locker.get());
         }
 
+    }
+
+    // 壁との当たり判定
+    for (auto& [type, object] : backGround_->GetBuilding()->GetFieldPoses()) {
+        collisionManager.AddCollider(object.get());
     }
 }

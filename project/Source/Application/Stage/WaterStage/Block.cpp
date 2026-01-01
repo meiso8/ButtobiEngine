@@ -7,11 +7,10 @@
 
 void Block::Initialize()
 {
-    assert(object_);
-
     object_->Initialize();
     aniTimer_ = 0.0f;
     isPush_ = false;
+    isHit_ = false;
 }
 
 void Block::Update()
@@ -30,23 +29,55 @@ void Block::Update()
 
 void Block::OnCollision(Collider* collider)
 {
-
     if (isPush_) {
         return;
     }
 
-    Sound::PlaySE(Sound::THROW);
-    isPush_ = true;
-    aniTimer_ = 0.0f;
+    if (isHit_) {
+        return;
+    }
+    // 通常ブロックなら無視 
+    if (cubeMesh_->GetSrvIndex() == Texture::GetHandle(Texture::PUZZLE)) {
+        return;
+    };
+    cubeMesh_->GetSrvIndex();
 
+    Sound::PlaySE(Sound::THROW);
+    aniTimer_ = 0.0f;
+    isHit_ = true;
+
+}
+
+void Block::SetPos(const Vector3& pos, const float& endOffset)
+{
+    object_->worldTransform_.translate_ = pos;
+    startPosY_ = pos.y;
+    SetEndPos(endOffset);
+}
+
+void Block::SetEndPos(const float& endOffset)
+{
+    endPosY_ = startPosY_ + endOffset;
+}
+
+void Block::Reset()
+{
+    // 通常ブロックなら無視 
+    if (cubeMesh_->GetSrvIndex() == Texture::GetHandle(Texture::PUZZLE)) {
+        return;
+    };
+
+    aniTimer_ = 0.0f;
+    isPush_ = false;
+    isHit_ = false;
 }
 
 BlockMap::BlockMap()
 {
     AABB aabb = { .min = {-1.5f, -1.5f, -1.5f}, .max = {1.5f, 1.5f, 1.5f} };
     float blockSize = aabb.max.x - aabb.min.x; // = 3.0f
-    float offsetX = -(kMapWidth * blockSize) * 0.5f;
-    float offsetZ = -(kMapHeight * blockSize) * 0.5f;
+    float offsetX = -(kMapWidth * blockSize) * 0.5f + aabb.max.x;
+    float offsetZ = -(kMapHeight * blockSize) * 0.5f + aabb.max.y;
 
     for (int y = 0; y < kMapHeight; ++y) {
         for (int x = 0; x < kMapWidth; ++x) {
@@ -54,8 +85,8 @@ BlockMap::BlockMap()
             map_[y][x]->Initialize();
 
             Vector3 pos = {
-                static_cast<float>(x) * blockSize +offsetX,
-                -3.0f,
+                static_cast<float>(x) * blockSize + offsetX,
+                -1.5f,
                 static_cast<float>(y) * blockSize + offsetZ
             };
 
@@ -66,11 +97,19 @@ BlockMap::BlockMap()
     }
 
 
+
     // ヒエログリフ付きブロックを配置（例：中央付近）
-    map_[3][2]->SetTextureHandle(Texture::HIERO_S);
-    map_[3][3]->SetTextureHandle(Texture::HIERO_T);
-    map_[3][4]->SetTextureHandle(Texture::HIERO_D);
-    map_[3][5]->SetTextureHandle(Texture::HIERO_P);
+    map_[4][2]->SetTextureHandle(Texture::HIERO_S);
+    map_[1][5]->SetTextureHandle(Texture::HIERO_T);
+    map_[2][1]->SetTextureHandle(Texture::HIERO_D);
+    map_[3][3]->SetTextureHandle(Texture::HIERO_P);
+
+
+    centerBlocks_[0] = map_[3][3].get(); // 左上
+    centerBlocks_[1] = map_[4][3].get(); // 右上
+    centerBlocks_[2] = map_[3][4].get(); // 左下
+    centerBlocks_[3] = map_[4][4].get(); // 右下
+
 }
 
 void BlockMap::Initialize() {
@@ -81,17 +120,30 @@ void BlockMap::Initialize() {
 
 void BlockMap::Update() {
 
+    for (auto& y : map_) {
+        for (auto& block : y) {
+            block->Update();
+        }
+    }
+
+    if (isClear_) {
+        return;
+    }
+
+
+    // ======================================================================================
+    bool isReset = false;
 
     for (auto& y : map_) {
         for (auto& block : y) {
 
-            block->Update();
-
-            if (block->IsHit() && block->GetIsPush()) {
-                Texture::TEXTURE_HANDLE tex = block->GetTextureHandle();
+            if (block->IsHit()) {
+                //まだ踏んでないトキ且つヒットしたとき
+                Texture::TEXTURE_HANDLE tex = Texture::GetTextureHandle(block->GetSrvIndex());
 
                 // すでに踏んだ順番に追加（重複防止）
                 if (std::find(steppedOrder_.begin(), steppedOrder_.end(), tex) == steppedOrder_.end()) {
+                    block->SetIsPush(true);
                     steppedOrder_.push_back(tex);
                 }
 
@@ -100,16 +152,34 @@ void BlockMap::Update() {
                     if (!isClear_) {
                         isClear_ = true;
                         SoundManager::PlayCorrectSE();
+                        SoundManager::PlayGOGOGOSE();
+                        for (auto& block : centerBlocks_) { if (block) {
+                            block->SetEndPos(-1.5f);
+                            block->SetIsPush(true); 
+                        } }
+                        return;
                     }
-
                 }
 
                 // 間違った順番ならリセット
-                if (steppedOrder_.size() > correctOrder_.size() ||
-                    steppedOrder_[steppedOrder_.size() - 1] != correctOrder_[steppedOrder_.size() - 1]) {
+                if (steppedOrder_.size() >= correctOrder_.size()/* ||
+                    steppedOrder_[steppedOrder_.size() - 1] != correctOrder_[steppedOrder_.size() - 1]*/) {
                     steppedOrder_.clear();
-                    SoundManager::PlayCancelSE();
+                    isReset = true;
                 }
+
+
+            }
+
+        }
+    }
+
+
+    if (isReset) {
+        SoundManager::PlayCancelSE();
+        for (auto& y : map_) {
+            for (auto& block : y) {
+                block->Reset();
             }
         }
     }

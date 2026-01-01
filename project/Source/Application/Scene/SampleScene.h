@@ -11,7 +11,6 @@
 #include"UI/UIManager.h"
 #include"LightingManager.h"
 #include"Item/ItemManager.h"
-#include"BackGround/BackGround.h"
 
 #pragma endregion
 #include"CollisionManager.h"
@@ -45,7 +44,7 @@ private:
 
 #pragma region//ゲームオブジェクト
     std::unique_ptr<Player>player_ = nullptr;
-    std::unique_ptr<BackGround>backGround_ = nullptr;
+
     std::unique_ptr<LightingManager>lightingManager_ = nullptr;
 
     std::unique_ptr<ItemManager>itemManager_ = nullptr;
@@ -57,7 +56,7 @@ private:
 #pragma region//ステージ
     std::unique_ptr<MummyStage> mummyStage_ = nullptr;
     std::unique_ptr<WaterStage> waterStage_ = nullptr;
-    std::unique_ptr<MedjedStage> medjedStage_ = nullptr;
+    //std::unique_ptr<MedjedStage> medjedStage_ = nullptr;
 #pragma endregion
 
     std::array<std::unique_ptr<ParticleEmitter>, 2>particleEmitters_;
