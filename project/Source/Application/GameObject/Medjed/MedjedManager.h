@@ -29,7 +29,7 @@ private:
     bool IsOverlapping(const Vector2& pos, const std::vector<Vector2>& placedPositions);
 public:
     MedjedManager();
-    void SetTarget(Vector3& target) { targetPos_ = &target; };
+    void SetTarget(Vector3& target) { targetPos_ = &target; enemy_->SetTarget(target); };
     void RayCastHit(RaySprite& raySprite);
 
     void Initialize();

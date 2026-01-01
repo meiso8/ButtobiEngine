@@ -3,6 +3,7 @@
 
 #include"Input.h"
 #include"Sound.h"
+#include"InputBind.h"
 
 RaySprite::RaySprite()
 {
@@ -39,9 +40,5 @@ bool RaySprite::IntersectsAABB(const AABB& aabb, const Vector3& pos)
 
 void RaySprite::Update()
 {
-    sprite_->SetColor({ 1.0f,1.0f,1.0f,0.5f });
-
-    if (Input::IsTriggerMouse(0)) {
-        Sound::PlaySE(Sound::SWITCH_ON);
-    }
+    sprite_->SetColor({ 1.0f,1.0f,1.0f,0.125f });
 }

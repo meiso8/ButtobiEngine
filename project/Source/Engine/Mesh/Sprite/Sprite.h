@@ -62,13 +62,14 @@ public:
     void SetTextureSize(const Vector2& size) { textureSize = size; };
     Vector2& GetTextureLeftTop() { return textureLeftTop; };
     Vector2& GetTextureSize() { return textureSize; };
+    void AdjustTextureSize();
 private:
     void CreateVertex();
     void CreateUVTransformationMatrix();
     void CreateTransformationMatrix();
     void CreateMaterial(const Vector4& color);
     void UpdateUV();
-    void AdjustTextureSize();
+
 private:
     uint32_t textureHandle_ = 0;
     Vector2 anchorPoint_ = { 0.0f,0.0f };

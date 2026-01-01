@@ -37,16 +37,18 @@ public:
         Wall3,
         Floor,
     };
-private:
+protected:
     std::unique_ptr <Object3d> buildingPos;
     Model* model_ = nullptr;
     std::unordered_map<AABBType, AABB>aabbs_;
     std::unordered_map<AABBType, std::unique_ptr <FieldCollider>>fieldPoses_;
 public:
     Building();
-    void Init();
-    void Update();
-    void Draw(Camera& camera);
+    virtual void Init();
+    virtual void SetWallAABB();
+    virtual void SetWallPos();
+    virtual void Update();
+    virtual void Draw(Camera& camera);
     std::unordered_map<AABBType, std::unique_ptr <FieldCollider>>& GetFieldPoses() { return fieldPoses_; };
 };
 

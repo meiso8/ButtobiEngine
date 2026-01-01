@@ -3,13 +3,13 @@
 #include"Line.h"
 #include"Vector3.h"
 #include "CollisionManager.h"
-#include"Input.h"
+#include"InputBind.h"
 #include"DebugUI.h"
 #include"Player/RaySprite.h"
 #include"SoundManager/SoundManager.h"
 ItemManager::ItemManager()
 {
- 
+
 }
 void ItemManager::Init() {
     auto crowbar = std::make_shared<CrowbarItem>();
@@ -81,7 +81,7 @@ std::shared_ptr<Item> ItemManager::RaycastHitItem(RaySprite& raySprite) {
 
             obj->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 
-            if (Input::IsTriggerMouse(0)||Input::IsControllerTriggerButton(XINPUT_GAMEPAD_A,0)) {
+            if (InputBind::IsClick()) {
                 return item;
             }
 
@@ -94,15 +94,20 @@ std::shared_ptr<Item> ItemManager::RaycastHitItem(RaySprite& raySprite) {
 void ItemManager::UseItemFromSlot(const Vector3& pos)
 {
     for (auto& item : itemSlot_.GetItemInSlot()) {
-        if (Input::IsTriggerMouse(0)) {
-            if (item && item->name_ == "GoldHeart") {
-                SoundManager::PlayCorrectSE();
-                item->Use();
-                Vector3 offset = { 0.0f,0.5f,-0.3f };
-             /*   Vector3 offset = { 0.0f,0.3f,-0.3f };*/
-                item->SetWorldPos(pos+ offset);
-                item->SetRotateY(3.14f);
+
+        if (InputBind::IsClick()) {
+            if (item&& !item->used_) {
+                if (item->name_ == "GoldHeart") {
+                    SoundManager::PlayCorrectSE();
+                    item->Use();
+                    Vector3 offset = { 0.0f,0.5f,-0.3f };
+                    Vector3 endOffset = { 0.0f,0.3f,-0.3f };
+                    item->SetStartEndPos(pos + offset, pos + endOffset);
+                    item->SetRotate({ 4.7f,0.0f,0.0f });
+                }
             }
+
+         
         }
     }
 }

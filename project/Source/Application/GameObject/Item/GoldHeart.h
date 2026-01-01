@@ -9,5 +9,6 @@ public:
         SetModel(ModelManager::HART);
         object_->SetLightMode(kLightModeLReflectance);
     }
+    void Update()override;
     void Use() override;
 };

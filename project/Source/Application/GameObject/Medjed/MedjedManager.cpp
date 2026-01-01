@@ -7,9 +7,11 @@
 #include <cmath>
 #include "Vector2.h" // 必要なら自作の2Dベクトルクラスを用意してね
 #include"CollisionManager.h"
-#include"Input.h"
+
 #include"SoundManager/SoundManager.h"
 #include"Sound.h"
+#include"InputBind.h"
+
 MedjedManager::MedjedManager()
 {
     enemy_ = std::make_unique<Enemy>();
@@ -42,7 +44,7 @@ void MedjedManager::RayCastHit(RaySprite& raySprite) {
             //メジェドざまを当ててないとき
             if (!GetIsFindMedjed()) {
                 //Mouseをクリックしたら
-                if (Input::IsTriggerMouse(0) || Input::IsControllerTriggerButton(XINPUT_GAMEPAD_A, 0)) {
+                if (InputBind::IsClick()) {
 
                     if (auto correctMedjed = dynamic_cast<Medjed*>(medjed.get())) {
                         correctMedjed->MoveStart();
@@ -55,8 +57,7 @@ void MedjedManager::RayCastHit(RaySprite& raySprite) {
                     } else {
 
                         SoundManager::PlayCancelSE();
-                        Sound::PlaySE(Sound::VOICE_Sottizyanaiwa, 0.5f);
-                        PlaceLockersRandomly();
+                        Sound::PlayOriginSE(Sound::VOICE_Sottizyanaiwa, 0.5f);
                         return;
                     }
 
@@ -95,7 +96,7 @@ void MedjedManager::Draw(Camera& camera)
 
 void MedjedManager::UpdateEnemyApperTime()
 {
-    if (enemyApperTime_ == 5.0f) {
+    if (enemyApperTime_ >= 5.0f) {
         return;
     }
 

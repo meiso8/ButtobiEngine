@@ -10,13 +10,14 @@ class UIManager
         kPlayer,
     };
 public:
-    UIManager(HPs& enemyHp, HPs& playerHp);
+    UIManager();
     void Initialize();
     void Update();
-    void Draw();
-    bool isDrawPlayerGage_ = false;
+    void DrawHPGage();
+    void DrawEffect();
+    void CreateHpGage(HPs& enemyHp, HPs& playerHp);
 private:
     std::unordered_map<GageType, std::unique_ptr<HPGage>>hpGages_;
-    std::unique_ptr<HPIcon>playerHpIcon_= nullptr;
+    std::unique_ptr<Sprite> effectSprite_;
 };
 

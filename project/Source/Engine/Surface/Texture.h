@@ -24,13 +24,19 @@ public:
      
         TEST3,
 
-
         MEMO1,
         MEMO2,
         MEMO3,
         MEMO4,
+        BOOK,
+        BOOK2,
 
         PUZZLE,
+
+       HIERO_S,
+       HIERO_P,
+       HIERO_D,
+       HIERO_T,
 
         SLOT,
         EYE,

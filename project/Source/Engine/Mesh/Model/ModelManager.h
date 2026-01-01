@@ -11,7 +11,7 @@ public:
     /// @brief モデルのハンドルを宣言します
     enum MODEL_HANDLE {
         BOX,
-      normalMedjed_GLTF,
+        normalMedjed_GLTF,
         medJed_GLTF,
         medJedDance_GLTF,
         //プレイヤーそれぞれのパーツ
@@ -19,13 +19,18 @@ public:
 
         PEOPLE,
         MUMMY,
+        MUMMY_ROOM,
         COFFIN_GLTF,
-
-        BUILDING,
+        //心臓
         HART,
+        //太陽のメダル
         SUN_MEDAL,
+        //バールのようなもの
         CROW_BAR_ITEM,
-
+        //パピルス
+        PAPYRUS,
+        //水
+        WATER,
         KEY,
 
         MODELS,

@@ -27,13 +27,17 @@ void ModelManager::LoadAllModel()
     LoadModel("Resource/Models/player", "player.obj", PLAYER_BODY);
     LoadModel("Resource/Models/people", "people.obj", PEOPLE);
     LoadModel("Resource/Models/mummy", "mummy.obj", MUMMY);
+    LoadModel("Resource/Models/mummy", "mummyRoom.obj", MUMMY_ROOM);
     LoadModel("Resource/Models/mummy", "coffin.gltf", COFFIN_GLTF);
-    LoadModel("Resource/Models/building", "building.obj", BUILDING);
+
     LoadModel("Resource/Models/key", "key.obj", KEY);
     LoadModel("Resource/Models/hart", "hart.obj", HART);
     LoadModel("Resource/Models/sunMedal", "sunMedal.obj", SUN_MEDAL);
     LoadModel("Resource/Models/sunMedal", "crowbarItem.obj", CROW_BAR_ITEM);
    
+    LoadModel("Resource/Models/Papyrus", "Papyrus.obj", PAPYRUS);
+
+    LoadModel("Resource/Models/Water", "Water.obj", WATER);
 }
 
 // ========================================================================================================

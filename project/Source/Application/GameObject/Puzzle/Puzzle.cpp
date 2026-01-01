@@ -6,6 +6,8 @@ using namespace std;
 #include"Collision.h"
 #include"Sound.h"
 #include"SoundManager/SoundManager.h"
+#include"InputBind.h"
+
 void Puzzle::Change(int x, int y)
 {
     int p1 = y * vertical_ + x;
@@ -84,7 +86,7 @@ void Puzzle::Game()
         if (IsCollision(pos, rect)) {
             sprites_[panel_[i]]->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 
-            if (Input::IsTriggerMouse(0)) {
+            if (InputBind::IsClick()) {
                 clickedIndex = i;
                 Sound::PlaySE(Sound::THROW);
             }

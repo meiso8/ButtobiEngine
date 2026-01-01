@@ -76,7 +76,7 @@ public:
     void SetLightMode(const LightMode& lightMode) { materialResource_->SetLightMode(lightMode); }
 
     void Create();
-    void Initialize();
+    virtual void Initialize();
     virtual void Update();
     virtual void Draw(Camera& camera, const BlendMode& blendMode = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack);
 
@@ -84,8 +84,12 @@ public:
     void InitWaveDataIndex(const uint32_t& index);
     void InitBalloonData();
 
-   void SetMesh(MeshCommon* mesh) { meshCommon_ = mesh; };
+    void SetMesh(MeshCommon* mesh) { meshCommon_ = mesh; };
     virtual void SetTextureHandle(const Texture::TEXTURE_HANDLE& handle) { meshCommon_->SetTextureHandle(handle); };
+    virtual const Texture::TEXTURE_HANDLE GetTextureHandle() {
+        return  //一旦TextureHandleとして返す
+            static_cast<Texture::TEXTURE_HANDLE>(meshCommon_->GetTextureHandle());
+    }
 private:
     void CreateUV();
     void CreateTransformationMatrix();
