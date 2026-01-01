@@ -24,3 +24,13 @@ void WaterStage::Draw(Camera& camera)
     water_->Draw(camera);
 }
 
+void WaterStage::CheckCollision(CollisionManager& collisionManager)
+{
+    //Waterのかべ
+    for (auto& [type, object] : papyrusWall_.get()->GetFieldPoses()) {
+        collisionManager.AddCollider(object.get());
+    }
+
+    collisionManager.AddCollider(water_.get());
+}
+

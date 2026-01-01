@@ -1,7 +1,8 @@
 #include "MummyStage.h"
-#include"CollisionManager.h"
+
 #include"SoundManager/SoundManager.h"
 #include"InputBind.h"
+
 MummyStage::MummyStage()
 {
     papyrus_ = std::make_unique<Papyrus>();
@@ -23,7 +24,7 @@ bool MummyStage::IsRayCastHit(RaySprite& raySprite)
     AABB aabb = GetAABBWorldPos(mummy_.get());
 
     if (raySprite.IntersectsAABB(aabb, mummy_->GetWorldPosition())) {
-        if (InputBind::IsClick())
+        if (InputBind::IsClick())              
             //Openしていなかったらmummyをあける
             if (!mummy_->GetIsOpen()) {
                 SoundManager::PlayCorrectSE();
@@ -34,6 +35,19 @@ bool MummyStage::IsRayCastHit(RaySprite& raySprite)
     }
 
     return false;
+}
+
+void MummyStage::CheckCollision(CollisionManager& collisionManager)
+{
+    //ミイラ
+    if (IsRayCastHit(*player_->raySprite_)) {
+        //心臓を使う
+        itemManager_->UseItemFromSlot(GetMummy()->GetWorldPosition());
+    }
+
+    //ミイラの台も一緒に
+    collisionManager.AddCollider(GetMummy());
+    collisionManager.AddCollider(GetMummy()->GetPlatform());
 }
 
 void MummyStage::Draw(Camera& camera) {

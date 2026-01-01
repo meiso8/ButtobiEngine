@@ -41,28 +41,29 @@ void MedjedStage::Draw(Camera& camera)
     rhythmBullet_->Draw(camera);
 }
 
-void MedjedStage::CheckCollision(CollisionManager* collisionManager)
+void MedjedStage::CheckCollision(CollisionManager& collisionManager)
 {
     //メジェドたちがヒットしているかどうか
     medjedManager_->RayCastHit(*player_->raySprite_);
     //弾がヒットしているかどうか
     rhythmBullet_->GetShotBulletManager()->RayCastHit(*player_->raySprite_);
 
-    // ========================//メジェド　見つかってないときとそうではないとき================================
+
+    //メジェド探したかどうか
     if (FindMedjed()) {
 
-        collisionManager->AddCollider(medjedManager_->GetMedjed());
+        collisionManager.AddCollider(medjedManager_->GetMedjed());
 
         //巨大メジェド出現し、弾を打ってくる
         for (auto& bullet : rhythmBullet_->GetBulletManager()->GetBullets()) {
             if (bullet->isActive_) {
-                collisionManager->AddCollider(bullet.get());
+                collisionManager.AddCollider(bullet.get());
             }
         }
-        collisionManager->AddCollider(medjedManager_->GetEnemy());
+        collisionManager.AddCollider(medjedManager_->GetEnemy());
     } else {
         for (auto& locker : medjedManager_->GetAllMedjeds()) {
-            collisionManager->AddCollider(locker.get());
+            collisionManager.AddCollider(locker.get());
         }
 
     }

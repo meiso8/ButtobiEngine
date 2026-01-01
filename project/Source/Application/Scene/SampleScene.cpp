@@ -80,9 +80,11 @@ void SampleScene::Initialize() {
     //メモマネージャー
     memoManager_->Initialize();
 
+    Stage::SetItemManager(itemManager_.get());
+    Stage::SetPlayer(player_.get());
+
     //メジェドのステージ
     medjedStage_ = std::make_unique<MedjedStage>();
-    medjedStage_->SetPlayer(player_.get());
     medjedStage_->Initialize();
     uIManager_->CreateHpGage(*medjedStage_->GetEnemy()->GetHpsPtr(), *player_->GetHpsPtr());
 
@@ -95,6 +97,7 @@ void SampleScene::Initialize() {
     //ミイラのステージ
     mummyStage_ = std::make_unique<MummyStage>();
     mummyStage_->Initialize();
+
     //player_->SetBodyPos({ 0.0f,0.0f,-15.0f });
 
     //水のステージ
@@ -195,31 +198,19 @@ void SampleScene::CheckAllCollision()
 
     collisionManager_->ClearColliders();
 
-    if (medjedStage_) {
-        medjedStage_->CheckCollision(collisionManager_.get());
-    }
-
     collisionManager_->AddCollider(player_.get());
     collisionManager_->AddCollider(player_->GetEyeCollider());
 
-    if (mummyStage_) {
-        //ミイラ
-        if (mummyStage_->IsRayCastHit(*player_->raySprite_)) {
-            //心臓を使う
-            itemManager_->UseItemFromSlot(mummyStage_->GetMummy()->GetWorldPosition());
-        }
+    if (medjedStage_) {
+        medjedStage_->CheckCollision(*collisionManager_);
+    }
 
-        //ミイラの台も一緒に
-        collisionManager_->AddCollider(mummyStage_->GetMummy());
-        collisionManager_->AddCollider(mummyStage_->GetMummy()->GetPlatform());
+    if (mummyStage_) {
+        mummyStage_->CheckCollision(*collisionManager_);
     }
 
     if (waterStage_) {
-        //Waterのかべ
-        for (auto& [type, object] : waterStage_->GetBuilding()->GetFieldPoses()) {
-            collisionManager_->AddCollider(object.get());
-        }
-        collisionManager_->AddCollider(waterStage_->GetWater());
+        waterStage_->CheckCollision(*collisionManager_);
     }
 
     // 壁との当たり判定
@@ -291,12 +282,14 @@ void SampleScene::Draw() {
         mummyStage_->Draw(*currentCamera_);
     }
 
-    if (waterStage_) {
-        waterStage_->Draw(*currentCamera_);
-    }
+ 
 
     if (medjedStage_) {
         medjedStage_->Draw(*currentCamera_);
+    }
+
+    if (waterStage_) {
+        waterStage_->Draw(*currentCamera_);
     }
 
     player_->Draw(*currentCamera_, kLightModeHalfL);
@@ -307,7 +300,7 @@ void SampleScene::Draw() {
     memoManager_->Draw(*currentCamera_);
 
 
-    if (medjedStage_&&medjedStage_->FindMedjed()) {
+    if (medjedStage_ && medjedStage_->FindMedjed()) {
         //今のところHPゲージのみなのでここで描画
         uIManager_->DrawHPGage();
     }

@@ -18,7 +18,7 @@ public:
     void Initialize()override;
     void Update()override;
     void Draw(Camera& camera)override;
-    void CheckCollision(CollisionManager* collisionManager);
+    void CheckCollision(CollisionManager& collisionManager)override;
     const bool& FindMedjed() { return medjedManager_->GetIsFindMedjed(); }
     const bool& MedjedDead() { return medjedManager_->GetIsEnemyDead(); }
     Medjed* GetMedjed() { return medjedManager_->GetMedjed(); };

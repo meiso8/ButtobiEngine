@@ -2,9 +2,13 @@
 #include "Collider.h"
 #include <memory>
 #include"CubeMesh.h"
+#include"Texture.h"
 class Platform : public Collider {
 public:
     Platform();
+    void SetTextureHandle(const Texture::TEXTURE_HANDLE& handle) {
+        object_->SetTextureHandle(handle);
+    }
     void Initialize();
     void Update();
     void Draw(Camera& camera);

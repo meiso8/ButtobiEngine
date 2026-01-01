@@ -15,11 +15,6 @@ public:
     void Initialize()override;
     void Update()override;
     void Draw(Camera& camera)override;
-
-    PapyrusWall* GetBuilding() {
-        return papyrusWall_
-            .get();
-    };
-    Water* GetWater() { return water_.get(); };
+    void CheckCollision(CollisionManager& collisionManager)override;
 };
 
