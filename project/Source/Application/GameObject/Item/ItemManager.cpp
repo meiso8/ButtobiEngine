@@ -11,20 +11,35 @@ ItemManager::ItemManager()
 {
 
 }
-void ItemManager::Init() {
-    auto crowbar = std::make_shared<CrowbarItem>();
-    crowbar->Init();
-    items_[crowbar->name_] = crowbar;
 
-    auto sunMedal = std::make_shared<SunMedal>();
-    sunMedal->Init();
-    items_[sunMedal->name_] = sunMedal;
+void ItemManager::GenerateItems(const std::vector<std::string>& itemNames)
+{
+    items_.clear(); // 既存のアイテムをクリア
 
-    auto goldHeart = std::make_shared<GoldHeart>();
-    goldHeart->Init();
-    items_[goldHeart->name_] = goldHeart;
+    for (const auto& name : itemNames) {
+        std::shared_ptr<Item> item = nullptr;
+
+        if (name == "CrowbarItem") {
+            item = std::make_shared<CrowbarItem>();
+        } else if (name == "SunMedal") {
+            item = std::make_shared<SunMedal>();
+        } else if (name == "GoldHeart") {
+            item = std::make_shared<GoldHeart>();
+        } else if (name == "SunRod") {
+            item = std::make_shared<SunRod>();
+        }
+
+        if (item) {
+            item->Init();
+            items_[name] = item;
+        }
+    }
 
     itemSlot_.Init();
+}
+
+void ItemManager::Init() {
+    items_.clear(); // 既存のアイテムをクリア
 }
 
 void ItemManager::Update() {

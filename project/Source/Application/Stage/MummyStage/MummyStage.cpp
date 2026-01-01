@@ -7,10 +7,12 @@ void MummyStage::TimerUpdate()
 {
     medjedApperTime_ -= InverseFPS;
     medjedApperTime_ = std::clamp(medjedApperTime_, 0.0f, maxTime_);
+
 }
 
 MummyStage::MummyStage()
 {
+    memoManager_ = std::make_unique<MemoManager>();
     papyrus_ = std::make_unique<Papyrus>();
     mummy_ = std::make_unique<Mummy>();
 }
@@ -19,6 +21,13 @@ void MummyStage::Initialize() {
     medjedApperTime_ = maxTime_;
     papyrus_->Initialize();
     mummy_->Initialize();
+
+    memoManager_->GenerateMemos({ Texture::BOOK});
+    //メモマネージャー
+    memoManager_->Initialize();
+
+    //itemManager_->GenerateItems({ "GoldHeart" }); // 取得済み前提で使用のみ
+
 }
 
 void MummyStage::Update() {
@@ -29,12 +38,16 @@ void MummyStage::Update() {
         TimerUpdate();
     };
 
+    memoManager_->Update();
     papyrus_->Update();
     mummy_->Update();
 }
 
 bool MummyStage::IsRayCastHit(RaySprite& raySprite)
 {
+    //メモがヒットしているかどうか
+    memoManager_->RayCastHit(raySprite);
+
     AABB aabb = GetAABBWorldPos(mummy_.get());
 
     if (raySprite.IntersectsAABB(aabb, mummy_->GetWorldPosition())) {
@@ -74,4 +87,5 @@ void MummyStage::CheckCollision(CollisionManager& collisionManager)
 void MummyStage::Draw(Camera& camera) {
     papyrus_->Draw(camera);
     mummy_->Draw(camera);
+    memoManager_->Draw(camera);
 }

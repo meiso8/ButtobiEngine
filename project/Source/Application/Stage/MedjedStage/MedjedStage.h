@@ -5,7 +5,7 @@
 #include"Player/Player.h"
 #include"CollisionManager.h"
 #include"../GameObject/BackGround/BackGround.h"
-
+#include"Memo/MemoManager.h"
 #include<memory>
 class MedjedStage :public Stage
 {
@@ -13,6 +13,7 @@ private:
     std::unique_ptr<MedjedManager>medjedManager_ = nullptr;
     std::unique_ptr<RhythmBullet>rhythmBullet_ = nullptr;
     std::unique_ptr<BackGround>backGround_ = nullptr;
+    std::unique_ptr<MemoManager>memoManager_ = nullptr;
 public:
 
     MedjedStage();

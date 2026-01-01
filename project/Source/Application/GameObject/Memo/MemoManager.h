@@ -16,6 +16,7 @@ public:
     void Initialize();
     void Update();
     void Draw(Camera& camera);
+    void GenerateMemos(const std::vector<Texture::TEXTURE_HANDLE>& handles);
 
     void SetSpriteSize(const Texture::TEXTURE_HANDLE& handle);
     void RayCastHit(RaySprite& raySprite);

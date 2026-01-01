@@ -35,7 +35,7 @@ SampleScene::SampleScene()
     collisionManager_ = std::make_unique<CollisionManager>();
 
     itemManager_ = std::make_unique<ItemManager>();
-    memoManager_ = std::make_unique<MemoManager>();
+
 
 }
 
@@ -54,22 +54,27 @@ void SampleScene::Initialize() {
 
     uIManager_->Initialize();
     itemManager_->Init();
-    //メモマネージャー
-    memoManager_->Initialize();
 
-    Stage::SetItemManager(itemManager_.get());
     Stage::SetPlayer(player_.get());
 
     //player_->SetBodyPos({ 0.0f,0.0f,-15.0f });
 
     waterStage_ = std::make_unique<WaterStage>();
+    medjedStage_ = std::make_unique<MedjedStage>();
+    mummyStage_ = std::make_unique<MummyStage>();
+
+    // 各ステージに渡す
+    waterStage_->SetItemManager(itemManager_);
+    mummyStage_->SetItemManager(itemManager_);
+    medjedStage_->SetItemManager(itemManager_);
+
     waterStage_->Initialize();
     player_->SetBodyPos({ 0.0f,0.0f,-5.0f });
 
-    mummyStage_ = std::make_unique<MummyStage>();
+
     mummyStage_->Initialize();
 
-    medjedStage_ = std::make_unique<MedjedStage>();
+
     medjedStage_->SetPlayer(player_.get());
     medjedStage_->Initialize();
     if (medjedStage_) {
@@ -78,6 +83,8 @@ void SampleScene::Initialize() {
     uIManager_->CreateHpGage(*medjedStage_->GetEnemy()->GetHpsPtr(), *player_->GetHpsPtr());
 
     currentPhase_ = StagePhase::Water;
+
+
 
 }
 
@@ -152,7 +159,7 @@ void SampleScene::Update() {
     // 共通更新
     ParticleManager::GetInstance()->Update(*currentCamera_);
     itemManager_->Update();
-    memoManager_->Update();
+
     CheckAllCollision();
 }
 
@@ -191,8 +198,6 @@ void SampleScene::CheckAllCollision()
     auto hitItem = itemManager_->RaycastHitItem(*player_->raySprite_);
     if (hitItem) { itemManager_->GetItemSlot().OnTriggerItemPickup(hitItem); }
 
-    //メモがヒットしているかどうか
-    memoManager_->RayCastHit(*player_->raySprite_);
 
     // ========================//Ray================================
 
@@ -297,7 +302,6 @@ void SampleScene::Draw() {
 
     ParticleManager::GetInstance()->Draw();
 
-    memoManager_->Draw(*currentCamera_);
 
 
     player_->DrawUI();

@@ -14,7 +14,11 @@ private:
 public:
     void SetIsPush(const bool& isPush) { isPush_ = isPush; }
     const bool& GetIsPush() { return isPush_; };
-    bool IsHit() const { return isHit_ && !isPush_ && cubeMesh_->GetSrvIndex() != Texture::GetHandle(Texture::PUZZLE); } // ← すでに踏んだブロックは無視！
+    bool IsHit() const { return isHit_ && !isPush_ && cubeMesh_->GetSrvIndex() != Texture::GetHandle(Texture::PUZZLE)&&
+    
+    cubeMesh_->GetSrvIndex() != Texture::GetHandle(Texture::NONE);
+    
+    } // ← すでに踏んだブロックは無視！
     void Initialize()override;
     void Update()override;
     //void Draw(Camera& camera);
