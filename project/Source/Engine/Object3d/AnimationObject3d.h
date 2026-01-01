@@ -21,7 +21,9 @@ public:
     //オーバーライド
     void Update()override;
     void UpdateAniTimer(const bool& isLoop = true);
-
+    bool IsAnimEnd() {
+        return  animationTime_ == animation_.duration;
+    }
     void Draw(Camera& camera, const BlendMode& blendMode = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack)override;
 private:
     void UpdateAnimation();

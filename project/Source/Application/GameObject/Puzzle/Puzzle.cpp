@@ -88,7 +88,7 @@ void Puzzle::Game()
 
             if (InputBind::IsClick()) {
                 clickedIndex = i;
-                Sound::PlaySE(Sound::THROW);
+                Sound::PlaySE(Sound::MOVE_ROCK);
             }
 
         } else {

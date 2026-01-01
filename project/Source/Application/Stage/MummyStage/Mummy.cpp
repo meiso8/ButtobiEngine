@@ -32,6 +32,7 @@ Mummy::Mummy() {
 
 void Mummy::Initialize() {
     isOpen_ = false;
+    isOpenEnd_ = false;
     platform_->Initialize();
     aniObj_->Initialize();
     object_->Initialize();
@@ -46,6 +47,10 @@ void Mummy::Update() {
     if (isOpen_) {
         //ループしない
         aniObj_->UpdateAniTimer(false);
+        
+        if (aniObj_->IsAnimEnd()) {
+            isOpenEnd_ = true;
+        }
     }
     platform_->Update();
     aniObj_->Update();

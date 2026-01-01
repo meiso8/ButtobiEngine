@@ -29,6 +29,7 @@ public:
     void Init();
 
     void Draw(Camera& camera, const LightMode& lightType);
+    void DrawUI();
     void Update();
 
 

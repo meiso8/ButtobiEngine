@@ -257,6 +257,7 @@ void SampleScene::Draw() {
     //if (medjedStage_) {
     //    medjedStage_->Draw(*currentCamera_);
     //}
+    itemManager_->Draw(*currentCamera_);
 
     if (waterStage_) {
         waterStage_->Draw(*currentCamera_);
@@ -266,14 +267,14 @@ void SampleScene::Draw() {
 
     //ParticleManager::GetInstance()->Draw();
 
-    itemManager_->Draw(*currentCamera_);
+
     memoManager_->Draw(*currentCamera_);
 
     //if (medjedStage_ && medjedStage_->FindMedjed()) {
     //    //今のところHPゲージのみなのでここで描画
     //    uIManager_->DrawHPGage();
     //}
-
+    player_->DrawUI();
     uIManager_->DrawEffect();
 
     sceneChange_->Draw();

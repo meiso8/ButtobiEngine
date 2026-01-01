@@ -47,7 +47,7 @@ public:
         //メモ用
         BOOK,
         //スライドするとか
-        THROW,
+        MOVE_ROCK,
         //クラッカー
         CRACKER,
         //足音
