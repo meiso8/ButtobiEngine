@@ -14,8 +14,13 @@ MemoManager::MemoManager()
     sprite_->Create(Texture::MEMO1, { width * 0.5f, height * 0.5f });
     sprite_->SetAnchorPoint({ 0.5f,0.5f });
 
+    backSprite_ = std::make_unique<Sprite>();
+    backSprite_->Create(Texture::WHITE_1X1, {0.0f,0.0f},{0.0f,0.0f,0.0f,0.5f});
+    backSprite_->SetSize({width,height});
+
+
     Json file = JsonFile::GetJsonFiles("memo");
-    std::vector<std::string> keys = { "memo1", "memo2", "memo3", "memo4", "book1","book2" };
+    std::vector<std::string> keys = { "memo1", "memo2", "memo3", "memo4", "book1","book2","book3"};
     std::unordered_map<std::string, WorldTransform> memoTransforms;
 
 
@@ -38,7 +43,7 @@ MemoManager::MemoManager()
     std::unordered_map<std::string, AABB> memoAABB;
 
 
-    std::vector<std::string> sizeKeys = { "memoSize", "bookSize" };
+    std::vector<std::string> sizeKeys = { "memoSize", "bookSize","noteSize"};
     for (const auto& key : sizeKeys) {
         if (file.contains(key)) {
             AABB aabb; // AABBの読み込み 
@@ -59,11 +64,14 @@ MemoManager::MemoManager()
     memos_[Texture::MEMO4] = std::make_unique<Memo>();
     memos_[Texture::BOOK] = std::make_unique<Memo>();
     memos_[Texture::BOOK2] = std::make_unique<Memo>();
+    memos_[Texture::BOOK3] = std::make_unique<Memo>();
 
     for (auto& [handle, memo] : memos_) {
         memo->SetTexture(handle);
         if (handle == Texture::BOOK|| handle == Texture::BOOK2) {
             memo->SetCubeSize(memoAABB["bookSize"]);
+        } else if(handle == Texture::BOOK3) {
+            memo->SetCubeSize(memoAABB["noteSize"]);
         } else {
             memo->SetCubeSize(memoAABB["memoSize"]);
         }
@@ -75,6 +83,7 @@ MemoManager::MemoManager()
     memos_[Texture::MEMO4]->GetWorldTransform() = memoTransforms["memo4"];
     memos_[Texture::BOOK]->GetWorldTransform() = memoTransforms["book1"];
     memos_[Texture::BOOK2]->GetWorldTransform() = memoTransforms["book2"];
+    memos_[Texture::BOOK3]->GetWorldTransform() = memoTransforms["book3"];
 }
 
 void MemoManager::Initialize()
@@ -100,6 +109,7 @@ void MemoManager::Draw(Camera& camera)
     //アイテムを見ていたら表示する
     if (isLookItem_) {
         Sprite::PreDraw();
+        backSprite_->Draw();
         sprite_->Draw();
     }
 }
