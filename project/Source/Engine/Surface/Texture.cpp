@@ -73,6 +73,20 @@ uint32_t Texture::AddTextureHandle(const std::string& filePath) {
     return srvIndex;
 }
 
+Texture::TEXTURE_HANDLE Texture::GetTextureHandle(const uint32_t& srvIndex)
+{
+    auto it = std::find(handles.begin(), handles.end(), srvIndex); 
+    if (it != handles.end()) { 
+        // インデックスを取得して enum にキャスト 
+       size_t index = std::distance(handles.begin(), it);
+       return static_cast<TEXTURE_HANDLE>(index);
+    }
+    assert(it != handles.end());
+
+    // 見つからなかった場合のフォールバック（適宜変更）
+    return Texture::WHITE_1X1;
+}
+
 void Texture::Finalize()
 {
     textureDatas.clear();

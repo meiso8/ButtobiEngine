@@ -6,7 +6,7 @@
 #include"Model.h"
 #include"JsonFile.h"
 #include"DebugUI.h"
-
+#include"Lerp.h"
 Water::Water() {
 
     object_ = std::make_unique<Object3d>();
@@ -34,11 +34,18 @@ void Water::Initialize() {
     object_->GetWaveData(0).time = 0.0f;
     object_->GetWaveData(1).time = 0.0f;
     object_->Initialize();
-    object_->worldTransform_.translate_ = { 0.0f,0.5f,0.0f };
-
+    object_->worldTransform_.translate_ = { 0.0f,0.75f,0.0f };
+    object_->GetWaveData(0).amplitude = 0.2f;
+    object_->GetWaveData(1).amplitude = 0.1f;
 }
 
 void Water::Update() {
+
+    if (isDrain_) {
+        object_->worldTransform_.translate_.y = Lerp(object_->worldTransform_.translate_.y, -0.5f, 0.01f);
+        object_->GetWaveData(0).amplitude = Lerp(object_->GetWaveData(0).amplitude, 0.0f, 0.1f);
+        object_->GetWaveData(1).amplitude = Lerp(object_->GetWaveData(1).amplitude, 0.0f, 0.1f);
+    }
 
     object_->GetWaveData(0).time += InverseFPS;
     object_->GetWaveData(1).time = object_->GetWaveData(0).time + 1.5f;
@@ -47,7 +54,7 @@ void Water::Update() {
 }
 
 void Water::Draw(Camera& camera) {
-    object_->Draw(camera,kBlendModeMultiply);
+    object_->Draw(camera, kBlendModeMultiply);
 
 }
 

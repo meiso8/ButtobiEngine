@@ -6,4 +6,5 @@ public:
     static void PlayCancelSE();
     static void ApperMedjedUpdate();
     static void NotFindMedjedUpdate();
+    static void PlayGOGOGOSE();
 };

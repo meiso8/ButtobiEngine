@@ -37,7 +37,7 @@ public:
     };
     void Rotate();
     void SetRotate(const Vector3& rotate) { object_->worldTransform_.rotate_ = rotate; };
-    void SetStartPos();
+    void SetScreenStartPos();
     void UpdateAniTimer(const float& endTime = 4.0f);
     float aniTimer_ = 0.0f;
    virtual void LerpScreenPos(const Vector2& screenPos, const Matrix4x4& matInverseVPV);

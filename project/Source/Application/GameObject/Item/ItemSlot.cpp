@@ -67,9 +67,11 @@ void Item::Rotate()
     TransformAni::RotateY(object_->worldTransform_, 1.0f);
 }
 
-void Item::SetStartPos()
+void Item::SetScreenStartPos()
 {
+    object_->Initialize();
     object_->worldTransform_.translate_.z = 1.0f;
+  
     startPos_ = object_->worldTransform_.translate_;
     object_->Update();
 }
@@ -203,7 +205,7 @@ bool ItemSlot::AddItem(const std::shared_ptr<Item>& item)
         if (!slot) {
             slot = item;
             slot->Init();
-            slot->SetStartPos();
+            slot->SetScreenStartPos();
             return true;
         }
     }

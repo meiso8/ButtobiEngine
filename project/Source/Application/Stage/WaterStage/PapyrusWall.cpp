@@ -24,20 +24,20 @@ void PapyrusWall::Draw(Camera& camera)
     buildingPos->SetLightMode(kLightModeHalfL);
     buildingPos->Draw(camera, kBlendModeNormal);
 
-   /* for (const auto& [type, pos] : fieldPoses_) {
-        pos->Draw(camera);
-    }*/
+    /* for (const auto& [type, pos] : fieldPoses_) {
+         pos->Draw(camera);
+     }*/
 }
 
 void PapyrusWall::SetWallAABB() {
 
-    
-    AABB wallLongX = { 
+
+    AABB wallLongX = {
         { -11.5f, 0.0f, -0.5f },
         { 11.5f,  16.5f, 0.5f }
     };
 
-    AABB wallLongZ = { 
+    AABB wallLongZ = {
         {-0.5f, 0.0f, -11.5f},
         { 0.5f , 16.5f, 11.5f}
     };
@@ -57,8 +57,8 @@ void PapyrusWall::SetWallAABB() {
 
     // 床（Yマイナス側）
     aabbs_[Floor] = {
-        {-11.5f, -11.6f, -8.35f},
-        { 11.5f, -10.6f,  8.35f}
+        {-11.5f, -0.5f, -11.5f},
+        { 11.5f, 0.5f,  11.5f}
     };
 
     // 天井（Yプラス側）←追加

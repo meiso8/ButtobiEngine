@@ -1,4 +1,6 @@
 #include "WaterStage.h"
+#include"SoundManager/SoundManager.h"
+
 WaterStage::WaterStage()
 {
     water_ = std::make_unique<Water>();
@@ -15,6 +17,8 @@ void WaterStage::Initialize()
 
 void WaterStage::Update()
 {
+   SoundManager::NotFindMedjedUpdate();
+
     water_->Update();
     papyrusWall_->Update();
     blockMap_->Update();
@@ -23,7 +27,6 @@ void WaterStage::Update()
         //クリアしていたら水が引ける
         water_->SetIsDrain(true);
     }
-
 
 }
 

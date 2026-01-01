@@ -1,6 +1,16 @@
 #include "GoldHeart.h"
 #include"Lerp.h"
 
+void GoldHeart::Init()
+{
+    used_ = false;
+    aniTimer_ = 0.0f;
+    object_->Initialize();
+    object_->worldTransform_.translate_.y = -1.2f;
+    startPos_ = { 0.0f };
+    endPos_ = { 0.0f };
+}
+
 void GoldHeart::Update()
 {
     if (used_) {

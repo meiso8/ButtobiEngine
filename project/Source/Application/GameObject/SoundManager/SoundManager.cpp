@@ -13,6 +13,13 @@ void SoundManager::PlayCorrectSE()
     Sound::PlayOriginSE(Sound::CORRECT);
 }
 
+
+void SoundManager::PlayGOGOGOSE()
+{
+    Sound::PlayOriginSE(Sound::GOGOGO);
+}
+
+
 void SoundManager::PlayCancelSE()
 {
     Sound::PlaySE(Sound::BUZZER);

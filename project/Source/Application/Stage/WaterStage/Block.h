@@ -10,16 +10,18 @@ private:
     float startPosY_ = { 0.0f };
     float endPosY_ = { 0.0f };
     float aniTimer_ = 0.0f;
+    bool isHit_ = false;
 public:
     void SetIsPush(const bool& isPush) { isPush_ = isPush; }
     const bool& GetIsPush() { return isPush_; };
-    bool IsHit() const { return isPush_ && aniTimer_ == 0.0f; } // 踏んだ瞬間だけ true
+    bool IsHit() const { return isHit_ && !isPush_ && cubeMesh_->GetSrvIndex() != Texture::GetHandle(Texture::PUZZLE); } // ← すでに踏んだブロックは無視！
     void Initialize()override;
     void Update()override;
     //void Draw(Camera& camera);
     void OnCollision(Collider* collider)override;
-    void SetPos(const Vector3& pos) { object_->worldTransform_.translate_ = pos; startPosY_ = pos.y; endPosY_ = pos.y - 0.2f; };
-
+    void SetPos(const Vector3& pos, const float& endOffset = -0.5f);
+    void SetEndPos(const float& endOffset);
+    void Reset();
 };
 
 class BlockMap {
@@ -33,6 +35,8 @@ public:
     const bool& IsClear() { return isClear_; };
     std::array < std::array<std::unique_ptr<Block>, kMapWidth>, kMapHeight >& GetMap() { return map_; };
 private:
+    std::array<Block*, 4> centerBlocks_;
+
     std::array < std::array<std::unique_ptr<Block>, kMapWidth>, kMapHeight >map_;
     std::vector<Texture::TEXTURE_HANDLE> correctOrder_ = { Texture::HIERO_S, Texture::HIERO_P, Texture::HIERO_D, Texture::HIERO_T };
     std::vector<Texture::TEXTURE_HANDLE> steppedOrder_;
