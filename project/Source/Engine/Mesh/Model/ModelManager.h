@@ -11,6 +11,7 @@ public:
     /// @brief モデルのハンドルを宣言します
     enum MODEL_HANDLE {
         BOX,
+        AMEN,
         normalMedjed_GLTF,
         medJed_GLTF,
         medJedDance_GLTF,

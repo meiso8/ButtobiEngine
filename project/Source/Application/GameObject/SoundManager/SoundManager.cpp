@@ -31,7 +31,7 @@ void SoundManager::ApperMedjedUpdate()
         Sound::bgmVolume_ += InverseFPS * 0.25f;
     }
     Sound::Stop(Sound::BGM_Sea);
-    Sound::PlayBGM(Sound::BGM_ArabRuins);
+    Sound::PlayBGM(Sound::BGM_ArabRuins,-0.5f);
 }
 
 void SoundManager::NotFindMedjedUpdate()

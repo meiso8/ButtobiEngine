@@ -41,7 +41,7 @@ void Block::OnCollision(Collider* collider)
         return;
     };
 
-    Sound::PlaySE(Sound::MOVE_ROCK);
+    Sound::PlaySE(Sound::MOVE_ROCK,0.5f);
     aniTimer_ = 0.0f;
     isHit_ = true;
 
@@ -107,7 +107,11 @@ BlockMap::BlockMap()
     map_[1][5]->SetTextureHandle(Texture::HIERO_T);
     map_[2][1]->SetTextureHandle(Texture::HIERO_D);
     map_[3][3]->SetTextureHandle(Texture::HIERO_P);
-
+    Vector4 color = { 1.0f,1.0f,0.0f,1.0f };
+    map_[4][2]->SetColor(color);
+    map_[1][5]->SetColor(color);
+    map_[2][1]->SetColor(color);
+    map_[3][3]->SetColor(color);
 
     centerBlocks_[0] = map_[3][3].get(); // 左上
     centerBlocks_[1] = map_[4][3].get(); // 右上
@@ -166,8 +170,8 @@ void BlockMap::Update() {
                 }
 
                 // 間違った順番ならリセット
-                if (steppedOrder_.size() >= correctOrder_.size()/* ||
-                    steppedOrder_[steppedOrder_.size() - 1] != correctOrder_[steppedOrder_.size() - 1]*/) {
+                if (steppedOrder_.size() >= correctOrder_.size() ||
+                    steppedOrder_[steppedOrder_.size() - 1] != correctOrder_[steppedOrder_.size() - 1]) {
                     steppedOrder_.clear();
                     isReset = true;
                 }

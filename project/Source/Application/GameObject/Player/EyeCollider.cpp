@@ -69,11 +69,5 @@ void EyeCollider::WalkStop()
 void EyeCollider::MouseLook(const float& rotateX)
 {
     object_->worldTransform_.rotate_.x = Lerp(object_->worldTransform_.rotate_.y, rotateX, 0.5f);
-
-
-    object_->worldTransform_.rotate_.x = std::clamp(
-        object_->worldTransform_.rotate_.x,
-        -std::numbers::pi_v<float> / 2.0f,
-        std::numbers::pi_v<float> / 2.0f);
 }
 

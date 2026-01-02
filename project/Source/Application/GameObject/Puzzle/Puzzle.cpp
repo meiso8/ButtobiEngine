@@ -58,7 +58,6 @@ Puzzle::Puzzle()
 void Puzzle::Init()
 {
     isClear_ = false;
-    clearTimer_ = maxTimer_;
     Shuffle();
 }
 
@@ -119,19 +118,7 @@ void Puzzle::Game()
 
 void Puzzle::Update()
 {
-
-    if (isClear_) {
-        Sound::PlayOriginSE(Sound::CORRECT);
-
-        clearTimer_ -= InverseFPS;
-        if (clearTimer_ <= 0.0f) {
-            clearTimer_ = 0.0f;
-        }
-    
-    }
-
     Game();
-
 }
 
 void Puzzle::Draw()

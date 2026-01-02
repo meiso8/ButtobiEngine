@@ -9,6 +9,7 @@ public:
     void SetTextureHandle(const Texture::TEXTURE_HANDLE& handle) {
         object_->SetTextureHandle(handle);
     }
+    void SetColor(const Vector4& color) { object_->SetColor(color); };
     const uint32_t GetSrvIndex() { return cubeMesh_->GetSrvIndex(); }
     virtual void Initialize();
     virtual void Update();
