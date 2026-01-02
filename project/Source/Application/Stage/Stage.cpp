@@ -2,7 +2,6 @@
 
 Player* Stage::player_ =nullptr;
 
-
 Stage::Stage()
  {
 }

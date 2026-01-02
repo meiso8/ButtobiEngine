@@ -102,3 +102,5 @@ private:
 
 //Spriteとposとの当たり判定
 bool IsCollision(const Vector2& pos, Sprite& sprite);
+//Spriteとposとの当たり判定
+bool IsCollision(Sprite& sprite,const Vector2& pos);

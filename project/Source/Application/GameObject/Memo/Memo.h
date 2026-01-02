@@ -30,5 +30,6 @@ public:
         cubeMesh_->SetMinMax(GetAABB()); 
         object_->SetMesh(cubeMesh_.get());
     };
+    void SetColor(const Vector4& color) { object_->SetColor(color); }
 };
 

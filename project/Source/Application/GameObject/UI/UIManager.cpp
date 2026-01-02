@@ -5,6 +5,8 @@ UIManager::UIManager()
     effectSprite_ = std::make_unique<Sprite>();
     effectSprite_->Create(Texture::WHITE_1X1, { 0.0f,0.0f }, { 1.0f,0.75f,0.75f,1.0f });
     effectSprite_->SetSize({ 1280.0f,720.0f });
+    pauseScreen_ = std::make_unique<PauseScreen>();
+
 }
 
 void UIManager::Initialize()
@@ -13,15 +15,20 @@ void UIManager::Initialize()
         gage->Initialize();
     }
 
+    pauseScreen_->Initialize();
 }
 
-void UIManager::Update()
+void UIManager::UpdateGage()
 {
-
     for (const auto& [type, gage] : hpGages_) {
         gage->Update();
     }
 
+}
+
+void UIManager::UpdatePauseScreen()
+{
+    pauseScreen_->Update();
 }
 
 void UIManager::DrawHPGage()
@@ -29,6 +36,12 @@ void UIManager::DrawHPGage()
     for (const auto& [type, gage] : hpGages_) {
         gage->Draw();
     }
+
+}
+
+void UIManager::DrawPauseScreen()
+{
+    pauseScreen_->Draw();
 }
 
 void UIManager::DrawEffect()

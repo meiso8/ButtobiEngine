@@ -24,7 +24,7 @@ void Memo::Initialize() {
 
 void Memo::Update() {
     object_->Update();
-
+    object_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 }
 
 void Memo::Draw(Camera& camera) {

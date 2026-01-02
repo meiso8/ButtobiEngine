@@ -18,6 +18,8 @@
 
 #include"Easing.h"
 #include"SoundManager/SoundManager.h"
+#include"Puzzle/SlidePuzzleSystem.h"
+#include"UI/PauseScreen.h"
 
 SampleScene::SampleScene()
 {
@@ -26,17 +28,16 @@ SampleScene::SampleScene()
 
     player_ = std::make_unique<Player>();
 
-    uIManager_ = std::make_unique<UIManager>();
-
     lightingManager_ = std::make_unique<LightingManager>();
     lightingManager_->playerHandPos_.Parent(player_->GetEyeWorldTransform());
     lightingManager_->direction_ = &player_->GetForward();
 
     collisionManager_ = std::make_unique<CollisionManager>();
-
     itemManager_ = std::make_unique<ItemManager>();
 
+    uIManager_ = std::make_unique<UIManager>();
 
+    memoManager_ = std::make_unique<MemoManager>();
 }
 
 void SampleScene::Initialize() {
@@ -51,41 +52,40 @@ void SampleScene::Initialize() {
     camera_->UpdateMatrix();
 
     player_->Init();
+    player_->SetBodyPos({ 0.0f,0.0f,-5.0f });
 
     uIManager_->Initialize();
     itemManager_->Init();
+    //メモマネージャー
+    memoManager_->Initialize();
 
     Stage::SetPlayer(player_.get());
-
     //player_->SetBodyPos({ 0.0f,0.0f,-15.0f });
 
+    amenStage_ = std::make_unique<AmenStage>();
     waterStage_ = std::make_unique<WaterStage>();
     medjedStage_ = std::make_unique<MedjedStage>();
     mummyStage_ = std::make_unique<MummyStage>();
 
     // 各ステージに渡す
+    amenStage_->SetItemManager(itemManager_);
     waterStage_->SetItemManager(itemManager_);
     mummyStage_->SetItemManager(itemManager_);
     medjedStage_->SetItemManager(itemManager_);
 
+
+    amenStage_->Initialize();
     waterStage_->Initialize();
-    player_->SetBodyPos({ 0.0f,0.0f,-5.0f });
-
-
     mummyStage_->Initialize();
-
-
-    medjedStage_->SetPlayer(player_.get());
     medjedStage_->Initialize();
+
     if (medjedStage_) {
         CreateParticle();
     }
     uIManager_->CreateHpGage(*medjedStage_->GetEnemy()->GetHpsPtr(), *player_->GetHpsPtr());
 
-    currentPhase_ = StagePhase::Water;
-
-
-
+    currentPhase_ = StagePhase::Amen;
+    memoManager_->GenerateMemos({ Texture::MEMO1, Texture::MEMO3,Texture::MEMO4,Texture::BOOK4 });
 }
 
 void SampleScene::Update() {
@@ -100,17 +100,40 @@ void SampleScene::Update() {
         camera_->UpdateViewProjectionMatrix();
     }
 
-    player_->Update();
 
-
-    if (player_->IsDead() /*|| medjedStage_&& medjedStage_->MedjedDead()*/) {
-        sceneChange_->SetState(SceneChange::kFadeIn, 60);
-        SceneManager::SetNestScene("Title");
+    if (PauseScreen::isBackToTitle) {
+        BackToTitle();
     }
 
 
+    if (!PauseScreen::isActive_) {
+        //アクティブなら更新しない
+        player_->Update();
+
+        if (player_->IsDead()) {
+            BackToTitle();
+        }
+    }
+
     // ステージごとの更新
     switch (currentPhase_) {
+    case StagePhase::Amen:
+
+        if (amenStage_) {
+            amenStage_->Update();
+
+            // 水の謎解きクリアで心臓を取得
+            if (amenStage_->IsClear()) {
+                currentPhase_ = StagePhase::Water;
+                //メモマネージャー
+                memoManager_->Initialize();
+                memoManager_->GenerateMemos({ Texture::MEMO2, Texture::MEMO4,Texture::BOOK2 });
+                player_->Init();
+                player_->SetBodyPos({ 0.0f, 0.0f, -5.0f }); // ミイラ前に移動
+            }
+        }
+
+        break;
     case StagePhase::Water:
         if (waterStage_) {
             waterStage_->Update();
@@ -118,6 +141,10 @@ void SampleScene::Update() {
             // 水の謎解きクリアで心臓を取得
             if (waterStage_->IsClear()) {
                 currentPhase_ = StagePhase::Mummy;
+                //メモマネージャー
+                memoManager_->Initialize();
+                memoManager_->GenerateMemos({ Texture::BOOK });
+                player_->Init();
                 player_->SetBodyPos({ 0.0f, 0.0f, -5.0f }); // ミイラ前に移動
             }
         }
@@ -130,6 +157,10 @@ void SampleScene::Update() {
             // 心臓をはめてメジェドが現れたら
             if (mummyStage_->IsEndTime()) {
                 currentPhase_ = StagePhase::Medjed;
+                //メモマネージャー
+                memoManager_->Initialize();
+                memoManager_->GenerateMemos({ Texture::BOOK3 });
+                player_->Init();
                 player_->SetBodyPos({ 0.0f, 0.0f, -5.0f }); // メジェド前に移動
             }
         }
@@ -139,8 +170,8 @@ void SampleScene::Update() {
         if (medjedStage_) {
             medjedStage_->Update();
             if (medjedStage_->MedjedDead()) {
-                sceneChange_->SetState(SceneChange::kFadeIn, 60);
-                SceneManager::SetNestScene("Title");
+
+                BackToTitle();
             }
 
             if (medjedStage_->FindMedjed()) {
@@ -150,7 +181,7 @@ void SampleScene::Update() {
                     particleEmitters_[i]->UpdateTimer();
                     particleEmitters_[i]->UpdateEmitter();
                 }
-                uIManager_->Update();
+                uIManager_->UpdateGage();
             }
         }
         break;
@@ -159,7 +190,8 @@ void SampleScene::Update() {
     // 共通更新
     ParticleManager::GetInstance()->Update(*currentCamera_);
     itemManager_->Update();
-
+    uIManager_->UpdatePauseScreen();
+    memoManager_->Update();
     CheckAllCollision();
 }
 
@@ -192,13 +224,22 @@ void SampleScene::Debug()
 
 void SampleScene::CheckAllCollision()
 {
+
+
+    if (PauseScreen::isActive_) {
+        //ポーズ中はコライダーヒットしない
+        return;
+    }
+
+
     // ========================//Ray================================
 
     //アイテムがヒットしているか
     auto hitItem = itemManager_->RaycastHitItem(*player_->raySprite_);
     if (hitItem) { itemManager_->GetItemSlot().OnTriggerItemPickup(hitItem); }
 
-
+    //メモがヒットしているかどうか
+    memoManager_->RayCastHit(*player_->raySprite_);
     // ========================//Ray================================
 
     collisionManager_->ClearColliders();
@@ -207,6 +248,9 @@ void SampleScene::CheckAllCollision()
     collisionManager_->AddCollider(player_->GetEyeCollider());
 
     switch (currentPhase_) {
+    case StagePhase::Amen:
+        if (amenStage_) amenStage_->CheckCollision(*collisionManager_);
+        break;
     case StagePhase::Water:
         if (waterStage_) waterStage_->CheckCollision(*collisionManager_);
         break;
@@ -220,6 +264,12 @@ void SampleScene::CheckAllCollision()
 
     collisionManager_->CheckAllCollisions();
 
+}
+
+void SampleScene::BackToTitle()
+{
+    sceneChange_->SetState(SceneChange::kFadeIn, 60);
+    SceneManager::SetNestScene("Title");
 }
 
 void SampleScene::CreateParticle()
@@ -276,10 +326,13 @@ void SampleScene::Draw() {
     DrawGrid::Draw(*currentCamera_);
 
 #endif
-
+    memoManager_->Draw(*currentCamera_);
     itemManager_->Draw(*currentCamera_);
 
     switch (currentPhase_) {
+    case StagePhase::Amen:
+        if (amenStage_) amenStage_->Draw(*currentCamera_);
+        break;
     case StagePhase::Water:
         if (waterStage_) waterStage_->Draw(*currentCamera_);
         break;
@@ -301,10 +354,11 @@ void SampleScene::Draw() {
     player_->Draw(*currentCamera_, kLightModeHalfL);
 
     ParticleManager::GetInstance()->Draw();
+    uIManager_->DrawPauseScreen();
+    if (amenStage_) amenStage_->DrawUI();
 
-
-
-    player_->DrawUI();
+    memoManager_->DrawUI();
+    player_->DrawRaySprite();
     uIManager_->DrawEffect();
 
     sceneChange_->Draw();

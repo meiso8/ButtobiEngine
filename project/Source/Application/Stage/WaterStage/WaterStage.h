@@ -14,7 +14,7 @@ private:
     std::unique_ptr<Water>water_ = nullptr;
     std::unique_ptr<PapyrusWall>papyrusWall_ = nullptr;
     std::unique_ptr<BlockMap>blockMap_ = nullptr;
-    std::unique_ptr<MemoManager>memoManager_ = nullptr;
+
     bool itemApper_ = false;
 public:
     const bool IsClear();

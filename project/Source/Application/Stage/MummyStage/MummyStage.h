@@ -6,13 +6,13 @@
 #include"Papyrus.h"
 #include"Item/ItemManager.h"
 #include"Memo/MemoManager.h"
-
+#include "../Stage/WaterStage/PapyrusWall.h"
 class MummyStage :public Stage
 {
 private:
     std::unique_ptr<Mummy>mummy_ = nullptr;
     std::unique_ptr<Papyrus> papyrus_ = nullptr;
-    std::unique_ptr<MemoManager>memoManager_ = nullptr;
+    std::unique_ptr<PapyrusWall>papyrusWall_ = nullptr;
 public:
     const float maxTime_ = 5.0f;
     float medjedApperTime_ = maxTime_;

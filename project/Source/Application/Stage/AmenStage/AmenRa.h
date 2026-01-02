@@ -3,10 +3,10 @@
 #include"Collider.h"
 #include <memory>
 #include"Object3d.h"
-#include"CubeMesh.h"
-class PuzzleObj : public Collider {
+
+class AmenRa : public Collider {
 public:
-    PuzzleObj();
+    AmenRa();
     void Initialize();
     void Update();
     void Draw(Camera& camera);
@@ -14,8 +14,7 @@ public:
     Vector3 GetWorldPosition() const override {
         return object_->worldTransform_.GetWorldPosition();
     }
-    void SetColor(const Vector4& color) { object_->SetColor(color); };
 private:
-    std::unique_ptr<Object3d> object_ = nullptr;
-    std::unique_ptr<CubeMesh> cubeMesh_ = nullptr;
+    std::unique_ptr<Object3d> object_;
+
 };

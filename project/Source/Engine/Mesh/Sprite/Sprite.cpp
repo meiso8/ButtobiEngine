@@ -231,3 +231,8 @@ bool IsCollision(const Vector2& pos, Sprite& sprite) {
     return (pos.x >= left && pos.x <= right &&
         pos.y >= top && pos.y <= bottom);
 }
+
+bool IsCollision(Sprite& sprite, const Vector2& pos)
+{
+    return IsCollision(pos,sprite);
+}
