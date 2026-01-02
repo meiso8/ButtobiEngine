@@ -20,7 +20,7 @@
 #include"../Stage/MummyStage/MummyStage.h"
 #include"../Stage/WaterStage/WaterStage.h"
 #include"../Stage/MedjedStage/MedjedStage.h"
-
+#include"../Stage/AmenStage/AmenStage.h"
 class Sprite;
 class PlaneMesh;
 class SphereMesh;
@@ -38,22 +38,21 @@ public:
     void Draw()override;
     void Debug()override;
     void CheckAllCollision();
-
+    void BackToTitle();
 private:
     void CreateParticle();
-    enum class StagePhase { Water, Mummy, Medjed }; StagePhase currentPhase_ = StagePhase::Water;
+    enum class StagePhase {Amen, Water, Mummy, Medjed }; 
+    StagePhase currentPhase_ = StagePhase::Amen;
 #pragma region//ゲームオブジェクト
     std::unique_ptr<Player>player_ = nullptr;
-
     std::unique_ptr<LightingManager>lightingManager_ = nullptr;
-
     std::shared_ptr<ItemManager> itemManager_;
-
     std::unique_ptr<UIManager> uIManager_ = nullptr;
-
+    std::unique_ptr<MemoManager>memoManager_ = nullptr;
 #pragma endregion
 
 #pragma region//ステージ
+    std::unique_ptr<AmenStage> amenStage_ = nullptr;
     std::unique_ptr<MummyStage> mummyStage_ = nullptr;
     std::unique_ptr<WaterStage> waterStage_ = nullptr;
     std::unique_ptr<MedjedStage> medjedStage_ = nullptr;

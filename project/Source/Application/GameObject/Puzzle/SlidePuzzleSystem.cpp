@@ -4,6 +4,7 @@
 #include"CollisionManager.h"
 #include"InputBind.h"
 bool SlidePuzzleSystem::isActive_ = false;
+ bool SlidePuzzleSystem::isEnd_ = false;;
 SlidePuzzleSystem::SlidePuzzleSystem()
 {
     puzzle_ = std::make_unique<Puzzle>();
@@ -15,6 +16,7 @@ void SlidePuzzleSystem::Initialize()
 
     clearTimer_ = maxTimer_;
     isActive_ = false;
+    isEnd_ = false;
     puzzle_->Init();
     puzzleObj_->Initialize();
 }
@@ -23,7 +25,7 @@ void SlidePuzzleSystem::Update()
 {
     if (isActive_) {
         //クリアしたら
-        
+
         puzzle_->Update();
 
         if (puzzle_->IsClear()) {
@@ -34,6 +36,11 @@ void SlidePuzzleSystem::Update()
 
             clearTimer_ -= InverseFPS;
             clearTimer_ = std::clamp(clearTimer_, 0.0f, maxTimer_);
+
+            if (clearTimer_ == 0.0f) {
+                isEnd_ = true;
+                isActive_ = false;
+            }
         }
 
     }
@@ -44,8 +51,16 @@ void SlidePuzzleSystem::Update()
 void SlidePuzzleSystem::Draw(Camera& camera)
 {
     puzzleObj_->Draw(camera);
-    puzzle_->Draw();
 
+
+
+}
+
+void SlidePuzzleSystem::DrawUI()
+{
+    if (isActive_) {
+        puzzle_->Draw();
+    }
 }
 
 void SlidePuzzleSystem::RayCastHit(RaySprite& ray)

@@ -3,6 +3,15 @@
 #include"SoundManager/SoundManager.h"
 #include"InputBind.h"
 #include<algorithm>
+
+
+MummyStage::MummyStage()
+{
+    papyrus_ = std::make_unique<Papyrus>();
+    mummy_ = std::make_unique<Mummy>();
+    papyrusWall_ = std::make_unique<PapyrusWall>();
+}
+
 void MummyStage::TimerUpdate()
 {
     medjedApperTime_ -= InverseFPS;
@@ -10,22 +19,12 @@ void MummyStage::TimerUpdate()
 
 }
 
-MummyStage::MummyStage()
-{
-    memoManager_ = std::make_unique<MemoManager>();
-    papyrus_ = std::make_unique<Papyrus>();
-    mummy_ = std::make_unique<Mummy>();
-}
 void MummyStage::Initialize() {
 
     medjedApperTime_ = maxTime_;
     papyrus_->Initialize();
     mummy_->Initialize();
-
-    memoManager_->GenerateMemos({ Texture::BOOK});
-    //メモマネージャー
-    memoManager_->Initialize();
-
+    papyrusWall_->Init();
     //itemManager_->GenerateItems({ "GoldHeart" }); // 取得済み前提で使用のみ
 
 }
@@ -33,20 +32,18 @@ void MummyStage::Initialize() {
 void MummyStage::Update() {
 
     auto item = itemManager_->GetItem("GoldHeart");
-    if (itemManager_&& item&&item->isUsed_) {
+    if (itemManager_ && item && item->isUsed_) {
         //メジェドあらわる
         TimerUpdate();
     };
 
-    memoManager_->Update();
     papyrus_->Update();
     mummy_->Update();
+    papyrusWall_->Update();
 }
 
 bool MummyStage::IsRayCastHit(RaySprite& raySprite)
 {
-    //メモがヒットしているかどうか
-    memoManager_->RayCastHit(raySprite);
 
     AABB aabb = GetAABBWorldPos(mummy_.get());
 
@@ -77,15 +74,21 @@ void MummyStage::CheckCollision(CollisionManager& collisionManager)
 
     }
 
-
     //ミイラの台も一緒に
     collisionManager.AddCollider(GetMummy());
     collisionManager.AddCollider(GetMummy()->GetPlatform());
     collisionManager.AddCollider(papyrus_.get());
+
+    //Waterのかべ
+    for (auto& [type, object] : papyrusWall_.get()->GetFieldPoses()) {
+        collisionManager.AddCollider(object.get());
+    }
+
 }
 
 void MummyStage::Draw(Camera& camera) {
+
+    papyrusWall_->Draw(camera);
     papyrus_->Draw(camera);
     mummy_->Draw(camera);
-    memoManager_->Draw(camera);
 }

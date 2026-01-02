@@ -80,10 +80,11 @@ void Puzzle::Game()
     int clickedIndex = -1;
 
     for (int i = 0; i < maxArrayNum_; ++i) {
-        Vector2 spritePos = sprites_[panel_[i]]->GetPosition();
-        Rect rect = { .left = spritePos.x - size_.x * 0.5f,.width = size_.x,.top = spritePos.y - size_.y * 0.5f,.height = size_.y };
-        if (IsCollision(pos, rect)) {
-            sprites_[panel_[i]]->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+
+        Sprite* sprite = sprites_[panel_[i]].get();
+
+        if (IsCollision(pos, *sprite)) {
+            sprite->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 
             if (InputBind::IsClick()) {
                 clickedIndex = i;
@@ -91,7 +92,7 @@ void Puzzle::Game()
             }
 
         } else {
-            sprites_[panel_[i]]->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+            sprite->SetColor({ 1.0f,1.0f,1.0f,1.0f });
         }
     }
 

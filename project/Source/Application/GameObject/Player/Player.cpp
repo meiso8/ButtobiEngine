@@ -62,6 +62,8 @@ Player::Player() {
 
     raySprite_ = std::make_unique<RaySprite>();
     eyeCollider_ = std::make_unique<EyeCollider>();
+    //体の位置を親に設定
+    eyeCollider_->SetParent(bodyPos_.worldTransform_);
 }
 
 void Player::Init()
@@ -73,10 +75,8 @@ void Player::Init()
     //体の位置初期化
     bodyPos_.Initialize();
     //目の位置初期化
-
     eyeCollider_->Initialize();
-    //体の位置を親に設定
-    eyeCollider_->SetParent(bodyPos_.worldTransform_);
+
 
     velocity_ = { 0.0f,0.0f,0.0f };
     kSpeed_ = { 0.5f };
@@ -110,7 +110,7 @@ void Player::Draw(Camera& camera, const LightMode& lightType)
     ColliderDraw(camera);
 }
 
-void Player::DrawUI()
+void Player::DrawRaySprite()
 {
     raySprite_->Draw();
 }

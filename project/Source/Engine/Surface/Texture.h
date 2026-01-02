@@ -21,7 +21,10 @@ public:
         WHITE_1X1,
         UV_CHECKER,
         NUMBERS,
-     
+
+        BUTTON_BACK_TO_GAME,
+        BUTTON_BACK_TO_TITL,
+
         TEST3,
 
         MEMO1,
@@ -31,13 +34,15 @@ public:
         BOOK,
         BOOK2,
         BOOK3,
+        BOOK4,
         NONE,
         PUZZLE,
+        PUZZLE_NUM,
 
-       HIERO_S,
-       HIERO_P,
-       HIERO_D,
-       HIERO_T,
+        HIERO_S,
+        HIERO_P,
+        HIERO_D,
+        HIERO_T,
 
         SLOT,
         EYE,
@@ -67,7 +72,7 @@ public:
     static void Finalize();
     //初期化
     static void Initialize();
-//インデックスを返すロード関数
+    //インデックスを返すロード関数
     static uint32_t Load(const std::string& filePath);
     //SRVインデックスの開始番号
     static uint32_t GetSrvIndexByFilePath(const std::string& filePath);
@@ -76,7 +81,7 @@ public:
     static D3D12_GPU_DESCRIPTOR_HANDLE GetSrvHandleGPU(const std::string& filePath);
     static const DirectX::TexMetadata& GetMetaData(const uint32_t& handle);
 private:
-    static std::unordered_map<std::string,TextureData> textureDatas;
+    static std::unordered_map<std::string, TextureData> textureDatas;
     static std::vector<uint32_t> handles;
     static std::unordered_map<uint32_t, std::string> handleToPath_;
 private:

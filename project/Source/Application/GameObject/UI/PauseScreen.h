@@ -2,12 +2,12 @@
 #include"Sprite.h"
 #include<memory>
 #include<array>
+
 class PauseScreen
 {
 public:
     static bool isActive_;
     static bool isPause_;
-    static bool isRetry;
     static bool isBackToTitle;
 
     PauseScreen();
@@ -18,34 +18,21 @@ public:
 private:
     enum Layer {
         kBlackScreen,
-        kPauseBG,
-        kPausing,
         kBackToGame,
-        kReTry,
         kBackToTitle,
-        kButton,
-        kConfirm,
         kMaxLayer,
-    };
-    enum Button {
-        kBackToGameButton,
-        kReTryButton,
-        kBackToTitleButton,
-        kButtonMax,
     };
 
     void TimerUpdate();
-    void TimerDown();
     void SelectButton();
     void ScalingButton();
 
     float pauseTimer_ = 0.0f;
-    int selectButtonNum_ = kBackToGameButton;
+    int selectButtonNum_ = kBackToGame;
 
     float scaleTheta_ = 0.0f;
 
-    std::array < Vector2, kMaxLayer> startPos_;
-    std::array < Vector2, kMaxLayer> endPos_;
+    std::array < Vector2, kMaxLayer> pos_;
     std::array<std::unique_ptr<Sprite>, kMaxLayer> sprites_;
 };
 

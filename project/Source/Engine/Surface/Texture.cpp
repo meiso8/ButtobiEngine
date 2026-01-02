@@ -27,6 +27,9 @@ void Texture::LoadAllTexture() {
     handles[UV_CHECKER] = Load("Resource/Textures/uvChecker.png");
     handles[NUMBERS] = Load("Resource/Textures/numbers.png");
 
+    handles[BUTTON_BACK_TO_GAME] = Load("Resource/Textures/back.png");
+    handles[BUTTON_BACK_TO_TITL] = Load("Resource/Textures/titleButton.png");
+
     handles[TEST3] = Load("Resource/Textures/test3.png");
 
     handles[MEMO1] = Load("Resource/Textures/memo01.png");
@@ -37,8 +40,12 @@ void Texture::LoadAllTexture() {
     handles[BOOK] = Load("Resource/Textures/book.png");
     handles[BOOK2] = Load("Resource/Textures/book02.png");
     handles[BOOK3] = Load("Resource/Textures/book03.png");
+    handles[BOOK4] = Load("Resource/Textures/book04.png");
+
+
     handles[NONE] = Load("Resource/Textures/none.png");
     handles[PUZZLE] = Load("Resource/Textures/puzzle.png");
+    handles[PUZZLE_NUM] = Load("Resource/Textures/puzzleNum.png");
 
     handles[HIERO_S] = Load("Resource/Textures/s.png");
     handles[HIERO_P] = Load("Resource/Textures/p.png");

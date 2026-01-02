@@ -13,7 +13,6 @@ private:
     std::unique_ptr<MedjedManager>medjedManager_ = nullptr;
     std::unique_ptr<RhythmBullet>rhythmBullet_ = nullptr;
     std::unique_ptr<BackGround>backGround_ = nullptr;
-    std::unique_ptr<MemoManager>memoManager_ = nullptr;
 public:
 
     MedjedStage();

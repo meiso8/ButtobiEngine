@@ -9,11 +9,7 @@
 
 PuzzleObj::PuzzleObj() {
 
-    object_ = std::make_unique<Object3d>();
-    object_->Create();
-    object_->SetMesh(ModelManager::GetModel(ModelManager::BOX));
-
-    AABB aabb = { .min = {-0.5f,-0.5f,-0.5f},.max = {0.5f,0.5f,0.5f} };
+    AABB aabb = { .min = {-0.25f,-0.25f,-0.25f},.max = {0.25f,0.25f,0.25f} };
 
     SetType(kAABB);
     SetCollisionAttribute(kCollisionWall); // ミイラの衝突属性
@@ -21,12 +17,21 @@ PuzzleObj::PuzzleObj() {
 
     // memoのサイズに合わせる
     SetAABB(aabb);
+
+    cubeMesh_ = std::make_unique<CubeMesh>();
+    cubeMesh_->Create();
+    cubeMesh_->SetMinMax(aabb);
+    cubeMesh_->SetTextureHandle(Texture::PUZZLE_NUM);
+
+    object_ = std::make_unique<Object3d>();
+    object_->Create();
+    object_->SetMesh(cubeMesh_.get());
 }
 
 void PuzzleObj::Initialize() {
 
     object_->Initialize();
-    object_->worldTransform_.translate_ = { 0.0f,0.0f,0.0f };
+    object_->worldTransform_.translate_ = { -24.0f,0.25f,-24.0f };
 
 }
 

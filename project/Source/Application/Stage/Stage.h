@@ -9,7 +9,6 @@ class Stage
 protected:
     static Player* player_;
     std::shared_ptr<ItemManager> itemManager_;
-
 public:
     Stage();
     void SetItemManager(std::shared_ptr<ItemManager> itemManager) {
