@@ -157,6 +157,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\Puzzle\PuzzleObj.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Puzzle\SlidePuzzleSystem.cpp" />
     <ClCompile Include="Source\Application\Stage\WaterStage\Block.cpp" />
     <ClCompile Include="Source\Application\Stage\MedjedStage\MedjedStage.cpp" />
     <ClCompile Include="Source\Application\Stage\WaterStage\PapyrusWall.cpp" />
@@ -310,6 +312,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\Stage\Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\Puzzle\PuzzleObj.h" />
+    <ClInclude Include="Source\Application\GameObject\Puzzle\SlidePuzzleSystem.h" />
     <ClInclude Include="Source\Application\Stage\WaterStage\Block.h" />
     <ClInclude Include="Source\Application\Stage\MedjedStage\MedjedStage.h" />
     <ClInclude Include="Source\Application\Stage\WaterStage\PapyrusWall.h" />

@@ -296,6 +296,11 @@ void Player::MouseLook()
         cameraRotateX_ += Input::GetMousePosFiltered().y * InverseFPS / cameraSpeed_;
     }
 
+    cameraRotateX_ = std::clamp(
+        cameraRotateX_,
+        -std::numbers::pi_v<float> *0.5f,
+        std::numbers::pi_v<float> *0.5f);
+
     bodyPos_.worldTransform_.rotate_.y = Lerp(bodyPos_.worldTransform_.rotate_.y, cameraRotateY_, 0.5f);
     eyeCollider_->MouseLook(cameraRotateX_);
 

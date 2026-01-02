@@ -1,0 +1,72 @@
+#include "SlidePuzzleSystem.h"
+#include"SoundManager/SoundManager.h"
+#include<algorithm>
+#include"CollisionManager.h"
+#include"InputBind.h"
+bool SlidePuzzleSystem::isActive_ = false;
+SlidePuzzleSystem::SlidePuzzleSystem()
+{
+    puzzle_ = std::make_unique<Puzzle>();
+    puzzleObj_ = std::make_unique<PuzzleObj>();
+}
+
+void SlidePuzzleSystem::Initialize()
+{
+
+    clearTimer_ = maxTimer_;
+    isActive_ = false;
+    puzzle_->Init();
+    puzzleObj_->Initialize();
+}
+
+void SlidePuzzleSystem::Update()
+{
+    if (isActive_) {
+        //クリアしたら
+        
+        puzzle_->Update();
+
+        if (puzzle_->IsClear()) {
+
+            if (clearTimer_ == maxTimer_) {
+                SoundManager::PlayCorrectSE();
+            }
+
+            clearTimer_ -= InverseFPS;
+            clearTimer_ = std::clamp(clearTimer_, 0.0f, maxTimer_);
+        }
+
+    }
+
+    puzzleObj_->Update();
+}
+
+void SlidePuzzleSystem::Draw(Camera& camera)
+{
+    puzzleObj_->Draw(camera);
+    puzzle_->Draw();
+
+}
+
+void SlidePuzzleSystem::RayCastHit(RaySprite& ray)
+{
+    //アクティブならヒットさせない
+    if (isActive_) {
+        return;
+    }
+    AABB box = GetAABBWorldPos(puzzleObj_.get()); // AABBなど
+    Vector3 itemPos = puzzleObj_->GetWorldPosition();
+
+    if (ray.IntersectsAABB(box, itemPos)) {
+
+        puzzleObj_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+
+        if (InputBind::IsClick()) {
+            if (!isActive_) {
+                isActive_ = true;
+            }
+
+        }
+    }
+
+}

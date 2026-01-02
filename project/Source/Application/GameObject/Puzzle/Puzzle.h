@@ -18,8 +18,7 @@ private:
     bool isClear_ = false;
     Vector2 size_ = { 0.0f };
     Vector2 centerPos_ = { 0.0 };
-    const float maxTimer_ = 5.0f;
-    float clearTimer_ = maxTimer_;
+
 
 private:
     //シャッフル
@@ -32,7 +31,8 @@ public:
     void Game();
     void Update();
     void Draw();
-    bool GetIsGameEnd() { return clearTimer_ <= 0.0f; };
+    bool IsClear() { return isClear_; };
+
     void SetTexture(const Texture::TEXTURE_HANDLE& handle);
 };
 

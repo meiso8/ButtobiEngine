@@ -1,6 +1,5 @@
 #pragma once
 #include"SceneManager.h"
-#include"Puzzle/Puzzle.h"
 
 class TitleScene :public BaseScene
 {
@@ -14,6 +13,6 @@ public:
    void SceneChangeUpdate()override;
 
 private:
-    std::unique_ptr<Puzzle>puzzle_ = nullptr;
+
 };
 

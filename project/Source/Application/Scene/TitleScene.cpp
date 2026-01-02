@@ -8,7 +8,7 @@
 #include"CoordinateTransform.h"
 TitleScene::TitleScene()
 {
-    puzzle_ = std::make_unique<Puzzle>();
+ 
 }
 
 TitleScene::~TitleScene()
@@ -20,22 +20,18 @@ void TitleScene::Initialize()
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 60);
     Sound::StopAllSound();
-    puzzle_->Init();
+  
 }
 
 void TitleScene::Update()
 {
-    puzzle_->Update();
+ 
 
-    if (puzzle_->GetIsGameEnd()) {
-        sceneChange_->SetState(SceneChange::kFadeIn, 30);
-        SceneManager::SetNestScene("Sample");
-    }
 }
 
 void TitleScene::Draw()
 {
-    puzzle_->Draw();
+
     sceneChange_->Draw();
 }
 
