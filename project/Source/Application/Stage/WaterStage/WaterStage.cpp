@@ -18,11 +18,13 @@ void WaterStage::Initialize()
     
     water_->Initialize();
     papyrusWall_->Init();
+    papyrusWall_->Update();
     blockMap_->Initialize();
     blockMap_->Update();
     itemManager_->Init();
     player_->Init();
     player_->SetBodyPos({ 0.0f,0.0f, -10.0f });
+    player_->Update();
     itemApper_ = false;
 }
 
@@ -56,6 +58,7 @@ void WaterStage::Draw(Camera& camera)
 void WaterStage::CheckCollision(CollisionManager& collisionManager)
 {
 
+    blockMap_->RayCastHit(*player_->raySprite_);
     //Waterのかべ
     for (auto& [type, object] : papyrusWall_.get()->GetFieldPoses()) {
         collisionManager.AddCollider(object.get());

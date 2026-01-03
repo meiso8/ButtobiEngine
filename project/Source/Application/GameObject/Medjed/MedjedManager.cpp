@@ -113,10 +113,10 @@ void MedjedManager::UpdateMedjedIfNotFind()
     //メジェド一つだけ
     GetMedjed()->Look(*targetPos_);
 
-    if (GetMedjed()->GetIsHit()) {
-        //ランダム
-        PlaceLockersRandomly();
-    }
+    //if (GetMedjed()->GetIsHit()) {
+    //    //ランダム
+    //    PlaceLockersRandomly();
+    //}
 }
 
 void MedjedManager::UpdateMedjedIfFind()
@@ -125,10 +125,11 @@ void MedjedManager::UpdateMedjedIfFind()
 
         medjed->Look(*targetPos_);
 
+        if (enemyApperTime_ >= 2.0f) {
+            medjed->GoToTarget(enemy_->GetWorldPos());
+        }
         if (GetIsApperMedjed()) {
-            if (auto dummy = dynamic_cast<DummyMedjed*>(medjed.get())) {
-                dummy->Hide();
-            }
+            medjed->Hide();
         }
 
     }

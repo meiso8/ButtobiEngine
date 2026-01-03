@@ -24,6 +24,7 @@ void Player::OnCollision(Collider* collider)
         OnCollisionEnemy();
     }
 
+
     if (collider->GetCollisionAttribute() == kCollisionDummyMedjed
         || collider->GetCollisionAttribute() == kCollisionWall
         || collider->GetCollisionAttribute() == kCollisionMedjed
@@ -35,6 +36,10 @@ void Player::OnCollision(Collider* collider)
         if (isJump_) {
             isJump_ = false;
         }
+
+    }
+
+    if (collider->GetCollisionAttribute() == kCollisionWater) {
 
     }
 
@@ -57,7 +62,7 @@ Player::Player() {
     SetType(ColliderType::kAABB);
     SetAABB(localAabb_);
     SetCollisionAttribute(kCollisionPlayer);
-    SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet | kCollisionMedjed | kCollisionDummyMedjed | kCollisionWall | kCollisionMummy);
+    SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet | kCollisionMedjed | kCollisionDummyMedjed | kCollisionWall | kCollisionMummy|kCollisionWater);
 
     //それぞれのObject3d（WorldTransform）を作る
     bodyPos_.Create();
@@ -72,6 +77,7 @@ Player::Player() {
 
 void Player::Init()
 {
+
     isJump_ = false;
     zoomTimer_ = 0.0f;
     zoomStartTimer_ = 0.0f;

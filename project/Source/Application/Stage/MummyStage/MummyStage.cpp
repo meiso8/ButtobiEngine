@@ -9,7 +9,7 @@ MummyStage::MummyStage()
 {
     papyrus_ = std::make_unique<Papyrus>();
     mummy_ = std::make_unique<Mummy>();
-    papyrusWall_ = std::make_unique<PapyrusWall>();
+    mummyRoom_ = std::make_unique<MummyRoom>(); // ← 追加
 }
 
 void MummyStage::TimerUpdate()
@@ -25,7 +25,7 @@ void MummyStage::Initialize() {
     medjedApperTime_ = maxTime_;
     papyrus_->Initialize();
     mummy_->Initialize();
-    papyrusWall_->Init();
+    mummyRoom_->Init(); // ← 追加
     player_->Init();
     player_->SetBodyPos({ 0.0f, 0.0f, -5.0f }); // ミイラ前に移動
 }
@@ -41,7 +41,7 @@ void MummyStage::Update() {
 
     papyrus_->Update();
     mummy_->Update();
-    papyrusWall_->Update();
+    mummyRoom_->Update(); // ← 追加（必要に応じて
 }
 
 bool MummyStage::IsRayCastHit(RaySprite& raySprite)
@@ -82,7 +82,7 @@ void MummyStage::CheckCollision(CollisionManager& collisionManager)
     collisionManager.AddCollider(papyrus_.get());
 
     //Waterのかべ
-    for (auto& [type, object] : papyrusWall_.get()->GetFieldPoses()) {
+    for (auto& [type, object] : mummyRoom_.get()->GetFieldPoses()) {
         collisionManager.AddCollider(object.get());
     }
 
@@ -90,7 +90,7 @@ void MummyStage::CheckCollision(CollisionManager& collisionManager)
 
 void MummyStage::Draw(Camera& camera) {
 
-    papyrusWall_->Draw(camera);
+    mummyRoom_->Draw(camera); // ← 追加
     papyrus_->Draw(camera);
     mummy_->Draw(camera);
 }

@@ -49,6 +49,7 @@ public:
     HPs* GetHpsPtr() { return &characterState_.hps; }
     const bool& GetIsDead() { return characterState_.isDead; }
 private:
+   const float kScale_ = 5.0f;
     bool isApper_ = false;
     float timer_ = 0.0f;
     float actionTime_ = 0.0f;
@@ -68,6 +69,7 @@ private:
     Circle enemyFieldCircle_ = { {0.0f,0.0f,0.0f} ,9.0f };
 
     enum PHASE {
+        APPER,
         ROUND,
         FIREBALL,
         EXIT,
@@ -76,7 +78,7 @@ private:
 
     //メンバ関数ポインタテーブル
     std::unordered_map<PHASE, std::function<void()>> UpdateActions_;
-    PHASE phase_ = PHASE::ROUND;
+    PHASE phase_ = PHASE::APPER;
     Vector3 velocity_ = { 0.0f };
 
     Vector3 startPos_ = { 0.0f };
@@ -87,7 +89,7 @@ private:
     float roundSpeedY = 1.0f;
 private:
     void SetPhase(PHASE phase);
-
+    void Apper();
     void Round();
     void Fireball();
     void Exit();

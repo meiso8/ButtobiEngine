@@ -16,12 +16,17 @@ void DummyMedjed::Look(const Vector3& target)
     object3d_->worldTransform_.rotate_.y = Easing::EaseInOutBounce(startRotateY_, std::atan2(direction.x, direction.z), aniTimer_);
 }
 
+void DummyMedjed::GoToTarget(const Vector3& target)
+{
+    object3d_->worldTransform_.translate_ = Lerp(object3d_->worldTransform_.translate_, target, 0.01f);
+}
+
 void DummyMedjed::Hide()
 {
 
-    hideTimer_ += InverseFPS * 0.25f;
+    hideTimer_ += InverseFPS * 0.5f;
     hideTimer_ = std::clamp(hideTimer_, 0.0f, 1.0f);
-    object3d_->worldTransform_.translate_.y = Easing::EaseInCubic(startPosY_, -2.0f, hideTimer_);
+  /*  object3d_->worldTransform_.translate_.y = Easing::EaseInCubic(startPosY_, -2.0f, hideTimer_);*/
 
 }
 

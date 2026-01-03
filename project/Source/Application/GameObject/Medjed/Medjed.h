@@ -30,6 +30,8 @@ public:
     {
         return aniObj_->worldTransform_;
     }
+    void GoToTarget(const Vector3& target)override;
+    void Hide()override;
     void MoveStart();
     const bool& GetIsFind()const { return isFind_; };
     void SetIsFind(const bool& f) { isFind_ = f; };

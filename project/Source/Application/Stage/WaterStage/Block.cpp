@@ -5,6 +5,8 @@
 #include"SoundManager/SoundManager.h"
 #include"Sound.h"
 #include"CollisionConfig.h"
+#include"InputBind.h"
+#include"../System/CollisionManager.h"
 Block::Block()
 {
     SetType(kAABB);
@@ -17,7 +19,7 @@ void Block::Initialize()
     object_->Initialize();
     aniTimer_ = 0.0f;
     isPush_ = false;
-    isHit_ = false;
+
 }
 
 void Block::Update()
@@ -39,21 +41,7 @@ void Block::OnCollision(Collider* collider)
 {
     OnCollisionCollider();
 
-    if (isPush_) {
-        return;
-    }
 
-    if (isHit_) {
-        return;
-    }
-    // 通常ブロックなら無視 
-    if (cubeMesh_->GetSrvIndex() == Texture::GetHandle(Texture::PUZZLE)|| cubeMesh_->GetSrvIndex() == Texture::GetHandle(Texture::NONE)) {
-        return;
-    };
-
-    Sound::PlaySE(Sound::MOVE_ROCK,0.5f);
-    aniTimer_ = 0.0f;
-    isHit_ = true;
 
 }
 
@@ -69,16 +57,39 @@ void Block::SetEndPos(const float& endOffset)
     endPosY_ = startPosY_ + endOffset;
 }
 
+void Block::InitAnitimer()
+{
+    aniTimer_ = 0.0f;
+}
+
 void Block::Reset()
 {
-    // 通常ブロックなら無視 
-    if (cubeMesh_->GetSrvIndex() == Texture::GetHandle(Texture::PUZZLE)|| cubeMesh_->GetSrvIndex() == Texture::GetHandle(Texture::NONE)) {
+    if (!CanPushBlock()) {
         return;
-    };
+
+    }
 
     aniTimer_ = 0.0f;
     isPush_ = false;
-    isHit_ = false;
+}
+
+void Block::RayCastHit()
+{
+    if (!InputBind::IsClick()) {
+        return;
+    }
+
+    if (isPush_) {
+        return;
+    }
+
+    if (!CanPushBlock()) {
+        return;
+    }
+
+    Sound::PlaySE(Sound::MOVE_ROCK, 0.5f);
+    aniTimer_ = 0.0f;
+    isPush_ = true;
 }
 
 BlockMap::BlockMap()
@@ -116,6 +127,14 @@ BlockMap::BlockMap()
     centerBlocks_[2] = map_[3][4].get(); // 左下
     centerBlocks_[3] = map_[4][4].get(); // 右下
 
+    // roundBlocks_ の設定（center を除いた周囲） 
+    int index = 0; for (int y = 2; y <= 5; ++y) {
+        for (int x = 2; x <= 5; ++x) {
+            // center の範囲（3,3）〜（4,4）を除外 
+            if (x >= 3 && x <= 4 && y >= 3 && y <= 4) continue;
+            roundBlocks_[index++] = map_[x][y].get();
+        }
+    }
 }
 
 void BlockMap::Initialize() {
@@ -149,6 +168,9 @@ void BlockMap::Update() {
     for (auto& y : map_) {
         for (auto& block : y) {
             block->Update();
+            if (block->CanPushBlock()) {
+                block->SetColor({ 1.0f,1.0f,0.0f,1.0f });
+            }
         }
     }
 
@@ -163,13 +185,11 @@ void BlockMap::Update() {
     for (auto& y : map_) {
         for (auto& block : y) {
 
-            if (block->IsHit()) {
-                //まだ踏んでないトキ且つヒットしたとき
+            if (block->GetIsPush()) {
                 Texture::TEXTURE_HANDLE tex = Texture::GetTextureHandle(block->GetSrvIndex());
 
                 // すでに踏んだ順番に追加（重複防止）
                 if (std::find(steppedOrder_.begin(), steppedOrder_.end(), tex) == steppedOrder_.end()) {
-                    block->SetIsPush(true);
                     steppedOrder_.push_back(tex);
                 }
 
@@ -179,18 +199,28 @@ void BlockMap::Update() {
                         isClear_ = true;
                         SoundManager::PlayCorrectSE();
                         SoundManager::PlayGOGOGOSE();
-                        for (auto& block : centerBlocks_) { if (block) {
-                            block->SetEndPos(-1.5f);
-                            block->SetIsPush(true); 
+                        for (auto& center : centerBlocks_) { if (center) {
+                            center->SetEndPos(-1.5f);
+                            center->SetIsPush(true);
+                            center->InitAnitimer();
                         } }
+
+                        for (auto& round : roundBlocks_) {
+                            if (round) {
+                                round->SetEndPos(-1.0f);
+                                round->SetIsPush(true);
+                                round->InitAnitimer();
+                            }
+                        }
                         return;
                     }
                 }
 
                 // 間違った順番ならリセット
-                if (steppedOrder_.size() >= correctOrder_.size()/* ||
-                    steppedOrder_[steppedOrder_.size() - 1] != correctOrder_[steppedOrder_.size() - 1]*/) {
+                if (steppedOrder_.size() >= correctOrder_.size() ||
+                    steppedOrder_[steppedOrder_.size() - 1] != correctOrder_[steppedOrder_.size() - 1]) {
                     steppedOrder_.clear();
+                    block->Reset();
                     isReset = true;
                 }
 
@@ -202,8 +232,9 @@ void BlockMap::Update() {
 
 
     if (isReset) {
+    
         SoundManager::PlayCancelSE();
-        ResetAll();
+        ResetPushMap();
     }
 
 }
@@ -218,7 +249,7 @@ void BlockMap::Draw(Camera& camera)
     }
 }
 
-void BlockMap::ResetAll()
+void BlockMap::ResetPushMap()
 {
   
     for (auto& y : map_) {
@@ -226,9 +257,29 @@ void BlockMap::ResetAll()
             if (block->GetIsPush()) {
                 block->Reset();
                 block->SetEndPos(); // ← 戻す位置を設定
-            
             }
     
         }
     }
+
+}
+
+void BlockMap::RayCastHit(RaySprite& raySprite)
+{
+    for (auto& y : map_) {
+        for (auto& block : y) {
+            if (!block->GetIsPush()&&block->CanPushBlock()) {
+                AABB aabb = GetAABBWorldPos(block.get());
+                if (raySprite.IntersectsAABB(aabb, block->GetWorldPosition())) {
+
+                    block->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+                    block->RayCastHit();
+
+                }
+            }
+
+        }
+    }
+
+
 }

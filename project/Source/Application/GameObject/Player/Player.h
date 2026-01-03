@@ -66,6 +66,7 @@ public:
     float zoomStartTimer_ = 0.0f;
     std::unique_ptr<RaySprite> raySprite_ = nullptr;
     const bool& IsDead() { return characterState_.isDead; }
+
 private:
     const float kJumpSpeed_ = 1.0f;
     float hitTimer_ = 0.0f;

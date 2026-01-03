@@ -1,6 +1,6 @@
 #include "MedjedStage.h"
 #include"SoundManager/SoundManager.h"
-
+#include"Sound.h"
 MedjedStage::MedjedStage()
 {
     backGround_ = std::make_unique<BackGround>();
@@ -14,15 +14,17 @@ void MedjedStage::Initialize()
 
     SoundManager::InitMedjedScene();
     backGround_->Initialize();
+    backGround_->Update();
     medjedManager_->Initialize();
     rhythmBullet_->Initialize();
     medjedManager_->SetTarget(player_->GetBodyPos());
+    medjedManager_->Update();
     player_->Init();
     player_->SetBodyPos({ 0.0f, 0.0f, -15.0f });
-
+    player_->Update();
 
     itemManager_->GenerateItems({ "SunRod" });
-
+    Sound::PlaySE(Sound::VOICE_Asobimasyo);
 }
 
 void MedjedStage::Update()

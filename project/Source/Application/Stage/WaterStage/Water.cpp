@@ -7,6 +7,8 @@
 #include"JsonFile.h"
 #include"DebugUI.h"
 #include"Lerp.h"
+#include"Sound.h"
+
 Water::Water() {
 
     object_ = std::make_unique<Object3d>();
@@ -22,8 +24,8 @@ Water::Water() {
 
     AABB aabb = { .min = {-12.5f,-0.5f,-12.5f},.max = {12.5f,0.5f,12.5f} };
     SetType(kAABB);
-    SetCollisionAttribute(kCollisionWater); // ミイラの衝突属性
-    SetCollisionMask(kCollisionPlayer | kCollisionEnemy); // プレイヤーや壁と衝突
+    SetCollisionAttribute(kCollisionWater);
+    SetCollisionMask(kCollisionPlayer); // プレイヤー
 
     // memoのサイズに合わせる
     SetAABB(aabb);
@@ -31,6 +33,8 @@ Water::Water() {
 
 void Water::Initialize() {
     isDrain_ = false;
+    isPrePlayerHit_ = false;
+    isPlayerHit_ = false;
     object_->GetWaveData(0).time = 0.0f;
     object_->GetWaveData(1).time = 0.0f;
     object_->Initialize();
@@ -41,11 +45,24 @@ void Water::Initialize() {
 
 void Water::Update() {
 
+    if (!isPrePlayerHit_ && isPlayerHit_|| isPrePlayerHit_ && !isPlayerHit_) {
+    
+        object_->GetWaveData(0).amplitude = 0.2f;
+        object_->GetWaveData(1).amplitude = 0.1f;
+
+        Sound::PlayOriginSE(Sound::WATER_DROP);
+    }
+
+    isPrePlayerHit_ = isPlayerHit_;
+    isPlayerHit_ = false;
+
     if (isDrain_) {
-        object_->worldTransform_.translate_.y = Lerp(object_->worldTransform_.translate_.y, -0.5f, 0.01f);
+        object_->worldTransform_.translate_.y = Lerp(object_->worldTransform_.translate_.y, -0.625f, 0.01f);
         object_->GetWaveData(0).amplitude = Lerp(object_->GetWaveData(0).amplitude, 0.0f, 0.1f);
         object_->GetWaveData(1).amplitude = Lerp(object_->GetWaveData(1).amplitude, 0.0f, 0.1f);
     }
+
+
 
     object_->GetWaveData(0).time += InverseFPS;
     object_->GetWaveData(1).time = object_->GetWaveData(0).time + 1.5f;
@@ -59,8 +76,11 @@ void Water::Draw(Camera& camera) {
 }
 
 void Water::OnCollision(Collider* collider) {
-    if (collider->GetCollisionAttribute() == kCollisionPlayer) {
-        // プレイヤーとぶつかったときの処理（必要なら）
-    }
+
+    isPlayerHit_ = true;
+
+
+
+
 
 }
