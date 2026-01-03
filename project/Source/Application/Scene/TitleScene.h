@@ -2,6 +2,7 @@
 #include"SceneManager.h"
 #include "Sprite.h"
 #include<memory>
+#include<array>
 class TitleScene :public BaseScene
 {
 public:
@@ -17,6 +18,7 @@ private:
     std::unique_ptr<Sprite> titleSprite_;
     std::unique_ptr<Sprite> startButton_;
     std::unique_ptr<Sprite> exitButton_;
+    std::array<std::unique_ptr<Sprite> ,2>test3Spritea_;
     bool isHoverStartButton_ = false;
     bool isHoverExitButton_ = false;
 };
