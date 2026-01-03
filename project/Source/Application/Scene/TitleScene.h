@@ -1,6 +1,7 @@
 #pragma once
 #include"SceneManager.h"
-
+#include "Sprite.h"
+#include<memory>
 class TitleScene :public BaseScene
 {
 public:
@@ -13,6 +14,10 @@ public:
    void SceneChangeUpdate()override;
 
 private:
-
+    std::unique_ptr<Sprite> titleSprite_;
+    std::unique_ptr<Sprite> startButton_;
+    std::unique_ptr<Sprite> exitButton_;
+    bool isHoverStartButton_ = false;
+    bool isHoverExitButton_ = false;
 };
 

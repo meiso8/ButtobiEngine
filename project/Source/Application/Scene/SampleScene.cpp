@@ -33,10 +33,9 @@ SampleScene::SampleScene()
     lightingManager_->direction_ = &player_->GetForward();
 
     collisionManager_ = std::make_unique<CollisionManager>();
+  
     itemManager_ = std::make_unique<ItemManager>();
-
     uIManager_ = std::make_unique<UIManager>();
-
     memoManager_ = std::make_unique<MemoManager>();
 }
 
@@ -47,7 +46,7 @@ void SampleScene::Initialize() {
     lightingManager_->Initialize();
 
     sceneChange_->Initialize();
-    sceneChange_->SetState(SceneChange::kWipeOut, 60);
+    sceneChange_->SetState(SceneChange::kFadeOut, 60);
     camera_->Initialize();
     camera_->UpdateMatrix();
 
@@ -73,19 +72,16 @@ void SampleScene::Initialize() {
     mummyStage_->SetItemManager(itemManager_);
     medjedStage_->SetItemManager(itemManager_);
 
-
     amenStage_->Initialize();
-    waterStage_->Initialize();
-    mummyStage_->Initialize();
-    medjedStage_->Initialize();
+    memoManager_->GenerateMemos({ Texture::MEMO1, Texture::MEMO3,Texture::MEMO4,Texture::BOOK4 });
 
     if (medjedStage_) {
         CreateParticle();
+        uIManager_->CreateHpGage(*medjedStage_->GetEnemy()->GetHpsPtr(), *player_->GetHpsPtr());
     }
-    uIManager_->CreateHpGage(*medjedStage_->GetEnemy()->GetHpsPtr(), *player_->GetHpsPtr());
 
     currentPhase_ = StagePhase::Amen;
-    memoManager_->GenerateMemos({ Texture::MEMO1, Texture::MEMO3,Texture::MEMO4,Texture::BOOK4 });
+
 }
 
 void SampleScene::Update() {
@@ -127,9 +123,9 @@ void SampleScene::Update() {
                 currentPhase_ = StagePhase::Water;
                 //メモマネージャー
                 memoManager_->Initialize();
-                memoManager_->GenerateMemos({ Texture::MEMO2, Texture::MEMO4,Texture::BOOK2 });
-                player_->Init();
-                player_->SetBodyPos({ 0.0f, 0.0f, -5.0f }); // ミイラ前に移動
+                memoManager_->GenerateMemos({ Texture::MEMO2, Texture::BOOK2 });
+                waterStage_->Initialize();
+
             }
         }
 
@@ -144,8 +140,10 @@ void SampleScene::Update() {
                 //メモマネージャー
                 memoManager_->Initialize();
                 memoManager_->GenerateMemos({ Texture::BOOK });
-                player_->Init();
-                player_->SetBodyPos({ 0.0f, 0.0f, -5.0f }); // ミイラ前に移動
+
+                mummyStage_->Initialize();
+
+
             }
         }
         break;
@@ -160,8 +158,10 @@ void SampleScene::Update() {
                 //メモマネージャー
                 memoManager_->Initialize();
                 memoManager_->GenerateMemos({ Texture::BOOK3 });
-                player_->Init();
-                player_->SetBodyPos({ 0.0f, 0.0f, -5.0f }); // メジェド前に移動
+
+                medjedStage_->Initialize();
+
+
             }
         }
         break;
@@ -169,9 +169,11 @@ void SampleScene::Update() {
     case StagePhase::Medjed:
         if (medjedStage_) {
             medjedStage_->Update();
-            if (medjedStage_->MedjedDead()) {
 
-                BackToTitle();
+            if (medjedStage_->MedjedDead()) {
+                //メジェドを倒したらシーン切り替え
+                sceneChange_->SetState(SceneChange::kFadeIn, 60);
+                SceneManager::SetNestScene("Result");
             }
 
             if (medjedStage_->FindMedjed()) {
@@ -225,12 +227,10 @@ void SampleScene::Debug()
 void SampleScene::CheckAllCollision()
 {
 
-
     if (PauseScreen::isActive_) {
         //ポーズ中はコライダーヒットしない
         return;
     }
-
 
     // ========================//Ray================================
 
@@ -241,6 +241,10 @@ void SampleScene::CheckAllCollision()
     //メモがヒットしているかどうか
     memoManager_->RayCastHit(*player_->raySprite_);
     // ========================//Ray================================
+    //めもとの当たり判定
+    for (auto& [texture, memo] : memoManager_->GetMemos()) {
+        collisionManager_->AddCollider(memo.get());
+    }
 
     collisionManager_->ClearColliders();
 

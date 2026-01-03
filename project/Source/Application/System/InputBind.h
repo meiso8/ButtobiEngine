@@ -11,7 +11,7 @@ public:
     static bool IsPressMoveF();
     static bool IsPressMoveB();
     static bool IsPressSpeedButton();
-    static bool IsPressZoom();
+    static bool IsTriggerJump();
     static bool IsClickR();
     static bool IsClickPressR();
 };

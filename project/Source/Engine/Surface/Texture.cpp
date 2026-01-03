@@ -27,6 +27,11 @@ void Texture::LoadAllTexture() {
     handles[UV_CHECKER] = Load("Resource/Textures/uvChecker.png");
     handles[NUMBERS] = Load("Resource/Textures/numbers.png");
 
+    handles[TITLE] = Load("Resource/Textures/Title.png");
+    handles[CREDIT] = Load("Resource/Textures/credit.png");
+    handles[BUTTON_EXIT] = Load("Resource/Textures/exit.png");
+    handles[BUTTON_START] = Load("Resource/Textures/start.png");
+
     handles[BUTTON_BACK_TO_GAME] = Load("Resource/Textures/back.png");
     handles[BUTTON_BACK_TO_TITL] = Load("Resource/Textures/titleButton.png");
 
@@ -51,7 +56,10 @@ void Texture::LoadAllTexture() {
     handles[HIERO_P] = Load("Resource/Textures/p.png");
     handles[HIERO_D] = Load("Resource/Textures/d.png");
     handles[HIERO_T] = Load("Resource/Textures/t.png");
+    handles[BD_HUNEFER] = Load("Resource/Textures/BD_Hunefer.jpg");
 
+    handles[ENDING1] = Load("Resource/Textures/ending01.png");
+    handles[ENDING2] = Load("Resource/Textures/ending02.png");
 
     handles[SLOT] = Load("Resource/Textures/slot.png");
     handles[EYE] = Load("Resource/Textures/eye.png");

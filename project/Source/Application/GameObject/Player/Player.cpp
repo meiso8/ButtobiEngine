@@ -24,14 +24,18 @@ void Player::OnCollision(Collider* collider)
         OnCollisionEnemy();
     }
 
-    if (collider->GetCollisionAttribute() == kCollisionDummyMedjed 
-        || collider->GetCollisionAttribute() == kCollisionWall 
+    if (collider->GetCollisionAttribute() == kCollisionDummyMedjed
+        || collider->GetCollisionAttribute() == kCollisionWall
         || collider->GetCollisionAttribute() == kCollisionMedjed
         || collider->GetCollisionAttribute() == kCollisionEnemy
         || collider->GetCollisionAttribute() == kCollisionMummy
-        
+
         ) {
         ResolveCollision(bodyPos_.worldTransform_.translate_, velocity_, GetCollisionInfo());
+        if (isJump_) {
+            isJump_ = false;
+        }
+
     }
 
     OnCollisionCollider();
@@ -53,7 +57,7 @@ Player::Player() {
     SetType(ColliderType::kAABB);
     SetAABB(localAabb_);
     SetCollisionAttribute(kCollisionPlayer);
-    SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet | kCollisionMedjed | kCollisionDummyMedjed | kCollisionWall| kCollisionMummy);
+    SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet | kCollisionMedjed | kCollisionDummyMedjed | kCollisionWall | kCollisionMummy);
 
     //それぞれのObject3d（WorldTransform）を作る
     bodyPos_.Create();
@@ -68,10 +72,9 @@ Player::Player() {
 
 void Player::Init()
 {
-
-    isPressSpace_ = false;
+    isJump_ = false;
     zoomTimer_ = 0.0f;
-
+    zoomStartTimer_ = 0.0f;
     //体の位置初期化
     bodyPos_.Initialize();
     //目の位置初期化
@@ -105,7 +108,7 @@ void Player::Draw(Camera& camera, const LightMode& lightType)
     bodyPos_.Draw(camera, kBlendModeNormal);
     eyeCollider_->Draw(camera);
 
-  
+
 
     ColliderDraw(camera);
 }
@@ -128,6 +131,7 @@ void Player::Update()
     }
 
     Move();
+    Jump();
     Zoom();
     LookBack();
     MouseLook();
@@ -144,6 +148,7 @@ void Player::Update()
 
 #ifdef _DEBUG
     DebugUI::CheckCaracterState(characterState_, "player");
+    ImGui::SliderFloat3("velocity_", &velocity_.x, -1000.0f, 1000.0f);
 #endif // _DEBUG
 
 
@@ -152,9 +157,10 @@ void Player::Update()
 
 void Player::Move()
 {
-    velocity_ = { 0.0f,0.0f,0.0f };
 
-    bodyPos_.worldTransform_.translate_.y = Lerp(0.0f, bodyPos_.worldTransform_.translate_.y, 0.5f);
+    velocity_.x = { 0.0f };
+    velocity_.z = { 0.0f };
+
 
     Vector2 controllerPos = { velocity_.x ,velocity_.z };
     if (Input::IsControllerStickPosMove(BUTTON_LEFT, 0, &controllerPos)) {
@@ -170,16 +176,20 @@ void Player::Move()
     kSpeed_ = (InputBind::IsPressSpeedButton()) ? 0.125f : 0.25f;
 
     if (fabs(velocity_.x) > 0.0f || fabs(velocity_.z) > 0.0f) {
-        if (soundTimer_ == 0.0f) {
-            if (kSpeed_ == 0.25f) {};
-            Sound::PlaySE(Sound::FOOT_STEP, (kSpeed_ == 0.25f) ? 0.5f : 0.0f);
+
+        if (!isJump_) {
+            if (soundTimer_ == 0.0f) {
+                if (kSpeed_ == 0.25f) {};
+                Sound::PlaySE(Sound::FOOT_STEP, (kSpeed_ == 0.25f) ? 0.5f : 0.0f);
+            }
+
+            if (soundTimer_ < 7.5f) {
+                soundTimer_ += kSpeed_;
+            } else {
+                soundTimer_ = 0.0f;
+            }
         }
 
-        if (soundTimer_ < 7.5f) {
-            soundTimer_ += kSpeed_;
-        } else {
-            soundTimer_ = 0.0f;
-        }
 
         //前の方向を取得
         Vector3 forward = GetForward();
@@ -203,28 +213,52 @@ void Player::Move()
 
 }
 
+void Player::Jump()
+{
+    if (InputBind::IsTriggerJump()) {
+
+        if (!isJump_) {
+            isJump_ = true;
+            velocity_.y = kJumpSpeed_;
+            velocity_.y = 0.3125f;
+        }
+
+    }
+
+    velocity_.y -= InverseFPS * 0.98f;
+    bodyPos_.worldTransform_.translate_.y += velocity_.y;
+}
+
 void Player::Zoom()
 {
-    if (InputBind::IsPressZoom()) {
+    if (InputBind::IsClickPress()) {
 
-        isZoom_ = true;
-        if (zoomTimer_ < 1.0f) {
+        zoomStartTimer_ += InverseFPS;
+        zoomStartTimer_ = std::clamp(zoomStartTimer_, 0.0f, 0.2f);
+
+
+
+        if (zoomStartTimer_ >= 0.2f) {
+            if (!isZoom_) {
+                isZoom_ = true;
+                Sound::PlaySE(Sound::FALL);
+            }
+          
             zoomTimer_ += InverseFPS * 2.0f;
 
-        } else {
-            zoomTimer_ = 1.0f;
-            isPressSpace_ = true;
         }
 
     } else {
+
+        zoomStartTimer_ = 0.0f;
+
         if (zoomTimer_ > 0.0f) {
             zoomTimer_ -= InverseFPS * 2.0f;
         } else {
-            zoomTimer_ = 0.0f;
             isZoom_ = false;
         }
     }
-
+    zoomTimer_ = std::clamp(zoomTimer_, 0.0f, 1.0f);
 }
 
 Vector3& Player::GetForward()
@@ -291,10 +325,9 @@ void Player::MouseLook()
         cameraRotateX_ -= controllerPos.y * InverseFPS * cameraSpeed_;
     }
 
-    if (!InputBind::IsClickPress()) {
-        cameraRotateY_ += Input::GetMousePosFiltered().x * InverseFPS / cameraSpeed_;
-        cameraRotateX_ += Input::GetMousePosFiltered().y * InverseFPS / cameraSpeed_;
-    }
+
+    cameraRotateY_ += Input::GetMousePosFiltered().x * InverseFPS / cameraSpeed_;
+    cameraRotateX_ += Input::GetMousePosFiltered().y * InverseFPS / cameraSpeed_;
 
     cameraRotateX_ = std::clamp(
         cameraRotateX_,

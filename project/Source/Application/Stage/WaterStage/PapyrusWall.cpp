@@ -7,11 +7,11 @@ void PapyrusWall::SetWallPos() {
     constexpr float wallThickness = 1.0f;
     constexpr float halfWall = wallThickness * 0.5f;
 
-    fieldPoses_[Wall0]->SetPos({ 0.0f, 0.0f, -(halfDepth + halfWall) }); // 奥
-    fieldPoses_[Wall1]->SetPos({ 0.0f, 0.0f,  (halfDepth + halfWall) }); // 手前
-    fieldPoses_[Wall2]->SetPos({ -(halfWidth + halfWall), 0.0f, 0.0f }); // 左
-    fieldPoses_[Wall3]->SetPos({ (halfWidth + halfWall), 0.0f, 0.0f }); // 右
-    fieldPoses_[Floor]->SetPos({ 0.0f, -halfWall, 0.0f }); // 床
+    fieldPoses_[Wall0]->SetPos({ 0.0f, 0.0f, -(halfDepth ) }); // 奥
+    fieldPoses_[Wall1]->SetPos({ 0.0f, 0.0f,  (halfDepth) }); // 手前
+    fieldPoses_[Wall2]->SetPos({ -(halfWidth), 0.0f, 0.0f }); // 左
+    fieldPoses_[Wall3]->SetPos({ (halfWidth), 0.0f, 0.0f }); // 右
+    fieldPoses_[Floor]->SetPos({ 0.0f, -1.5f- halfWall, 0.0f }); // 床
     //fieldPoses_[Ceiling]->SetPos({ 0.0f,  (halfHeight + halfWall), 0.0f }); // 天井
 }
 

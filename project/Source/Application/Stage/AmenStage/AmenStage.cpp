@@ -1,7 +1,7 @@
 #include "AmenStage.h"
 
 #include"SoundManager/SoundManager.h"
-
+#include"Sound.h"
 const bool AmenStage::IsClear()
 {
     return slidePuzzleSystem_->GetIsGameEnd();
@@ -16,6 +16,7 @@ AmenStage::AmenStage()
 void AmenStage::Initialize()
 {
 
+    Sound::StopAllSound();
     slidePuzzleSystem_->Initialize();
     backGround_->Initialize();
     itemManager_->Init();
@@ -24,8 +25,7 @@ void AmenStage::Initialize()
 
 void AmenStage::Update()
 {
-
-    SoundManager::NotFindMedjedUpdate();
+    Sound::PlayBGM(Sound::BGM_Sun);
     slidePuzzleSystem_->Update();
     amenRa_->Update();
     backGround_->Update();

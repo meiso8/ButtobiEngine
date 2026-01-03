@@ -35,7 +35,6 @@ void Sound::LoadAllSound()
 
     // ======================================
     handles_[BGM_ArabRuins] = Load("Resource/Sounds/BGM/ArabRuins.mp3");
-    handles_[BGM_Ethnic] = Load("Resource/Sounds/BGM/maou_bgm_ethnic08.mp3");
     handles_[BGM_SandCity] = Load("Resource/Sounds/BGM/SandCity.mp3");
     handles_[BGM_Sea] = Load("Resource/Sounds/BGM/sea.mp3");
     handles_[BGM_Sun] = Load("Resource/Sounds/BGM/Sun.mp3");

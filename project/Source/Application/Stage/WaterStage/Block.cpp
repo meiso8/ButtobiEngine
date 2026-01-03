@@ -4,6 +4,13 @@
 #include<algorithm>
 #include"SoundManager/SoundManager.h"
 #include"Sound.h"
+#include"CollisionConfig.h"
+Block::Block()
+{
+    SetType(kAABB);
+    SetCollisionAttribute(kCollisionWall);
+    SetCollisionMask(kCollisionPlayer | kCollisionEnemy | kCollisionMedjed | kCollisionDummyMedjed);
+}
 
 void Block::Initialize()
 {
@@ -25,10 +32,13 @@ void Block::Update()
     }
 
     object_->Update();
+    ColliderUpdate();
 }
 
 void Block::OnCollision(Collider* collider)
 {
+    OnCollisionCollider();
+
     if (isPush_) {
         return;
     }
@@ -73,40 +83,28 @@ void Block::Reset()
 
 BlockMap::BlockMap()
 {
+
     AABB aabb = { .min = {-1.5f, -1.5f, -1.5f}, .max = {1.5f, 1.5f, 1.5f} };
-    float blockSize = aabb.max.x - aabb.min.x; // = 3.0f
-    float offsetX = -(kMapWidth * blockSize) * 0.5f + aabb.max.x;
-    float offsetZ = -(kMapHeight * blockSize) * 0.5f + aabb.max.y;
 
     for (int y = 0; y < kMapHeight; ++y) {
         for (int x = 0; x < kMapWidth; ++x) {
             map_[y][x] = std::make_unique<Block>();
-            map_[y][x]->Initialize();
-
-            Vector3 pos = {
-                static_cast<float>(x) * blockSize + offsetX,
-                -1.5f,
-                static_cast<float>(y) * blockSize + offsetZ
-            };
-
-            map_[y][x]->SetPos(pos);
             map_[y][x]->SetCubeAABB(aabb);
             if (rand() % 2 == 0) {
                 map_[y][x]->SetTextureHandle(Texture::PUZZLE);
             } else {
                 map_[y][x]->SetTextureHandle(Texture::NONE);
             }
-       
+
         }
     }
-
-
 
     // ヒエログリフ付きブロックを配置（例：中央付近）
     map_[4][2]->SetTextureHandle(Texture::HIERO_S);
     map_[1][5]->SetTextureHandle(Texture::HIERO_T);
     map_[2][1]->SetTextureHandle(Texture::HIERO_D);
     map_[3][3]->SetTextureHandle(Texture::HIERO_P);
+
     Vector4 color = { 1.0f,1.0f,0.0f,1.0f };
     map_[4][2]->SetColor(color);
     map_[1][5]->SetColor(color);
@@ -124,6 +122,26 @@ void BlockMap::Initialize() {
 
     isClear_ = false;
     steppedOrder_.clear();
+
+    AABB aabb = { .min = {-1.5f, -1.5f, -1.5f}, .max = {1.5f, 1.5f, 1.5f} };
+    float blockSize = aabb.max.x - aabb.min.x; // = 3.0f
+    float offsetX = -(kMapWidth * blockSize) * 0.5f + aabb.max.x;
+    float offsetZ = -(kMapHeight * blockSize) * 0.5f + aabb.max.y;
+
+    for (int y = 0; y < kMapHeight; ++y) {
+        for (int x = 0; x < kMapWidth; ++x) {
+            map_[y][x]->Initialize();
+
+            Vector3 pos = {
+                static_cast<float>(x) * blockSize + offsetX,
+                -1.5f,
+                static_cast<float>(y) * blockSize + offsetZ
+            };
+
+            map_[y][x]->SetPos(pos);
+        }
+    }
+
 }
 
 void BlockMap::Update() {
@@ -170,8 +188,8 @@ void BlockMap::Update() {
                 }
 
                 // 間違った順番ならリセット
-                if (steppedOrder_.size() >= correctOrder_.size() ||
-                    steppedOrder_[steppedOrder_.size() - 1] != correctOrder_[steppedOrder_.size() - 1]) {
+                if (steppedOrder_.size() >= correctOrder_.size()/* ||
+                    steppedOrder_[steppedOrder_.size() - 1] != correctOrder_[steppedOrder_.size() - 1]*/) {
                     steppedOrder_.clear();
                     isReset = true;
                 }
@@ -185,11 +203,7 @@ void BlockMap::Update() {
 
     if (isReset) {
         SoundManager::PlayCancelSE();
-        for (auto& y : map_) {
-            for (auto& block : y) {
-                block->Reset();
-            }
-        }
+        ResetAll();
     }
 
 }
@@ -200,6 +214,21 @@ void BlockMap::Draw(Camera& camera)
     for (auto& y : map_) {
         for (auto& x : y) {
             x->Draw(camera);
+        }
+    }
+}
+
+void BlockMap::ResetAll()
+{
+  
+    for (auto& y : map_) {
+        for (auto& block : y) {
+            if (block->GetIsPush()) {
+                block->Reset();
+                block->SetEndPos(); // ← 戻す位置を設定
+            
+            }
+    
         }
     }
 }

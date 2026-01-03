@@ -12,6 +12,7 @@ private:
     float aniTimer_ = 0.0f;
     bool isHit_ = false;
 public:
+    Block();
     void SetIsPush(const bool& isPush) { isPush_ = isPush; }
     const bool& GetIsPush() { return isPush_; };
     bool IsHit() const { return isHit_ && !isPush_ && cubeMesh_->GetSrvIndex() != Texture::GetHandle(Texture::PUZZLE)&&
@@ -24,7 +25,7 @@ public:
     //void Draw(Camera& camera);
     void OnCollision(Collider* collider)override;
     void SetPos(const Vector3& pos, const float& endOffset = -0.5f);
-    void SetEndPos(const float& endOffset);
+    void SetEndPos(const float& endOffset = -0.5f);
     void Reset();
 };
 
@@ -38,6 +39,7 @@ public:
     void Draw(Camera& camera);
     const bool& IsClear() { return isClear_; };
     std::array < std::array<std::unique_ptr<Block>, kMapWidth>, kMapHeight >& GetMap() { return map_; };
+    void ResetAll();
 private:
     std::array<Block*, 4> centerBlocks_;
 

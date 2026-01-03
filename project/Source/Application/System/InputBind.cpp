@@ -24,9 +24,9 @@ bool InputBind::IsPressSpeedButton()
 {
     return  (Input::IsPushKey(DIK_LSHIFT) || Input::IsControllerPressButton(XINPUT_GAMEPAD_X, 0));
 }
-bool InputBind::IsPressZoom()
+bool InputBind::IsTriggerJump()
 {
-    return Input::IsPushKey(DIK_SPACE) || Input::IsControllerPressButton(XINPUT_GAMEPAD_LEFT_SHOULDER, 0);
+    return Input::IsTriggerKey(DIK_SPACE) || Input::IsControllerTriggerButton(XINPUT_GAMEPAD_LEFT_SHOULDER, 0);
 }
 bool InputBind::IsClickR()
 {

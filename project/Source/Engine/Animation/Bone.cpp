@@ -96,9 +96,18 @@ void DebugBone::Update(const Matrix4x4& parentMatrix)
     for (auto& [joint, value] : bones_) {
         value->lineMesh->SetVertexData({ 0.0f,0.0f,0.0f }, joint->transform.translate);
         value->object3d->worldTransform_.matWorld_ = joint->skeletonSpaceMatrix * parentMatrix;
+    }
+
 
 #ifdef USE_IMGUI
-        DebugUI::CheckQuaternionTransform(joint->transform, joint->name.c_str());
-#endif
+
+    ImGui::Begin("Bone");
+    for (auto& [joint, value] : bones_) {
+        if (ImGui::TreeNode("bone")) {
+            DebugUI::CheckQuaternionTransform(joint->transform, joint->name.c_str());
+            ImGui::TreePop();   
+        }
     }
+    ImGui::End();
+#endif
 }

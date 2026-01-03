@@ -11,11 +11,14 @@ MedjedStage::MedjedStage()
 
 void MedjedStage::Initialize()
 {
+
+    SoundManager::InitMedjedScene();
     backGround_->Initialize();
     medjedManager_->Initialize();
     rhythmBullet_->Initialize();
     medjedManager_->SetTarget(player_->GetBodyPos());
-
+    player_->Init();
+    player_->SetBodyPos({ 0.0f, 0.0f, -15.0f });
 
 
     itemManager_->GenerateItems({ "SunRod" });

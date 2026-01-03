@@ -22,6 +22,12 @@ public:
         UV_CHECKER,
         NUMBERS,
 
+        TITLE,
+        CREDIT,
+        BUTTON_EXIT,
+        BUTTON_START,
+
+
         BUTTON_BACK_TO_GAME,
         BUTTON_BACK_TO_TITL,
 
@@ -43,6 +49,10 @@ public:
         HIERO_P,
         HIERO_D,
         HIERO_T,
+        BD_HUNEFER,
+
+        ENDING1,
+        ENDING2,
 
         SLOT,
         EYE,
