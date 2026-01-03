@@ -35,6 +35,7 @@ public:
 
     void UpdateRay();
     void Move();
+    void Jump();
     void Zoom();
 
     void LookBack();
@@ -59,14 +60,14 @@ public:
         return eyeCollider_.get();
     }
     float cameraSpeed_ = 1.0f;
-    bool isPressSpace_ = false;
 
     float zoomTimer_ = 1.0f;
     bool isZoom_ = false;
-
+    float zoomStartTimer_ = 0.0f;
     std::unique_ptr<RaySprite> raySprite_ = nullptr;
     const bool& IsDead() { return characterState_.isDead; }
 private:
+    const float kJumpSpeed_ = 1.0f;
     float hitTimer_ = 0.0f;
     float endRotateY_ = 0.0f;
     float startRotateY = 0.0f;
@@ -74,7 +75,7 @@ private:
     bool isLookBackEnd_ = false;
 
     bool isLookBack_ = false;
-
+    bool isJump_ = false;
     //AABB
     AABB localAabb_;
     Vector3 velocity_;

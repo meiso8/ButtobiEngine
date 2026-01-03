@@ -5,7 +5,7 @@
 void SoundManager::InitMedjedScene()
 {
     Sound::bgmVolume_ = 0.1f;
-    Sound::StopAllSound();
+    Sound::Stop(Sound::BGM_Sun);
 }
 
 void SoundManager::PlayCorrectSE()

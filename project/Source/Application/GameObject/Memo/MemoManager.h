@@ -20,4 +20,5 @@ public:
 
     void SetSpriteSize(const Texture::TEXTURE_HANDLE& handle);
     void RayCastHit(RaySprite& raySprite);
+    std::map< Texture::TEXTURE_HANDLE, std::unique_ptr<Memo>>& GetMemos() { return memos_; }
 };

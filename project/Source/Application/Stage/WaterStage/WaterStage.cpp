@@ -1,6 +1,6 @@
 #include "WaterStage.h"
 #include"SoundManager/SoundManager.h"
-
+#include"Sound.h"
 const bool WaterStage::IsClear()
 {
     return (blockMap_->IsClear() && itemManager_->HasItem("GoldHeart"));
@@ -15,18 +15,20 @@ WaterStage::WaterStage()
 
 void WaterStage::Initialize()
 {
+    
     water_->Initialize();
     papyrusWall_->Init();
     blockMap_->Initialize();
-
+    blockMap_->Update();
     itemManager_->Init();
+    player_->Init();
+    player_->SetBodyPos({ 0.0f,0.0f, -10.0f });
     itemApper_ = false;
 }
 
 void WaterStage::Update()
 {
-    SoundManager::NotFindMedjedUpdate();
-
+    Sound::PlayBGM(Sound::BGM_Sea);
     blockMap_->Update();
 
     if (blockMap_->IsClear()) {
@@ -53,8 +55,6 @@ void WaterStage::Draw(Camera& camera)
 
 void WaterStage::CheckCollision(CollisionManager& collisionManager)
 {
-
-
 
     //Waterのかべ
     for (auto& [type, object] : papyrusWall_.get()->GetFieldPoses()) {

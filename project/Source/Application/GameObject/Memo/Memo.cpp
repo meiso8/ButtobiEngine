@@ -25,10 +25,12 @@ void Memo::Initialize() {
 void Memo::Update() {
     object_->Update();
     object_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+    ColliderUpdate();
 }
 
 void Memo::Draw(Camera& camera) {
     object_->Draw(camera);
+    ColliderDraw(camera);
 }
 
 Vector3 Memo::GetWorldPosition() const {
@@ -37,6 +39,7 @@ Vector3 Memo::GetWorldPosition() const {
 
 void Memo::OnCollision(Collider* collider)
 {
+    OnCollisionCollider();
 
 }
 

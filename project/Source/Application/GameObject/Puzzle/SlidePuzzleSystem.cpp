@@ -46,6 +46,12 @@ void SlidePuzzleSystem::Update()
     }
 
     puzzleObj_->Update();
+
+#ifdef _DEBUG
+    ImGui::Checkbox("isEndPuzzle", &isEnd_);
+
+#endif // _DEBUG
+
 }
 
 void SlidePuzzleSystem::Draw(Camera& camera)

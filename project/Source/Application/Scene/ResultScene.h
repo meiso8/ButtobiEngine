@@ -1,5 +1,7 @@
 #pragma once
 #include"SceneManager.h"
+#include"Sprite.h"
+#include<memory>
 class ResultScene :public BaseScene
 {
 public:
@@ -9,4 +11,17 @@ public:
     void Update()override;
     void Draw()override;
    void SceneChangeUpdate()override;
+private:
+    float timer_ = 0.0f;
+    std::unique_ptr<Sprite> creditSprite_;
+    float scrollSpeed_ = 0.001f; // スクロール速度
+
+    std::unique_ptr<Sprite> symbolSprite_; 
+    std::vector<Texture::TEXTURE_HANDLE> textureSequence_;
+    size_t currentIndex_ = 0;
+    float switchInterval_ = 5.0f; // 1秒ごとに切り替え
+
+    float alpha_ = 1.0f;
+    float fadeSpeed_ = 0.05f; // フェードイン速度（調整可）
+
 };

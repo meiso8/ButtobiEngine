@@ -24,6 +24,7 @@ Bullet::~Bullet() {
 
 void Bullet::Initialize() {
     body_.Initialize();
+    body_.worldTransform_.translate_.y = -10.0f;
     body_.SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
     moveDir_ = { 0.0f,0.0f,1.0f };
     moveSpeed_ = 0.2f;
@@ -37,6 +38,11 @@ void Bullet::OnCollision(Collider* collider)
     if (!isActive_) {
         return;
     }
+
+    isActive_ = false;
+    lifeTimer_ = 0.0f;
+    body_.worldTransform_.translate_ = {0.0f,-10.0f,0.0f};
+    body_.Update();
     //デバック用
     OnCollisionCollider();
 }
@@ -92,6 +98,7 @@ void Bullet::Shot(const Vector3& position, const Vector3& direction, const float
     type_ = type;
     SetBulletType(type);
     body_.worldTransform_.translate_ = position;
+    body_.Update();
     moveDir_ = Normalize(direction);
     moveSpeed_ = speed;
     size_ = size;

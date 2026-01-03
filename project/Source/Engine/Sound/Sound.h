@@ -31,7 +31,6 @@ public:
         // ======================================
         //BGM
         BGM_ArabRuins,
-        BGM_Ethnic,
         BGM_SandCity,
         BGM_Sea,
         BGM_Sun,

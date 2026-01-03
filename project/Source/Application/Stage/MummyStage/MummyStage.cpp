@@ -4,7 +4,7 @@
 #include"InputBind.h"
 #include<algorithm>
 
-
+#include"Sound.h"
 MummyStage::MummyStage()
 {
     papyrus_ = std::make_unique<Papyrus>();
@@ -21,16 +21,18 @@ void MummyStage::TimerUpdate()
 
 void MummyStage::Initialize() {
 
+    Sound::Stop(Sound::BGM_Sea);
     medjedApperTime_ = maxTime_;
     papyrus_->Initialize();
     mummy_->Initialize();
     papyrusWall_->Init();
-    //itemManager_->GenerateItems({ "GoldHeart" }); // 取得済み前提で使用のみ
-
+    player_->Init();
+    player_->SetBodyPos({ 0.0f, 0.0f, -5.0f }); // ミイラ前に移動
 }
 
 void MummyStage::Update() {
 
+ 
     auto item = itemManager_->GetItem("GoldHeart");
     if (itemManager_ && item && item->isUsed_) {
         //メジェドあらわる
