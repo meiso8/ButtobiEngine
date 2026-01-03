@@ -15,10 +15,9 @@ void Medjed::OnCollision(Collider* collider)
 
         if (!isHit_) {
             isHit_ = true;
-        }
-
-        if (!isFind_) {
-            Sound::PlaySE(Sound::VOICE_Asobimasyo, 0.5f);
+            if (!isFind_) {
+                Sound::PlayOriginSE(Sound::VOICE_Asobimasyo, 0.5f);
+            }
         }
 
     }
@@ -29,6 +28,21 @@ void Medjed::OnCollision(Collider* collider)
 Vector3 Medjed::GetWorldPosition() const
 {
     return aniObj_->worldTransform_.GetWorldPosition();
+}
+
+void Medjed::GoToTarget(const Vector3& target)
+{
+    aniObj_->worldTransform_.translate_ = Lerp(aniObj_->worldTransform_.translate_, target, 0.01f);
+}
+
+void Medjed::Hide()
+{
+
+    hideTimer_ += InverseFPS;
+    hideTimer_ = std::clamp(hideTimer_, 0.0f, 1.0f);
+    aniObj_->worldTransform_.scale_ = Easing::EaseInBounce(Vector3{ 1.0f,1.0f,1.0f }, {5.0f,5.0f,5.0f}, hideTimer_);
+
+
 }
 
 void Medjed::MoveStart()
@@ -63,9 +77,14 @@ void Medjed::Look(const Vector3& target)
 
 void Medjed::Update()
 {
+
+    if (IsHide()) {
+        return;
+    }
+
     isHit_ = false;
     if (isFind_) {
-        aniTimer_ += InverseFPS*0.25f;
+        aniTimer_ += InverseFPS * 0.25f;
         aniObj_->SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInOut(0.0f,1.0f,fmod(aniTimer_,1.0f)) });
     } else {
         SetColor({ 1.0f,1.0f,1.0f,0.0f });
@@ -77,16 +96,20 @@ void Medjed::Update()
 }
 void Medjed::Init()
 {
+    hideTimer_ = 0.0f;
     aniTimer_ = 0.0f;
     isHit_ = false;
     isFind_ = false;
     aniObj_->Initialize();
     aniObj_->SetAnimation(model_);
-    aniObj_->SetColor({1.0f,1.0f,1.0f,0.0f});
+    aniObj_->SetColor({ 1.0f,1.0f,1.0f,0.0f });
 }
 
 void Medjed::Draw(Camera& camera)
 {
+    if (IsHide()) {
+        return;
+    }
     /*   ColliderDraw(camera);*/
     aniObj_->Draw(camera);
 

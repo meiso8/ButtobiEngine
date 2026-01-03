@@ -56,6 +56,7 @@ void WaterStage::Draw(Camera& camera)
 void WaterStage::CheckCollision(CollisionManager& collisionManager)
 {
 
+    blockMap_->RayCastHit(*player_->raySprite_);
     //Waterのかべ
     for (auto& [type, object] : papyrusWall_.get()->GetFieldPoses()) {
         collisionManager.AddCollider(object.get());

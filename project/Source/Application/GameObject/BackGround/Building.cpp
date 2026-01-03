@@ -120,24 +120,23 @@ FieldCollider::FieldCollider()
 
 void FieldCollider::Update()
 {
-    object_->GetUVTransform().translate.x -= std::numbers::pi_v<float> *0.0625f * 0.5f * InverseFPS;
-    object_->GetUVTransform().scale.x = sinf(object_->GetUVTransform().translate.x);
+    object_->GetUVTransform().translate.x -= std::numbers::pi_v<float> *0.0625f * 0.125f * InverseFPS;
     object_->UpdateUV();
 
     object_->Update();
-
+   
 }
 
 void FieldCollider::Draw(Camera& camera)
 {
     object_->Draw(camera);
-
+   
 }
 
 void FieldCollider::Initialize()
 {
     object_->Initialize();
-    object_->GetUVTransform().scale.y = { 2.0f };
+    object_->GetUVScale().x = { 4.0f };
 }
 
 void FieldCollider::OnCollision(Collider* collider)
