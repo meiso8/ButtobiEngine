@@ -123,14 +123,11 @@ void MedjedManager::UpdateMedjedIfFind()
 {
     for (auto& medjed : dummyMedjeds_) {
 
+        medjed->Look(*targetPos_);
 
-        if (enemyApperTime_ <= 2.0f) {
-            medjed->Look(*targetPos_);
-        } else {
-            medjed->Look(enemy_->GetWorldPos());
+        if (enemyApperTime_ >= 2.0f) {
             medjed->GoToTarget(enemy_->GetWorldPos());
         }
-
         if (GetIsApperMedjed()) {
             medjed->Hide();
         }

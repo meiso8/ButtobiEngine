@@ -14,6 +14,7 @@
 Enemy::Enemy()
 {
     UpdateActions_ = {
+               {PHASE::APPER, std::bind(&Enemy::Apper, this)},
          {PHASE::ROUND, std::bind(&Enemy::Round, this)},
          {PHASE::FIREBALL, std::bind(&Enemy::Fireball, this)},
          {PHASE::EXIT, std::bind(&Enemy::Exit, this)},
@@ -30,11 +31,10 @@ Enemy::Enemy()
     bodyPos_.SetMeshAndData(skinningModel_.get());
     bodyPos_.Create();
 
-    float scale = 5.0f;
-    bodyPos_.worldTransform_.scale_ = { scale,scale,scale };
+    float halfScale = kScale_ * 0.5f;
     Init();
-
-    SetRadius(bodyPos_.worldTransform_.scale_.x * 0.5f);
+    SetType(kAABB);
+    SetAABB({ { -halfScale ,0.0f ,-halfScale }, { halfScale ,kScale_ ,halfScale } });
     SetCollisionAttribute(kCollisionEnemy);
     // 敵は「プレイヤー」と「プレイヤーの弾」と衝突したい
     SetCollisionMask(kCollisionPlayer | kCollisionPlayerBullet);
@@ -54,6 +54,8 @@ void Enemy::Init()
     velocity_ = { 10.0f,10.0f,10.0f };
     startPos_ = { 0.0f };
     isApper_ = false;
+
+    phase_ = APPER;
 }
 
 void Enemy::Draw(Camera& camera, const LightMode& lightMode)
@@ -81,7 +83,7 @@ void Enemy::Update()
 
 
     UpdateTimer();
-    bodyPos_.SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInBounce(0.0f,1.0f,fmod(timer_,1.0f)) });
+
     // 呼び出す  
     UpdateActions_[phase_]();
     HitUpdate();
@@ -148,8 +150,25 @@ void Enemy::SetPhase(PHASE phase)
     }
 }
 
+void Enemy::Apper()
+{
+    float time = timer_ / 3.0f;
+    time = std::clamp(time, 0.0f, 1.0f);
+    bodyPos_.worldTransform_.scale_ = Easing::EaseInBounce(Vector3{ 1.0f,1.0f,1.0f }, { kScale_,kScale_,kScale_ }, time);
+
+    if (timer_ >= 4.0f) {
+        SetPhase(ROUND);
+        bodyPos_.worldTransform_.scale_ = { kScale_,kScale_,kScale_ };
+    }
+
+
+
+}
+
 void Enemy::Round()
 {
+    bodyPos_.SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInBounce(0.0f,1.0f,fmod(timer_,1.0f)) });
+
     bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, { 0.0f,0.0f,0.0f }, 0.5f);
     Look();
     if (timer_ >= actionTime_) {
@@ -159,6 +178,9 @@ void Enemy::Round()
 
 void Enemy::Fireball()
 {
+    float theta = timer_ * std::numbers::phi_v<float>*2.0f;
+    bodyPos_.SetColor({ 1.0f,1.0f,1.0f,sinf(timer_) * 0.5f + 1.0f });
+
     if (timer_ <= 1.0f) {
         RotateY(timer_);
     } else {
@@ -197,7 +219,7 @@ void Enemy::PoyoPoyo(const float& endTimer)
 {
     poyoAnimTimer_ += InverseFPS;
     poyoAnimTimer_ = std::clamp(poyoAnimTimer_, 0.0f, endTimer);
-    TransformAni::PoyoPoyo(bodyPos_.worldTransform_, poyoAnimTimer_, GetRadius() * 2.0f);
+    TransformAni::PoyoPoyo(bodyPos_.worldTransform_, poyoAnimTimer_,kScale_);
 }
 
 void Enemy::HitUpdate()
@@ -215,8 +237,7 @@ void Enemy::HitUpdate()
 
 void Enemy::LerpScale()
 {
-    float scale = GetRadius() * 2.0f;
-    bodyPos_.worldTransform_.scale_ = Lerp(Vector3{ bodyPos_.worldTransform_.scale_ }, { scale,scale,scale }, 0.5f);
+    bodyPos_.worldTransform_.scale_ = Lerp(Vector3{ bodyPos_.worldTransform_.scale_ }, { kScale_,kScale_,kScale_ }, 0.5f);
 }
 
 void Enemy::RotateY(const float& timer)

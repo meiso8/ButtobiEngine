@@ -40,7 +40,7 @@ void Medjed::Hide()
 
     hideTimer_ += InverseFPS;
     hideTimer_ = std::clamp(hideTimer_, 0.0f, 1.0f);
-    aniObj_->worldTransform_.scale_ = Easing::EaseInBounce(Vector3{ 1.0f,1.0f,1.0f }, {5.0f,5.0f,5.0f}, hideTimer_);
+
 
 
 }
