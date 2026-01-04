@@ -6,6 +6,11 @@ UIManager::UIManager()
     effectSprite_->Create(Texture::WHITE_1X1, { 0.0f,0.0f }, { 1.0f,0.75f,0.75f,1.0f });
     effectSprite_->SetSize({ 1280.0f,720.0f });
    
+    uiSprite_ = std::make_unique<Sprite>();
+    uiSprite_->Create(Texture::UI, { 0.0f,0.0f });
+
+
+
     curPos_ = std::make_unique<CurPos>();
     curPos_->Initialize();
     
@@ -59,9 +64,13 @@ void UIManager::DrawPauseScreen()
 
 void UIManager::DrawCurPos()
 {
+    Sprite::PreDraw();
+    uiSprite_->Draw();
+
     if (pauseScreen_->isActive_) {
         curPos_->Draw();
     }
+
 }
 
 void UIManager::DrawEffect()

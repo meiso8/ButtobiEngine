@@ -28,5 +28,6 @@ private:
     std::unordered_map<GageType, std::unique_ptr<HPGage>>hpGages_;
     std::unique_ptr<Sprite> effectSprite_;
     std::unique_ptr<CurPos>  curPos_ = nullptr;
+    std::unique_ptr<Sprite> uiSprite_;
 };
 

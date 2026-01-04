@@ -39,6 +39,6 @@ public:
     void SetIsFind(const bool& f) { isFind_ = f; };
     const  bool& GetIsHit() const { return isHit_; };
     void SetColor(const Vector4& color) { aniObj_->SetColor(color); };
-    void MoveAround(const Vector3& target, const Vector3& dir);
+    //void MoveAround(const Vector3& target, const Vector3& dir);
 };
 

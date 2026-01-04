@@ -156,7 +156,7 @@ void Enemy::Apper()
     time = std::clamp(time, 0.0f, 1.0f);
     Look();
 
-    bodyPos_.worldTransform_.scale_ = Easing::EaseInBounce(Vector3{ 1.0f,1.0f,1.0f }, { kScale_,kScale_,kScale_ }, time);
+    bodyPos_.worldTransform_.scale_ = Easing::EaseInBounce(Vector3{ 0.0f,0.0f,0.0f }, { kScale_,kScale_,kScale_ }, time);
 
     if (timer_ >= 9.0f) {
         SetPhase(FIREBALL);
