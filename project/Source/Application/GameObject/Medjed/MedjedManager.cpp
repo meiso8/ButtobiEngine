@@ -38,8 +38,12 @@ void MedjedManager::RayCastHit(RaySprite& raySprite) {
     for (auto& medjed : dummyMedjeds_) {
 
         AABB aabb = GetAABBWorldPos(medjed.get());
+        float dist = 5.0f;
+        if (auto correctMedjed = dynamic_cast<Medjed*>(medjed.get())) {
+            dist = 10.0f;
+        }
 
-        if (raySprite.IntersectsAABB(aabb, medjed->GetWorldPosition())) {
+        if (raySprite.IntersectsAABB(aabb, medjed->GetWorldPosition(), dist)) {
             medjed->SetColor({ 1.0f,1.0f,1.0f,0.5f });
             //メジェドざまを当ててないとき
             if (!GetIsFindMedjed()) {
@@ -113,6 +117,7 @@ void MedjedManager::UpdateMedjedIfNotFind()
     //メジェド一つだけ
     GetMedjed()->Look(*targetPos_);
 
+    GetMedjed()->MoveAround(*targetPos_,raySprite_->ray_.diff);
     //if (GetMedjed()->GetIsHit()) {
     //    //ランダム
     //    PlaceLockersRandomly();

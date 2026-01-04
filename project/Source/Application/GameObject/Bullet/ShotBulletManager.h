@@ -18,7 +18,7 @@ private:
 	RhythmManager* rhythmManager_ = nullptr;
 
 	float shotSpeed_ = 0.3f;
-	float shotSize_ = 3.0f;
+	float shotSize_ = 1.5f;
 	float currentTime_ = 0.0f;
 
 };

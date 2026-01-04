@@ -21,6 +21,7 @@ private:
     float rangeMax = 10.0f;
     Vector3* targetPos_ = nullptr;
     float enemyApperTime_ = 0.0f;
+    RaySprite* raySprite_ = nullptr;
 
     void UpdateEnemyApperTime();
     void UpdateMedjedIfNotFind();
@@ -28,6 +29,7 @@ private:
     void PlaceLockersRandomly();
     bool IsOverlapping(const Vector2& pos, const std::vector<Vector2>& placedPositions);
 public:
+    void SetRaySprite(RaySprite* raySprite) { raySprite_ = raySprite; };
     MedjedManager();
     void SetTarget(Vector3& target) { targetPos_ = &target; enemy_->SetTarget(target); };
     void RayCastHit(RaySprite& raySprite);

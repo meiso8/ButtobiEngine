@@ -32,6 +32,9 @@ void Bullet::Initialize() {
     lifeDuration_ = 2.0f;
     isActive_ = false;
     size_ = 3.0f;
+    body_.GetBalloonData().sphere = 0.0f;
+
+    body_.GetBalloonData().isSphere = true;
 }
 void Bullet::OnCollision(Collider* collider)
 {
@@ -63,9 +66,19 @@ void Bullet::Update() {
         lifeTimer_ -= 0.016f;
     }
 
+    if (type_ == kPlayer) {
+        body_.GetBalloonData().sphere = Lerp(body_.GetBalloonData().sphere, 0.0f, 0.5f);
+        body_.GetBalloonData().expansion = Lerp(body_.GetBalloonData().expansion, 0.0f, 0.1f);
+    } else {
+        body_.GetBalloonData().sphere = Lerp(body_.GetBalloonData().sphere, 1.0f, 0.1f);
+        body_.GetBalloonData().expansion = Lerp(body_.GetBalloonData().expansion, 1.0f, 0.1f);
+    }
+
+
     body_.worldTransform_.rotate_ = moveDir_;
     body_.worldTransform_.translate_ += moveDir_ * moveSpeed_;
     body_.Update();
+
 
     ColliderUpdate();
 
@@ -94,6 +107,9 @@ void Bullet::SetBulletType(const BulletType& type)
 }
 
 void Bullet::Shot(const Vector3& position, const Vector3& direction, const float& speed, const float& size, const Bullet::BulletType& type) {
+   
+    body_.GetBalloonData().sphere =0.0f;
+    
     body_.SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
     type_ = type;
     SetBulletType(type);

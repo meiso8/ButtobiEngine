@@ -24,24 +24,24 @@ void Player::OnCollision(Collider* collider)
         OnCollisionEnemy();
     }
 
+    if (collider->GetCollisionAttribute() == kCollisionFloor) {
+        isFloorHit_ = true;
+        isJump_ = false;
+    }
 
     if (collider->GetCollisionAttribute() == kCollisionDummyMedjed
         || collider->GetCollisionAttribute() == kCollisionWall
         || collider->GetCollisionAttribute() == kCollisionMedjed
         || collider->GetCollisionAttribute() == kCollisionEnemy
-        || collider->GetCollisionAttribute() == kCollisionMummy
+        || collider->GetCollisionAttribute() == kCollisionMummy || collider->GetCollisionAttribute() == kCollisionFloor
 
         ) {
+
         ResolveCollision(bodyPos_.worldTransform_.translate_, velocity_, GetCollisionInfo());
-        if (isJump_) {
-            isJump_ = false;
-        }
 
     }
 
-    if (collider->GetCollisionAttribute() == kCollisionWater) {
 
-    }
 
     OnCollisionCollider();
 
@@ -62,7 +62,7 @@ Player::Player() {
     SetType(ColliderType::kAABB);
     SetAABB(localAabb_);
     SetCollisionAttribute(kCollisionPlayer);
-    SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet | kCollisionMedjed | kCollisionDummyMedjed | kCollisionWall | kCollisionMummy | kCollisionWater);
+    SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet | kCollisionMedjed | kCollisionDummyMedjed | kCollisionWall | kCollisionMummy | kCollisionWater | kCollisionFloor);
 
     //それぞれのObject3d（WorldTransform）を作る
     bodyPos_.Create();
@@ -211,9 +211,11 @@ void Player::Move()
         eyeCollider_->Walk(kSpeed_);
 
         //速度を正規化しそれぞれ足す
-        velocity_ = Normalize(velocity_);
-        bodyPos_.worldTransform_.translate_ += forward * velocity_.z * kSpeed_;
-        bodyPos_.worldTransform_.translate_ += right * velocity_.x * kSpeed_;
+     // x, z 成分だけ正規化 
+        Vector3 horizontal = Normalize(Vector3{ velocity_.x, 0.0f, velocity_.z });
+
+        bodyPos_.worldTransform_.translate_ += forward * horizontal.z * kSpeed_;
+        bodyPos_.worldTransform_.translate_ += right * horizontal.x * kSpeed_;
     } else {
         eyeCollider_->WalkStop();
     }
@@ -223,15 +225,24 @@ void Player::Move()
 
 void Player::Jump()
 {
-    if (InputBind::IsTriggerJump()) {
 
-        if (!isJump_) {
-            isJump_ = true;
-            velocity_.y = kJumpSpeed_;
-            velocity_.y = 0.3125f;
+    if (isFloorHit_) {
+
+        isFloorHit_ = false;
+
+        if (InputBind::IsTriggerJump()) {
+
+            if (!isJump_) {
+                isJump_ = true;
+                velocity_.y = kJumpSpeed_;
+            }
+
         }
 
     }
+
+    velocity_.y = std::clamp(velocity_.y, -1.0f, kJumpSpeed_);
+
 
     velocity_.y -= InverseFPS * 0.98f;
     bodyPos_.worldTransform_.translate_.y += velocity_.y;

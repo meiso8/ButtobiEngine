@@ -8,7 +8,7 @@
 #include"Model.h"
 #include"Collider.h"
 #include"DummyMedjed.h"
-
+Vector3 ClampLength(const Vector3& v, float maxLength);
 class Medjed :public DummyMedjed
 {
 private:
@@ -16,6 +16,8 @@ private:
     std::unique_ptr <SkinningModel> skinningModel = nullptr;
     bool isFind_ = false;
     bool isHit_ = false;
+    Vector3 velocity_ = { 0.0f};
+
 private:
 
 public:
@@ -37,5 +39,6 @@ public:
     void SetIsFind(const bool& f) { isFind_ = f; };
     const  bool& GetIsHit() const { return isHit_; };
     void SetColor(const Vector4& color) { aniObj_->SetColor(color); };
+    void MoveAround(const Vector3& target, const Vector3& dir);
 };
 

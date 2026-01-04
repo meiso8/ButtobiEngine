@@ -18,9 +18,10 @@ void MedjedStage::Initialize()
     medjedManager_->Initialize();
     rhythmBullet_->Initialize();
     medjedManager_->SetTarget(player_->GetBodyPos());
+    medjedManager_->SetRaySprite(player_->raySprite_.get());
     medjedManager_->Update();
     player_->Init();
-    player_->SetBodyPos({ 0.0f, 0.0f, -15.0f });
+    player_->SetBodyPos({ 0.0f, 0.0f, 0.0f });
     player_->Update();
 
     itemManager_->GenerateItems({ "SunRod" });

@@ -66,7 +66,7 @@ void ShotBulletManager::RayCastHit(RaySprite& raySprite)
 
         AABB aabb = GetAABBWorldPos(bullet.get());
 
-        if (raySprite.IntersectsAABB(aabb, bullet->GetWorldPosition())) {
+        if (raySprite.IntersectsAABB(aabb, bullet->GetWorldPosition()),5.0f) {
             bullet->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 
             if (InputBind::IsClick()) {

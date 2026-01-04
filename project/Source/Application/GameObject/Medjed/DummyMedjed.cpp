@@ -41,7 +41,7 @@ DummyMedjed::DummyMedjed()
     SetType(kAABB);
     SetAABB(localAABB_);
     SetCollisionAttribute(kCollisionDummyMedjed);
-    SetCollisionMask(kCollisionPlayer);
+    SetCollisionMask(kCollisionPlayer|kCollisionMedjed);
 
 }
 void DummyMedjed::Init()

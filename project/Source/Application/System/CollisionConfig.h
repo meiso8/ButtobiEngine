@@ -20,6 +20,10 @@ namespace {
     constexpr uint64_t kCollisionMummy = 0b1 << 9;
     // 壁
     constexpr uint64_t kCollisionWall = 0b1 << 5;
+
+    // 壁
+    constexpr uint64_t kCollisionFloor = 0b1 << 11;
+
     // 水
     constexpr uint64_t kCollisionWater = 0b1 << 10;
     // アイテム

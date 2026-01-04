@@ -31,10 +31,10 @@ Enemy::Enemy()
     bodyPos_.SetMeshAndData(skinningModel_.get());
     bodyPos_.Create();
 
-    float halfScale = kScale_ * 0.5f;
+    float halfScale = kScale_ * 0.25f;
     Init();
     SetType(kAABB);
-    SetAABB({ { -halfScale ,0.0f ,-halfScale }, { halfScale ,kScale_ ,halfScale } });
+    SetAABB({ { -halfScale ,0.0f ,-halfScale }, { halfScale ,kScale_*1.5f ,halfScale } });
     SetCollisionAttribute(kCollisionEnemy);
     // 敵は「プレイヤー」と「プレイヤーの弾」と衝突したい
     SetCollisionMask(kCollisionPlayer | kCollisionPlayerBullet);
@@ -152,12 +152,14 @@ void Enemy::SetPhase(PHASE phase)
 
 void Enemy::Apper()
 {
-    float time = timer_ / 3.0f;
+    float time = timer_ / 7.0f;
     time = std::clamp(time, 0.0f, 1.0f);
+    Look();
+
     bodyPos_.worldTransform_.scale_ = Easing::EaseInBounce(Vector3{ 1.0f,1.0f,1.0f }, { kScale_,kScale_,kScale_ }, time);
 
-    if (timer_ >= 4.0f) {
-        SetPhase(ROUND);
+    if (timer_ >= 9.0f) {
+        SetPhase(FIREBALL);
         bodyPos_.worldTransform_.scale_ = { kScale_,kScale_,kScale_ };
     }
 
