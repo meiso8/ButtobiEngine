@@ -6,11 +6,11 @@
 #include"Camera/Camera.h"
 #include<cmath>
 #include"Vector2.h"
-
+#include<algorithm>
 BYTE Input::key_[256];
 BYTE Input::preKey_[256];
 
-float Input::deadZone_ = 0.1f;
+
 DIMOUSESTATE Input::mouseState_;
 DIMOUSESTATE Input::preMouseState_;
 
@@ -234,19 +234,8 @@ Vector2 Input::NormalizeButtonCount(SHORT& buttonX, SHORT& buttonY)
     float normX = (static_cast<float>(buttonX) / SHRT_MAX);
     float normY = (static_cast<float>(buttonY) / SHRT_MAX);
 
-
-
-    if (normX > 1.0f - deadZone_) {
-        normX = 1.0f;
-    } else if (normX < -1.0f + deadZone_) {
-        normX = -1.0f;
-    }
-
-    if (normY > 1.0f - deadZone_) {
-        normY = 1.0f;
-    } else if (normY < -1.0f + deadZone_) {
-        normY = -1.0f;
-    }
+    normX = std::clamp(normX, -1.0f, 1.0f);
+    normY =  std::clamp(normY, -1.0f, 1.0f);
 
     //if (absX == 1.0f || absY < deadZone_) {
     //    normY = 0.0f;
@@ -256,7 +245,7 @@ Vector2 Input::NormalizeButtonCount(SHORT& buttonX, SHORT& buttonY)
     //    normX = 0.0f;
     //}
 
-    return Normalize(Vector2{ normX,normY });
+    return  {normX,normY };
 
 }
 

@@ -15,6 +15,7 @@ TitleScene::TitleScene()
     titleSprite_ = std::make_unique<Sprite>();
     titleSprite_->Create(Texture::TEXTURE_HANDLE::TITLE, { 640.0f, 256.0f });
     titleSprite_->SetAnchorPoint({ 0.5f, 0.5f });
+
     // スタートボタン 
     startButton_ = std::make_unique<Sprite>();
     startButton_->Create(Texture::TEXTURE_HANDLE::BUTTON_START, { 640.0f,448.0f });
@@ -45,7 +46,7 @@ TitleScene::~TitleScene()
 
 void TitleScene::Initialize()
 {
-
+    timer_ = 0.0f;
         for (int i = 0; i < test3Spritea_.size(); ++i) {
             test3Spritea_[i]->SetUVTranslate({ 0.0f, 0.0f, 0.0f });
         }
@@ -57,54 +58,72 @@ void TitleScene::Initialize()
         Sound::bgmVolume_ = 0.5f;
         Sound::StopAllSound();
 
-    
+        titleSprite_->SetScale({1.0f,1.0f});
 }
 
 void TitleScene::Update()
 {
     Sound::PlayBGM(Sound::BGM_ArabRuins);
-    startButton_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-    exitButton_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 
+    timer_ += InverseFPS;
+    float scale = sinf(timer_) * 0.125f+1.25f;
+    titleSprite_->SetScale({ scale,scale });
 
     test3Spritea_[0]->GetUVTranslate().x += 0.001f;
     test3Spritea_[1]->GetUVTranslate().x -= 0.001f;
+
     for (auto& sprite : test3Spritea_) {
         sprite->Update();
     }
     Vector2 mousePos = Input::GetCursorPosition();
-    if (IsCollision(mousePos, *startButton_)) {
+    Vector2 stickPos = { 0.0f,0.0f };
+    Input::IsControllerStickPosMoveTrigger(BUTTON_LEFT, 0, &stickPos);
+
+    if (stickPos.y > 0.1f|| IsCollision(mousePos, *startButton_)) {
         isHoverExitButton_ = false;
-        startButton_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+
         if (!isHoverStartButton_) {
             Sound::PlaySE(Sound::SWITCH_ON);
             isHoverStartButton_ = true;
 
         }
-
-        if (InputBind::IsClick()) {
-            Sound::PlaySE(Sound::FALL);
-            sceneChange_->SetState(SceneChange::kFadeIn, 30);
-            SceneManager::SetNestScene("Sample");
-        }
-
     }
 
-    if (IsCollision(mousePos, *exitButton_)) {
+    if (stickPos.y < -0.1f || IsCollision(mousePos, *exitButton_)) {
         isHoverStartButton_ = false;
-        exitButton_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+
         if (!isHoverExitButton_) {
             Sound::PlaySE(Sound::SWITCH_ON);
             isHoverExitButton_ = true;
 
         }
+    }
 
+
+    if (isHoverStartButton_) {
+        startButton_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+        if (InputBind::IsClick()) {
+            Sound::PlaySE(Sound::FALL);
+            sceneChange_->SetState(SceneChange::kFadeIn, 30);
+            SceneManager::SetNestScene("Sample");
+        }
+    } else {
+        startButton_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+    }
+
+
+
+    if (isHoverExitButton_) {
+        exitButton_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
         if (InputBind::IsClick()) {
             // アプリケーション終了 
             PostQuitMessage(0); // Windows APIでウィンドウを閉じる 
         }
-
+    } else {
+        exitButton_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
     }
+
+
 }
 
 void TitleScene::Draw()
@@ -131,3 +150,4 @@ void TitleScene::SceneChangeUpdate()
 
     sceneChange_->Update();
 }
+

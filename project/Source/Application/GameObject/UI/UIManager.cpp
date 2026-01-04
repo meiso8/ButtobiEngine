@@ -5,8 +5,12 @@ UIManager::UIManager()
     effectSprite_ = std::make_unique<Sprite>();
     effectSprite_->Create(Texture::WHITE_1X1, { 0.0f,0.0f }, { 1.0f,0.75f,0.75f,1.0f });
     effectSprite_->SetSize({ 1280.0f,720.0f });
+   
+    curPos_ = std::make_unique<CurPos>();
+    curPos_->Initialize();
+    
     pauseScreen_ = std::make_unique<PauseScreen>();
-
+    pauseScreen_->SetCurPosPtr(curPos_->GetScreenPosPtr());
 }
 
 void UIManager::Initialize()
@@ -14,8 +18,8 @@ void UIManager::Initialize()
     for (const auto& [type, gage] : hpGages_) {
         gage->Initialize();
     }
-
-    pauseScreen_->Initialize();
+   pauseScreen_->Initialize();
+    curPos_->Initialize();
 }
 
 void UIManager::UpdateGage()
@@ -28,7 +32,14 @@ void UIManager::UpdateGage()
 
 void UIManager::UpdatePauseScreen()
 {
+    if (pauseScreen_->isActive_) {
+        curPos_->Update();
+    } else {
+        curPos_->Initialize();
+    }
+
     pauseScreen_->Update();
+
 }
 
 void UIManager::DrawHPGage()
@@ -42,6 +53,15 @@ void UIManager::DrawHPGage()
 void UIManager::DrawPauseScreen()
 {
     pauseScreen_->Draw();
+
+
+}
+
+void UIManager::DrawCurPos()
+{
+    if (pauseScreen_->isActive_) {
+        curPos_->Draw();
+    }
 }
 
 void UIManager::DrawEffect()

@@ -4,22 +4,22 @@
 #include"Sprite.h"
 class Puzzle
 {
-private:
+public:
     //水平
     static const int horizontal_ = 4;
     //垂直
     static const int vertical_ = 4;
     static const int maxArrayNum_ = vertical_ * horizontal_;
+private:
+
     std::array<int, maxArrayNum_>panel_;
     //画像
-    std::array< std::unique_ptr<Sprite>, maxArrayNum_>sprites_;
+     std::array< std::unique_ptr<Sprite>, maxArrayNum_>sprites_;
     //画像全て
     std::unique_ptr<Sprite>  sprite_ = nullptr;
     bool isClear_ = false;
     Vector2 size_ = { 0.0f };
     Vector2 centerPos_ = { 0.0 };
-
-
 private:
     //シャッフル
     void Shuffle();
@@ -28,11 +28,13 @@ private:
 public:
     Puzzle();
     void Init();
-    void Game();
-    void Update();
+    void Game(const Vector2& screenPos);
     void Draw();
     bool IsClear() { return isClear_; };
 
     void SetTexture(const Texture::TEXTURE_HANDLE& handle);
+
+    //画像
+    std::array< std::unique_ptr<Sprite>, maxArrayNum_>& GetSprites() { return sprites_; };
 };
 

@@ -29,8 +29,8 @@ PauseScreen::PauseScreen()
 
     sprites_[kBackToGame]->Create(Texture::BUTTON_BACK_TO_GAME, { 0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f });
     sprites_[kBackToTitle]->Create(Texture::BUTTON_BACK_TO_TITL, { 0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f });
-    pos_[kBackToGame] = { width*0.5f,  528.0f + sprites_[kBackToGame]->GetSize().y * 0.5f };
-    pos_[kBackToTitle] = { width - sprites_[kBackToTitle]->GetSize().x*0.5f-64.0f,  528.0f+sprites_[kBackToTitle]->GetSize().y * 0.5f };
+    pos_[kBackToGame] = { width * 0.5f,  528.0f + sprites_[kBackToGame]->GetSize().y * 0.5f };
+    pos_[kBackToTitle] = { width - sprites_[kBackToTitle]->GetSize().x * 0.5f - 64.0f,  528.0f + sprites_[kBackToTitle]->GetSize().y * 0.5f };
 
     sprites_[kBackToGame]->SetAnchorPoint({ 0.5f,0.5f });
     sprites_[kBackToTitle]->SetAnchorPoint({ 0.5f,0.5f });
@@ -84,11 +84,6 @@ void PauseScreen::Update()
     if (isPause_) {
 
         SelectButton();
-
-        if (pauseTimer_ == 1.0f) {
-            ScalingButton();
-        }
-
     } else {
 
         for (int i = kBackToGame; i < kMaxLayer; ++i) {
@@ -113,17 +108,20 @@ void PauseScreen::TimerUpdate()
 
 void PauseScreen::SelectButton()
 {
-    Vector2 pos = Input::GetCursorPosition();
 
     for (int i = kBackToGame; i < kMaxLayer; ++i) {
+        sprites_[i]->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+    }
 
-        if (IsCollision(*sprites_[i], pos)) {
-            sprites_[i]->SetColor({ 1.0f,0.0f,0.0f,1.0f });
-            ScalingButton();
+
+    for (int i = kBackToGame; i < kMaxLayer; ++i) {
+        if (IsCollision(*sprites_[i], *curPos_)) {
             selectButtonNum_ = i;
+            
+            sprites_[i]->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 
             if (InputBind::IsClick()) {
-
+                Sound::PlaySE(Sound::FALL);
                 switch (selectButtonNum_)
                 {
                 case kBackToGame:
@@ -139,25 +137,13 @@ void PauseScreen::SelectButton()
                 }
 
             }
-
-        } else {
-            sprites_[i]->SetColor({ 1.0f,1.0f,1.0f,1.0f });
         }
     }
 
-}
 
-void PauseScreen::ScalingButton()
-{
-    //for (int i = 0; i < kButtonMax; ++i) {
-    //    if (selectButtonNum_ == i) {
-    //        scaleTheta_ += InverseFPS * std::numbers::pi_v<float>*2.0f;
-    //        float scale = cosf(scaleTheta_) * 0.125f + 1.125f;
-    //        sprites_[i + kBackToGame]->SetScale({ scale,scale });
-    //    } else {
-    //        sprites_[i + kBackToGame]->SetScale({ 1.0f,1.0f });
-    //    }
-    //}
+
+
+
 }
 
 void PauseScreen::Draw()

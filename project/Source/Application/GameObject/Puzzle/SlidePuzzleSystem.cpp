@@ -4,7 +4,8 @@
 #include"CollisionManager.h"
 #include"InputBind.h"
 bool SlidePuzzleSystem::isActive_ = false;
- bool SlidePuzzleSystem::isEnd_ = false;;
+bool SlidePuzzleSystem::isEnd_ = false;;
+std::unique_ptr<Puzzle>SlidePuzzleSystem::puzzle_ = nullptr;
 SlidePuzzleSystem::SlidePuzzleSystem()
 {
     puzzle_ = std::make_unique<Puzzle>();
@@ -21,12 +22,12 @@ void SlidePuzzleSystem::Initialize()
     puzzleObj_->Initialize();
 }
 
-void SlidePuzzleSystem::Update()
+void SlidePuzzleSystem::Update(const Vector2& screenPos)
 {
     if (isActive_) {
         //クリアしたら
 
-        puzzle_->Update();
+        puzzle_->Game(screenPos);
 
         if (puzzle_->IsClear()) {
 
@@ -91,3 +92,5 @@ void SlidePuzzleSystem::RayCastHit(RaySprite& ray)
     }
 
 }
+
+

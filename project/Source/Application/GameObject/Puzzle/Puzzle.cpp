@@ -59,6 +59,7 @@ void Puzzle::Init()
 {
     isClear_ = false;
     Shuffle();
+
 }
 
 void Puzzle::Shuffle()
@@ -67,15 +68,12 @@ void Puzzle::Shuffle()
     rep(j, 1000) Change(rand() % horizontal_, rand() % vertical_);
 }
 
-void Puzzle::Game()
+void Puzzle::Game(const Vector2& screenPos)
 {
 
     if (isClear_) {
         return;
     }
-
-
-    Vector2 pos = Input::GetCursorPosition();
 
     int clickedIndex = -1;
 
@@ -83,7 +81,7 @@ void Puzzle::Game()
 
         Sprite* sprite = sprites_[panel_[i]].get();
 
-        if (IsCollision(pos, *sprite)) {
+        if (IsCollision(screenPos, *sprite)) {
             sprite->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 
             if (InputBind::IsClick()) {
@@ -117,10 +115,6 @@ void Puzzle::Game()
 
 }
 
-void Puzzle::Update()
-{
-    Game();
-}
 
 void Puzzle::Draw()
 {
@@ -141,4 +135,6 @@ void Puzzle::SetTexture(const Texture::TEXTURE_HANDLE& handle)
     rep(i, maxArrayNum_)
         sprites_[i]->SetTexture(handle);
     sprite_->SetTexture(handle);
+
+
 }

@@ -10,7 +10,7 @@ class SlidePuzzleSystem {
 public:
     SlidePuzzleSystem();
     void Initialize();
-    void Update();
+    void Update(const Vector2& screenPos);
     void Draw(Camera& camera);
     void DrawUI();
     void RayCastHit(RaySprite& ray);
@@ -23,8 +23,10 @@ public:
         return puzzleObj_.get()
             ;
     }
+    static Puzzle* GetPuzzle() { return puzzle_.get(); };
+
 private:
-    std::unique_ptr<Puzzle>puzzle_ = nullptr;
+    static std::unique_ptr<Puzzle>puzzle_;
     std::unique_ptr<PuzzleObj>puzzleObj_ = nullptr;
 
     const float maxTimer_ = 5.0f;

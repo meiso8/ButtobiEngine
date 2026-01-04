@@ -21,5 +21,6 @@ private:
     std::array<std::unique_ptr<Sprite> ,2>test3Spritea_;
     bool isHoverStartButton_ = false;
     bool isHoverExitButton_ = false;
+    float timer_ = 0.0f;
 };
 
