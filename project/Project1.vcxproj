@@ -157,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\UI\CurPos.cpp" />
     <ClCompile Include="Source\Application\Stage\MummyStage\MummyRoom.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\PauseScreen.cpp" />
     <ClCompile Include="Source\Application\Stage\AmenStage\AmenRa.cpp" />
@@ -316,6 +317,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\Stage\Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\UI\CurPos.h" />
     <ClInclude Include="Source\Application\Stage\MummyStage\MummyRoom.h" />
     <ClInclude Include="Source\Application\GameObject\UI\PauseScreen.h" />
     <ClInclude Include="Source\Application\Stage\AmenStage\AmenRa.h" />

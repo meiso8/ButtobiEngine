@@ -62,7 +62,7 @@ Player::Player() {
     SetType(ColliderType::kAABB);
     SetAABB(localAabb_);
     SetCollisionAttribute(kCollisionPlayer);
-    SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet | kCollisionMedjed | kCollisionDummyMedjed | kCollisionWall | kCollisionMummy|kCollisionWater);
+    SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet | kCollisionMedjed | kCollisionDummyMedjed | kCollisionWall | kCollisionMummy | kCollisionWater);
 
     //それぞれのObject3d（WorldTransform）を作る
     bodyPos_.Create();
@@ -179,22 +179,24 @@ void Player::Move()
     if (InputBind::IsPressMoveF()) { velocity_.z = 1.0f; }
     if (InputBind::IsPressMoveB()) { velocity_.z = -1.0f; }
 
-    kSpeed_ = (InputBind::IsPressSpeedButton()) ? 0.125f : 0.25f;
+    float length = Length(Vector2{ velocity_.x,velocity_.z });
+    kSpeed_ = (InputBind::IsPressSpeedButton() || length <= 0.5f) ? 0.125f : 0.25f;
 
     if (fabs(velocity_.x) > 0.0f || fabs(velocity_.z) > 0.0f) {
 
         if (!isJump_) {
             if (soundTimer_ == 0.0f) {
-                if (kSpeed_ == 0.25f) {};
                 Sound::PlaySE(Sound::FOOT_STEP, (kSpeed_ == 0.25f) ? 0.5f : 0.0f);
             }
 
-            if (soundTimer_ < 7.5f) {
-                soundTimer_ += kSpeed_;
-            } else {
-                soundTimer_ = 0.0f;
-            }
         }
+
+        if (soundTimer_ < 7.5f) {
+            soundTimer_ += kSpeed_;
+        } else {
+            soundTimer_ = 0.0f;
+        }
+
 
 
         //前の方向を取得
@@ -249,7 +251,7 @@ void Player::Zoom()
                 isZoom_ = true;
                 Sound::PlaySE(Sound::FALL);
             }
-          
+
             zoomTimer_ += InverseFPS * 2.0f;
 
         }

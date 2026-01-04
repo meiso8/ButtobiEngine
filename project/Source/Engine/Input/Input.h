@@ -114,8 +114,7 @@ private:
     IDirectInputDevice8* mouse_ = nullptr;
     static DIMOUSESTATE mouseState_;
     static DIMOUSESTATE preMouseState_;	// マウス情報(変化検知用)
-    //ゲームパッド
-    static float deadZone_;
+
     static std::array <bool ,4>isControllerConnected_;
 
     static std::array <XINPUT_STATE, 4>xinputState_;

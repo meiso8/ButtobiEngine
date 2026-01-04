@@ -26,7 +26,7 @@ void AmenStage::Initialize()
 void AmenStage::Update()
 {
     Sound::PlayBGM(Sound::BGM_Sun);
-    slidePuzzleSystem_->Update();
+    slidePuzzleSystem_->Update(*screenPos_);
     amenRa_->Update();
     backGround_->Update();
 }

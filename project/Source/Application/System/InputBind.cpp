@@ -5,7 +5,7 @@ bool InputBind::IsClick() {
 }
 
 bool InputBind::IsClickPress() {
-    return (Input::IsPressMouse(0) || Input::IsControllerPressButton(XINPUT_GAMEPAD_A, 0));
+    return (Input::IsPressMouse(0) || Input::IsControllerPressButton(XINPUT_GAMEPAD_LEFT_SHOULDER, 0)|| Input::IsControllerPressButton(XINPUT_GAMEPAD_RIGHT_SHOULDER, 0));
 }
 
 bool InputBind::IsPressMoveL() {
@@ -22,11 +22,11 @@ bool InputBind::IsPressMoveB() {
 }
 bool InputBind::IsPressSpeedButton()
 {
-    return  (Input::IsPushKey(DIK_LSHIFT) || Input::IsControllerPressButton(XINPUT_GAMEPAD_X, 0));
+    return  (Input::IsPushKey(DIK_LSHIFT)/* || Input::IsControllerPressButton(XINPUT_GAMEPAD_LEFT_SHOULDER, 0)*/);
 }
 bool InputBind::IsTriggerJump()
 {
-    return Input::IsTriggerKey(DIK_SPACE) || Input::IsControllerTriggerButton(XINPUT_GAMEPAD_LEFT_SHOULDER, 0);
+    return Input::IsTriggerKey(DIK_SPACE) || Input::IsControllerTriggerButton(XINPUT_GAMEPAD_X, 0);
 }
 bool InputBind::IsClickR()
 {

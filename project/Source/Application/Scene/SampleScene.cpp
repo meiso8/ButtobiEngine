@@ -73,6 +73,7 @@ void SampleScene::Initialize() {
     medjedStage_->SetItemManager(itemManager_);
 
     amenStage_->Initialize();
+    amenStage_->SetCurPos(*uIManager_->GetCurPosPtr());
     memoManager_->GenerateMemos({ Texture::MEMO1, Texture::MEMO3,Texture::MEMO4,Texture::BOOK4 });
 
     if (medjedStage_) {
@@ -362,6 +363,7 @@ void SampleScene::Draw() {
     if (amenStage_) amenStage_->DrawUI();
 
     memoManager_->DrawUI();
+    uIManager_->DrawCurPos();
     player_->DrawRaySprite();
     uIManager_->DrawEffect();
 
