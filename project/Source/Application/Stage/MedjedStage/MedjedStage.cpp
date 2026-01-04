@@ -75,13 +75,18 @@ void MedjedStage::CheckCollision(CollisionManager& collisionManager)
 
         collisionManager.AddCollider(medjedManager_->GetMedjed());
 
-        //巨大メジェド出現し、弾を打ってくる
-        for (auto& bullet : rhythmBullet_->GetBulletManager()->GetBullets()) {
-            if (bullet->isActive_) {
-                collisionManager.AddCollider(bullet.get());
+        if (medjedManager_->GetIsApperMedjed()) {
+            collisionManager.AddCollider(medjedManager_->GetEnemy());
+
+            //巨大メジェド出現し、弾を打ってくる
+            for (auto& bullet : rhythmBullet_->GetBulletManager()->GetBullets()) {
+                if (bullet->isActive_) {
+                    collisionManager.AddCollider(bullet.get());
+                }
             }
+
         }
-        collisionManager.AddCollider(medjedManager_->GetEnemy());
+
     } else {
         for (auto& locker : medjedManager_->GetAllMedjeds()) {
             collisionManager.AddCollider(locker.get());

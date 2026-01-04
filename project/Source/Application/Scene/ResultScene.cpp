@@ -40,20 +40,24 @@ void ResultScene::Initialize()
     timer_ = 0.0f;
     fadeSpeed_ = InverseFPS * 2.0f;
     Sound::StopAllSound();
+    lookTimer_ = 0.0f;
 }
 
 void ResultScene::Update()
 {
     Sound::PlayBGM(Sound::BGM_SandCity);
 
-    if (InputBind::IsClick()) {
-        sceneChange_->SetState(SceneChange::kFadeIn, 30);
-        SceneManager::SetNestScene("Title");
+    if (lookTimer_ >= 20.0f) {
+        if (InputBind::IsClick()) {
+            sceneChange_->SetState(SceneChange::kFadeIn, 30);
+            SceneManager::SetNestScene("Title");
+        }
     }
 
 
-    symbolSprite_->Update();
 
+    symbolSprite_->Update();
+    lookTimer_ += InverseFPS;
     timer_ += InverseFPS;
 
     if (timer_ >= switchInterval_) {

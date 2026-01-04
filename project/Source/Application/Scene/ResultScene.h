@@ -23,5 +23,5 @@ private:
 
     float alpha_ = 1.0f;
     float fadeSpeed_ = 0.05f; // フェードイン速度（調整可）
-
+    float lookTimer_ = 0.0f;
 };

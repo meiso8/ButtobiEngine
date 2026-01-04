@@ -51,7 +51,7 @@ void MedjedManager::RayCastHit(RaySprite& raySprite) {
                 if (InputBind::IsClick()) {
 
                     if (auto correctMedjed = dynamic_cast<Medjed*>(medjed.get())) {
-                        correctMedjed->MoveStart();
+         
 
                         SetIsFindMedjed(true);
                         SoundManager::PlayCorrectSE();
@@ -85,6 +85,7 @@ void MedjedManager::Initialize()
     PlaceLockersRandomly();
     enemy_->Init();
     enemy_->SetTarget(*targetPos_);
+    GetMedjed()->MoveStart();
 }
 
 void MedjedManager::Draw(Camera& camera)
@@ -117,7 +118,6 @@ void MedjedManager::UpdateMedjedIfNotFind()
     //メジェド一つだけ
     GetMedjed()->Look(*targetPos_);
 
-    GetMedjed()->MoveAround(*targetPos_,raySprite_->ray_.diff);
     //if (GetMedjed()->GetIsHit()) {
     //    //ランダム
     //    PlaceLockersRandomly();

@@ -46,6 +46,7 @@ void ShotBulletManager::Update() {
                     shotDirection = Normalize(shotDirection);
 
                     Vector3 shotPosition = enemy_->GetWorldPosition() + shotDirection * 0.5f;
+                    shotPosition.y += 0.5f;
                     bulletManager_->ShotBullet(shotPosition, shotDirection, shotSpeed_, shotSize_, Bullet::kEnemy);
                 }
             } else {
@@ -66,14 +67,14 @@ void ShotBulletManager::RayCastHit(RaySprite& raySprite)
 
         AABB aabb = GetAABBWorldPos(bullet.get());
 
-        if (raySprite.IntersectsAABB(aabb, bullet->GetWorldPosition()),5.0f) {
+        if (raySprite.IntersectsAABB(aabb, bullet->GetWorldPosition())) {
             bullet->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 
             if (InputBind::IsClick()) {
                 if (bullet->type_ != Bullet::kPlayer) {
                     Sound::PlaySE(Sound::CRACKER, 0.5f);
                     Vector3 shotDirection = raySprite.ray_.diff;
-                    Vector3 shotPosition = raySprite.ray_.origin;
+                    Vector3 shotPosition = bullet->GetWorldPosition();
                     bullet->Shot(shotPosition, shotDirection, shotSpeed_, shotSize_, Bullet::kPlayer);
                 }
             }

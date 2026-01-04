@@ -27,6 +27,7 @@ void Texture::LoadAllTexture() {
     handles[UV_CHECKER] = Load("Resource/Textures/uvChecker.png");
     handles[NUMBERS] = Load("Resource/Textures/numbers.png");
 
+    handles[UI] = Load("Resource/Textures/ui.png");
     handles[TITLE] = Load("Resource/Textures/Title.png");
     handles[CREDIT] = Load("Resource/Textures/credit.png");
     handles[BUTTON_EXIT] = Load("Resource/Textures/exit.png");
