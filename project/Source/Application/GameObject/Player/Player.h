@@ -68,7 +68,8 @@ public:
     const bool& IsDead() { return characterState_.isDead; }
 
 private:
-    const float kJumpSpeed_ = 1.0f;
+    bool isFloorHit_ = false;
+    const float kJumpSpeed_ = 0.3125;
     float hitTimer_ = 0.0f;
     float endRotateY_ = 0.0f;
     float startRotateY = 0.0f;

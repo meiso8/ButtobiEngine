@@ -10,7 +10,7 @@
 Block::Block()
 {
     SetType(kAABB);
-    SetCollisionAttribute(kCollisionWall);
+    SetCollisionAttribute(kCollisionFloor);
     SetCollisionMask(kCollisionPlayer | kCollisionEnemy | kCollisionMedjed | kCollisionDummyMedjed);
 }
 

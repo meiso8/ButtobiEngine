@@ -22,13 +22,13 @@ void RaySprite::Draw()
     sprite_->Draw();
 }
 
-bool RaySprite::IntersectsAABB(const AABB& aabb, const Vector3& pos)
+bool RaySprite::IntersectsAABB(const AABB& aabb, const Vector3& pos,const float kMaxDistance)
 {
 
     if (RayIntersectsAABB(ray_, aabb, tMin_, tMax_)) {
 
         float dist = Distance(ray_.origin, pos);
-        if (dist <= kMaxDistance_) {
+        if (dist <= kMaxDistance) {
             sprite_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
             return true;
         }

@@ -21,12 +21,14 @@ void CurPos::Update()
 {
 
     if (!Input::GetIsControllerConnected(0)) {
-        screenPos_ = Input::GetCursorPosition();
+      
     }
 
 #ifdef _DEBUG
     ImGui::SliderFloat2("curPos", &curPosSpeed_.x, -10.0f, 10.0f);
 #endif // _DEBUG
+
+
 
 
     if (Input::IsControllerStickPosMove(BUTTON_LEFT, 0, &curPosSpeed_)) {
@@ -38,6 +40,13 @@ void CurPos::Update()
         screenPos_.y = std::clamp(screenPos_.y, 0.0f, aspect.y);
 
     } else {
+
+        Vector2 mouse = Input::GetMousePosFiltered();
+ 
+        if (fabs(mouse.x) > 0.0f || fabs(mouse.y) > 0.0f) {
+            screenPos_ = Input::GetCursorPosition();
+        } 
+        
         if (SlidePuzzleSystem::IsActive()) {
 
             screenPos_ = SnapCursorToNearestSprite(screenPos_, SlidePuzzleSystem::GetPuzzle()->GetSprites());

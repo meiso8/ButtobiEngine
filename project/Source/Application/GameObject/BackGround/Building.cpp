@@ -20,6 +20,7 @@ Building::Building() {
     fieldPoses_[Wall2] = std::make_unique<FieldCollider>();
     fieldPoses_[Wall3] = std::make_unique<FieldCollider>();
     fieldPoses_[Floor] = std::make_unique<FieldCollider>();
+    fieldPoses_[Floor]->SetCollisionAttribute(kCollisionFloor);
 
     for (const auto& [type, object] : fieldPoses_) {
         if (type == Floor) {
@@ -85,6 +86,7 @@ void Building::SetWallPos()
     fieldPoses_[Wall2]->SetPos({ -26.0f, 0.0f, 0.0f }); // 左の壁
     fieldPoses_[Wall3]->SetPos({ 26.0f, 0.0f, 0.0f });  // 右の壁
     fieldPoses_[Floor]->SetPos({ 0.0f, -0.6f, 0.0f });  // 床
+
 }
 
 void Building::Update()
@@ -115,7 +117,7 @@ FieldCollider::FieldCollider()
 
     SetType(kAABB);
     SetCollisionAttribute(kCollisionWall);
-    SetCollisionMask(kCollisionPlayer | kCollisionPlayerEye);
+    SetCollisionMask(kCollisionPlayer | kCollisionPlayerEye|kCollisionEnemy|kCollisionMedjed);
 }
 
 void FieldCollider::Update()
