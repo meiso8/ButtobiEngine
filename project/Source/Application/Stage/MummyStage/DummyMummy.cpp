@@ -6,7 +6,7 @@
 Vector3* DummyMummy::targetPos_ = nullptr;
 Model* DummyMummy::model_ = nullptr;
 
-
+#include"Sound.h"
 DummyMummy::DummyMummy()
 {
     object_ = std::make_unique<AnimationObject3d>();
@@ -50,8 +50,10 @@ void DummyMummy::Update()
             return;
         } else {
             object_->SetSkinning(true);
-
-
+            if (!isHitCollision_) {
+                Sound::PlayOriginSE(Sound::WOO);
+            }
+      
         }
 
 

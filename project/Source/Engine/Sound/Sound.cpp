@@ -53,6 +53,7 @@ void Sound::LoadAllSound()
     handles_[BUZZER] = Load("Resource/Sounds/externals/Quiz-Buzzer03-2(Short).mp3");
     handles_[GOGOGO] = Load("Resource/Sounds/externals/Onoma-Rumble02-2(Hard-Short).mp3");
     handles_[FIRE_BALL] = Load("Resource/Sounds/externals/fireBall.mp3");
+    handles_[WOO] = Load("Resource/Sounds/externals/woo.mp3");
 
     // ======================================
     handles_[VOICE_Asobimasyo] = Load("Resource/Sounds/externals/asobimasyo.mp3");
