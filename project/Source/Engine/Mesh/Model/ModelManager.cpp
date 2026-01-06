@@ -38,7 +38,6 @@ void ModelManager::LoadAllModel()
     LoadModel("Resource/Models/Papyrus", "Papyrus.obj", PAPYRUS);
 
     LoadModel("Resource/Models/Water", "Water.obj", WATER);
-    LoadModel("Resource/Models/key", "key.obj", KEY);
 }
 
 // ========================================================================================================

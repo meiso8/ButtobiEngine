@@ -33,7 +33,6 @@ public:
         PAPYRUS,
         //水
         WATER,
-        KEY,
 
         MODELS,
     };
