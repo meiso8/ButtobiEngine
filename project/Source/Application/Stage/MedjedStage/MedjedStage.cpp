@@ -25,11 +25,14 @@ void MedjedStage::Initialize()
     player_->Update();
 
     itemManager_->GenerateItems({ "SunRod" });
-    Sound::PlaySE(Sound::VOICE_Asobimasyo);
+    Sound::PlaySE(Sound::VOICE_Asobimasyo,0.5f);
+
 }
 
 void MedjedStage::Update()
 {
+
+
 
     medjedManager_->Update();
     backGround_->Update();
@@ -40,9 +43,8 @@ void MedjedStage::Update()
         if (medjedManager_->GetIsApperMedjed()) {
             //メジェド出現！
             SoundManager::ApperMedjedUpdate();
+            rhythmBullet_->Update();
         }
-
-        rhythmBullet_->Update();
 
     } else {
         SoundManager::NotFindMedjedUpdate();
@@ -55,6 +57,7 @@ void MedjedStage::Draw(Camera& camera)
     backGround_->Draw(camera);
 
     if (FindMedjed()) {
+        backGround_->DrawField(camera);
         rhythmBullet_->Draw(camera);
     }
 

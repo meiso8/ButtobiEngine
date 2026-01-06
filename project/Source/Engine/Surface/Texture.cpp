@@ -28,6 +28,8 @@ void Texture::LoadAllTexture() {
     handles[NUMBERS] = Load("Resource/Textures/numbers.png");
 
     handles[UI] = Load("Resource/Textures/ui.png");
+
+    handles[SKIP] = Load("Resource/Textures/skip.png");
     handles[TITLE] = Load("Resource/Textures/Title.png");
     handles[CREDIT] = Load("Resource/Textures/credit.png");
     handles[BUTTON_EXIT] = Load("Resource/Textures/exit.png");
@@ -42,6 +44,7 @@ void Texture::LoadAllTexture() {
     handles[MEMO2] = Load("Resource/Textures/memo02.png");
     handles[MEMO3] = Load("Resource/Textures/memo03.png");
     handles[MEMO4] = Load("Resource/Textures/memo04.png");
+    handles[MEMO5] = Load("Resource/Textures/memo05.png");
 
     handles[BOOK] = Load("Resource/Textures/book.png");
     handles[BOOK2] = Load("Resource/Textures/book02.png");

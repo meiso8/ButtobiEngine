@@ -81,6 +81,7 @@ void MemoManager::GenerateMemos(const std::vector<Texture::TEXTURE_HANDLE>& hand
         case Texture::MEMO2: key = "memo2"; break;
         case Texture::MEMO3: key = "memo3"; break;
         case Texture::MEMO4: key = "memo4"; break;
+        case Texture::MEMO5: key = "memo5"; break;
         case Texture::BOOK:  key = "book1"; break;
         case Texture::BOOK2: key = "book2"; break;
         case Texture::BOOK3: key = "book3"; break;

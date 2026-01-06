@@ -71,7 +71,6 @@ void WaterStage::CheckCollision(CollisionManager& collisionManager)
         }
     }
 
-
     collisionManager.AddCollider(water_.get());
 }
 

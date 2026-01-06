@@ -33,33 +33,12 @@ SampleScene::SampleScene()
     lightingManager_->direction_ = &player_->GetForward();
 
     collisionManager_ = std::make_unique<CollisionManager>();
-  
+
     itemManager_ = std::make_unique<ItemManager>();
     uIManager_ = std::make_unique<UIManager>();
     memoManager_ = std::make_unique<MemoManager>();
-}
-
-void SampleScene::Initialize() {
-
-    ParticleManager::ResetAll();
-    SoundManager::InitMedjedScene();
-    lightingManager_->Initialize();
-
-    sceneChange_->Initialize();
-    sceneChange_->SetState(SceneChange::kFadeOut, 60);
-    camera_->Initialize();
-    camera_->UpdateMatrix();
-
-    player_->Init();
-    player_->SetBodyPos({ 0.0f,0.0f,-5.0f });
-
-    uIManager_->Initialize();
-    itemManager_->Init();
-    //メモマネージャー
-    memoManager_->Initialize();
 
     Stage::SetPlayer(player_.get());
-    //player_->SetBodyPos({ 0.0f,0.0f,-15.0f });
 
     amenStage_ = std::make_unique<AmenStage>();
     waterStage_ = std::make_unique<WaterStage>();
@@ -68,20 +47,82 @@ void SampleScene::Initialize() {
 
     // 各ステージに渡す
     amenStage_->SetItemManager(itemManager_);
+    amenStage_->SetCurPos(*uIManager_->GetCurPosPtr());
+
     waterStage_->SetItemManager(itemManager_);
     mummyStage_->SetItemManager(itemManager_);
+
+
     medjedStage_->SetItemManager(itemManager_);
-
-    amenStage_->Initialize();
-    amenStage_->SetCurPos(*uIManager_->GetCurPosPtr());
-    memoManager_->GenerateMemos({ Texture::MEMO1, Texture::MEMO3,Texture::MEMO4,Texture::BOOK4 });
-
     if (medjedStage_) {
         CreateParticle();
         uIManager_->CreateHpGage(*medjedStage_->GetEnemy()->GetHpsPtr(), *player_->GetHpsPtr());
     }
 
+}
+
+void SampleScene::Initialize() {
+
+    ParticleManager::ResetAll();
+
+    lightingManager_->Initialize();
+
+    SetSceneChange();
+
+    camera_->Initialize();
+    camera_->UpdateMatrix();
+
+    uIManager_->Initialize();
+    itemManager_->Init();
+    //メモマネージャー
+    memoManager_->Initialize();
+
     currentPhase_ = StagePhase::Amen;
+
+    InitAmenScene();
+}
+
+void SampleScene::InitAmenScene()
+{
+    //メモマネージャー
+    memoManager_->Initialize();
+    SetSceneChange();
+    memoManager_->GenerateMemos({ Texture::MEMO1, Texture::MEMO3,Texture::MEMO4,Texture::BOOK4 });
+    amenStage_->Initialize();
+}
+
+void SampleScene::InitWaterScene()
+{
+    //メモマネージャー
+    memoManager_->Initialize();
+    SetSceneChange();
+    memoManager_->GenerateMemos({ Texture::MEMO2, Texture::BOOK2 });
+    waterStage_->Initialize();
+}
+
+void SampleScene::InitMummyScene()
+{
+    //メモマネージャー
+    memoManager_->Initialize();
+    SetSceneChange();
+    memoManager_->GenerateMemos({ Texture::BOOK,Texture::MEMO5 });
+    mummyStage_->Initialize();
+}
+
+void SampleScene::InitMedjedScene()
+{
+    if (medjedStage_) {
+        particleEmitters_[0]->emitter_.transform.Parent(medjedStage_->GetMedjed()->GetWorldTransform());
+    }
+    //メモマネージャー
+    memoManager_->Initialize();
+    SetSceneChange();
+    ParticleManager::ResetAll();
+    SoundManager::InitMedjedScene();
+    lightingManager_->Initialize();
+
+    memoManager_->GenerateMemos({ Texture::BOOK3 });
+    medjedStage_->Initialize();
 
 }
 
@@ -108,7 +149,30 @@ void SampleScene::Update() {
         player_->Update();
 
         if (player_->IsDead()) {
-            BackToTitle();
+            // ステージごとの更新
+            switch (currentPhase_) {
+            case StagePhase::Amen:
+                if (amenStage_) {
+                    InitAmenScene();
+                }
+                break;
+            case StagePhase::Water:
+                if (waterStage_) {
+                    InitWaterScene();
+                }
+                break;
+            case StagePhase::Mummy:
+                if (mummyStage_) {
+                    InitMummyScene();
+                }
+                break;
+            case StagePhase::Medjed:
+                if (medjedStage_) {
+                    InitMedjedScene();
+                }
+                break;
+            }
+
         }
     }
 
@@ -122,11 +186,9 @@ void SampleScene::Update() {
             // 水の謎解きクリアで心臓を取得
             if (amenStage_->IsClear()) {
                 currentPhase_ = StagePhase::Water;
-                //メモマネージャー
-                memoManager_->Initialize();
-                memoManager_->GenerateMemos({ Texture::MEMO2, Texture::BOOK2 });
-                waterStage_->Initialize();
 
+
+                InitWaterScene();
             }
         }
 
@@ -138,13 +200,7 @@ void SampleScene::Update() {
             // 水の謎解きクリアで心臓を取得
             if (waterStage_->IsClear()) {
                 currentPhase_ = StagePhase::Mummy;
-                //メモマネージャー
-                memoManager_->Initialize();
-                memoManager_->GenerateMemos({ Texture::BOOK });
-
-                mummyStage_->Initialize();
-
-
+                InitMummyScene();
             }
         }
         break;
@@ -156,13 +212,7 @@ void SampleScene::Update() {
             // 心臓をはめてメジェドが現れたら
             if (mummyStage_->IsEndTime()) {
                 currentPhase_ = StagePhase::Medjed;
-                //メモマネージャー
-                memoManager_->Initialize();
-                memoManager_->GenerateMemos({ Texture::BOOK3 });
-
-                medjedStage_->Initialize();
-
-
+                InitMedjedScene();
             }
         }
         break;
@@ -179,6 +229,10 @@ void SampleScene::Update() {
 
             if (medjedStage_->FindMedjed()) {
                 lightingManager_->DirectionalLightUpdate();
+
+                if (medjedStage_->GetEnemyApper()) {
+                    particleEmitters_[0]->emitter_.transform.Parent(medjedStage_->GetEnemy()->GetWorldTransform());
+                }
 
                 for (int i = 0; i < particleEmitters_.size(); ++i) {
                     particleEmitters_[i]->UpdateTimer();
@@ -277,6 +331,12 @@ void SampleScene::BackToTitle()
     SceneManager::SetNestScene("Title");
 }
 
+void SampleScene::SetSceneChange()
+{
+    sceneChange_->Initialize();
+    sceneChange_->SetState(SceneChange::kFadeOut, 60);
+}
+
 void SampleScene::CreateParticle()
 {
     for (int i = 0; i < particleEmitters_.size(); ++i) {
@@ -286,13 +346,8 @@ void SampleScene::CreateParticle()
 
     ParticleManager::GetInstance()->Create();
 
-    if (medjedStage_) {
-        particleEmitters_[0]->emitter_.transform.Parent(medjedStage_->GetMedjed()->GetWorldTransform());
-    }
-
     particleEmitters_[0]->SetName("medjedParticle");
     particleEmitters_[1]->SetName("people");
-
 
     particleEmitters_[0]->emitter_.count = 8;
     particleEmitters_[0]->emitter_.color = { 1.0f,0.75f,0.75f,1.0f };
@@ -349,7 +404,7 @@ void SampleScene::Draw() {
             medjedStage_->Draw(*currentCamera_);
 
             if (medjedStage_->FindMedjed()) {
-                //今のところHPゲージのみなのでここで描画
+                //HPゲー描画
                 uIManager_->DrawHPGage();
             }
         };

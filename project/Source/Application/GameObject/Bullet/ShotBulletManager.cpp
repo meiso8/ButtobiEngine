@@ -16,7 +16,6 @@ ShotBulletManager::ShotBulletManager(Enemy* enemy, BulletManager* bulletManager,
 
 void ShotBulletManager::Initialize() {
     currentTime_ = 0.0f;
-
 }
 
 // Update内で時間を進める
@@ -51,6 +50,7 @@ void ShotBulletManager::Update() {
                 }
             } else {
                 Vector3 shotPosition = enemy_->GetWorldPosition() + toTarget * 0.5f;
+                shotPosition.y += 0.5f;
                 bulletManager_->ShotBullet(shotPosition, toTarget, shotSpeed_, shotSize_, Bullet::kEnemy);
             }
 

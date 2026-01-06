@@ -501,6 +501,9 @@
     <ClCompile Include="Source\Application\GameObject\UI\CurPos.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Application\Stage\MummyStage\DummyMummy.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -1004,6 +1007,9 @@
     <ClInclude Include="Source\Application\GameObject\UI\CurPos.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Application\Stage\MummyStage\DummyMummy.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
@@ -1026,6 +1032,10 @@
     <None Include="Resource\JsonFiles\Boss.json" />
     <None Include="Resource\JsonFiles\notes.json" />
     <None Include="Resource\JsonFiles\memo.json" />
+    <None Include="..\..\..\Downloads\GE3-master\GE3-master\project\Resource\Models\mummy\dummyMummy.gltf" />
+    <None Include="..\..\..\Downloads\GE3-master\GE3-master\project\Resource\Models\mummy\dummyMummy.bin">
+      <Filter>リソース ファイル</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png">

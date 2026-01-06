@@ -21,6 +21,7 @@ private:
     float rangeMax = 10.0f;
     Vector3* targetPos_ = nullptr;
     float enemyApperTime_ = 0.0f;
+    const float kEnemyApperMaxTime_  = 7.0f;
     RaySprite* raySprite_ = nullptr;
 
     void UpdateEnemyApperTime();
@@ -40,7 +41,6 @@ public:
     const bool& GetIsEnemyDead() {
         return enemy_->GetIsDead();
     }
-
     std::vector < std::unique_ptr<DummyMedjed>>& GetAllMedjeds() { return dummyMedjeds_; };
     Medjed* GetMedjed();
     const bool& GetIsFindMedjed() {
@@ -50,6 +50,7 @@ public:
     const bool& GetIsApperMedjed() {
         return GetEnemy()->GetIsApper();
     };
+
 
     void SetIsFindMedjed(const bool& flag) { GetMedjed()->SetIsFind(flag); }
 

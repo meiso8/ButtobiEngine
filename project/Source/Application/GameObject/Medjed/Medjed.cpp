@@ -38,7 +38,7 @@ Vector3 Medjed::GetWorldPosition() const
 
 void Medjed::GoToTarget(const Vector3& target)
 {
-    aniObj_->worldTransform_.translate_ = Lerp(aniObj_->worldTransform_.translate_, target, 0.01f);
+    aniObj_->worldTransform_.translate_ = Lerp(aniObj_->worldTransform_.translate_, target, 0.05f);
 }
 
 void Medjed::Hide()

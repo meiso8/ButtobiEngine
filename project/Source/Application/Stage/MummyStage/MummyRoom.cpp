@@ -39,9 +39,6 @@ void MummyRoom::SetWallAABB() {
         {  11.5f,  0.5f,  11.5f }
     };
 
-    // 天井が必要ならここに追加
-    // aabbs_[Ceiling] = {...};
-
     for (const auto& [type, pos] : fieldPoses_) {
         pos->SetingAABB(aabbs_[type]);
     }

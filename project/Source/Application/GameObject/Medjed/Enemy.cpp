@@ -54,8 +54,16 @@ void Enemy::Init()
     velocity_ = { 10.0f,10.0f,10.0f };
     startPos_ = { 0.0f };
     isApper_ = false;
+    isShotStart_ = false;
 
     phase_ = APPER;
+
+    bodyPos_.Initialize();
+    bodyPos_.worldTransform_.scale_ = { 0.0f };
+
+    timer_ = 0.0f;
+    poyoAnimTimer_ = 0.0f;
+
 }
 
 void Enemy::Draw(Camera& camera, const LightMode& lightMode)
@@ -138,7 +146,7 @@ void Enemy::SetPhase(PHASE phase)
     isShotStart_ = false;
     bodyPos_.InitTime();
 
-    if (phase_ == ROUND) {
+    if (phase_ == ROUND||phase_ == APPER) {
         bodyPos_.SetAnimation(dancingModel_);
     }
 

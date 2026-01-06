@@ -20,7 +20,12 @@
 void Player::OnCollision(Collider* collider)
 {
 
-    if (collider->GetCollisionAttribute() == kCollisionEnemy || collider->GetCollisionAttribute() == kCollisionEnemyBullet || collider->GetCollisionAttribute() == kCollisionMedjed) {
+    if (collider->GetCollisionAttribute() == kCollisionEnemy 
+        ||collider->GetCollisionAttribute() == kCollisionEnemyBullet 
+        || collider->GetCollisionAttribute() == kCollisionMedjed
+        || collider->GetCollisionAttribute() == kCollisionMummy
+        
+        ) {
         OnCollisionEnemy();
     }
 
@@ -33,7 +38,8 @@ void Player::OnCollision(Collider* collider)
         || collider->GetCollisionAttribute() == kCollisionWall
         || collider->GetCollisionAttribute() == kCollisionMedjed
         || collider->GetCollisionAttribute() == kCollisionEnemy
-        || collider->GetCollisionAttribute() == kCollisionMummy || collider->GetCollisionAttribute() == kCollisionFloor
+        || collider->GetCollisionAttribute() == kCollisionMummy
+        || collider->GetCollisionAttribute() == kCollisionFloor
 
         ) {
 
@@ -340,8 +346,8 @@ void Player::MouseLook()
     Vector2 controllerPos = { cameraRotateY_ ,cameraRotateX_ };
 
     if (Input::IsControllerStickPosMove(BUTTON_RIGHT, 0, &controllerPos)) {
-        cameraRotateY_ += controllerPos.x * InverseFPS * cameraSpeed_;
-        cameraRotateX_ -= controllerPos.y * InverseFPS * cameraSpeed_;
+        cameraRotateY_ += controllerPos.x * InverseFPS * cameraSpeed_*2.0f;
+        cameraRotateX_ -= controllerPos.y * InverseFPS * cameraSpeed_*2.0f;
     }
 
 

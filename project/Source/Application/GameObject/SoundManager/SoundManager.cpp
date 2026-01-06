@@ -30,12 +30,12 @@ void SoundManager::ApperMedjedUpdate()
     if (Sound::bgmVolume_ < 0.5f) {
         Sound::bgmVolume_ += InverseFPS * 0.25f;
     }
-    Sound::Stop(Sound::BGM_Sea);
+    Sound::Stop(Sound::HORROR2);
     Sound::PlayBGM(Sound::BGM_ArabRuins);
 }
 
 void SoundManager::NotFindMedjedUpdate()
 {
     Sound::Stop(Sound::BGM_ArabRuins);
-    Sound::PlayBGM(Sound::BGM_Sea);
+    Sound::PlayBGM(Sound::HORROR2);
 }

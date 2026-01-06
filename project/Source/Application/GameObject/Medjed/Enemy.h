@@ -13,6 +13,7 @@ class Model;
 class Camera;
 enum LightMode;
 
+
 class Enemy :public Collider
 {
 private:
@@ -32,7 +33,7 @@ public:
     {
         return bodyPos_.worldTransform_.GetWorldPosition();
     }
-
+    WorldTransform& GetWorldTransform() { return bodyPos_.worldTransform_; }
     void OnCollision(Collider* collder)override;
 
     void SetTarget(Vector3& target) { target_ = &target; };

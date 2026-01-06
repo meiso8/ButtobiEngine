@@ -6,6 +6,16 @@
 
 // ==========================//イーズイン//================================
 
+float NormalizeAngle(float angle)
+{
+
+    while (angle > PI) angle -= 2.0f * PI;
+    while (angle < -PI) angle += 2.0f * PI;
+
+
+    return angle;
+}
+
 float EaseInQuadT(const float& t)
 {
     return  t * t;

@@ -9,6 +9,10 @@ ResultScene::~ResultScene() {}
 ResultScene::ResultScene()
 {
 
+    skipSprite_ = std::make_unique<Sprite>();
+    skipSprite_->Create(Texture::TEXTURE_HANDLE::SKIP, { 1280.0f-128.0f-64.0f, 720.0f-64.0f });
+    skipSprite_->SetAnchorPoint({ 0.5f, 0.5f });
+
     symbolSprite_ = std::make_unique<Sprite>();
     symbolSprite_->Create(Texture::TEXTURE_HANDLE::PUZZLE, { 640.0f, 360.0f });
     symbolSprite_->SetAnchorPoint({ 0.5f, 0.5f });
@@ -41,19 +45,30 @@ void ResultScene::Initialize()
     fadeSpeed_ = InverseFPS * 2.0f;
     Sound::StopAllSound();
     lookTimer_ = 0.0f;
+
+    isSkipDraw_ = false;
 }
 
 void ResultScene::Update()
 {
     Sound::PlayBGM(Sound::BGM_SandCity);
 
-    if (lookTimer_ >= 20.0f) {
-        if (InputBind::IsClick()) {
+    if (InputBind::IsClick()) {
+
+        Sound::PlaySE(Sound::FALL);
+
+        if (lookTimer_ >= 10.0f) {
             sceneChange_->SetState(SceneChange::kFadeIn, 30);
             SceneManager::SetNestScene("Title");
-        }
-    }
+        } else {
 
+            if (lookTimer_ <= 10.0f) {
+                lookTimer_ = 10.0f;
+                isSkipDraw_ = true;
+            }
+        }
+
+    }
 
 
     symbolSprite_->Update();
@@ -100,6 +115,10 @@ void ResultScene::Draw()
     symbolSprite_->Draw();
     creditSprite_->Draw();
 
+    if (isSkipDraw_) {
+        skipSprite_->Draw();
+    }
+  
 }
 
 void ResultScene::SceneChangeUpdate()

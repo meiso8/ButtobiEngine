@@ -20,6 +20,7 @@ public:
 
         PEOPLE,
         MUMMY,
+        DUMMY_MUMMY,
         MUMMY_ROOM,
         COFFIN_GLTF,
         //心臓

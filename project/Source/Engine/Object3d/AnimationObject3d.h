@@ -25,6 +25,7 @@ public:
         return  animationTime_ == animation_.duration;
     }
     void Draw(Camera& camera, const BlendMode& blendMode = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack)override;
+    void SetSkinning(const bool& flag) { isSkinning_ = flag; }
 private:
     void UpdateAnimation();
     float animationTime_ = 0.0f;

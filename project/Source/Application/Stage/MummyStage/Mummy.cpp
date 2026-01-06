@@ -9,7 +9,7 @@ Mummy::Mummy() {
     object_ = std::make_unique<Object3d>();
     object_->Create();
     object_->SetMesh(ModelManager::GetModel(ModelManager::MUMMY));
-
+    //coffinModel_ = ModelManager::GetModel(ModelManager::MUMMY_ROOM);
     coffinModel_ = ModelManager::GetModel(ModelManager::COFFIN_GLTF);
     aniObj_ = std::make_unique<AnimationObject3d>();
     aniObj_->Create();
@@ -23,23 +23,28 @@ Mummy::Mummy() {
     aniObj_->SetMeshAndData(skinningModel_.get());
 
     SetType(kAABB);
-    SetCollisionAttribute(kCollisionMummy); // ミイラの衝突属性
-    SetCollisionMask(kCollisionPlayer | kCollisionEnemy); // プレイヤーや壁と衝突
+    SetCollisionAttribute(kCollisionWall); // ミイラの衝突属性
+    SetCollisionMask(kCollisionPlayer | kCollisionEnemy|kCollisionMummy); // プレイヤーや壁と衝突
 
-    // ミイラのサイズに合わせてAABBを設定（仮のサイズ）
-    SetAABB({ {-0.25f, 0.0f, -1.0f}, {0.25f, 0.5f, 1.0f} });
+    SetAABB({ {-1.0f, 0.0f, -0.25f}, {1.0f, 0.5f, 0.25f} });
+
 }
 
 void Mummy::Initialize() {
     isOpen_ = false;
     isOpenEnd_ = false;
     platform_->Initialize();
+
     aniObj_->Initialize();
     object_->Initialize();
+    object_->worldTransform_.rotate_.y = 1.57f;
+    aniObj_->worldTransform_.rotate_.y = 1.57f;
     // 台の高さを取得してオフセット 
     float platformHeight = platform_->GetAABB().max.y-platform_->GetAABB().min.y;
     object_->worldTransform_.translate_.y = platformHeight;
     aniObj_->worldTransform_.translate_.y = platformHeight;
+
+
 }
 
 void Mummy::Update() {
@@ -66,8 +71,5 @@ void Mummy::Draw(Camera& camera) {
 }
 
 void Mummy::OnCollision(Collider* collider) {
-    if (collider->GetCollisionAttribute() == kCollisionPlayer) {
-        // プレイヤーとぶつかったときの処理（必要なら）
-    }
 
 }

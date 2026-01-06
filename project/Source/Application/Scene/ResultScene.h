@@ -12,10 +12,11 @@ public:
     void Draw()override;
    void SceneChangeUpdate()override;
 private:
+    bool isSkipDraw_ = false;
     float timer_ = 0.0f;
     std::unique_ptr<Sprite> creditSprite_;
     float scrollSpeed_ = 0.001f; // スクロール速度
-
+    std::unique_ptr<Sprite> skipSprite_;
     std::unique_ptr<Sprite> symbolSprite_; 
     std::vector<Texture::TEXTURE_HANDLE> textureSequence_;
     size_t currentIndex_ = 0;

@@ -32,9 +32,7 @@ void Bullet::Initialize() {
     lifeDuration_ = 2.0f;
     isActive_ = false;
     size_ = 3.0f;
-    body_.GetBalloonData().sphere = 0.0f;
-
-    body_.GetBalloonData().isSphere = true;
+    body_.GetBalloonData().expansion = 0.0f;
 }
 void Bullet::OnCollision(Collider* collider)
 {
@@ -67,11 +65,11 @@ void Bullet::Update() {
     }
 
     if (type_ == kPlayer) {
-        body_.GetBalloonData().sphere = Lerp(body_.GetBalloonData().sphere, 0.0f, 0.5f);
+  
         body_.GetBalloonData().expansion = Lerp(body_.GetBalloonData().expansion, 0.0f, 0.1f);
     } else {
-        body_.GetBalloonData().sphere = Lerp(body_.GetBalloonData().sphere, 1.0f, 0.1f);
-        body_.GetBalloonData().expansion = Lerp(body_.GetBalloonData().expansion, 1.0f, 0.1f);
+    
+        body_.GetBalloonData().expansion = Lerp(body_.GetBalloonData().expansion, 0.5f, 0.005f);
     }
 
 
@@ -97,18 +95,19 @@ void Bullet::Draw(Camera& camera) {
 void Bullet::SetBulletType(const BulletType& type)
 {
     if (type == kPlayer) {
+
         SetCollisionAttribute(kCollisionPlayerBullet);
-        SetCollisionMask(kCollisionEnemy | kCollisionMedjed);
+        SetCollisionMask(kCollisionEnemy | kCollisionMedjed|kCollisionWall| kCollisionFloor);
     } else {
-        SetCollisionAttribute(kCollisionEnemyBullet);
+        body_.GetBalloonData().expansion = 0.0f;
+        SetCollisionAttribute(kCollisionEnemyBullet| kCollisionWall|kCollisionFloor);
         // 弾は「Player」とだけ衝突したい
         SetCollisionMask(kCollisionPlayer);
     }
 }
 
 void Bullet::Shot(const Vector3& position, const Vector3& direction, const float& speed, const float& size, const Bullet::BulletType& type) {
-   
-    body_.GetBalloonData().sphere =0.0f;
+  
     
     body_.SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
     type_ = type;

@@ -6,16 +6,20 @@
 #include"Papyrus.h"
 #include"Item/ItemManager.h"
 #include"Memo/MemoManager.h"
-#include "MummyRoom.h" // ← 追加
-
+#include "MummyRoom.h" 
+#include"DummyMummy.h"
+#include<array>
 class MummyStage :public Stage
 {
 private:
+    static const int kMaxMummy_ = 13;
+
     std::unique_ptr<Mummy>mummy_ = nullptr;
     std::unique_ptr<Papyrus> papyrus_ = nullptr;
-    std::unique_ptr<MummyRoom> mummyRoom_ = nullptr; // ← 追加
+    std::unique_ptr<MummyRoom> mummyRoom_ = nullptr; 
+    std::array<std::unique_ptr<DummyMummy>, kMaxMummy_> dummyMummies_;
 public:
-    const float maxTime_ = 5.0f;
+    const float maxTime_ = 2.0f;
     float medjedApperTime_ = maxTime_;
     void TimerUpdate();
     bool IsEndTime() { return medjedApperTime_ <= 0.0f; };

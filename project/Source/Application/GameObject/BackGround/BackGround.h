@@ -16,6 +16,7 @@ public:
     void Initialize();
     void Update();
     void Draw(Camera& camera);
+    void DrawField(Camera& camera);
     void UpdateApperMedjed();
     Building* GetBuilding() {
         return building_

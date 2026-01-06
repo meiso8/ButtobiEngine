@@ -18,7 +18,7 @@ Papyrus::Papyrus() {
 
     SetType(kAABB);
     SetCollisionAttribute(kCollisionWall); //かべ
-    SetCollisionMask(kCollisionPlayer | kCollisionEnemy); // プレイヤーや壁と衝突
+    SetCollisionMask(kCollisionPlayer | kCollisionEnemy|kCollisionMummy); // プレイヤーや壁と衝突
 
     // memoのサイズに合わせる
     SetAABB(aabb);

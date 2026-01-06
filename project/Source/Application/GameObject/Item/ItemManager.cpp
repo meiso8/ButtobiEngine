@@ -120,10 +120,10 @@ void ItemManager::UseItemFromSlot(const Vector3& pos)
         if (item && !item->isUsed_ && item->isGet_) {
             SoundManager::PlayCorrectSE();
             item->Use();
-            Vector3 offset = { 0.0f,0.5f,-0.3f };
-            Vector3 endOffset = { 0.0f,0.3f,-0.3f };
+            Vector3 offset = { -0.3f,0.5f,0.01f };
+            Vector3 endOffset = { -0.3f,0.3f,0.01f };
             item->SetStartEndPos(pos + offset, pos + endOffset);
-            item->SetRotate({ 4.7f,0.0f,0.0f });
+            item->SetRotate({ 4.7f,1.57f,0.0f });
 
         }
     }

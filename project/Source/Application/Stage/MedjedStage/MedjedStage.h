@@ -24,5 +24,6 @@ public:
     const bool& MedjedDead() { return medjedManager_->GetIsEnemyDead(); }
     Medjed* GetMedjed() { return medjedManager_->GetMedjed(); };
     Enemy* GetEnemy() { return medjedManager_->GetEnemy(); };
+    const bool& GetEnemyApper() {return medjedManager_->GetIsApperMedjed(); }
 };
 

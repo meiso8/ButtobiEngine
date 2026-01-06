@@ -21,7 +21,7 @@ MedjedManager::MedjedManager()
 
     for (int i = 0; i < dummyMedjeds_.size(); ++i) {
         if (i == 0) {
-            // 最初の1体だけ本物のメジェド様を生成！
+            //0だけ本物のメジェド様を生成！
             dummyMedjeds_[i] = std::make_unique<Medjed>();
         } else {
             dummyMedjeds_[i] = std::make_unique<DummyMedjed>();
@@ -41,18 +41,23 @@ void MedjedManager::RayCastHit(RaySprite& raySprite) {
         float dist = 5.0f;
         if (auto correctMedjed = dynamic_cast<Medjed*>(medjed.get())) {
             dist = 10.0f;
+
         }
 
         if (raySprite.IntersectsAABB(aabb, medjed->GetWorldPosition(), dist)) {
-            medjed->SetColor({ 1.0f,1.0f,1.0f,0.5f });
+            if (auto correctMedjed = dynamic_cast<Medjed*>(medjed.get())) {
+                medjed->SetColor({ 1.0f,1.0f,1.0f,0.5f });
+            } else {
+                medjed->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+            }
+
+    
             //メジェドざまを当ててないとき
             if (!GetIsFindMedjed()) {
                 //Mouseをクリックしたら
                 if (InputBind::IsClick()) {
 
                     if (auto correctMedjed = dynamic_cast<Medjed*>(medjed.get())) {
-         
-
                         SetIsFindMedjed(true);
                         SoundManager::PlayCorrectSE();
                         Sound::PlaySE(Sound::GOGOGO);
@@ -101,14 +106,14 @@ void MedjedManager::Draw(Camera& camera)
 
 void MedjedManager::UpdateEnemyApperTime()
 {
-    if (enemyApperTime_ >= 5.0f) {
+    if (enemyApperTime_ >= kEnemyApperMaxTime_) {
         return;
     }
 
     enemyApperTime_ += InverseFPS;
-    enemyApperTime_ = std::clamp(enemyApperTime_, 0.0f, 5.0f);
+    enemyApperTime_ = std::clamp(enemyApperTime_, 0.0f, kEnemyApperMaxTime_);
 
-    if (enemyApperTime_ >= 5.0f) {
+    if (enemyApperTime_ >= kEnemyApperMaxTime_) {
         GetEnemy()->SetIsApper(true);
     }
 }
@@ -118,10 +123,6 @@ void MedjedManager::UpdateMedjedIfNotFind()
     //メジェド一つだけ
     GetMedjed()->Look(*targetPos_);
 
-    //if (GetMedjed()->GetIsHit()) {
-    //    //ランダム
-    //    PlaceLockersRandomly();
-    //}
 }
 
 void MedjedManager::UpdateMedjedIfFind()
@@ -130,7 +131,7 @@ void MedjedManager::UpdateMedjedIfFind()
 
         medjed->Look(*targetPos_);
 
-        if (enemyApperTime_ >= 2.0f) {
+        if (enemyApperTime_ >= 5.0f) {
             medjed->GoToTarget(enemy_->GetWorldPos());
         }
         if (GetIsApperMedjed()) {
@@ -169,8 +170,18 @@ void MedjedManager::PlaceLockersRandomly() {
         Vector2 pos;
 
         while (true) {
-            Random::SetMinMax(rangeMin, rangeMax);
-            pos.x = Random::Get(); pos.y = Random::Get(); // Z座標として使う 
+
+            if (auto medjed = dynamic_cast<Medjed*>(locker.get())) {
+                Random::SetMinMax(rangeMin, rangeMax);
+                pos.x = Random::Get(); 
+                Random::SetMinMax(rangeMin, rangeMin*0.5f);
+                pos.y = Random::Get(); // Z座標として使う 
+            } else {
+                Random::SetMinMax(rangeMin, rangeMax);
+                pos.x = Random::Get(); 
+                pos.y = Random::Get(); // Z座標として使う 
+            }
+            
             if (!IsOverlapping(pos, placedPositions)) {
                 placedPositions.push_back(pos);
                 locker->GetWorldTransform().translate_ = { pos.x, 0.0f, pos.y };

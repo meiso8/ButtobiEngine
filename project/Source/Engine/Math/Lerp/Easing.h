@@ -1,5 +1,7 @@
 #pragma once
 
+float NormalizeAngle(float angle);
+
 /// @brief イーズイン t^2
 /// @param t 時間
 /// @return イージングされた時間

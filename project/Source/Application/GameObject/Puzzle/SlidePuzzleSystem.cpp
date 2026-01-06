@@ -24,25 +24,25 @@ void SlidePuzzleSystem::Initialize()
 
 void SlidePuzzleSystem::Update(const Vector2& screenPos)
 {
-    if (isActive_) {
-        //クリアしたら
+    //クリアしたら
+    if (puzzle_->IsClear()) {
 
-        puzzle_->Game(screenPos);
-
-        if (puzzle_->IsClear()) {
-
-            if (clearTimer_ == maxTimer_) {
-                SoundManager::PlayCorrectSE();
-            }
-
-            clearTimer_ -= InverseFPS;
-            clearTimer_ = std::clamp(clearTimer_, 0.0f, maxTimer_);
-
-            if (clearTimer_ == 0.0f) {
-                isEnd_ = true;
-                isActive_ = false;
-            }
+        if (clearTimer_ == maxTimer_) {
+            SoundManager::PlayCorrectSE();
         }
+
+        clearTimer_ -= InverseFPS;
+        clearTimer_ = std::clamp(clearTimer_, 0.0f, maxTimer_);
+
+        if (clearTimer_ == 0.0f) {
+            isEnd_ = true;
+            isActive_ = false;
+        }
+    }
+
+    if (isActive_) {
+  
+        puzzle_->Game(screenPos);
 
     }
 

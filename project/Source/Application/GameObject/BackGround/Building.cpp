@@ -117,7 +117,7 @@ FieldCollider::FieldCollider()
 
     SetType(kAABB);
     SetCollisionAttribute(kCollisionWall);
-    SetCollisionMask(kCollisionPlayer | kCollisionPlayerEye|kCollisionEnemy|kCollisionMedjed);
+    SetCollisionMask(kCollisionPlayer | kCollisionPlayerEye|kCollisionEnemy|kCollisionMedjed|kCollisionMummy);
 }
 
 void FieldCollider::Update()

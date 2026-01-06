@@ -24,8 +24,13 @@ void BackGround::Update()
 void BackGround::Draw(Camera& camera)
 {
     world_->Draw(camera);
-    filed_->Draw(camera);
+
     building_->Draw(camera);
+}
+
+void BackGround::DrawField(Camera& camera)
+{
+    filed_->Draw(camera);
 }
 
 void BackGround::UpdateApperMedjed()

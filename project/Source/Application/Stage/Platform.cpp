@@ -9,8 +9,8 @@ Platform::Platform() {
     SetCollisionAttribute(kCollisionWall);
     SetCollisionMask(kCollisionPlayer | kCollisionEnemy | kCollisionMedjed | kCollisionDummyMedjed);
 
-    // 台のサイズ（仮）
-    SetAABB({ { -0.75f, 0.0f, -1.5f },{ 0.5f, 0.75f, 1.5f } });
+    SetAABB({ { -1.5f, 0.0f, -0.5f }, { 1.5f, 0.75f, 1.0f } });
+
 
     cubeMesh_ = std::make_unique<CubeMesh>();
     cubeMesh_->Create();
@@ -23,6 +23,7 @@ Platform::Platform() {
 
 void Platform::Initialize() {
     object_->Initialize();
+
 }
 
 void Platform::Update() {

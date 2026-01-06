@@ -34,11 +34,17 @@ public:
     SampleScene();
     ~SampleScene() override;
     void Initialize()override;
+    void InitAmenScene();
+    void InitWaterScene();
+    void InitMummyScene();
+    void InitMedjedScene();
+
     void Update()override;
     void Draw()override;
     void Debug()override;
     void CheckAllCollision();
     void BackToTitle();
+    void SetSceneChange();
 private:
     void CreateParticle();
     enum class StagePhase {Amen, Water, Mummy, Medjed }; 

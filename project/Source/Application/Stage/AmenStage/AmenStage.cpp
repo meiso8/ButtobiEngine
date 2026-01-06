@@ -15,12 +15,15 @@ AmenStage::AmenStage()
 
 void AmenStage::Initialize()
 {
+    player_->Init();
+    player_->SetBodyPos({ 0.0f,0.0f,-5.0f });
 
     Sound::StopAllSound();
     slidePuzzleSystem_->Initialize();
     backGround_->Initialize();
     itemManager_->Init();
     amenRa_->Initialize();
+    Sound::bgmVolume_ = 0.1f;
 }
 
 void AmenStage::Update()

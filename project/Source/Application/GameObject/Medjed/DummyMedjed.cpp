@@ -11,14 +11,17 @@ void DummyMedjed::Look(const Vector3& target)
 
     aniTimer_ += InverseFPS * 0.25f;
     aniTimer_ = std::clamp(aniTimer_, 0.0f, 1.0f);
-
     Vector3 direction = target - GetWorldPosition();
-    object3d_->worldTransform_.rotate_.y = Easing::EaseInOutBounce(startRotateY_, std::atan2(direction.x, direction.z), aniTimer_);
+    float targetAngle = std::atan2(direction.x, direction.z);
+    // 差分を最短経路に補正
+   float delta = NormalizeAngle(targetAngle - startRotateY_);
+
+    object3d_->worldTransform_.rotate_.y = startRotateY_ + Easing::EaseInOutBounce(0.0f, delta, aniTimer_);
 }
 
 void DummyMedjed::GoToTarget(const Vector3& target)
 {
-    object3d_->worldTransform_.translate_ = Lerp(object3d_->worldTransform_.translate_, target, 0.01f);
+    object3d_->worldTransform_.translate_ = Lerp(object3d_->worldTransform_.translate_, target, 0.05f);
 }
 
 void DummyMedjed::Hide()
@@ -74,15 +77,14 @@ void DummyMedjed::Update()
         return;
     }
     SetColor({ 1.0f,1.0f,1.0f,1.0f });
-    object3d_->Update();
-    ColliderUpdate();
+  
+  object3d_->Update();
+
 }
 
 
 void DummyMedjed::OnCollision(Collider* collider)
 {
-
-    OnCollisionCollider();
 }
 
 Vector3 DummyMedjed::GetWorldPosition() const

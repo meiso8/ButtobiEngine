@@ -4,6 +4,7 @@
 #include"Object3d.h"
 #include"Collider.h"
 #include"AABB.h"
+
 class Model;
 class DummyMedjed :public Collider {
 
