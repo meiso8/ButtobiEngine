@@ -30,6 +30,7 @@ void Item::SetModel(const ModelManager::MODEL_HANDLE& handle)
 }
 void Item::Init()
 {
+    isGetAnimEnd_ = false;
     isGet_ = false;
     isUsed_ = false;
     aniTimer_ = 0.0f;
@@ -80,6 +81,7 @@ void Item::SetScreenStartPos()
 void Item::UpdateAniTimer(const float& endTime)
 {
     if (aniTimer_ == endTime) {
+        isGetAnimEnd_ = true;
         return;
     }
 

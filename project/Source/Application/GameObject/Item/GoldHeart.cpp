@@ -3,6 +3,7 @@
 
 void GoldHeart::Init()
 {
+    isGetAnimEnd_ = false;
     isUsed_ = false;
     isGet_ = false;
     aniTimer_ = 0.0f;

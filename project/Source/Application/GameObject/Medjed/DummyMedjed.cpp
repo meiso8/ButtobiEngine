@@ -14,7 +14,7 @@ void DummyMedjed::Look(const Vector3& target)
     Vector3 direction = target - GetWorldPosition();
     float targetAngle = std::atan2(direction.x, direction.z);
     // 差分を最短経路に補正
-   float delta = NormalizeAngle(targetAngle - startRotateY_);
+    float delta = NormalizeAngle(targetAngle - startRotateY_);
 
     object3d_->worldTransform_.rotate_.y = startRotateY_ + Easing::EaseInOutBounce(0.0f, delta, aniTimer_);
 }
@@ -27,9 +27,9 @@ void DummyMedjed::GoToTarget(const Vector3& target)
 void DummyMedjed::Hide()
 {
 
-    hideTimer_ += InverseFPS * 0.5f;
+    hideTimer_ += InverseFPS*1.2f;
     hideTimer_ = std::clamp(hideTimer_, 0.0f, 1.0f);
-  /*  object3d_->worldTransform_.translate_.y = Easing::EaseInCubic(startPosY_, -2.0f, hideTimer_);*/
+    /*  object3d_->worldTransform_.translate_.y = Easing::EaseInCubic(startPosY_, -2.0f, hideTimer_);*/
 
 }
 
@@ -44,7 +44,7 @@ DummyMedjed::DummyMedjed()
     SetType(kAABB);
     SetAABB(localAABB_);
     SetCollisionAttribute(kCollisionDummyMedjed);
-    SetCollisionMask(kCollisionPlayer|kCollisionMedjed);
+    SetCollisionMask(kCollisionPlayer | kCollisionMedjed);
 
 }
 void DummyMedjed::Init()
@@ -77,8 +77,8 @@ void DummyMedjed::Update()
         return;
     }
     SetColor({ 1.0f,1.0f,1.0f,1.0f });
-  
-  object3d_->Update();
+
+    object3d_->Update();
 
 }
 

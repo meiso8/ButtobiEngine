@@ -100,9 +100,9 @@ void Bullet::SetBulletType(const BulletType& type)
         SetCollisionMask(kCollisionEnemy | kCollisionMedjed|kCollisionWall| kCollisionFloor);
     } else {
         body_.GetBalloonData().expansion = 0.0f;
-        SetCollisionAttribute(kCollisionEnemyBullet| kCollisionWall|kCollisionFloor);
+        SetCollisionAttribute(kCollisionEnemyBullet);
         // 弾は「Player」とだけ衝突したい
-        SetCollisionMask(kCollisionPlayer);
+        SetCollisionMask(kCollisionPlayer | kCollisionWall | kCollisionFloor);
     }
 }
 

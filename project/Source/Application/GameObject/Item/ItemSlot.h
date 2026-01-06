@@ -26,6 +26,7 @@ public:
     }
     bool isUsed_ = false;
     bool isGet_ = false;
+    bool isGetAnimEnd_ = false;
     // UI表示用（ImGuiなど） 
     virtual void Init();
     virtual void DrawInfoUI();

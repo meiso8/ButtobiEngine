@@ -41,15 +41,6 @@ void Medjed::GoToTarget(const Vector3& target)
     aniObj_->worldTransform_.translate_ = Lerp(aniObj_->worldTransform_.translate_, target, 0.05f);
 }
 
-void Medjed::Hide()
-{
-
-    hideTimer_ += InverseFPS;
-    hideTimer_ = std::clamp(hideTimer_, 0.0f, 1.0f);
-
-
-
-}
 
 void Medjed::MoveStart()
 {

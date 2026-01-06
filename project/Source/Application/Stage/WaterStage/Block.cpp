@@ -66,7 +66,6 @@ void Block::Reset()
 {
     if (!CanPushBlock()) {
         return;
-
     }
 
     aniTimer_ = 0.0f;
@@ -219,8 +218,7 @@ void BlockMap::Update() {
                 // 間違った順番ならリセット
                 if (steppedOrder_.size() >= correctOrder_.size() ||
                     steppedOrder_[steppedOrder_.size() - 1] != correctOrder_[steppedOrder_.size() - 1]) {
-                    steppedOrder_.clear();
-                    block->Reset();
+      
                     isReset = true;
                 }
 
@@ -232,7 +230,7 @@ void BlockMap::Update() {
 
 
     if (isReset) {
-    
+        steppedOrder_.clear();
         SoundManager::PlayCancelSE();
         ResetPushMap();
     }

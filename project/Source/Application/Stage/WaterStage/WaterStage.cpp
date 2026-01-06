@@ -3,7 +3,8 @@
 #include"Sound.h"
 const bool WaterStage::IsClear()
 {
-    return (blockMap_->IsClear() && itemManager_->HasItem("GoldHeart"));
+    //金の心臓を手に入れたとき
+    return (blockMap_->IsClear() && itemManager_->HasItem("GoldHeart") && itemManager_->GetItem("GoldHeart")->isGetAnimEnd_);
 }
 WaterStage::WaterStage()
 {
