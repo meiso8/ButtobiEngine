@@ -16,8 +16,8 @@ public:
     void SetIsPush(const bool& isPush) { isPush_ = isPush; }
     const bool& GetIsPush() { return isPush_; };
     bool CanPushBlock(){     // 通常ブロックなら無視 
-        if (cubeMesh_->GetSrvIndex() == Texture::GetHandle(Texture::PUZZLE) ||
-            cubeMesh_->GetSrvIndex() == Texture::GetHandle(Texture::NONE)) {
+        if (cubeMesh_->GetSrvIndex() == Texture::GetHandle(TextureFactory::PUZZLE) ||
+            cubeMesh_->GetSrvIndex() == Texture::GetHandle(TextureFactory::NONE)) {
             return false;
         };
         return true;
@@ -49,7 +49,7 @@ private:
     std::array<Block*, 4> centerBlocks_;
     std::array<Block*, 12> roundBlocks_;
     std::array < std::array<std::unique_ptr<Block>, kMapWidth>, kMapHeight >map_;
-    std::vector<Texture::TEXTURE_HANDLE> correctOrder_ = { Texture::HIERO_S, Texture::HIERO_P, Texture::HIERO_D, Texture::HIERO_T };
-    std::vector<Texture::TEXTURE_HANDLE> steppedOrder_;
+    std::vector<TextureFactory::Handle> correctOrder_ = { TextureFactory::HIERO_S, TextureFactory::HIERO_P, TextureFactory::HIERO_D, TextureFactory::HIERO_T };
+    std::vector<TextureFactory::Handle> steppedOrder_;
     bool isClear_ = false;
 };

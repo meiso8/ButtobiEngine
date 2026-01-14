@@ -11,7 +11,7 @@ MemoManager::MemoManager()
     sprite_ = std::make_unique<Sprite>();
     float width = static_cast<float>(Window::GetClientWidth());
     float height = static_cast<float>(Window::GetClientHeight());
-    sprite_->Create(Texture::MEMO1, { width * 0.5f, height * 0.5f });
+    sprite_->Create(TextureFactory::MEMO1, { width * 0.5f, height * 0.5f });
     sprite_->SetAnchorPoint({ 0.5f,0.5f });
 
 }
@@ -47,7 +47,7 @@ void MemoManager::DrawUI()
 }
 
 
-void MemoManager::GenerateMemos(const std::vector<Texture::TEXTURE_HANDLE>& handles)
+void MemoManager::GenerateMemos(const std::vector<TextureFactory::Handle>& handles)
 {
     memos_.clear(); // 既存のメモをクリア
 
@@ -77,15 +77,15 @@ void MemoManager::GenerateMemos(const std::vector<Texture::TEXTURE_HANDLE>& hand
 
         std::string key;
         switch (handle) {
-        case Texture::MEMO1: key = "memo1"; break;
-        case Texture::MEMO2: key = "memo2"; break;
-        case Texture::MEMO3: key = "memo3"; break;
-        case Texture::MEMO4: key = "memo4"; break;
-        case Texture::MEMO5: key = "memo5"; break;
-        case Texture::BOOK:  key = "book1"; break;
-        case Texture::BOOK2: key = "book2"; break;
-        case Texture::BOOK3: key = "book3"; break;
-        case Texture::BOOK4: key = "book4"; break;
+        case TextureFactory::MEMO1: key = "memo1"; break;
+        case TextureFactory::MEMO2: key = "memo2"; break;
+        case TextureFactory::MEMO3: key = "memo3"; break;
+        case TextureFactory::MEMO4: key = "memo4"; break;
+        case TextureFactory::MEMO5: key = "memo5"; break;
+        case TextureFactory::BOOK:  key = "book1"; break;
+        case TextureFactory::BOOK2: key = "book2"; break;
+        case TextureFactory::BOOK3: key = "book3"; break;
+        case TextureFactory::BOOK4: key = "book4"; break;
         default: continue;
         }
 
@@ -100,9 +100,9 @@ void MemoManager::GenerateMemos(const std::vector<Texture::TEXTURE_HANDLE>& hand
             memo->GetWorldTransform() = wt;
         }
 
-        if (handle == Texture::BOOK || handle == Texture::BOOK2) {
+        if (handle == TextureFactory::BOOK || handle == TextureFactory::BOOK2) {
             memo->SetCubeSize(memoAABB["bookSize"]);
-        } else if (handle == Texture::BOOK3 || handle == Texture::BOOK4) {
+        } else if (handle == TextureFactory::BOOK3 || handle == TextureFactory::BOOK4) {
             memo->SetCubeSize(memoAABB["noteSize"]);
         } else {
             memo->SetCubeSize(memoAABB["memoSize"]);
@@ -112,7 +112,7 @@ void MemoManager::GenerateMemos(const std::vector<Texture::TEXTURE_HANDLE>& hand
     }
 }
 
-void MemoManager::SetSpriteSize(const Texture::TEXTURE_HANDLE& handle)
+void MemoManager::SetSpriteSize(const TextureFactory::Handle& handle)
 {
     sprite_->SetTexture(handle);
     sprite_->AdjustTextureSize();

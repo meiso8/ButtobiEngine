@@ -18,7 +18,7 @@ private:
     float scrollSpeed_ = 0.001f; // スクロール速度
     std::unique_ptr<Sprite> skipSprite_;
     std::unique_ptr<Sprite> symbolSprite_; 
-    std::vector<Texture::TEXTURE_HANDLE> textureSequence_;
+    std::vector<TextureFactory::Handle> textureSequence_;
     size_t currentIndex_ = 0;
     float switchInterval_ = 5.0f; // 1秒ごとに切り替え
 

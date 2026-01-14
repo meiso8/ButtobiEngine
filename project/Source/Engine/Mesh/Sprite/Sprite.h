@@ -17,7 +17,7 @@ class Sprite
 {
 public:
     ~Sprite();
-    void Create(const Texture::TEXTURE_HANDLE& textureHandle, const Vector2& position, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
+    void Create(const TextureFactory::Handle& textureHandle, const Vector2& position, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
 
     void Update();
     void UpdateAnchorPoint();
@@ -26,7 +26,7 @@ public:
     );
 
     void SetColor(const Vector4& color);
-    void SetTexture(const Texture::TEXTURE_HANDLE& textureHandle);
+    void SetTexture(const TextureFactory::Handle& textureHandle);
     void SetSize(const Vector2& size) { size_ = size; };
     void SetPosition(const Vector2& position) { position_ = position; }
     void SetRotate(const float& rotate) { rotate_ = rotate; }

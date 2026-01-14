@@ -7,7 +7,7 @@ Field::Field()
 
     circle_ = { {0.0f,0.0f,0.0f},25.0f };
     circleMesh_ = std::make_unique<CircleMesh>();
-    circleMesh_->Create(Texture::NUMBERS);
+    circleMesh_->Create(TextureFactory::NUMBERS);
     circleMesh_->SetVertex(circle_);
 
     object3d_ = std::make_unique<Object3d>();

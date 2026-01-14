@@ -24,11 +24,11 @@ PauseScreen::PauseScreen()
     float width = static_cast<float>(Window::GetClientWidth());
     float height = static_cast<float>(Window::GetClientHeight());
 
-    sprites_[kBlackScreen]->Create(Texture::WHITE_1X1, { 0.0f,0.0f }, { 0.0f,0.0f,0.0f,0.75f });
+    sprites_[kBlackScreen]->Create(TextureFactory::WHITE_1X1, { 0.0f,0.0f }, { 0.0f,0.0f,0.0f,0.75f });
     sprites_[kBlackScreen]->SetSize({ width,height });
 
-    sprites_[kBackToGame]->Create(Texture::BUTTON_BACK_TO_GAME, { 0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f });
-    sprites_[kBackToTitle]->Create(Texture::BUTTON_BACK_TO_TITL, { 0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f });
+    sprites_[kBackToGame]->Create(TextureFactory::BUTTON_BACK_TO_GAME, { 0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f });
+    sprites_[kBackToTitle]->Create(TextureFactory::BUTTON_BACK_TO_TITL, { 0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f });
     pos_[kBackToGame] = {256.0f+128.0f,  528.0f + sprites_[kBackToGame]->GetSize().y * 0.5f };
     pos_[kBackToTitle] = { width - sprites_[kBackToTitle]->GetSize().x * 0.5f - 256.0f,  528.0f + sprites_[kBackToTitle]->GetSize().y * 0.5f };
 

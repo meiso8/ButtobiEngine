@@ -9,9 +9,9 @@ HPGage::HPGage()
     sprites_.emplace(SpriteTypes::layer2, std::make_unique<Sprite>());
     sprites_.emplace(SpriteTypes::MaxHp, std::make_unique<Sprite>());
 
-    sprites_[layer1]->Create(Texture::WHITE_1X1, { 640.0,64.0f }, {1.0f,0.0f,0.0f,1.0f});
-    sprites_[layer2]->Create(Texture::WHITE_1X1, { 640.0,64.0f }, { 1.0f,1.0f,0.0f,1.0f });
-    sprites_[MaxHp]->Create(Texture::WHITE_1X1, { 640.0,64.0f }, { 0.0f,0.0f,0.0f,0.5f });
+    sprites_[layer1]->Create(TextureFactory::WHITE_1X1, { 640.0,64.0f }, {1.0f,0.0f,0.0f,1.0f});
+    sprites_[layer2]->Create(TextureFactory::WHITE_1X1, { 640.0,64.0f }, { 1.0f,1.0f,0.0f,1.0f });
+    sprites_[MaxHp]->Create(TextureFactory::WHITE_1X1, { 640.0,64.0f }, { 0.0f,0.0f,0.0f,0.5f });
 }
 
 void HPGage::Setting(const Vector2& size, const Vector2& pos, const Vector2& anchorPoint)

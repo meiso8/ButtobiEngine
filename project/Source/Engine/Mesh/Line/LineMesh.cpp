@@ -9,7 +9,7 @@ LineMesh::~LineMesh() {
     Finalize();
 }
 
-void LineMesh::Create(const Texture::TEXTURE_HANDLE& textureHandle)
+void LineMesh::Create(const TextureFactory::Handle& textureHandle)
 {
 
 

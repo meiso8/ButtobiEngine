@@ -17,7 +17,7 @@ public:
     void SetMeshAndData(SkinningModel* skinningModel);
     void SetAnimation(Model* model);
     void SetModel(Model* model);
-    void SetTextureHandle(const Texture::TEXTURE_HANDLE& handle)override;
+    void SetTextureHandle(const TextureFactory::Handle& textureHandle)override;
     //オーバーライド
     void Update()override;
     void UpdateAniTimer(const bool& isLoop = true);

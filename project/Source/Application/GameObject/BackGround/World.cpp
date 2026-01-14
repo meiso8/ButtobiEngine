@@ -6,7 +6,7 @@
 #include"TimeManager.h"
 World::World() {
     sphereMesh_ = std::make_unique<SphereMesh>();
-    sphereMesh_->Create(Texture::WORLD);
+    sphereMesh_->Create(TextureFactory::WORLD);
 
     object3d_ = std::make_unique<Object3d>();
     object3d_->Create();
@@ -16,7 +16,7 @@ World::World() {
 
 void World::Init()
 {
-    sphereMesh_->SetTextureHandle(Texture::WORLD);
+    sphereMesh_->SetTextureHandle(TextureFactory::WORLD);
 
     object3d_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
     object3d_->Initialize();
@@ -39,9 +39,9 @@ void World::Draw(Camera& camera)
 void World::SetTexture(const uint32_t& texture)
 {
     if (texture == NORMAL) {
-        sphereMesh_->SetTextureHandle(Texture::WORLD);
+        sphereMesh_->SetTextureHandle(TextureFactory::WORLD);
     } else {
-        sphereMesh_->SetTextureHandle(Texture::TEXTURE_HANDLE(texture));
+        sphereMesh_->SetTextureHandle(TextureFactory::Handle(texture));
     }
 }
 

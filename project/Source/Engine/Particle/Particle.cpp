@@ -23,9 +23,9 @@ std::unordered_map<std::string, std::unique_ptr <ParticleGroup> >ParticleManager
 
 void ParticleManager::CreateAll()
 {
-    CreateParticleGroup("people", Texture::UV_CHECKER, true, "people.obj");
-    CreateParticleGroup("uvChecker", Texture::UV_CHECKER);
-    CreateParticleGroup("medjedParticle", Texture::UV_CHECKER, true, "people.obj");
+    CreateParticleGroup("people", TextureFactory::UV_CHECKER, true, "people.obj");
+    CreateParticleGroup("uvChecker", TextureFactory::UV_CHECKER);
+    CreateParticleGroup("medjedParticle", TextureFactory::UV_CHECKER, true, "people.obj");
 }
 
 // ==========================================================================================================
@@ -110,7 +110,7 @@ SphericalMove MakeNewSphericalCoordinate(const float& radius, const int& count, 
     return spherical;
 }
 
-void ParticleManager::CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle, const bool& useModel, const std::string& modelFileName)
+void ParticleManager::CreateParticleGroup(const std::string name, const TextureFactory::Handle& textureHandle, const bool& useModel, const std::string& modelFileName)
 {
 
     assert(!particleGroups.contains(name));

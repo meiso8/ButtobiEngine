@@ -8,7 +8,7 @@ CubeMesh::~CubeMesh()
     Finalize();
 }
 
-void CubeMesh::Create(const Texture::TEXTURE_HANDLE& textureHandle) {
+void CubeMesh::Create(const TextureFactory::Handle& textureHandle) {
 
     textureHandle_ = Texture::GetHandle(textureHandle);
     CreateVertex();

@@ -25,9 +25,9 @@ Building::Building() {
 
     for (const auto& [type, object] : fieldPoses_) {
         if (type == Floor) {
-            object->SetTexture(Texture::WHITE_1X1);
+            object->SetTexture(TextureFactory::WHITE_1X1);
         } else {
-            object->SetTexture(Texture::TEST3);
+            object->SetTexture(TextureFactory::TEST3);
         }
     }
 

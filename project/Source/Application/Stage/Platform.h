@@ -6,7 +6,7 @@
 class Platform : public Collider {
 public:
     Platform();
-    void SetTextureHandle(const Texture::TEXTURE_HANDLE& handle) {
+    void SetTextureHandle(const TextureFactory::Handle& handle) {
         object_->SetTextureHandle(handle);
     }
     void SetColor(const Vector4& color) { object_->SetColor(color); };

@@ -7,7 +7,7 @@
 class MemoManager
 {
 private:
-    std::map< Texture::TEXTURE_HANDLE, std::unique_ptr<Memo>>memos_;
+    std::map< TextureFactory::Handle, std::unique_ptr<Memo>>memos_;
     std::unique_ptr<Sprite> sprite_;
 public:
     static bool isLookItem_;
@@ -16,9 +16,9 @@ public:
     void Update();
     void Draw(Camera& camera);
     void DrawUI();
-    void GenerateMemos(const std::vector<Texture::TEXTURE_HANDLE>& handles);
+    void GenerateMemos(const std::vector<TextureFactory::Handle>& handles);
 
-    void SetSpriteSize(const Texture::TEXTURE_HANDLE& handle);
+    void SetSpriteSize(const TextureFactory::Handle& handle);
     void RayCastHit(RaySprite& raySprite);
-    std::map< Texture::TEXTURE_HANDLE, std::unique_ptr<Memo>>& GetMemos() { return memos_; }
+    std::map<TextureFactory::Handle, std::unique_ptr<Memo>>& GetMemos() { return memos_; }
 };

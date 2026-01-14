@@ -15,7 +15,7 @@ CircleMesh::~CircleMesh()
     Finalize();
 }
 
-void CircleMesh::Create(const Texture::TEXTURE_HANDLE& textureHandle)
+void CircleMesh::Create(const TextureFactory::Handle& textureHandle)
 {
     textureHandle_ = Texture::GetHandle(textureHandle);
 

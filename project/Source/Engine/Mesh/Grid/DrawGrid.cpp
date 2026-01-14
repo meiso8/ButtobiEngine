@@ -38,7 +38,7 @@ void DrawGrid::Create()
 
     for (int i = 0; i < cube_.size(); ++i) {
         cube_[i] = std::make_unique <CubeMesh>();
-        cube_[i]->Create(Texture::WHITE_1X1);
+        cube_[i]->Create(TextureFactory::WHITE_1X1);
     }
 
     AABB aabb0 = { { -2.0f / 128.0f,-2.0f / 128.0f,-25.0f }, { 2.0f / 128.0f,2.0f / 128.0f,25.0f } };

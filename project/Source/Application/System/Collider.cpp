@@ -8,11 +8,11 @@ Collider::Collider()
     object3d_.Create();
 
     sphereMesh_ = std::make_unique<SphereMesh>();
-    sphereMesh_->Create(Texture::WHITE_1X1);
+    sphereMesh_->Create(TextureFactory::WHITE_1X1);
     object3d_.SetMesh(sphereMesh_.get());
 
     cubeMesh_ = std::make_unique<CubeMesh>();
-    cubeMesh_->Create(Texture::WHITE_1X1);
+    cubeMesh_->Create(TextureFactory::WHITE_1X1);
 
 #endif // _DEBUG
 

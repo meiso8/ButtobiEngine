@@ -87,7 +87,7 @@ void SampleScene::InitAmenScene()
     //メモマネージャー
     memoManager_->Initialize();
     SetSceneChange();
-    memoManager_->GenerateMemos({ Texture::MEMO1, Texture::MEMO3,Texture::MEMO4,Texture::BOOK4 });
+    memoManager_->GenerateMemos({ TextureFactory::MEMO1, TextureFactory::MEMO3,TextureFactory::MEMO4,TextureFactory::BOOK4 });
     amenStage_->Initialize();
 }
 
@@ -96,7 +96,7 @@ void SampleScene::InitWaterScene()
     //メモマネージャー
     memoManager_->Initialize();
     SetSceneChange();
-    memoManager_->GenerateMemos({ Texture::MEMO2, Texture::BOOK2 });
+    memoManager_->GenerateMemos({ TextureFactory::MEMO2, TextureFactory::BOOK2 });
     waterStage_->Initialize();
 }
 
@@ -105,7 +105,7 @@ void SampleScene::InitMummyScene()
     //メモマネージャー
     memoManager_->Initialize();
     SetSceneChange();
-    memoManager_->GenerateMemos({ Texture::BOOK,Texture::MEMO5 });
+    memoManager_->GenerateMemos({ TextureFactory::BOOK,TextureFactory::MEMO5 });
     mummyStage_->Initialize();
 }
 
@@ -121,7 +121,7 @@ void SampleScene::InitMedjedScene()
     SoundManager::InitMedjedScene();
     lightingManager_->Initialize();
 
-    memoManager_->GenerateMemos({ Texture::BOOK3 });
+    memoManager_->GenerateMemos({ TextureFactory::BOOK3 });
     medjedStage_->Initialize();
 
 }

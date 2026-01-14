@@ -9,7 +9,7 @@ PlaneMesh::~PlaneMesh() {
     Finalize();
 }
 
-void PlaneMesh::Create(const Texture::TEXTURE_HANDLE& textureHandle)
+void PlaneMesh::Create(const TextureFactory::Handle& textureHandle)
 {
     textureHandle_ = Texture::GetHandle(textureHandle);
 

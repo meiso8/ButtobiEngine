@@ -22,7 +22,7 @@ Sprite::~Sprite()
     }
 }
 
-void Sprite::Create(const Texture::TEXTURE_HANDLE& textureHandle, const Vector2& position, const Vector4& color)
+void Sprite::Create(const TextureFactory::Handle& textureHandle, const Vector2& position, const Vector4& color)
 {
     commandList = DirectXCommon::GetCommandList();
     position_ = position;
@@ -87,7 +87,7 @@ void Sprite::SetColor(const Vector4& color) {
     materialResource_.SetColor(color);
 }
 
-void Sprite::SetTexture(const Texture::TEXTURE_HANDLE& textureHandle)
+void Sprite::SetTexture(const TextureFactory::Handle& textureHandle)
 {
     textureHandle_ = Texture::GetHandle(textureHandle);
 

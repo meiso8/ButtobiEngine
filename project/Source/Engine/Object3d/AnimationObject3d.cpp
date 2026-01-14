@@ -96,9 +96,9 @@ void AnimationObject3d::SetModel(Model* model)
     skinningModel_->SetModel(model);
 }
 
-void AnimationObject3d::SetTextureHandle(const Texture::TEXTURE_HANDLE& handle)
+void AnimationObject3d::SetTextureHandle(const TextureFactory::Handle& textureHandle)
 {
-    skinningModel_->SetTextureHandle(handle);
+    skinningModel_->SetTextureHandle(textureHandle);
 }
 
 

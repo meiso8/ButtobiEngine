@@ -13,21 +13,21 @@ TitleScene::TitleScene()
 {
     //タイトル画像 
     titleSprite_ = std::make_unique<Sprite>();
-    titleSprite_->Create(Texture::TEXTURE_HANDLE::TITLE, { 640.0f, 256.0f });
+    titleSprite_->Create(TextureFactory::Handle::TITLE, { 640.0f, 256.0f });
     titleSprite_->SetAnchorPoint({ 0.5f, 0.5f });
 
     // スタートボタン 
     startButton_ = std::make_unique<Sprite>();
-    startButton_->Create(Texture::TEXTURE_HANDLE::BUTTON_START, { 640.0f,448.0f });
+    startButton_->Create(TextureFactory::Handle::BUTTON_START, { 640.0f,448.0f });
     startButton_->SetAnchorPoint({ 0.5f, 0.5f });
     // Exitボタン 
     exitButton_ = std::make_unique<Sprite>();
-    exitButton_->Create(Texture::TEXTURE_HANDLE::BUTTON_EXIT, { 640.0f, 528.0f });
+    exitButton_->Create(TextureFactory::Handle::BUTTON_EXIT, { 640.0f, 528.0f });
     exitButton_->SetAnchorPoint({ 0.5f, 0.5f });
 
     for (auto& sprite : test3Spritea_) {
         sprite = std::make_unique<Sprite>();
-        sprite->Create(Texture::TEXTURE_HANDLE::TEST3, { 0.0f, 360.0f });
+        sprite->Create(TextureFactory::Handle::TEST3, { 0.0f, 360.0f });
         sprite->SetSize({ static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()) *0.5f});
         sprite->SetUVScale({ 0.5f,1.0f,1.0f });
     }

@@ -21,7 +21,7 @@ PuzzleObj::PuzzleObj() {
     cubeMesh_ = std::make_unique<CubeMesh>();
     cubeMesh_->Create();
     cubeMesh_->SetMinMax(aabb);
-    cubeMesh_->SetTextureHandle(Texture::PUZZLE_NUM);
+    cubeMesh_->SetTextureHandle(TextureFactory::PUZZLE_NUM);
 
     object_ = std::make_unique<Object3d>();
     object_->Create();

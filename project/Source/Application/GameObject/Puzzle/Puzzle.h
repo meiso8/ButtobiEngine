@@ -32,7 +32,7 @@ public:
     void Draw();
     bool IsClear() { return isClear_; };
 
-    void SetTexture(const Texture::TEXTURE_HANDLE& handle);
+    void SetTexture(const TextureFactory::Handle& handle);
 
     //画像
     std::array< std::unique_ptr<Sprite>, maxArrayNum_>& GetSprites() { return sprites_; };

@@ -20,7 +20,7 @@ public:
     };
     void SettingAABB(const AABB& aabb);
     void SetPos(const Vector3& pos);
-    void SetTexture(const Texture::TEXTURE_HANDLE& handle) { object_->SetTextureHandle(handle); }
+    void SetTexture(const TextureFactory::Handle& handle) { object_->SetTextureHandle(handle); }
 
 private:
     std::unique_ptr <Object3d> object_;

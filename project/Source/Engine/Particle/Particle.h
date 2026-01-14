@@ -129,7 +129,7 @@ public:
         assert(particleGroups.contains(name));
         return particleGroups[name];
     };
-    void CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle, const bool& useModel = false, const std::string& modelFileName = "Box.obj");
+    void CreateParticleGroup(const std::string name, const TextureFactory::Handle& textureHandle, const bool& useModel = false, const std::string& modelFileName = "Box.obj");
 
     void Update(Camera& camera);
     void Draw();

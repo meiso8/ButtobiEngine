@@ -8,7 +8,7 @@
 RaySprite::RaySprite()
 {
     sprite_ = std::make_unique<Sprite>();
-    sprite_->Create(Texture::EYE, { 0.0f,0.0f });
+    sprite_->Create(TextureFactory::EYE, { 0.0f,0.0f });
     sprite_->SetAnchorPoint({ 0.5f,0.5f });
 
     const float width = float(Window::GetClientWidth());

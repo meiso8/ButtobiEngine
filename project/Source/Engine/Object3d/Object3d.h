@@ -85,7 +85,7 @@ public:
     void InitBalloonData();
 
     void SetMesh(MeshCommon* mesh) { meshCommon_ = mesh; };
-    virtual void SetTextureHandle(const Texture::TEXTURE_HANDLE& handle) { meshCommon_->SetTextureHandle(handle); };
+    virtual void SetTextureHandle(const TextureFactory::Handle& textureHandle) { meshCommon_->SetTextureHandle(textureHandle); };
 private:
     void CreateUV();
     void CreateTransformationMatrix();

@@ -32,7 +32,7 @@ Puzzle::Puzzle()
     centerPos_ = { float(Window::GetClientWidth() * 0.5f),float(Window::GetClientHeight() * 0.5f) };
 
     sprite_ = make_unique<Sprite>();
-    sprite_->Create(Texture::PUZZLE, centerPos_);
+    sprite_->Create(TextureFactory::PUZZLE, centerPos_);
     sprite_->SetAnchorPoint({ 0.5f,0.5f });
 
     Vector2 size = sprite_->GetSize();
@@ -41,7 +41,7 @@ Puzzle::Puzzle()
     centerPos_ -= size_ * horizontal_ * 0.375f;
 
     rep(i, maxArrayNum_) sprites_[i] = make_unique<Sprite>(),
-        sprites_[i]->Create(Texture::PUZZLE, { 0.0f,0.0f });
+        sprites_[i]->Create(TextureFactory::PUZZLE, { 0.0f,0.0f });
 
     for (int i = 0; i < maxArrayNum_; ++i) {
         int col = i % horizontal_; // 横方向のインデックス（0〜3）
@@ -130,7 +130,7 @@ void Puzzle::Draw()
 
 }
 
-void Puzzle::SetTexture(const Texture::TEXTURE_HANDLE& handle)
+void Puzzle::SetTexture(const TextureFactory::Handle& handle)
 {
     rep(i, maxArrayNum_)
         sprites_[i]->SetTexture(handle);

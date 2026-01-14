@@ -13,7 +13,7 @@ CurPos::CurPos()
     screenPos_ = centerPos_;
     //カーソルポジション
     curPos_ = std::make_unique<Sprite>();
-    curPos_->Create(Texture::EYE, centerPos_);
+    curPos_->Create(TextureFactory::EYE, centerPos_);
     curPos_->SetAnchorPoint({ 0.5f,0.5f });
 }
 

@@ -134,7 +134,7 @@ ItemSlot::ItemSlot()
 
     rep(i, kMaxSlots_) {
         slotSprites_[i] = make_unique<Sprite>();
-        slotSprites_[i]->Create(Texture::SLOT, { 0.0f,0.0f });
+        slotSprites_[i]->Create(TextureFactory::SLOT, { 0.0f,0.0f });
         slotSprites_[i]->SetSize({ sizeX,sizeX });
         slotSprites_[i]->SetAnchorPoint({ 0.5f,0.5f });
         slotSprites_[i]->SetPosition({ (width - sizeX * kMaxSlots_ + sizeX) * 0.5f + i * sizeX,height - 64.0f });

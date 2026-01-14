@@ -12,63 +12,19 @@
 
 #include"CommandList.h"
 #include<unordered_map>
+#include"Application/Loader/TextureFactory.h"
 
 class Texture
 {
 
 public:
-    enum TEXTURE_HANDLE {
-        WHITE_1X1,
-        UV_CHECKER,
-        NUMBERS,
-        UI,
-        SKIP,
-        TITLE,
-        CREDIT,
-        BUTTON_EXIT,
-        BUTTON_START,
 
-
-        BUTTON_BACK_TO_GAME,
-        BUTTON_BACK_TO_TITL,
-
-        TEST3,
-
-        MEMO1,
-        MEMO2,
-        MEMO3,
-        MEMO4,
-        MEMO5,
-        BOOK,
-        BOOK2,
-        BOOK3,
-        BOOK4,
-        NONE,
-        PUZZLE,
-        PUZZLE_NUM,
-
-        HIERO_S,
-        HIERO_P,
-        HIERO_D,
-        HIERO_T,
-        BD_HUNEFER,
-
-        ENDING1,
-        ENDING2,
-
-        SLOT,
-        EYE,
-
-        WORLD,
-        TEXTURES,
-    };
-    static void LoadAllTexture();
-
+    static void Load(const std::string& filePath, const TextureFactory::Handle& handle);
     static uint32_t AddTextureHandle(const std::string& filePath);
 
-    static uint32_t GetHandle(const TEXTURE_HANDLE& handle) { return handles[handle]; }
-    static std::string& GetFilePath(const TEXTURE_HANDLE& handle) { return handleToPath_[handles[handle]]; }
-    static Texture::TEXTURE_HANDLE GetTextureHandle(const uint32_t& srvIndex);
+    static uint32_t GetHandle(const TextureFactory::Handle& handle) { return srvIndexes_[handle]; }
+    static std::string& GetFilePath(const TextureFactory::Handle& handle) { return handleToPath_[srvIndexes_[handle]]; }
+    static TextureFactory::Handle GetTextureHandle(const uint32_t& srvIndex);
     //SRVインデックスの開始番号
     static uint32_t kSRVIndexTop;
     struct TextureData {
@@ -85,7 +41,7 @@ public:
     //初期化
     static void Initialize();
     //インデックスを返すロード関数
-    static uint32_t Load(const std::string& filePath);
+    static uint32_t LoadAndGetIndex(const std::string& filePath);
     //SRVインデックスの開始番号
     static uint32_t GetSrvIndexByFilePath(const std::string& filePath);
 
@@ -94,7 +50,7 @@ public:
     static const DirectX::TexMetadata& GetMetaData(const uint32_t& handle);
 private:
     static std::unordered_map<std::string, TextureData> textureDatas;
-    static std::vector<uint32_t> handles;
+    static std::vector<uint32_t> srvIndexes_;
     static std::unordered_map<uint32_t, std::string> handleToPath_;
 private:
     //コンストラク・タデストラクタの隠ぺい

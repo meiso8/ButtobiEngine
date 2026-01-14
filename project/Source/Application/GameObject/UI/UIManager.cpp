@@ -3,11 +3,11 @@
 UIManager::UIManager()
 {
     effectSprite_ = std::make_unique<Sprite>();
-    effectSprite_->Create(Texture::WHITE_1X1, { 0.0f,0.0f }, { 1.0f,0.75f,0.75f,1.0f });
+    effectSprite_->Create(TextureFactory::WHITE_1X1, { 0.0f,0.0f }, { 1.0f,0.75f,0.75f,1.0f });
     effectSprite_->SetSize({ 1280.0f,720.0f });
    
     uiSprite_ = std::make_unique<Sprite>();
-    uiSprite_->Create(Texture::UI, { 0.0f,0.0f });
+    uiSprite_->Create(TextureFactory::UI, { 0.0f,0.0f });
 
 
 

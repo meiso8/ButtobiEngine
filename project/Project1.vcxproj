@@ -318,6 +318,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\Stage\WaterStage\Water.cpp" />
     <ClCompile Include="Source\Application\Stage\WaterStage\WaterStage.cpp" />
     <ClCompile Include="Source\Application\Stage\Stage.cpp" />
+    <ClCompile Include="Source\Application\Loader\TextureFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\Loader\SoundFactory.h" />
@@ -490,6 +491,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\Stage\WaterStage\Water.h" />
     <ClInclude Include="Source\Application\Stage\WaterStage\WaterStage.h" />
     <ClInclude Include="Source\Application\Stage\Stage.h" />
+    <ClInclude Include="Source\Application\Loader\TextureFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />

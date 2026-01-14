@@ -17,7 +17,7 @@ void MeshCommon::PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode
 }
 
 
-void MeshCommon::SetTextureHandle(const Texture::TEXTURE_HANDLE& textureHandle)
+void MeshCommon::SetTextureHandle(const TextureFactory::Handle& textureHandle)
 {
     textureHandle_ = Texture::GetHandle(textureHandle);
 }

@@ -101,19 +101,19 @@ BlockMap::BlockMap()
             map_[y][x] = std::make_unique<Block>();
             map_[y][x]->SetCubeAABB(aabb);
             if (rand() % 2 == 0) {
-                map_[y][x]->SetTextureHandle(Texture::PUZZLE);
+                map_[y][x]->SetTextureHandle(TextureFactory::PUZZLE);
             } else {
-                map_[y][x]->SetTextureHandle(Texture::NONE);
+                map_[y][x]->SetTextureHandle(TextureFactory::NONE);
             }
 
         }
     }
 
     // ヒエログリフ付きブロックを配置（例：中央付近）
-    map_[4][2]->SetTextureHandle(Texture::HIERO_S);
-    map_[1][5]->SetTextureHandle(Texture::HIERO_T);
-    map_[2][1]->SetTextureHandle(Texture::HIERO_D);
-    map_[3][3]->SetTextureHandle(Texture::HIERO_P);
+    map_[4][2]->SetTextureHandle(TextureFactory::HIERO_S);
+    map_[1][5]->SetTextureHandle(TextureFactory::HIERO_T);
+    map_[2][1]->SetTextureHandle(TextureFactory::HIERO_D);
+    map_[3][3]->SetTextureHandle(TextureFactory::HIERO_P);
 
     Vector4 color = { 1.0f,1.0f,0.0f,1.0f };
     map_[4][2]->SetColor(color);
@@ -185,7 +185,7 @@ void BlockMap::Update() {
         for (auto& block : y) {
 
             if (block->GetIsPush()) {
-                Texture::TEXTURE_HANDLE tex = Texture::GetTextureHandle(block->GetSrvIndex());
+                TextureFactory::Handle tex = Texture::GetTextureHandle(block->GetSrvIndex());
 
                 // すでに踏んだ順番に追加（重複防止）
                 if (std::find(steppedOrder_.begin(), steppedOrder_.end(), tex) == steppedOrder_.end()) {

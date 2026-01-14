@@ -10,23 +10,23 @@ ResultScene::ResultScene()
 {
 
     skipSprite_ = std::make_unique<Sprite>();
-    skipSprite_->Create(Texture::TEXTURE_HANDLE::SKIP, { 1280.0f-128.0f-64.0f, 720.0f-64.0f });
+    skipSprite_->Create(TextureFactory::Handle::SKIP, { 1280.0f-128.0f-64.0f, 720.0f-64.0f });
     skipSprite_->SetAnchorPoint({ 0.5f, 0.5f });
 
     symbolSprite_ = std::make_unique<Sprite>();
-    symbolSprite_->Create(Texture::TEXTURE_HANDLE::PUZZLE, { 640.0f, 360.0f });
+    symbolSprite_->Create(TextureFactory::Handle::PUZZLE, { 640.0f, 360.0f });
     symbolSprite_->SetAnchorPoint({ 0.5f, 0.5f });
 
     // 切り替えるテクスチャの順番
     textureSequence_ = {
-        Texture::TEXTURE_HANDLE::ENDING2,
-        Texture::TEXTURE_HANDLE::BD_HUNEFER,
-        Texture::TEXTURE_HANDLE::ENDING1,
-         Texture::TEXTURE_HANDLE::PUZZLE,
+        TextureFactory::Handle::ENDING2,
+        TextureFactory::Handle::BD_HUNEFER,
+        TextureFactory::Handle::ENDING1,
+         TextureFactory::Handle::PUZZLE,
     };
 
     creditSprite_ = std::make_unique<Sprite>();
-    creditSprite_->Create(Texture::TEXTURE_HANDLE::CREDIT, { 640.0f, 360.0f });
+    creditSprite_->Create(TextureFactory::Handle::CREDIT, { 640.0f, 360.0f });
     creditSprite_->SetAnchorPoint({ 0.5f, 0.5f });
 
 }

@@ -19,7 +19,7 @@ public:
     VertexData& GetVertexData(const uint32_t& index) {
         return vertexData_[index];
     }
-    void SetTextureHandle(const Texture::TEXTURE_HANDLE& textureHandle);
+    void SetTextureHandle(const TextureFactory::Handle& textureHandle);
     uint32_t GetSrvIndex() { return textureHandle_; }
 protected:
     /// @brief テクスチャハンドル

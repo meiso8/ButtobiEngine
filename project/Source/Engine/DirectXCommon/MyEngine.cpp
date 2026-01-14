@@ -14,6 +14,7 @@
 #include"SceneFactory.h"
 #include"Application/Loader/ModelFactory.h"
 #include"Application/Loader/SoundFactory.h"
+#include"Application/Loader/TextureFactory.h"
 
 std::unique_ptr<PSO> MyEngine::pso = nullptr;
 std::unique_ptr <Input> MyEngine::input = nullptr;
@@ -82,7 +83,7 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     Texture::Initialize();
     LogFile::Log("InitializeTexture");
     //テスクチャ読み込み
-    Texture::LoadAllTexture();
+    TextureFactory::Load();
     LogFile::Log("LoadAllTexture");
     //音声の読み込み
     SoundFactory::Load();

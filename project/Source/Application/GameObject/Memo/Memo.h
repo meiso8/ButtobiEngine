@@ -18,7 +18,7 @@ public:
     Vector3 GetWorldPosition() const override;
     WorldTransform& GetWorldTransform() { return object_->worldTransform_; };
     void OnCollision(Collider* collider) override;
-    void SetTexture(const Texture::TEXTURE_HANDLE& handle) {
+    void SetTexture(const TextureFactory::Handle& handle) {
         object_->SetTextureHandle(handle);
     };
     void SetTranslate(const Vector3& translate) {

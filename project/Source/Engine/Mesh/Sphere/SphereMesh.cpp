@@ -11,7 +11,7 @@ SphereMesh::~SphereMesh()
     Finalize();
 }
 
-void SphereMesh::Create(const Texture::TEXTURE_HANDLE& textureHandle)
+void SphereMesh::Create(const TextureFactory::Handle& textureHandle)
 {
 
   textureHandle_ = Texture::GetHandle(textureHandle);

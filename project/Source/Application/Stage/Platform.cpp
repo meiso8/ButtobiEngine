@@ -18,7 +18,7 @@ Platform::Platform() {
     object_ = std::make_unique<Object3d>();
     object_->Create();
     object_->SetMesh(cubeMesh_.get()); // 台座用モデル
-    object_->SetTextureHandle(Texture::PUZZLE);
+    object_->SetTextureHandle(TextureFactory::PUZZLE);
 }
 
 void Platform::Initialize() {
