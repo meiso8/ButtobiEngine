@@ -504,7 +504,7 @@
     <ClCompile Include="Source\Application\Stage\MummyStage\DummyMummy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\Model\ModelFactory.cpp">
+    <ClCompile Include="Source\Application\Loader\ModelFactory.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1013,7 +1013,7 @@
     <ClInclude Include="Source\Application\Stage\MummyStage\DummyMummy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\Model\ModelFactory.h">
+    <ClInclude Include="Source\Application\Loader\ModelFactory.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
