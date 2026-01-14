@@ -187,6 +187,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\Item\ItemSlot.cpp" />
     <ClCompile Include="Source\Application\GameObject\Medjed\MedjedManager.cpp" />
     <ClCompile Include="Source\Engine\Math\Structs\Line.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\Model\ModelFactory.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Model\SkinningModel.cpp" />
     <ClCompile Include="Source\Engine\Animation\Bone.cpp" />
     <ClCompile Include="Source\Engine\Animation\SkinCluster.cpp" />
@@ -347,6 +348,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\GameObject\Item\CrowbarItem.h" />
     <ClInclude Include="Source\Application\GameObject\Item\ItemSlot.h" />
     <ClInclude Include="Source\Application\GameObject\Medjed\MedjedManager.h" />
+    <ClInclude Include="Source\Engine\Mesh\Model\ModelFactory.h" />
     <ClInclude Include="Source\Engine\Mesh\Model\SkinningModel.h" />
     <ClInclude Include="Source\Engine\Animation\Animation.h" />
     <ClInclude Include="Source\Engine\Animation\Bone.h" />

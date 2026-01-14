@@ -23,9 +23,9 @@ std::unordered_map<std::string, std::unique_ptr <ParticleGroup> >ParticleManager
 
 void ParticleManager::CreateAll()
 {
-    CreateParticleGroup("people", Texture::UV_CHECKER, true, ModelManager::PEOPLE);
+    CreateParticleGroup("people", Texture::UV_CHECKER, true, "people.obj");
     CreateParticleGroup("uvChecker", Texture::UV_CHECKER);
-    CreateParticleGroup("medjedParticle", Texture::UV_CHECKER, true, ModelManager::PEOPLE);
+    CreateParticleGroup("medjedParticle", Texture::UV_CHECKER, true, "people.obj");
 }
 
 // ==========================================================================================================
@@ -110,7 +110,7 @@ SphericalMove MakeNewSphericalCoordinate(const float& radius, const int& count, 
     return spherical;
 }
 
-void ParticleManager::CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle, const bool& useModel, const ModelManager::MODEL_HANDLE& modelHandle)
+void ParticleManager::CreateParticleGroup(const std::string name, const Texture::TEXTURE_HANDLE& textureHandle, const bool& useModel, const std::string& modelFileName)
 {
 
     assert(!particleGroups.contains(name));
@@ -124,7 +124,7 @@ void ParticleManager::CreateParticleGroup(const std::string name, const Texture:
     newParticleGroup->useModel = useModel;
     newParticleGroup->textureSize = { 100.0f,100.0f };
     if (newParticleGroup->useModel) {
-        newParticleGroup->model = ModelManager::GetModel(modelHandle);
+        newParticleGroup->model = ModelManager::GetModel(modelFileName);
         newParticleGroup->materialData.textureSrvIndex = newParticleGroup->model->GetModelData()->material.textureSrvIndex;
         newParticleGroup->materialData.textureFilePath = newParticleGroup->model->GetModelData()->material.textureFilePath;
     } else {

@@ -64,10 +64,6 @@ void Model::Draw(ID3D12GraphicsCommandList* commandList) {
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
     SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
 
-////描画!(DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
-//    commandList->DrawInstanced(UINT(modelData_->vertices.size()), 1, 0, 0);
-
-
     //描画!（DrawCall/ドローコール）6個のインデックスを使用し1つのインスタンスを描画。その他は当面0で良い。
     commandList->DrawIndexedInstanced(UINT(modelData_->indices.size()), 1, 0, 0, 0);
 

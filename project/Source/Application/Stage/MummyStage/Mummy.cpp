@@ -8,9 +8,8 @@ Mummy::Mummy() {
 
     object_ = std::make_unique<Object3d>();
     object_->Create();
-    object_->SetMesh(ModelManager::GetModel(ModelManager::MUMMY));
-    //coffinModel_ = ModelManager::GetModel(ModelManager::MUMMY_ROOM);
-    coffinModel_ = ModelManager::GetModel(ModelManager::COFFIN_GLTF);
+    object_->SetMesh(ModelManager::GetModel("mummy.obj"));
+    coffinModel_ = ModelManager::GetModel("coffin.gltf");
     aniObj_ = std::make_unique<AnimationObject3d>();
     aniObj_->Create();
 

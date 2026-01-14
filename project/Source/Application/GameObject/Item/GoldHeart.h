@@ -7,7 +7,7 @@ public:
     GoldHeart() {
         name_ = "GoldHeart";
         description_ = "何かにはめ込むことで力を発揮する。";
-        SetModel(ModelManager::HART);
+        SetModel("hart.obj");
         object_->SetLightMode(kLightModeLReflectance);
     }
     void Update()override;

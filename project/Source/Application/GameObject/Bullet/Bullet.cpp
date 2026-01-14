@@ -9,7 +9,7 @@
 #include"CollisionConfig.h"
 
 Bullet::Bullet() {
-    model_ = ModelManager::GetModel(ModelManager::PEOPLE);
+    model_ = ModelManager::GetModel("people.obj");
     body_.Create();
     body_.SetMesh(model_);
     body_.SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });

@@ -7,7 +7,7 @@
 #include"AABB.h"
 Building::Building() {
 
-    model_ = ModelManager::GetModel(ModelManager::MUMMY_ROOM);
+    model_ = ModelManager::GetModel("mummyRoom.obj");
 
     buildingPos = std::make_unique<Object3d>();
     buildingPos->Create();

@@ -11,7 +11,7 @@ AmenRa::AmenRa() {
 
     object_ = std::make_unique<Object3d>();
     object_->Create();
-    object_->SetMesh(ModelManager::GetModel(ModelManager::AMEN));
+    object_->SetMesh(ModelManager::GetModel("AmenRa.obj"));
 
     AABB aabb = { .min = {-1.0f,0.0f,-1.0f},.max = {1.0f,6.01f,1.0f} };
 

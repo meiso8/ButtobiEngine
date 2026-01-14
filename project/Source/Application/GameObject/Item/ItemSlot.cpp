@@ -23,10 +23,9 @@ Item::Item()
     SetCollisionAttribute(kCollisionItem);
     SetCollisionMask(!kCollisionItem);
 }
-void Item::SetModel(const ModelManager::MODEL_HANDLE& handle)
+void Item::SetModel(const std::string& fileName)
 {
-    object_->SetMesh(ModelManager::GetModel(handle));
-
+    object_->SetMesh(ModelManager::GetModel(fileName));
 }
 void Item::Init()
 {

@@ -45,7 +45,7 @@ void Medjed::GoToTarget(const Vector3& target)
 void Medjed::MoveStart()
 {
     aniObj_->InitTime();
-    aniObj_->SetAnimation(ModelManager::GetModel(ModelManager::medJed_GLTF));
+    aniObj_->SetAnimation(ModelManager::GetModel("medjedAnimation.gltf"));
 }
 
 //
@@ -89,13 +89,13 @@ void Medjed::MoveStart()
 
 Medjed::Medjed() {
 
-    model_ = ModelManager::GetModel(ModelManager::normalMedjed_GLTF);
+    model_ = ModelManager::GetModel("normalMed.gltf");
 
     aniObj_ = std::make_unique<AnimationObject3d>();
     aniObj_->Create();
 
     skinningModel = std::make_unique<SkinningModel>();
-    skinningModel->CreateDatas(model_, ModelManager::GetModel(ModelManager::normalMedjed_GLTF));
+    skinningModel->CreateDatas(model_, model_);
     aniObj_->SetMeshAndData(skinningModel.get());
 
     SetType(kAABB);

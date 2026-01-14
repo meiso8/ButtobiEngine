@@ -12,6 +12,7 @@
 #include"Lights/SpotLightManager.h"
 #include"SceneManager.h"
 #include"SceneFactory.h"
+#include"ModelFactory.h"
 
 std::unique_ptr<PSO> MyEngine::pso = nullptr;
 std::unique_ptr <Input> MyEngine::input = nullptr;
@@ -86,7 +87,7 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     Sound::LoadAllSound();
     LogFile::Log("LoadAllSound");
     //モデル読み込み
-    ModelManager::LoadAllModel();
+    ModelFactory::Load();
     LogFile::Log("LoadAllModel");
     //JsonFileの読み込み
     JsonFile::LoadAllJsonFile();

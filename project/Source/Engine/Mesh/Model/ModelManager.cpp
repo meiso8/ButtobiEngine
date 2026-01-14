@@ -14,43 +14,18 @@
 #include"Quaternion/Quaternion.h"
 #include"MakeMatrix.h"
 
-std::map<const uint32_t, std::unique_ptr< Model> >ModelManager::models_;
-
-void ModelManager::LoadAllModel()
-{
-    //モデルのファイルパスとタグを関連付けてください
-    LoadModel("Resource/Models/Box", "Box.obj", BOX);
-    LoadModel("Resource/Models/AmenRa", "AmenRa.obj", AMEN);
-    LoadModel("Resource/Models/medjed", "normalMed.gltf", normalMedjed_GLTF);
-    LoadModel("Resource/Models/medjed", "medjedAnimation.gltf", medJed_GLTF);
-    LoadModel("Resource/Models/medjed", "medjedDance.gltf", medJedDance_GLTF);
-    LoadModel("Resource/Models/player", "player.obj", PLAYER_BODY);
-    LoadModel("Resource/Models/people", "people.obj", PEOPLE);
-    LoadModel("Resource/Models/mummy", "mummy.obj", MUMMY);
-    LoadModel("Resource/Models/mummy", "dummyMummy.gltf", DUMMY_MUMMY);
-    LoadModel("Resource/Models/mummyRoom", "mummyRoom.obj", MUMMY_ROOM);
-    LoadModel("Resource/Models/mummy", "coffin.gltf", COFFIN_GLTF);
-
-    LoadModel("Resource/Models/hart", "hart.obj", HART);
-    LoadModel("Resource/Models/sunMedal", "sunMedal.obj", SUN_MEDAL);
-    LoadModel("Resource/Models/sunMedal", "crowbarItem.obj", CROW_BAR_ITEM);
-   
-    LoadModel("Resource/Models/Papyrus", "Papyrus.obj", PAPYRUS);
-
-    LoadModel("Resource/Models/Water", "Water.obj", WATER);
-}
+std::map < const std::string, std::unique_ptr< Model> > ModelManager::models_;
 
 // ========================================================================================================
 
-Model* ModelManager::GetModel(const uint32_t& handle)
+Model* ModelManager::GetModel(const std::string& filename)
 {
-    assert(handle < models_.size());
 
-    if (models_.contains(handle)) {
-        return models_.at(handle).get();
+    if (models_.contains(filename)) {
+        return models_.at(filename).get();
     }
 
-    std::cerr << "COFFIN_GLTF モデルの取得に失敗しました！" << std::endl;
+    std::cerr << "モデルの取得に失敗しました！" << std::endl;
 
     return nullptr;
 
@@ -62,10 +37,10 @@ void ModelManager::Finalize()
 
 // ========================================================================================================
 
-void ModelManager::LoadModel(const std::string& directoryPath, const std::string& filename, const uint32_t& handle)
+void ModelManager::LoadModel(const std::string& directoryPath, const std::string& filename)
 {
     //読み込み済みテクスチャを検索
-    if (models_.contains(handle)) {
+    if (models_.contains(filename)) {
         return;
     }
     //テクスチャ枚数上限チェック
@@ -183,7 +158,7 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
     model->Create();
 
     //ハンドルとモデルをセットにする
-    models_.insert(std::make_pair(handle, std::move(model)));
+    models_.insert(std::make_pair(filename, std::move(model)));
 
 }
 

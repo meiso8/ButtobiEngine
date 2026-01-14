@@ -35,7 +35,7 @@ void DummyMedjed::Hide()
 
 DummyMedjed::DummyMedjed()
 {
-    model_ = ModelManager::GetModel(ModelManager::normalMedjed_GLTF);
+    model_ = ModelManager::GetModel("normalMed.gltf");
 
     object3d_ = std::make_unique<Object3d>();
     object3d_->Create();

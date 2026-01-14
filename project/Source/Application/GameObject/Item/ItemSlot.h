@@ -3,7 +3,7 @@
 #include"Object3d.h"
 #include<list>
 #include<map>
-#include"ModelManager.h"
+
 #include"Sprite.h"
 #include<memory>
 #include"Collider.h"
@@ -11,7 +11,7 @@ class Item :public Collider{
 public:
     Item();
     virtual ~Item() = default;
-    virtual void SetModel(const ModelManager::MODEL_HANDLE& handle);
+    virtual void SetModel(const std::string& fileName);
     // 3Dオブジェクトの参照（描画や当たり判定用）
     std::shared_ptr<Object3d> object_;
     // アイテムの名前や説明 
