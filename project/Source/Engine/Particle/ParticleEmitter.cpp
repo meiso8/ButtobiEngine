@@ -1,7 +1,7 @@
 #include "ParticleEmitter.h"
 #include"Input.h"
 #include"Camera.h"
-
+#include"TimeManager.h"
  ParticleManager* ParticleEmitter::particleManager_ = nullptr;
 
 ParticleEmitter::ParticleEmitter()
@@ -32,8 +32,8 @@ void ParticleEmitter::Initialize()
     emitter_.lifeTime = -1.0f;
     emitter_.radius = 5.0f;
 
-    emitter_.radiusSpeed = InverseFPS;
-    emitter_.polarSpeed = std::numbers::pi_v<float>*InverseFPS;
+    emitter_.radiusSpeed = kInverseFPS;
+    emitter_.polarSpeed = std::numbers::pi_v<float>*kInverseFPS;
     emitter_.polarSpeedMinMax = { 0.0f,0.0f };
     emitter_.radiusSpeedMinMax = { 0.0f,0.0f };
 
@@ -87,7 +87,7 @@ void ParticleEmitter::SetEmitterParam(
 }
 void ParticleEmitter::UpdateTimer()
 {
-    emitter_.frequencyTime += InverseFPS;
+    emitter_.frequencyTime += kInverseFPS;
 
     if (emitter_.frequency <= emitter_.frequencyTime) {
         emitter_.frequencyTime -= emitter_.frequency;

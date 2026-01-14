@@ -1,6 +1,6 @@
 #include "SoundManager.h"
 #include"Sound.h"
-#include"Window.h"
+#include"TimeManager.h"
 
 void SoundManager::InitMedjedScene()
 {
@@ -29,7 +29,7 @@ void SoundManager::PlayCancelSE()
 void SoundManager::ApperMedjedUpdate()
 {
     if (Sound::bgmVolume_ < 0.5f) {
-        Sound::bgmVolume_ += InverseFPS * 0.25f;
+        Sound::bgmVolume_ += kInverseFPS * 0.25f;
     }
     Sound::Stop(Sound::HORROR2);
     Sound::PlayBGM(Sound::BGM_ArabRuins);

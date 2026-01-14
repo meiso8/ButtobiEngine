@@ -2,7 +2,7 @@
 #include <cassert>
 #pragma comment(lib,"dinput8.lib")
 #pragma comment(lib,"dxguid.lib")
-
+#include"TimeManager.h"
 #include"Camera/Camera.h"
 #include<cmath>
 #include"Vector2.h"
@@ -395,7 +395,7 @@ Vector2& Input::GetMousePosFiltered()
 }
 
 float Input::GetMouseWheel() {
-    return  static_cast<float>(mouseState_.lZ) * InverseFPS;
+    return  static_cast<float>(mouseState_.lZ) * kInverseFPS;
 }
 
 

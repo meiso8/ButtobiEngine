@@ -8,7 +8,7 @@
 using namespace std;
 #define rep(i,n)for(int i =0;i < n;++i)
 #include"CollisionConfig.h"
-#include"Window.h"
+#include"TimeManager.h"
 #include"TransformAni/TransformAni.h"
 #include"CoordinateTransform.h"
 #include"MakeMatrix.h"
@@ -84,7 +84,7 @@ void Item::UpdateAniTimer(const float& endTime)
         return;
     }
 
-    aniTimer_ += InverseFPS;
+    aniTimer_ += kInverseFPS;
     aniTimer_ = std::clamp(aniTimer_, 0.0f, endTime);
 }
 

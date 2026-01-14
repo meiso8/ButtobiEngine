@@ -30,6 +30,11 @@ void JsonFile::LoadJson(const std::string& Tag) {
 
 }
 
+JsonFile::~JsonFile()
+{
+    jsonFiles_.clear();
+}
+
 const std::unordered_map <std::string, JsonData >JsonFile::GetJsonData()
 {
     return jsonFiles_;

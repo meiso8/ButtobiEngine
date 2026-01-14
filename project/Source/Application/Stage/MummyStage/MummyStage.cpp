@@ -3,7 +3,7 @@
 #include"SoundManager/SoundManager.h"
 #include"InputBind.h"
 #include<algorithm>
-
+#include"TimeManager.h"
 #include"Sound.h"
 MummyStage::MummyStage()
 {
@@ -18,7 +18,7 @@ MummyStage::MummyStage()
 
 void MummyStage::TimerUpdate()
 {
-    medjedApperTime_ -= InverseFPS;
+    medjedApperTime_ -= kInverseFPS;
     medjedApperTime_ = std::clamp(medjedApperTime_, 0.0f, maxTime_);
 
 }

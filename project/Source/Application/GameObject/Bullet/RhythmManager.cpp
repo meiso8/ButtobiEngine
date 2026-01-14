@@ -1,5 +1,5 @@
 #include "RhythmManager.h"
-#include"Window.h"
+#include"TimeManager.h"
 #include"JsonFile.h"
 #include"DebugUI.h"
 void RhythmManager::Initialize() {
@@ -18,7 +18,7 @@ void RhythmManager::Initialize() {
 
 void RhythmManager::Update() {
 
-    timer_ += InverseFPS;
+    timer_ += kInverseFPS;
     if (timer_ >= kEndSoundTime_) {
         Initialize();
     }

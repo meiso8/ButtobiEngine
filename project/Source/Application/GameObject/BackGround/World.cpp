@@ -3,7 +3,7 @@
 #include"Camera.h"
 #include"Input.h"
 #include"Texture.h"
-
+#include"TimeManager.h"
 World::World() {
     sphereMesh_ = std::make_unique<SphereMesh>();
     sphereMesh_->Create(Texture::WORLD);
@@ -26,7 +26,7 @@ void World::Init()
 
 void World::Update()
 {
-    object3d_->GetUVTransform().translate.x += std::numbers::pi_v<float> *0.0625f * 0.5f * InverseFPS;
+    object3d_->GetUVTransform().translate.x += std::numbers::pi_v<float> *0.0625f * 0.5f * kInverseFPS;
     object3d_->UpdateUV();
     object3d_->Update();
 }
@@ -52,7 +52,7 @@ void World::UpdateColor()
     }
 
     if (timer_ < 1.0f) {
-        timer_ += InverseFPS;
+        timer_ += kInverseFPS;
     } else {
         timer_ = 1.0f;
     }

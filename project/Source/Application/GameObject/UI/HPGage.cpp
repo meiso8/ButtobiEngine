@@ -2,7 +2,7 @@
 #include"Easing.h"
 #include"DebugUI.h"
 #include"Input.h"
-
+#include"TimeManager.h"
 HPGage::HPGage()
 {
     sprites_.emplace(SpriteTypes::layer1, std::make_unique<Sprite>());
@@ -41,7 +41,7 @@ void HPGage::Update()
     }
 
     if (timer_ < 1.0f) {
-        timer_ += InverseFPS;
+        timer_ += kInverseFPS;
     } else {
         timer_ = 1.0f;
     }

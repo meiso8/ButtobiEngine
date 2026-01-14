@@ -8,7 +8,7 @@
 #include"DebugUI.h"
 #include"Lerp.h"
 #include"Sound.h"
-
+#include"TimeManager.h"
 Water::Water() {
 
     object_ = std::make_unique<Object3d>();
@@ -64,7 +64,7 @@ void Water::Update() {
 
 
 
-    object_->GetWaveData(0).time += InverseFPS;
+    object_->GetWaveData(0).time += kInverseFPS;
     object_->GetWaveData(1).time = object_->GetWaveData(0).time + 1.5f;
     object_->Update();
     DebugUI::CheckObject3d(*object_, "Water");

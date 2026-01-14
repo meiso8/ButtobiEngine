@@ -8,7 +8,7 @@
 #include"CoordinateTransform.h"
 #include"InputBind.h"
 #include"Window.h"
-
+#include"TimeManager.h"
 TitleScene::TitleScene()
 {
     //タイトル画像 
@@ -65,7 +65,7 @@ void TitleScene::Update()
 {
     Sound::PlayBGM(Sound::BGM_ArabRuins);
 
-    timer_ += InverseFPS;
+    timer_ += kInverseFPS;
     float scale = sinf(timer_) * 0.125f+1.25f;
     titleSprite_->SetScale({ scale,scale });
 

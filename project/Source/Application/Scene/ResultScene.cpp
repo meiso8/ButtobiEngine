@@ -3,7 +3,7 @@
 #include"InputBind.h"
 #include"Sound.h"
 #include<algorithm>
-
+#include"TimeManager.h"
 ResultScene::~ResultScene() {}
 
 ResultScene::ResultScene()
@@ -42,7 +42,7 @@ void ResultScene::Initialize()
 
     currentIndex_ = 0;
     timer_ = 0.0f;
-    fadeSpeed_ = InverseFPS * 2.0f;
+    fadeSpeed_ = kInverseFPS * 2.0f;
     Sound::StopAllSound();
     lookTimer_ = 0.0f;
 
@@ -72,8 +72,8 @@ void ResultScene::Update()
 
 
     symbolSprite_->Update();
-    lookTimer_ += InverseFPS;
-    timer_ += InverseFPS;
+    lookTimer_ +=kInverseFPS;
+    timer_ += kInverseFPS;
 
     if (timer_ >= switchInterval_) {
         timer_ = 0.0f;

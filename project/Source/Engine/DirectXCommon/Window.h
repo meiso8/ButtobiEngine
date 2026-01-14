@@ -2,7 +2,6 @@
 #include <Windows.h>  
 #include<cstdint>//int32_tを使うため
 #include<string>
-#define InverseFPS 1.0f/60.0f
 
 class Window
 {

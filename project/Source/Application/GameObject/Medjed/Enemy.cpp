@@ -11,6 +11,8 @@
 #include"Easing.h"
 #include"DebugUI.h"
 #include"TransformAni/TransformAni.h"
+#include"TimeManager.h"
+
 Enemy::Enemy()
 {
     UpdateActions_ = {
@@ -217,7 +219,7 @@ void Enemy::Exit()
 
 void Enemy::UpdateTimer()
 {
-    timer_ += InverseFPS;
+    timer_ += kInverseFPS;
 }
 
 void Enemy::Look()
@@ -227,7 +229,7 @@ void Enemy::Look()
 
 void Enemy::PoyoPoyo(const float& endTimer)
 {
-    poyoAnimTimer_ += InverseFPS;
+    poyoAnimTimer_ += kInverseFPS;
     poyoAnimTimer_ = std::clamp(poyoAnimTimer_, 0.0f, endTimer);
     TransformAni::PoyoPoyo(bodyPos_.worldTransform_, poyoAnimTimer_,kScale_);
 }

@@ -2,7 +2,7 @@
 #include"ModelManager.h"
 #include"Model.h"
 #include"CollisionConfig.h"
-#include"Window.h"
+#include"TimeManager.h"
 Vector3* DummyMummy::targetPos_ = nullptr;
 Model* DummyMummy::model_ = nullptr;
 
@@ -68,7 +68,7 @@ void DummyMummy::Update()
             Look(*targetPos_);
             velocity_ = *targetPos_ - object_->worldTransform_.GetWorldPosition();
             velocity_ = Normalize(Vector3{ velocity_.x, 0.0f, velocity_.z });
-            object_->worldTransform_.translate_ += velocity_ * InverseFPS;
+            object_->worldTransform_.translate_ += velocity_ * kInverseFPS;
         }
 
     }

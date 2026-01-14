@@ -1,5 +1,5 @@
 #include "AnimationObject3d.h"
-#include"Window.h"
+#include"TimeManager.h"
 #include"Model.h"
 #include"ModelData.h"
 #include"Lights/PointLightManager.h"
@@ -64,7 +64,7 @@ void AnimationObject3d::UpdateAnimation()
 }
 void AnimationObject3d::UpdateAniTimer(const bool& isLoop)
 {
-    animationTime_ += InverseFPS;
+    animationTime_ += kInverseFPS;
     if (isLoop) {
         animationTime_ = std::fmod(animationTime_, animation_.duration);
     } else {

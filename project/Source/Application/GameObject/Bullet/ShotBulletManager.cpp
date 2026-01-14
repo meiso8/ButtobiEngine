@@ -9,6 +9,8 @@
 
 #include"MakeMatrix.h"
 #include"CoordinateTransform.h"
+#include"TimeManager.h"
+
 ShotBulletManager::ShotBulletManager(Enemy* enemy, BulletManager* bulletManager, RhythmManager* rhythmManager)
     :enemy_(enemy), bulletManager_(bulletManager), rhythmManager_(rhythmManager)
 {
@@ -21,7 +23,7 @@ void ShotBulletManager::Initialize() {
 // Update内で時間を進める
 void ShotBulletManager::Update() {
 
-    currentTime_ += InverseFPS;
+    currentTime_ += kInverseFPS;
 
     if (currentTime_ >= rhythmManager_-> kEndSoundTime_) {
         Initialize();

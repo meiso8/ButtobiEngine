@@ -2,7 +2,7 @@
 #include"Lights/DirectionalLightManager.h"
 #include"Lights/PointLightManager.h"
 #include"Lights/SpotLightManager.h"
-#include"Window.h"
+#include"TimeManager.h"
 #include"DebugUI.h"
 
 bool LightingManager::isPointLightOn_ = false;
@@ -44,7 +44,7 @@ void LightingManager::UpdatePointLight()
 void LightingManager::DirectionalLightUpdate()
 {
     if (DirectionalLightManager::GetDirectionalLightData()->intensity < 1.0f) {
-        DirectionalLightManager::GetDirectionalLightData()->intensity += InverseFPS * 2.0f;
+        DirectionalLightManager::GetDirectionalLightData()->intensity += kInverseFPS * 2.0f;
     } else {
         DirectionalLightManager::GetDirectionalLightData()->intensity = 1.0f;
         isPointLightOn_ = false;

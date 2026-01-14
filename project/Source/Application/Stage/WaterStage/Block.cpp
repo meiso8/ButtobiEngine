@@ -1,6 +1,6 @@
 #include "Block.h"
 #include"Easing.h"
-#include"Window.h"
+#include"TimeManager.h"
 #include<algorithm>
 #include"SoundManager/SoundManager.h"
 #include"Sound.h"
@@ -24,7 +24,7 @@ void Block::Initialize()
 
 void Block::Update()
 {
-    aniTimer_ += InverseFPS;
+    aniTimer_ += kInverseFPS;
     aniTimer_ = std::clamp(aniTimer_, 0.0f, 1.0f);
 
     if (isPush_) {

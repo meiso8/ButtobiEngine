@@ -1,6 +1,5 @@
 #include "VibrateManager.h"
-
-
+#include"TimeManager.h"
 float VibrateManager:: timer_ = 0.0f;
 WORD  VibrateManager::leftMotor_ = 0;
 WORD  VibrateManager::rightMotor_ = 0;
@@ -34,7 +33,7 @@ void VibrateManager::Update()
         leftMotor_ = 0;
         rightMotor_ = 0;
     } else {
-        timer_ -= InverseFPS;
+        timer_ -= kInverseFPS;
     }
 
     Input::VibrateController(0, leftMotor_, rightMotor_);

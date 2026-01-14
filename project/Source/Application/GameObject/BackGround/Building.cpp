@@ -5,6 +5,7 @@
 #include "Texture.h"
 #include"CollisionConfig.h"
 #include"AABB.h"
+#include"TimeManager.h"
 Building::Building() {
 
     model_ = ModelManager::GetModel("mummyRoom.obj");
@@ -119,7 +120,7 @@ FieldCollider::FieldCollider()
 
 void FieldCollider::Update()
 {
-    object_->GetUVTransform().translate.x -= std::numbers::pi_v<float> *0.0625f * 0.125f * InverseFPS;
+    object_->GetUVTransform().translate.x -= std::numbers::pi_v<float> *0.0625f * 0.125f * kInverseFPS;
     object_->UpdateUV();
 
     object_->Update();

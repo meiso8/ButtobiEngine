@@ -9,7 +9,7 @@
 #include"Model.h"
 #include"SpriteCamera.h"
 #include"ParticleEmitter.h"
-#include"Input.h"
+#include"TimeManager.h"
 #include"Lerp.h"
 
 using namespace  Microsoft::WRL;
@@ -232,9 +232,9 @@ void ParticleManager::Normal(ParticleGroup& group)
             //場の処理
             IsCollisionFieldArea(*particleIterator, group);
             //移動処理
-            (*particleIterator).transform.translate += (*particleIterator).velocity * InverseFPS;
+            (*particleIterator).transform.translate += (*particleIterator).velocity * kInverseFPS;
             //経過時間を加算
-            (*particleIterator).currentTime += InverseFPS;
+            (*particleIterator).currentTime += kInverseFPS;
 
             UpdateMatrix(*particleIterator, group);
 
@@ -283,7 +283,7 @@ void ParticleManager::Sphere(ParticleGroup& group)
 
             particleIterator->transform.translate = group.parentPos_->GetWorldPosition() + particleIterator->velocity + sphereCoordinate;
 
-            (*particleIterator).currentTime += InverseFPS;
+            (*particleIterator).currentTime += kInverseFPS;
 
             IsCollisionFieldArea(*particleIterator, group);
 
@@ -332,7 +332,7 @@ void ParticleManager::Shock(ParticleGroup& group)
 
             particleIterator->transform.translate = group.parentPos_->GetWorldPosition() + particleIterator->velocity + sphereCoordinate;
 
-            (*particleIterator).currentTime += InverseFPS;
+            (*particleIterator).currentTime += kInverseFPS;
 
             IsCollisionFieldArea(*particleIterator, group);
 
@@ -358,7 +358,7 @@ void ParticleManager::Shock(ParticleGroup& group)
 void ParticleManager::IsCollisionFieldArea(Particle& particleItr, ParticleGroup& group)
 {
     if (IsCollision(group.accelerationField.area, particleItr.transform.translate)) {
-        particleItr.velocity += group.accelerationField.acceleration * InverseFPS;
+        particleItr.velocity += group.accelerationField.acceleration * kInverseFPS;
     }
 }
 

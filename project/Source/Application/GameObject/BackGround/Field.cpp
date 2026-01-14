@@ -1,6 +1,7 @@
 #include "Field.h"
 #include"Input.h"
 #include"DebugUI.h"
+#include"TimeManager.h"
 Field::Field()
 {
 
@@ -22,7 +23,7 @@ void Field::Init()
 
 void Field::Update()
 {
-    uvTranslate_ += InverseFPS;
+    uvTranslate_ += kInverseFPS;
     object3d_->GetUVTransform().translate.y = uvTranslate_;
     object3d_->UpdateUV();
     object3d_->Update();

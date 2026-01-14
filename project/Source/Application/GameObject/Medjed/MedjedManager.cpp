@@ -11,7 +11,7 @@
 #include"SoundManager/SoundManager.h"
 #include"Sound.h"
 #include"InputBind.h"
-
+#include"TimeManager.h"
 MedjedManager::MedjedManager()
 {
     enemy_ = std::make_unique<Enemy>();
@@ -110,7 +110,7 @@ void MedjedManager::UpdateEnemyApperTime()
         return;
     }
 
-    enemyApperTime_ += InverseFPS;
+    enemyApperTime_ += kInverseFPS;
     enemyApperTime_ = std::clamp(enemyApperTime_, 0.0f, kEnemyApperMaxTime_);
 
     if (enemyApperTime_ >= kEnemyApperMaxTime_) {

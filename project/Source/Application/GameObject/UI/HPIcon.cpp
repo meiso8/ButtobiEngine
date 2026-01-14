@@ -3,7 +3,7 @@
 #include"Easing.h"
 #include"DebugUI.h"
 #include"Input.h"
-
+#include"TimeManager.h"
 HPIcon::HPIcon()
 {
 
@@ -55,7 +55,7 @@ void HPIcon::Update()
         }
 
         if (timer_ < 3.0f) {
-            timer_ += InverseFPS;
+            timer_ += kInverseFPS;
             theta_ += timer_ * std::numbers::phi_v<float>*2.0f;
         } else {
             timer_ = 3.0f;

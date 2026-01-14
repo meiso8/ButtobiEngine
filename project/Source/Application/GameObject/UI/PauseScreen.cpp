@@ -8,7 +8,7 @@
 #include"Collision.h"
 #include"Puzzle/SlidePuzzleSystem.h"
 #include"Sound.h"
-
+#include"TimeManager.h"
 #include"Memo/MemoManager.h"
 
 bool PauseScreen::isActive_ = false;
@@ -102,7 +102,7 @@ void PauseScreen::TimerUpdate()
         return;
     }
 
-    pauseTimer_ += InverseFPS;
+    pauseTimer_ += kInverseFPS;
     pauseTimer_ = std::clamp(pauseTimer_, 0.0f, 1.0f);
 }
 

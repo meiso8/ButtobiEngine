@@ -5,7 +5,7 @@
 #include"CollisionConfig.h"
 #include"Sound.h"
 #include"TransformAni/TransformAni.h"
-#include"Window.h"
+#include"TimeManager.h"
 #include<algorithm>
 #include"Easing.h"
 void Medjed::OnCollision(Collider* collider)
@@ -120,7 +120,7 @@ void Medjed::Update()
 
     isHit_ = false;
     if (isFind_) {
-        aniTimer_ += InverseFPS * 0.25f;
+        aniTimer_ += kInverseFPS * 0.25f;
         aniTimer_ = std::clamp(aniTimer_, 0.0f, 1.0f);
         aniObj_->SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInOut(0.0f,1.0f,aniTimer_) });
     } else {

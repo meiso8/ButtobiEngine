@@ -3,6 +3,7 @@
 #include<algorithm>
 #include"CollisionManager.h"
 #include"InputBind.h"
+#include"TimeManager.h"
 bool SlidePuzzleSystem::isActive_ = false;
 bool SlidePuzzleSystem::isEnd_ = false;;
 std::unique_ptr<Puzzle>SlidePuzzleSystem::puzzle_ = nullptr;
@@ -31,7 +32,7 @@ void SlidePuzzleSystem::Update(const Vector2& screenPos)
             SoundManager::PlayCorrectSE();
         }
 
-        clearTimer_ -= InverseFPS;
+        clearTimer_ -= kInverseFPS;
         clearTimer_ = std::clamp(clearTimer_, 0.0f, maxTimer_);
 
         if (clearTimer_ == 0.0f) {

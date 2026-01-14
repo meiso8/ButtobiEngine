@@ -16,7 +16,7 @@
 #include"Sprite.h"
 #include"CollisionConfig.h"
 #include"InputBind.h"
-
+#include"TimeManager.h"
 void Player::OnCollision(Collider* collider)
 {
 
@@ -135,7 +135,7 @@ void Player::Update()
 
     if (characterState_.isHit) {
         if (hitTimer_ > 0.0f) {
-            hitTimer_ -= InverseFPS;
+            hitTimer_ -= kInverseFPS;
         } else {
             hitTimer_ = 0.0f;
             characterState_.isHit = false;
@@ -250,7 +250,7 @@ void Player::Jump()
     velocity_.y = std::clamp(velocity_.y, -1.0f, kJumpSpeed_);
 
 
-    velocity_.y -= InverseFPS * 0.98f;
+    velocity_.y -= kInverseFPS * 0.98f;
     bodyPos_.worldTransform_.translate_.y += velocity_.y;
 }
 
@@ -258,7 +258,7 @@ void Player::Zoom()
 {
     if (InputBind::IsClickPress()) {
 
-        zoomStartTimer_ += InverseFPS;
+        zoomStartTimer_ += kInverseFPS;
         zoomStartTimer_ = std::clamp(zoomStartTimer_, 0.0f, 0.2f);
 
 
@@ -269,7 +269,7 @@ void Player::Zoom()
                 Sound::PlaySE(Sound::FALL);
             }
 
-            zoomTimer_ += InverseFPS * 2.0f;
+            zoomTimer_ += kInverseFPS * 2.0f;
 
         }
 
@@ -278,7 +278,7 @@ void Player::Zoom()
         zoomStartTimer_ = 0.0f;
 
         if (zoomTimer_ > 0.0f) {
-            zoomTimer_ -= InverseFPS * 2.0f;
+            zoomTimer_ -= kInverseFPS * 2.0f;
         } else {
             isZoom_ = false;
         }
@@ -313,7 +313,7 @@ void Player::LookBack()
 
         if (!isLookBackEnd_) {
             if (lookBackTime_ < 1.0f) {
-                lookBackTime_ += InverseFPS * 2.0f;
+                lookBackTime_ += kInverseFPS * 2.0f;
             } else {
                 lookBackTime_ = 1.0f;
                 isLookBackEnd_ = true;
@@ -323,7 +323,7 @@ void Player::LookBack()
 
     } else {
         if (lookBackTime_ > 0.0f) {
-            lookBackTime_ -= InverseFPS * 2.0f;
+            lookBackTime_ -= kInverseFPS * 2.0f;
         } else {
             lookBackTime_ = 0.0f;
             isLookBack_ = false;
@@ -346,13 +346,13 @@ void Player::MouseLook()
     Vector2 controllerPos = { cameraRotateY_ ,cameraRotateX_ };
 
     if (Input::IsControllerStickPosMove(BUTTON_RIGHT, 0, &controllerPos)) {
-        cameraRotateY_ += controllerPos.x * InverseFPS * cameraSpeed_*2.0f;
-        cameraRotateX_ -= controllerPos.y * InverseFPS * cameraSpeed_*2.0f;
+        cameraRotateY_ += controllerPos.x * kInverseFPS * cameraSpeed_*2.0f;
+        cameraRotateX_ -= controllerPos.y * kInverseFPS * cameraSpeed_*2.0f;
     }
 
 
-    cameraRotateY_ += Input::GetMousePosFiltered().x * InverseFPS / cameraSpeed_;
-    cameraRotateX_ += Input::GetMousePosFiltered().y * InverseFPS / cameraSpeed_;
+    cameraRotateY_ += Input::GetMousePosFiltered().x * kInverseFPS / cameraSpeed_;
+    cameraRotateX_ += Input::GetMousePosFiltered().y * kInverseFPS / cameraSpeed_;
 
     cameraRotateX_ = std::clamp(
         cameraRotateX_,
