@@ -252,9 +252,6 @@
     <ClCompile Include="Source\Engine\Mesh\Sprite\SpriteCommon.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\DirectXCommon\ModelConfig.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\Surface\Texture.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -690,9 +687,6 @@
       <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\DirectXCommon\Log.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\ModelConfig.h">
       <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\DirectXCommon\MyEngine.h">
