@@ -21,8 +21,8 @@ PapyrusWall::PapyrusWall()
 
 void PapyrusWall::Draw(Camera& camera)
 {
-    buildingPos->SetLightMode(kLightModeHalfL);
-    buildingPos->Draw(camera, kBlendModeNormal);
+    buildingPos_->SetLightMode(kLightModeHalfL);
+    buildingPos_->Draw(camera, kBlendModeNormal);
 
     /* for (const auto& [type, pos] : fieldPoses_) {
          pos->Draw(camera);
@@ -68,6 +68,6 @@ void PapyrusWall::SetWallAABB() {
     //};
 
     for (const auto& [type, pos] : fieldPoses_) {
-        pos->SetingAABB(aabbs_[type]);
+        pos->SettingAABB(aabbs_[type]);
     }
 }

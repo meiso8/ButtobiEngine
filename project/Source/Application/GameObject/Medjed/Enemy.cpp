@@ -14,7 +14,7 @@
 Enemy::Enemy()
 {
     UpdateActions_ = {
-               {PHASE::APPER, std::bind(&Enemy::Apper, this)},
+         {PHASE::APPEAR, std::bind(&Enemy::Appear, this)},
          {PHASE::ROUND, std::bind(&Enemy::Round, this)},
          {PHASE::FIREBALL, std::bind(&Enemy::Fireball, this)},
          {PHASE::EXIT, std::bind(&Enemy::Exit, this)},
@@ -53,10 +53,10 @@ void Enemy::Init()
 
     velocity_ = { 10.0f,10.0f,10.0f };
     startPos_ = { 0.0f };
-    isApper_ = false;
+    isAppear_ = false;
     isShotStart_ = false;
 
-    phase_ = APPER;
+    phase_ = APPEAR;
 
     bodyPos_.Initialize();
     bodyPos_.worldTransform_.scale_ = { 0.0f };
@@ -68,7 +68,7 @@ void Enemy::Init()
 
 void Enemy::Draw(Camera& camera, const LightMode& lightMode)
 {
-    if (!isApper_) { return; }
+    if (!isAppear_) { return; }
 
     bodyPos_.SetLightMode(lightMode);
     bodyPos_.Draw(camera, kBlendModeNormal);
@@ -77,7 +77,7 @@ void Enemy::Draw(Camera& camera, const LightMode& lightMode)
 
 void Enemy::Update()
 {
-    if (!isApper_) { return; }
+    if (!isAppear_) { return; }
 
     // とりあえずフェーズが最大になったら処理を終える  
     if (phase_ >= MAX_PHASE || phase_ < 0) {
@@ -108,7 +108,7 @@ Vector3 Enemy::GetWorldPosition()const
 void Enemy::OnCollision(Collider* collider)
 {
 
-    if (!isApper_) { return; }
+    if (!isAppear_) { return; }
 
     //デバック用
     OnCollisionCollider();
@@ -146,7 +146,7 @@ void Enemy::SetPhase(PHASE phase)
     isShotStart_ = false;
     bodyPos_.InitTime();
 
-    if (phase_ == ROUND||phase_ == APPER) {
+    if (phase_ == ROUND||phase_ == APPEAR) {
         bodyPos_.SetAnimation(dancingModel_);
     }
 
@@ -158,15 +158,15 @@ void Enemy::SetPhase(PHASE phase)
     }
 }
 
-void Enemy::Apper()
+void Enemy::Appear()
 {
-    float time = timer_ / 7.0f;
+    float time = timer_ / kApperTime_;
     time = std::clamp(time, 0.0f, 1.0f);
     Look();
 
-    bodyPos_.worldTransform_.scale_ = Easing::EaseInBounce(Vector3{ 0.0f,0.0f,0.0f }, { kScale_,kScale_,kScale_ }, time);
+    bodyPos_.worldTransform_.scale_ = Easing::EaseInBounce(startScale_, { kScale_,kScale_,kScale_ }, time);
 
-    if (timer_ >= 9.0f) {
+    if (timer_ >= kApperEndTime_) {
         SetPhase(FIREBALL);
         bodyPos_.worldTransform_.scale_ = { kScale_,kScale_,kScale_ };
     }
@@ -212,7 +212,7 @@ void Enemy::Fireball()
 
 void Enemy::Exit()
 {
-    //bodyPos_.SetColor({ 0.0f,0.0f,0.0f,1.0f });
+ 
 }
 
 void Enemy::UpdateTimer()

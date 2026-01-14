@@ -27,8 +27,8 @@ public:
     void Draw(Camera& camera, const LightMode& lightMode);
     void Update();
     Vector3 GetWorldPosition()const override;
-    void SetIsApper(const bool& flag) { isApper_ = flag; }
-    const bool& GetIsApper() { return isApper_; }
+    void SetIsApper(const bool& flag) { isAppear_ = flag; }
+    const bool& GetIsApper() { return isAppear_; }
     Vector3 GetWorldPos()const
     {
         return bodyPos_.worldTransform_.GetWorldPosition();
@@ -51,7 +51,7 @@ public:
     const bool& GetIsDead() { return characterState_.isDead; }
 private:
    const float kScale_ = 5.0f;
-    bool isApper_ = false;
+    bool isAppear_ = false;
     float timer_ = 0.0f;
     float actionTime_ = 0.0f;
     float attackTime_ = 10.0f;
@@ -70,7 +70,7 @@ private:
     Circle enemyFieldCircle_ = { {0.0f,0.0f,0.0f} ,9.0f };
 
     enum PHASE {
-        APPER,
+        APPEAR,
         ROUND,
         FIREBALL,
         EXIT,
@@ -79,7 +79,7 @@ private:
 
     //メンバ関数ポインタテーブル
     std::unordered_map<PHASE, std::function<void()>> UpdateActions_;
-    PHASE phase_ = PHASE::APPER;
+    PHASE phase_ = PHASE::APPEAR;
     Vector3 velocity_ = { 0.0f };
 
     Vector3 startPos_ = { 0.0f };
@@ -88,9 +88,13 @@ private:
     float endRotateY_ = 0.0f;
     float startRotateY_ = 0.0f;
     float roundSpeedY = 1.0f;
+
+    const float kApperTime_ = 7.0f;
+    const float kApperEndTime_ = 9.0f;
+    Vector3 startScale_ = { 0.0f,0.0f,0.0f };
 private:
     void SetPhase(PHASE phase);
-    void Apper();
+    void Appear();
     void Round();
     void Fireball();
     void Exit();

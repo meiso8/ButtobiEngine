@@ -3,7 +3,7 @@
 BackGround::BackGround()
 {
     world_ = std::make_unique<World>();
-    filed_ = std::make_unique<Field>();
+    field_ = std::make_unique<Field>();
     building_ = std::make_unique<Building>();
 
 }
@@ -11,7 +11,7 @@ BackGround::BackGround()
 void BackGround::Initialize()
 {
     world_->Init();
-    filed_->Init();
+    field_->Init();
     building_->Init();
 }
 
@@ -30,11 +30,11 @@ void BackGround::Draw(Camera& camera)
 
 void BackGround::DrawField(Camera& camera)
 {
-    filed_->Draw(camera);
+    field_->Draw(camera);
 }
 
 void BackGround::UpdateApperMedjed()
 {
     world_->UpdateColor();
-    filed_->Update();
+    field_->Update();
 }

@@ -29,12 +29,6 @@ void World::Update()
     object3d_->GetUVTransform().translate.x += std::numbers::pi_v<float> *0.0625f * 0.5f * InverseFPS;
     object3d_->UpdateUV();
     object3d_->Update();
-    //if (Input::IsTriggerKey(DIK_SPACE)) {
-    //    texture_++;
-    //    texture_ %= Texture::TEXTURES;
-    //    SetTexture(texture_);
-    //}
-
 }
 
 void World::Draw(Camera& camera)

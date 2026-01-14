@@ -9,7 +9,7 @@ class BackGround
 {
 private:
     std::unique_ptr<World>world_ = nullptr;
-    std::unique_ptr<Field>filed_ = nullptr;
+    std::unique_ptr<Field>field_ = nullptr;
     std::unique_ptr<Building>building_ = nullptr;
 public:
     BackGround();

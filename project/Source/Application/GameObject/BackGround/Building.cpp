@@ -9,10 +9,10 @@ Building::Building() {
 
     model_ = ModelManager::GetModel("mummyRoom.obj");
 
-    buildingPos = std::make_unique<Object3d>();
-    buildingPos->Create();
-    buildingPos->SetMesh(model_);
-    buildingPos->SetLightMode(kLightModeNone);
+    buildingPos_ = std::make_unique<Object3d>();
+    buildingPos_->Create();
+    buildingPos_->SetMesh(model_);
+    buildingPos_->SetLightMode(kLightModeNone);
 
 
     fieldPoses_[Wall0] = std::make_unique<FieldCollider>();
@@ -35,7 +35,7 @@ Building::Building() {
 
 void Building::Init()
 {
-    buildingPos->Initialize();
+    buildingPos_->Initialize();
     model_->ResetTextureHandle();
 
     for (const auto& [type, pos] : fieldPoses_) {
@@ -49,19 +49,19 @@ void Building::Init()
 
 void Building::SetWallAABB()
 {
-    // 奥の壁（厚み2.0f）
+    // 奥の壁
     aabbs_[Wall0] = {
-        {-30.0f,-1.0f, -0.5f},
-        { 30.0f, 5.0f,  0.5f}
+        {-kWallWidth_,kWallMinHeight_, -kWallThickness_},
+        { kWallWidth_, kWallMaxHeight_, kWallThickness_}
     };
 
     // 手前の壁
     aabbs_[Wall1] = aabbs_[Wall0];
 
-    // 左の壁（厚み2.0f）
+    // 左の壁
     aabbs_[Wall2] = {
-        {-0.5f,-1.0f,-30.0f},
-        { 0.5f, 5.0f, 30.0f}
+        {-kWallThickness_,kWallMinHeight_,-kWallWidth_},
+        { kWallThickness_,kWallMaxHeight_, kWallWidth_}
     };
 
     // 右の壁
@@ -69,23 +69,23 @@ void Building::SetWallAABB()
 
     // 床
     aabbs_[Floor] = {
-        {-30.0f, -1.0f, -30.0f},
-        { 30.0f, 0.5f,  30.0f}
+        {-kWallWidth_, kWallMinHeight_, -kWallWidth_},
+        { kWallWidth_, kFloorThickness_,  kWallWidth_}
     };
 
     for (const auto& [type, pos] : fieldPoses_) {
-        pos->SetingAABB(aabbs_[type]);
+        pos->SettingAABB(aabbs_[type]);
     }
 }
 
 void Building::SetWallPos()
 {
     // 前後左右の壁と床の位置を設定
-    fieldPoses_[Wall0]->SetPos({ 0.0f, 0.0f, -26.0f }); // 奥の壁
-    fieldPoses_[Wall1]->SetPos({ 0.0f, 0.0f,  26.0f }); // 手前の壁
-    fieldPoses_[Wall2]->SetPos({ -26.0f, 0.0f, 0.0f }); // 左の壁
-    fieldPoses_[Wall3]->SetPos({ 26.0f, 0.0f, 0.0f });  // 右の壁
-    fieldPoses_[Floor]->SetPos({ 0.0f, -0.6f, 0.0f });  // 床
+    fieldPoses_[Wall0]->SetPos({ kWallOriginPos_,kWallOriginPos_, -kWallPosXZ_ }); // 奥の壁
+    fieldPoses_[Wall1]->SetPos({ kWallOriginPos_, kWallOriginPos_, kWallPosXZ_ }); // 手前の壁
+    fieldPoses_[Wall2]->SetPos({ -kWallPosXZ_,kWallOriginPos_, kWallOriginPos_ }); // 左の壁
+    fieldPoses_[Wall3]->SetPos({ kWallPosXZ_,kWallOriginPos_, kWallOriginPos_ });  // 右の壁
+    fieldPoses_[Floor]->SetPos({ kWallOriginPos_, kFloorPosY_, kWallOriginPos_ });  // 床
 
 }
 
@@ -98,9 +98,6 @@ void Building::Update()
 
 void Building::Draw(Camera& camera)
 {
-    //buildingPos->SetLightMode(kLightModeHalfL);
-    //buildingPos->Draw(camera, kBlendModeNormal);
-
     for (const auto& [type, pos] : fieldPoses_) {
         pos->Draw(camera);
     }
@@ -138,7 +135,7 @@ void FieldCollider::Draw(Camera& camera)
 void FieldCollider::Initialize()
 {
     object_->Initialize();
-    object_->GetUVScale().x = { 4.0f };
+    object_->GetUVScale().x =  4.0f ;
 }
 
 void FieldCollider::OnCollision(Collider* collider)
@@ -146,7 +143,7 @@ void FieldCollider::OnCollision(Collider* collider)
 
 }
 
-void FieldCollider::SetingAABB(const AABB& aabb)
+void FieldCollider::SettingAABB(const AABB& aabb)
 {
     SetAABB(aabb);
     cube_->SetMinMax(aabb);

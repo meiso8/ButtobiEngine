@@ -40,14 +40,14 @@ void MummyRoom::SetWallAABB() {
     };
 
     for (const auto& [type, pos] : fieldPoses_) {
-        pos->SetingAABB(aabbs_[type]);
+        pos->SettingAABB(aabbs_[type]);
     }
 }
 
 void MummyRoom::Draw(Camera& camera)
 {
-    buildingPos->SetLightMode(kLightModeHalfL);
-    buildingPos->Draw(camera, kBlendModeNormal);
+    buildingPos_->SetLightMode(kLightModeHalfL);
+    buildingPos_->Draw(camera, kBlendModeNormal);
 
      fieldPoses_[Floor]->Draw(camera);
 }
