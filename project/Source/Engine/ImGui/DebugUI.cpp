@@ -656,8 +656,8 @@ void DebugUI::CheckSound()
         // 正規化済みのモノラル波形バッファ
         if (ImGui::TreeNode("ShowOscilloscope")) {
             static int writeIdx = 0;
-            std::vector<float> waveform = Sound::GetWaveform(Sound::BGM_ArabRuins);
-            writeIdx = (int)(Sound::GetSamplesPlayed(Sound::BGM_ArabRuins) % waveform.size());
+            std::vector<float> waveform = Sound::GetWaveform(SoundFactory::BGM_ArabRuins);
+            writeIdx = (int)(Sound::GetSamplesPlayed(SoundFactory::BGM_ArabRuins) % waveform.size());
 
             float scale = Sound::bgmVolume_; // 0.0〜1.0
 

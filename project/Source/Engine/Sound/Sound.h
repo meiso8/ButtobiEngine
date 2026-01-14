@@ -22,104 +22,55 @@ struct SoundData {
 #include <wrl.h> // ComPtr(コムポインタ)  
 #include<memory>//unique_ptr
 #include <unordered_map>
+#include"SoundFactory.h"
 
 class Sound {
 public:
-
-    //TAGを宣言する
-    enum TAG {
-        // ======================================
-        //BGM
-        BGM_ArabRuins,
-        BGM_SandCity,
-        BGM_Sea,
-        BGM_Sun,
-        // ======================================
-       
-        //ホラーアクセント
-        HORROR1,
-        HORROR2,
-        //物が落ちる
-        FALL,
-        //水
-        WATER_DROP,
-        //メモ用
-        BOOK,
-        //スライドするとか
-        MOVE_ROCK,
-        //クラッカー
-        CRACKER,
-        //足音
-        FOOT_STEP,
-        //スイッチ
-        SWITCH_ON,
-        //正解
-        CORRECT,
-        //キャンセル
-        BUZZER,
-        //ごごごごごご
-        GOGOGO,
-        //ファイアボール
-        FIRE_BALL,
-        //うめき声
-        WOO,
-
-        // ======================================
-        //ボイス
-        VOICE_Asobimasyo,
-        VOICE_Sottizyanaiwa,
-        // ======================================
-
-        SOUNDS
-    };
-
-    /// @brief 全てのサウンドを読み込む
-    static void LoadAllSound();
-
     /// @brief BGＭを再生する
     /// @param tag タグ
     /// @param volumeOffset offset
     /// @param loop ループフラグ　デフォルト true
-    static void PlayBGM(const TAG& tag, const float& volumeOffset = 0.0f, const bool& loop = true);
+    static void PlayBGM(const SoundFactory::TAG& tag, const float& volumeOffset = 0.0f, const bool& loop = true);
     /// @brief SEを再生する
     /// @param tag タグ
     /// @param volumeOffset  offset
     /// @param loop ループフラグ デフォルト false
-    static void PlaySE(const TAG& tag, const float& volumeOffset = 0.0f, const bool& loop = false);
+    static void PlaySE(const SoundFactory::TAG& tag, const float& volumeOffset = 0.0f, const bool& loop = false);
     /// @brief LoopSEを再生する
     /// @param tag タグ
     /// @param volumeOffset  offset
-    static void PlayLoopSE(const TAG& tag, const float& volumeOffset = 0.0f);
+    static void PlayLoopSE(const SoundFactory::TAG& tag, const float& volumeOffset = 0.0f);
     /// @brief 重複を省いたSEを再生する
     /// @param tag タグ
     /// @param volumeOffset offset
-    static void PlayOriginSE(const TAG& tag, const float& volumeOffset = 0.0f);
+    static void PlayOriginSE(const SoundFactory::TAG& tag, const float& volumeOffset = 0.0f);
     /// @brief 一時停止
     /// @param tag 
-    static void Pause(const TAG& tag);
+    static void Pause(const SoundFactory::TAG& tag);
     /// @brief 再開
     /// @param tag タグ
-    static void Resume(const TAG& tag);
+    static void Resume(const SoundFactory::TAG& tag);
     /// @brief 停止
     /// @param tag タグ 
-    static void Stop(const TAG& tag);
+    static void Stop(const SoundFactory::TAG& tag);
     /// @brief 全ての音を停止する
     static void StopAllSound();
     /// @brief プレイ中かどうかを検証する
     /// @param tag タグ 
     /// @return 判定結果
-    static bool IsPlaying(const TAG& tag);
-
+    static bool IsPlaying(const SoundFactory::TAG& tag);
 
     /// @brief 音声データの解放関数  
 /// @param soundData 音声データ  
     static void Unload(SoundData& soundData);
     static void Initialize();
     static void Finalize();
-    static void SetVol(const float& vol, const TAG& tag);
+    static void SetVol(const float& vol, const SoundFactory::TAG& tag);
 
-    static std::vector<float> GetWaveform(const TAG& tag);
-    static UINT64 GetSamplesPlayed(const TAG& tag);
+    static std::vector<float> GetWaveform(const SoundFactory::TAG& tag);
+    static UINT64 GetSamplesPlayed(const SoundFactory::TAG& tag);
+    static void Load(const std::string& path, const SoundFactory::TAG& tag);
+
 public:
 
     static float bgmVolume_;
@@ -131,18 +82,15 @@ private:
     Sound(Sound&) = delete;
     Sound& operator=(Sound&) = delete;
 
-    static void Play(const uint32_t& tag, const float& volume, const bool& isLoop = false);
-    static void LoadFile(const std::string& path);
-    static uint32_t Load(const std::string& path);
+    static void Play(const SoundFactory::TAG& tag, const float& volume, const bool& isLoop = false);
+
     static bool IsPlayingAll();
 
-    static uint32_t GetSoundByIndex(const std::string& filePath);
-    static XAUDIO2_BUFFER GetBuffer(const TAG& tag);
+    static XAUDIO2_BUFFER GetBuffer(const SoundFactory::TAG& tag);
 private:
 
     static  Microsoft::WRL::ComPtr<IXAudio2> xAudio2_; // ComオブジェクトなのでComPtrで管理する。  
     static IXAudio2MasteringVoice* masterVoice_; // ReleaseなしのためComPtrで管理することが出来ない。  
-    static std::unordered_map<uint32_t, IXAudio2SourceVoice*> voices_;
-    static std::vector<SoundData> soundDatas;
-    static std::vector<uint32_t> handles_;
+    static std::unordered_map<SoundFactory::TAG, IXAudio2SourceVoice*> voices_;
+    static std::unordered_map<SoundFactory::TAG, SoundData> soundDatas_;
 };

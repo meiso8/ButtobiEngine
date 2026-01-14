@@ -6,24 +6,23 @@ void SoundManager::InitMedjedScene()
 {
     Sound::StopAllSound();
     Sound::bgmVolume_ = 0.1f;
-  /*  Sound::Stop(Sound::BGM_Sun);*/
 }
 
 void SoundManager::PlayCorrectSE()
 {
-    Sound::PlayOriginSE(Sound::CORRECT);
+    Sound::PlayOriginSE(SoundFactory::CORRECT);
 }
 
 
 void SoundManager::PlayGOGOGOSE()
 {
-    Sound::PlayOriginSE(Sound::GOGOGO);
+    Sound::PlayOriginSE(SoundFactory::GOGOGO);
 }
 
 
 void SoundManager::PlayCancelSE()
 {
-    Sound::PlaySE(Sound::BUZZER);
+    Sound::PlaySE(SoundFactory::BUZZER);
 }
 
 void SoundManager::ApperMedjedUpdate()
@@ -31,12 +30,12 @@ void SoundManager::ApperMedjedUpdate()
     if (Sound::bgmVolume_ < 0.5f) {
         Sound::bgmVolume_ += kInverseFPS * 0.25f;
     }
-    Sound::Stop(Sound::HORROR2);
-    Sound::PlayBGM(Sound::BGM_ArabRuins);
+    Sound::Stop(SoundFactory::HORROR2);
+    Sound::PlayBGM(SoundFactory::BGM_ArabRuins);
 }
 
 void SoundManager::NotFindMedjedUpdate()
 {
-    Sound::Stop(Sound::BGM_ArabRuins);
-    Sound::PlayBGM(Sound::HORROR2);
+    Sound::Stop(SoundFactory::BGM_ArabRuins);
+    Sound::PlayBGM(SoundFactory::HORROR2);
 }

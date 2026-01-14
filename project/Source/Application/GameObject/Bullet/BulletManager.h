@@ -9,7 +9,7 @@ public:
 	void Initialize();
 	void Update();
 	void Draw(class Camera& camera);
-	void ShotBullet(const Vector3& position, const Vector3& direction, const float& speed, const float& size, const Bullet::BulletType& type);
+	void ShotBullet(const Vector3& position, const Vector3& direction, const float speed, const float size, const Bullet::BulletType& type);
 	const std::vector<std::unique_ptr<Bullet>>& GetBullets() const {
 		return bullets_;
 	};

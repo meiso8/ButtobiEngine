@@ -157,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\Sound\SoundFactory.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\CurPos.cpp" />
     <ClCompile Include="Source\Application\Stage\MummyStage\DummyMummy.cpp" />
     <ClCompile Include="Source\Application\Stage\MummyStage\MummyRoom.cpp" />
@@ -319,6 +320,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\Stage\Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\Sound\SoundFactory.h" />
     <ClInclude Include="Source\Application\GameObject\UI\CurPos.h" />
     <ClInclude Include="Source\Application\Stage\MummyStage\DummyMummy.h" />
     <ClInclude Include="Source\Application\Stage\MummyStage\MummyRoom.h" />

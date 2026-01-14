@@ -26,7 +26,7 @@ public:
     void Update();
     void Draw(Camera& camera);
     void SetBulletType(const BulletType& type);
-    void Shot(const Vector3& position, const Vector3& direction, const float& speed, const float& size, const Bullet::BulletType& type);
+    void Shot(const Vector3& position, const Vector3& direction, const float speed, const float size, const Bullet::BulletType& type);
     void SetColor(const Vector4& color);
     bool isActive_ = false;
     Object3d body_;

@@ -86,7 +86,7 @@ void Block::RayCastHit()
         return;
     }
 
-    Sound::PlaySE(Sound::MOVE_ROCK, 1.0f);
+    Sound::PlaySE(SoundFactory::MOVE_ROCK, 1.0f);
     aniTimer_ = 0.0f;
     isPush_ = true;
 }

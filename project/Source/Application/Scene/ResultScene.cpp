@@ -51,11 +51,11 @@ void ResultScene::Initialize()
 
 void ResultScene::Update()
 {
-    Sound::PlayBGM(Sound::BGM_SandCity);
+    Sound::PlayBGM(SoundFactory::BGM_SandCity);
 
     if (InputBind::IsClick()) {
 
-        Sound::PlaySE(Sound::FALL);
+        Sound::PlaySE(SoundFactory::FALL);
 
         if (lookTimer_ >= 10.0f) {
             sceneChange_->SetState(SceneChange::kFadeIn, 30);

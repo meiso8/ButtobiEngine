@@ -16,7 +16,7 @@ void Medjed::OnCollision(Collider* collider)
         if (!isHit_) {
             isHit_ = true;
             if (!isFind_) {
-                Sound::PlayOriginSE(Sound::VOICE_Asobimasyo, 0.5f);
+                Sound::PlayOriginSE(SoundFactory::VOICE_Asobimasyo, 0.5f);
             }
         }
 
@@ -47,45 +47,6 @@ void Medjed::MoveStart()
     aniObj_->InitTime();
     aniObj_->SetAnimation(ModelManager::GetModel("medjedAnimation.gltf"));
 }
-
-//
-//void Medjed::MoveAround(const Vector3& target, const Vector3& dir)
-//{
-//    // プレイヤーの後ろを目指す
-//    Vector3 newDir = { dir.x, 0.0f, dir.z };
-//    Vector3 desiredPos = target - Normalize(newDir) * 5.0f;
-//
-//    // 現在位置
-//    Vector3& currentPos = aniObj_->worldTransform_.translate_;
-//
-//    // 目標方向を計算
-//    Vector3 toTarget = desiredPos - currentPos;
-//    toTarget.y = 0.0f;
-//
-//    // 距離が小さければ止まる
-//    float distance = Length(toTarget);
-//    if (distance < 2.0f) {
-//        velocity_ = { 0.0f, 0.0f, 0.0f };
-//        return;
-//    }
-//
-//    // 加速度的に追いかける
-//    Vector3 direction = Normalize(toTarget);
-//    float acceleration = 0.01f;
-//    float maxSpeed = 0.01f;
-//
-//    velocity_ += direction * acceleration;
-//    velocity_ = ClampLength(velocity_, maxSpeed); // 速度制限
-//    // 移動
-//    currentPos += velocity_;
-//}
-//
-//Vector3 ClampLength(const Vector3& v, float maxLength) { 
-//    float len = Length(v);
-//    if (len > maxLength) { 
-//        return Normalize(v) * maxLength; }
-//    return v;
-//}
 
 Medjed::Medjed() {
 
@@ -124,13 +85,7 @@ void Medjed::Update()
         aniTimer_ = std::clamp(aniTimer_, 0.0f, 1.0f);
         aniObj_->SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInOut(0.0f,1.0f,aniTimer_) });
     } else {
-
         SetColor({ 1.0f,1.0f,1.0f,0.0f });
-//#ifdef _DEBUG
-//
-//        SetColor({ 1.0f,0.0f,0.0f,1.0f });
-//#endif // _DEBUG
-
     }
 
     aniObj_->UpdateAniTimer();

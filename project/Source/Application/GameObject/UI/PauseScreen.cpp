@@ -121,7 +121,7 @@ void PauseScreen::SelectButton()
             sprites_[i]->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 
             if (InputBind::IsClick()) {
-                Sound::PlaySE(Sound::FALL);
+                Sound::PlaySE(SoundFactory::FALL);
                 switch (selectButtonNum_)
                 {
                 case kBackToGame:

@@ -119,7 +119,7 @@ void Enemy::OnCollision(Collider* collider)
         if (!characterState_.isHit) {
             characterState_.isHit = true;
 
-            Sound::PlaySE(Sound::CRACKER);
+            Sound::PlaySE(SoundFactory::CRACKER);
 
             if (characterState_.hps.hp > 0) {
                 characterState_.hps.hp--;
@@ -132,7 +132,7 @@ void Enemy::OnCollision(Collider* collider)
 
         if (collider->GetCollisionAttribute() == kCollisionPlayer) {
 
-            Sound::PlaySE(Sound::VOICE_Asobimasyo);
+            Sound::PlaySE(SoundFactory::VOICE_Asobimasyo,1.0f);
 
         }
 

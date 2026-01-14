@@ -50,7 +50,7 @@ void Water::Update() {
         object_->GetWaveData(0).amplitude = 0.2f;
         object_->GetWaveData(1).amplitude = 0.1f;
 
-        Sound::PlayOriginSE(Sound::WATER_DROP);
+        Sound::PlayOriginSE(SoundFactory::WATER_DROP);
     }
 
     isPrePlayerHit_ = isPlayerHit_;

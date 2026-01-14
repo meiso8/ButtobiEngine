@@ -31,7 +31,7 @@ void WaterStage::Initialize()
 
 void WaterStage::Update()
 {
-    Sound::PlayBGM(Sound::BGM_Sea);
+    Sound::PlayBGM(SoundFactory::BGM_Sea);
     blockMap_->Update();
 
     if (blockMap_->IsClear()) {

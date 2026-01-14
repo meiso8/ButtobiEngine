@@ -60,13 +60,13 @@ void MedjedManager::RayCastHit(RaySprite& raySprite) {
                     if (auto correctMedjed = dynamic_cast<Medjed*>(medjed.get())) {
                         SetIsFindMedjed(true);
                         SoundManager::PlayCorrectSE();
-                        Sound::PlaySE(Sound::GOGOGO);
+                        Sound::PlaySE(SoundFactory::GOGOGO);
                         return;
 
                     } else {
 
                         SoundManager::PlayCancelSE();
-                        Sound::PlayOriginSE(Sound::VOICE_Sottizyanaiwa, 0.5f);
+                        Sound::PlayOriginSE(SoundFactory::VOICE_Sottizyanaiwa, 0.5f);
                         return;
                     }
 

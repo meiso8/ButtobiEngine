@@ -13,7 +13,7 @@
 #include"SceneManager.h"
 #include"SceneFactory.h"
 #include"Application/Loader/ModelFactory.h"
-
+#include"SoundFactory.h"
 std::unique_ptr<PSO> MyEngine::pso = nullptr;
 std::unique_ptr <Input> MyEngine::input = nullptr;
 std::unique_ptr<Window> MyEngine::wc = nullptr;
@@ -84,7 +84,7 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     Texture::LoadAllTexture();
     LogFile::Log("LoadAllTexture");
     //音声の読み込み
-    Sound::LoadAllSound();
+    SoundFactory::Load();
     LogFile::Log("LoadAllSound");
     //モデル読み込み
     ModelFactory::Load();

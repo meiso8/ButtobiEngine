@@ -15,113 +15,72 @@
 using namespace Microsoft::WRL;
 
 ComPtr<IXAudio2> Sound::xAudio2_ = nullptr; // ComオブジェクトなのでComPtrで管理する。  
-std::unordered_map<uint32_t, IXAudio2SourceVoice*>Sound::voices_;
+std::unordered_map<SoundFactory::TAG, IXAudio2SourceVoice*>Sound::voices_;
 IXAudio2MasteringVoice* Sound::masterVoice_ = nullptr;
 
-std::vector<SoundData> Sound::soundDatas;
-std::vector<uint32_t> Sound::handles_;
+std::unordered_map<SoundFactory::TAG,SoundData> Sound::soundDatas_;
 
-float Sound::bgmVolume_ = 0.1f;
+float Sound::bgmVolume_ = 0.25f;
 float Sound::seVolume_ = 0.75f;
 
-void Sound::LoadAllSound()
-{
-#ifdef _DEBUG
-    bgmVolume_ = 0.0f;
-    seVolume_ = 0.5f;
-#endif // _DEBUG
-
-    handles_.resize(SOUNDS);
-
-    // ======================================
-    handles_[BGM_ArabRuins] = Load("Resource/Sounds/BGM/ArabRuins.mp3");
-    handles_[BGM_SandCity] = Load("Resource/Sounds/BGM/SandCity.mp3");
-    handles_[BGM_Sea] = Load("Resource/Sounds/BGM/sea.mp3");
-    handles_[BGM_Sun] = Load("Resource/Sounds/BGM/Sun.mp3");
-    // ======================================
-
-    handles_[HORROR1] = Load("Resource/Sounds/externals/Horror_Accent02-1(Far).mp3");
-    handles_[HORROR2] = Load("Resource/Sounds/externals/Horror_Accent16-2(Mid-Long).mp3");
-    handles_[FALL] = Load("Resource/Sounds/externals/maou_se_sound_fall02.mp3");
-    handles_[WATER_DROP] = Load("Resource/Sounds/externals/Water_Drop02-1(Low-Reverb).mp3");
-    handles_[BOOK] = Load("Resource/Sounds/externals/Book01-1(Flip).mp3");
-    handles_[MOVE_ROCK] = Load("Resource/Sounds/moveRock.mp3");
-    handles_[CRACKER] = Load("Resource/Sounds/cracker_short.mp3");
-    handles_[FOOT_STEP] = Load("Resource/Sounds/externals/maou_se_sound_footstep02.mp3");
-    handles_[SWITCH_ON] = Load("Resource/Sounds/externals/maou_se_sound_switch01.mp3");
-    handles_[CORRECT] = Load("Resource/Sounds/correct.mp3");
-    handles_[BUZZER] = Load("Resource/Sounds/externals/Quiz-Buzzer03-2(Short).mp3");
-    handles_[GOGOGO] = Load("Resource/Sounds/externals/Onoma-Rumble02-2(Hard-Short).mp3");
-    handles_[FIRE_BALL] = Load("Resource/Sounds/externals/fireBall.mp3");
-    handles_[WOO] = Load("Resource/Sounds/externals/woo.mp3");
-
-    // ======================================
-    handles_[VOICE_Asobimasyo] = Load("Resource/Sounds/externals/asobimasyo.mp3");
-    handles_[VOICE_Sottizyanaiwa] = Load("Resource/Sounds/externals/sottizyanaiwa.mp3");
-    // ======================================
-
-}
-
-void Sound::PlayBGM(const TAG& tag, const float& volumeOffset, const bool& loop)
+void Sound::PlayBGM(const SoundFactory::TAG& tag, const float& volumeOffset, const bool& loop)
 {
     SetVol(bgmVolume_ + volumeOffset, tag);
 
     if (!IsPlaying(tag)) {
-        Play(handles_[tag], bgmVolume_ + volumeOffset, loop);
+        Play(tag, bgmVolume_ + volumeOffset, loop);
     }
 }
 
-void Sound::PlaySE(const TAG& tag, const float& volumeOffset, const bool& loop)
+void Sound::PlaySE(const SoundFactory::TAG& tag, const float& volumeOffset, const bool& loop)
 {
-    Play(handles_[tag], seVolume_ + volumeOffset);
-
+    Play(tag, seVolume_ + volumeOffset);
 }
 
-void Sound::PlayLoopSE(const TAG& tag, const float& volumeOffset)
+void Sound::PlayLoopSE(const SoundFactory::TAG& tag, const float& volumeOffset)
 {
     if (!IsPlaying(tag)) {
-        Play(handles_[tag], seVolume_ + volumeOffset, true);
+        Play(tag, seVolume_ + volumeOffset, true);
     }
 }
 
-void Sound::PlayOriginSE(const TAG& tag, const float& volumeOffset)
+void Sound::PlayOriginSE(const SoundFactory::TAG& tag, const float& volumeOffset)
 {
     if (!IsPlaying(tag)) {
-        Play(handles_[tag], seVolume_ + volumeOffset, false);
+        Play(tag, seVolume_ + volumeOffset, false);
     }
 }
 
-void Sound::Pause(const TAG& tag)
+void Sound::Pause(const SoundFactory::TAG& tag)
 {
-    auto it = voices_.find(handles_[tag]);
+    auto it = voices_.find(tag);
     if (it != voices_.end() && it->second != nullptr) {
         it->second->Stop(); // バッファは保持されたまま停止
     }
 }
 
-void Sound::Resume(const TAG& tag)
+void Sound::Resume(const SoundFactory::TAG& tag)
 {
-    auto it = voices_.find(handles_[tag]);
+    auto it = voices_.find(tag);
     if (it != voices_.end() && it->second != nullptr) {
         it->second->Start(); // 停止した位置から再開
     }
 }
 
-void Sound::Stop(const TAG& tag)
+void Sound::Stop(const SoundFactory::TAG& tag)
 {
-    auto it = voices_.find(handles_[tag]);
+    auto it = voices_.find(tag);
     if (it != voices_.end() && it->second != nullptr) {
         it->second->Stop(); // バッファは保持されたまま停止
         it->second->Discontinuity();
         it->second->FlushSourceBuffers();
-        /*  it->second->DestroyVoice();*/
     }
 
 }
 
-bool Sound::IsPlaying(const TAG& tag) {
+bool Sound::IsPlaying(const SoundFactory::TAG& tag) {
 
-    auto it = voices_.find(handles_[tag]);
+    auto it = voices_.find(tag);
     if (it != voices_.end() && it->second != nullptr) {
         XAUDIO2_VOICE_STATE state{};
         it->second->GetState(&state);
@@ -142,42 +101,23 @@ void Sound::StopAllSound()
             voice->Stop();
             voice->Discontinuity();
             voice->FlushSourceBuffers();
-            // voice->DestroyVoice();
         }
     }
 
 }
 
 
-uint32_t Sound::GetSoundByIndex(const std::string& filePath)
-{
-    //読み込み済みデータを検索
-    auto it = std::find_if(
-        soundDatas.begin(),
-        soundDatas.end(),
-        [&](SoundData& soundData) {return soundData.filePath == filePath; }
-    );
-
-    if (it != soundDatas.end()) {
-        uint32_t soundIndex = static_cast<uint32_t>(std::distance(soundDatas.begin(), it));
-        return soundIndex;
-    }
-
-    assert(0);
-    return 0;
-}
-
-XAUDIO2_BUFFER Sound::GetBuffer(const TAG& tag)
+XAUDIO2_BUFFER Sound::GetBuffer(const SoundFactory::TAG& tag)
 {
     XAUDIO2_BUFFER buf{};
-    buf.pAudioData = soundDatas[handles_[tag]].mediaData.data();
-    buf.AudioBytes = static_cast<UINT32>(soundDatas[handles_[tag]].mediaData.size());
+    buf.pAudioData = soundDatas_[tag].mediaData.data();
+    buf.AudioBytes = static_cast<UINT32>(soundDatas_[tag].mediaData.size());
     buf.Flags = XAUDIO2_END_OF_STREAM;
 
     return buf;
 }
 
-std::vector<float> Sound::GetWaveform(const TAG& tag)
+std::vector<float> Sound::GetWaveform(const SoundFactory::TAG& tag)
 {
     XAUDIO2_BUFFER buf = Sound::GetBuffer(tag);
     std::vector<float> waveform;
@@ -192,10 +132,10 @@ std::vector<float> Sound::GetWaveform(const TAG& tag)
     return waveform;
 }
 
-UINT64 Sound::GetSamplesPlayed(const TAG& tag)
+UINT64 Sound::GetSamplesPlayed(const SoundFactory::TAG& tag)
 {
     XAUDIO2_VOICE_STATE state{};
-    auto it = voices_.find(handles_[tag]);
+    auto it = voices_.find(tag);
     if (it != voices_.end() && it->second != nullptr) {
         it->second->GetState(&state);
     }
@@ -212,29 +152,22 @@ void Sound::Unload(SoundData& soundData) {
 
 // ====================================================================================================
 
-uint32_t Sound::Load(const std::string& path)
-{
-    LoadFile(path);
-    //サウンドハンドルを返す
-    return (UINT)soundDatas.size() - 1;
-}
-
-void Sound::Play(const uint32_t& handle, const float& volume, const bool& isLoop) {
+void Sound::Play(const SoundFactory::TAG& tag, const float& volume, const bool& isLoop) {
     HRESULT result;
 
     IXAudio2SourceVoice* newVoice = nullptr;
 
-    result = xAudio2_->CreateSourceVoice(&newVoice, &soundDatas[handle].pWaveFormat);
+    result = xAudio2_->CreateSourceVoice(&newVoice, &soundDatas_[tag].pWaveFormat);
     assert(SUCCEEDED(result));
     float newVolume = volume;
     //最大値と最小値を入れる
-    newVolume = std::clamp(newVolume, 0.0f, 1.0f);
+    newVolume = std::clamp(newVolume, 0.0f, 10.0f);
 
     newVoice->SetVolume(newVolume);
 
     XAUDIO2_BUFFER buf{};
-    buf.pAudioData = soundDatas[handle].mediaData.data();
-    buf.AudioBytes = /*sizeof(BYTE) * */static_cast<UINT32>(soundDatas[handle].mediaData.size());
+    buf.pAudioData = soundDatas_[tag].mediaData.data();
+    buf.AudioBytes = static_cast<UINT32>(soundDatas_[tag].mediaData.size());
     buf.Flags = XAUDIO2_END_OF_STREAM;
 
     if (isLoop) {
@@ -246,17 +179,17 @@ void Sound::Play(const uint32_t& handle, const float& volume, const bool& isLoop
     result = newVoice->Start();//再生開始
     assert(SUCCEEDED(result));
 
-    voices_[handle] = newVoice;
+    voices_[tag] = newVoice;
 };
 
 
-void Sound::SetVol(const float& vol, const TAG& tag)
+void Sound::SetVol(const float& vol, const SoundFactory::TAG& tag)
 {
-    auto it = voices_.find(handles_[tag]);
+    auto it = voices_.find(tag);
     if (it != voices_.end() && it->second != nullptr) {
         float newVolume = vol;
         //最大値と最小値を入れる
-        newVolume = std::clamp(newVolume, 0.0f, 1.0f);
+        newVolume = std::clamp(newVolume, 0.0f, 10.0f);
         it->second->SetVolume(newVolume);
     }
 }
@@ -277,20 +210,25 @@ bool Sound::IsPlayingAll() {
 }
 
 
-
-void Sound::LoadFile(const std::string& path) {
+void Sound::Load(const std::string& path, const SoundFactory::TAG& tag) {
 
     //読み込み済みテクスチャを検索
     auto it = std::find_if(
-        soundDatas.begin(),
-        soundDatas.end(),
-        [&](SoundData& soundData) {return soundData.filePath == path; }
+        soundDatas_.begin(),
+        soundDatas_.end(),
+        [&](const auto& pair) {
+            return pair.second.filePath == path;
+        }
     );
 
-    //テクスチャ枚数上限チェック
-    assert(soundDatas.size() < DirectXCommon::kMaxSoundCount);
+    if (soundDatas_.contains(tag)) {
+        return;
+    }
 
-    if (it != soundDatas.end()) {
+    //テクスチャ枚数上限チェック
+    assert(soundDatas_.size() < DirectXCommon::kMaxSoundCount);
+
+    if (it != soundDatas_.end()) {
         return;
     }
 
@@ -316,13 +254,8 @@ void Sound::LoadFile(const std::string& path) {
     WAVEFORMATEX* waveFormat{ nullptr };
     MFCreateWaveFormatExFromMFMediaType(pOutType.Get(), &waveFormat, nullptr);
 
-
-    //テクスチャデータを追加
-    soundDatas.resize(soundDatas.size() + 1);
-    //追加したテクスチャデータの参照を取得する
-    SoundData& soundData = soundDatas.back();
-    soundData.pWaveFormat = *waveFormat;
-    soundData.filePath = path;
+    soundDatas_[tag].pWaveFormat = *waveFormat;
+    soundDatas_[tag].filePath = path;
 
     while (true) {
         ComPtr<IMFSample> pMFSample{ nullptr };
@@ -340,13 +273,11 @@ void Sound::LoadFile(const std::string& path) {
             BYTE* pBuffer{ nullptr };
             DWORD maxLength = 0, cbCurrentLength = 0;
             pMFMediaBuffer->Lock(&pBuffer, &maxLength, &cbCurrentLength);
-            soundData.mediaData.insert(soundData.mediaData.end(), pBuffer, pBuffer + cbCurrentLength);
+            soundDatas_[tag].mediaData.insert(soundDatas_[tag].mediaData.end(), pBuffer, pBuffer + cbCurrentLength);
             pMFMediaBuffer->Unlock();
         }
 
     }
-
-
 }
 
 
@@ -364,15 +295,28 @@ void Sound::Initialize()
     result = MFStartup(MF_VERSION, MFSTARTUP_NOSOCKET);
     assert(SUCCEEDED(result));
 
-    soundDatas.reserve(DirectXCommon::kMaxSoundCount);
+    soundDatas_.reserve(DirectXCommon::kMaxSoundCount);
 }
 
 void Sound::Finalize()
 {
-    xAudio2_.Reset();
-    for (uint32_t i = 0; i < soundDatas.size(); ++i) {
-        Unload(soundDatas[i]);
+
+    for (auto& pair : voices_) {
+        IXAudio2SourceVoice* voice = pair.second;
+        if (voice) {
+            voice->Stop();
+            voice->Discontinuity();
+            voice->FlushSourceBuffers();
+            voice->DestroyVoice();
+        }
     }
+
+    for (auto& [tag, data] : soundDatas_) {
+        Unload(data);
+    }
+
+    soundDatas_.clear();
+    xAudio2_.Reset();
 
     HRESULT result;
     result = MFShutdown();

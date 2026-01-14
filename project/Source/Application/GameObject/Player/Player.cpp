@@ -150,7 +150,7 @@ void Player::Update()
     UpdateRay();
     //クリックしたらサウンド
     if (InputBind::IsClick()) {
-        Sound::PlaySE(Sound::SWITCH_ON);
+        Sound::PlaySE(SoundFactory::SWITCH_ON);
     }
 
     bodyPos_.Update();
@@ -192,7 +192,7 @@ void Player::Move()
 
         if (!isJump_) {
             if (soundTimer_ == 0.0f) {
-                Sound::PlaySE(Sound::FOOT_STEP, (kSpeed_ == 0.25f) ? 0.5f : 0.0f);
+                Sound::PlaySE(SoundFactory::FOOT_STEP, (kSpeed_ == 0.25f) ? 0.5f : 0.0f);
             }
 
         }
@@ -266,7 +266,7 @@ void Player::Zoom()
         if (zoomStartTimer_ >= 0.2f) {
             if (!isZoom_) {
                 isZoom_ = true;
-                Sound::PlaySE(Sound::FALL);
+                Sound::PlaySE(SoundFactory::FALL);
             }
 
             zoomTimer_ += kInverseFPS * 2.0f;
@@ -370,7 +370,7 @@ void Player::OnCollisionEnemy()
         return;
     }
 
-    Sound::PlaySE(Sound::CRACKER);
+    Sound::PlaySE(SoundFactory::CRACKER);
     //衝突フラグを真に
     characterState_.isHit = true;
     characterState_.hps.hp -= 10;

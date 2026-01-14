@@ -51,7 +51,7 @@ void DummyMummy::Update()
         } else {
             object_->SetSkinning(true);
             if (!isHitCollision_) {
-                Sound::PlayOriginSE(Sound::WOO);
+                Sound::PlayOriginSE(SoundFactory::WOO);
             }
       
         }

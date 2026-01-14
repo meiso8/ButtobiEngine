@@ -86,7 +86,7 @@ void Puzzle::Game(const Vector2& screenPos)
 
             if (InputBind::IsClick()) {
                 clickedIndex = i;
-                Sound::PlaySE(Sound::MOVE_ROCK,0.5f);
+                Sound::PlaySE(SoundFactory::MOVE_ROCK,0.5f);
             }
 
         } else {
@@ -135,6 +135,4 @@ void Puzzle::SetTexture(const Texture::TEXTURE_HANDLE& handle)
     rep(i, maxArrayNum_)
         sprites_[i]->SetTexture(handle);
     sprite_->SetTexture(handle);
-
-
 }

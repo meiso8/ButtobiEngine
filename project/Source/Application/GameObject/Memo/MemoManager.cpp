@@ -135,7 +135,7 @@ void MemoManager::RayCastHit(RaySprite& raySprite)
                 if (!isLookItem_) {
                     isLookItem_ = true;
                     SetSpriteSize(handle);
-                    Sound::PlayOriginSE(Sound::BOOK);
+                    Sound::PlayOriginSE(SoundFactory::BOOK);
                     return;
                 }
 

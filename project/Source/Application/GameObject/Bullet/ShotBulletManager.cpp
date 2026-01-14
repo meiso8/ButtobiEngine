@@ -34,7 +34,7 @@ void ShotBulletManager::Update() {
         if (rhythmManager_->IsOnBeat(currentTime_)) {
 
             Vector3 toTarget = enemy_->GetToTarget();
-            Sound::PlaySE(Sound::FIRE_BALL);
+            Sound::PlaySE(SoundFactory::FIRE_BALL);
 
             if (rand() % 2 == 0) {
                 const int bulletCount = 5;
@@ -74,7 +74,7 @@ void ShotBulletManager::RayCastHit(RaySprite& raySprite)
 
             if (InputBind::IsClick()) {
                 if (bullet->type_ != Bullet::kPlayer) {
-                    Sound::PlaySE(Sound::CRACKER, 0.5f);
+                    Sound::PlaySE(SoundFactory::CRACKER, 0.5f);
                     Vector3 shotDirection = raySprite.ray_.diff;
                     Vector3 shotPosition = bullet->GetWorldPosition();
                     bullet->Shot(shotPosition, shotDirection, shotSpeed_, shotSize_, Bullet::kPlayer);

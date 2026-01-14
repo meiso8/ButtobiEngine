@@ -106,7 +106,7 @@ void Bullet::SetBulletType(const BulletType& type)
     }
 }
 
-void Bullet::Shot(const Vector3& position, const Vector3& direction, const float& speed, const float& size, const Bullet::BulletType& type) {
+void Bullet::Shot(const Vector3& position, const Vector3& direction, const float speed, const float size, const Bullet::BulletType& type) {
   
     
     body_.SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });

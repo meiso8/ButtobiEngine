@@ -25,7 +25,7 @@ void MedjedStage::Initialize()
     player_->Update();
 
     itemManager_->GenerateItems({ "SunRod" });
-    Sound::PlaySE(Sound::VOICE_Asobimasyo,0.5f);
+    Sound::PlaySE(SoundFactory::VOICE_Asobimasyo,0.5f);
 
 }
 

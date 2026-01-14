@@ -27,8 +27,8 @@ void MummyStage::Initialize() {
 
     DummyMummy::SetTargetPosPtr(&player_->GetBodyPos());
 
-    Sound::Stop(Sound::BGM_Sea);
-    Sound::PlaySE(Sound::HORROR1);
+    Sound::Stop(SoundFactory::BGM_Sea);
+    Sound::PlaySE(SoundFactory::HORROR1);
     medjedApperTime_ = maxTime_;
     papyrus_->Initialize();
     mummy_->Initialize();

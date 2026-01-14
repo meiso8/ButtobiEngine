@@ -63,7 +63,7 @@ void TitleScene::Initialize()
 
 void TitleScene::Update()
 {
-    Sound::PlayBGM(Sound::BGM_ArabRuins);
+    Sound::PlayBGM(SoundFactory::BGM_ArabRuins);
 
     timer_ += kInverseFPS;
     float scale = sinf(timer_) * 0.125f+1.25f;
@@ -83,7 +83,7 @@ void TitleScene::Update()
         isHoverExitButton_ = false;
 
         if (!isHoverStartButton_) {
-            Sound::PlaySE(Sound::SWITCH_ON);
+            Sound::PlaySE(SoundFactory::SWITCH_ON);
             isHoverStartButton_ = true;
 
         }
@@ -93,7 +93,7 @@ void TitleScene::Update()
         isHoverStartButton_ = false;
 
         if (!isHoverExitButton_) {
-            Sound::PlaySE(Sound::SWITCH_ON);
+            Sound::PlaySE(SoundFactory::SWITCH_ON);
             isHoverExitButton_ = true;
 
         }
@@ -103,7 +103,7 @@ void TitleScene::Update()
     if (isHoverStartButton_) {
         startButton_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
         if (InputBind::IsClick()) {
-            Sound::PlaySE(Sound::FALL);
+            Sound::PlaySE(SoundFactory::FALL);
             sceneChange_->SetState(SceneChange::kFadeIn, 30);
             SceneManager::SetNestScene("Sample");
         }
