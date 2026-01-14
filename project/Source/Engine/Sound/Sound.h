@@ -22,7 +22,7 @@ struct SoundData {
 #include <wrl.h> // ComPtr(コムポインタ)  
 #include<memory>//unique_ptr
 #include <unordered_map>
-#include"SoundFactory.h"
+#include"Application/Loader/SoundFactory.h"
 
 class Sound {
 public:

@@ -13,7 +13,8 @@
 #include"SceneManager.h"
 #include"SceneFactory.h"
 #include"Application/Loader/ModelFactory.h"
-#include"SoundFactory.h"
+#include"Application/Loader/SoundFactory.h"
+
 std::unique_ptr<PSO> MyEngine::pso = nullptr;
 std::unique_ptr <Input> MyEngine::input = nullptr;
 std::unique_ptr<Window> MyEngine::wc = nullptr;

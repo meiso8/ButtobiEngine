@@ -2,7 +2,7 @@
 #include"ModelManager.h"
 void ModelFactory::Load() {
 
-    //モデルのファイルパスとタグを関連付けてください
+    //モデルのロード
     ModelManager::LoadModel("Resource/Models/Box", "Box.obj");
     ModelManager::LoadModel("Resource/Models/AmenRa", "AmenRa.obj");
     ModelManager::LoadModel("Resource/Models/medjed", "normalMed.gltf");
