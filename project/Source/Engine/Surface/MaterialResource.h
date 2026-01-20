@@ -14,7 +14,7 @@ enum LightMode {
 
 struct Material
 {
-    float32_t4 color;
+    float4 color;
     int32_t lightMode;
     float padding[3];
     float32_t4x4 uvTransform;

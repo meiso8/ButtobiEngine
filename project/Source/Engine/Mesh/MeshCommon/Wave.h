@@ -4,7 +4,7 @@
 //波の頂点アニメーション用
 struct Wave
 {
-    float32_t3 direction;
+    float3 direction;
     float padding;
     float time; // アニメーション用の時間変数
     float amplitude; //振幅

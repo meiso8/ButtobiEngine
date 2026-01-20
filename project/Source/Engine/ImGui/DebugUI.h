@@ -60,7 +60,7 @@ public:
     static void CheckSprite(Sprite& sprite, const char* label);
     static void CheckBalloonData(Balloon& balloon);
     static void CheckWaveData(Wave& wave, const char* label);
-    static void CheckPointLightData(PointLight& pointLight, const char* label);
+    static void CheckPointLightData();
     /// @brief Object3d
     /// @param object3d Object3d
     /// @param label 
