@@ -21,6 +21,7 @@ SamplerState gSampler : register(s0);
 
 StructuredBuffer<PointLight> gPointLights : register(t4);
 
+StructuredBuffer<SpotLight> gSpotLights : register(t5);
 struct PixelShaderOutput
 {
     float32_t4 color : SV_TARGET0;
