@@ -128,7 +128,7 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
         //ライトのCBufferの場所を設定
         DirectionalLightManager::SetGraphicsRootConstantBufferView();
         PointLightManager::SetGraphicsRootDescriptorTable();
-        SpotLightManager::SetGraphicsRootConstantBufferView();
+        SpotLightManager::SetGraphicsRootDescriptorTable();
         meshCommon_->Draw(commandList_);
     }
 }

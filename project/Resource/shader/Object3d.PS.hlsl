@@ -1,31 +1,31 @@
-#include "object3d.hlsli"
+#include "Object3d.hlsli"
 #include "Camera.hlsli"
 #include"Light.hlsli"
 
-
 struct Material
 {
-    float32_t4 color;
+    float4 color;
     int32_t lightType;
     float32_t4x4 uvTransform;
-    float32_t shininess;
+    float shininess;
 };
+
+
 
 ConstantBuffer<Material> gMaterial : register(b0);
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
 ConstantBuffer<Camera> gCamera : register(b2);
-ConstantBuffer<SpotLight> gSpotLight : register(b3);
 
-Texture2D<float32_t4> gTexture : register(t2); 
-SamplerState gSampler : register(s0); 
+Texture2D<float4> gTexture : register(t2);
+SamplerState gSampler : register(s0);
 
 StructuredBuffer<PointLight> gPointLights : register(t4);
+StructuredBuffer<SpotLight> gSpotLights : register(t5);
 
 struct PixelShaderOutput
 {
-    float32_t4 color : SV_TARGET0;
+    float4 color : SV_TARGET0;
 };
-
 
 float GetCosin(float NdotL, int lightType)
 {
@@ -44,7 +44,6 @@ float3 CalculatePointLightDiffuse(float3 normal, float3 worldPos, PointLight lig
     return light.color.rgb * cos * light.intensity * factor;
     
 }
-
 
 float3 CalculateSpotLightDiffuse(float3 normal, float3 worldPos, SpotLight light, int lightType)
 {
@@ -65,8 +64,16 @@ float3 CalculatePointLightSpecular(float3 normal, float3 worldPos, float3 toEye,
     float3 halfVector = normalize(-dir + toEye);
     float NDotH = dot(normal, halfVector);
     float spec = pow(saturate(NDotH), shininess);
-    return spec * light.color.rgb;//<-selectReflectColor
+    return spec * light.color.rgb; //<-selectReflectColor
     
+}
+
+float3 CalculateSpotLightSpecular(float3 normal, float3 toEye, SpotLight light, float shininess)
+{
+    float3 halfVector = normalize(-light.direction + toEye);
+    float NDotH = dot(normal, halfVector);
+    float spec = pow(saturate(NDotH), shininess);
+    return spec * light.color.rgb; //<-selectReflectColor
 }
 
 
@@ -89,8 +96,8 @@ float3 CalculateDirectionalSpecular(float3 normal, float3 dir, float3 toEye, flo
 PixelShaderOutput main(VertexShaderOutput input)
 {
  
-    float4 transformedUV = mul(float32_t4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
-    float32_t4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
+    float4 transformedUV = mul(float4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
+    float4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
     
 
     if (textureColor.a <= 0.5)
@@ -102,7 +109,7 @@ PixelShaderOutput main(VertexShaderOutput input)
 
     if (gMaterial.lightType == 0)
     {
-        output.color = gMaterial.color * textureColor; 
+        output.color = gMaterial.color * textureColor;
      
     }
     else
@@ -110,51 +117,61 @@ PixelShaderOutput main(VertexShaderOutput input)
  
         // ==========================//Common//====================================
         //normal
-        float32_t3 normalInput = normalize(input.normal);
+        float3 normalInput = normalize(input.normal);
         //baseColor
-        float32_t3 baseColor = gMaterial.color.rgb * textureColor.rgb;
+        float3 baseColor = gMaterial.color.rgb * textureColor.rgb;
          //toCameraVector
-        float32_t3 toEye = normalize(gCamera.worldPosition - input.worldPosition);
+        float3 toEye = normalize(gCamera.worldPosition - input.worldPosition);
         // ======================================================================
   
         // totalPointLightDiffuse
-        float3 pointLightTotalDiffuse = float3(0, 0, 0);
-        float3 pointLightTotalSpecular = float3(0, 0, 0);
+        float3 lightTotalDiffuse = float3(0, 0, 0);
+        float3 lightTotalSpecular = float3(0, 0, 0);
 
-        [loop]
+     [loop]
         for (int i = 0; i < 20; ++i)
         {
-            pointLightTotalDiffuse += CalculatePointLightDiffuse(normalInput, input.worldPosition, gPointLights[i], gMaterial.lightType);
+            lightTotalDiffuse += CalculatePointLightDiffuse(normalInput, input.worldPosition, gPointLights[i], gMaterial.lightType);
         }
         
-        float32_t3 DirectionalLightDiffuse = CalculateDirectionalDiffuse(normalInput, gDirectionalLight.direction, gDirectionalLight.color.rgb, gDirectionalLight.intensity, gMaterial.lightType);
-
         
-        float32_t3 spotLightDiffuse = CalculateSpotLightDiffuse(normalInput, input.worldPosition, gSpotLight, gMaterial.lightType);
+        float3 DirectionalLightDiffuse = CalculateDirectionalDiffuse(normalInput, gDirectionalLight.direction, gDirectionalLight.color.rgb, gDirectionalLight.intensity, gMaterial.lightType);
 
+           [loop]
+        for (int i = 0; i < 20; ++i)
+        {
+            lightTotalDiffuse += CalculateSpotLightDiffuse(normalInput, input.worldPosition, gSpotLights[i], gMaterial.lightType);
+        }
+        
         if (gMaterial.lightType == 1)
         {
             
-            [loop]
+          [loop]
             for (int i = 0; i < 20; ++i)
             {
-                pointLightTotalSpecular += CalculatePointLightSpecular(normalInput, input.worldPosition, toEye, gPointLights[i], gMaterial.shininess);
+                lightTotalSpecular += CalculatePointLightSpecular(normalInput, input.worldPosition, toEye, gPointLights[i], gMaterial.shininess);
             }
         
+          [loop]
+            for (int i = 0; i < 20; ++i)
+            {
+                lightTotalSpecular += CalculateSpotLightSpecular(normalInput,  toEye, gSpotLights[i], gMaterial.shininess);
+            }
+            
+        
             //directionalLightReflect
-            float32_t3 speculargDirectionalLight =
+            lightTotalSpecular +=
             DirectionalLightDiffuse *
             CalculateDirectionalSpecular(normalInput, gDirectionalLight.direction, toEye, gDirectionalLight.color.rgb, gMaterial.shininess);
          
             output.color.rgb =
-            baseColor * (DirectionalLightDiffuse + pointLightTotalDiffuse + spotLightDiffuse) +
-            (speculargDirectionalLight + pointLightTotalSpecular);
+            baseColor * (DirectionalLightDiffuse + lightTotalDiffuse) + lightTotalSpecular;
             
         }
         else
         {
-            //NoneReflect
-            output.color.rgb = baseColor * (DirectionalLightDiffuse + pointLightTotalDiffuse + spotLightDiffuse);
+         //NoneReflect
+          output.color.rgb = baseColor * (DirectionalLightDiffuse + lightTotalDiffuse);
 
         }
         

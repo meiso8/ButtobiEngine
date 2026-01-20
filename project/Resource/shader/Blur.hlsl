@@ -4,7 +4,7 @@
 
 struct Material
 {
-    float32_t4 color;
+    float4 color;
 };
 
 struct DoFParam
@@ -20,8 +20,8 @@ struct DoFParam
 ConstantBuffer<Material> gMaterial : register(b0);
 ConstantBuffer<DoFParam> gDoFParam : register(b1);
 
-Texture2D<float32_t4> gTexture : register(t0); //SRVはt
-Texture2D<float32_t4> gDepthTexture : register(t1); //追加
+Texture2D<float4> gTexture : register(t0); //SRVはt
+Texture2D<float4> gDepthTexture : register(t1); //追加
 
 SamplerState gSampler : register(s0); //Samplerはs これを介してtextureを読む
 
@@ -75,7 +75,7 @@ float4 GaussianBlur(Texture2D sceneTex, SamplerState sample, float2 uv, float si
 
 struct PixelShaderOutput
 {
-    float32_t4 color : SV_TARGET0;
+    float4 color : SV_TARGET0;
 };
 
 
@@ -91,9 +91,9 @@ PixelShaderOutput main(VertexShaderOutput input)
     float blurFactor = abs(depth - gDoFParam.focusDepth);
 
     //オリジナルカラー
-    float32_t4 originalColor = gTexture.Sample(gSampler, input.texcoord);
+    float4 originalColor = gTexture.Sample(gSampler, input.texcoord);
      //ガウスブラー処理をしたもの
-    float32_t4 blurColor = GaussianBlur(gTexture, gSampler, input.texcoord, gDoFParam.sigma, gDoFParam.kernel);
+    float4 blurColor = GaussianBlur(gTexture, gSampler, input.texcoord, gDoFParam.sigma, gDoFParam.kernel);
     
     //線形補間しているというわけですね
     output.color = lerp(originalColor, blurColor, blurFactor);

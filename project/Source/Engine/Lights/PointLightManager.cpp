@@ -9,25 +9,22 @@ uint32_t PointLightManager::srvIndex_;
 void PointLightManager::CreateData()
 {
 
-    pointLightResource_ = DirectXCommon::CreateBufferResource(sizeof(PointLight
-        ) * kMaxData_);
+    pointLightResource_ =
+        DirectXCommon::CreateBufferResource(sizeof(PointLight) * kMaxData_);
     //書き込むためのアドレスを取得
     pointLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&pointLightData_));
-    
+
     srvIndex_ = SrvManager::Allocate();
     SrvManager::CreateSRVforStructuredBuffer(srvIndex_, pointLightResource_.Get(), UINT(kMaxData_), sizeof(PointLight));
-    
+
     //データを初期化する
     InitDatas();
 }
 
 void PointLightManager::SetGraphicsRootDescriptorTable()
 {
-    //粒ごとのトランスフォーム
+    //PointLightのDescriptorTableの設定をする
     SrvManager::SetGraphicsRootDescriptorTable(7, srvIndex_);
-
-    ////pointLightのCBufferの場所を設定
-    //DirectXCommon::GetCommandList()->SetGraphicsRootConstantBufferView(7, pointLightResource_->GetGPUVirtualAddress());
 }
 
 void PointLightManager::InitData(const uint32_t& index)

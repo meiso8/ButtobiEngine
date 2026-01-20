@@ -16,6 +16,8 @@
 #include"Lights/Light.h"
 #include"Lights/DirectionalLightManager.h"
 #include"Lights/SpotLightManager.h"
+#include"Lights/PointLightManager.h"
+
 #include"PSO.h"
 #include"Camera.h"
 #include"JsonFile.h"
@@ -23,7 +25,6 @@
 #include<numbers>
 #include<algorithm>
 
-#include"CharacterState.h"
 struct Param {
     char name[128];
     char value[128];
@@ -208,43 +209,36 @@ void DebugUI::CheckJsonFile()
 #endif
 }
 
-//void DebugUI::CheckDamageStruct(Damage& damage, const char* label)
-//{
-//#ifdef USE_IMGUI
-//
-//
-//    if (ImGui::TreeNode(label)) {
-//        ImGui::SliderFloat("cannotControlTime", &damage.cannotControlTime, 0.0f, 10.0f);
-//        ImGui::SliderFloat("flashTimer", &damage.flashTimer, 0.0f, 10.0f);
-//        ImGui::SliderFloat("flashTimer", &damage.invincibilityTime, 0.0f, 10.0f);
-//        ImGui::Checkbox("isHit", &damage.isHit);
-//        ImGui::Checkbox("isInvincible", &damage.isInvincible);
-//        ImGui::DragInt("HP", &damage.hps.hp, 1, 0, 100);
-//        ImGui::DragInt("MaxHP", &damage.hps.maxHp, 1, 0, 100);
-//        ImGui::DragInt("hpDecrease", &damage.hps.hpDecrease, 1, 0, 100);
-//        ImGui::TreePop();
-//    }
-//
-//#endif
-//}
-
 void DebugUI::CheckSpotLight()
 {
 #ifdef USE_IMGUI
-    SpotLight& spotLight = SpotLightManager::GetData();
-    Vector3& direction = spotLight.direction;
 
-    if (ImGui::TreeNode("SpotLight")) {
-        CheckColor(spotLight.color, "color");
-        ImGui::SliderFloat("intensity", &spotLight.intensity, 0.0f, 100.0f);
-        ImGui::DragFloat3("position", &spotLight.position.x, 0.03f, -10000.0f, 10000.0f);
-        ImGui::SliderFloat3("direction", &direction.x, -1.0f, 1.0f);
-        direction = Normalize(direction);
-        ImGui::SliderFloat("distance", &spotLight.distance, 0.0f, 100.0f);
-        ImGui::SliderFloat("decay", &spotLight.decay, 0.0f, 100.0f);
-        ImGui::SliderFloat("cosAngle", &spotLight.cosAngle, -6.28f, 6.28f);
-        ImGui::TreePop();
+    ImGui::Begin("SpotLight");
+
+    for (int i = 0; i < SpotLightManager::kMaxData_; ++i) {
+
+
+        if (ImGui::TreeNode(("light " + std::to_string(i)).c_str())) {
+            SpotLight& spotLight = SpotLightManager::GetData(i);
+            Vector3& direction = spotLight.direction;
+
+            CheckColor(spotLight.color, "color");
+            ImGui::SliderFloat("intensity", &spotLight.intensity, 0.0f, 100.0f);
+            ImGui::DragFloat3("position", &spotLight.position.x, 0.03f, -10000.0f, 10000.0f);
+            ImGui::SliderFloat3("direction", &direction.x, -1.0f, 1.0f);
+            direction = Normalize(direction);
+            ImGui::SliderFloat("distance", &spotLight.distance, 0.0f, 100.0f);
+            ImGui::SliderFloat("decay", &spotLight.decay, 0.0f, 100.0f);
+            ImGui::SliderFloat("cosAngle", &spotLight.cosAngle, -6.28f, 6.28f);
+            ImGui::TreePop();
+
+        }
+
+
+
     }
+
+    ImGui::End();
 #endif
 }
 
@@ -383,7 +377,7 @@ void DebugUI::ShowMatrix4x4(const Matrix4x4& matrix, const char* label) {
         }
         ImGui::TreePop();
     }
- 
+
 #endif
 }
 
@@ -415,17 +409,29 @@ void DebugUI::CheckWaveData(Wave& wave, const char* label)
     }
 #endif
 }
-void DebugUI::CheckPointLightData(PointLight& pointLight, const char* label)
+void DebugUI::CheckPointLightData()
 {
 #ifdef USE_IMGUI
-    if (ImGui::TreeNode(label)) {
-        CheckColor(pointLight.color, "color");
-        ImGui::SliderFloat("intensity", &pointLight.intensity, 0.0f, 100.0f);
-        ImGui::DragFloat3("position", &pointLight.position.x, 0.03f, -10000.0f, 10000.0f);
-        ImGui::SliderFloat("radius", &pointLight.radius, 0.0f, 100.0f);
-        ImGui::SliderFloat("decay", &pointLight.decay, 0.0f, 100.0f);
-        ImGui::TreePop();
+
+    ImGui::Begin("PointLight");
+
+    for (int i = 0; i < PointLightManager::kMaxData_; ++i) {
+
+        if (ImGui::TreeNode(("light " + std::to_string(i)).c_str())) {
+            PointLight& pointLight = PointLightManager::GetData(i);
+            CheckColor(pointLight.color, "color");
+            ImGui::SliderFloat("intensity", &pointLight.intensity, 0.0f, 100.0f);
+            ImGui::DragFloat3("position", &pointLight.position.x, 0.03f, -10000.0f, 10000.0f);
+            ImGui::SliderFloat("radius", &pointLight.radius, 0.0f, 100.0f);
+            ImGui::SliderFloat("decay", &pointLight.decay, 0.0f, 100.0f);
+            ImGui::TreePop();
+
+        }
+
     }
+
+    ImGui::End();
+
 #endif
 }
 void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
@@ -438,9 +444,7 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
         ShowMatrix4x4(object3d.worldTransform_.matWorld_);
 
         CheckMaterial(object3d.GetMaterial(), "material");
-        CheckColor(object3d.GetColor(), "modelColor");//一応マテリアルについている
         CheckTransform(object3d.GetUVTransform(), "uvTransfrom");
-        CheckLightMode(object3d.GetLightMode(), "GetLightMode");
 
         CheckWaveData(object3d.GetWaveData(0), "wave0");
         CheckWaveData(object3d.GetWaveData(1), "wave1");
@@ -530,10 +534,7 @@ void DebugUI::CheckTransforms(Vector3& scale, Vector3& rotate, Vector3& translat
 };
 void DebugUI::CheckColor(Vector4& color, const char* label) {
 #ifdef USE_IMGUI
-    if (ImGui::TreeNode(label)) {
-        ImGui::ColorEdit4("color", (float*)&color);
-        ImGui::TreePop();
-    }
+    ImGui::ColorEdit4("color", (float*)&color);
 #endif
 }
 
@@ -541,8 +542,9 @@ void DebugUI::CheckMaterial(Material& material, const char* label) {
 #ifdef USE_IMGUI
     if (ImGui::TreeNode(label)) {
         CheckColor(material.color, "color");
-        CheckLightMode(material.lightMode, "material");
+        CheckLightMode(material.lightMode, "lightMode");
         ImGui::SliderFloat("shininess", &material.shininess, 0.0f, 100.0f);
+        ShowMatrix4x4(material.uvTransform, "uvMatrix");
         ImGui::TreePop();
     }
 #endif
@@ -620,11 +622,11 @@ void DebugUI::CheckCaracterState(CharacterState& characterState, const char* lab
     ImGui::Begin(label);
     if (ImGui::TreeNode(label)) {
 
-        ImGui::SliderInt("Maxhp",&characterState.hps.maxHp,0,500);
-        ImGui::SliderInt("hp",&characterState.hps.hp,0, characterState.hps.maxHp);
+        ImGui::SliderInt("Maxhp", &characterState.hps.maxHp, 0, 500);
+        ImGui::SliderInt("hp", &characterState.hps.hp, 0, characterState.hps.maxHp);
 
         ImGui::Checkbox("isDead", &characterState.isDead);
-        ImGui::Checkbox( "isHit", &characterState.isHit );
+        ImGui::Checkbox("isHit", &characterState.isHit);
 
         ImGui::TreePop();
     }

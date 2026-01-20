@@ -144,8 +144,7 @@ void MyEngine::Debug()
     DebugUI::CheckSound();
     DebugUI::CheckDirectionalLight();
     DebugUI::CheckSpotLight();
-    DebugUI::CheckPointLightData(PointLightManager::GetPointLightData(0), "pointLight0");
-    DebugUI::CheckPointLightData(PointLightManager::GetPointLightData(1), "pointLight1");
+    DebugUI::CheckPointLightData();
 
     SceneManager::Debug();
 

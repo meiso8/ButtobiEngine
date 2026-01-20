@@ -123,7 +123,7 @@ void AnimationObject3d::Draw(Camera& camera, const BlendMode& blendMode, const C
         //ライトのCBufferの場所を設定
         DirectionalLightManager::SetGraphicsRootConstantBufferView();
         PointLightManager::SetGraphicsRootDescriptorTable();
-        SpotLightManager::SetGraphicsRootConstantBufferView();
+        SpotLightManager::SetGraphicsRootDescriptorTable();
         skinningModel_->Draw(commandList_);
     }
 

@@ -17,7 +17,7 @@ void InputLayout::Create() {
     inputElementDescs_[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;//RGB
     inputElementDescs_[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 
-    //float32_t3 worldPosition : POSITION0;
+    //float3 worldPosition : POSITION0;
     inputElementDescs_[3].SemanticName = "POSITION";
     inputElementDescs_[3].SemanticIndex = 1;
     inputElementDescs_[3].Format = DXGI_FORMAT_R32G32B32_FLOAT;//RGB

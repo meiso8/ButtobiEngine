@@ -5,7 +5,7 @@ ConstantBuffer<TransformationMatrix> gTransformationMatrix : register(b0);
 ConstantBuffer<Balloon> gBalloon : register(b1);
 StructuredBuffer<Wave> gWave : register(t1);
 
-StructuredBuffer<Well> gMatrixPalette : register(t5);
+StructuredBuffer<Well> gMatrixPalette : register(t6);
 
 
 Skinned Skinning(VertexShaderInput input)
@@ -40,23 +40,20 @@ float WaveUpdate(VertexShaderInput input)
     float Dot2 = dot(input.position, normalize(gWave[1].direction) * gWave[1].frequency);
     float Wave2 = cos(gWave[1].time + Dot2) * gWave[1].amplitude;
     
-    //float Dot2 = dot(pow(input.position, 2), normalize(gWave[1].direction));
-    //float Wave2 = sin(gWave[1].time + Dot2) * gWave[1].amplitude;
-    
     return Wave1 + Wave2;
 }
 
-float32_t3 BalloonUpdate(VertexShaderInput input)
+float3 BalloonUpdate(VertexShaderInput input)
 {
-    float32_t3 output;
+    float3 output;
     
     output = input.normal * gBalloon.expansion;
     return output;
 }
 
-float32_t4 SphereUpdate(VertexShaderInput input)
+float4 SphereUpdate(VertexShaderInput input)
 {
-    float32_t4 output;
+    float4 output;
     
     output.xyz = lerp(input.position.xyz, normalize(input.position.xyz), gBalloon.sphere);
     output.w = input.position.w;
@@ -64,9 +61,9 @@ float32_t4 SphereUpdate(VertexShaderInput input)
     return output;
 }
 
-float32_t4 CubeUpdate(VertexShaderInput input)
+float4 CubeUpdate(VertexShaderInput input)
 {
-    float32_t4 output;
+    float4 output;
     
     output.xyz = lerp(input.position.xyz, clamp(normalize(input.position.xyz), -0.5f, 0.5f), gBalloon.cube);
     output.w = input.position.w;
