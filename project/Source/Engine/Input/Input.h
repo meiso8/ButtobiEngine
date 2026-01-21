@@ -28,7 +28,7 @@ public:
     Input(Input&) = delete;
     Input& operator=(Input&) = delete;
     ~Input();
-
+    static void SetShowCursor(const bool flag);
     HRESULT Initialize(Window& window);
     /// @brief キーを押した状態 
     static bool IsPushKey(const uint8_t& key);
@@ -104,6 +104,7 @@ public:
 
     static bool IsControllerDeadZone(BYTE& triggerButton);
     static Vector2& GetCursorPosition();
+    static void SetCursorPosition(const Vector2& pos);
 private:
     static Window* window_;
     IDirectInputDevice8* keyboard_ = nullptr;
@@ -115,7 +116,7 @@ private:
     static DIMOUSESTATE mouseState_;
     static DIMOUSESTATE preMouseState_;	// マウス情報(変化検知用)
 
-    static std::array <bool ,4>isControllerConnected_;
+    static std::array <bool, 4>isControllerConnected_;
 
     static std::array <XINPUT_STATE, 4>xinputState_;
     static std::array <XINPUT_STATE, 4>preXinputState_;

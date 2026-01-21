@@ -25,16 +25,16 @@ TitleScene::TitleScene()
     exitButton_->Create(TextureFactory::Handle::BUTTON_EXIT, { 640.0f, 528.0f });
     exitButton_->SetAnchorPoint({ 0.5f, 0.5f });
 
-    for (auto& sprite : test3Spritea_) {
+    for (auto& sprite : test3Sprites_) {
         sprite = std::make_unique<Sprite>();
         sprite->Create(TextureFactory::Handle::TEST3, { 0.0f, 360.0f });
         sprite->SetSize({ static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()) *0.5f});
         sprite->SetUVScale({ 0.5f,1.0f,1.0f });
     }
 
-    for (int i = 0; i < test3Spritea_.size(); ++i) {
-        test3Spritea_[i]->SetUVTranslate({ 0.0f, 0.0f, 0.0f });
-        test3Spritea_[i]->SetPosition({ 0.0f, test3Spritea_[i]->GetSize().y * i });
+    for (int i = 0; i < test3Sprites_.size(); ++i) {
+        test3Sprites_[i]->SetUVTranslate({ 0.0f, 0.0f, 0.0f });
+        test3Sprites_[i]->SetPosition({ 0.0f, test3Sprites_[i]->GetSize().y * i });
 
     }
 
@@ -47,8 +47,8 @@ TitleScene::~TitleScene()
 void TitleScene::Initialize()
 {
     timer_ = 0.0f;
-        for (int i = 0; i < test3Spritea_.size(); ++i) {
-            test3Spritea_[i]->SetUVTranslate({ 0.0f, 0.0f, 0.0f });
+        for (int i = 0; i < test3Sprites_.size(); ++i) {
+            test3Sprites_[i]->SetUVTranslate({ 0.0f, 0.0f, 0.0f });
         }
 
         isHoverStartButton_ = false;
@@ -69,10 +69,10 @@ void TitleScene::Update()
     float scale = sinf(timer_) * 0.125f+1.25f;
     titleSprite_->SetScale({ scale,scale });
 
-    test3Spritea_[0]->GetUVTranslate().x += 0.001f;
-    test3Spritea_[1]->GetUVTranslate().x -= 0.001f;
+    test3Sprites_[0]->GetUVTranslate().x += 0.001f;
+    test3Sprites_[1]->GetUVTranslate().x -= 0.001f;
 
-    for (auto& sprite : test3Spritea_) {
+    for (auto& sprite : test3Sprites_) {
         sprite->Update();
     }
     Vector2 mousePos = Input::GetCursorPosition();
@@ -129,7 +129,7 @@ void TitleScene::Update()
 void TitleScene::Draw()
 {
     Sprite::PreDraw();
-    for (auto& sprite : test3Spritea_) {
+    for (auto& sprite : test3Sprites_) {
         sprite->Draw();
     }
     titleSprite_->Draw();

@@ -1,4 +1,4 @@
-#include"Input.h"
+                                                                                                                                                                                                                                                                                                      #include"Input.h"
 #include <cassert>
 #pragma comment(lib,"dinput8.lib")
 #pragma comment(lib,"dxguid.lib")
@@ -16,7 +16,7 @@ DIMOUSESTATE Input::preMouseState_;
 
 std::array <XINPUT_STATE, 4>Input::xinputState_;
 std::array <XINPUT_STATE, 4>Input::preXinputState_;
- Window* Input::window_ = nullptr;
+Window* Input::window_ = nullptr;
 
 std::array <bool, 4>Input::isControllerConnected_;
 
@@ -151,7 +151,7 @@ void Input::Update() {
     //マウスの状態を取得する
     mouse_->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState_);
 
-   
+
     for (int i = 0; i < 4; ++i) {
         if (isControllerConnected_[i]) {
             memcpy(&preXinputState_[i], &xinputState_[i], sizeof(XINPUT_STATE));
@@ -163,7 +163,7 @@ void Input::Update() {
     }
 }
 
-bool Input::IsControllerStickPosMove(ButtonType index, DWORD dwUserIndex,Vector2* pos)
+bool Input::IsControllerStickPosMove(ButtonType index, DWORD dwUserIndex, Vector2* pos)
 {
     if (isControllerConnected_[dwUserIndex])
     {
@@ -178,7 +178,7 @@ bool Input::IsControllerStickPosMove(ButtonType index, DWORD dwUserIndex,Vector2
         } else if (index == ButtonType::BUTTON_RIGHT) {
             SHORT rx = xinputState_[dwUserIndex].Gamepad.sThumbRX; // 右スティックX軸
             SHORT ry = xinputState_[dwUserIndex].Gamepad.sThumbRY; // 右スティックY軸
-            if (IsControllerStickMove(rx,ry))
+            if (IsControllerStickMove(rx, ry))
             {
                 *pos = NormalizeButtonCount(xinputState_[dwUserIndex].Gamepad.sThumbRX, xinputState_[dwUserIndex].Gamepad.sThumbRY);
                 return true;
@@ -200,7 +200,7 @@ bool Input::IsControllerStickPosMoveTrigger(ButtonType index, DWORD dwUserIndex,
             SHORT preLx = preXinputState_[dwUserIndex].Gamepad.sThumbLX; // 右スティックX軸
             SHORT preLy = preXinputState_[dwUserIndex].Gamepad.sThumbLY; // 右スティックY軸
 
-            if (IsControllerStickMove(lx, ly)&& !IsControllerStickMove(preLx, preLy))
+            if (IsControllerStickMove(lx, ly) && !IsControllerStickMove(preLx, preLy))
             {
                 *pos = NormalizeButtonCount(lx, ly);
                 return true;
@@ -235,7 +235,7 @@ Vector2 Input::NormalizeButtonCount(SHORT& buttonX, SHORT& buttonY)
     float normY = (static_cast<float>(buttonY) / SHRT_MAX);
 
     normX = std::clamp(normX, -1.0f, 1.0f);
-    normY =  std::clamp(normY, -1.0f, 1.0f);
+    normY = std::clamp(normY, -1.0f, 1.0f);
 
     //if (absX == 1.0f || absY < deadZone_) {
     //    normY = 0.0f;
@@ -245,7 +245,7 @@ Vector2 Input::NormalizeButtonCount(SHORT& buttonX, SHORT& buttonY)
     //    normX = 0.0f;
     //}
 
-    return  {normX,normY };
+    return  { normX,normY };
 
 }
 
@@ -361,6 +361,11 @@ Vector2& Input::GetCursorPosition()
     return cursorPos;
 }
 
+void Input::SetCursorPosition(const Vector2& pos)
+{
+    SetCursorPos(static_cast<int>(pos.x), static_cast<int>(pos.y));
+}
+
 bool Input::IsPressMouse(uint32_t index) {
     assert(index < 4);
     return (mouseState_.rgbButtons[index] & 0x80) ? true : false;
@@ -405,4 +410,9 @@ Input::~Input() {
     mouse_->Unacquire();
     mouse_->Release();
     mouse_ = nullptr;
+}
+
+void Input::SetShowCursor(const bool flag)
+{
+    ShowCursor(flag);
 }
