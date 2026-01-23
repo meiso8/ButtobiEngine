@@ -66,6 +66,7 @@ void PauseScreen::Update()
             isActive_ = true;
             selectButtonNum_ = kBackToGame;
             Input::SetShowCursor(true);
+
             float width = static_cast<float>(Window::GetClientWidth());
             float height = static_cast<float>(Window::GetClientHeight());
 
@@ -76,6 +77,10 @@ void PauseScreen::Update()
         isPause_ = false;
         isActive_ = false;
         Input::SetShowCursor(false);
+#ifdef _DEBUG
+        Input::SetShowCursor(true);
+#endif
+
     }
 
     for (int i = 0; i < sprites_.size(); ++i) {
