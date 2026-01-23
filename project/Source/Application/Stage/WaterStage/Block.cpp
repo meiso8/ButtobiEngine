@@ -174,12 +174,12 @@ void BlockMap::Update() {
         }
     }
 
-#ifdef _DEBUG
+#ifdef _DEVELOP
 
     if (ImGui::Button("isBlockClear")) {
         ClearSet();
     }
-#endif // _DEBUG
+#endif //_DEVELOP
     if (isClear_) {
         return;
     }

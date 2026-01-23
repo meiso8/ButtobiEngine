@@ -381,7 +381,7 @@ void SampleScene::CreateParticle()
 
 void SampleScene::Draw() {
 
-#ifdef _DEBUG
+#ifdef _DEVELOP
 
     DrawGrid::Draw(*currentCamera_);
 

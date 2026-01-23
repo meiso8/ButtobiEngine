@@ -77,7 +77,7 @@ void PauseScreen::Update()
         isPause_ = false;
         isActive_ = false;
         Input::SetShowCursor(false);
-#ifdef _DEBUG
+#ifdef _DEVELOP
         Input::SetShowCursor(true);
 #endif
 

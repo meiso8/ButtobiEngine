@@ -6,10 +6,10 @@ BaseScene::BaseScene()
     sceneChange_ = std::make_unique<SceneChange>();
 
     camera_ = std::make_unique<Camera>();
-#ifdef _DEBUG
+#ifdef _DEVELOP
     // デバッグカメラの初期化
     debugCamera_ = std::make_unique<DebugCamera>();
-#endif // _DEBUG
+#endif //_DEVELOP
 }
 
 void BaseScene::Initialize()
@@ -85,7 +85,6 @@ void SceneManager::Draw()
 
 void SceneManager::Debug()
 {
-#ifdef _DEBUG
 
 #ifdef USE_IMGUI
     for (const auto& [name, scene] : scenes_) {
@@ -96,7 +95,7 @@ void SceneManager::Debug()
 
 #endif // USE_IMGUI
     currentScene_->Debug();
-#endif
+
 }
 
 void SceneManager::SetMap(const std::string& name, std::unique_ptr<BaseScene> scene)
