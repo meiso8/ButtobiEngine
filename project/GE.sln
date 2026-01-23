@@ -12,7 +12,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTex", "externals\Dir
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "externals", "externals", "{DDB4EF12-CC4E-5E88-E6FC-71A802F4DE97}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CG2", "Project1.vcxproj", "{0BDF6D0F-7DC9-4BE0-84EE-3F1A8B776470}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CG3", "Project1.vcxproj", "{0BDF6D0F-7DC9-4BE0-84EE-3F1A8B776470}"
+	ProjectSection(ProjectDependencies) = postProject
+		{881E02E6-598A-4BEA-8833-91E253C333DB} = {881E02E6-598A-4BEA-8833-91E253C333DB}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "freetype", "externals\freetype\freetype.vcxproj", "{881E02E6-598A-4BEA-8833-91E253C333DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,12 +38,19 @@ Global
 		{0BDF6D0F-7DC9-4BE0-84EE-3F1A8B776470}.Development|x64.Build.0 = Development|x64
 		{0BDF6D0F-7DC9-4BE0-84EE-3F1A8B776470}.Release|x64.ActiveCfg = Release|x64
 		{0BDF6D0F-7DC9-4BE0-84EE-3F1A8B776470}.Release|x64.Build.0 = Release|x64
+		{881E02E6-598A-4BEA-8833-91E253C333DB}.Debug|x64.ActiveCfg = Debug|x64
+		{881E02E6-598A-4BEA-8833-91E253C333DB}.Debug|x64.Build.0 = Debug|x64
+		{881E02E6-598A-4BEA-8833-91E253C333DB}.Development|x64.ActiveCfg = Release|x64
+		{881E02E6-598A-4BEA-8833-91E253C333DB}.Development|x64.Build.0 = Release|x64
+		{881E02E6-598A-4BEA-8833-91E253C333DB}.Release|x64.ActiveCfg = Release|x64
+		{881E02E6-598A-4BEA-8833-91E253C333DB}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{371B9FA9-4C90-4AC6-A123-ACED756D6C77} = {DDB4EF12-CC4E-5E88-E6FC-71A802F4DE97}
+		{881E02E6-598A-4BEA-8833-91E253C333DB} = {DDB4EF12-CC4E-5E88-E6FC-71A802F4DE97}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0F8FCCDB-BCBB-40C5-8CA7-D2BE2B625B5B}
