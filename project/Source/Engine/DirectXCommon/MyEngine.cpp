@@ -95,7 +95,7 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     JsonFile::LoadAllJsonFile();
     LogFile::Log("LoadAllJsonFile");
 
-#ifdef _DEBUG
+#ifdef _DEVELOP
     //グリット描画
     DrawGrid::Create();
     LogFile::Log("CreateDrawGrid");
@@ -208,7 +208,7 @@ void MyEngine::Finalize() {
 
     ModelManager::Finalize();
 
-#ifdef _DEBUG
+#ifdef _DEVELOP
     //グリットを解放
     DrawGrid::Finalize();
 

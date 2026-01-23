@@ -77,7 +77,9 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>FT2_BUILD_LIBRARY</PreprocessorDefinitions>
+
+      <PreprocessorDefinitions>USE_IMGUI;_DEVELOPFT2_BUILD_LIBRARY</PreprocessorDefinitions>
+
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
@@ -105,7 +107,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>FT2_BUILD_LIBRARY</PreprocessorDefinitions>
+
+      <PreprocessorDefinitions>USE_IMGUI;FT2_BUILD_LIBRARY</PreprocessorDefinitions>
+
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
@@ -134,7 +138,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>FT2_BUILD_LIBRARY</PreprocessorDefinitions>
+
+      <PreprocessorDefinitions>USE_IMGUI;_DEVELOP;FT2_BUILD_LIBRARY</PreprocessorDefinitions>
+
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>

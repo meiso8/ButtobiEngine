@@ -33,9 +33,9 @@ void Game::Draw()
 void Game::Debug()
 {
 
-#ifdef _DEBUG
+#ifdef USE_IMGUI
     // デバック用
     MyEngine::Debug();
-#endif // _DEBUG
+#endif // USE_IMGUI
 
 }

@@ -1,3 +1,4 @@
+#define UNICODE
 #include "Window.h"
 #include"ImGuiClass.h"
 
@@ -19,7 +20,7 @@ int32_t Window::clientHeight_ = 720;
 // ウィンドウプロシージャ
 LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
-#ifdef _DEBUG
+#ifdef USE_IMGUI
 
     //ImGuiにメッセージを渡す
     if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam)) {

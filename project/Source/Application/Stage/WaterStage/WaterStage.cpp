@@ -46,6 +46,8 @@ void WaterStage::Update()
 
     water_->Update();
     papyrusWall_->Update();
+
+
 }
 
 void WaterStage::Draw(Camera& camera)

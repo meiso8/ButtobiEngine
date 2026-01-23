@@ -7,6 +7,7 @@
 #include"CollisionConfig.h"
 #include"InputBind.h"
 #include"../System/CollisionManager.h"
+#include"../Engine/ImGui/DebugUI.h"
 Block::Block()
 {
     SetType(kAABB);
@@ -173,6 +174,12 @@ void BlockMap::Update() {
         }
     }
 
+#ifdef _DEVELOP
+
+    if (ImGui::Button("isBlockClear")) {
+        ClearSet();
+    }
+#endif //_DEVELOP
     if (isClear_) {
         return;
     }
@@ -195,22 +202,7 @@ void BlockMap::Update() {
                 // 正しい順番と一致したら水を引く！
                 if (steppedOrder_ == correctOrder_) {
                     if (!isClear_) {
-                        isClear_ = true;
-                        SoundManager::PlayCorrectSE();
-                        SoundManager::PlayGOGOGOSE();
-                        for (auto& center : centerBlocks_) { if (center) {
-                            center->SetEndPos(-1.5f);
-                            center->SetIsPush(true);
-                            center->InitAnitimer();
-                        } }
-
-                        for (auto& round : roundBlocks_) {
-                            if (round) {
-                                round->SetEndPos(-1.0f);
-                                round->SetIsPush(true);
-                                round->InitAnitimer();
-                            }
-                        }
+                        ClearSet();
                         return;
                     }
                 }
@@ -280,4 +272,26 @@ void BlockMap::RayCastHit(RaySprite& raySprite)
     }
 
 
+}
+
+void BlockMap::ClearSet()
+{
+    isClear_ = true;
+    SoundManager::PlayCorrectSE();
+    SoundManager::PlayGOGOGOSE();
+    for (auto& center : centerBlocks_) {
+        if (center) {
+            center->SetEndPos(-1.5f);
+            center->SetIsPush(true);
+            center->InitAnitimer();
+        }
+    }
+
+    for (auto& round : roundBlocks_) {
+        if (round) {
+            round->SetEndPos(-1.0f);
+            round->SetIsPush(true);
+            round->InitAnitimer();
+        }
+    }
 }
