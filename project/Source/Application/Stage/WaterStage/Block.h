@@ -52,4 +52,5 @@ private:
     std::vector<TextureFactory::Handle> correctOrder_ = { TextureFactory::HIERO_S, TextureFactory::HIERO_P, TextureFactory::HIERO_D, TextureFactory::HIERO_T };
     std::vector<TextureFactory::Handle> steppedOrder_;
     bool isClear_ = false;
+    void ClearSet();
 };
