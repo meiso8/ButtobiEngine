@@ -1,0 +1,36 @@
+﻿  ftbase.c
+C:\Users\k024g\Lessons\GE3\project\externals\freetype\src\base\ftrfork.c(883,7): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  (ソース ファイル 'src/base/ftbase.c' をコンパイルしています)
+  
+C:\Users\k024g\Lessons\GE3\project\externals\freetype\src\base\ftrfork.c(895,5): error C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  (ソース ファイル 'src/base/ftbase.c' をコンパイルしています)
+  
+C:\Users\k024g\Lessons\GE3\project\externals\freetype\src\base\ftrfork.c(896,5): error C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  (ソース ファイル 'src/base/ftbase.c' をコンパイルしています)
+  
+  ftinit.c
+C:\Users\k024g\Lessons\GE3\project\externals\freetype\src\base\ftinit.c(125,11): error C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  ftsystem.c
+C:\Users\k024g\Lessons\GE3\project\externals\freetype\src\base\ftsystem.c(253,12): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  sfnt.c
+C:\Users\k024g\Lessons\GE3\project\externals\freetype\src\sfnt\sfdriver.c(859,13): warning C4267: '=': 'size_t' から 'FT_UInt' に変換しました。データが失われているかもしれません。
+  (ソース ファイル 'src/sfnt/sfnt.c' をコンパイルしています)
+  
+C:\Users\k024g\Lessons\GE3\project\externals\freetype\src\sfnt\sfdriver.c(1011,36): warning C4244: '関数': '__int64' から 'const unsigned int' への変換です。データが失われる可能性があります。
+  (ソース ファイル 'src/sfnt/sfnt.c' をコンパイルしています)
+  
+C:\Users\k024g\Lessons\GE3\project\externals\freetype\src\sfnt\sfdriver.c(935,9): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  (ソース ファイル 'src/sfnt/sfnt.c' をコンパイルしています)
+  
+C:\Users\k024g\Lessons\GE3\project\externals\freetype\src\sfnt\sfdriver.c(967,7): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  (ソース ファイル 'src/sfnt/sfnt.c' をコンパイルしています)
+  
+C:\Users\k024g\Lessons\GE3\project\externals\freetype\src\sfnt\ttload.c(1,1): warning C4819: ファイルは、現在のコード ページ (932) で表示できない文字を含んでいます。データの損失を防ぐために、ファイルを Unicode 形式で保存してください。
+  (ソース ファイル 'src/sfnt/sfnt.c' をコンパイルしています)
+  
+  smooth.c
+C:\Users\k024g\Lessons\GE3\project\externals\freetype\src\smooth\ftgrays.c(1978,20): warning C4267: '+=': 'size_t' から 'TCoord' に変換しました。データが失われているかもしれません。
+  (ソース ファイル 'src/smooth/smooth.c' をコンパイルしています)
+  
+  winfnt.c
+  コードを生成中...

@@ -11,6 +11,8 @@
 #include"TimeManager.h"
 #include"Memo/MemoManager.h"
 
+
+
 bool PauseScreen::isActive_ = false;
 bool PauseScreen::isPause_ = false;
 bool PauseScreen::isBackToTitle = false;
