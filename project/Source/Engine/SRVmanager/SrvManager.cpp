@@ -5,6 +5,8 @@
 #include<cassert>
 using namespace Microsoft::WRL;
 
+
+
 uint32_t SrvManager::useIndex = 0;
 const uint32_t SrvManager::kMaxSRVCount = 512;
 uint32_t SrvManager::descriptorSize = 0;

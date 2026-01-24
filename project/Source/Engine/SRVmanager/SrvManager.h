@@ -4,6 +4,8 @@
 #include<wrl.h>
 #include<stdint.h>
 
+
+
 class SrvManager
 {
 public:
