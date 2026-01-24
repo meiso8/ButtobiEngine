@@ -15,7 +15,7 @@ unordered_map<uint32_t, unique_ptr<Sprite>> FreeTypeManager::sprites_;
 
 void FreeTypeManager::Initialize()
 {
-    //ライブラリの初期化
+    //ライブラリの初期化　error　== 0 で成功
     FT_Error error = FT_Init_FreeType(&library_);
 
     if (error == 0) {
@@ -25,9 +25,9 @@ void FreeTypeManager::Initialize()
         //失敗
         std::string msg = "FT_Init_FreeType failed!: " + std::to_string(error) + "\n";
         DebugLog(msg);
+        assert(false);
     }
 
-    assert(!error);
 }
 
 
@@ -35,7 +35,7 @@ uint32_t FreeTypeManager::CreateFace(const string& fontPath, const uint32_t inde
 {
 
     uint32_t handle = static_cast<uint32_t>(glyphTextures_.size());
-   
+
     if (glyphTextures_.contains(handle)) {
         return handle;
     }
@@ -47,7 +47,7 @@ uint32_t FreeTypeManager::CreateFace(const string& fontPath, const uint32_t inde
         std::ifstream file(fontPath, std::ios::binary | std::ios::ate);
         if (!file) {
             std::string msg = "Cannot Open File: " + fontPath + "\n";
-            DebugLog(msg);   
+            DebugLog(msg);
             assert(false);
         }
 
@@ -60,7 +60,7 @@ uint32_t FreeTypeManager::CreateFace(const string& fontPath, const uint32_t inde
             DebugLog("CannotLoadFontData\n");
             assert(false);
         }
-      
+
     }
 
 
@@ -77,7 +77,7 @@ uint32_t FreeTypeManager::CreateFace(const string& fontPath, const uint32_t inde
     } else if (err)
     {
         std::string msg = "FT_New_Memory_Face failed!: " + std::to_string(err) + "\n";
-        DebugLog(msg); 
+        DebugLog(msg);
     }
 
     assert(!err);
@@ -113,7 +113,7 @@ void FreeTypeManager::Finalize()
 
         //faceの破棄
         FT_Done_Face(data.ftData.face);
-      
+
 
     }
 
@@ -154,7 +154,7 @@ void FreeTypeManager::GetBitMapGlyph(uint32_t faceIndex, FT_UInt glyphIndex)
     //(オプション)face->glyphをラスタライズする
     if (FT_Render_Glyph(glyph, FT_RENDER_MODE_NORMAL)) {
         DebugLog("FT_Render_Glyph failed!\n");
-        return;
+        assert(false);
     }
 
     if (glyph->format == FT_GLYPH_FORMAT_BITMAP &&
@@ -177,21 +177,22 @@ void FreeTypeManager::GetOutLineGlyph(uint32_t handle, FT_UInt glyphIndex, uint3
     if (!face) {
         std::string msg = "face[" + std::to_string(handle) + "] is invalid\n";
         DebugLog(msg);
-        return;
+        assert(false);
     }
 
     auto& glyph = face->glyph;
 
     if (glyph->format != FT_GLYPH_FORMAT_OUTLINE) {
         DebugLog("This Glyph is not OutLineGlyph type\n");
-        return;
+        assert(false);
     }
 
     //サイズにスケーリング・ヒンティングしたものを取得する場合
-    if (FT_Set_Pixel_Sizes(face, width, height)) { DebugLog("Failed to Set_Pixel_Sizes\n"); return; }
+    if (FT_Set_Pixel_Sizes(face, width, height)) { DebugLog("Failed to Set_Pixel_Sizes\n");  assert(false); }
 
     //(オプション)glyph->outlineをラスタライズする
-    if (FT_Render_Glyph(glyph, FT_RENDER_MODE_LCD)) { DebugLog("Glyph rasterization failed!\n"); return; }
+    if (FT_Render_Glyph(glyph, FT_RENDER_MODE_LCD)) { DebugLog("Glyph rasterization failed!\n");  assert(false);
+    }
 }
 
 void FreeTypeManager::Draw(uint32_t faceIndex)
@@ -312,7 +313,7 @@ void FreeTypeManager::CreateSprite(uint32_t handle)
     }
 
     auto& data = glyphTextures_.at(handle);
-    auto& bitmap = data.ftData.face -> glyph->bitmap;
+    auto& bitmap = data.ftData.face->glyph->bitmap;
 
     if (!bitmap.buffer) {
         DebugLog("bitmap.buffer is null\n");
@@ -382,13 +383,13 @@ FT_UInt FreeTypeManager::GetGlyphID(uint32_t handle, uint32_t unicode, uint32_t 
             // フォールバック文字（例: '?'）
             glyphIndex = FT_Get_Char_Index(face, '?');
 
-            if (glyphIndex == 0) { 
-                DebugLog("Fallback glyph '?' not found either!\n"); 
+            if (glyphIndex == 0) {
+                DebugLog("Fallback glyph '?' not found either!\n");
             }
 
             assert(glyphIndex);
         }
- 
+
         return glyphIndex;
 
     } else {
@@ -403,19 +404,13 @@ void FreeTypeManager::GetBitMap(uint32_t handle, FT_UInt glyphIndex, FT_Int stri
     auto& data = glyphTextures_.at(handle);
     auto& face = data.ftData.face;
 
+    //ビットマップグリフを取得する 
+    if (FT_Select_Size(face, strikeIndex)) { assert(false); }
+    //グリフを読み込む
+    if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT)) { assert(false); }
 
-    //ビットマップグリフを取得する err == 0正常
-    FT_Error err = FT_Select_Size(face, strikeIndex);
-    assert(err);
-
-    err = FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT);
-    assert(err);
-
-    if (face->glyph->format == FT_GLYPH_FORMAT_BITMAP) {
-        //FT_GLYPH_FORMAT_BITMAPなら埋め込みビットマップ 
-        // face->glyph->bitmapに（多くの場合モノクロの）ビットマップが入ってる
-        DebugLog("FT_GLYPH_FORMAT_BITMAP\n");
-    }
+    //face->glyph->format == FT_GLYPH_FORMAT_BITMAPなら埋め込みビットマップ 
+    // face->glyph->bitmapに（多くの場合モノクロの）ビットマップが入ってる
 
 
 }
