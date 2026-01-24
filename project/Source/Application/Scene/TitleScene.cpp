@@ -9,6 +9,7 @@
 #include"InputBind.h"
 #include"Window.h"
 #include"TimeManager.h"
+#include"Log.h"
 TitleScene::TitleScene()
 {
     //タイトル画像 
@@ -37,6 +38,16 @@ TitleScene::TitleScene()
         test3Sprites_[i]->SetPosition({ 0.0f, test3Sprites_[i]->GetSize().y * i });
 
     }
+
+    ft_.Initialize();
+    ft_.SetTTF("Resource/Fonts/NotoSansEgyptianHieroglyphs-Regular.ttf", 0, 0);
+    char32_t ch = 0x13000; // エジプト象形文字の最初の文字
+    ft_.SetPixelSizes(0, 64, 64); 
+    FT_UInt glyphIndex = ft_.GetGlyphID(0, ch, 0); // faceIndex=0, uvs=0
+    if (glyphIndex == 0) { DebugLog("GlyphNotFound\n"); return; }
+    ft_.GetBitMapGlyph(0, glyphIndex);
+
+    ft_.CreateSprite(0);
 
 }
 
@@ -128,15 +139,18 @@ void TitleScene::Update()
 
 void TitleScene::Draw()
 {
-    Sprite::PreDraw();
-    for (auto& sprite : test3Sprites_) {
-        sprite->Draw();
-    }
-    titleSprite_->Draw();
-    startButton_->Draw();
-    exitButton_->Draw();
+    //Sprite::PreDraw();
+    //for (auto& sprite : test3Sprites_) {
+    //    sprite->Draw();
+    //}
+    //titleSprite_->Draw();
+    //startButton_->Draw();
+    //exitButton_->Draw();
 
-    sceneChange_->Draw();
+    //sceneChange_->Draw();
+
+    ft_.Draw(0);
+
 }
 
 void TitleScene::Debug()

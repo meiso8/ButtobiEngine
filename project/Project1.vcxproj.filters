@@ -513,6 +513,15 @@
     <ClCompile Include="Source\Application\Loader\TextureFactory.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\FreeTypeManager\FreeTypeManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\freetype\src\cff\cff.c">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\freetype\src\pcf\pcf.c">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -1028,6 +1037,12 @@
     <ClInclude Include="Source\Application\Loader\TextureFactory.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Engine\FreeTypeManager\FreeTypeManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\freetype\src\pcf\pcf.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
@@ -1035,12 +1050,10 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="externals\assimp\lib\Debug\assimp-vc143-mdd.lib">
-      <Filter>externals\assimp</Filter>
-    </Library>
     <Library Include="externals\assimp\lib\Debug\assimp-vc143-mtd.lib">
       <Filter>externals\assimp</Filter>
     </Library>
+    <Library Include="externals\assimp\lib\Release\assimp-vc143-mt.lib" />
   </ItemGroup>
   <ItemGroup>
     <None Include="externals\assimp\lib\Debug\assimp-vc143-mtd.pdb">
@@ -1068,5 +1081,8 @@
     <Image Include="Resources\white1x1.png">
       <Filter>リソース ファイル</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Resource\Fonts\NotoSansEgyptianHieroglyphs-Regular.ttf" />
   </ItemGroup>
 </Project>

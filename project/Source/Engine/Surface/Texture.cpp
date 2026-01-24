@@ -45,6 +45,19 @@ uint32_t Texture::AddTextureHandle(const std::string& filePath) {
     return srvIndex;
 }
 
+void Texture::AddTextureHandleByIndex(const uint32_t& srvIndex)
+{
+    // すでに登録済みならおしまい
+    for (uint32_t existing : srvIndexes_) {
+        if (existing == srvIndex) {
+            return;
+        }
+    }
+
+    srvIndexes_.push_back(srvIndex);
+
+}
+
 TextureFactory::Handle Texture::GetTextureHandle(const uint32_t& srvIndex)
 {
    
