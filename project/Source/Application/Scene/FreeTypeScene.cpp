@@ -3,7 +3,6 @@
 FreeTypeScene::FreeTypeScene()
 {
 
-
     handle_ = FreeTypeManager::CreateFace("Resource/Fonts/NotoSansEgyptianHieroglyphs-Regular.ttf", 0);
     FreeTypeManager::SetPixelSizes(handle_, 64, 64);
     text_.Initialize(handle_);

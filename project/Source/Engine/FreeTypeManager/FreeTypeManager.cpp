@@ -232,6 +232,15 @@ void FreeTypeManager::ShowFontSize(uint32_t faceHandle)
     }
 }
 
+void FreeTypeManager::ResetSpriteUsage()
+{
+    for (auto& [key, pool] : spritePool_) {
+        for (auto& sprite : pool) {
+            sprite->SetInUse(false);
+        }
+    }
+}
+
 const FTTextureData& FreeTypeManager::GetGlyphTextures(const GlyphKey& key) {
 
 
@@ -250,7 +259,7 @@ const FTTextureData& FreeTypeManager::GetGlyphTextures(const GlyphKey& key) {
     return it->second;
 }
 
-FTResource FreeTypeManager::CreateTextureFromFTBitmap(const FT_Bitmap& bitmap)
+FTResource FreeTypeManager::CreateResourceFromFTBitmap(const FT_Bitmap& bitmap)
 {
     using namespace Microsoft::WRL;
 
@@ -361,7 +370,7 @@ void FreeTypeManager::CreateGlyphTexture(uint32_t faceHandle, FT_UInt glyphIndex
     }
 
     FTTextureData texData;
-    texData.ftResource = CreateTextureFromFTBitmap(bitmap);
+    texData.ftResource = CreateResourceFromFTBitmap(bitmap);
 
     texData.srvIndex = SrvManager::Allocate();
     Texture::AddTextureHandleByIndex(texData.srvIndex);
@@ -529,4 +538,19 @@ float FreeTypeManager::GetMaxDescender(uint32_t handle, std::vector<GlyphRun>& r
     }
     return maxDescender;
 
+}
+
+Sprite* FreeTypeManager::GetOrCreateSprite(const GlyphKey& key)
+{
+    auto& pool = spritePool_[key];
+
+    // 未使用のスプライトを探す
+    for (auto& sprite : pool) {
+        if (!sprite->IsInUse()) {
+            sprite->SetInUse(true);
+            return sprite.get();
+        }
+    }
+    //無かったら作成する
+    return CreateSprite(key.handle, key.glyphIndex);
 }

@@ -4,7 +4,6 @@
 //FT_FREETYPE_H はマクロです。
 #include FT_FREETYPE_H
 
-
 //DirectX
 #include<wrl.h>
 #include<d3d12.h>
@@ -28,6 +27,7 @@ struct GlyphKey {
     }
 };
 
+//Hash値の設定？
 namespace std {
     template <>
     struct hash<GlyphKey> {
@@ -38,7 +38,9 @@ namespace std {
 }
 
 struct GlyphRun {
+    //文字の添え字
     FT_UInt glyphIndex;
+    //位置
     Vector2 position;
 };
 
@@ -62,13 +64,14 @@ struct FTTextureData {
     uint32_t srvIndex;
     D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU;
     D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU;
-    Vector2 glyphSize; 
+    //文字のサイズ
+    Vector2 glyphSize;
     float bearingY = 0.0f;
 };
 
 class FreeTypeManager {
 public:
-    /// @brief 初期化
+    /// @brief ライブラリの初期化
     static void Initialize();
     /// @brief 終了処理
     static void Finalize();
@@ -77,54 +80,53 @@ public:
     /// @brief Faceの生成
     /// @param fontPath .ttfや.tccを読み込む
     /// @param faceIndex .ttf の場合0でOK　.tccの場合は複数存在する
-    static uint32_t CreateFace(const std::string& fontPath, const uint32_t index);
-    static FT_UInt GetGlyphID(uint32_t handle, uint32_t unicode, uint32_t uvs);
-    static void GetBitMap(uint32_t handle, FT_UInt glyphIndex, FT_Int strikeIndex);
-    static void GetBitMapGlyph(uint32_t handle, FT_UInt glyphIndex);
-    static void GetOutLineGlyph(uint32_t handle, FT_UInt glyphIndex, uint32_t width, uint32_t height);
-    static void Draw(uint32_t handle, FT_UInt glyphIndex);
+    static uint32_t CreateFace(const std::string& fontPath, const uint32_t faceIndex);
+    /// @brief 文字のIDの取得
+    /// @param faceHandle フォントの種類
+    /// @param unicode Unicodeで入力する
+    /// @param uvs 基本的に0でいい
+    /// @return ID
+    static FT_UInt GetGlyphID(uint32_t faceHandle, uint32_t unicode, uint32_t uvs);
+    /// @brief ビットマップの取得
+    /// @param faceHandle 
+    /// @param glyphIndex 
+    /// @param strikeIndex 
+    static void GetBitMap(uint32_t faceHandle, FT_UInt glyphIndex, FT_Int strikeIndex);
+    /// @brief 
+    /// @param faceHandle 
+    /// @param glyphIndex 
+    static void GetBitMapGlyph(uint32_t faceHandle, FT_UInt glyphIndex);
+    static void GetOutLineGlyph(uint32_t faceHandle, FT_UInt glyphIndex, uint32_t width, uint32_t height);
+    static void Draw(uint32_t faceHandle, FT_UInt glyphIndex);
 
-    static Sprite* CreateSprite(uint32_t handle, FT_UInt glyphIndex);
+    static Sprite* CreateSprite(uint32_t faceHandle, FT_UInt glyphIndex);
     static void SetPixelSizes(uint32_t faceHandle, uint32_t width, uint32_t height);
-    static void ShowFontSize(uint32_t handle);
+    static void ShowFontSize(uint32_t faceHandle);
 
-    static std::vector<GlyphRun> LayoutString(uint32_t handle, const std::u32string& text, const Vector2& startPos);
-    static float GetMaxDescender(uint32_t handle, std::vector<GlyphRun>& runs);
-   static Sprite* GetOrCreateSprite(const GlyphKey& key) {
-        auto& pool = spritePool_[key];
+    static std::vector<GlyphRun> LayoutString(uint32_t faceHandle, const std::u32string& text, const Vector2& startPos);
+    static float GetMaxDescender(uint32_t faceHandle, std::vector<GlyphRun>& runs);
+    static Sprite* GetOrCreateSprite(const GlyphKey& key);
 
-        // 未使用のスプライトを探す
-        for (auto& sprite : pool) {
-            if (!sprite->IsInUse()) {
-                sprite->SetInUse(true);
-                return sprite.get();
-            }
-        }
-
-        return CreateSprite(key.handle,key.glyphIndex);
-    }
-
-    static void ResetSpriteUsage() {
-        for (auto& [key, pool] : spritePool_) {
-            for (auto& sprite : pool) {
-                sprite->SetInUse(false);
-            }
-        }
-    }
+    /// @brief エンジンでCommandQueueを送った後にリセットする
+    static void ResetSpriteUsage();
     static const FTTextureData& GetGlyphTextures(const GlyphKey& key);
 private:
-    /// @brief FreeTypeのテクスチャデータの生成
-    /// @param bitmap 
-    /// @return 
-    static FTResource CreateTextureFromFTBitmap(const FT_Bitmap& bitmap);
+    /// @brief FreeTypeのResource生成
+    /// @param bitmap bitmapを入れる
+    /// @return FTResource resource intermediateResource
+    static FTResource CreateResourceFromFTBitmap(const FT_Bitmap& bitmap);
+    /// @brief 文字のテクスチャ生成
+    /// @param handle 
+    /// @param glyphIndex 
     static void CreateGlyphTexture(uint32_t handle, FT_UInt glyphIndex);
 private:
     //一つのライブラリで複数のFaceを保持できる
     static FT_Library library_;
-    // フォントごとのFTData（faceとfontData）
+    // フォント（←注意）ごとのFTData（faceとfontData）
     static std::unordered_map<uint32_t, FTData> fontFaces_;
-    // グリフごとのテクスチャとスプライト
+    // 文字ごとのテクスチャを格納する
     static std::unordered_map<GlyphKey, FTTextureData> glyphTextures_;
-   static std::unordered_map<GlyphKey, std::vector<std::unique_ptr<Sprite>>> spritePool_;
+    //文字ごとのSpriteを格納する
+    static std::unordered_map<GlyphKey, std::vector<std::unique_ptr<Sprite>>> spritePool_;
 
 };
