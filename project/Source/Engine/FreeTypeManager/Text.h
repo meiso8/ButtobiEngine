@@ -27,8 +27,7 @@ public:
     void SetBlendMode(const BlendMode& blendMode);
     void SetSize(const Vector2 size) { size_ = size; }
     void Draw();
-    void Update();
-
+    void Debug();
 private:
     void UpdateLayout();
 

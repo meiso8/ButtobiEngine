@@ -39,18 +39,6 @@ TitleScene::TitleScene()
 
     }
 
-    FreeTypeManager::Initialize();
-
-    handle_ = FreeTypeManager::CreateFace("Resource/Fonts/NotoSansEgyptianHieroglyphs-Regular.ttf", 0);
-    FreeTypeManager::SetPixelSizes(handle_, 64, 64);
-    text_.Initialize(handle_);
-    text_.SetString(U"Medjed");
-    text_.SetPosition({ 400, 300 });
-    text_.SetColor({ 1, 1, 1, 1 });
-    text_.SetAlign(TextAlign::Center);
-    text_.SetBlendMode(BlendMode::kBlendModeAdd);
-
-
 }
 
 TitleScene::~TitleScene()
@@ -76,94 +64,78 @@ void TitleScene::Initialize()
 
 void TitleScene::Update()
 {
-    //Sound::PlayBGM(SoundFactory::BGM_ArabRuins);
+    Sound::PlayBGM(SoundFactory::BGM_ArabRuins);
 
-    //timer_ += kInverseFPS;
-    //float scale = sinf(timer_) * 0.125f+1.25f;
-    //titleSprite_->SetScale({ scale,scale });
+    timer_ += kInverseFPS;
+    float scale = sinf(timer_) * 0.125f+1.25f;
+    titleSprite_->SetScale({ scale,scale });
 
-    //test3Sprites_[0]->GetUVTranslate().x += 0.001f;
-    //test3Sprites_[1]->GetUVTranslate().x -= 0.001f;
+    test3Sprites_[0]->GetUVTranslate().x += 0.001f;
+    test3Sprites_[1]->GetUVTranslate().x -= 0.001f;
 
-    //for (auto& sprite : test3Sprites_) {
-    //    sprite->Update();
-    //}
-    //Vector2 mousePos = Input::GetCursorPosition();
-    //Vector2 stickPos = { 0.0f,0.0f };
-    //Input::IsControllerStickPosMoveTrigger(BUTTON_LEFT, 0, &stickPos);
-
-    //if (stickPos.y > 0.1f|| IsCollision(mousePos, *startButton_)) {
-    //    isHoverExitButton_ = false;
-
-    //    if (!isHoverStartButton_) {
-    //        Sound::PlaySE(SoundFactory::SWITCH_ON);
-    //        isHoverStartButton_ = true;
-
-    //    }
-    //}
-
-    //if (stickPos.y < -0.1f || IsCollision(mousePos, *exitButton_)) {
-    //    isHoverStartButton_ = false;
-
-    //    if (!isHoverExitButton_) {
-    //        Sound::PlaySE(SoundFactory::SWITCH_ON);
-    //        isHoverExitButton_ = true;
-
-    //    }
-    //}
-
-
-    //if (isHoverStartButton_) {
-    //    startButton_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
-    //    if (InputBind::IsClick()) {
-    //        Sound::PlaySE(SoundFactory::FALL);
-    //        sceneChange_->SetState(SceneChange::kFadeIn, 30);
-    //        SceneManager::SetNestScene("Sample");
-    //    }
-    //} else {
-    //    startButton_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-    //}
-
-
-
-    //if (isHoverExitButton_) {
-    //    exitButton_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
-    //    if (InputBind::IsClick()) {
-    //        // アプリケーション終了 
-    //        PostQuitMessage(0); // Windows APIでウィンドウを閉じる 
-    //    }
-    //} else {
-    //    exitButton_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-    //}
-
-
-
-
-
-    for (char32_t ch : Input::GetInputChars()) {
-        if (ch == U'\b') {
-            if (!inputText_.empty()) inputText_.pop_back();
-        } else if (ch >= 0x20) {
-            inputText_ += ch;
-        }
-        text_.SetString(inputText_);
+    for (auto& sprite : test3Sprites_) {
+        sprite->Update();
     }
-    text_.Update();
+    Vector2 mousePos = Input::GetCursorPosition();
+    Vector2 stickPos = { 0.0f,0.0f };
+    Input::IsControllerStickPosMoveTrigger(BUTTON_LEFT, 0, &stickPos);
+
+    if (stickPos.y > 0.1f|| IsCollision(mousePos, *startButton_)) {
+        isHoverExitButton_ = false;
+
+        if (!isHoverStartButton_) {
+            Sound::PlaySE(SoundFactory::SWITCH_ON);
+            isHoverStartButton_ = true;
+
+        }
+    }
+
+    if (stickPos.y < -0.1f || IsCollision(mousePos, *exitButton_)) {
+        isHoverStartButton_ = false;
+
+        if (!isHoverExitButton_) {
+            Sound::PlaySE(SoundFactory::SWITCH_ON);
+            isHoverExitButton_ = true;
+
+        }
+    }
+
+
+    if (isHoverStartButton_) {
+        startButton_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+        if (InputBind::IsClick()) {
+            Sound::PlaySE(SoundFactory::FALL);
+            sceneChange_->SetState(SceneChange::kFadeIn, 30);
+            SceneManager::SetNestScene("Sample");
+        }
+    } else {
+        startButton_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+    }
+
+
+
+    if (isHoverExitButton_) {
+        exitButton_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+        if (InputBind::IsClick()) {
+            // アプリケーション終了 
+            PostQuitMessage(0); // Windows APIでウィンドウを閉じる 
+        }
+    } else {
+        exitButton_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+    }
 }
 
 void TitleScene::Draw()
 {
-    //Sprite::PreDraw();
-    //for (auto& sprite : test3Sprites_) {
-    //    sprite->Draw();
-    //}
-    //titleSprite_->Draw();
-    //startButton_->Draw();
-    //exitButton_->Draw();
+    Sprite::PreDraw();
+    for (auto& sprite : test3Sprites_) {
+        sprite->Draw();
+    }
+    titleSprite_->Draw();
+    startButton_->Draw();
+    exitButton_->Draw();
 
-    //sceneChange_->Draw();
-
-    text_.Draw();
+    sceneChange_->Draw();
 }
 
 void TitleScene::Debug()

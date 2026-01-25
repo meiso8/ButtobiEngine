@@ -71,7 +71,7 @@ void Text::UpdateLayout() {
     // 最終的な位置を加算
     for (auto& run : glyphRuns_) {
         run.position.x += position_.x + offsetX;
-        run.position.y += position_.y+offsetY;
+        run.position.y += position_.y + offsetY;
     }
 }
 
@@ -85,8 +85,8 @@ void Text::Draw() {
         auto* sprite = FreeTypeManager::GetOrCreateSprite(key);
         auto& texData = FreeTypeManager::GetGlyphTextures(key);
         // ベースラインに合わせてY位置を調整！
-        float y = run.position.y -(texData.glyphSize.y +texData.bearingY)/2.0f;
-        sprite->SetPosition({ run.position.x,y});
+        float y = run.position.y - (texData.glyphSize.y + texData.bearingY) / 2.0f;
+        sprite->SetPosition({ run.position.x,y });
         sprite->SetColor(color_);
         sprite->Draw();
         activeSprites_.push_back(sprite);
@@ -95,8 +95,9 @@ void Text::Draw() {
 
 }
 
-void Text::Update() {
+void Text::Debug() {
 
+#ifdef _DEVELOP
     DebugUI::CheckColor(color_, "color");
     DebugUI::CheckBlendMode(blendMode_);
 
@@ -108,4 +109,5 @@ void Text::Update() {
 
         }
     }
+#endif
 }

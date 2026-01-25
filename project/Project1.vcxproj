@@ -162,6 +162,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <ClCompile Include="externals\freetype\src\cff\cff.c" />
     <ClCompile Include="externals\freetype\src\pcf\pcf.c" />
+    <ClCompile Include="Source\Application\Scene\FreeTypeScene.cpp" />
     <ClCompile Include="Source\Application\Loader\SoundFactory.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\CurPos.cpp" />
     <ClCompile Include="Source\Application\Stage\MummyStage\DummyMummy.cpp" />
@@ -329,6 +330,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\freetype\src\pcf\pcf.h" />
+    <ClInclude Include="Source\Application\Scene\FreeTypeScene.h" />
     <ClInclude Include="Source\Application\Loader\SoundFactory.h" />
     <ClInclude Include="Source\Application\GameObject\UI\CurPos.h" />
     <ClInclude Include="Source\Application\Stage\MummyStage\DummyMummy.h" />

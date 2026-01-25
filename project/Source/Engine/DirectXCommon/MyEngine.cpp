@@ -95,7 +95,8 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     //JsonFileの読み込み
     JsonFile::LoadAllJsonFile();
     LogFile::Log("LoadAllJsonFile");
-
+    FreeTypeManager::Initialize();
+    LogFile::Log("InitializeFreeTypeManager");
 #ifdef _DEVELOP
     //グリット描画
     DrawGrid::Create();
@@ -216,6 +217,7 @@ void MyEngine::Finalize() {
     DrawGrid::Finalize();
 
 #endif
+    FreeTypeManager::Finalize();
 
     Texture::Finalize();
     Sound::Finalize();

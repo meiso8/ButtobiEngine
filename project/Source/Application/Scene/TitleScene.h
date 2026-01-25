@@ -3,8 +3,6 @@
 #include "Sprite.h"
 #include<memory>
 #include<array>
-#include"../Engine/FreeTypeManager/FreeTypeManager.h"
-#include"../Engine/FreeTypeManager/Text.h"
 
 class TitleScene :public BaseScene
 {
@@ -16,9 +14,7 @@ public:
     void Draw()override;
     void Debug()override;
    void SceneChangeUpdate()override;
-
 private:
-
     std::unique_ptr<Sprite> titleSprite_;
     std::unique_ptr<Sprite> startButton_;
     std::unique_ptr<Sprite> exitButton_;
@@ -26,10 +22,5 @@ private:
     bool isHoverStartButton_ = false;
     bool isHoverExitButton_ = false;
     float timer_ = 0.0f;
-
-    Text text_;
-    uint32_t handle_;
-    std::u32string inputText_;
-
 };
 
