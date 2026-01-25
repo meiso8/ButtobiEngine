@@ -42,12 +42,14 @@ public:
     Vector2& GetScale() { return scale_; };
     float& GetRotate() { return rotate_; };
     Vector2& GetPosition() { return position_; };
+   const Vector2& GetPosition() const{ return position_; };
 
     Material* GetMaterial() { return materialResource_.GetMaterial(); };
     Vector3& GetUVScale() { return uvTransform_.scale; };
     Vector3& GetUVRotate() { return uvTransform_.rotate; };
     Vector3& GetUVTranslate() { return uvTransform_.translate; };
     Vector4& GetColor() { return materialResource_.GetMaterial()->color; }
+    const Vector4& GetColor() const { return materialResource_.GetMaterial()->color; }
 
     Vector2& GetAnchorPoint() { return anchorPoint_; }
     /// @brief アンカーポイント
@@ -63,6 +65,8 @@ public:
     Vector2& GetTextureLeftTop() { return textureLeftTop; };
     Vector2& GetTextureSize() { return textureSize; };
     void AdjustTextureSize();
+    void SetInUse(bool inUse) { inUse_ = inUse; } 
+    bool IsInUse() const { return inUse_; }
 private:
     void CreateVertex();
     void CreateUVTransformationMatrix();
@@ -71,6 +75,8 @@ private:
     void UpdateUV();
 
 private:
+ bool inUse_ = false;
+
     uint32_t textureHandle_ = 0;
     Vector2 anchorPoint_ = { 0.0f,0.0f };
     bool isFlipX_ = false;

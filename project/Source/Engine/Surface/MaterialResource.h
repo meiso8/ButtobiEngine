@@ -34,6 +34,10 @@ public:
     Material* GetMaterial() {
         return material_;
     };
+    const Material* GetMaterial() const {
+        return material_;
+    };
+
     Microsoft::WRL::ComPtr <ID3D12Resource>& GetMaterialResource() {
         return materialResource_
             ;

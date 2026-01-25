@@ -219,6 +219,7 @@ void Sprite::AdjustTextureSize()
 }
 
 
+
 bool IsCollision(const Vector2& pos, Sprite& sprite) {
     Vector2 spritePos = sprite.GetPosition();
     Vector2 spriteSize = sprite.GetSize(); // サイズが取得できる前提！

@@ -4,6 +4,8 @@
 #include<memory>
 #include<array>
 #include"../Engine/FreeTypeManager/FreeTypeManager.h"
+#include"../Engine/FreeTypeManager/Text.h"
+
 class TitleScene :public BaseScene
 {
 public:
@@ -25,6 +27,9 @@ private:
     bool isHoverExitButton_ = false;
     float timer_ = 0.0f;
 
-    FreeTypeManager ft_;
+    Text text_;
+    uint32_t handle_;
+    std::u32string inputText_;
+
 };
 

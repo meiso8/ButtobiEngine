@@ -325,6 +325,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\Stage\WaterStage\WaterStage.cpp" />
     <ClCompile Include="Source\Application\Stage\Stage.cpp" />
     <ClCompile Include="Source\Application\Loader\TextureFactory.cpp" />
+    <ClCompile Include="Source\Engine\FreeTypeManager\Text.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\freetype\src\pcf\pcf.h" />
@@ -500,6 +501,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\Stage\WaterStage\WaterStage.h" />
     <ClInclude Include="Source\Application\Stage\Stage.h" />
     <ClInclude Include="Source\Application\Loader\TextureFactory.h" />
+    <ClInclude Include="Source\Engine\FreeTypeManager\Text.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />

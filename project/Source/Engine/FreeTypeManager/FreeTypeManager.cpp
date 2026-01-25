@@ -1,3 +1,4 @@
+#define NOMINMAX
 #include"FreeTypeManager.h"
 #include<cstdint>
 #include<fstream>
@@ -10,8 +11,10 @@ using namespace std;
 
 FT_Library FreeTypeManager::library_;
 
-unordered_map<uint32_t, FTTextureData> FreeTypeManager::glyphTextures_;
-unordered_map<uint32_t, unique_ptr<Sprite>> FreeTypeManager::sprites_;
+// フォントごとのFTData（faceとfontData）
+std::unordered_map<uint32_t, FTData> FreeTypeManager::fontFaces_;
+unordered_map<GlyphKey, FTTextureData> FreeTypeManager::glyphTextures_;
+std::unordered_map<GlyphKey, std::vector<std::unique_ptr<Sprite>>> FreeTypeManager::spritePool_;
 
 void FreeTypeManager::Initialize()
 {
@@ -33,14 +36,16 @@ void FreeTypeManager::Initialize()
 
 uint32_t FreeTypeManager::CreateFace(const string& fontPath, const uint32_t index)
 {
+    //サイズからハンドルを取得
+    uint32_t handle = static_cast<uint32_t>(fontFaces_.size());
 
-    uint32_t handle = static_cast<uint32_t>(glyphTextures_.size());
-
-    if (glyphTextures_.contains(handle)) {
+    //すでにあったらreturn
+    if (fontFaces_.contains(handle)) {
         return handle;
     }
 
-    FTTextureData data;
+    //fontDataの箱を用意
+    FTData data;
 
     {
         // ファイルをバイナリで開く
@@ -54,22 +59,22 @@ uint32_t FreeTypeManager::CreateFace(const string& fontPath, const uint32_t inde
         // ファイルサイズを取得してバッファ確保
         std::streamsize size = file.tellg();
         file.seekg(0, std::ios::beg);
-        data.ftData.fontData.resize(static_cast<size_t>(size));
+        data.fontData.resize(static_cast<size_t>(size));
 
-        if (!file.read(reinterpret_cast<char*>(data.ftData.fontData.data()), size)) {
+        if (!file.read(reinterpret_cast<char*>(data.fontData.data()), size)) {
             DebugLog("CannotLoadFontData\n");
             assert(false);
         }
 
     }
 
-
+    //Faceの作成
     FT_Error err = FT_New_Memory_Face(
         library_,
-        data.ftData.fontData.data(),
-        static_cast<FT_Long>(data.ftData.fontData.size()),
+        data.fontData.data(),
+        static_cast<FT_Long>(data.fontData.size()),
         index,
-        &data.ftData.face);
+        &data.face);
 
     if (err == FT_Err_Unknown_File_Format)
     {
@@ -83,14 +88,21 @@ uint32_t FreeTypeManager::CreateFace(const string& fontPath, const uint32_t inde
     assert(!err);
 
     //登録！
-    glyphTextures_.emplace(handle, std::move(data));
+    fontFaces_.emplace(handle, std::move(data));
 
+    //ハンドルを返す
     return handle;
 
 }
 
 void FreeTypeManager::Finalize()
 {
+
+    for (auto& data : fontFaces_) {
+        //faceの破棄
+        FT_Done_Face(data.second.face);
+        data.second.fontData.clear();
+    }
 
     //一旦明示的にglyphTextures_を解放しておく
     for (auto& glyphTexture : glyphTextures_) {
@@ -111,22 +123,22 @@ void FreeTypeManager::Finalize()
             intermediateResource = nullptr;
         }
 
-        //faceの破棄
-        FT_Done_Face(data.ftData.face);
-
-
     }
 
     glyphTextures_.clear();
 
     //一旦明示的に解放しておく
-    for (auto& sprite : sprites_) {
-        if (sprite.second != nullptr) {
-            sprite.second.reset();
-            sprite.second = nullptr;
+    for (auto& [key, sprites] : spritePool_) {
+        for (auto& sprite : sprites) {
+            if (sprite != nullptr) {
+                sprite.reset();
+                sprite = nullptr;
+            }
         }
+        sprites.clear();
     }
-    sprites_.clear();
+
+    spritePool_.clear();
 
     //libraryの破棄
     FT_Done_FreeType(library_);
@@ -137,11 +149,11 @@ FreeTypeManager::~FreeTypeManager()
     Finalize();
 }
 
-void FreeTypeManager::GetBitMapGlyph(uint32_t faceIndex, FT_UInt glyphIndex)
+void FreeTypeManager::GetBitMapGlyph(uint32_t faceHandle, FT_UInt glyphIndex)
 {
 
-    auto& data = glyphTextures_.at(faceIndex);
-    auto& face = data.ftData.face;
+    auto& ftData = fontFaces_.at(faceHandle);
+    FT_Face face = ftData.face;
 
     //グリフの読み込み
     if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT | FT_LOAD_COLOR)) {
@@ -165,17 +177,17 @@ void FreeTypeManager::GetBitMapGlyph(uint32_t faceIndex, FT_UInt glyphIndex)
 
 }
 
-void FreeTypeManager::GetOutLineGlyph(uint32_t handle, FT_UInt glyphIndex, uint32_t width, uint32_t height)
+void FreeTypeManager::GetOutLineGlyph(uint32_t faceIndex, FT_UInt glyphIndex, uint32_t width, uint32_t height)
 {
 
-    auto& data = glyphTextures_.at(handle);
-    auto& face = data.ftData.face;
+    auto& ftData = fontFaces_.at(faceIndex);
+    FT_Face face = ftData.face;
 
     //生のアウトラインデータを取得する場合
     if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_NO_SCALE | FT_LOAD_NO_AUTOHINT | FT_LOAD_NO_BITMAP)) { DebugLog("Failed to Load_Glyph\n"); return; }
 
     if (!face) {
-        std::string msg = "face[" + std::to_string(handle) + "] is invalid\n";
+        std::string msg = "face[" + std::to_string(faceIndex) + "] is invalid\n";
         DebugLog(msg);
         assert(false);
     }
@@ -191,32 +203,52 @@ void FreeTypeManager::GetOutLineGlyph(uint32_t handle, FT_UInt glyphIndex, uint3
     if (FT_Set_Pixel_Sizes(face, width, height)) { DebugLog("Failed to Set_Pixel_Sizes\n");  assert(false); }
 
     //(オプション)glyph->outlineをラスタライズする
-    if (FT_Render_Glyph(glyph, FT_RENDER_MODE_LCD)) { DebugLog("Glyph rasterization failed!\n");  assert(false);
-    }
+    if (FT_Render_Glyph(glyph, FT_RENDER_MODE_LCD)) { DebugLog("Glyph rasterization failed!\n");  assert(false); }
 }
 
-void FreeTypeManager::Draw(uint32_t faceIndex)
+void FreeTypeManager::Draw(uint32_t faceIndex, FT_UInt glyphIndex)
 {
-    if (!sprites_.contains(faceIndex)) {
-        return;
-    }
 
-    auto& sprite = sprites_.at(faceIndex);
+    GlyphKey key{ faceIndex, glyphIndex };
+    auto& ftData = fontFaces_.at(faceIndex);
+
+    FT_Size_Metrics metrics = ftData.face->size->metrics;
+
+    float height = metrics.height / 64.0f;
+    float width = metrics.max_advance / 64.0f;
 
     Sprite::PreDraw();
+    auto sprite = GetOrCreateSprite(key);
     sprite->Draw();
 }
 
-void FreeTypeManager::ShowFontSize(uint32_t handle)
+void FreeTypeManager::ShowFontSize(uint32_t faceHandle)
 {
-    auto& data = glyphTextures_.at(handle);
-    auto& face = data.ftData.face;
+    auto& ftData = fontFaces_.at(faceHandle);
+    FT_Face face = ftData.face;
 
     for (int i = 0; i < face->num_fixed_sizes; ++i) {
         DebugLog("Size[" + to_string(i) + "]:" + to_string(face->available_sizes[i].width) + "x" + to_string(face->available_sizes[i].height) + "\n");
     }
 }
 
+const FTTextureData& FreeTypeManager::GetGlyphTextures(const GlyphKey& key) {
+
+
+    if (!glyphTextures_.contains(key)) {
+        // なければ生成
+        CreateGlyphTexture(key.handle, key.glyphIndex);
+    }
+
+
+    auto it = glyphTextures_.find(key);
+    if (it == glyphTextures_.end()) {
+
+        DebugLog("Glyph texture not found for key: " + std::to_string(key.handle) + ", " + std::to_string(key.glyphIndex) + "\n");
+        assert(false); // or return a default value if you prefer
+    }
+    return it->second;
+}
 
 FTResource FreeTypeManager::CreateTextureFromFTBitmap(const FT_Bitmap& bitmap)
 {
@@ -306,48 +338,77 @@ FTResource FreeTypeManager::CreateTextureFromFTBitmap(const FT_Bitmap& bitmap)
     return result;
 }
 
-void FreeTypeManager::CreateSprite(uint32_t handle)
+void FreeTypeManager::CreateGlyphTexture(uint32_t faceHandle, FT_UInt glyphIndex)
 {
-    if (sprites_.contains(handle)) {
-        return;
-    }
+    //faceHandleとglyphIndexからkeyを作成
+    GlyphKey key{ faceHandle, glyphIndex };
 
-    auto& data = glyphTextures_.at(handle);
-    auto& bitmap = data.ftData.face->glyph->bitmap;
+    //glyphTextures_に含まれていたらreturn
+    if (glyphTextures_.contains(key)) return;
 
+    auto& ftData = fontFaces_.at(faceHandle);
+    FT_Face face = ftData.face;
+
+    // グリフ読み込み＆ラスタライズ
+    if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT) != 0) return;
+    if (FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL) != 0) return;
+
+    //faceからBitMapを取得
+    FT_Bitmap& bitmap = face->glyph->bitmap;
     if (!bitmap.buffer) {
         DebugLog("bitmap.buffer is null\n");
         assert(false);
     }
 
-    data.ftResource = CreateTextureFromFTBitmap(bitmap);
-    auto& srvIndex = data.srvIndex;
+    FTTextureData texData;
+    texData.ftResource = CreateTextureFromFTBitmap(bitmap);
 
-    if (data.ftResource.resource) {
+    texData.srvIndex = SrvManager::Allocate();
+    Texture::AddTextureHandleByIndex(texData.srvIndex);
+    texData.srvHandleCPU = SrvManager::GetCPUDescriptorHandle(texData.srvIndex);
+    texData.srvHandleGPU = SrvManager::GetGPUDescriptorHandle(texData.srvIndex);
+    SrvManager::CreateSRVforTexture2D(texData.srvIndex, texData.ftResource.resource.Get(), DXGI_FORMAT_R8_UNORM, 1);
+    texData.glyphSize = { (float)bitmap.width, (float)bitmap.rows };
+    texData.bearingY = face->glyph->metrics.horiBearingY / 64.0f;
 
-        srvIndex = SrvManager::Allocate();
-        Texture::AddTextureHandleByIndex(srvIndex);
-
-        data.srvHandleCPU = SrvManager::GetCPUDescriptorHandle(srvIndex);
-        data.srvHandleGPU = SrvManager::GetGPUDescriptorHandle(srvIndex);
-
-        SrvManager::CreateSRVforTexture2D(srvIndex, data.ftResource.resource.Get(), DXGI_FORMAT_R8_UNORM, 1);
-
-        //Spriteの生成
-        auto sprite = std::make_unique<Sprite>();
-        sprite->Create(Texture::GetTextureHandle(srvIndex), { 100.0f, 100.0f });
-        sprite->SetSize({ (float)bitmap.width, (float)bitmap.rows });
-
-        //ハンドルとSpriteをセットにする
-        sprites_.insert(std::make_pair(handle, std::move(sprite)));
-    }
-
+    glyphTextures_[key] = std::move(texData);
 }
 
-void FreeTypeManager::SetPixelSizes(uint32_t handle, uint32_t width, uint32_t height)
+Sprite* FreeTypeManager::CreateSprite(uint32_t faceHandle, FT_UInt glyphIndex)
 {
-    auto& data = glyphTextures_.at(handle);
-    auto& face = data.ftData.face;
+    GlyphKey key = { faceHandle ,glyphIndex };
+
+    if (!glyphTextures_.contains(key)) {
+        // なければ生成
+        CreateGlyphTexture(key.handle, key.glyphIndex);
+    }
+
+    auto& data = glyphTextures_.at(key);
+
+    auto& srvIndex = data.srvIndex;
+    auto& ftData = fontFaces_.at(key.handle);
+    FT_Face face = ftData.face;
+
+    if (data.ftResource.resource) {
+        auto& pool = spritePool_[key];
+        auto& glyphSize = data.glyphSize;
+        auto newSprite = std::make_unique<Sprite>();
+        newSprite->Create(Texture::GetTextureHandle(srvIndex), { 100.0f, 100.0f });
+        newSprite->SetSize(glyphSize);
+        newSprite->SetInUse(true);
+        Sprite* ptr = newSprite.get();
+        pool.push_back(std::move(newSprite));
+        return ptr;
+
+    }
+    assert(false);
+
+    return nullptr;
+}
+
+void FreeTypeManager::SetPixelSizes(uint32_t faceHandle, uint32_t width, uint32_t height)
+{
+    auto& face = fontFaces_.at(faceHandle).face;
 
     if (!face) { DebugLog("face is null!\n"); return; }
 
@@ -358,16 +419,11 @@ void FreeTypeManager::SetPixelSizes(uint32_t handle, uint32_t width, uint32_t he
     }
 }
 
-FT_UInt FreeTypeManager::GetGlyphID(uint32_t handle, uint32_t unicode, uint32_t uvs)
+FT_UInt FreeTypeManager::GetGlyphID(uint32_t faceHandle, uint32_t unicode, uint32_t uvs)
 {
 
-
-    auto& data = glyphTextures_.at(handle);
-
-    assert(&data);
-
-    auto& face = data.ftData.face;
-
+    auto& ftData = fontFaces_.at(faceHandle);
+    auto& face = ftData.face;
 
     //Unicodeのコードポイントから
     FT_UInt result = FT_Face_GetCharVariantIndex(face, unicode, uvs);
@@ -398,11 +454,9 @@ FT_UInt FreeTypeManager::GetGlyphID(uint32_t handle, uint32_t unicode, uint32_t 
 
 }
 
-void FreeTypeManager::GetBitMap(uint32_t handle, FT_UInt glyphIndex, FT_Int strikeIndex)
+void FreeTypeManager::GetBitMap(uint32_t faceHandle, FT_UInt glyphIndex, FT_Int strikeIndex)
 {
-
-    auto& data = glyphTextures_.at(handle);
-    auto& face = data.ftData.face;
+    auto& face = fontFaces_.at(faceHandle).face;
 
     //ビットマップグリフを取得する 
     if (FT_Select_Size(face, strikeIndex)) { assert(false); }
@@ -412,5 +466,67 @@ void FreeTypeManager::GetBitMap(uint32_t handle, FT_UInt glyphIndex, FT_Int stri
     //face->glyph->format == FT_GLYPH_FORMAT_BITMAPなら埋め込みビットマップ 
     // face->glyph->bitmapに（多くの場合モノクロの）ビットマップが入ってる
 
+}
+
+std::vector<GlyphRun> FreeTypeManager::LayoutString(uint32_t handle, const std::u32string& text, const Vector2& startPos)
+{
+    std::vector<GlyphRun> runs;
+
+    auto& ftData = fontFaces_.at(handle);
+    FT_Face face = ftData.face;
+
+    float maxDescender = 0.0f;
+
+    for (char32_t ch : text) {
+        FT_UInt glyphIndex = GetGlyphID(handle, ch, 0);
+        if (glyphIndex == 0) continue;
+
+        if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT) != 0) continue;
+
+        float descender = -(face->glyph->metrics.horiBearingY - face->glyph->metrics.height) / 64.0f;
+        maxDescender = std::max(maxDescender, descender);
+    }
+
+    float penX = startPos.x;
+    float penY = startPos.y + maxDescender;
+    FT_UInt prevGlyph = 0;
+
+    for (char32_t ch : text) {
+        FT_UInt glyphIndex = GetGlyphID(handle, ch, 0);
+        if (glyphIndex == 0) continue;
+
+        if (prevGlyph && glyphIndex) {
+            FT_Vector kerning;
+            if (FT_Get_Kerning(face, prevGlyph, glyphIndex, FT_KERNING_DEFAULT, &kerning) == 0) {
+                penX += kerning.x / 64.0f;
+            }
+        }
+
+        if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT) != 0) continue;
+
+        runs.push_back({ glyphIndex, { penX, penY } });
+
+        penX += face->glyph->advance.x / 64.0f;
+        prevGlyph = glyphIndex;
+    }
+
+    return runs;
+}
+
+float FreeTypeManager::GetMaxDescender(uint32_t handle, std::vector<GlyphRun>& runs)
+{
+    float maxDescender = 0.0f;
+
+    for (const auto& run : runs) {
+        GlyphKey key{ handle, run.glyphIndex };
+        auto& ftData = fontFaces_.at(handle);
+        FT_Face& face = ftData.face;
+       
+        if (FT_Load_Glyph(face, run.glyphIndex, FT_LOAD_DEFAULT) != 0) continue;
+        
+        float descender = -static_cast<float>(face->glyph->metrics.horiBearingY - face->glyph->metrics.height)/64.0f;
+        maxDescender = std::max(maxDescender, descender);
+    }
+    return maxDescender;
 
 }

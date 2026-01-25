@@ -15,6 +15,7 @@
 #include"Application/Loader/ModelFactory.h"
 #include"Application/Loader/SoundFactory.h"
 #include"Application/Loader/TextureFactory.h"
+#include"Engine/FreeTypeManager/FreeTypeManager.h"
 
 std::unique_ptr<PSO> MyEngine::pso = nullptr;
 std::unique_ptr <Input> MyEngine::input = nullptr;
@@ -196,6 +197,8 @@ void MyEngine::PostCommandSet() {
 
 #endif // _DEBUG
     directXCommon->PostDraw();
+
+    FreeTypeManager::ResetSpriteUsage();
 };
 
 void MyEngine::Finalize() {
