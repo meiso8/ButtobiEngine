@@ -98,6 +98,7 @@ public:
     static void GetBitMapGlyph(uint32_t faceHandle, FT_UInt glyphIndex);
     static void GetOutLineGlyph(uint32_t faceHandle, FT_UInt glyphIndex, uint32_t width, uint32_t height);
     static void Draw(uint32_t faceHandle, FT_UInt glyphIndex);
+    static bool LoadAndRenderGlyph(FT_Face& face, FT_UInt glyphIndex, FT_Render_Mode mode);
 
     static Sprite* CreateSprite(uint32_t faceHandle, FT_UInt glyphIndex);
     static void SetPixelSizes(uint32_t faceHandle, uint32_t width, uint32_t height);

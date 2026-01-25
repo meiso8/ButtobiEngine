@@ -153,22 +153,15 @@ void FreeTypeManager::GetBitMapGlyph(uint32_t faceHandle, FT_UInt glyphIndex)
 {
 
     auto& ftData = fontFaces_.at(faceHandle);
-    FT_Face face = ftData.face;
+    FT_Face& face = ftData.face;
 
-    //グリフの読み込み
-    if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT | FT_LOAD_COLOR)) {
-        DebugLog("FT_Load_Glyph faild\n");
+    if (!LoadAndRenderGlyph(face, glyphIndex, FT_RENDER_MODE_NORMAL))
+    {
+        DebugLog("LoadAndRenderGlyph faild\n");
         return;
-    }
+    };
 
     auto& glyph = face->glyph;
-
-    //(オプション)face->glyphをラスタライズする
-    if (FT_Render_Glyph(glyph, FT_RENDER_MODE_NORMAL)) {
-        DebugLog("FT_Render_Glyph failed!\n");
-        assert(false);
-    }
-
     if (glyph->format == FT_GLYPH_FORMAT_BITMAP &&
         glyph->bitmap.pixel_mode == FT_PIXEL_MODE_BGRA) {
         //カラー絵文字（PNG） face->glyph->bitmapにBGRAビットマップが入ってる
@@ -220,6 +213,25 @@ void FreeTypeManager::Draw(uint32_t faceIndex, FT_UInt glyphIndex)
     Sprite::PreDraw();
     auto sprite = GetOrCreateSprite(key);
     sprite->Draw();
+}
+
+bool FreeTypeManager::LoadAndRenderGlyph(FT_Face& face, FT_UInt glyphIndex, FT_Render_Mode mode)
+{
+
+    //グリフの読み込み
+    if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT|FT_LOAD_COLOR)) {
+        DebugLog("FT_Load_Glyph faild\n"); 
+        assert(false);
+        return false;
+    }
+
+    if (FT_Render_Glyph(face->glyph, mode)) {
+        DebugLog("FT_Render_Glyph failed!\n");
+        assert(false);
+        return false;
+    }
+
+    return true;
 }
 
 void FreeTypeManager::ShowFontSize(uint32_t faceHandle)
@@ -356,11 +368,12 @@ void FreeTypeManager::CreateGlyphTexture(uint32_t faceHandle, FT_UInt glyphIndex
     if (glyphTextures_.contains(key)) return;
 
     auto& ftData = fontFaces_.at(faceHandle);
-    FT_Face face = ftData.face;
+    FT_Face& face = ftData.face;
 
-    // グリフ読み込み＆ラスタライズ
-    if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT) != 0) return;
-    if (FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL) != 0) return;
+    if (!LoadAndRenderGlyph(face, glyphIndex, FT_RENDER_MODE_NORMAL)) {
+        assert(false);
+        return;
+    };
 
     //faceからBitMapを取得
     FT_Bitmap& bitmap = face->glyph->bitmap;
