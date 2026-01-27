@@ -106,23 +106,7 @@ void FreeTypeManager::Finalize()
 
     //一旦明示的にglyphTextures_を解放しておく
     for (auto& glyphTexture : glyphTextures_) {
-
-        auto& data = glyphTexture.second;
-
-        auto& resource = data.ftResource.resource;
-
-        if (resource != nullptr) {
-            resource.Reset();
-            resource = nullptr;
-        }
-
-        auto& intermediateResource = data.ftResource.intermediateResource;
-
-        if (intermediateResource != nullptr) {
-            intermediateResource.Reset();
-            intermediateResource = nullptr;
-        }
-
+        ReleaseResource(glyphTexture.second.ftResource);
     }
 
     glyphTextures_.clear();
@@ -153,20 +137,12 @@ void FreeTypeManager::GetBitMapGlyph(uint32_t faceHandle, FT_UInt glyphIndex)
 {
 
     auto& ftData = fontFaces_.at(faceHandle);
-    FT_Face& face = ftData.face;
 
-    if (!LoadAndRenderGlyph(face, glyphIndex, FT_RENDER_MODE_NORMAL))
+    if (!LoadAndRenderGlyph(ftData.face, glyphIndex, FT_RENDER_MODE_NORMAL))
     {
         DebugLog("LoadAndRenderGlyph faild\n");
         return;
     };
-
-    auto& glyph = face->glyph;
-    if (glyph->format == FT_GLYPH_FORMAT_BITMAP &&
-        glyph->bitmap.pixel_mode == FT_PIXEL_MODE_BGRA) {
-        //カラー絵文字（PNG） face->glyph->bitmapにBGRAビットマップが入ってる
-        DebugLog("This is color glyph\n");
-    }
 
 }
 
@@ -231,6 +207,13 @@ bool FreeTypeManager::LoadAndRenderGlyph(FT_Face& face, FT_UInt glyphIndex, FT_R
         return false;
     }
 
+    auto glyph = face->glyph;
+    if (glyph->format == FT_GLYPH_FORMAT_BITMAP &&
+        glyph->bitmap.pixel_mode == FT_PIXEL_MODE_BGRA) {
+        //カラー絵文字（PNG） face->glyph->bitmapにBGRAビットマップが入ってる
+        DebugLog("This is color glyph\n");
+    }
+
     return true;
 }
 
@@ -269,6 +252,19 @@ const FTTextureData& FreeTypeManager::GetGlyphTextures(const GlyphKey& key) {
         assert(false); // or return a default value if you prefer
     }
     return it->second;
+}
+
+void FreeTypeManager::ReleaseResource(FTResource& resource)
+{
+
+    if (resource.resource != nullptr) {
+        resource.resource.Reset();
+        resource.resource = nullptr;
+    }
+    if (resource.intermediateResource != nullptr) {
+        resource.intermediateResource.Reset();
+        resource.intermediateResource = nullptr;
+    }
 }
 
 FTResource FreeTypeManager::CreateResourceFromFTBitmap(const FT_Bitmap& bitmap)
@@ -338,8 +334,8 @@ FTResource FreeTypeManager::CreateResourceFromFTBitmap(const FT_Bitmap& bitmap)
     // 3. 中間リソースにビットマップを書き込む
     D3D12_SUBRESOURCE_DATA subResourceData = {};
     subResourceData.pData = bitmap.buffer;
-    subResourceData.RowPitch = std::abs(bitmap.pitch);
-    subResourceData.SlicePitch = std::abs(bitmap.pitch) * bitmap.rows;
+    subResourceData.RowPitch = bitmap.pitch;
+    subResourceData.SlicePitch =bitmap.pitch * bitmap.rows;
 
     if (bitmap.pixel_mode != FT_PIXEL_MODE_GRAY) {
         DebugLog("bitmap.pixel_mode is not GRAY!\n");
@@ -495,7 +491,7 @@ std::vector<GlyphRun> FreeTypeManager::LayoutString(uint32_t handle, const std::
     std::vector<GlyphRun> runs;
 
     auto& ftData = fontFaces_.at(handle);
-    FT_Face face = ftData.face;
+    FT_Face& face = ftData.face;
 
     float maxDescender = 0.0f;
 
@@ -556,11 +552,17 @@ float FreeTypeManager::GetMaxDescender(uint32_t handle, std::vector<GlyphRun>& r
 Sprite* FreeTypeManager::GetOrCreateSprite(const GlyphKey& key)
 {
     auto& pool = spritePool_[key];
+    if (!glyphTextures_.contains(key)) {
+        // なければ生成
+        CreateGlyphTexture(key.handle, key.glyphIndex);
+    }
+    auto& texData = glyphTextures_.at(key);
 
     // 未使用のスプライトを探す
     for (auto& sprite : pool) {
         if (!sprite->IsInUse()) {
             sprite->SetInUse(true);
+            sprite->SetSize(texData.glyphSize); 
             return sprite.get();
         }
     }

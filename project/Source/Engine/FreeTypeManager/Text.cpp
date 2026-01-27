@@ -100,13 +100,14 @@ void Text::Debug() {
 #ifdef _DEVELOP
     DebugUI::CheckColor(color_, "color");
     DebugUI::CheckBlendMode(blendMode_);
-
+    ImGui::SliderFloat2("pos", &position_.x, -1000.0f, 1000.0f);
+    UpdateLayout();
     for (size_t i = 0; i < activeSprites_.size(); ++i) {
         auto* sprite = activeSprites_[i];
         if (sprite) {
             std::string msg = "Glyph[" + std::to_string(i) + "]";
             DebugUI::CheckSprite(*sprite, msg.c_str());
-
+       
         }
     }
 #endif

@@ -111,6 +111,7 @@ public:
     /// @brief エンジンでCommandQueueを送った後にリセットする
     static void ResetSpriteUsage();
     static const FTTextureData& GetGlyphTextures(const GlyphKey& key);
+
 private:
     /// @brief FreeTypeのResource生成
     /// @param bitmap bitmapを入れる
@@ -120,6 +121,7 @@ private:
     /// @param handle 
     /// @param glyphIndex 
     static void CreateGlyphTexture(uint32_t handle, FT_UInt glyphIndex);
+    static void ReleaseResource(FTResource& resource);
 private:
     //一つのライブラリで複数のFaceを保持できる
     static FT_Library library_;
