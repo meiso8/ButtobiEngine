@@ -9,6 +9,7 @@
 #include"InputBind.h"
 #include"Window.h"
 #include"TimeManager.h"
+#include"Log.h"
 TitleScene::TitleScene()
 {
     //タイトル画像 
@@ -28,7 +29,7 @@ TitleScene::TitleScene()
     for (auto& sprite : test3Sprites_) {
         sprite = std::make_unique<Sprite>();
         sprite->Create(TextureFactory::Handle::TEST3, { 0.0f, 360.0f });
-        sprite->SetSize({ static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()) *0.5f});
+        sprite->SetSize({ static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()) * 0.5f });
         sprite->SetUVScale({ 0.5f,1.0f,1.0f });
     }
 
@@ -47,18 +48,18 @@ TitleScene::~TitleScene()
 void TitleScene::Initialize()
 {
     timer_ = 0.0f;
-        for (int i = 0; i < test3Sprites_.size(); ++i) {
-            test3Sprites_[i]->SetUVTranslate({ 0.0f, 0.0f, 0.0f });
-        }
+    for (int i = 0; i < test3Sprites_.size(); ++i) {
+        test3Sprites_[i]->SetUVTranslate({ 0.0f, 0.0f, 0.0f });
+    }
 
-        isHoverStartButton_ = false;
-        isHoverExitButton_ = false;
-        sceneChange_->Initialize();
-        sceneChange_->SetState(SceneChange::kFadeOut, 60);
-        Sound::bgmVolume_ = 0.5f;
-        Sound::StopAllSound();
+    isHoverStartButton_ = false;
+    isHoverExitButton_ = false;
+    sceneChange_->Initialize();
+    sceneChange_->SetState(SceneChange::kFadeOut, 60);
+    Sound::bgmVolume_ = 0.5f;
+    Sound::StopAllSound();
 
-        titleSprite_->SetScale({1.0f,1.0f});
+    titleSprite_->SetScale({ 1.0f,1.0f });
 }
 
 void TitleScene::Update()
@@ -122,8 +123,6 @@ void TitleScene::Update()
     } else {
         exitButton_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
     }
-
-
 }
 
 void TitleScene::Draw()

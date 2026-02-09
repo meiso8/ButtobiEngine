@@ -3,6 +3,7 @@
 #include "Sprite.h"
 #include<memory>
 #include<array>
+
 class TitleScene :public BaseScene
 {
 public:
@@ -13,7 +14,6 @@ public:
     void Draw()override;
     void Debug()override;
    void SceneChangeUpdate()override;
-
 private:
     std::unique_ptr<Sprite> titleSprite_;
     std::unique_ptr<Sprite> startButton_;

@@ -15,6 +15,8 @@
 //libのリンク includeのすぐ後ろに書くとよい
 #pragma comment(lib,"winmm.lib")
 
+#include"Input.h"
+
 int32_t Window::clientWidth_ = 1280;
 int32_t Window::clientHeight_ = 720;
 // ウィンドウプロシージャ
@@ -29,6 +31,9 @@ LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 
 #endif
 
+
+
+
     //メッセージに応じてゲーム固有の処理を行う
     switch (msg) {
         //ウィンドウが破棄された
@@ -36,6 +41,10 @@ LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
         //OSに対して、アプリの終了を伝える
         PostQuitMessage(0);
         return 0;
+
+    case WM_CHAR: 
+        Input::PushChar(static_cast<char32_t>(wparam)); // ← ここで文字を渡す！ 
+        break;
     }
 
     //標準メッセージ処理を行う

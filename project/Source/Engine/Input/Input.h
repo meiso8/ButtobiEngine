@@ -5,7 +5,7 @@
 #include<cstdint>
 #include"Vector2.h"
 #include"Window.h"
-
+#include<vector>
 #include<memory>
 
 #include <Xinput.h>
@@ -28,6 +28,15 @@ public:
     Input(Input&) = delete;
     Input& operator=(Input&) = delete;
     ~Input();
+    static void PushChar(char32_t ch) {
+        inputChars_.push_back(ch);
+    }
+
+    static std::vector<char32_t> GetInputChars() {
+        auto copy = inputChars_;
+        inputChars_.clear();
+        return copy;
+    }
     static void SetShowCursor(const bool flag);
     HRESULT Initialize(Window& window);
     /// @brief キーを押した状態 
@@ -106,6 +115,8 @@ public:
     static Vector2& GetCursorPosition();
     static void SetCursorPosition(const Vector2& pos);
 private:
+    static inline std::vector<char32_t> inputChars_;
+
     static Window* window_;
     IDirectInputDevice8* keyboard_ = nullptr;
     //全キー入力状態を取得する

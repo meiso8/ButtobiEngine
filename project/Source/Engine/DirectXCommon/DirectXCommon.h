@@ -85,6 +85,8 @@ public:
 
     static Microsoft::WRL::ComPtr<ID3D12Resource> CreateTextureResource(
         const DirectX::TexMetadata& metadata);
+
+
     [[nodiscard]]
     static Microsoft::WRL::ComPtr<ID3D12Resource> UploadTextureData(
         const Microsoft::WRL::ComPtr<ID3D12Resource>& texture,

@@ -4,6 +4,8 @@
 BaseScene::BaseScene()
 {
     sceneChange_ = std::make_unique<SceneChange>();
+    sceneChange_->Initialize();
+    sceneChange_->SetState(SceneChange::kFadeOut, 60);
 
     camera_ = std::make_unique<Camera>();
 #ifdef _DEVELOP

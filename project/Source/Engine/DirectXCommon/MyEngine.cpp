@@ -15,6 +15,7 @@
 #include"Application/Loader/ModelFactory.h"
 #include"Application/Loader/SoundFactory.h"
 #include"Application/Loader/TextureFactory.h"
+#include"Engine/FreeTypeManager/FreeTypeManager.h"
 
 std::unique_ptr<PSO> MyEngine::pso = nullptr;
 std::unique_ptr <Input> MyEngine::input = nullptr;
@@ -94,7 +95,8 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     //JsonFileの読み込み
     JsonFile::LoadAllJsonFile();
     LogFile::Log("LoadAllJsonFile");
-
+    FreeTypeManager::Initialize();
+    LogFile::Log("InitializeFreeTypeManager");
 #ifdef _DEVELOP
     //グリット描画
     DrawGrid::Create();
@@ -196,6 +198,8 @@ void MyEngine::PostCommandSet() {
 
 #endif // _DEBUG
     directXCommon->PostDraw();
+
+    FreeTypeManager::ResetSpriteUsage();
 };
 
 void MyEngine::Finalize() {
@@ -213,6 +217,7 @@ void MyEngine::Finalize() {
     DrawGrid::Finalize();
 
 #endif
+    FreeTypeManager::Finalize();
 
     Texture::Finalize();
     Sound::Finalize();

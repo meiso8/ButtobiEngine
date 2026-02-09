@@ -135,6 +135,7 @@ bool Input::IsAnyKeyPressed() {
     return false;
 }
 
+
 void Input::Update() {
 
     //キーの状態をコピーする
@@ -161,6 +162,8 @@ void Input::Update() {
     for (int i = 0; i < 4; ++i) {
         isControllerConnected_[i] = IsControllerConnected(i) ? true : false;
     }
+
+
 }
 
 bool Input::IsControllerStickPosMove(ButtonType index, DWORD dwUserIndex, Vector2* pos)
