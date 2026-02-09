@@ -14,6 +14,6 @@ public:
 private:
     Text text_;
     uint32_t handle_;
-    std::u32string inputText_;
+    Text pressSpaceText_;
 };
 

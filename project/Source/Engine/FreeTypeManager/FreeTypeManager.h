@@ -88,28 +88,64 @@ public:
     /// @return ID
     static FT_UInt GetGlyphID(uint32_t faceHandle, uint32_t unicode, uint32_t uvs);
     /// @brief ビットマップの取得
-    /// @param faceHandle 
-    /// @param glyphIndex 
+    /// @param faceHandle faceのハンドル
+    /// @param glyphIndex 文字のindex
     /// @param strikeIndex 
     static void GetBitMap(uint32_t faceHandle, FT_UInt glyphIndex, FT_Int strikeIndex);
-    /// @brief 
-    /// @param faceHandle 
-    /// @param glyphIndex 
+    /// @brief BitMapGlyphの作成
+    /// @param faceHandle faceのハンドル
+    /// @param glyphIndex 文字のindex
     static void GetBitMapGlyph(uint32_t faceHandle, FT_UInt glyphIndex);
+    /// @brief アウトライン付き文字の取得
+    /// @param faceHandle faceのハンドル
+    /// @param glyphIndex 文字のindex
+    /// @param width 文字の幅
+    /// @param height 文字の高さ
     static void GetOutLineGlyph(uint32_t faceHandle, FT_UInt glyphIndex, uint32_t width, uint32_t height);
+    /// @brief 文字一つを指定して描画
+    /// @param faceHandle faceのハンドル
+    /// @param glyphIndex  文字のindex
     static void Draw(uint32_t faceHandle, FT_UInt glyphIndex);
+    /// @brief 読み込みとレンダー
+    /// @param face face
+    /// @param glyphIndex   文字のindex
+    /// @param mode FT_Render_Modeの設定
+    /// @return 成功したかどうか
     static bool LoadAndRenderGlyph(FT_Face& face, FT_UInt glyphIndex, FT_Render_Mode mode);
-
+    /// @brief Spriteの作成
+    /// @param faceHandle faceのハンドル
+    /// @param glyphIndex 文字のindex
+    /// @return Sprite*
     static Sprite* CreateSprite(uint32_t faceHandle, FT_UInt glyphIndex);
+    /// @brief PixelSizeの設定
+    /// @param faceHandle  faceのハンドル
+    /// @param width 文字の幅
+    /// @param height 文字の高さ
     static void SetPixelSizes(uint32_t faceHandle, uint32_t width, uint32_t height);
+    /// @brief FontSizeを見せる
+    /// @param faceHandle  faceのハンドル
     static void ShowFontSize(uint32_t faceHandle);
-
+    /// @brief Stringのレイアウトを作成する
+    /// @param faceHandle  faceのハンドル
+    /// @param text text
+    /// @param startPos 始点
+    /// @return 文字の情報のvectorを取得する
     static std::vector<GlyphRun> LayoutString(uint32_t faceHandle, const std::u32string& text, const Vector2& startPos);
+    /// @brief 文字の最大下降を決める　ここは欠陥がある
+    /// @param faceHandle face(フォント)のハンドル
+    /// @param runs 文字一つ一つの情報が格納されている
+    /// @return 文字の最大下降
     static float GetMaxDescender(uint32_t faceHandle, std::vector<GlyphRun>& runs);
+    /// @brief Spriteが作成済みだったら取得し、無かったら作成する
+    /// @param key　keyを入れる 
+    /// @return Sprite*
     static Sprite* GetOrCreateSprite(const GlyphKey& key);
 
     /// @brief エンジンでCommandQueueを送った後にリセットする
     static void ResetSpriteUsage();
+    /// @brief FTTextureDataの取得関数
+    /// @param key keyを入れる
+    /// @return FTTextureData
     static const FTTextureData& GetGlyphTextures(const GlyphKey& key);
 
 private:
@@ -121,6 +157,8 @@ private:
     /// @param handle 
     /// @param glyphIndex 
     static void CreateGlyphTexture(uint32_t handle, FT_UInt glyphIndex);
+    /// @brief リソールリリース
+    /// @param resource 
     static void ReleaseResource(FTResource& resource);
 private:
     //一つのライブラリで複数のFaceを保持できる
