@@ -99,6 +99,8 @@ void Text::Draw() {
 void Text::Debug() {
 
 #ifdef _DEVELOP
+    ImGui::Begin("Font");
+
     DebugUI::CheckColor(color_, "color");
     DebugUI::CheckBlendMode(blendMode_);
     ImGui::SliderFloat2("pos", &position_.x, -1000.0f, 1000.0f);
@@ -107,8 +109,9 @@ void Text::Debug() {
         auto* font = activeFonts_[i];
         if (font) {
             std::string msg = "Glyph[" + std::to_string(i) + "]";
-  
+            DebugUI::CheckFont(*font, msg.c_str());
         }
     }
+    ImGui::End();
 #endif
 }

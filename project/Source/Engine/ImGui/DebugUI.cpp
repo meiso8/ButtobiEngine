@@ -17,6 +17,7 @@
 #include"Lights/DirectionalLightManager.h"
 #include"Lights/SpotLightManager.h"
 #include"Lights/PointLightManager.h"
+#include"Engine/Mesh/Font/Font.h"
 
 #include"PSO.h"
 #include"Camera.h"
@@ -381,6 +382,44 @@ void DebugUI::ShowMatrix4x4(const Matrix4x4& matrix, const char* label) {
 #endif
 }
 
+
+void DebugUI::CheckFont(Font& font, const char* label)
+{
+#ifdef USE_IMGUI
+    ImGui::Begin("Font");
+
+    if (ImGui::TreeNode(label)) {
+
+        if (ImGui::TreeNode("transform2D")) {
+            ImGui::SliderFloat2("pos", &font.GetPosition().x, -1280.0f, 1280.0f);
+            ImGui::SliderFloat("rotation", &font.GetRotate(), 0.0f, std::numbers::pi_v<float>*2.0f);
+            ImGui::SliderFloat2("scale", &font.GetScale().x, -1280.0f, 1280.0f);
+            ImGui::SliderFloat2("size", &font.GetSize().x, -1280.0f, 1280.0f);
+            ImGui::TreePop();
+        }
+
+        CheckTransforms(font.GetUVScale(), font.GetUVRotate(), font.GetUVTranslate(), "uvTransform");
+
+        if (ImGui::TreeNode("anchorPointTextureSize")) {
+
+            ImGui::SliderFloat2("anchorPoint", &font.GetAnchorPoint().x, 0.0f, 1.0f);
+            ImGui::Checkbox("isFlipX", &font.GetIsFlipX());
+            ImGui::Checkbox("isFlipY", &font.GetIsFlipY());
+            ImGui::SliderFloat2("textureLeftTop", &font.GetTextureLeftTop().x, 0.0f, 1280.0f);
+            ImGui::SliderFloat2("textureSize", &font.GetTextureSize().x, 0.0f, 1280.0f);
+            ImGui::TreePop();
+        }
+
+        CheckColor(font.GetColor(), "color");
+
+        ImGui::TreePop();
+    }
+
+
+
+    ImGui::End();
+#endif
+}
 
 void DebugUI::CheckBalloonData(Balloon& balloon)
 {
