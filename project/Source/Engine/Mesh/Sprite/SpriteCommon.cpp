@@ -31,6 +31,11 @@ void SpriteCommon::PreDraw(ID3D12GraphicsCommandList* commandList)
     commandList->SetGraphicsRootSignature(rootSignature_->GetRootSignature(RootSignature::SPRITE));
 }
 
+void SpriteCommon::PreFontDraw(ID3D12GraphicsCommandList* commandList)
+{
+    commandList->SetGraphicsRootSignature(rootSignature_->GetRootSignature(RootSignature::FONT));
+}
+
 void SpriteCommon::DrawCall(ID3D12GraphicsCommandList* commandList)
 {
     //描画!（DrawCall/ドローコール）6個のインデックスを使用し1つのインスタンスを描画。その他は当面0で良い。

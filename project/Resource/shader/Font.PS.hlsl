@@ -26,13 +26,13 @@ PixelShaderOutput main(VertexShaderOutput input)
     float4 tempColor = { 0.0, 0.0, 0.0, 0.0 };
 
     float3 redColor = float3(1.0, 0.0, 0.0);
-    float threshold = 0.75;
+    float threshold = 0.625;
     
     if (distance(textureColor.rgb, redColor) < threshold)
     {
         tempColor = float4(1.0, 1.0, 1.0, 1.0); 
     }
-    else if (length(textureColor.rgb) == 0.0)
+    else if (length(textureColor.rgb) <= 0.1)
     { 
         discard;
     }

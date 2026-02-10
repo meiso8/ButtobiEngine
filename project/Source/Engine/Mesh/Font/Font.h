@@ -9,7 +9,7 @@
 #include"RootSignature.h"  
 
 #include<d3d12.h>
-#include"FontCommon.h"
+#include"SpriteCommon.h"
 
 #include"Texture.h"
 

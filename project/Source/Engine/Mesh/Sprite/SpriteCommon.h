@@ -19,6 +19,7 @@ public:
      static void Initialize();
      static void SetIndexBuffer(ID3D12GraphicsCommandList* commandList);
      static void PreDraw(ID3D12GraphicsCommandList* commandList);
+     static void PreFontDraw(ID3D12GraphicsCommandList* commandList);
      static void DrawCall(ID3D12GraphicsCommandList* commandList);
 private:
     static void CreateIndexResource();
