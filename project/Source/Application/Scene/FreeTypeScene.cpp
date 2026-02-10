@@ -4,7 +4,7 @@ FreeTypeScene::FreeTypeScene()
 {
 
     handle_ = FreeTypeManager::CreateFace("Resource/Fonts/NotoSansEgyptianHieroglyphs-Regular.ttf", 0);
-    FreeTypeManager::SetPixelSizes(handle_, 64, 64);
+    FreeTypeManager::SetPixelSizes(handle_, 12, 12);
     text_.Initialize(handle_);
     pressSpaceText_.Initialize(handle_);
 
