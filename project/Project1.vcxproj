@@ -160,6 +160,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\Mesh\Font\FontCommon.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\Font\Font.cpp" />
     <ClCompile Include="Source\Application\Scene\FreeTypeScene.cpp" />
     <ClCompile Include="Source\Application\Loader\SoundFactory.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\CurPos.cpp" />
@@ -426,6 +428,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\freetype\include\freetype\tttables.h" />
     <ClInclude Include="externals\freetype\include\freetype\tttags.h" />
     <ClInclude Include="externals\freetype\include\ft2build.h" />
+    <ClInclude Include="Source\Engine\Mesh\Font\FontCommon.h" />
+    <ClInclude Include="Source\Engine\Mesh\Font\Font.h" />
     <ClInclude Include="Source\Application\Scene\FreeTypeScene.h" />
     <ClInclude Include="Source\Application\Loader\SoundFactory.h" />
     <ClInclude Include="Source\Application\GameObject\UI\CurPos.h" />

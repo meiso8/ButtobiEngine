@@ -17,6 +17,7 @@
 #include"Application/Loader/TextureFactory.h"
 #include"Engine/FreeTypeManager/FreeTypeManager.h"
 
+
 std::unique_ptr<PSO> MyEngine::pso = nullptr;
 std::unique_ptr <Input> MyEngine::input = nullptr;
 std::unique_ptr<Window> MyEngine::wc = nullptr;
@@ -74,6 +75,10 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     ////共通のスプライト
     SpriteCommon::Initialize();
     LogFile::Log("InitializeSpriteCommon");
+
+    FontCommon::Initialize();
+    LogFile::Log("InitializeFontCommon");
+
     //スプライト用カメラ
     SpriteCamera::Initialize(static_cast<float>(wc->GetClientWidth()), static_cast<float>(wc->GetClientHeight()));
     LogFile::Log("InitializeSpriteCamera");
@@ -199,7 +204,7 @@ void MyEngine::PostCommandSet() {
 #endif // _DEBUG
     directXCommon->PostDraw();
 
-    FreeTypeManager::ResetSpriteUsage();
+    FreeTypeManager::ResetFontUsage();
 };
 
 void MyEngine::Finalize() {
@@ -221,7 +226,7 @@ void MyEngine::Finalize() {
 
     Texture::Finalize();
     Sound::Finalize();
-
+    FontCommon::Finalize();
     SpriteCommon::Finalize();
 
     SpotLightManager::Finalize();

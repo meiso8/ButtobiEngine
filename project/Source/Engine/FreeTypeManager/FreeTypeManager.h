@@ -13,8 +13,7 @@
 #include<memory>
 #include<unordered_map>
 //自作Sprite
-#include<Sprite.h>
-
+#include"Engine/Mesh/Font/Font.h"
 
 struct GlyphKey {
     //フォントの種類のハンドル
@@ -112,11 +111,11 @@ public:
     /// @param mode FT_Render_Modeの設定
     /// @return 成功したかどうか
     static bool LoadAndRenderGlyph(FT_Face& face, FT_UInt glyphIndex, FT_Render_Mode mode);
-    /// @brief Spriteの作成
+    /// @brief Fontの作成
     /// @param faceHandle faceのハンドル
     /// @param glyphIndex 文字のindex
-    /// @return Sprite*
-    static Sprite* CreateSprite(uint32_t faceHandle, FT_UInt glyphIndex);
+    /// @return Font*
+    static Font* CreateFontSprite(uint32_t faceHandle, FT_UInt glyphIndex);
     /// @brief PixelSizeの設定
     /// @param faceHandle  faceのハンドル
     /// @param width 文字の幅
@@ -138,11 +137,11 @@ public:
     static float GetMaxDescender(uint32_t faceHandle, std::vector<GlyphRun>& runs);
     /// @brief Spriteが作成済みだったら取得し、無かったら作成する
     /// @param key　keyを入れる 
-    /// @return Sprite*
-    static Sprite* GetOrCreateSprite(const GlyphKey& key);
+    /// @return Font*
+    static Font* GetOrCreateFont(const GlyphKey& key);
 
     /// @brief エンジンでCommandQueueを送った後にリセットする
-    static void ResetSpriteUsage();
+    static void ResetFontUsage();
     /// @brief FTTextureDataの取得関数
     /// @param key keyを入れる
     /// @return FTTextureData
@@ -167,7 +166,7 @@ private:
     static std::unordered_map<uint32_t, FTData> fontFaces_;
     // 文字ごとのテクスチャを格納する
     static std::unordered_map<GlyphKey, FTTextureData> glyphTextures_;
-    //文字ごとのSpriteを格納する
-    static std::unordered_map<GlyphKey, std::vector<std::unique_ptr<Sprite>>> spritePool_;
+    //文字ごとのFontを格納する
+    static std::unordered_map<GlyphKey, std::vector<std::unique_ptr<Font>>> fontPool_;
 
 };
