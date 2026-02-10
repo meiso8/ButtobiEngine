@@ -4,7 +4,7 @@
 #include "Vector2.h"
 #include "Vector4.h"
 #include "FreeTypeManager.h"
-
+#include"Engine/Mesh/Font/Font.h"
 enum class TextAlign {
     Left,
     Center,
@@ -40,7 +40,7 @@ private:
     BlendMode blendMode_ = kBlendModeNone;
     Vector2 size_ = { 64.0f,64.0f };
     std::vector<GlyphRun> glyphRuns_;
-    std::vector<Sprite*> activeSprites_;
+    std::vector<Font*> activeFonts_;
     VerticalAlign verticalAlign_ = VerticalAlign::Top;
 
 

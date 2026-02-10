@@ -14,7 +14,7 @@ FT_Library FreeTypeManager::library_;
 // フォントごとのFTData（faceとfontData）
 std::unordered_map<uint32_t, FTData> FreeTypeManager::fontFaces_;
 unordered_map<GlyphKey, FTTextureData> FreeTypeManager::glyphTextures_;
-std::unordered_map<GlyphKey, std::vector<std::unique_ptr<Sprite>>> FreeTypeManager::spritePool_;
+std::unordered_map<GlyphKey, std::vector<std::unique_ptr<Font>>> FreeTypeManager::fontPool_;
 
 void FreeTypeManager::Initialize()
 {
@@ -112,17 +112,17 @@ void FreeTypeManager::Finalize()
     glyphTextures_.clear();
 
     //一旦明示的に解放しておく
-    for (auto& [key, sprites] : spritePool_) {
-        for (auto& sprite : sprites) {
-            if (sprite != nullptr) {
-                sprite.reset();
-                sprite = nullptr;
+    for (auto& [key, fonts] : fontPool_) {
+        for (auto& font : fonts) {
+            if (font != nullptr) {
+                font.reset();
+                font = nullptr;
             }
         }
-        sprites.clear();
+        fonts.clear();
     }
 
-    spritePool_.clear();
+    fontPool_.clear();
 
     //libraryの破棄
     FT_Done_FreeType(library_);
@@ -186,9 +186,9 @@ void FreeTypeManager::Draw(uint32_t faceIndex, FT_UInt glyphIndex)
     float height = metrics.height / 64.0f;
     float width = metrics.max_advance / 64.0f;
 
-    Sprite::PreDraw();
-    auto sprite = GetOrCreateSprite(key);
-    sprite->Draw();
+    Font::PreDraw();
+    auto font = GetOrCreateFont(key);
+    font->Draw();
 }
 
 bool FreeTypeManager::LoadAndRenderGlyph(FT_Face& face, FT_UInt glyphIndex, FT_Render_Mode mode)
@@ -227,11 +227,11 @@ void FreeTypeManager::ShowFontSize(uint32_t faceHandle)
     }
 }
 
-void FreeTypeManager::ResetSpriteUsage()
+void FreeTypeManager::ResetFontUsage()
 {
-    for (auto& [key, pool] : spritePool_) {
-        for (auto& sprite : pool) {
-            sprite->SetInUse(false);
+    for (auto& [key, pool] : fontPool_) {
+        for (auto& font : pool) {
+            font->SetInUse(false);
         }
     }
 }
@@ -392,7 +392,7 @@ void FreeTypeManager::CreateGlyphTexture(uint32_t faceHandle, FT_UInt glyphIndex
     glyphTextures_[key] = std::move(texData);
 }
 
-Sprite* FreeTypeManager::CreateSprite(uint32_t faceHandle, FT_UInt glyphIndex)
+Font* FreeTypeManager::CreateFontSprite(uint32_t faceHandle, FT_UInt glyphIndex)
 {
     GlyphKey key = { faceHandle ,glyphIndex };
 
@@ -408,14 +408,14 @@ Sprite* FreeTypeManager::CreateSprite(uint32_t faceHandle, FT_UInt glyphIndex)
     FT_Face face = ftData.face;
 
     if (data.ftResource.resource) {
-        auto& pool = spritePool_[key];
+        auto& pool = fontPool_[key];
         auto& glyphSize = data.glyphSize;
-        auto newSprite = std::make_unique<Sprite>();
-        newSprite->Create(Texture::GetTextureHandle(srvIndex), { 100.0f, 100.0f });
-        newSprite->SetSize(glyphSize);
-        newSprite->SetInUse(true);
-        Sprite* ptr = newSprite.get();
-        pool.push_back(std::move(newSprite));
+        auto newFont = std::make_unique<Font>();
+        newFont->Create(Texture::GetTextureHandle(srvIndex), { 100.0f, 100.0f });
+        newFont->SetSize(glyphSize);
+        newFont->SetInUse(true);
+        Font* ptr = newFont.get();
+        pool.push_back(std::move(newFont));
         return ptr;
 
     }
@@ -549,9 +549,9 @@ float FreeTypeManager::GetMaxDescender(uint32_t handle, std::vector<GlyphRun>& r
 
 }
 
-Sprite* FreeTypeManager::GetOrCreateSprite(const GlyphKey& key)
+Font* FreeTypeManager::GetOrCreateFont(const GlyphKey& key)
 {
-    auto& pool = spritePool_[key];
+    auto& pool = fontPool_[key];
     if (!glyphTextures_.contains(key)) {
         // なければ生成
         CreateGlyphTexture(key.handle, key.glyphIndex);
@@ -559,13 +559,13 @@ Sprite* FreeTypeManager::GetOrCreateSprite(const GlyphKey& key)
     auto& texData = glyphTextures_.at(key);
 
     // 未使用のスプライトを探す
-    for (auto& sprite : pool) {
-        if (!sprite->IsInUse()) {
-            sprite->SetInUse(true);
-            sprite->SetSize(texData.glyphSize); 
-            return sprite.get();
+    for (auto& font : pool) {
+        if (!font->IsInUse()) {
+            font->SetInUse(true);
+            font->SetSize(texData.glyphSize);
+            return font.get();
         }
     }
     //無かったら作成する
-    return CreateSprite(key.handle, key.glyphIndex);
+    return CreateFontSprite(key.handle, key.glyphIndex);
 }

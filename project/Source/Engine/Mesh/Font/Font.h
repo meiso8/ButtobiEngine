@@ -1,4 +1,4 @@
-#pragma once  
+#pragma once
 
 #include"VertexData.h"
 #include"PSO.h"  
@@ -9,21 +9,21 @@
 #include"RootSignature.h"  
 
 #include<d3d12.h>
-#include"SpriteCommon.h"
+#include"FontCommon.h"
 
 #include"Texture.h"
 
-class Sprite
+class Font
 {
 public:
-    ~Sprite();
+    Font();
+    ~Font();
     void Create(const TextureFactory::Handle& textureHandle, const Vector2& position, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
 
     void Update();
     void UpdateAnchorPoint();
     static void PreDraw(uint32_t blendMode = BlendMode::kBlendModeNormal);
-    void Draw(const LightMode& lightMode = LightMode::kLightModeNone
-    );
+    void Draw(const LightMode& lightMode = LightMode::kLightModeNone);
 
     void SetColor(const Vector4& color);
     void SetTexture(const TextureFactory::Handle& textureHandle);
@@ -63,6 +63,8 @@ public:
     Vector2& GetTextureLeftTop() { return textureLeftTop; };
     Vector2& GetTextureSize() { return textureSize; };
     void AdjustTextureSize();
+    void SetInUse(bool inUse) { inUse_ = inUse; }
+    bool IsInUse() const { return inUse_; }
 private:
     void CreateVertex();
     void CreateUVTransformationMatrix();
@@ -71,6 +73,7 @@ private:
     void UpdateUV();
 
 private:
+    bool inUse_ = false;
 
     uint32_t textureHandle_ = 0;
     Vector2 anchorPoint_ = { 0.0f,0.0f };
@@ -101,7 +104,7 @@ private:
 
 };
 
-//Spriteとposとの当たり判定
-bool IsCollision(const Vector2& pos, Sprite& sprite);
-//Spriteとposとの当たり判定
-bool IsCollision(Sprite& sprite, const Vector2& pos);
+////Fontとposとの当たり判定
+//bool IsCollision(const Vector2& pos, Font& font);
+////Fontとposとの当たり判定
+//bool (Font& font, const Vector2& pos);

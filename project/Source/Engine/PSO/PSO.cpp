@@ -11,6 +11,8 @@ std::array<std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfCullM
 std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode>PSO::graphicsPipelineStatesParticle_;
 Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::graphicsPipelineStatesLine_;
 std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> PSO::graphicsPipelineStateSprite_;
+std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> PSO::graphicsPipelineStateFont_;
+
 std::array<std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfCullMode>, kCountOfBlendMode>PSO::graphicsPipelineStatesSkinning_;
 Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
     RootSignature& rootSignature,
@@ -151,7 +153,19 @@ void PSO::CreateALLPSO()
             rasterizerStates[kCullModeBack],
             depthStencils[kAll], kSprite, kTriangle, InputLayout::kInputLayoutTypeNormal
         );
+
     }
+
+    for (int b = 0; b < kCountOfBlendMode; ++b) {
+        graphicsPipelineStateFont_[b] = Create(
+            *rootSignature,
+            *inputLayout,
+            blendStates[b],
+            rasterizerStates[kCullModeBack],
+            depthStencils[kAll], kFont, kTriangle, InputLayout::kInputLayoutTypeNormal
+        );
+    }
+
 
     for (uint32_t b = 0; b < kCountOfBlendMode; ++b) {
         for (uint32_t c = 0; c < kCountOfCullMode; ++c) {
@@ -180,6 +194,12 @@ PSO::~PSO()
     }
 
     for (auto& pso : graphicsPipelineStateSprite_) {
+        if (pso) {
+            pso.Reset();
+        }
+    }
+
+    for (auto& pso : graphicsPipelineStateFont_) {
         if (pso) {
             pso.Reset();
         }

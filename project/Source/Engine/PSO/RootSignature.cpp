@@ -201,17 +201,40 @@ void RootSignature::Create() {
 
 #pragma endregion
 
-    descriptionRootSignature[kNormal].pParameters = rootParameters;//ルートパラメータ配列へのポインタ
-    descriptionRootSignature[kNormal].NumParameters = _countof(rootParameters);//配列の長さ
+#pragma region//SpriteParameters
+    //CBufferを利用することになったので、RootParameterに設定を追加する
+   /* RootParameter作成。PixelShaderのMaterialとVertexShaderのTransform*/
+    D3D12_ROOT_PARAMETER rootParametersForFont[3] = {};
+    //Material
+    rootParametersForFont[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+    rootParametersForFont[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParametersForFont[0].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
+    //Transform用
+    rootParametersForFont[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+    rootParametersForFont[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
+    rootParametersForFont[1].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
+    //Texture?
+    rootParametersForFont[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParametersForFont[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParametersForFont[2].DescriptorTable.pDescriptorRanges = descriptorRange;//Tableの中身の配列を指定
+    rootParametersForFont[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);//Tableで利用する数
 
-    descriptionRootSignature[kParticle].pParameters = rootParametersForInstancing;//ルートパラメータ配列へのポインタ
-    descriptionRootSignature[kParticle].NumParameters = _countof(rootParametersForInstancing);//配列の長さ
+#pragma endregion
 
-    descriptionRootSignature[kSprite].pParameters = rootParametersForSprite;//ルートパラメータ配列へのポインタ
-    descriptionRootSignature[kSprite].NumParameters = _countof(rootParametersForSprite);//配列の長さ
+    descriptionRootSignature[NORMAL].pParameters = rootParameters;//ルートパラメータ配列へのポインタ
+    descriptionRootSignature[NORMAL].NumParameters = _countof(rootParameters);//配列の長さ
 
-    descriptionRootSignature[kSkinning].pParameters = rootParametersForSkinning;//ルートパラメータ配列へのポインタ
-    descriptionRootSignature[kSkinning].NumParameters = _countof(rootParametersForSkinning);//配列の長さ
+    descriptionRootSignature[PARTICLE].pParameters = rootParametersForInstancing;//ルートパラメータ配列へのポインタ
+    descriptionRootSignature[PARTICLE].NumParameters = _countof(rootParametersForInstancing);//配列の長さ
+
+    descriptionRootSignature[SPRITE].pParameters = rootParametersForSprite;//ルートパラメータ配列へのポインタ
+    descriptionRootSignature[SPRITE].NumParameters = _countof(rootParametersForSprite);//配列の長さ
+
+    descriptionRootSignature[SKINNING].pParameters = rootParametersForSkinning;//ルートパラメータ配列へのポインタ
+    descriptionRootSignature[SKINNING].NumParameters = _countof(rootParametersForSkinning);//配列の長さ
+
+    descriptionRootSignature[FONT].pParameters = rootParametersForFont;//ルートパラメータ配列へのポインタ
+    descriptionRootSignature[FONT].NumParameters = _countof(rootParametersForFont);//配列の長さ
 
     //シリアライズしてバイナリにする
     Microsoft::WRL::ComPtr <ID3DBlob> signatureBlob = nullptr;

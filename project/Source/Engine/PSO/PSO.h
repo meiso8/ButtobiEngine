@@ -49,6 +49,11 @@ public:
         return graphicsPipelineStateSprite_[blendMode];
         ;
     }
+    static Microsoft::WRL::ComPtr <ID3D12PipelineState>& GetGraphicsPipelineStateFont(uint32_t blendMode) {
+        return graphicsPipelineStateFont_[blendMode];
+        ;
+    }
+
     void CreateALLPSO();
     static RootSignature* GetRootSignature() { return rootSignature.get(); }
     ~PSO();
@@ -71,6 +76,7 @@ private:
     static std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState> ,kCountOfBlendMode> graphicsPipelineStatesParticle_;
     static Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineStatesLine_;
     static std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> graphicsPipelineStateSprite_;
+    static std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> graphicsPipelineStateFont_;
     std::unique_ptr<InputLayout>inputLayout = nullptr;
     std::vector<BlendState> blendStates = {};
     std::vector<RasterizerState> rasterizerStates = {};

@@ -78,18 +78,19 @@ void Text::UpdateLayout() {
 
 void Text::Draw() {
 
-    Sprite::PreDraw(blendMode_);
-    activeSprites_.clear();
+
+    activeFonts_.clear();
+    Font::PreDraw(blendMode_);
     for (const auto& run : glyphRuns_) {
         GlyphKey key{ fontHandle_, run.glyphIndex };
-        auto* sprite = FreeTypeManager::GetOrCreateSprite(key);
+        auto* font = FreeTypeManager::GetOrCreateFont(key);
         auto& texData = FreeTypeManager::GetGlyphTextures(key);
         // ベースラインに合わせてY位置を調整！
         float y = run.position.y - (texData.glyphSize.y + texData.bearingY) / 2.0f;
-        sprite->SetPosition({ run.position.x,y });
-        sprite->SetColor(color_);
-        sprite->Draw();
-        activeSprites_.push_back(sprite);
+        font->SetPosition({ run.position.x,y });
+        font->SetColor(color_);
+        font->Draw();
+        activeFonts_.push_back(font);
     }
 
 
@@ -102,12 +103,11 @@ void Text::Debug() {
     DebugUI::CheckBlendMode(blendMode_);
     ImGui::SliderFloat2("pos", &position_.x, -1000.0f, 1000.0f);
     UpdateLayout();
-    for (size_t i = 0; i < activeSprites_.size(); ++i) {
-        auto* sprite = activeSprites_[i];
-        if (sprite) {
+    for (size_t i = 0; i < activeFonts_.size(); ++i) {
+        auto* font = activeFonts_[i];
+        if (font) {
             std::string msg = "Glyph[" + std::to_string(i) + "]";
-            DebugUI::CheckSprite(*sprite, msg.c_str());
-       
+  
         }
     }
 #endif

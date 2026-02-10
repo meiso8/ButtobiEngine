@@ -31,9 +31,6 @@ LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 
 #endif
 
-
-
-
     //メッセージに応じてゲーム固有の処理を行う
     switch (msg) {
         //ウィンドウが破棄された

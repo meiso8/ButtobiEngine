@@ -14,6 +14,7 @@ public:
         PARTICLE,
         SPRITE,
         SKINNING,
+        FONT,
         TYPES
     };
 

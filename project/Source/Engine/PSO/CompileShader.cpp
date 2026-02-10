@@ -61,6 +61,16 @@ void DxcCompiler::ShaderSetting() {
     pixelShaderBlobs_.push_back(pixelShaderBlobs_[kNormal]);
     assert(pixelShaderBlobs_[kSkinning] != nullptr);
 
+    {
+        //Font用
+        vertexShaderBlobs_.push_back(vertexShaderBlobs_[kSprite]);
+        assert(vertexShaderBlobs_[kFont] != nullptr);
+
+        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/Font.PS.hlsl",
+            L"ps_6_0"));
+        assert(pixelShaderBlobs_[kFont] != nullptr);
+    }
+
 }
 
 //CompileShader関数
