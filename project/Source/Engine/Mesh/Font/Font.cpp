@@ -27,17 +27,20 @@ Font::~Font()
     }
 }
 
-void Font::Create(const TextureFactory::Handle& textureHandle, const Vector2& position, const Vector4& color)
+void Font::Create(const TextureFactory::Handle& textureHandle, const Vector2& position, const Vector4& color, const Vector2& size, const Vector2& anchorPoint)
 {
 
     position_ = position;
     textureHandle_ = Texture::GetHandle(textureHandle);
+    anchorPoint_ = anchorPoint;
 
     CreateMaterial(color);
     CreateVertex();
     CreateTransformationMatrix();
     CreateUVTransformationMatrix();
-    AdjustTextureSize();
+    AdjustTextureSize(size);
+
+
 }
 
 void Font::Update()
@@ -64,22 +67,19 @@ void Font::UpdateAnchorPoint()
         bottom = -bottom;
     }
 
-
     vertexData_[0].position = { left,bottom,0.0f,1.0f };//左下
     vertexData_[1].position = { left,top,0.0f,1.0f };//左上
     vertexData_[2].position = { right,bottom,0.0f,1.0f };//右下
     vertexData_[3].position = { right,top,0.0f,1.0f };//右上
 
-    const DirectX::TexMetadata& metadata = Texture::GetMetaData(textureHandle_);
+    float texelWidth = 1.0f / textureSize.x;
+    float texelHeight = 1.0f / textureSize.y;
 
-    float texelWidth = 1.0f / metadata.width;
-    float texelHeight = 1.0f / metadata.height;
     float offset = 0.5f;
     float tex_left = (textureLeftTop.x + offset) * texelWidth;
     float tex_right = (textureLeftTop.x + textureSize.x - offset) * texelWidth;
     float tex_top = (textureLeftTop.y + offset) * texelHeight;
     float tex_bottom = (textureLeftTop.y + textureSize.y - offset) * texelHeight;
-
 
     vertexData_[0].texcoord = { tex_left,tex_bottom };
     vertexData_[1].texcoord = { tex_left,tex_top };
@@ -98,12 +98,11 @@ void Font::SetTexture(const TextureFactory::Handle& textureHandle)
 
 }
 
-
 void Font::PreDraw(uint32_t blendMode) {
+
     if (commandList == nullptr) {
         commandList = DirectXCommon::GetCommandList();
     }
-    assert(commandList);
     SpriteCommon::PreDraw(commandList);
 
     commandList->SetPipelineState(PSO::GetGraphicsPipelineStateFont(blendMode).Get());//PSOを設定
@@ -122,7 +121,6 @@ void Font::Draw(const LightMode& lightMode
     worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 
     *transformationMatrixData_ = { Multiply(worldMatrix_, SpriteCamera::GetViewProjectionMatrix()),worldMatrix_ };
-
 
     //頂点バッファビューを設定
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
@@ -164,7 +162,6 @@ void Font::CreateVertex()
     vertexData_[2].position = { 1.0f,1.0f,0.0f,1.0f };//右下
     vertexData_[3].position = { 1.0f,0.0f,0.0f,1.0f };//右上
 
-
     vertexData_[0].texcoord = { 0.0f,1.0f };
     vertexData_[0].normal = { 0.0f,0.0f,-1.0f };//法線
 
@@ -176,8 +173,6 @@ void Font::CreateVertex()
 
     vertexData_[3].texcoord = { 1.0f,0.0f };
     vertexData_[3].normal = { 0.0f,0.0f,-1.0f };
-
-
 
 #pragma endregion
 
@@ -220,11 +215,9 @@ void Font::UpdateUV() {
     materialResource_.SetUV(uvTransformMatrix_);
 }
 
-void Font::AdjustTextureSize()
+void Font::AdjustTextureSize(const Vector2& size)
 {
-    const DirectX::TexMetadata& metadata = Texture::GetMetaData(textureHandle_);
-    textureSize.x = static_cast<float>(metadata.width);
-    textureSize.y = static_cast<float>(metadata.height);
+    textureSize = size;
     size_ = textureSize;
 }
 

@@ -411,8 +411,7 @@ Font* FreeTypeManager::CreateFontSprite(uint32_t faceHandle, FT_UInt glyphIndex)
         auto& pool = fontPool_[key];
         auto& glyphSize = data.glyphSize;
         auto newFont = std::make_unique<Font>();
-        newFont->Create(Texture::GetTextureHandle(srvIndex), { 100.0f, 100.0f });
-        newFont->SetSize(glyphSize);
+        newFont->Create(Texture::GetTextureHandle(srvIndex), { 100.0f, 100.0f },{1.0f,1.0f,1.0f,1.0f}, glyphSize);
         newFont->SetInUse(true);
         Font* ptr = newFont.get();
         pool.push_back(std::move(newFont));

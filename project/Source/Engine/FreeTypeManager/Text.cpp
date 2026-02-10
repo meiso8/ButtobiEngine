@@ -30,9 +30,9 @@ void Text::SetBlendMode(const BlendMode& blendMode) {
 }
 
 void Text::UpdateLayout() {
+
     // まず仮レイアウト（位置は0始まり）を取得
     glyphRuns_ = FreeTypeManager::LayoutString(fontHandle_, text_, { 0.0f, 0.0f });
-
 
     // 中央・右寄せ対応
     float totalWidth = 0.0f;
@@ -78,7 +78,6 @@ void Text::UpdateLayout() {
 
 void Text::Draw() {
 
-
     activeFonts_.clear();
     Font::PreDraw(blendMode_);
     for (const auto& run : glyphRuns_) {
@@ -92,8 +91,6 @@ void Text::Draw() {
         font->Draw();
         activeFonts_.push_back(font);
     }
-
-
 }
 
 void Text::Debug() {
@@ -108,6 +105,7 @@ void Text::Debug() {
     for (size_t i = 0; i < activeFonts_.size(); ++i) {
         auto* font = activeFonts_[i];
         if (font) {
+            font->Update();
             std::string msg = "Glyph[" + std::to_string(i) + "]";
             DebugUI::CheckFont(*font, msg.c_str());
         }

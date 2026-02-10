@@ -18,7 +18,7 @@ class Font
 public:
     Font();
     ~Font();
-    void Create(const TextureFactory::Handle& textureHandle, const Vector2& position, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
+    void Create(const TextureFactory::Handle& textureHandle, const Vector2& position, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f },  const Vector2& size = {64.0f,64.0f},const Vector2& anchorPoint = {0.0f,0.0f});
 
     void Update();
     void UpdateAnchorPoint();
@@ -52,7 +52,11 @@ public:
     Vector2& GetAnchorPoint() { return anchorPoint_; }
     /// @brief アンカーポイント
     /// @param anchorPoint 0.0f~1.0f
-    void SetAnchorPoint(const Vector2& anchorPoint) { anchorPoint_ = anchorPoint; UpdateAnchorPoint(); }
+    
+    void SetAnchorPoint(const Vector2& anchorPoint) { 
+        anchorPoint_ = anchorPoint;
+        UpdateAnchorPoint();
+    }
     void SetIsFlipX(const bool isFlipX) { isFlipX_ = isFlipX; };
     void SetIsFlipY(const bool isFlipY) { isFlipY_ = isFlipY; };
     bool& GetIsFlipX() { return isFlipX_; };
@@ -62,7 +66,7 @@ public:
     void SetTextureSize(const Vector2& size) { textureSize = size; };
     Vector2& GetTextureLeftTop() { return textureLeftTop; };
     Vector2& GetTextureSize() { return textureSize; };
-    void AdjustTextureSize();
+    void AdjustTextureSize(const Vector2& size);
     void SetInUse(bool inUse) { inUse_ = inUse; }
     bool IsInUse() const { return inUse_; }
 private:
