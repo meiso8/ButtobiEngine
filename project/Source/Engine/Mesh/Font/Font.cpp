@@ -104,7 +104,7 @@ void Font::PreDraw(uint32_t blendMode) {
         commandList = DirectXCommon::GetCommandList();
     }
     assert(commandList);
-    FontCommon::PreDraw(commandList);
+    SpriteCommon::PreDraw(commandList);
 
     commandList->SetPipelineState(PSO::GetGraphicsPipelineStateFont(blendMode).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
@@ -126,7 +126,7 @@ void Font::Draw(const LightMode& lightMode
 
     //頂点バッファビューを設定
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
-    FontCommon::SetIndexBuffer(commandList);
+    SpriteCommon::SetIndexBuffer(commandList);
     //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
     commandList->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
     //TransformationMatrixCBufferの場所を設定
@@ -134,7 +134,7 @@ void Font::Draw(const LightMode& lightMode
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
     SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
 
-    FontCommon::DrawCall(commandList);
+    SpriteCommon::DrawCall(commandList);
 
 };
 

@@ -76,9 +76,6 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     SpriteCommon::Initialize();
     LogFile::Log("InitializeSpriteCommon");
 
-    FontCommon::Initialize();
-    LogFile::Log("InitializeFontCommon");
-
     //スプライト用カメラ
     SpriteCamera::Initialize(static_cast<float>(wc->GetClientWidth()), static_cast<float>(wc->GetClientHeight()));
     LogFile::Log("InitializeSpriteCamera");
@@ -226,7 +223,6 @@ void MyEngine::Finalize() {
 
     Texture::Finalize();
     Sound::Finalize();
-    FontCommon::Finalize();
     SpriteCommon::Finalize();
 
     SpotLightManager::Finalize();
