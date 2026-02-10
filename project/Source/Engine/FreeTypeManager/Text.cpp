@@ -41,8 +41,6 @@ void Text::UpdateLayout() {
         totalWidth = last.position.x - glyphRuns_.front().position.x;
     }
 
-    float maxDescender = FreeTypeManager::GetMaxDescender(fontHandle_, glyphRuns_);
-
     float offsetX = 0.0f;
     switch (align_) {
     case TextAlign::Center:
@@ -55,23 +53,11 @@ void Text::UpdateLayout() {
         break;
     }
 
-    float offsetY = 0.0f;
-    switch (verticalAlign_) {
-    case VerticalAlign::Middle:
-        offsetY = -maxDescender * 0.5f;
-        break;
-    case VerticalAlign::Bottom:
-        offsetY = -maxDescender;
-        break;
-    default:
-        break;
-    }
-
 
     // 最終的な位置を加算
     for (auto& run : glyphRuns_) {
         run.position.x += position_.x + offsetX;
-        run.position.y += position_.y + offsetY;
+        run.position.y += position_.y;
     }
 }
 
@@ -88,6 +74,7 @@ void Text::Draw() {
         float y = run.position.y - (texData.glyphSize.y + texData.bearingY) / 2.0f;
         font->SetPosition({ run.position.x,y });
         font->SetColor(color_);
+        font->Update();
         font->Draw();
         activeFonts_.push_back(font);
     }
@@ -105,7 +92,6 @@ void Text::Debug() {
     for (size_t i = 0; i < activeFonts_.size(); ++i) {
         auto* font = activeFonts_[i];
         if (font) {
-            font->Update();
             std::string msg = "Glyph[" + std::to_string(i) + "]";
             DebugUI::CheckFont(*font, msg.c_str());
         }

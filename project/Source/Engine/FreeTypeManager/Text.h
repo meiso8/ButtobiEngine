@@ -41,8 +41,6 @@ private:
     Vector2 size_ = { 64.0f,64.0f };
     std::vector<GlyphRun> glyphRuns_;
     std::vector<Font*> activeFonts_;
-    VerticalAlign verticalAlign_ = VerticalAlign::Top;
-
-
+    VerticalAlign verticalAlign_ = VerticalAlign::Middle;
 
 };

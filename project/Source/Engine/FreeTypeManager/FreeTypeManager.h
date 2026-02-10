@@ -130,11 +130,6 @@ public:
     /// @param startPos 始点
     /// @return 文字の情報のvectorを取得する
     static std::vector<GlyphRun> LayoutString(uint32_t faceHandle, const std::u32string& text, const Vector2& startPos);
-    /// @brief 文字の最大下降を決める　ここは欠陥がある
-    /// @param faceHandle face(フォント)のハンドル
-    /// @param runs 文字一つ一つの情報が格納されている
-    /// @return 文字の最大下降
-    static float GetMaxDescender(uint32_t faceHandle, std::vector<GlyphRun>& runs);
     /// @brief Spriteが作成済みだったら取得し、無かったら作成する
     /// @param key　keyを入れる 
     /// @return Font*
@@ -146,7 +141,7 @@ public:
     /// @param key keyを入れる
     /// @return FTTextureData
     static const FTTextureData& GetGlyphTextures(const GlyphKey& key);
-
+    static float GetFontDescender(uint32_t handle);
 private:
     /// @brief FreeTypeのResource生成
     /// @param bitmap bitmapを入れる

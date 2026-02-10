@@ -254,6 +254,18 @@ const FTTextureData& FreeTypeManager::GetGlyphTextures(const GlyphKey& key) {
     return it->second;
 }
 
+float FreeTypeManager::GetFontDescender(uint32_t handle)
+{
+    auto& ftData = fontFaces_.at(handle);
+    FT_Face face = ftData.face;
+
+    if (!face || !face->size) return 0.0f;
+
+    // descenderは負の値なので符号を反転して正にする
+    return -static_cast<float>(face->descender) * face->size->metrics.y_ppem / face->units_per_EM / 64.0f;
+}
+
+
 void FreeTypeManager::ReleaseResource(FTResource& resource)
 {
 
@@ -460,7 +472,6 @@ FT_UInt FreeTypeManager::GetGlyphID(uint32_t faceHandle, uint32_t unicode, uint3
                 DebugLog("Fallback glyph '?' not found either!\n");
             }
 
-            assert(glyphIndex);
         }
 
         return glyphIndex;
@@ -492,17 +503,7 @@ std::vector<GlyphRun> FreeTypeManager::LayoutString(uint32_t handle, const std::
     auto& ftData = fontFaces_.at(handle);
     FT_Face& face = ftData.face;
 
-    float maxDescender = 0.0f;
-
-    for (char32_t ch : text) {
-        FT_UInt glyphIndex = GetGlyphID(handle, ch, 0);
-        if (glyphIndex == 0) continue;
-
-        if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT) != 0) continue;
-
-        float descender = -(face->glyph->metrics.horiBearingY - face->glyph->metrics.height) / 64.0f;
-        maxDescender = std::max(maxDescender, descender);
-    }
+    float maxDescender = GetFontDescender(handle);
 
     float penX = startPos.x;
     float penY = startPos.y + maxDescender;
@@ -528,24 +529,6 @@ std::vector<GlyphRun> FreeTypeManager::LayoutString(uint32_t handle, const std::
     }
 
     return runs;
-}
-
-float FreeTypeManager::GetMaxDescender(uint32_t handle, std::vector<GlyphRun>& runs)
-{
-    float maxDescender = 0.0f;
-
-    for (const auto& run : runs) {
-        GlyphKey key{ handle, run.glyphIndex };
-        auto& ftData = fontFaces_.at(handle);
-        FT_Face& face = ftData.face;
-       
-        if (FT_Load_Glyph(face, run.glyphIndex, FT_LOAD_DEFAULT) != 0) continue;
-        
-        float descender = -static_cast<float>(face->glyph->metrics.horiBearingY - face->glyph->metrics.height)/64.0f;
-        maxDescender = std::max(maxDescender, descender);
-    }
-    return maxDescender;
-
 }
 
 Font* FreeTypeManager::GetOrCreateFont(const GlyphKey& key)
