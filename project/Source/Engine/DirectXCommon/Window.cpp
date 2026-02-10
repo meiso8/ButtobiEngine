@@ -1,4 +1,3 @@
-#define UNICODE
 #include "Window.h"
 #include"ImGuiClass.h"
 

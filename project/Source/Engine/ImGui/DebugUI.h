@@ -15,6 +15,7 @@
 enum BlendMode;
 class Input;
 class Sprite;
+class Font;
 class SphereMesh;
 class Camera;
 class Model;
@@ -58,6 +59,9 @@ public:
     /// @brief スプライト
     /// @param sprite 
     static void CheckSprite(Sprite& sprite, const char* label);
+    /// @brief Font
+/// @param Font 
+    static void CheckFont(Font& sprite, const char* label);
     static void CheckBalloonData(Balloon& balloon);
     static void CheckWaveData(Wave& wave, const char* label);
     static void CheckPointLightData();
