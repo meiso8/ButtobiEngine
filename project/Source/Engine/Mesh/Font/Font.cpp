@@ -77,9 +77,9 @@ void Font::UpdateAnchorPoint()
 
     float offset = 0.5f;
     float tex_left = (textureLeftTop.x + offset) * texelWidth;
-    float tex_right = (textureLeftTop.x + textureSize.x - offset) * texelWidth;
+    float tex_right = (textureLeftTop.x + textureSize.x) * texelWidth;
     float tex_top = (textureLeftTop.y + offset) * texelHeight;
-    float tex_bottom = (textureLeftTop.y + textureSize.y - offset) * texelHeight;
+    float tex_bottom = (textureLeftTop.y + textureSize.y) * texelHeight;
 
     vertexData_[0].texcoord = { tex_left,tex_bottom };
     vertexData_[1].texcoord = { tex_left,tex_top };
