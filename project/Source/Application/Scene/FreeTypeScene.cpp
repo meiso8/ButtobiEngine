@@ -28,14 +28,14 @@ void FreeTypeScene::Initialize()
 void FreeTypeScene::Update()
 {
     //入力受付
-    for (char32_t ch : Input::GetInputChars()) {
-        if (ch == U'\b') {
-            if (!inputText_.empty()) inputText_.pop_back();
-        } else if (ch >= 0x20) {
-            inputText_ += ch;
-        }
-        text_.SetString(inputText_);
-    }
+    //for (char32_t ch : Input::GetInputChars()) {
+    //    if (ch == U'\b') {
+    //        if (!inputText_.empty()) inputText_.pop_back();
+    //    } else if (ch >= 0x20) {
+    //        inputText_ += ch;
+    //    }
+    //    text_.SetString(inputText_);
+    //}
 
     //デバック
     text_.Debug();
@@ -45,10 +45,10 @@ void FreeTypeScene::Update()
         SceneManager::SetNestScene("Title");
     }
 
-    /*if (Input::IsTriggerKey(DIK_SPACE)) {
+    if (Input::IsTriggerKey(DIK_SPACE)) {
         sceneChange_->SetState(SceneChange::kFadeIn, 30);
         SceneManager::SetNestScene("Title");
-    }*/
+    }
 }
 
 void FreeTypeScene::Draw()

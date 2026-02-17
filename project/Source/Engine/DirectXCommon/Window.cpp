@@ -1,3 +1,5 @@
+#define _UNICODE
+#define UNICODE
 #include "Window.h"
 #include"ImGuiClass.h"
 
