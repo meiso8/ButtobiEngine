@@ -1,5 +1,7 @@
+#ifdef _NOT_DEBUG
 #define _UNICODE
 #define UNICODE
+#endif
 #include "Window.h"
 #include"ImGuiClass.h"
 
