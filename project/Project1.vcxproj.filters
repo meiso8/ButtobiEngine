@@ -81,24 +81,6 @@
     <ClCompile Include="Source\main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="externals\imgui\imgui_demo.cpp">
-      <Filter>externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui\imgui_draw.cpp">
-      <Filter>externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui\imgui_impl_dx12.cpp">
-      <Filter>externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui\imgui_impl_win32.cpp">
-      <Filter>externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui\imgui_tables.cpp">
-      <Filter>externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui\imgui_widgets.cpp">
-      <Filter>externals\imgui</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\Camera\Camera.cpp">
       <Filter>ソース ファイル\Engine\Camera</Filter>
     </ClCompile>
@@ -301,9 +283,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\BackGround\Field.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui\imgui.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Mesh\Circle\CircleMesh.cpp">
@@ -524,30 +503,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="externals\imgui\imconfig.h">
-      <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui\imgui.h">
-      <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui\imgui_impl_dx12.h">
-      <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui\imgui_impl_win32.h">
-      <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui\imgui_internal.h">
-      <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui\imstb_rectpack.h">
-      <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui\imstb_textedit.h">
-      <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui\imstb_truetype.h">
-      <Filter>externals\imgui</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Engine\Math\Structs\AABB.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
@@ -1051,20 +1006,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="externals\imgui\LICENSE.txt">
-      <Filter>externals\imgui</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="externals\assimp\lib\Debug\assimp-vc143-mtd.lib">
-      <Filter>externals\assimp</Filter>
-    </Library>
-    <Library Include="externals\assimp\lib\Release\assimp-vc143-mt.lib" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="externals\assimp\lib\Debug\assimp-vc143-mtd.pdb">
-      <Filter>externals\assimp</Filter>
-    </None>
     <None Include="Resource\JsonFiles\config.json" />
     <None Include="Resource\JsonFiles\Boss.json" />
     <None Include="Resource\JsonFiles\notes.json" />
@@ -1090,5 +1031,9 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="Resource\Fonts\NotoSansEgyptianHieroglyphs-Regular.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="externals\assimp\lib\Release\assimp-vc143-mt.lib" />
+    <Library Include="externals\assimp\lib\Debug\assimp-vc143-mtd.lib" />
   </ItemGroup>
 </Project>

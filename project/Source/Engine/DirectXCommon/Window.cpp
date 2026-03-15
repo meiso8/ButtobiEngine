@@ -1,10 +1,6 @@
-#ifdef _NOT_DEBUG
-#define _UNICODE
-#define UNICODE
-#endif
 #include "Window.h"
-#include"ImGuiClass.h"
 
+#include"ImGuiClass.h"
 //ComPtr(コムポインタ)
 #include<wrl.h>
 #include<cassert>
@@ -51,7 +47,6 @@ LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
     return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
-
 void Window::Create(const std::wstring& title, const int32_t& clientWidth, const int32_t& clientHeight) {
 
     clientWidth_ = clientWidth;
@@ -94,7 +89,7 @@ void Window::Create(const std::wstring& title, const int32_t& clientWidth, const
 
     //ウィンドウの生成
     //CreateWindowの戻り値であるHWNDはウィンドウハンドルを呼びウィンドウを表す識別子である
-    hwnd_ = CreateWindow(
+    hwnd_ = CreateWindowW(
         wc_.lpszClassName,         // 利用するクラス名
         title.c_str(),                   // タイトルバーの文字(何でもいい)
         WS_OVERLAPPEDWINDOW,      // よく見るウィンドウスタイル
