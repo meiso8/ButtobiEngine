@@ -499,10 +499,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <Font Include="Resource\Fonts\NotoSansEgyptianHieroglyphs-Regular.ttf" />
   </ItemGroup>
-  <ItemGroup>
-    <Library Include="externals\assimp\lib\Debug\assimp-vc143-mtd.lib" />
-    <Library Include="externals\assimp\lib\Release\assimp-vc143-mt.lib" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -1032,8 +1032,4 @@
   <ItemGroup>
     <Font Include="Resource\Fonts\NotoSansEgyptianHieroglyphs-Regular.ttf" />
   </ItemGroup>
-  <ItemGroup>
-    <Library Include="externals\assimp\lib\Release\assimp-vc143-mt.lib" />
-    <Library Include="externals\assimp\lib\Debug\assimp-vc143-mtd.lib" />
-  </ItemGroup>
 </Project>
