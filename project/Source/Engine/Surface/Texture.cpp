@@ -75,6 +75,10 @@ TextureFactory::Handle Texture::GetTextureHandle(const uint32_t& srvIndex)
 
 void Texture::Finalize()
 {
+    for (auto& data : textureDatas) {
+        data.second.intermediateResource.Reset();
+        data.second.resource.Reset();
+    }
     textureDatas.clear();
 }
 
