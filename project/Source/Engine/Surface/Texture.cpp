@@ -60,12 +60,12 @@ void Texture::AddTextureHandleByIndex(const uint32_t& srvIndex)
 
 TextureFactory::Handle Texture::GetTextureHandle(const uint32_t& srvIndex)
 {
-   
-    auto it = std::find(srvIndexes_.begin(), srvIndexes_.end(), srvIndex); 
-    if (it != srvIndexes_.end()) { 
+
+    auto it = std::find(srvIndexes_.begin(), srvIndexes_.end(), srvIndex);
+    if (it != srvIndexes_.end()) {
         // インデックスを取得して enum にキャスト 
-       size_t index = std::distance(srvIndexes_.begin(), it);
-       return static_cast<TextureFactory::Handle>(index);
+        size_t index = std::distance(srvIndexes_.begin(), it);
+        return static_cast<TextureFactory::Handle>(index);
     }
     assert(it != srvIndexes_.end());
 
@@ -96,20 +96,37 @@ void Texture::LoadTexture(const std::string& filePath)
     DirectX::ScratchImage image{};
     std::wstring filePathW = ConvertString(filePath);
     //sRBG空間で作られた物として読む。
-    HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
-    assert(SUCCEEDED(hr));
+    HRESULT hr;
 
+    if (filePathW.ends_with(L".dds")) {
+        //.ddsで終わっていたらddsとみなす。
+        hr = DirectX::LoadFromDDSFile(filePathW.c_str(), DirectX::DDS_FLAGS_NONE, nullptr, image);
+    } else {
+        hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
+    }
+
+    assert(SUCCEEDED(hr));
     const DirectX::TexMetadata metadata = image.GetMetadata();
 
     //ミニマップの作成
     DirectX::ScratchImage mipImages{};
 
-    if (metadata.width > 1 || metadata.height > 1) {
-        hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
-        assert(SUCCEEDED(hr));
+    if (DirectX::IsCompressed(image.GetMetadata().format)) {
+        //圧縮フォーマットである
+        mipImages = std::move(image);
     } else {
-        mipImages = std::move(image); // そのまま使う
+
+        if (metadata.width > 1 || metadata.height > 1) {
+            //hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
+            hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 4, mipImages);
+            assert(SUCCEEDED(hr));
+        } else {
+            mipImages = std::move(image); // そのまま使う
+        }
+
     }
+
+
 
     //追加したテクスチャデータの参照を取得する
     TextureData& textureData = textureDatas[filePath];
@@ -125,7 +142,7 @@ void Texture::LoadTexture(const std::string& filePath)
     textureData.srvHandleCPU = SrvManager::GetCPUDescriptorHandle(textureData.srvIndex);
     textureData.srvHandleGPU = SrvManager::GetGPUDescriptorHandle(textureData.srvIndex);
 
-    SrvManager::CreateSRVforTexture2D(textureData.srvIndex, textureData.resource.Get(), textureData.metadata.format, UINT(textureData.metadata.mipLevels));
+    SrvManager::CreateSRVforTexture2D(textureData.srvIndex, textureData.resource.Get(), textureData.metadata);
 
 }
 
