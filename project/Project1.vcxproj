@@ -163,6 +163,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\Mesh\SkyBox\SkyBox.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Font\Font.cpp" />
     <ClCompile Include="Source\Application\Scene\FreeTypeScene.cpp" />
     <ClCompile Include="Source\Application\Loader\SoundFactory.cpp" />
@@ -309,6 +310,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\FreeTypeManager\Text.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\Mesh\SkyBox\SkyBox.h" />
     <ClInclude Include="Source\Engine\Mesh\Font\Font.h" />
     <ClInclude Include="Source\Application\Scene\FreeTypeScene.h" />
     <ClInclude Include="Source\Application\Loader\SoundFactory.h" />
