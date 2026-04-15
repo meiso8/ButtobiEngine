@@ -26,11 +26,11 @@ FreeTypeScene::FreeTypeScene()
     sprite_->SetSize({ 1280,720 });
 
 
-    object3d_ = std::make_unique<Object3d>();
-    object3d_->Create();
-    skyBox_ = std::make_unique<SkyBox>();
-    skyBox_->Create(TextureFactory::UV_CHECKER);
-    object3d_->SetMesh(skyBox_.get());
+    skyBoxObj_ = std::make_unique<SkyboxObject3d>();
+    skyBoxObj_->Create();
+    skyBox_ = std::make_unique<Skybox>();
+    skyBox_->Create(TextureFactory::ART1);
+    skyBoxObj_->SetMesh(skyBox_.get());
   
  
 
@@ -80,7 +80,7 @@ void FreeTypeScene::Draw()
 #ifdef _DEVELOP
     // デバッグカメラ
     DrawGrid::Draw(*debugCamera_);
-    object3d_->Draw(*debugCamera_);
+    skyBoxObj_->Draw(*debugCamera_);
 #endif //_DEVELOP
 
     //Sprite::PreDraw();

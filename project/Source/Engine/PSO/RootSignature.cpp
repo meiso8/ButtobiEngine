@@ -201,7 +201,7 @@ void RootSignature::Create() {
 
 #pragma endregion
 
-#pragma region//SpriteParameters
+#pragma region//SpriteParametersForFont
     //CBufferを利用することになったので、RootParameterに設定を追加する
    /* RootParameter作成。PixelShaderのMaterialとVertexShaderのTransform*/
     D3D12_ROOT_PARAMETER rootParametersForFont[3] = {};
@@ -221,6 +221,26 @@ void RootSignature::Create() {
 
 #pragma endregion
 
+#pragma region//SkyboxParameters
+
+    D3D12_ROOT_PARAMETER rootParametersForSkyBox[3] = {};
+    //Material b0
+    rootParametersForSkyBox[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+    rootParametersForSkyBox[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParametersForSkyBox[0].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
+    //Transform用 b0
+    rootParametersForSkyBox[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+    rootParametersForSkyBox[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
+    rootParametersForSkyBox[1].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
+    //Texture t2
+    rootParametersForSkyBox[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParametersForSkyBox[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParametersForSkyBox[2].DescriptorTable.pDescriptorRanges = descriptorRange;//Tableの中身の配列を指定
+    rootParametersForSkyBox[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);//Tableで利用する数
+
+#pragma endregion
+
+
     descriptionRootSignature[NORMAL].pParameters = rootParameters;//ルートパラメータ配列へのポインタ
     descriptionRootSignature[NORMAL].NumParameters = _countof(rootParameters);//配列の長さ
 
@@ -235,6 +255,9 @@ void RootSignature::Create() {
 
     descriptionRootSignature[FONT].pParameters = rootParametersForFont;//ルートパラメータ配列へのポインタ
     descriptionRootSignature[FONT].NumParameters = _countof(rootParametersForFont);//配列の長さ
+
+    descriptionRootSignature[SKYBOX].pParameters = rootParametersForSkyBox;//ルートパラメータ配列へのポインタ
+    descriptionRootSignature[SKYBOX].NumParameters = _countof(rootParametersForSkyBox);//配列の長さ
 
     //シリアライズしてバイナリにする
     Microsoft::WRL::ComPtr <ID3DBlob> signatureBlob = nullptr;

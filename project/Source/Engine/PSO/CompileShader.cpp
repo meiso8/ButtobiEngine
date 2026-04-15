@@ -71,6 +71,15 @@ void DxcCompiler::ShaderSetting() {
         assert(pixelShaderBlobs_[kFont] != nullptr);
     }
 
+    {
+        //skybox
+        vertexShaderBlobs_.push_back(CompileShader(L"Resource/shader/Skybox.VS.hlsl",
+            L"vs_6_0"));
+        assert(vertexShaderBlobs_[kSkyBox] != nullptr);
+        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/Skybox.PS.hlsl",
+            L"ps_6_0"));
+        assert(pixelShaderBlobs_[kSkyBox] != nullptr);
+    }
 }
 
 //CompileShader関数
