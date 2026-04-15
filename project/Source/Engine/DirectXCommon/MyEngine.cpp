@@ -181,13 +181,13 @@ void MyEngine::Run() {
 
 }
 
-void MyEngine::PreCommandSet(Vector4 screenColor) {
+void MyEngine::PreCommandSet() {
 
 #ifdef USE_IMGUI
     //ImGuiの内部コマンドを生成する
     imGuiClass.Render();
 #endif
-    directXCommon->PreDraw(screenColor);
+    directXCommon->PreDraw();
 
     // シーンの描画
     SceneManager::Draw();

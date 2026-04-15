@@ -17,6 +17,8 @@
 #include"ImGuiClass.h"
 #include"TransitionBarrier.h"
 
+#include"RenderTexture/RenderTexture.h"
+
 //Textureデータを読み込むためにDirectXTex.hをインクルード
 #include"../externals/DirectXTex/DirectXTex.h"
 //Textureの転送のために
@@ -51,6 +53,7 @@ private:
     DebugError debugError = {};
     std::array<Microsoft::WRL::ComPtr <ID3D12Resource>, 2> swapChainResources;
     RenderTargetView rtvClass = {};
+    RenderTexture renderTexture_;
     Fence fence = {};
     Microsoft::WRL::ComPtr <ID3D12Resource> depthStencilResource = nullptr;
 
@@ -60,7 +63,7 @@ private:
     TransitionBarrier barrier = {};
     std::chrono::steady_clock::time_point reference_;
 
-
+    
 public:
 
     ~DirectXCommon();
@@ -70,7 +73,7 @@ public:
     void Initialize(Window& window);
     /// @brief 描画前処理
     /// @param color 画面の色を指定する
-    void PreDraw(Vector4& color);
+    void PreDraw();
     /// @brief 描画後処理
     void PostDraw();
     /// @brief フレーム終了処理
@@ -111,8 +114,7 @@ public:
     /// @param format フォーマット
     /// @param clearColor クリアカラー
     /// @return レンダーテクスチャ
-    static Microsoft::WRL::ComPtr<ID3D12Resource>CreateRenderTexture(
-        Microsoft::WRL::ComPtr<ID3D12Device>& device,
+    static Microsoft::WRL::ComPtr<ID3D12Resource>CreateRenderTextureResource(
         uint32_t width, uint32_t height,
         DXGI_FORMAT format,
         const Vector4& clearColor);
@@ -187,5 +189,6 @@ private:
     void CreateDXCCompiler();
     void InitializeFixFPS();
     void UpdateFixFPS();
+    void InitializeRenderTexture();
 };
 
