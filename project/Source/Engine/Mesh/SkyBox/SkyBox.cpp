@@ -86,14 +86,12 @@ void Skybox::SetVertex(const Vector3(&vertices)[8]) {
             vertices[4].x,
             vertices[4].y,
             vertices[4].z,1.0f };
-        vertexData_[0].texcoord = { 0.0f,1.0f };
         vertexData_[0].normal = vertices[4];//法線
         //上面手前左
         vertexData_[1].position = {
             vertices[5].x,
             vertices[5].y,
             vertices[5].z,1.0f };
-        vertexData_[1].texcoord = { 1.0f,1.0f };
         vertexData_[1].normal = vertices[5];//法線
 
         //上面奥右
@@ -101,7 +99,7 @@ void Skybox::SetVertex(const Vector3(&vertices)[8]) {
             vertices[0].x,
             vertices[0].y,
             vertices[0].z,1.0f };
-        vertexData_[2].texcoord = { 0.0f,0.0f };
+
         vertexData_[2].normal = vertices[0];//法線
 
         //上面奥左
@@ -109,7 +107,6 @@ void Skybox::SetVertex(const Vector3(&vertices)[8]) {
             vertices[1].x,
             vertices[1].y,
             vertices[1].z,1.0f };
-        vertexData_[3].texcoord = { 1.0f,0.0f };
         vertexData_[3].normal = vertices[1];//法線
 
     }
@@ -120,14 +117,12 @@ void Skybox::SetVertex(const Vector3(&vertices)[8]) {
             vertices[6].x,
             vertices[6].y,
             vertices[6].z,1.0f };
-        vertexData_[4].texcoord = { 0.0f,1.0f };
         vertexData_[4].normal = vertices[6];//法線
         //底面手前左
         vertexData_[5].position = {
             vertices[7].x,
             vertices[7].y,
             vertices[7].z,1.0f };
-        vertexData_[5].texcoord = { 1.0f,1.0f };
         vertexData_[5].normal = vertices[7];//法線
 
         //底面奥右
@@ -135,7 +130,6 @@ void Skybox::SetVertex(const Vector3(&vertices)[8]) {
             vertices[2].x,
             vertices[2].y,
             vertices[2].z,1.0f };
-        vertexData_[6].texcoord = { 0.0f,0.0f };
         vertexData_[6].normal = vertices[2];//法線
 
         //底面奥左
@@ -144,22 +138,16 @@ void Skybox::SetVertex(const Vector3(&vertices)[8]) {
             vertices[3].y,
             vertices[3].z,
             1.0f };
-        vertexData_[7].texcoord = { 1.0f,0.0f };
         vertexData_[7].normal = vertices[3];//法線
-
     }
 
 
     {
-
         //上面手前左
         vertexData_[8].position = vertexData_[1].position;
-        vertexData_[8].texcoord = { 1.0f,0.0f };
         vertexData_[8].normal = vertexData_[1].normal;//法線
-
         //上面手前右
         vertexData_[9].position = vertexData_[0].position;
-        vertexData_[9].texcoord = { 0.0f,0.0f };
         vertexData_[9].normal = vertexData_[0].normal;//法線
 
     }
@@ -167,17 +155,14 @@ void Skybox::SetVertex(const Vector3(&vertices)[8]) {
     {
         //上面手前右
         vertexData_[10].position = vertexData_[0].position;
-        vertexData_[10].texcoord = { 1.0f,0.0f };
         vertexData_[10].normal = vertexData_[0].normal;//法線
 
         //底面手前右
         vertexData_[11].position = vertexData_[4].position;
-        vertexData_[11].texcoord = { 1.0f,1.0f };
         vertexData_[11].normal = vertexData_[4].normal;//法線
 
         //底面奥右
         vertexData_[12].position = vertexData_[6].position;
-        vertexData_[12].texcoord = { 0.0f,1.0f };
         vertexData_[12].normal = vertexData_[6].normal;//法線
 
     }
@@ -185,42 +170,39 @@ void Skybox::SetVertex(const Vector3(&vertices)[8]) {
     {
         //上面奥右
         vertexData_[13].position = vertexData_[2].position;
-        vertexData_[13].texcoord = { 1.0f,0.0f };
         vertexData_[13].normal = vertexData_[2].normal;//法線
 
         //上面奥左 かぶり
         vertexData_[14].position = vertexData_[3].position;
-        vertexData_[14].texcoord = { 0.0f,0.0f };
         vertexData_[14].normal = vertexData_[3].normal;//法線
 
         //底面奥右
         vertexData_[15].position = vertexData_[6].position;
-        vertexData_[15].texcoord = { 1.0f,1.0f };
         vertexData_[15].normal = vertexData_[6].normal;//法線
 
         //底面奥左
         vertexData_[16].position = vertexData_[7].position;
-        vertexData_[16].texcoord = { 0.0f,1.0f };
         vertexData_[16].normal = vertexData_[7].normal;//法線
     }
 
     {
-
         //上面手前左
         vertexData_[17].position = vertexData_[1].position;
-        vertexData_[17].texcoord = { 0.0f,0.0f };
         vertexData_[17].normal = vertexData_[1].normal;//法線
 
         //底面奥左
         vertexData_[18].position = vertexData_[7].position;
-        vertexData_[18].texcoord = { 1.0f,1.0f };
         vertexData_[18].normal = vertexData_[7].normal;//法線
 
         //底面手前左
         vertexData_[19].position = vertexData_[5].position;
-        vertexData_[19].texcoord = { 0.0f,1.0f };
         vertexData_[19].normal = vertexData_[5].normal;//法線
 
+    }
+
+    for (int i = 0; i < 20; i++) {
+        //適当に埋めとく
+        vertexData_[i].texcoord = { 0.0f,0.0f };
     }
 
     vertexResource_->Unmap(0, nullptr);
