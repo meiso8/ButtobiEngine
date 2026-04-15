@@ -504,6 +504,9 @@
     <ClCompile Include="Source\Engine\Mesh\SkyBox\Skybox.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\RenderTexture\RenderTexture.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\Math\Structs\AABB.h">
@@ -1010,16 +1013,15 @@
     <ClInclude Include="Source\Engine\Mesh\SkyBox\Skybox.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Engine\RenderTexture\RenderTexture.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\JsonFiles\config.json" />
     <None Include="Resource\JsonFiles\Boss.json" />
     <None Include="Resource\JsonFiles\notes.json" />
     <None Include="Resource\JsonFiles\memo.json" />
-    <None Include="..\..\..\Downloads\GE3-master\GE3-master\project\Resource\Models\mummy\dummyMummy.gltf" />
-    <None Include="..\..\..\Downloads\GE3-master\GE3-master\project\Resource\Models\mummy\dummyMummy.bin">
-      <Filter>リソース ファイル</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png">
