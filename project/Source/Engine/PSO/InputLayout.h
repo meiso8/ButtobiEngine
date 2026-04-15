@@ -9,6 +9,7 @@ public:
     enum InputLayoutType {
         kInputLayoutTypeNormal,
         kInputLayoutTypeSkinning,
+        kInputLayoutTypeOffScreen,
         kMaxInputLayoutType,
     };
     void Create();

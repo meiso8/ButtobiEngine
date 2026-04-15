@@ -47,4 +47,9 @@ void InputLayout::Create() {
     inputLayoutDescs_[kInputLayoutTypeSkinning].pInputElementDescs = inputElementDescsSkinning_;
     inputLayoutDescs_[kInputLayoutTypeSkinning].NumElements = _countof(inputElementDescsSkinning_);
 
+    // ============================================================================================
+    //オフスクリーンレンダリングは頂点シェーダーを使用しないため、入力レイアウトは必要ない
+    inputLayoutDescs_[kInputLayoutTypeOffScreen].pInputElementDescs = nullptr;
+    inputLayoutDescs_[kInputLayoutTypeOffScreen].NumElements = 0;
+
 }

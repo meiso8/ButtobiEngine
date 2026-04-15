@@ -80,6 +80,16 @@ void DxcCompiler::ShaderSetting() {
             L"ps_6_0"));
         assert(pixelShaderBlobs_[kSkyBox] != nullptr);
     }
+
+    {
+        //offscreen
+        vertexShaderBlobs_.push_back(CompileShader(L"Resource/shader/CopyImage.VS.hlsl",
+            L"vs_6_0"));
+        assert(vertexShaderBlobs_[kOffScreen] != nullptr);
+        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/CopyImage.PS.hlsl",
+            L"ps_6_0"));
+        assert(pixelShaderBlobs_[kOffScreen] != nullptr);
+    }
 }
 
 //CompileShader関数

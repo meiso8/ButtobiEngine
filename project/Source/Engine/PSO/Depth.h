@@ -7,6 +7,7 @@
 enum MaskMode {
     kZero,
     kAll,
+    kNone,
     kMasks
 };
 

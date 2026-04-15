@@ -1,7 +1,7 @@
 #include "RenderTexture.h"
 #include"DirectXCommon.h"
 #include"Engine/SRVManager/SRVManager.h"
-
+#include"PSO.h"
 void RenderTexture::Create()
 {
     kRenderTargetClearValue_ = { 1.0f,0.0f,0.0f,1.0f };
@@ -36,4 +36,18 @@ void RenderTexture::Create()
     renderTextureData_.srvHandleGPU = SrvManager::GetGPUDescriptorHandle(renderTextureData_.srvIndex);
 
     DirectXCommon::GetDevice()->CreateShaderResourceView(renderTextureData_.resource.Get(), &renderTextureSrvDesc, renderTextureData_.srvHandleCPU);
+}
+
+void RenderTexture::Draw()
+{
+    auto* commandList = DirectXCommon::GetCommandList();
+
+    commandList->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::OFFSCREEN));
+    commandList->SetPipelineState(PSO::GetGraphicsPipelineStateOffScreen().Get());//PSOを設定
+    //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    ////SRVのDescriptorTableの先頭を設定。0はrootParameter[0]である。
+    SrvManager::SetGraphicsRootDescriptorTable(0, renderTextureData_.srvIndex);
+    commandList->DrawInstanced(3, 1, 0, 0);
+
 }

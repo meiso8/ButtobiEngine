@@ -75,6 +75,7 @@ public:
     /// @brief 描画前処理
 /// @param color 画面の色を指定する
     void RenderTexturePreDraw();
+    void DrawRenderTexture();
     void RenderTexturePostDraw();
     /// @brief 描画前処理
     /// @param color 画面の色を指定する

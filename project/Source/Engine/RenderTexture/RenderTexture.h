@@ -22,7 +22,6 @@ private:
     RenderTextureData renderTextureData_;
 public:
 
-    RenderTexture() = default;
     void Create();
     const Vector4& GetColor() {
         return kRenderTargetClearValue_;
@@ -30,5 +29,6 @@ public:
     RenderTextureData& GetRenderTextureData() {
         return renderTextureData_;
     }
+    void Draw();
 };
 

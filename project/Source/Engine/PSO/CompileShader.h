@@ -13,6 +13,7 @@ enum ShaderType {
     kSkinning,
     kFont,
     kSkyBox,
+    kOffScreen,
     Shaders,
 };
 

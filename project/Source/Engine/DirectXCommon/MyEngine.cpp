@@ -198,7 +198,12 @@ void MyEngine::PreCommandSet(Vector4 screenColor) {
     directXCommon->RenderTexturePostDraw();
 
     directXCommon->PreDraw(screenColor);
-};
+}
+void MyEngine::DrawCommandSet()
+{
+    directXCommon->DrawRenderTexture();
+}
+;
 
 void MyEngine::PostCommandSet() {
 #ifdef USE_IMGUI

@@ -97,6 +97,11 @@ void DirectXCommon::RenderTexturePreDraw()
 
 }
 
+void DirectXCommon::DrawRenderTexture()
+{
+    renderTexture_.Draw();
+}
+
 void DirectXCommon::RenderTexturePostDraw()
 {
     
@@ -282,15 +287,13 @@ void DirectXCommon::DescriptorHeapSettings()
 {
     //DescriptorSizeを取得しておく
     descriptorSizeRTV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-descriptorSizeDSV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+    descriptorSizeDSV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
     //DescriptorHeapを生成する
     if (rtvDescriptorHeap == nullptr) {
         rtvDescriptorHeap = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV,64, false);
         LogFile::Log("Create RTV DescriptorHeap");
     }
-
-
 
     //DSV用ヒープでディスクリプタの数は1。DSVはShader内で触るものではないので、ShaderVisibleはfalse
     if (dsvDescriptorHeap == nullptr) {
@@ -337,8 +340,6 @@ void DirectXCommon::ScissorRectSetting()
     //ViewportとScissor(シザー)
     scissorRect = CreateScissorRect(window_->GetClientWidth(), window_->GetClientHeight());
     LogFile::Log("ViewportAndScissor");
-
-
 }
 
 void DirectXCommon::CreateDXCCompiler()
