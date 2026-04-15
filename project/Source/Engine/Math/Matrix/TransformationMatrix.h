@@ -14,3 +14,8 @@ struct TransformationMatrixFor3D
     Matrix4x4 World;
     Matrix4x4 WorldInverseTranspose;
 };
+
+struct TransformationMatrixFor3DSkybox
+{
+    Matrix4x4 WVP;
+};

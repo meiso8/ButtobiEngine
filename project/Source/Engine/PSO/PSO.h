@@ -45,6 +45,11 @@ public:
         return graphicsPipelineStatesLine_;
         ;
     }
+    static Microsoft::WRL::ComPtr <ID3D12PipelineState>& GetGraphicsPipelineStateSkyBox() {
+        return graphicsPipelineStateSkyBox_;
+        ;
+    }
+
     static Microsoft::WRL::ComPtr <ID3D12PipelineState>& GetGraphicsPipelineStateSprite(uint32_t blendMode) {
         return graphicsPipelineStateSprite_[blendMode];
         ;
@@ -77,6 +82,9 @@ private:
     static Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineStatesLine_;
     static std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> graphicsPipelineStateSprite_;
     static std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> graphicsPipelineStateFont_;
+
+    static Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineStateSkyBox_;
+
     std::unique_ptr<InputLayout>inputLayout = nullptr;
     std::vector<BlendState> blendStates = {};
     std::vector<RasterizerState> rasterizerStates = {};

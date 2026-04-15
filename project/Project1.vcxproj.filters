@@ -501,7 +501,7 @@
     <ClCompile Include="Source\Engine\Mesh\Font\Font.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\SkyBox\SkyBox.cpp">
+    <ClCompile Include="Source\Engine\Mesh\SkyBox\Skybox.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1007,7 +1007,7 @@
     <ClInclude Include="Source\Engine\Mesh\Font\Font.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\SkyBox\SkyBox.h">
+    <ClInclude Include="Source\Engine\Mesh\SkyBox\Skybox.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

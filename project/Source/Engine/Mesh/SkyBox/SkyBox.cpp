@@ -1,14 +1,16 @@
-#include "SkyBox.h"
+#include "Skybox.h"
 #include"DirectXCommon.h"
 #include"MyEngine.h"
 #include"AABB.h"
+#include"MakeMatrix.h"
 
-SkyBox::~SkyBox()
+ID3D12GraphicsCommandList* SkyboxObject3d::commandList_ = nullptr;
+Skybox::~Skybox()
 {
     Finalize();
 }
 
-void SkyBox::Create(const TextureFactory::Handle& textureHandle) {
+void Skybox::Create(const TextureFactory::Handle& textureHandle) {
 
     textureHandle_ = Texture::GetHandle(textureHandle);
     CreateVertex();
@@ -17,7 +19,7 @@ void SkyBox::Create(const TextureFactory::Handle& textureHandle) {
     CreateIndexResource();
 };
 
-void SkyBox::CreateVertex()
+void Skybox::CreateVertex()
 {
     vertexResource_ = DirectXCommon::CreateBufferResource(sizeof(VertexData) * 20);
 
@@ -27,7 +29,7 @@ void SkyBox::CreateVertex()
     vertexBufferView_.StrideInBytes = sizeof(VertexData);
 }
 
-void SkyBox::CreateIndexResource() {
+void Skybox::CreateIndexResource() {
 
 #pragma region//IndexResourceを作成
     indexResource_ = DirectXCommon::CreateBufferResource(sizeof(uint32_t) * 36);
@@ -74,7 +76,7 @@ void SkyBox::CreateIndexResource() {
 #pragma endregion
 }
 
-void SkyBox::SetVertex(const Vector3(&vertices)[8]) {
+void Skybox::SetVertex(const Vector3(&vertices)[8]) {
 
     vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 
@@ -224,7 +226,7 @@ void SkyBox::SetVertex(const Vector3(&vertices)[8]) {
     vertexResource_->Unmap(0, nullptr);
 }
 
-void SkyBox::Draw(ID3D12GraphicsCommandList* commandList)
+void Skybox::Draw(ID3D12GraphicsCommandList* commandList)
 {
 
     //頂点バッファビューを設定
@@ -239,8 +241,17 @@ void SkyBox::Draw(ID3D12GraphicsCommandList* commandList)
     commandList->DrawIndexedInstanced(36, 1, 0, 0, 0);
 }
 
+void Skybox::PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode& blendMode, const CullMode& cullMode)
+{
+    (void)blendMode;
+    (void)cullMode;
+    commandList->SetGraphicsRootSignature(PSO::GetRootSignature()->GetRootSignature(RootSignature::SKYBOX));
+    commandList->SetPipelineState(PSO::GetGraphicsPipelineStateSkyBox().Get());//PSOを設定
+    //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
 
-void SkyBox::SetMinMax(const AABB& aabb) {
+void Skybox::SetMinMax(const AABB& aabb) {
 
     Vector3 vertexData[8] = {};
 
@@ -256,4 +267,67 @@ void SkyBox::SetMinMax(const AABB& aabb) {
     SetVertex(vertexData);
 }
 
+SkyboxObject3d::~SkyboxObject3d()
+{
+    if (materialResource_) {
+        materialResource_->Unmap(0, nullptr);
+        materialResource_ = nullptr;
+    }
 
+    materialResource_.Reset();
+}
+
+void SkyboxObject3d::Create()
+{
+    commandList_ = DirectXCommon::GetCommandList();
+    CreateTransformationMatrix();
+    CreateMaterial();
+    Initialize();
+}
+
+
+void SkyboxObject3d::Initialize()
+{
+    worldTransform_.Initialize();
+}
+
+void SkyboxObject3d::Update()
+{
+    WorldTransformUpdate(worldTransform_);
+}
+
+void SkyboxObject3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode)
+{
+    //データを書き込む
+    transformationMatrixData_->WVP = Multiply(worldTransform_.matWorld_, camera.GetViewProjectionMatrix());
+
+    if (meshCommon_) {
+        meshCommon_->PreDraw(commandList_, blendMode, cullMode);
+        //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
+        commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+        //wvp用のCBufferの場所を設定
+        commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+        meshCommon_->Draw(commandList_);
+    }
+}
+
+void SkyboxObject3d::CreateTransformationMatrix()
+
+{    //Matrix4x4　1つ分のサイズを用意
+    transformationMatrixResource_ = DirectXCommon::CreateBufferResource(sizeof(TransformationMatrixFor3DSkybox));
+    //データを書き込む
+    //書き込むためのアドレスを取得
+    transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
+    transformationMatrixData_->WVP = MakeIdentity4x4();
+}
+
+void SkyboxObject3d::CreateMaterial(const Vector4& color)
+{
+    //マテリアル用のリソースを作る。
+    materialResource_ = DirectXCommon::CreateBufferResource(sizeof(MaterialForSkyBox));
+    //マテリアルにデータを書き込む
+
+    //書き込むためのアドレスを取得
+    HRESULT result = materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&material_));
+    material_->color = color;
+}

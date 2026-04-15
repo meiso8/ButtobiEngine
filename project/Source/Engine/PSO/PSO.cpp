@@ -12,7 +12,7 @@ std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode>PSO::g
 Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::graphicsPipelineStatesLine_;
 std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> PSO::graphicsPipelineStateSprite_;
 std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> PSO::graphicsPipelineStateFont_;
-
+Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::graphicsPipelineStateSkyBox_;
 std::array<std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfCullMode>, kCountOfBlendMode>PSO::graphicsPipelineStatesSkinning_;
 Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
     RootSignature& rootSignature,
@@ -180,6 +180,19 @@ void PSO::CreateALLPSO()
             );
         }
     }
+
+    graphicsPipelineStateSkyBox_ =
+        Create(
+            *rootSignature,
+            *inputLayout,
+            blendStates[kBlendModeNone],
+            rasterizerStates[kCullModeNone],
+            depthStencils[kZero],
+            kSkyBox,
+            kTriangle,
+            InputLayout::kInputLayoutTypeNormal);
+
+
 }
 
 PSO::~PSO()
@@ -223,6 +236,10 @@ PSO::~PSO()
                 pso.Reset(); // Release() と同じ効果
             }
         }
+    }
+
+    if (graphicsPipelineStateSkyBox_) {
+        graphicsPipelineStateSkyBox_.Reset();
     }
 
     rootSignature.reset();

@@ -3,7 +3,7 @@
 struct Material
 {
     float4 color;
-    int32_t lightType;
+    int lightType;
     float32_t4x4 uvTransform;
 
 };

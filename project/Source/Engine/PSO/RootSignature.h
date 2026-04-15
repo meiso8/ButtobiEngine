@@ -15,7 +15,8 @@ public:
         SPRITE,
         SKINNING,
         FONT,
-        TYPES
+        SKYBOX,
+        TYPES,
     };
 
    void Create();

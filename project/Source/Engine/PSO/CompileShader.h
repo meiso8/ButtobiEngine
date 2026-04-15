@@ -12,6 +12,7 @@ enum ShaderType {
     kSprite,
     kSkinning,
     kFont,
+    kSkyBox,
     Shaders,
 };
 
