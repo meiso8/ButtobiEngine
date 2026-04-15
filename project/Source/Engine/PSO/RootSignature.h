@@ -16,6 +16,7 @@ public:
         SKINNING,
         FONT,
         SKYBOX,
+        OFFSCREEN,
         TYPES,
     };
 

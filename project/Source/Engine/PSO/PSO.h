@@ -59,6 +59,11 @@ public:
         ;
     }
 
+    static Microsoft::WRL::ComPtr <ID3D12PipelineState>& GetGraphicsPipelineStateOffScreen(){
+        return graphicsPipelineStateOffScreen_;
+        ;
+    }
+
     void CreateALLPSO();
     static RootSignature* GetRootSignature() { return rootSignature.get(); }
     ~PSO();
@@ -75,15 +80,16 @@ private:
     static std::array<std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfCullMode>, kCountOfBlendMode> graphicsPipelineStates_;
 
     static std::array<std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfCullMode>, kCountOfBlendMode> graphicsPipelineStatesSkinning_;
-
-
-
     static std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState> ,kCountOfBlendMode> graphicsPipelineStatesParticle_;
     static Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineStatesLine_;
     static std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> graphicsPipelineStateSprite_;
     static std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> graphicsPipelineStateFont_;
 
     static Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineStateSkyBox_;
+
+    static Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineStateOffScreen_;
+
+
 
     std::unique_ptr<InputLayout>inputLayout = nullptr;
     std::vector<BlendState> blendStates = {};

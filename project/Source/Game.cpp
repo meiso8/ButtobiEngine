@@ -26,6 +26,7 @@ void Game::Draw()
 {
     // エンジンの描画前処理
     MyEngine::PreCommandSet();
+    MyEngine::DrawCommandSet();
     // エンジンの描画後処理
     MyEngine::PostCommandSet();
 }

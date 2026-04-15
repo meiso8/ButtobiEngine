@@ -40,6 +40,7 @@ private:
 protected:
     void Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight);
     void PreCommandSet(Vector4 screenColor = { 0.5f, 0.5f, 0.5f, 1.0f });
+    void DrawCommandSet();
     void PostCommandSet();
 
     virtual void Initialize() = 0;

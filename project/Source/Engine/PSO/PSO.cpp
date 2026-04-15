@@ -13,6 +13,7 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::graphicsPipelineStatesLine_;
 std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> PSO::graphicsPipelineStateSprite_;
 std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> PSO::graphicsPipelineStateFont_;
 Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::graphicsPipelineStateSkyBox_;
+Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::graphicsPipelineStateOffScreen_;
 std::array<std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfCullMode>, kCountOfBlendMode>PSO::graphicsPipelineStatesSkinning_;
 Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
     RootSignature& rootSignature,
@@ -107,6 +108,8 @@ void PSO::CreateALLPSO()
     depthStencils.resize(kMasks);
     depthStencils[kZero].Create(kZero);
     depthStencils[kAll].Create(kAll);
+    depthStencils[kNone].Create(kNone);
+
     LogFile::Log("Create depthStencilDesc");
 
     for (uint32_t b = 0; b < kCountOfBlendMode; ++b) {
@@ -193,6 +196,15 @@ void PSO::CreateALLPSO()
             InputLayout::kInputLayoutTypeNormal);
 
 
+    graphicsPipelineStateOffScreen_ = Create(
+        *rootSignature,
+        *inputLayout,
+        blendStates[kBlendModeNone],
+        rasterizerStates[kCullModeNone],
+        depthStencils[kNone],
+        kOffScreen,
+        kTriangle,
+        InputLayout::kInputLayoutTypeOffScreen);
 }
 
 PSO::~PSO()
