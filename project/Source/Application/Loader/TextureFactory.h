@@ -45,6 +45,7 @@ public:
         EYE,
 
         WORLD,
+        ART1,
 
         // ======================
         TEXTURES,

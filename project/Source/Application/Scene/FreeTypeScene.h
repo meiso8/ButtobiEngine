@@ -1,7 +1,5 @@
 #pragma once
 #include "SceneManager.h"
-
-#include"../Engine/FreeTypeManager/FreeTypeManager.h"
 #include"../Engine/FreeTypeManager/Text.h"
 #include<string>
 
@@ -17,5 +15,6 @@ private:
     Text text_;
     uint32_t handle_;
     Text pressSpaceText_;
+    std::unique_ptr<Sprite>sprite_ = nullptr;
 };
 

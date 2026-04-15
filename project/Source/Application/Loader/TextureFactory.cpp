@@ -46,4 +46,6 @@ void TextureFactory::Load()
     Texture::Load("Resource/Textures/slot.png", SLOT);
     Texture::Load("Resource/Textures/eye.png", EYE);
     Texture::Load("Resource/Textures/world.png", WORLD);
+
+    Texture::Load("Resource/Textures/me.dds", ART1);
 }
