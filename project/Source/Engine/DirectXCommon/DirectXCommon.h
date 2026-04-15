@@ -53,7 +53,7 @@ private:
     DebugError debugError = {};
     std::array<Microsoft::WRL::ComPtr <ID3D12Resource>, 2> swapChainResources;
     RenderTargetView rtvClass = {};
-    RenderTexture renderTexture_;
+    RenderTexture renderTexture_ = {};
     Fence fence = {};
     Microsoft::WRL::ComPtr <ID3D12Resource> depthStencilResource = nullptr;
 
@@ -71,9 +71,14 @@ public:
     /// @brief 初期化
     /// @param window windowクラスを渡す
     void Initialize(Window& window);
+
+    /// @brief 描画前処理
+/// @param color 画面の色を指定する
+    void RenderTexturePreDraw();
+    void RenderTexturePostDraw();
     /// @brief 描画前処理
     /// @param color 画面の色を指定する
-    void PreDraw();
+    void PreDraw(Vector4& color);
     /// @brief 描画後処理
     void PostDraw();
     /// @brief フレーム終了処理
