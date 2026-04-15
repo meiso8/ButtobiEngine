@@ -179,7 +179,7 @@ public:
     /// @param index ヒープ内の取得対象ディスクリプタのインデックス。
     /// @return 指定したインデックスに対応するD3D12_GPU_DESCRIPTOR_HANDLE。
     static D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
-
+    void InitializeRenderTexture();
 private:
     void InitializeDevice();
     void InitializeCommand();
@@ -194,6 +194,6 @@ private:
     void CreateDXCCompiler();
     void InitializeFixFPS();
     void UpdateFixFPS();
-    void InitializeRenderTexture();
+
 };
 
