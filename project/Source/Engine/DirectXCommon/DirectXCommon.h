@@ -111,11 +111,21 @@ public:
     /// @param format フォーマット
     /// @param clearColor クリアカラー
     /// @return レンダーテクスチャ
-    static Microsoft::WRL::ComPtr<ID3D12Resource>
-        CreateRendezrTexture(Microsoft::WRL::ComPtr<ID3D12Device>& device,
-            uint32_t width, uint32_t height,
-            DXGI_FORMAT format,
-            const Vector4& clearColor);
+    static Microsoft::WRL::ComPtr<ID3D12Resource>CreateRenderTexture(
+        Microsoft::WRL::ComPtr<ID3D12Device>& device,
+        uint32_t width, uint32_t height,
+        DXGI_FORMAT format,
+        const Vector4& clearColor);
+
+    /// @brief StencilTextureの作成関数　奥行き
+    /// @param device 
+    /// @param width 
+    /// @param height 
+    /// @return StencilTexture
+   static Microsoft::WRL::ComPtr<ID3D12Resource> CreateDepthStencileTextureResource(
+        const Microsoft::WRL::ComPtr<ID3D12Device>& device,
+        int32_t width,
+        int32_t height);
 
     /// @brief テクスチャデータの転送関数
     /// @param texture 
