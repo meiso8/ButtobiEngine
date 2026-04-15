@@ -19,6 +19,9 @@ FreeTypeScene::FreeTypeScene()
     pressSpaceText_.SetColor({ 1, 1, 1, 1 });
     pressSpaceText_.SetAlign(TextAlign::Center);
     pressSpaceText_.SetBlendMode(BlendMode::kBlendModeAdd);
+    sprite_ = std::make_unique<Sprite>();
+    sprite_->Create(TextureFactory::ART1, { 0,0 });
+    sprite_->SetSize({ 1280,720 });
 }
 
 void FreeTypeScene::Initialize()
@@ -53,6 +56,8 @@ void FreeTypeScene::Update()
 
 void FreeTypeScene::Draw()
 {
+    Sprite::PreDraw();
+    sprite_->Draw();
     text_.Draw();
     pressSpaceText_.Draw();
 
