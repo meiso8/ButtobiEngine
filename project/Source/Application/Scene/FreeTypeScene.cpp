@@ -73,8 +73,6 @@ void FreeTypeScene::Update()
 void FreeTypeScene::Draw()
 {
 
-
-
 #ifdef _DEVELOP
     // デバッグカメラ
     DrawGrid::Draw(*debugCamera_);
