@@ -58,13 +58,15 @@ void DirectXCommon::Initialize(Window& window)
     DescriptorHeapSettings();
     InitializeRenderTargetView();
     InitializeDepthStencilView();
+    //レンダーテクスチャの初期化
+    InitializeRenderTexture();
     InitializeFence();
     InitializeViewPort();
     ScissorRectSetting();
     CreateDXCCompiler();
 }
 
-void DirectXCommon::PreDraw(Vector4& color)
+void DirectXCommon::PreDraw()
 {
 
     //これからの流れ
@@ -86,6 +88,7 @@ void DirectXCommon::PreDraw(Vector4& color)
     D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
     commandList->GetCommandList()->OMSetRenderTargets(1, &rtvClass.GetHandle(backBufferIndex), false, &dsvHandle);
     //3.指定した色で画面全体をクリアする
+    Vector4 color = renderTexture_.GetColor();
     float clearColor[] = { color.x,color.y,color.z,color.w };//青っぽい色。RGBAの順
     commandList->GetCommandList()->ClearRenderTargetView(rtvClass.GetHandle(backBufferIndex), clearColor, 0, nullptr);
 
@@ -327,6 +330,11 @@ void DirectXCommon::UpdateFixFPS()
 
 }
 
+void DirectXCommon::InitializeRenderTexture()
+{
+    renderTexture_.Create();
+}
+
 // =============================================================================================
 
 ComPtr<ID3D12Resource> DirectXCommon::CreateBufferResource(
@@ -406,7 +414,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::CreateTextureResource(cons
     return resource;
 }
 
-Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::CreateRenderTexture(Microsoft::WRL::ComPtr<ID3D12Device>& device, uint32_t width, uint32_t height, DXGI_FORMAT format, const Vector4& clearColor)
+Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::CreateRenderTextureResource(uint32_t width, uint32_t height, DXGI_FORMAT format, const Vector4& clearColor)
 {
 
     //1. metadataを基にResourceの設定
