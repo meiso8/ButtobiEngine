@@ -58,15 +58,62 @@ void DirectXCommon::Initialize(Window& window)
     DescriptorHeapSettings();
     InitializeRenderTargetView();
     InitializeDepthStencilView();
-    //レンダーテクスチャの初期化
-    InitializeRenderTexture();
     InitializeFence();
     InitializeViewPort();
     ScissorRectSetting();
     CreateDXCCompiler();
+
+    //レンダーテクスチャの初期化
+    InitializeRenderTexture();
 }
 
-void DirectXCommon::PreDraw()
+void DirectXCommon::RenderTexturePreDraw()
+{
+
+    auto& renderTextureData = renderTexture_ .GetRenderTextureData();
+    //TransitionBarrierの設定
+    barrier.SettingBarrier(renderTextureData.resource,
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+        D3D12_RESOURCE_STATE_RENDER_TARGET,
+       
+        commandList->GetCommandList().Get());
+
+    //2.描画用のRTVとDSVを設定する 
+ 
+    D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+
+    commandList->GetCommandList()->OMSetRenderTargets(1, &renderTextureData.rtvHandleCPU, false, &dsvHandle);
+    //3.指定した色で画面全体をクリアする
+    Vector4 color = renderTexture_.GetColor();
+    float clearColor[] = { color.x,color.y,color.z,color.w };//青っぽい色。RGBAの順
+    commandList->GetCommandList()->ClearRenderTargetView(renderTextureData.rtvHandleCPU, clearColor, 0, nullptr);
+
+    //指定した深度で画面全体をクリアする
+    commandList->GetCommandList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
+    SrvManager::PreDraw();
+
+    //ビューポート領域の設定
+    commandList->GetCommandList()->RSSetViewports(1, &viewport);//Viewportを設定
+    //シザー矩形の設定
+    commandList->GetCommandList()->RSSetScissorRects(1, &scissorRect);//Scirssorを設定
+
+}
+
+void DirectXCommon::RenderTexturePostDraw()
+{
+    
+    auto& renderTextureData = renderTexture_.GetRenderTextureData();
+
+    //TransitionBarrierの設定
+    barrier.SettingBarrier(renderTextureData.resource,
+        D3D12_RESOURCE_STATE_RENDER_TARGET,
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+
+        commandList->GetCommandList().Get());
+}
+
+void DirectXCommon::PreDraw(Vector4& color)
 {
 
     //これからの流れ
@@ -81,19 +128,25 @@ void DirectXCommon::PreDraw()
     //1.これから書き込むバックバッファのインデックスを取得
     UINT backBufferIndex = swapChainClass.GetSwapChain()->GetCurrentBackBufferIndex();
 
+
     //TransitionBarrierの設定
-    barrier.SettingBarrier(swapChainResources[backBufferIndex], commandList->GetCommandList().Get());
+    barrier.SettingBarrier(swapChainResources[backBufferIndex],
+        D3D12_RESOURCE_STATE_PRESENT,
+        D3D12_RESOURCE_STATE_RENDER_TARGET,
+        commandList->GetCommandList().Get());
 
     //2.描画用のRTVとDSVを設定する
     D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
     commandList->GetCommandList()->OMSetRenderTargets(1, &rtvClass.GetHandle(backBufferIndex), false, &dsvHandle);
     //3.指定した色で画面全体をクリアする
-    Vector4 color = renderTexture_.GetColor();
+
     float clearColor[] = { color.x,color.y,color.z,color.w };//青っぽい色。RGBAの順
     commandList->GetCommandList()->ClearRenderTargetView(rtvClass.GetHandle(backBufferIndex), clearColor, 0, nullptr);
 
     //指定した深度で画面全体をクリアする
-    commandList->GetCommandList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+    //commandList->GetCommandList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+   
+   
 
     SrvManager::PreDraw();
 
@@ -102,18 +155,20 @@ void DirectXCommon::PreDraw()
     //シザー矩形の設定
     commandList->GetCommandList()->RSSetScissorRects(1, &scissorRect);//Scirssorを設定
 
-
+   
 
 }
 
 void DirectXCommon::PostDraw()
 {
+    //1.これから書き込むバックバッファのインデックスを取得
+    UINT backBufferIndex = swapChainClass.GetSwapChain()->GetCurrentBackBufferIndex();
 
-    //画面に書く処理は終わり、画面に移すので、状態を遷移
-    barrier.Transition();
-
-    //TransitionBarrierを張る
-    commandList->GetCommandList()->ResourceBarrier(1, &barrier.GetBarrier());
+    //TransitionBarrierの設定
+    barrier.SettingBarrier(swapChainResources[backBufferIndex],
+        D3D12_RESOURCE_STATE_RENDER_TARGET,
+        D3D12_RESOURCE_STATE_PRESENT,
+        commandList->GetCommandList().Get());
 
     //4.コマンドリストの内容を確定させる。全てのコマンドを詰んでから　Closesすること。
     HRESULT hr = commandList->GetCommandList()->Close();
@@ -234,7 +289,7 @@ descriptorSizeDSV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HE
 
     //DescriptorHeapを生成する
     if (rtvDescriptorHeap == nullptr) {
-        rtvDescriptorHeap = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 2, false);
+        rtvDescriptorHeap = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV,64, false);
         LogFile::Log("Create RTV DescriptorHeap");
     }
 
