@@ -62,9 +62,6 @@ void DirectXCommon::Initialize(Window& window)
     InitializeViewPort();
     ScissorRectSetting();
     CreateDXCCompiler();
-
-    //レンダーテクスチャの初期化
-    InitializeRenderTexture();
 }
 
 void DirectXCommon::RenderTexturePreDraw()

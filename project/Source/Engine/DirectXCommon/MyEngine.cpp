@@ -62,6 +62,9 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     imGuiClass.Initialize(*wc, directXCommon->GetDevice().Get(), directXCommon->GetSwapChain(), directXCommon->GetSwapChainRtv());
     LogFile::Log("InitImGui");
 #endif
+    
+    directXCommon->InitializeRenderTexture();
+
     pso = std::make_unique<PSO>();
     pso->CreateALLPSO();
 
