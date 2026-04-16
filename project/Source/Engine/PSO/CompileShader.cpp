@@ -86,7 +86,7 @@ void DxcCompiler::ShaderSetting() {
         vertexShaderBlobs_.push_back(CompileShader(L"Resource/shader/Fullscreen.VS.hlsl",
             L"vs_6_0"));
         assert(vertexShaderBlobs_[kOffScreen] != nullptr);
-        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/Grayscale.PS.hlsl",
+        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/Vignette.PS.hlsl",
             L"ps_6_0"));
         assert(pixelShaderBlobs_[kOffScreen] != nullptr);
     }

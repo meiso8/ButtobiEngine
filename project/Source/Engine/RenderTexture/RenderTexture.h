@@ -12,6 +12,14 @@ struct MaterialForRenderTexture {
     uint32_t type = false;
     bool padding[2] = { };
 };
+
+struct MaterialForVignette
+{
+    float correctVal;
+    float viignetteVal;
+    float padding[2];
+};
+
 class RenderTexture
 
 {
@@ -30,6 +38,9 @@ private:
     RenderTextureData renderTextureData_;
     Microsoft::WRL::ComPtr <ID3D12Resource> materialResource_ = nullptr;
     MaterialForRenderTexture* material_ = nullptr;
+
+    Microsoft::WRL::ComPtr <ID3D12Resource> materialResourceForVignette_ = nullptr;
+    MaterialForVignette* materialForVignette_ = nullptr;
 public:
 
     void Create();
@@ -44,5 +55,6 @@ public:
     ~RenderTexture();
 private:
     void CreateMaterialBuffer();
+    void CreateMaterialBufferForVignette();
 };
 

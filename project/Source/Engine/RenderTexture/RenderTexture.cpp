@@ -41,6 +41,7 @@ void RenderTexture::Create()
     DirectXCommon::GetDevice()->CreateShaderResourceView(renderTextureData_.resource.Get(), &renderTextureSrvDesc, renderTextureData_.srvHandleCPU);
 
     CreateMaterialBuffer();
+    CreateMaterialBufferForVignette();
 }
 
 void RenderTexture::Draw()
@@ -53,7 +54,8 @@ void RenderTexture::Draw()
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     ////SRVのDescriptorTableの先頭を設定。0はrootParameter[0]である。
     SrvManager::SetGraphicsRootDescriptorTable(0, renderTextureData_.srvIndex);
-    commandList->SetGraphicsRootConstantBufferView(1, materialResource_->GetGPUVirtualAddress());
+    //commandList->SetGraphicsRootConstantBufferView(1, materialResource_->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(1, materialResourceForVignette_->GetGPUVirtualAddress());
     commandList->DrawInstanced(3, 1, 0, 0);
 
 }
@@ -61,14 +63,24 @@ void RenderTexture::Draw()
 void RenderTexture::Update()
 {
 #ifdef _DEVELOP
-    DebugUI::CheckColor(material_->color, "RenderTextureColor");
-    ImGui::Checkbox("UseEffect", &material_->useEffect);
-    const char* lights[] = { "Sepia", "Grayscale", "None" };
-    int type_current = int(material_->type);
+    if (ImGui::TreeNode("GrayScale")) {
+        DebugUI::CheckColor(material_->color, "RenderTextureColor");
+        ImGui::Checkbox("UseEffect", &material_->useEffect);
+        const char* lights[] = { "Sepia", "Grayscale", "None" };
+        int type_current = int(material_->type);
 
-    if (ImGui::Combo("EffectType", &type_current, lights, IM_ARRAYSIZE(lights))) {
-        material_->type = type_current % 3;
-    };
+        if (ImGui::Combo("EffectType", &type_current, lights, IM_ARRAYSIZE(lights))) {
+            material_->type = type_current % 3;
+        };
+        ImGui::TreePop();
+    }
+
+    if (ImGui::TreeNode("Vignette")) {
+        DebugUI::CheckFloat(materialForVignette_->correctVal,"correctVal");
+        DebugUI::CheckFloat(materialForVignette_->viignetteVal, "viignetteVal");
+        ImGui::TreePop();
+    }
+
 
 #endif
 }
@@ -92,4 +104,15 @@ void RenderTexture::CreateMaterialBuffer()
     //書き込むためのアドレスを取得
     HRESULT result = materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&material_));
     material_->color = sepiaColor_;
+}
+
+void RenderTexture::CreateMaterialBufferForVignette()
+{    //マテリアル用のリソースを作る。
+    materialResourceForVignette_ = DirectXCommon::CreateBufferResource(sizeof(MaterialForVignette));
+    //マテリアルにデータを書き込む
+
+    //書き込むためのアドレスを取得
+    HRESULT result = materialResourceForVignette_->Map(0, nullptr, reinterpret_cast<void**>(&materialForVignette_));
+    materialForVignette_->correctVal = 16.0f;
+    materialForVignette_->viignetteVal = 0.8f;
 }
