@@ -66,9 +66,12 @@ void FreeTypeScene::Update()
         SceneManager::SetNestScene("Title");
     }
 
-    if (Input::IsTriggerKey(DIK_F1)){
+#ifdef _DEVELOP
+    if (Input::IsTriggerKey(DIK_F1)) {
         SwitchCamera();
     }
+#endif //_DEVELOP
+
 
     
     currentCamera_->UpdateMatrix();
