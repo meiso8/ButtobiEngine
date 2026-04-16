@@ -48,9 +48,8 @@ void BaseScene::SceneChangeUpdate()
 
 void BaseScene::SwitchCamera()
 {
-    isDebugCameraActive_ = isDebugCameraActive_ ? false : true;
+    isDebugCameraActive_ = !isDebugCameraActive_;
     currentCamera_ = (isDebugCameraActive_) ? debugCamera_.get() : camera_.get();
-
 }
 
 // =========================================================================================

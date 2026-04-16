@@ -36,6 +36,8 @@ FreeTypeScene::FreeTypeScene()
 
 void FreeTypeScene::Initialize()
 {
+    camera_->Initialize();
+    currentCamera_ = camera_.get();
 
 }
 
@@ -64,10 +66,13 @@ void FreeTypeScene::Update()
         SceneManager::SetNestScene("Title");
     }
 
-#ifdef _DEVELOP
-    // デバッグカメラの初期化
-    debugCamera_->UpdateMatrix();
-#endif //_DEVELOP
+    if (Input::IsTriggerKey(DIK_F1)){
+        SwitchCamera();
+    }
+
+    
+    currentCamera_->UpdateMatrix();
+
 }
 
 void FreeTypeScene::Draw()
@@ -75,9 +80,10 @@ void FreeTypeScene::Draw()
 
 #ifdef _DEVELOP
     // デバッグカメラ
-    DrawGrid::Draw(*debugCamera_);
-    skyBoxObj_->Draw(*debugCamera_);
+    DrawGrid::Draw(*currentCamera_);
 #endif //_DEVELOP
+    
+    skyBoxObj_->Draw(*currentCamera_);
 
     //Sprite::PreDraw();
     //sprite_->Draw();
