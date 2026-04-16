@@ -62,6 +62,13 @@ void RenderTexture::Update()
 {
 #ifdef _DEVELOP
     DebugUI::CheckColor(material_->color, "RenderTextureColor");
+    ImGui::Checkbox("UseEffect", &material_->useEffect);
+    const char* lights[] = { "Sepia", "Grayscale", "None" };
+    int type_current = int(material_->type);
+
+    if (ImGui::Combo("EffectType", &type_current, lights, IM_ARRAYSIZE(lights))) {
+        material_->type = type_current % 3;
+    };
 
 #endif
 }
