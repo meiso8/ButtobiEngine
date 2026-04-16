@@ -2,6 +2,9 @@
 #include"DirectXCommon.h"
 #include"Engine/SRVManager/SRVManager.h"
 #include"PSO.h"
+#ifdef _DEVELOP
+#include "DebugUI.h"
+#endif
 void RenderTexture::Create()
 {
     kRenderTargetClearValue_ = { 1.0f,0.0f,0.0f,1.0f };
@@ -36,6 +39,8 @@ void RenderTexture::Create()
     renderTextureData_.srvHandleGPU = SrvManager::GetGPUDescriptorHandle(renderTextureData_.srvIndex);
 
     DirectXCommon::GetDevice()->CreateShaderResourceView(renderTextureData_.resource.Get(), &renderTextureSrvDesc, renderTextureData_.srvHandleCPU);
+
+    CreateMaterialBuffer();
 }
 
 void RenderTexture::Draw()
@@ -48,6 +53,36 @@ void RenderTexture::Draw()
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     ////SRVのDescriptorTableの先頭を設定。0はrootParameter[0]である。
     SrvManager::SetGraphicsRootDescriptorTable(0, renderTextureData_.srvIndex);
+    commandList->SetGraphicsRootConstantBufferView(1, materialResource_->GetGPUVirtualAddress());
     commandList->DrawInstanced(3, 1, 0, 0);
 
+}
+
+void RenderTexture::Update()
+{
+#ifdef _DEVELOP
+    DebugUI::CheckColor(material_->color, "RenderTextureColor");
+
+#endif
+}
+
+RenderTexture::~RenderTexture()
+{
+    if (materialResource_) {
+        materialResource_->Unmap(0, nullptr);
+        materialResource_ = nullptr;
+    }
+
+    materialResource_.Reset();
+}
+
+void RenderTexture::CreateMaterialBuffer()
+{
+    //マテリアル用のリソースを作る。
+    materialResource_ = DirectXCommon::CreateBufferResource(sizeof(MaterialForRenderTexture));
+    //マテリアルにデータを書き込む
+
+    //書き込むためのアドレスを取得
+    HRESULT result = materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&material_));
+    material_->color = sepiaColor_;
 }

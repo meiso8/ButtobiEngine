@@ -243,12 +243,16 @@ void RootSignature::Create() {
 
 #pragma region//offScreenParameters
 
-    D3D12_ROOT_PARAMETER rootParametersForOffScreen[1] = {};
+    D3D12_ROOT_PARAMETER rootParametersForOffScreen[2] = {};
     //Texture t2
     rootParametersForOffScreen[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
     rootParametersForOffScreen[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
     rootParametersForOffScreen[0].DescriptorTable.pDescriptorRanges = descriptorRange;//Tableの中身の配列を指定
     rootParametersForOffScreen[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);//Tableで利用する数
+    //Material b0
+    rootParametersForOffScreen[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+    rootParametersForOffScreen[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParametersForOffScreen[1].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
 
 #pragma endregion
 
