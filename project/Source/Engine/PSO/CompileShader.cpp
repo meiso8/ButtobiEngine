@@ -83,10 +83,10 @@ void DxcCompiler::ShaderSetting() {
 
     {
         //offscreen
-        vertexShaderBlobs_.push_back(CompileShader(L"Resource/shader/CopyImage.VS.hlsl",
+        vertexShaderBlobs_.push_back(CompileShader(L"Resource/shader/Fullscreen.VS.hlsl",
             L"vs_6_0"));
         assert(vertexShaderBlobs_[kOffScreen] != nullptr);
-        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/CopyImage.PS.hlsl",
+        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/Grayscale.PS.hlsl",
             L"ps_6_0"));
         assert(pixelShaderBlobs_[kOffScreen] != nullptr);
     }

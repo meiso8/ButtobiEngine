@@ -139,6 +139,7 @@ void MyEngine::Update() {
 #endif
     VibrateManager::Update();
     SceneManager::Update();
+    directXCommon->UpdateRenderTexture();
 }
 
 void MyEngine::Debug()

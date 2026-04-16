@@ -388,6 +388,11 @@ void DirectXCommon::InitializeRenderTexture()
     renderTexture_.Create();
 }
 
+void DirectXCommon::UpdateRenderTexture()
+{
+    renderTexture_.Update();
+}
+
 // =============================================================================================
 
 ComPtr<ID3D12Resource> DirectXCommon::CreateBufferResource(

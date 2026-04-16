@@ -4,7 +4,11 @@
 #include"Vector4.h"
 #include<stdint.h>
 
+#include"hlslTypeToCpp.h"
 
+struct MaterialForRenderTexture {
+    float4 color;
+};
 class RenderTexture
 
 {
@@ -19,7 +23,10 @@ public:
     };
 private:
     Vector4 kRenderTargetClearValue_;
+    const Vector4 sepiaColor_ = {1.0f,74.0f/107.0f,43.0f/107.0f,1.0f};
     RenderTextureData renderTextureData_;
+    Microsoft::WRL::ComPtr <ID3D12Resource> materialResource_ = nullptr;
+    MaterialForRenderTexture* material_ = nullptr;
 public:
 
     void Create();
@@ -30,5 +37,9 @@ public:
         return renderTextureData_;
     }
     void Draw();
+    void Update();
+    ~RenderTexture();
+private:
+    void CreateMaterialBuffer();
 };
 
