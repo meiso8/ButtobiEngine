@@ -8,6 +8,9 @@
 
 struct MaterialForRenderTexture {
     float4 color;
+    bool useEffect = false;
+    uint32_t type = false;
+    bool padding[2] = { };
 };
 class RenderTexture
 
