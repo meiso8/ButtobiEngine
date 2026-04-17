@@ -16,7 +16,6 @@
 #include<memory>
 #include<cstdint>
 
-
 class Camera;
 class ShaderResourceView;
 struct Emitter;
@@ -77,9 +76,9 @@ struct ParticleGroup {
 
 std::list<SphericalMove> EmitCoordinate(uint32_t count, const float& radius, const float& radiusSpeed, const float& polarSpeed, const MinMax& polarSpeedMinMax, const MinMax& radiusSpeedMinMax);
 
-std::list<Particle> EmitParticles(const AABB& velocityAABB, const WorldTransform& transform, uint32_t count, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const float& rotateOffset, const float& scaleOffset);
+std::list<Particle> EmitParticles(const AABB& velocityAABB, const WorldTransform& transform, uint32_t count, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const AABB& rotateAABB, const AABB& scaleAABB);
 Particle MakeNewParticle(const AABB& velocityAABB,
-    const WorldTransform& transform, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const float& rotateOffset, const float& scaleOffset);
+    const WorldTransform& transform, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const AABB& rotateAABB, const AABB& scaleAABB);
 
 SphericalMove MakeNewSphericalCoordinate(const float& radius, const int& count, const int& maxCount, const float& radiusSpeed, const float& polarSpeed, const MinMax& polarSpeedMinMax, const MinMax& radiusSpeedMinMax);
 

@@ -23,6 +23,7 @@ std::unordered_map<std::string, std::unique_ptr <ParticleGroup> >ParticleManager
 
 void ParticleManager::CreateAll()
 {
+    CreateParticleGroup("particle1", TextureFactory::CIRCLE, false);
     CreateParticleGroup("people", TextureFactory::UV_CHECKER, true, "people.obj");
     CreateParticleGroup("uvChecker", TextureFactory::UV_CHECKER);
     CreateParticleGroup("medjedParticle", TextureFactory::UV_CHECKER, true, "people.obj");
@@ -55,7 +56,7 @@ void ParticleManager::Create()
     CreateVertexBufferResource();
 }
 
-Particle MakeNewParticle(const AABB& velocityAABB, const WorldTransform& transform, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const float& rotateOffset, const float& scaleOffset)
+Particle MakeNewParticle(const AABB& velocityAABB, const WorldTransform& transform, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const AABB& rotateAABB, const AABB& scaleAABB)
 {
 
     Particle particle;
@@ -69,9 +70,14 @@ Particle MakeNewParticle(const AABB& velocityAABB, const WorldTransform& transfo
     Random::SetMinMax(velocityAABB.min.z, velocityAABB.max.z);
     particle.velocity.z = Random::Get();
 
-    Random::SetMinMax(-scaleOffset, scaleOffset);
-    float scale = Random::Get();
-    particle.transform.scale = transform.scale_ + Vector3{ scale ,scale, scale };
+    Random::SetMinMax(scaleAABB.min.x, scaleAABB.max.x);
+    float scaleX = Random::Get();
+    Random::SetMinMax(scaleAABB.min.y, scaleAABB.max.y);
+    float scaleY = Random::Get();
+    Random::SetMinMax(scaleAABB.min.z, scaleAABB.max.z);
+    float scaleZ = Random::Get();
+
+    particle.transform.scale = transform.scale_ + Vector3{ scaleX ,scaleY, scaleZ };
     
     Vector3 newTransform = transform.GetWorldPosition();
     Random::SetMinMax(translateAABB.min.x, translateAABB.max.x);
@@ -81,9 +87,14 @@ Particle MakeNewParticle(const AABB& velocityAABB, const WorldTransform& transfo
     Random::SetMinMax(translateAABB.min.z, translateAABB.max.z);
     particle.transform.translate.z = Random::Get() + newTransform.z;
 
-    Random::SetMinMax(-rotateOffset, rotateOffset);
-    particle.transform.rotate = Vector3{ Random::Get(), Random::Get(), Random::Get() } + transform.rotate_;
 
+    Random::SetMinMax(rotateAABB.min.x, rotateAABB.max.x);
+    float rotateX = Random::Get();
+    Random::SetMinMax(rotateAABB.min.y, rotateAABB.max.y);
+    float rotateY = Random::Get();
+    Random::SetMinMax(rotateAABB.min.z, rotateAABB.max.z);
+    float rotateZ = Random::Get();
+    particle.transform.rotate = Vector3{ rotateX,rotateY, rotateZ } + transform.rotate_;
     particle.currentTime = 0;
 
     if (color == Vector4{ 0.0f,0.0f,0.0f,0.0f }) {
@@ -171,11 +182,11 @@ void ParticleManager::Update(Camera& camera)
     }
 }
 
-std::list<Particle> EmitParticles(const AABB& velocityAABB, const WorldTransform& transform, uint32_t count, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const float& rotateOffset, const float& scaleOffset)
+std::list<Particle> EmitParticles(const AABB& velocityAABB, const WorldTransform& transform, uint32_t count, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const AABB& rotateAABB, const AABB& scaleAABB)
 {
     std::list<Particle>particles;
     for (uint32_t i = 0; i < count; ++i) {
-        particles.push_back(MakeNewParticle(velocityAABB,transform, color, lifeTime, translateAABB, rotateOffset, scaleOffset));
+        particles.push_back(MakeNewParticle(velocityAABB,transform, color, lifeTime, translateAABB, rotateAABB, scaleAABB));
     }
     return particles;
 }
@@ -197,7 +208,7 @@ void ParticleManager::Emit(Emitter& emitter)
 {
     assert(particleGroups.contains(emitter.name));
 
-    particleGroups[emitter.name]->particles.splice(particleGroups[emitter.name]->particles.end(), EmitParticles(emitter.velocityAABB,emitter.transform, emitter.count, emitter.color, emitter.lifeTime, emitter.translateAABB_, emitter.rotateOffset_, emitter.scaleOffset_));
+    particleGroups[emitter.name]->particles.splice(particleGroups[emitter.name]->particles.end(), EmitParticles(emitter.velocityAABB,emitter.transform, emitter.count, emitter.color, emitter.lifeTime, emitter.translateAABB_, emitter.rotateAABB_, emitter.scaleAABB_));
 
     particleGroups[emitter.name]->movement = emitter.movement;
     particleGroups[emitter.name]->parentPos_ = &emitter.transform;

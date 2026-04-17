@@ -4,6 +4,7 @@ void TextureFactory::Load()
 {
     Texture::Load("Resource/Textures/white1x1.png", WHITE_1X1);
     Texture::Load("Resource/Textures/uvChecker.png", UV_CHECKER);
+    Texture::Load("Resource/Textures/circle2.png", CIRCLE);
     Texture::Load("Resource/Textures/numbers.png", NUMBERS);
 
     Texture::Load("Resource/Textures/ui.png", UI);
