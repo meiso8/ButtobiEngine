@@ -27,6 +27,9 @@ void RootSignature::Create() {
     descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SRV
     descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//オフセット自動計算
 
+
+
+
     //Instancing用
     D3D12_DESCRIPTOR_RANGE descriptorRangeForInstancing[1] = {};
     descriptorRangeForInstancing[0].BaseShaderRegister = 3; // gTransformationMatrices : register(t3)
@@ -54,6 +57,15 @@ void RootSignature::Create() {
     descriptorRangeForMatrixPalette[0].NumDescriptors = 1;
     descriptorRangeForMatrixPalette[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
     descriptorRangeForMatrixPalette[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+
+    //DescriptorRange
+    D3D12_DESCRIPTOR_RANGE descriptorRangeForSkyBox[1] = {};
+    descriptorRangeForSkyBox[0].BaseShaderRegister = 7;//2から始める Texture2D<float32_t4> gTexture : register(t2); 
+    descriptorRangeForSkyBox[0].NumDescriptors = 1;//1つ
+    descriptorRangeForSkyBox[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SRV
+    descriptorRangeForSkyBox[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//オフセット自動計算
+
 
     //D3D12_DESCRIPTOR_RANGE waveDescriptorRange[1] = {};
     //waveDescriptorRange[0].BaseShaderRegister = 1; // StructuredBuffer<Wave> gWave : register(t1);
@@ -86,7 +98,7 @@ void RootSignature::Create() {
 #pragma region//NormalRootParameters
     //CBufferを利用することになったので、RootParameterに設定を追加する
    /* RootParameter作成。PixelShaderのMaterialとVertexShaderのTransform*/
-    D3D12_ROOT_PARAMETER rootParameters[10] = {};
+    D3D12_ROOT_PARAMETER rootParameters[11] = {};
     //Material b0
     rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
     rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
@@ -140,24 +152,27 @@ void RootSignature::Create() {
     rootParameters[9].DescriptorTable.pDescriptorRanges = descriptorRangeForSpotLight;//Tableの中身の配列を指定
     rootParameters[9].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForSpotLight);//Tableで利用する数
 
+    //SkyBox Texture t6
+    rootParameters[10].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParameters[10].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParameters[10].DescriptorTable.pDescriptorRanges = descriptorRangeForSkyBox;//Tableの中身の配列を指定
+    rootParameters[10].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForSkyBox);//Tableで利用する数
 #pragma endregion
 
 #pragma region//rootParametersForSkinning
 
-    D3D12_ROOT_PARAMETER rootParametersForSkinning[11] = {};
+    D3D12_ROOT_PARAMETER rootParametersForSkinning[12] = {};
 
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 11; ++i) {
         rootParametersForSkinning[i] = rootParameters[i];
     }
 
     //MatrixPalette t6
-    rootParametersForSkinning[10].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
-    rootParametersForSkinning[10].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
-    rootParametersForSkinning[10].DescriptorTable.pDescriptorRanges = descriptorRangeForMatrixPalette;//Tableの中身の配列を指定
-    rootParametersForSkinning[10].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForMatrixPalette);//Tableで利用する数
+    rootParametersForSkinning[11].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParametersForSkinning[11].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
+    rootParametersForSkinning[11].DescriptorTable.pDescriptorRanges = descriptorRangeForMatrixPalette;//Tableの中身の配列を指定
+    rootParametersForSkinning[11].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForMatrixPalette);//Tableで利用する数
 #pragma endregion
-
-
 
 #pragma region//ParticleRootParameters
     //CBufferを利用することになったので、RootParameterに設定を追加する

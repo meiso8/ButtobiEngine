@@ -9,6 +9,8 @@
 #include"SkinningModel.h"
 #include"Bone.h"
 #include<algorithm>
+#include"SRVmanager/SrvManager.h"
+
 AnimationObject3d::AnimationObject3d() {
     animationTime_ = 0.0f;
     worldMatrix_ = MakeIdentity4x4();
@@ -124,6 +126,7 @@ void AnimationObject3d::Draw(Camera& camera, const BlendMode& blendMode, const C
         DirectionalLightManager::SetGraphicsRootConstantBufferView();
         PointLightManager::SetGraphicsRootDescriptorTable();
         SpotLightManager::SetGraphicsRootDescriptorTable();
+        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetHandle(TextureFactory::ART1));
         skinningModel_->Draw(commandList_);
     }
 

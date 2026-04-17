@@ -2,6 +2,8 @@
 #include"Input.h"
 #include"AABB.h"
 #include"DrawGrid.h"
+#include"DebugUI.h"
+
 FreeTypeScene::FreeTypeScene()
 {
 
@@ -12,15 +14,15 @@ FreeTypeScene::FreeTypeScene()
 
     text_.SetString(U"\U00013000ButtobiEngine");
     text_.SetPosition({ 640, 360 });
-    text_.SetColor({ 1, 1, 1, 1 });
+    text_.SetColor({ 1, 0, 0, 1 });
     text_.SetAlign(TextAlign::Center);
-    text_.SetBlendMode(BlendMode::kBlendModeAdd);
+    text_.SetBlendMode(BlendMode::kBlendModeNormal);
 
     pressSpaceText_.SetString(U"SPACE");
     pressSpaceText_.SetPosition({ 640, 360 + 128 });
-    pressSpaceText_.SetColor({ 1, 1, 1, 1 });
+    pressSpaceText_.SetColor({ 1, 0, 0, 1 });
     pressSpaceText_.SetAlign(TextAlign::Center);
-    pressSpaceText_.SetBlendMode(BlendMode::kBlendModeAdd);
+    pressSpaceText_.SetBlendMode(BlendMode::kBlendModeNormal);
     sprite_ = std::make_unique<Sprite>();
     sprite_->Create(TextureFactory::ART1, { 0,0 });
     sprite_->SetSize({ 1280,720 });
@@ -28,8 +30,14 @@ FreeTypeScene::FreeTypeScene()
 
     skyBoxObj_ = std::make_unique<SkyboxObject3d>();
     skyBoxObj_->Create();
-    
 
+    cubeMesh_ = std::make_unique<CubeMesh>();
+    cubeMesh_->Create(TextureFactory::WHITE_1X1);
+    object3d_ = std::make_unique<Object3d>();
+    object3d_->Create();
+    object3d_->SetMesh(cubeMesh_.get());
+    object3d_->GetMaterial().environmentCoefficient = 0.5f;
+    //object3d_->SetTextureHandle(TextureFactory::WHITE_1X1);
 }
 
 void FreeTypeScene::Initialize()
@@ -68,10 +76,13 @@ void FreeTypeScene::Update()
     if (Input::IsTriggerKey(DIK_F1)) {
         SwitchCamera();
     }
+
+    DebugUI::CheckObject3d(*object3d_,"Cube");
 #endif //_DEVELOP
 
 
-    
+    object3d_->Update();
+
     currentCamera_->UpdateMatrix();
 
 }
@@ -85,6 +96,7 @@ void FreeTypeScene::Draw()
 #endif //_DEVELOP
     
     skyBoxObj_->Draw(*currentCamera_);
+    object3d_->Draw(*currentCamera_);
 
     //Sprite::PreDraw();
     //sprite_->Draw();

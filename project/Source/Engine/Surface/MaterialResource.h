@@ -12,15 +12,17 @@ enum LightMode {
     kLightModeHalfL,
 };
 
+
 struct Material
 {
     float4 color;
     int32_t lightMode;
-    float padding[3];
-    float32_t4x4 uvTransform;
     float32_t shininess;
-    float padding2[3];
+    float32_t environmentCoefficient;
+    float padding[1];
+    float32_t4x4 uvTransform;
 };
+
 
 class MaterialResource {
 
@@ -49,6 +51,9 @@ public:
     void SetUV(const Matrix4x4& transform);
     void SetLightMode(uint32_t lightType);
     void SetShininess(const float32_t& shininess);
+    void SetEnvironmentCoefficient(const float& environmentCoefficient) {
+        material_->environmentCoefficient = environmentCoefficient;
+    }
 private:
     Microsoft::WRL::ComPtr <ID3D12Resource> materialResource_ = nullptr;
     Material* material_ = nullptr;

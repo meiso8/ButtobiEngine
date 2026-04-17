@@ -262,14 +262,14 @@ SkyboxObject3d::~SkyboxObject3d()
 void SkyboxObject3d::Create()
 {
 
-    skyBox_ = std::make_unique<Skybox>();
-    skyBox_->Create(TextureFactory::ART1);
-
     commandList_ = DirectXCommon::GetCommandList();
     CreateTransformationMatrix();
     CreateMaterial();
     Initialize();
     Update();
+
+    skyBox_ = std::make_unique<Skybox>();
+    skyBox_->Create(TextureFactory::ART1);
 }
 
 
