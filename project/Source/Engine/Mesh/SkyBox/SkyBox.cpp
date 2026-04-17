@@ -261,16 +261,22 @@ SkyboxObject3d::~SkyboxObject3d()
 
 void SkyboxObject3d::Create()
 {
+
+    skyBox_ = std::make_unique<Skybox>();
+    skyBox_->Create(TextureFactory::ART1);
+
     commandList_ = DirectXCommon::GetCommandList();
     CreateTransformationMatrix();
     CreateMaterial();
     Initialize();
+    Update();
 }
 
 
 void SkyboxObject3d::Initialize()
 {
     worldTransform_.Initialize();
+    worldTransform_.scale_ = { 20.0f,20.0f,20.0f };
 }
 
 void SkyboxObject3d::Update()
@@ -283,13 +289,13 @@ void SkyboxObject3d::Draw(Camera& camera, const BlendMode& blendMode, const Cull
     //データを書き込む
     transformationMatrixData_->WVP = Multiply(worldTransform_.matWorld_, camera.GetViewProjectionMatrix());
 
-    if (meshCommon_) {
-        meshCommon_->PreDraw(commandList_, blendMode, cullMode);
+    if (skyBox_) {
+        skyBox_->PreDraw(commandList_, blendMode, cullMode);
         //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
         commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定
         commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
-        meshCommon_->Draw(commandList_);
+        skyBox_->Draw(commandList_);
     }
 }
 

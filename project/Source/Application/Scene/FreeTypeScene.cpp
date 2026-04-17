@@ -28,10 +28,8 @@ FreeTypeScene::FreeTypeScene()
 
     skyBoxObj_ = std::make_unique<SkyboxObject3d>();
     skyBoxObj_->Create();
-    skyBox_ = std::make_unique<Skybox>();
-    skyBox_->Create(TextureFactory::ART1);
-    skyBoxObj_->SetMesh(skyBox_.get());
-    skyBox_->SetMinMax({ {-5.0f,-5.0f,-5.0f},{5.0f,5.0f,5.0f} });
+    
+
 }
 
 void FreeTypeScene::Initialize()

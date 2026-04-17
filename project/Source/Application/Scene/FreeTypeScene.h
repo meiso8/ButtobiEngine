@@ -19,6 +19,6 @@ private:
     Text pressSpaceText_;
     std::unique_ptr<Sprite>sprite_ = nullptr;
     std::unique_ptr<SkyboxObject3d> skyBoxObj_ = nullptr;
-    std::unique_ptr<Skybox> skyBox_ = nullptr;
+
 };
 

@@ -48,7 +48,7 @@ protected:
     static  ID3D12GraphicsCommandList* commandList_;
 private:
     //メッシュ情報
-    MeshCommon* meshCommon_ = nullptr;
+    std::unique_ptr<Skybox> skyBox_ = nullptr;
     Microsoft::WRL::ComPtr <ID3D12Resource> materialResource_ = nullptr;
     MaterialForSkyBox* material_ = nullptr;
 public:
@@ -63,9 +63,7 @@ public:
     virtual void Initialize();
     virtual void Update();
     virtual void Draw(Camera& camera, const BlendMode& blendMode = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack);
-
-    void SetMesh(MeshCommon* mesh) { meshCommon_ = mesh; };
-    virtual void SetTextureHandle(const TextureFactory::Handle& textureHandle) { meshCommon_->SetTextureHandle(textureHandle); };
+    virtual void SetTextureHandle(const TextureFactory::Handle& textureHandle) { skyBox_->SetTextureHandle(textureHandle); };
 private:
     void CreateTransformationMatrix();
     void CreateMaterial(const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
