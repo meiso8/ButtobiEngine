@@ -14,8 +14,8 @@ struct Emitter
     WorldTransform transform;//エミッタのTransfrom
     AABB translateAABB_ = { 0.0f };
     AABB velocityAABB = {0.0f};
-    float rotateOffset_ = 0.0f;
-    float scaleOffset_ = 0.0f;
+    AABB rotateAABB_ = { 0.0f};
+    AABB scaleAABB_ = { 0.0f};
     uint32_t count = 3;//発生数
     float frequency = 0.5f;//発生頻度
     float frequencyTime = 0.0f;//頻度用時刻
@@ -40,8 +40,8 @@ class ParticleEmitter
 {
 private:
    static ParticleManager* particleManager_;
+   Emitter emitter_{};
 public:
-    Emitter emitter_{};
 public:
     ParticleEmitter();
     void Initialize();
@@ -49,10 +49,10 @@ public:
         const Vector3& translate,
         const Vector3& scale,
         const Vector3& rotate,
-        const  AABB& translateAABB_,
+        const  AABB& translateAABB,
         const AABB& velocityAABB,
-   const float& rotateOffset_,
-   const float& scaleOffset_,
+   const AABB& rotateAABB,
+   const AABB& scaleAABB,
    const uint32_t& count,
    const float& frequency,
    const float& frequencyTime,
@@ -72,7 +72,7 @@ public:
     void UpdateEmitter();
     void Emit();
 
-
+    Emitter& GetEmitter() { return emitter_; };
     void SetName(const std::string name) { emitter_.name = name; }
     void SetMovement(ParticleMovements& movement) { emitter_.movement; }
     void SetParent(WorldTransform& parent);

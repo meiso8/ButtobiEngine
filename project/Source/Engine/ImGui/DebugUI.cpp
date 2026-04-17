@@ -502,7 +502,7 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter, const char* label)
     ImGui::Begin("Particle");
 
     static  Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
-    Emitter& emitter = particleEmitter.emitter_;
+    Emitter& emitter = particleEmitter.GetEmitter();
 
     if (ImGui::TreeNode(label)) {
         int movement = static_cast<int>(emitter.movement);
@@ -510,10 +510,20 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter, const char* label)
         emitter.movement = static_cast<ParticleMovements>(movement);
         ImGui::SliderFloat("radius", &emitter.radius, 0.1f, 10.0f);
         ImGui::SliderFloat("lifeTime", &emitter.lifeTime, -1.0f, 50.0f);
+        
+        ImGui::SliderFloat3("scaleAABBMin", &emitter.scaleAABB_.min.x, -20.0f, 0.0f);
+        ImGui::SliderFloat3("scaleAABBMax", &emitter.scaleAABB_.max.x, 0.0f, 20.0f);
+
         ImGui::SliderFloat3("translateMin", &emitter.translateAABB_.min.x, -20.0f, 0.0f);
         ImGui::SliderFloat3("translateMax", &emitter.translateAABB_.max.x, 0.0f, 20.0f);
-        ImGui::SliderFloat("rotateOffset", &emitter.rotateOffset_, 0.0f, 20.0f);
-        ImGui::SliderFloat("scaleOffset", &emitter.scaleOffset_, 0.0f, 20.0f);
+
+        ImGui::SliderFloat3("rotateAABBMin", &emitter.rotateAABB_.min.x, -20.0f, 0.0f);
+        ImGui::SliderFloat3("rotateAABBMax", &emitter.rotateAABB_.max.x, 0.0f, 20.0f);
+
+        ImGui::SliderFloat3("velcityAABBMax", &emitter.velocityAABB.min.x, -20.0f, 0.0f);
+        ImGui::SliderFloat3("velcityAABBMin", &emitter.velocityAABB.max.x, 0.0f, 20.0f);
+
+
         CheckBlendMode(emitter.blendMode);
         CheckColor(emitter.color, "color");
 

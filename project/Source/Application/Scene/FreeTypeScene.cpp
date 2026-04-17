@@ -4,6 +4,7 @@
 #include"DrawGrid.h"
 #include"DebugUI.h"
 
+
 FreeTypeScene::FreeTypeScene()
 {
 
@@ -38,13 +39,17 @@ FreeTypeScene::FreeTypeScene()
     object3d_->SetMesh(cubeMesh_.get());
     object3d_->GetMaterial().environmentCoefficient = 0.5f;
     //object3d_->SetTextureHandle(TextureFactory::WHITE_1X1);
+
+
 }
 
 void FreeTypeScene::Initialize()
 {
+    ParticleManager::ResetAll();
+
     camera_->Initialize();
     currentCamera_ = camera_.get();
-
+    CreateParticle();
 }
 
 void FreeTypeScene::Update()
@@ -78,12 +83,23 @@ void FreeTypeScene::Update()
     }
 
     DebugUI::CheckObject3d(*object3d_,"Cube");
+    DebugUI::CheckParticle(*particleEmitters_[0], "Emitter0");
 #endif //_DEVELOP
 
 
     object3d_->Update();
 
+    for (int i = 0; i < particleEmitters_.size(); ++i) {
+        particleEmitters_[i]->UpdateTimer();
+        particleEmitters_[i]->UpdateEmitter();
+
+    }
+
+    // 共通更新
+    ParticleManager::GetInstance()->Update(*currentCamera_);
+
     currentCamera_->UpdateMatrix();
+
 
 }
 
@@ -95,14 +111,52 @@ void FreeTypeScene::Draw()
     DrawGrid::Draw(*currentCamera_);
 #endif //_DEVELOP
     
-    skyBoxObj_->Draw(*currentCamera_);
+  skyBoxObj_->Draw(*currentCamera_);
     object3d_->Draw(*currentCamera_);
 
-    //Sprite::PreDraw();
-    //sprite_->Draw();
+    ParticleManager::GetInstance()->Draw();
+
+
+    Sprite::PreDraw();
+    sprite_->Draw();
+
     text_.Draw();
     pressSpaceText_.Draw();
-
     sceneChange_->Draw();
+
+
+}
+
+void FreeTypeScene::CreateParticle()
+{
+    for (int i = 0; i < particleEmitters_.size(); ++i) {
+        particleEmitters_[i] = std::make_unique<ParticleEmitter>();
+        particleEmitters_[i]->Initialize();
+    }
+
+    ParticleManager::GetInstance()->Create();
+
+    particleEmitters_[0]->SetName("particle1");
+
+    auto& emitter0 = particleEmitters_[0]->GetEmitter();
+
+    emitter0.count = 8;
+    emitter0.color = { 1.0f,1.0f,1.0f,1.0f };
+    emitter0.transform.scale_ = { 0.05f,1.0f,1.0f };
+    emitter0.transform.rotate_ = { 0.0f,0.0f,0.0f };
+    emitter0.transform.translate_ = { 0.5f,0.5f,-0.5f };
+
+    emitter0.frequencyTime = 0.0f;
+    emitter0.frequency = 2.0f;
+    emitter0.lifeTime = 2.0f;   
+    emitter0.blendMode = kBlendModeScreen;
+    emitter0.movement = ParticleMovements::kParticleNormal;
+    emitter0.rotateAABB_ = { .min = {0.0f,0.0f,-3.14f},.max = {0.0f,0.0f,3.14f} };
+    emitter0.scaleAABB_ = { .min = {0.0f,0.4f,1.0f},.max = {0.0f,1.5f,0.0f} };
+
+    auto& group = ParticleManager::GetInstance()->GetParticleGroup(emitter0.name);
+    group->accelerationField.acceleration.y = 0.0f;
+    group->accelerationField.area = { .min = {-1.0f,-1.0f,-1.0f},.max = {1.0f,1.0f,1.0f} };
+
 
 }

@@ -112,7 +112,7 @@ void SampleScene::InitMummyScene()
 void SampleScene::InitMedjedScene()
 {
     if (medjedStage_) {
-        particleEmitters_[0]->emitter_.transform.Parent(medjedStage_->GetMedjed()->GetWorldTransform());
+        particleEmitters_[0]->GetEmitter().transform.Parent(medjedStage_->GetMedjed()->GetWorldTransform());
     }
     //メモマネージャー
     memoManager_->Initialize();
@@ -231,7 +231,7 @@ void SampleScene::Update() {
                 lightingManager_->DirectionalLightUpdate();
 
                 if (medjedStage_->GetEnemyApper()) {
-                    particleEmitters_[0]->emitter_.transform.Parent(medjedStage_->GetEnemy()->GetWorldTransform());
+                    particleEmitters_[0]->GetEmitter().transform.Parent(medjedStage_->GetEnemy()->GetWorldTransform());
                 }
 
                 for (int i = 0; i < particleEmitters_.size(); ++i) {
@@ -349,35 +349,37 @@ void SampleScene::CreateParticle()
     particleEmitters_[0]->SetName("medjedParticle");
     particleEmitters_[1]->SetName("people");
 
-    particleEmitters_[0]->emitter_.count = 8;
-    particleEmitters_[0]->emitter_.color = { 1.0f,0.75f,0.75f,1.0f };
-    particleEmitters_[0]->emitter_.frequencyTime = 0.25f;
-    particleEmitters_[0]->emitter_.lifeTime = 6.0f;
-    particleEmitters_[0]->emitter_.blendMode = kBlendModeMultiply;
-    particleEmitters_[0]->emitter_.movement = ParticleMovements::kParticleSphere;
-    particleEmitters_[0]->emitter_.radius = 3.0f;
-    particleEmitters_[0]->emitter_.rotateOffset_ = 3.14f;
+
+    auto& emitter0 = particleEmitters_[0]->GetEmitter();
+    emitter0.count = 8;
+    emitter0.color = { 1.0f,0.75f,0.75f,1.0f };
+    emitter0.frequencyTime = 0.25f;
+    emitter0.lifeTime = 6.0f;
+    emitter0.blendMode = kBlendModeMultiply;
+    emitter0.movement = ParticleMovements::kParticleSphere;
+    emitter0.radius = 3.0f;
+    float pi = std::numbers::pi_v<float>;
+    emitter0.rotateAABB_ = { .min = {-pi ,-pi ,-pi } ,.max = { pi, pi, pi} };
     //particleEmitters_[0]->emitter_.radiusSpeed = ;
-    auto& group = ParticleManager::GetInstance()->GetParticleGroup(particleEmitters_[0]->emitter_.name);
+    auto& group = ParticleManager::GetInstance()->GetParticleGroup(emitter0.name);
     group->accelerationField.acceleration.y = 5.0f;
     group->accelerationField.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,40.0f,25.0f} };
 
-    particleEmitters_[1]->emitter_.transform.translate_.y = 30.0f;
-    particleEmitters_[1]->emitter_.transform.scale_ = { 10.0f,10.0f,10.0f };
-    particleEmitters_[1]->emitter_.count = 4;
-    particleEmitters_[1]->emitter_.color = { 1.0f,0.75f,0.75f,1.0f };
-    particleEmitters_[1]->emitter_.frequencyTime = 0.1f;
-    particleEmitters_[1]->emitter_.lifeTime = 10.0f;
-    particleEmitters_[1]->emitter_.blendMode = kBlendModeScreen;
-    particleEmitters_[1]->emitter_.velocityAABB = { { -10.0f,-10.0f,-10.0f }, { 10.0f,0.0f,10.0f } };
-    particleEmitters_[1]->emitter_.rotateOffset_ = 3.14f;
+    auto& emitter1 = particleEmitters_[1]->GetEmitter();
+    emitter1.transform.translate_.y = 30.0f;
+    emitter1.transform.scale_ = { 10.0f,10.0f,10.0f };
+    emitter1.count = 4;
+    emitter1.color = { 1.0f,0.75f,0.75f,1.0f };
+    emitter1.frequencyTime = 0.1f;
+    emitter1.lifeTime = 10.0f;
+    emitter1.blendMode = kBlendModeScreen;
+    emitter1.velocityAABB = { { -10.0f,-10.0f,-10.0f }, { 10.0f,0.0f,10.0f } };
+    emitter1.rotateAABB_ = { .min = {-pi ,-pi ,-pi } ,.max = { pi, pi, pi} };
 
-    auto& enemyGroup = ParticleManager::GetInstance()->GetParticleGroup(particleEmitters_[1]->emitter_.name);
+    auto& enemyGroup = ParticleManager::GetInstance()->GetParticleGroup(emitter1.name);
     enemyGroup->accelerationField.acceleration.y = 10.0f;
     enemyGroup->accelerationField.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,15.0f,25.0f} };
 }
-
-
 
 void SampleScene::Draw() {
 

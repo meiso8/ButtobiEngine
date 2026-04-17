@@ -5,6 +5,8 @@
 #include"Object3d/Object3d.h"
 #include"Mesh/Skybox/Skybox.h"
 #include"Mesh/Cube/CubeMesh.h"
+#include"Particle/ParticleEmitter.h"
+
 class FreeTypeScene : public BaseScene
 {
 public:
@@ -12,6 +14,8 @@ public:
     void Initialize()override;
     void Update()override;
     void Draw()override;
+private:
+    void CreateParticle();
 private:
     std::u32string inputText_;
     Text text_;
@@ -21,5 +25,8 @@ private:
     std::unique_ptr<SkyboxObject3d> skyBoxObj_ = nullptr;
     std::unique_ptr<Object3d> object3d_ = nullptr;
     std::unique_ptr<CubeMesh> cubeMesh_ = nullptr;
+
+    std::array<std::unique_ptr<ParticleEmitter>, 1>particleEmitters_;
+
 };
 

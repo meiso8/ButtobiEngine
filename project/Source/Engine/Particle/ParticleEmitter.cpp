@@ -20,8 +20,8 @@ void ParticleEmitter::Initialize()
 
     emitter_.translateAABB_ = { 0.0f };
     emitter_.velocityAABB = { 0.0f};
-    emitter_.rotateOffset_ = 0.0f;
-    emitter_.scaleOffset_ = 0.0f;
+    emitter_.rotateAABB_ = { 0.0f };
+    emitter_.scaleAABB_ = { 0.0f };
 
     emitter_.color = { 1.0f,1.0f,1.0f,1.0f };
     emitter_.startAlpha_ = 1.0f;
@@ -42,10 +42,10 @@ void ParticleEmitter::SetEmitterParam(
     const Vector3& translate,
     const Vector3& scale,
     const Vector3& rotate,
-    const  AABB& translateAABB_,
+    const  AABB& translateAABB,
     const AABB& velocityAABB,
-    const float& rotateOffset_,
-    const float& scaleOffset_,
+    const AABB& rotateAABB,
+    const AABB& scaleAABB,
     const uint32_t& count,
     const float& frequency,
     const float& frequencyTime,
@@ -64,10 +64,10 @@ void ParticleEmitter::SetEmitterParam(
     emitter_.transform.translate_ = translate;//エミッタのTransfrom
     emitter_.transform.rotate_ = rotate;//エミッタのTransfrom
 
-    emitter_.translateAABB_ = translateAABB_;
+    emitter_.translateAABB_ = translateAABB;
     emitter_.velocityAABB = velocityAABB;
-    emitter_. rotateOffset_ = rotateOffset_;
-    emitter_. scaleOffset_ = scaleOffset_;
+    emitter_. rotateAABB_ = rotateAABB;
+    emitter_. scaleAABB_ = scaleAABB;
     emitter_.count = count;//発生数
     emitter_. frequency = frequency;//発生頻度
     emitter_. frequencyTime = frequencyTime;//頻度用時刻
