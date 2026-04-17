@@ -55,7 +55,7 @@ void SkinningModel::Draw(ID3D12GraphicsCommandList* commandList)
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
     SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
     //cameraのCBufferの場所を設定 paletteResource 
-    SrvManager::SetGraphicsRootDescriptorTable(10, skinCluster_->paletteSrvIndex);
+    SrvManager::SetGraphicsRootDescriptorTable(11, skinCluster_->paletteSrvIndex);
 
     //描画!（DrawCall/ドローコール）6個のインデックスを使用し1つのインスタンスを描画。その他は当面0で良い。
     commandList->DrawIndexedInstanced(UINT(modelData_->indices.size()), 1, 0, 0, 0);

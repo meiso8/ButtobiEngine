@@ -4,7 +4,7 @@
 #include<string>
 #include"Object3d/Object3d.h"
 #include"Mesh/Skybox/Skybox.h"
-
+#include"Mesh/Cube/CubeMesh.h"
 class FreeTypeScene : public BaseScene
 {
 public:
@@ -19,6 +19,7 @@ private:
     Text pressSpaceText_;
     std::unique_ptr<Sprite>sprite_ = nullptr;
     std::unique_ptr<SkyboxObject3d> skyBoxObj_ = nullptr;
-
+    std::unique_ptr<Object3d> object3d_ = nullptr;
+    std::unique_ptr<CubeMesh> cubeMesh_ = nullptr;
 };
 

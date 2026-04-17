@@ -2,15 +2,15 @@
 #include "Camera.hlsli"
 #include"Light.hlsli"
 
+
 struct Material
 {
     float4 color;
-    int32_t lightType;
+    int32_t lightMode;
+    float32_t shininess;
+    float32_t environmentCoefficient;
     float32_t4x4 uvTransform;
-    float shininess;
 };
-
-
 
 ConstantBuffer<Material> gMaterial : register(b0);
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
@@ -21,18 +21,19 @@ SamplerState gSampler : register(s0);
 
 StructuredBuffer<PointLight> gPointLights : register(t4);
 StructuredBuffer<SpotLight> gSpotLights : register(t5);
+TextureCube<float4> gEnvironmentTexture : register(t7);
 
 struct PixelShaderOutput
 {
     float4 color : SV_TARGET0;
 };
 
-float GetCosin(float NdotL, int lightType)
+float GetCosin(float NdotL, int lightMode)
 {
-    return (lightType == 1) ? saturate(NdotL) : pow(NdotL * 0.5f + 0.5f, 2.0f);
+    return (lightMode == 1) ? saturate(NdotL) : pow(NdotL * 0.5f + 0.5f, 2.0f);
 }
 
-float3 CalculatePointLightDiffuse(float3 normal, float3 worldPos, PointLight light, int lightType)
+float3 CalculatePointLightDiffuse(float3 normal, float3 worldPos, PointLight light, int lightMode)
 {
   
     float3 toWorldPos = worldPos - light.position;
@@ -40,12 +41,12 @@ float3 CalculatePointLightDiffuse(float3 normal, float3 worldPos, PointLight lig
     float distance = length(toWorldPos);
     float factor = pow(saturate(-distance / light.radius + 1.0f), light.decay);
     float NdotL = dot(normal, -dir);
-    float cos = GetCosin(NdotL, lightType);
+    float cos = GetCosin(NdotL, lightMode);
     return light.color.rgb * cos * light.intensity * factor;
     
 }
 
-float3 CalculateSpotLightDiffuse(float3 normal, float3 worldPos, SpotLight light, int lightType)
+float3 CalculateSpotLightDiffuse(float3 normal, float3 worldPos, SpotLight light, int lightMode)
 {
   
     float3 toWorldPos = worldPos - light.position;
@@ -77,10 +78,10 @@ float3 CalculateSpotLightSpecular(float3 normal, float3 toEye, SpotLight light, 
 }
 
 
-float3 CalculateDirectionalDiffuse(float3 normal, float3 dir, float3 color, float intensity, int lightType)
+float3 CalculateDirectionalDiffuse(float3 normal, float3 dir, float3 color, float intensity, int lightMode)
 {
     float NdotL = dot(normal, -dir);
-    float cos = GetCosin(NdotL, lightType);
+    float cos = GetCosin(NdotL, lightMode);
     return color.rgb * cos * intensity;
 }
 
@@ -107,7 +108,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     
     PixelShaderOutput output;
 
-    if (gMaterial.lightType == 0)
+    if (gMaterial.lightMode == 0)
     {
         output.color = gMaterial.color * textureColor;
      
@@ -122,6 +123,7 @@ PixelShaderOutput main(VertexShaderOutput input)
         float3 baseColor = gMaterial.color.rgb * textureColor.rgb;
          //toCameraVector
         float3 toEye = normalize(gCamera.worldPosition - input.worldPosition);
+
         // ======================================================================
   
         // totalPointLightDiffuse
@@ -131,19 +133,19 @@ PixelShaderOutput main(VertexShaderOutput input)
      [loop]
         for (int i = 0; i < 20; ++i)
         {
-            lightTotalDiffuse += CalculatePointLightDiffuse(normalInput, input.worldPosition, gPointLights[i], gMaterial.lightType);
+            lightTotalDiffuse += CalculatePointLightDiffuse(normalInput, input.worldPosition, gPointLights[i], gMaterial.lightMode);
         }
         
         
-        float3 DirectionalLightDiffuse = CalculateDirectionalDiffuse(normalInput, gDirectionalLight.direction, gDirectionalLight.color.rgb, gDirectionalLight.intensity, gMaterial.lightType);
+        float3 DirectionalLightDiffuse = CalculateDirectionalDiffuse(normalInput, gDirectionalLight.direction, gDirectionalLight.color.rgb, gDirectionalLight.intensity, gMaterial.lightMode);
 
            [loop]
         for (int i = 0; i < 20; ++i)
         {
-            lightTotalDiffuse += CalculateSpotLightDiffuse(normalInput, input.worldPosition, gSpotLights[i], gMaterial.lightType);
+            lightTotalDiffuse += CalculateSpotLightDiffuse(normalInput, input.worldPosition, gSpotLights[i], gMaterial.lightMode);
         }
         
-        if (gMaterial.lightType == 1)
+        if (gMaterial.lightMode == 1)
         {
             
           [loop]
@@ -155,7 +157,7 @@ PixelShaderOutput main(VertexShaderOutput input)
           [loop]
             for (int i = 0; i < 20; ++i)
             {
-                lightTotalSpecular += CalculateSpotLightSpecular(normalInput,  toEye, gSpotLights[i], gMaterial.shininess);
+                lightTotalSpecular += CalculateSpotLightSpecular(normalInput, toEye, gSpotLights[i], gMaterial.shininess);
             }
             
         
@@ -171,11 +173,19 @@ PixelShaderOutput main(VertexShaderOutput input)
         else
         {
          //NoneReflect
-          output.color.rgb = baseColor * (DirectionalLightDiffuse + lightTotalDiffuse);
+            output.color.rgb = baseColor * (DirectionalLightDiffuse + lightTotalDiffuse);
 
         }
         
-          //commonLightMode
+        //EnvironmentReflection    
+        // ======================================================================
+        float3 cameraToPosition = -toEye;
+        float3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
+        float4 environmentColor = gEnvironmentTexture.Sample(gSampler, reflectedVector);
+        output.color.rgb += environmentColor.rgb * gMaterial.environmentCoefficient;
+        // ======================================================================
+        
+        //commonLightMode
         output.color.a = gMaterial.color.a * textureColor.a;
     }
 

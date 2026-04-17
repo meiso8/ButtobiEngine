@@ -5,7 +5,7 @@
 #include"Lights/DirectionalLightManager.h"
 #include"Lights/SpotLightManager.h"
 #include"Model.h"
-
+#include"SRVmanager/SrvManager.h"
 ID3D12GraphicsCommandList* Object3d::commandList_ = nullptr;
 
 void Object3d::CreateMaterial(const Vector4& color, const uint32_t& lightType) {
@@ -130,6 +130,7 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
         DirectionalLightManager::SetGraphicsRootConstantBufferView();
         PointLightManager::SetGraphicsRootDescriptorTable();
         SpotLightManager::SetGraphicsRootDescriptorTable();
+        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetHandle(TextureFactory::ART1));
         meshCommon_->Draw(commandList_);
     }
 }
