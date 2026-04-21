@@ -29,6 +29,17 @@ class MYADDON_OT_stretch_vertex(bpy.types.Operator):
         return {'FINISHED'}
  
 
+class MYADDON_OT_create_ico_sphere(bpy.types.Operator):
+    bl_idname = "myaddon.myaddon_ot_create_object"
+    bl_label = "ICO級生成"
+    bl_description = "ICO球を生成します"
+    bl_options = {'REGISTER','UNDO'}
+    
+    def execute(self,context):
+        bpy.ops.mesh.primitive_ico_sphere_add()
+        print("ICO球を生成しました。")
+        return {'FINISHED'}
+
 class TOPBAR_MT_my_menu(bpy.types.Menu):
     bl_idname = "TOPBAR_MT_my_menu"
     bl_label = "MyMenu"
@@ -37,16 +48,17 @@ class TOPBAR_MT_my_menu(bpy.types.Menu):
     def draw(self,context):
         self.layout.operator(MYADDON_OT_stretch_vertex.bl_idname,text = MYADDON_OT_stretch_vertex.bl_label)
         self.layout.separator()
-        self.layout.operator("wm.url_open_preset",
-            text ="Manual",icon ="HELP")
+        self.layout.operator(MYADDON_OT_create_ico_sphere.bl_idname,text = MYADDON_OT_create_ico_sphere.bl_label)
+        self.layout.separator()
+        self.layout.operator("wm.url_open_preset",text ="Manual",icon ="HELP")
 
 
     def submenu(self,context):
         self.layout.menu(TOPBAR_MT_my_menu.bl_idname)
 
-
 classes = (
     MYADDON_OT_stretch_vertex,
+    MYADDON_OT_create_ico_sphere,
     TOPBAR_MT_my_menu,
            )
 
