@@ -84,7 +84,7 @@ void RenderTexture::Update()
     }
 
     if (ImGui::TreeNode("BoxFilter")) {
-        ImGui::DragFloat( "kernel", &materialForBoxFilter_->kernel,1.0f,1.0f,1001.0f );
+        ImGui::DragFloat( "kernel", &materialForBoxFilter_->kernel,1.0f,0.0f,1001.0f );
         ImGui::TreePop();
     }
 
