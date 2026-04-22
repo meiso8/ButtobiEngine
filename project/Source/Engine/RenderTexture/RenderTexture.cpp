@@ -84,7 +84,7 @@ void RenderTexture::Update()
     }
 
     if (ImGui::TreeNode("BoxFilter")) {
-        ImGui::DragFloat( "kernel", &materialForBoxFilter_->kernel,1.0f,2.0f,1001.0f );
+        ImGui::DragFloat( "kernel", &materialForBoxFilter_->kernel,1.0f,1.0f,1001.0f );
         ImGui::TreePop();
     }
 
@@ -132,5 +132,5 @@ void RenderTexture::CreateMaterialBufferForBoxFilter()
 
     //書き込むためのアドレスを取得
     HRESULT result = materialResourceForBoxFilter_->Map(0, nullptr, reinterpret_cast<void**>(&materialForBoxFilter_));
-    materialForBoxFilter_->kernel = 3.0f;
+    materialForBoxFilter_->kernel = 1.0f;
 }

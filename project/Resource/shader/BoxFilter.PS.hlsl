@@ -25,18 +25,18 @@ PixelShaderOutput main(VertexShaderOutput input)
     output.color.rgb = float3(0.0f, 0.0f, 0.0f);
     output.color.a = 1.0f;
      
-    const float32_t kKernel = { 1.0f / pow(gMaterial.kernel, 2.0f) };
-    int32_t halfKernel = gMaterial.kernel / 2;
+    //if you input kernel 1 : 2*x+1 = 3 kKernel = 1.0f/9.0f;
+    const float32_t kKernel = { 1.0f / pow(2*gMaterial.kernel+1, 2.0f) };
 
-    for (int32_t x = -halfKernel; x <= halfKernel; ++x)
+    for (int32_t x = -gMaterial.kernel; x <= gMaterial.kernel; ++x)
     {
-        for (int32_t y = -halfKernel; y <= halfKernel; ++y)
+        for (int32_t y = -gMaterial.kernel; y <= gMaterial.kernel; ++y)
         {
-            float2 kernels;
-            kernels.x = (float32_t) x;
-            kernels.y = (float32_t) y;
+            float2 index;
+            index.x = (float32_t) x;
+            index.y = (float32_t) y;
  
-            float32_t2 texcoord = input.texcoord + kernels * uvStepSize;
+            float32_t2 texcoord = input.texcoord + index * uvStepSize;
             float32_t3 fetchColor = gTexture.Sample(gSampler, texcoord).rgb;
             output.color.rgb += fetchColor * kKernel;
 
