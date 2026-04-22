@@ -20,6 +20,13 @@ struct MaterialForVignette
     float padding[2];
 };
 
+
+struct MaterialForBoxFilter
+{
+    float kernel;
+    float padding[3];
+};
+
 class RenderTexture
 
 {
@@ -41,6 +48,9 @@ private:
 
     Microsoft::WRL::ComPtr <ID3D12Resource> materialResourceForVignette_ = nullptr;
     MaterialForVignette* materialForVignette_ = nullptr;
+
+    Microsoft::WRL::ComPtr <ID3D12Resource> materialResourceForBoxFilter_ = nullptr;
+    MaterialForBoxFilter* materialForBoxFilter_ = nullptr;
 public:
 
     void Create();
@@ -56,5 +66,6 @@ public:
 private:
     void CreateMaterialBuffer();
     void CreateMaterialBufferForVignette();
+    void CreateMaterialBufferForBoxFilter();
 };
 
