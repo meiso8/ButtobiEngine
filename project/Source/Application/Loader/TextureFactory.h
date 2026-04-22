@@ -6,6 +6,7 @@ public:
         WHITE_1X1,
         UV_CHECKER,
         CIRCLE,
+        GRADATION_LINE,
         NUMBERS,
         UI,
         SKIP,

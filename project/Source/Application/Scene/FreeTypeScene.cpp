@@ -36,7 +36,7 @@ FreeTypeScene::FreeTypeScene()
     cubeMesh_->Create(TextureFactory::WHITE_1X1);
 
     ringMesh_ = std::make_unique<RingMesh>();
-    ringMesh_->Create();
+    ringMesh_->Create(TextureFactory::GRADATION_LINE);
     ringMesh_->SetVertex(0.1f, 1.3f);
 
     object3d_ = std::make_unique<Object3d>();
@@ -117,7 +117,7 @@ void FreeTypeScene::Draw()
 #endif //_DEVELOP
 
     skyBoxObj_->Draw(*currentCamera_);
-    object3d_->Draw(*currentCamera_);
+    object3d_->Draw(*currentCamera_,BlendMode::kBlendModeAdd);
 
     ParticleManager::GetInstance()->Draw();
 
