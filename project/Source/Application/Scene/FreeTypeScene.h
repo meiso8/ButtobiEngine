@@ -5,6 +5,7 @@
 #include"Object3d/Object3d.h"
 #include"Mesh/Skybox/Skybox.h"
 #include"Mesh/Cube/CubeMesh.h"
+#include"Mesh/Ring/RingMesh.h"
 #include"Particle/ParticleEmitter.h"
 
 class FreeTypeScene : public BaseScene
@@ -25,7 +26,7 @@ private:
     std::unique_ptr<SkyboxObject3d> skyBoxObj_ = nullptr;
     std::unique_ptr<Object3d> object3d_ = nullptr;
     std::unique_ptr<CubeMesh> cubeMesh_ = nullptr;
-
+    std::unique_ptr<RingMesh>ringMesh_ = nullptr;
     std::array<std::unique_ptr<ParticleEmitter>, 1>particleEmitters_;
 
 };

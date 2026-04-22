@@ -8,13 +8,12 @@ public:
     ~RingMesh();
     void Create(const TextureFactory::Handle& textureHandle = TextureFactory::UV_CHECKER);
     void Draw(ID3D12GraphicsCommandList* commandList)override;
-
-private:
-    void SetVertex();
-    void CreateVertex()override;
-    void CreateIndexResource()override;
+    void SetVertex(const float innerRadius = 0.2f, const float outerRadius = 1.0f);
 private:
     const uint32_t kRingDivide_ = 32;//分割数
-    const float kInnerRadius_ = 0.2f;//内半径
-    const float kOuterRadius_ = 1.0f;//外半径
+private:
+   
+    void CreateVertex()override;
+    void CreateIndexResource()override;
+
 };

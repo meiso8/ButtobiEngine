@@ -1,5 +1,4 @@
 #include "RingMesh.h"
-#include"Circle.h"
 
 #include"DirectXCommon.h"
 #include<numbers>
@@ -21,9 +20,21 @@ void RingMesh::Create(const TextureFactory::Handle& textureHandle)
 
 }
 
+void RingMesh::Draw(ID3D12GraphicsCommandList* commandList) {
 
+    //頂点バッファビューを設定
+    commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
+    //IBVを設定new
+    commandList->IASetIndexBuffer(&indexBufferView_);//IBVを設定
 
-void RingMesh::SetVertex()
+    //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
+    SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
+
+    //描画!（DrawCall/ドローコール）6個のインデックスを使用し1つのインスタンスを描画。その他は当面0で良い。
+    commandList->DrawIndexedInstanced(kRingDivide_ * 6, 1, 0, 0, 0);
+}
+
+void RingMesh::SetVertex(const float innerRadius, const float outerRadius)
 {
     vertexResource_->Map(0, nullptr,
         reinterpret_cast<void**>(&vertexData_));
@@ -43,25 +54,25 @@ void RingMesh::SetVertex()
         int indexes = 4 * index;
 
         vertexData_[indexes].position =
-        { -sin * kOuterRadius_, cos * kOuterRadius_, 0.0f, 1.0f };
+        { -sin * outerRadius, cos * outerRadius, 0.0f, 1.0f };
         vertexData_[indexes].texcoord = { u,0.0f };
 
         indexes++;
 
         vertexData_[indexes].position =
-        { -sinNext * kOuterRadius_, cosNext * kOuterRadius_, 0.0f, 1.0f };
+        { -sinNext * outerRadius, cosNext * outerRadius, 0.0f, 1.0f };
         vertexData_[indexes].texcoord = { uNext,0.0f };
 
         indexes++;
 
         vertexData_[indexes].position =
-        { -sin * kInnerRadius_, cos * kInnerRadius_, 0.0f, 1.0f };
+        { -sin * innerRadius, cos * innerRadius, 0.0f, 1.0f };
         vertexData_[indexes].texcoord = { u, 1.0f };
 
         indexes++;
 
         vertexData_[indexes].position =
-        { -sinNext * kInnerRadius_, cosNext * kInnerRadius_, 0.0f, 1.0f };
+        { -sinNext * innerRadius, cosNext * innerRadius, 0.0f, 1.0f };
         vertexData_[indexes].texcoord = { uNext, 1.0f };
     }
 
@@ -71,22 +82,6 @@ void RingMesh::SetVertex()
     }
 
     vertexResource_->Unmap(0, nullptr);
-}
-
-
-void RingMesh::Draw(ID3D12GraphicsCommandList* commandList) {
-
-
-    //頂点バッファビューを設定
-    commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
-    //IBVを設定new
-    commandList->IASetIndexBuffer(&indexBufferView_);//IBVを設定
-
-    //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
-    SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
-
-    //描画!（DrawCall/ドローコール）6個のインデックスを使用し1つのインスタンスを描画。その他は当面0で良い。
-    commandList->DrawIndexedInstanced(kRingDivide_ * 6, 1, 0, 0, 0);
 }
 
 void RingMesh::CreateVertex() {

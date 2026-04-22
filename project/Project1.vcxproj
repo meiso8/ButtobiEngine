@@ -163,6 +163,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\Mesh\Ring\RingMesh.cpp" />
     <ClCompile Include="Source\Engine\RenderTexture\RenderTexture.cpp" />
     <ClCompile Include="Source\Engine\Mesh\SkyBox\Skybox.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Font\Font.cpp" />
@@ -311,6 +312,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\FreeTypeManager\Text.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\Mesh\Ring\RingMesh.h" />
     <ClInclude Include="Source\Engine\RenderTexture\RenderTexture.h" />
     <ClInclude Include="Source\Engine\Mesh\SkyBox\Skybox.h" />
     <ClInclude Include="Source\Engine\Mesh\Font\Font.h" />
