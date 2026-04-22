@@ -42,6 +42,7 @@ void RenderTexture::Create()
 
     CreateMaterialBuffer();
     CreateMaterialBufferForVignette();
+    CreateMaterialBufferForBoxFilter();
 }
 
 void RenderTexture::Draw()
@@ -54,8 +55,9 @@ void RenderTexture::Draw()
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     ////SRVのDescriptorTableの先頭を設定。0はrootParameter[0]である。
     SrvManager::SetGraphicsRootDescriptorTable(0, renderTextureData_.srvIndex);
-    //commandList->SetGraphicsRootConstantBufferView(1, materialResource_->GetGPUVirtualAddress());
-    commandList->SetGraphicsRootConstantBufferView(1, materialResourceForVignette_->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(1, materialResource_->GetGPUVirtualAddress());
+    //commandList->SetGraphicsRootConstantBufferView(1, materialResourceForVignette_->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(1, materialResourceForBoxFilter_->GetGPUVirtualAddress());
     commandList->DrawInstanced(3, 1, 0, 0);
 
 }
@@ -80,6 +82,12 @@ void RenderTexture::Update()
         DebugUI::CheckFloat(materialForVignette_->viignetteVal, "viignetteVal");
         ImGui::TreePop();
     }
+
+    if (ImGui::TreeNode("BoxFilter")) {
+        ImGui::DragFloat( "kernel", &materialForBoxFilter_->kernel,1.0f,1.0f,1001.0f );
+        ImGui::TreePop();
+    }
+
 
 
 #endif
@@ -115,4 +123,14 @@ void RenderTexture::CreateMaterialBufferForVignette()
     HRESULT result = materialResourceForVignette_->Map(0, nullptr, reinterpret_cast<void**>(&materialForVignette_));
     materialForVignette_->correctVal = 16.0f;
     materialForVignette_->viignetteVal = 0.8f;
+}
+
+void RenderTexture::CreateMaterialBufferForBoxFilter()
+{
+    materialResourceForBoxFilter_ = DirectXCommon::CreateBufferResource(sizeof(MaterialForBoxFilter));
+    //マテリアルにデータを書き込む
+
+    //書き込むためのアドレスを取得
+    HRESULT result = materialResourceForBoxFilter_->Map(0, nullptr, reinterpret_cast<void**>(&materialForBoxFilter_));
+    materialForBoxFilter_->kernel = 1.0f;
 }
