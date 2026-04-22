@@ -34,9 +34,14 @@ FreeTypeScene::FreeTypeScene()
 
     cubeMesh_ = std::make_unique<CubeMesh>();
     cubeMesh_->Create(TextureFactory::WHITE_1X1);
+
+    ringMesh_ = std::make_unique<RingMesh>();
+    ringMesh_->Create();
+    ringMesh_->SetVertex(0.1f, 1.3f);
+
     object3d_ = std::make_unique<Object3d>();
     object3d_->Create();
-    object3d_->SetMesh(cubeMesh_.get());
+    object3d_->SetMesh(ringMesh_.get());
     object3d_->GetMaterial().environmentCoefficient = 0.5f;
     //object3d_->SetTextureHandle(TextureFactory::WHITE_1X1);
 
@@ -82,7 +87,7 @@ void FreeTypeScene::Update()
         SwitchCamera();
     }
 
-    DebugUI::CheckObject3d(*object3d_,"Cube");
+    DebugUI::CheckObject3d(*object3d_, "Ring");
     DebugUI::CheckParticle(*particleEmitters_[0], "Emitter0");
 #endif //_DEVELOP
 
@@ -110,8 +115,8 @@ void FreeTypeScene::Draw()
     // デバッグカメラ
     DrawGrid::Draw(*currentCamera_);
 #endif //_DEVELOP
-    
-  skyBoxObj_->Draw(*currentCamera_);
+
+    skyBoxObj_->Draw(*currentCamera_);
     object3d_->Draw(*currentCamera_);
 
     ParticleManager::GetInstance()->Draw();
@@ -148,7 +153,7 @@ void FreeTypeScene::CreateParticle()
 
     emitter0.frequencyTime = 0.0f;
     emitter0.frequency = 2.0f;
-    emitter0.lifeTime = 2.0f;   
+    emitter0.lifeTime = 2.0f;
     emitter0.blendMode = kBlendModeScreen;
     emitter0.movement = ParticleMovements::kParticleNormal;
     emitter0.rotateAABB_ = { .min = {0.0f,0.0f,-3.14f},.max = {0.0f,0.0f,3.14f} };
