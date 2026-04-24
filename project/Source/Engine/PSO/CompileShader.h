@@ -14,6 +14,9 @@ enum ShaderType {
     kFont,
     kSkyBox,
     kOffScreen,
+    kGrayScale,
+    kVignette,
+    kBoxFilter,
     Shaders,
 };
 

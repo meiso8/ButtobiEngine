@@ -26,6 +26,14 @@ public:
         TopologyTypes
     };
 
+    enum EffectType {
+        kEffectNone,
+        kEffectGrayScale,
+        kEffectVignette,
+        kEffectBoxFilter,
+        kCountOfEffect,
+
+    };
 
 
     static Microsoft::WRL::ComPtr <ID3D12PipelineState>& GetGraphicsPipelineState(uint32_t blendMode,uint32_t cullMode ) {
@@ -59,9 +67,8 @@ public:
         ;
     }
 
-    static Microsoft::WRL::ComPtr <ID3D12PipelineState>& GetGraphicsPipelineStateOffScreen(){
-        return graphicsPipelineStateOffScreen_;
-        ;
+    static Microsoft::WRL::ComPtr <ID3D12PipelineState>& GetGraphicsPipelineStateOffScreen(uint32_t effectType){
+        return graphicsPipelineStateOffScreen_[effectType];
     }
 
     void CreateALLPSO();
@@ -86,10 +93,7 @@ private:
     static std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> graphicsPipelineStateFont_;
 
     static Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineStateSkyBox_;
-
-    static Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineStateOffScreen_;
-
-
+    static std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfEffect> graphicsPipelineStateOffScreen_;
 
     std::unique_ptr<InputLayout>inputLayout = nullptr;
     std::vector<BlendState> blendStates = {};

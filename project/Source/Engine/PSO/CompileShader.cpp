@@ -56,10 +56,10 @@ void DxcCompiler::ShaderSetting() {
     vertexShaderBlobs_.push_back(CompileShader(L"Resource/shader/SkinningObject3d.VS.hlsl",
         L"vs_6_0"));
     assert(vertexShaderBlobs_[kSkinning] != nullptr);
-
     //Normalと同じなので
     pixelShaderBlobs_.push_back(pixelShaderBlobs_[kNormal]);
     assert(pixelShaderBlobs_[kSkinning] != nullptr);
+
 
     {
         //Font用
@@ -86,9 +86,39 @@ void DxcCompiler::ShaderSetting() {
         vertexShaderBlobs_.push_back(CompileShader(L"Resource/shader/Fullscreen.VS.hlsl",
             L"vs_6_0"));
         assert(vertexShaderBlobs_[kOffScreen] != nullptr);
-        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/BoxFilter.PS.hlsl",
+
+
+        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/Fullscreen.PS.hlsl",
             L"ps_6_0"));
         assert(pixelShaderBlobs_[kOffScreen] != nullptr);
+    }
+
+    {
+        //オフスクリーンで同じなためこのように記入するが後で最適化を行いたい
+        vertexShaderBlobs_.push_back(vertexShaderBlobs_[kOffScreen]);
+        assert(vertexShaderBlobs_[kGrayScale] != nullptr);
+        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/Grayscale.PS.hlsl",
+            L"ps_6_0"));
+        assert(pixelShaderBlobs_[kGrayScale] != nullptr);
+    }
+
+    {
+        //オフスクリーンで同じなためこのように記入するが後で最適化を行いたい
+        vertexShaderBlobs_.push_back(vertexShaderBlobs_[kOffScreen]);
+        assert(vertexShaderBlobs_[kVignette] != nullptr);
+        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/Vignette.PS.hlsl",
+            L"ps_6_0"));
+        assert(pixelShaderBlobs_[kVignette] != nullptr);
+    }
+
+
+    {
+        //オフスクリーンで同じなためこのように記入するが後で最適化を行いたい
+        vertexShaderBlobs_.push_back(vertexShaderBlobs_[kOffScreen]);
+        assert(vertexShaderBlobs_[kBoxFilter] != nullptr);
+        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/BoxFilter.PS.hlsl",
+            L"ps_6_0"));
+        assert(pixelShaderBlobs_[kBoxFilter] != nullptr);
     }
 }
 
