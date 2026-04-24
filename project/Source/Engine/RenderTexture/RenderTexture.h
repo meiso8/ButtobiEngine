@@ -3,7 +3,7 @@
 #include<d3d12.h>
 #include"Vector4.h"
 #include<stdint.h>
-
+#include<PSO.h>
 #include"hlslTypeToCpp.h"
 
 struct MaterialForRenderTexture {
@@ -32,6 +32,7 @@ class RenderTexture
 {
 public:
 
+
     struct RenderTextureData {
         Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;
         uint32_t srvIndex = 0;
@@ -43,13 +44,9 @@ private:
     Vector4 kRenderTargetClearValue_;
     const Vector4 sepiaColor_ = {1.0f,74.0f/107.0f,43.0f/107.0f,1.0f};
     RenderTextureData renderTextureData_;
-    Microsoft::WRL::ComPtr <ID3D12Resource> materialResource_ = nullptr;
-    MaterialForRenderTexture* material_ = nullptr;
-
-    Microsoft::WRL::ComPtr <ID3D12Resource> materialResourceForVignette_ = nullptr;
+    std::array<Microsoft::WRL::ComPtr <ID3D12Resource>,PSO::kCountOfEffect> materialResource_;
+    MaterialForRenderTexture* materialForGrayScale_ = nullptr;
     MaterialForVignette* materialForVignette_ = nullptr;
-
-    Microsoft::WRL::ComPtr <ID3D12Resource> materialResourceForBoxFilter_ = nullptr;
     MaterialForBoxFilter* materialForBoxFilter_ = nullptr;
 public:
 
@@ -60,11 +57,10 @@ public:
     RenderTextureData& GetRenderTextureData() {
         return renderTextureData_;
     }
-    void Draw();
+    void Draw(const PSO::EffectType& effectType);
     void Update();
-    ~RenderTexture();
 private:
-    void CreateMaterialBuffer();
+    void CreateMaterialBufferForGrayScale();
     void CreateMaterialBufferForVignette();
     void CreateMaterialBufferForBoxFilter();
 };

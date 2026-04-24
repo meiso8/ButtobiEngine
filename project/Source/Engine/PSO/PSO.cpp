@@ -13,7 +13,7 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::graphicsPipelineStatesLine_;
 std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> PSO::graphicsPipelineStateSprite_;
 std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> PSO::graphicsPipelineStateFont_;
 Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::graphicsPipelineStateSkyBox_;
-Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::graphicsPipelineStateOffScreen_;
+std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, PSO::kCountOfEffect> PSO::graphicsPipelineStateOffScreen_;
 std::array<std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfCullMode>, kCountOfBlendMode>PSO::graphicsPipelineStatesSkinning_;
 Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
     RootSignature& rootSignature,
@@ -196,15 +196,46 @@ void PSO::CreateALLPSO()
             InputLayout::kInputLayoutTypeNormal);
 
 
-    graphicsPipelineStateOffScreen_ = Create(
+    graphicsPipelineStateOffScreen_[kEffectNone] = Create(
         *rootSignature,
         *inputLayout,
         blendStates[kBlendModeNone],
-        rasterizerStates[kCullModeNone],
+        rasterizerStates[kCullModeBack],
         depthStencils[kNone],
         kOffScreen,
         kTriangle,
         InputLayout::kInputLayoutTypeOffScreen);
+
+    graphicsPipelineStateOffScreen_[kEffectGrayScale] = Create(
+        *rootSignature,
+        *inputLayout,
+        blendStates[kBlendModeNone],
+        rasterizerStates[kCullModeBack],
+        depthStencils[kNone],
+        kGrayScale,
+        kTriangle,
+        InputLayout::kInputLayoutTypeOffScreen);
+
+    graphicsPipelineStateOffScreen_[kEffectVignette] = Create(
+        *rootSignature,
+        *inputLayout,
+        blendStates[kBlendModeNone],
+        rasterizerStates[kCullModeBack],
+        depthStencils[kNone],
+        kVignette,
+        kTriangle,
+        InputLayout::kInputLayoutTypeOffScreen);
+
+    graphicsPipelineStateOffScreen_[kEffectBoxFilter] = Create(
+        *rootSignature,
+        *inputLayout,
+        blendStates[kBlendModeNone],
+        rasterizerStates[kCullModeBack],
+        depthStencils[kNone],
+        kBoxFilter,
+        kTriangle,
+        InputLayout::kInputLayoutTypeOffScreen);
+
 }
 
 PSO::~PSO()

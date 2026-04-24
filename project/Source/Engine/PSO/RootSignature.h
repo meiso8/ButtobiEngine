@@ -17,6 +17,9 @@ public:
         FONT,
         SKYBOX,
         OFFSCREEN,
+        GRAYSCALE,
+        VIGNETTE,
+        BOXFILTER,
         TYPES,
     };
 

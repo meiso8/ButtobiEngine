@@ -99,7 +99,9 @@ void DirectXCommon::RenderTexturePreDraw()
 
 void DirectXCommon::DrawRenderTexture()
 {
-    renderTexture_.Draw();
+
+
+    renderTexture_.Draw(PSO::kEffectVignette);
 }
 
 void DirectXCommon::RenderTexturePostDraw()
@@ -112,7 +114,7 @@ void DirectXCommon::RenderTexturePostDraw()
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
 
-        commandList->GetCommandList().Get());
+    commandList->GetCommandList().Get());
 }
 
 void DirectXCommon::PreDraw(Vector4& color)
