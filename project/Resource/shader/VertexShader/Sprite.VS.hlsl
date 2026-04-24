@@ -1,5 +1,5 @@
 
-#include "Sprite.hlsli"
+#include "../Hlsli/Sprite.hlsli"
 
 struct VertexShaderInput
 {

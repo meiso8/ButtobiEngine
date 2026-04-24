@@ -1,4 +1,4 @@
-#include "Sprite.hlsli"
+#include "../Hlsli/Sprite.hlsli"
 
 //テクスチャを貼り付けたり、ライティングを行ったりと、もっとも主要なShaderである
 struct Material

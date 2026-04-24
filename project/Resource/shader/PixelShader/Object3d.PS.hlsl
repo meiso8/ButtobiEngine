@@ -1,6 +1,6 @@
-#include "Object3d.hlsli"
-#include "Camera.hlsli"
-#include"Light.hlsli"
+#include "../Hlsli/Object3d.hlsli"
+#include "../Hlsli/Camera.hlsli"
+#include "../Hlsli/Light.hlsli"
 
 
 struct Material

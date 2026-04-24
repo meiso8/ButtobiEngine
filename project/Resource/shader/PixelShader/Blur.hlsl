@@ -1,4 +1,4 @@
-#include "object3d.hlsli"
+#include "../Hlsli/object3d.hlsli"
 
 //テクスチャを貼り付けたり、ライティングを行ったりと、もっとも主要なShaderである
 

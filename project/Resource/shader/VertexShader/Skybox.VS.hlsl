@@ -1,4 +1,4 @@
-#include "Skybox.hlsli"
+#include "../Hlsli/Skybox.hlsli"
 
 struct TransformationMatrix
 {

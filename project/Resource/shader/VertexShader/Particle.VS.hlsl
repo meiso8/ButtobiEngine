@@ -1,5 +1,5 @@
 
-#include "Particle.hlsli"
+#include "../Hlsli/Particle.hlsli"
 
 StructuredBuffer<ParticleForGPU> gParticle : register(t3);
 

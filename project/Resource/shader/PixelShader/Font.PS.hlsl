@@ -1,4 +1,4 @@
-#include "Sprite.hlsli"
+#include "../Hlsli/Sprite.hlsli"
 
 struct Material
 {
