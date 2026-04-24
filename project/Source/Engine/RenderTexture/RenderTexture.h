@@ -42,26 +42,32 @@ public:
     };
 private:
     Vector4 kRenderTargetClearValue_;
-    const Vector4 sepiaColor_ = {1.0f,74.0f/107.0f,43.0f/107.0f,1.0f};
-    RenderTextureData renderTextureData_;
-    std::array<Microsoft::WRL::ComPtr <ID3D12Resource>,PSO::kCountOfEffect> materialResource_;
+    const Vector4 sepiaColor_ = { 1.0f,74.0f / 107.0f,43.0f / 107.0f,1.0f };
+    std::array< RenderTextureData, 2> renderTextureDatas_;
+    std::array<Microsoft::WRL::ComPtr <ID3D12Resource>, PSO::kCountOfEffect> materialResource_;
     MaterialForRenderTexture* materialForGrayScale_ = nullptr;
     MaterialForVignette* materialForVignette_ = nullptr;
     MaterialForBoxFilter* materialForBoxFilter_ = nullptr;
+
+    MaterialForRenderTexture* materialForFullScreen_ = nullptr;
+
 public:
 
     void Create();
+    void CreateResource(const uint32_t index);
     const Vector4& GetColor() {
         return kRenderTargetClearValue_;
     }
-    RenderTextureData& GetRenderTextureData() {
-        return renderTextureData_;
+    RenderTextureData& GetRenderTextureData(const uint32_t index) {
+        return renderTextureDatas_[index];
     }
-    void Draw(const PSO::EffectType& effectType);
+    void Draw(const PSO::EffectType& effectType,const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle,const uint32_t index);
     void Update();
+
 private:
     void CreateMaterialBufferForGrayScale();
     void CreateMaterialBufferForVignette();
     void CreateMaterialBufferForBoxFilter();
+    void CreateMaterialBUfferForFullScreen();
 };
 
