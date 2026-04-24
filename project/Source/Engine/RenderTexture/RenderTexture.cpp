@@ -4,9 +4,10 @@
 #include"PSO.h"
 #ifdef _DEVELOP
 #include "DebugUI.h"
+#endif
 #include"Log.h"
 
-#endif
+
 void RenderTexture::Create()
 {
     kRenderTargetClearValue_ = { 1.0f,0.0f,0.0f,1.0f };
@@ -30,6 +31,7 @@ void RenderTexture::CreateResource(const uint32_t index)
             DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
             kRenderTargetClearValue_
         );
+
     LogFile::Log("Rendertexture : CreateRTV");
 
     D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
