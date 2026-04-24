@@ -27,6 +27,14 @@ struct MaterialForBoxFilter
     float padding[3];
 };
 
+
+struct MaterialForGaussianFilter
+{
+    int32_t kernel;
+    float sigma;
+    float padding[2];
+};
+
 class RenderTexture
 
 {
@@ -50,6 +58,7 @@ private:
     MaterialForBoxFilter* materialForBoxFilter_ = nullptr;
 
     MaterialForRenderTexture* materialForFullScreen_ = nullptr;
+    MaterialForGaussianFilter* materialForGaussianFilter_ = nullptr;
 
 public:
 
@@ -61,7 +70,7 @@ public:
     RenderTextureData& GetRenderTextureData(const uint32_t index) {
         return renderTextureDatas_[index];
     }
-    void Draw(const PSO::EffectType& effectType,const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle,const uint32_t index);
+    void Draw(const PSO::EffectType& effectType, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index);
     void Update();
 
 private:
@@ -69,5 +78,6 @@ private:
     void CreateMaterialBufferForVignette();
     void CreateMaterialBufferForBoxFilter();
     void CreateMaterialBUfferForFullScreen();
+    void CreateMaterialBufferForGaussianFilter();
 };
 

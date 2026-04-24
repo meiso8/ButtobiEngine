@@ -31,6 +31,7 @@ public:
         kEffectGrayScale,
         kEffectVignette,
         kEffectBoxFilter,
+        kEffectGaussianFilter,
         kCountOfEffect,
 
     };

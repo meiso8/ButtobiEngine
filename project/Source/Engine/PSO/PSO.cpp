@@ -236,6 +236,16 @@ void PSO::CreateALLPSO()
         kTriangle,
         InputLayout::kInputLayoutTypeOffScreen);
 
+    graphicsPipelineStateOffScreen_[kEffectGaussianFilter] = Create(
+        *rootSignature,
+        *inputLayout,
+        blendStates[kBlendModeNone],
+        rasterizerStates[kCullModeBack],
+        depthStencils[kNone],
+        kGaussianFilter,
+        kTriangle,
+        InputLayout::kInputLayoutTypeOffScreen);
+
 }
 
 PSO::~PSO()

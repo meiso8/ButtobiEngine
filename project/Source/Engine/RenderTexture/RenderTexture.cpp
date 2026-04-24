@@ -18,7 +18,7 @@ void RenderTexture::Create()
     CreateMaterialBufferForGrayScale();
     CreateMaterialBufferForVignette();
     CreateMaterialBufferForBoxFilter();
-
+    CreateMaterialBufferForGaussianFilter();
 }
 
 void RenderTexture::CreateResource(const uint32_t index)
@@ -98,6 +98,11 @@ void RenderTexture::Update()
         ImGui::TreePop();
     }
 
+    if (ImGui::TreeNode("GaussianFilter")) {
+        ImGui::DragInt("kernel", &materialForGaussianFilter_->kernel);
+        ImGui::DragFloat("sigma", &materialForGaussianFilter_->sigma);
+        ImGui::TreePop();
+    }
 
 
 #endif
@@ -153,4 +158,22 @@ void RenderTexture::CreateMaterialBUfferForFullScreen()
     materialForFullScreen_->color = {1.0f,1.0f,1.0f,1.0f};
 
     LogFile::Log("Rendertexture : Create : MaterialBuffer : GrayScale");
+}
+
+void RenderTexture::CreateMaterialBufferForGaussianFilter()
+{
+
+    //マテリアル用のリソースを作る。
+    materialResource_[PSO::kEffectGaussianFilter] = DirectXCommon::CreateBufferResource(sizeof(MaterialForGaussianFilter));
+    //マテリアルにデータを書き込む
+
+    //書き込むためのアドレスを取得
+    HRESULT result = materialResource_[PSO::kEffectGaussianFilter]->Map(0, nullptr, reinterpret_cast<void**>(&materialForGaussianFilter_));
+    materialForGaussianFilter_->sigma = 2.0f;
+    materialForGaussianFilter_->kernel = 1;
+
+    LogFile::Log("Rendertexture : Create : MaterialBuffer : GrayScale");
+
+
+    
 }
