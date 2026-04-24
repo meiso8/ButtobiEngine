@@ -20,6 +20,7 @@ public:
         GRAYSCALE,
         VIGNETTE,
         BOXFILTER,
+        GAUSSIANFILTER,
         TYPES,
     };
 

@@ -17,6 +17,7 @@ enum ShaderType {
     kGrayScale,
     kVignette,
     kBoxFilter,
+    kGaussianFilter,
     Shaders,
 };
 

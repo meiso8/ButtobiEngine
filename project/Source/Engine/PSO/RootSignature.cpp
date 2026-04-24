@@ -298,6 +298,9 @@ void RootSignature::Create() {
     descriptionRootSignature[VIGNETTE].NumParameters = _countof(rootParametersForOffScreen);//配列の長さ
     descriptionRootSignature[BOXFILTER].pParameters = rootParametersForOffScreen;//ルートパラメータ配列へのポインタ
     descriptionRootSignature[BOXFILTER].NumParameters = _countof(rootParametersForOffScreen);//配列の長さ
+    descriptionRootSignature[GAUSSIANFILTER].pParameters = rootParametersForOffScreen;//ルートパラメータ配列へのポインタ
+    descriptionRootSignature[GAUSSIANFILTER].NumParameters = _countof(rootParametersForOffScreen);//配列の長さ
+
     //シリアライズしてバイナリにする
     Microsoft::WRL::ComPtr <ID3DBlob> signatureBlob = nullptr;
     Microsoft::WRL::ComPtr <ID3DBlob> errorBlob = nullptr;
