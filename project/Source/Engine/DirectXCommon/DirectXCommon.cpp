@@ -67,13 +67,9 @@ void DirectXCommon::Initialize(Window& window)
 void DirectXCommon::RenderTexturePreDraw()
 {
 
-    auto& renderTextureData = renderTexture_ .GetRenderTextureData();
+    auto& renderTextureData = renderTexture_ .GetRenderTextureData(0);
     //TransitionBarrierの設定
-    barrier.SettingBarrier(renderTextureData.resource,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-        D3D12_RESOURCE_STATE_RENDER_TARGET,
-       
-        commandList->GetCommandList().Get());
+    barrier.SettingBarrierSRVforRTV(renderTextureData.resource);
 
     //2.描画用のRTVとDSVを設定する 
  
@@ -100,21 +96,36 @@ void DirectXCommon::RenderTexturePreDraw()
 void DirectXCommon::DrawRenderTexture()
 {
 
+    auto& renderTextureDataA = renderTexture_.GetRenderTextureData(0);
+    auto& renderTextureDataB = renderTexture_.GetRenderTextureData(1);
 
-    renderTexture_.Draw(PSO::kEffectVignette);
+    //TransitionBarrierの設定
+    barrier.SettingBarrierSRVforRTV(renderTextureDataB.resource);
+    // 2. A(0)を読み込み、B にグレースケールを描画
+    renderTexture_.Draw(PSO::kEffectGrayScale, renderTextureDataB.rtvHandleCPU, 0);
+    //TransitionBarrierの設定
+    barrier.SettingBarrierRTVforSRV(renderTextureDataB.resource);
+
+    // 4. テクスチャAを RTV(書き込み用) にする
+    barrier.SettingBarrierSRVforRTV(renderTextureDataA.resource);
+    // 5. B(1)を読み込み、A にボックスフィルターを描画
+    renderTexture_.Draw(PSO::kEffectBoxFilter, renderTextureDataA.rtvHandleCPU, 1);
+    // 6. 次の処理のために、テクスチャAを SRV(読み込み用) に戻す
+    barrier.SettingBarrierRTVforSRV(renderTextureDataA.resource);
+
+    // 4. 【重要】描画先を画面(バックバッファ)のRTVにする
+    // バックバッファは PreDraw で既に RENDER_TARGET 状態になっています
+    UINT backBufferIndex = swapChainClass.GetSwapChain()->GetCurrentBackBufferIndex();
+    auto backBufferRTV = GetRTVCPUDescriptorHandle(backBufferIndex);
+
+    // 5. B(1)を読み込み、画面 にビネットを描画
+    renderTexture_.Draw(PSO::kEffectVignette, backBufferRTV, 0);
 }
 
 void DirectXCommon::RenderTexturePostDraw()
-{
-    
-    auto& renderTextureData = renderTexture_.GetRenderTextureData();
-
-    //TransitionBarrierの設定
-    barrier.SettingBarrier(renderTextureData.resource,
-        D3D12_RESOURCE_STATE_RENDER_TARGET,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-
-    commandList->GetCommandList().Get());
+{ 
+    auto& renderTextureData = renderTexture_.GetRenderTextureData(0);
+    barrier.SettingBarrierRTVforSRV(renderTextureData.resource);
 }
 
 void DirectXCommon::PreDraw(Vector4& color)
@@ -132,12 +143,10 @@ void DirectXCommon::PreDraw(Vector4& color)
     //1.これから書き込むバックバッファのインデックスを取得
     UINT backBufferIndex = swapChainClass.GetSwapChain()->GetCurrentBackBufferIndex();
 
-
     //TransitionBarrierの設定
     barrier.SettingBarrier(swapChainResources[backBufferIndex],
         D3D12_RESOURCE_STATE_PRESENT,
-        D3D12_RESOURCE_STATE_RENDER_TARGET,
-        commandList->GetCommandList().Get());
+        D3D12_RESOURCE_STATE_RENDER_TARGET);
 
     //2.描画用のRTVとDSVを設定する
     D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
@@ -146,11 +155,6 @@ void DirectXCommon::PreDraw(Vector4& color)
 
     float clearColor[] = { color.x,color.y,color.z,color.w };//青っぽい色。RGBAの順
     commandList->GetCommandList()->ClearRenderTargetView(rtvClass.GetHandle(backBufferIndex), clearColor, 0, nullptr);
-
-    //指定した深度で画面全体をクリアする
-    //commandList->GetCommandList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-   
-   
 
     SrvManager::PreDraw();
 
@@ -171,8 +175,7 @@ void DirectXCommon::PostDraw()
     //TransitionBarrierの設定
     barrier.SettingBarrier(swapChainResources[backBufferIndex],
         D3D12_RESOURCE_STATE_RENDER_TARGET,
-        D3D12_RESOURCE_STATE_PRESENT,
-        commandList->GetCommandList().Get());
+        D3D12_RESOURCE_STATE_PRESENT);
 
     //4.コマンドリストの内容を確定させる。全てのコマンドを詰んでから　Closesすること。
     HRESULT hr = commandList->GetCommandList()->Close();
