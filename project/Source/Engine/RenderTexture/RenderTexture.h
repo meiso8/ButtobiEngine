@@ -35,6 +35,12 @@ struct MaterialForGaussianFilter
     float padding[2];
 };
 
+struct MaterialForLuminanceBasedOutline
+{
+    float weightVal;
+    float padding[3];
+};
+
 class RenderTexture
 
 {
@@ -59,7 +65,7 @@ private:
 
     MaterialForRenderTexture* materialForFullScreen_ = nullptr;
     MaterialForGaussianFilter* materialForGaussianFilter_ = nullptr;
-
+    MaterialForLuminanceBasedOutline* materialForLuminanceBasedOutline_ = nullptr;
 public:
 
     void Create();
@@ -79,5 +85,6 @@ private:
     void CreateMaterialBufferForBoxFilter();
     void CreateMaterialBUfferForFullScreen();
     void CreateMaterialBufferForGaussianFilter();
+    void CreateMaterialLuminanceBasedOutline();
 };
 

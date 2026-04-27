@@ -21,6 +21,7 @@ public:
         VIGNETTE,
         BOXFILTER,
         GAUSSIANFILTER,
+        LUMINANCE_BASED_OUTLINE,
         TYPES,
     };
 
