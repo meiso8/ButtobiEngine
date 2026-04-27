@@ -114,6 +114,14 @@ void DxcCompiler::ShaderSetting() {
         assert(pixelShaderBlobs_[kGaussianFilter] != nullptr);
     }
     
+    //エッジ
+    {
+        //オフスクリーンで同じなためこのように記入するが後で最適化を行いたい
+        vertexShaderBlobs_.push_back(vertexShaderBlobs_[kOffScreen]);
+        assert(vertexShaderBlobs_[kLuminanceBasedOutline] != nullptr);
+        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/PixelShader/LuminanceBasedOutline.PS.hlsl", L"ps_6_0"));
+        assert(pixelShaderBlobs_[kLuminanceBasedOutline] != nullptr);
+    }
 }
 
 //CompileShader関数

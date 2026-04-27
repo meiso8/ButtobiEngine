@@ -246,6 +246,17 @@ void PSO::CreateALLPSO()
         kTriangle,
         InputLayout::kInputLayoutTypeOffScreen);
 
+
+    graphicsPipelineStateOffScreen_[kEffectLuminanceBasedOutline] = Create(
+        *rootSignature,
+        *inputLayout,
+        blendStates[kBlendModeNone],
+        rasterizerStates[kCullModeBack],
+        depthStencils[kNone],
+        kLuminanceBasedOutline,
+        kTriangle,
+        InputLayout::kInputLayoutTypeOffScreen);
+
 }
 
 PSO::~PSO()

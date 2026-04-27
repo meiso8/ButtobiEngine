@@ -18,6 +18,7 @@ enum ShaderType {
     kVignette,
     kBoxFilter,
     kGaussianFilter,
+    kLuminanceBasedOutline,
     Shaders,
 };
 

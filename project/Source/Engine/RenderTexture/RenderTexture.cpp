@@ -20,6 +20,7 @@ void RenderTexture::Create()
     CreateMaterialBufferForVignette();
     CreateMaterialBufferForBoxFilter();
     CreateMaterialBufferForGaussianFilter();
+    CreateMaterialLuminanceBasedOutline();
 }
 
 void RenderTexture::CreateResource(const uint32_t index)
@@ -106,6 +107,11 @@ void RenderTexture::Update()
         ImGui::TreePop();
     }
 
+    if (ImGui::TreeNode("LuminanceBasedOutline")) {
+        ImGui::DragFloat("weightVal", &materialForLuminanceBasedOutline_->weightVal);
+        ImGui::TreePop();
+    }
+
 
 #endif
 }
@@ -178,4 +184,18 @@ void RenderTexture::CreateMaterialBufferForGaussianFilter()
 
 
     
+}
+
+void RenderTexture::CreateMaterialLuminanceBasedOutline()
+{
+    //マテリアル用のリソースを作る。
+    materialResource_[PSO::kEffectLuminanceBasedOutline] = DirectXCommon::CreateBufferResource(sizeof(MaterialForGaussianFilter));
+    //マテリアルにデータを書き込む
+
+    //書き込むためのアドレスを取得
+    HRESULT result = materialResource_[PSO::kEffectLuminanceBasedOutline]->Map(0, nullptr, reinterpret_cast<void**>(&materialForLuminanceBasedOutline_));
+    materialForLuminanceBasedOutline_->weightVal = 6.0f;
+
+
+    LogFile::Log("Rendertexture : Create : MaterialBuffer : LuminanceBasedOutline");
 }

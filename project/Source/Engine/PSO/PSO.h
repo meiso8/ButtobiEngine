@@ -32,6 +32,7 @@ public:
         kEffectVignette,
         kEffectBoxFilter,
         kEffectGaussianFilter,
+        kEffectLuminanceBasedOutline,
         kCountOfEffect,
 
     };
