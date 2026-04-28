@@ -7,6 +7,10 @@ public:
         UV_CHECKER,
         CIRCLE,
         GRADATION_LINE,
+        NOIZE0,
+        NOIZE1,
+
+
         NUMBERS,
         UI,
         SKIP,

@@ -310,6 +310,7 @@ void RootSignature::Create() {
 
 #pragma endregion
 
+
     descriptionRootSignature[NORMAL].pParameters = rootParameters;//ルートパラメータ配列へのポインタ
     descriptionRootSignature[NORMAL].NumParameters = _countof(rootParameters);//配列の長さ
 
@@ -347,6 +348,8 @@ void RootSignature::Create() {
     descriptionRootSignature[RADIAL_BLUR].pParameters = rootParametersForOffScreen;//ルートパラメータ配列へのポインタ
     descriptionRootSignature[RADIAL_BLUR].NumParameters = _countof(rootParametersForOffScreen);//配列の長さ
 
+    descriptionRootSignature[DISSOLVE].pParameters = rootParametersForDepthBasedOutline;//ルートパラメータ配列へのポインタ
+    descriptionRootSignature[DISSOLVE].NumParameters = _countof(rootParametersForDepthBasedOutline);//配列の長さ
 
     //シリアライズしてバイナリにする
     Microsoft::WRL::ComPtr <ID3DBlob> signatureBlob = nullptr;

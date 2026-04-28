@@ -11,7 +11,7 @@
 
 void RenderTexture::Create()
 {
-    kRenderTargetClearValue_ = { 0.0f,1.0f,0.0f,1.0f };
+    kRenderTargetClearValue_ = { 1.0f,0.0f,0.0f,1.0f };
 
     CreateResource(0);
     CreateResource(1);
@@ -24,6 +24,7 @@ void RenderTexture::Create()
     CreateMaterialLuminanceBasedOutline();
     CreateMaterialDepthBasedOutline();
     CreateMaterialRadialBlur();
+    CreateMaterialDissolve();
 }
 
 void RenderTexture::CreateResource(const uint32_t index)
@@ -66,7 +67,23 @@ void RenderTexture::CreateResource(const uint32_t index)
 
 }
 
+void RenderTexture::DrawDissolve(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index, const TextureFactory::Handle& textureHandle) {
 
+    auto* commandList = DirectXCommon::GetCommandList();
+    // 1. 書き込み先（RTV）の設定とクリア
+    commandList->OMSetRenderTargets(1, &dstRtvHandle, false, nullptr);
+    commandList->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::DISSOLVE));
+    commandList->SetPipelineState(PSO::GetGraphicsPipelineStateOffScreen(PSO::kEffectDissolve).Get());//PSOを設定
+    //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    //SRVのDescriptorTableの先頭を設定。0はrootParameter[0]である。
+    commandList->SetGraphicsRootConstantBufferView(0, materialResource_[PSO::kEffectDissolve]->GetGPUVirtualAddress());
+    SrvManager::SetGraphicsRootDescriptorTable(1, Texture::GetHandle(textureHandle));
+    SrvManager::SetGraphicsRootDescriptorTable(2, renderTextureDatas_[index].srvIndex);
+    commandList->DrawInstanced(3, 1, 0, 0);
+
+
+};
 void RenderTexture::Draw(const PSO::EffectType& effectType, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index)
 {
     auto* commandList = DirectXCommon::GetCommandList();
@@ -147,10 +164,15 @@ void RenderTexture::Update()
     }
 
     if (ImGui::TreeNode("RadialBulr")) {
-        ImGui::DragFloat2("center",&materialForRadialBlur_->center.x);
+        ImGui::DragFloat2("center",&materialForRadialBlur_->center.x,0.01f,0.0f,1.0f);
         ImGui::DragInt("numSamples",&materialForRadialBlur_->numSamples);
         ImGui::DragFloat("center", &materialForRadialBlur_->blurWidth);
+        ImGui::TreePop();
+    }
 
+    if (ImGui::TreeNode("Dissolve")) {
+        ImGui::DragFloat("maskVal", &materialForDissolve_->maskVal,0.01f,0.0f,1.0f);
+        ImGui::ColorEdit3("color", &materialForDissolve_->rgb.x);
         ImGui::TreePop();
     }
 
@@ -253,8 +275,6 @@ void RenderTexture::CreateMaterialDepthBasedOutline()
     materialForDepthBasedOutline_->projectionInverse = MakeIdentity4x4();
 
     LogFile::Log("Rendertexture : Create : MaterialBuffer : DepthBasedOutline");
-
-
 }
 
 
@@ -271,6 +291,19 @@ void RenderTexture::CreateMaterialRadialBlur()
     materialForRadialBlur_->numSamples = 10;
     materialForRadialBlur_->blurWidth = 0.01f;
 
-    LogFile::Log("Rendertexture : Create : MaterialBuffer : DepthBasedOutline");
+    LogFile::Log("Rendertexture : Create : MaterialBuffer : RadialBlur");
 }
 
+void RenderTexture::CreateMaterialDissolve() {
+
+    //マテリアル用のリソースを作る。
+    materialResource_[PSO::kEffectDissolve] = DirectXCommon::CreateBufferResource(sizeof(MaterialForDissolve));
+    //マテリアルにデータを書き込む
+
+    //書き込むためのアドレスを取得
+    HRESULT result = materialResource_[PSO::kEffectDissolve]->Map(0, nullptr, reinterpret_cast<void**>(&materialForDissolve_));
+    materialForDissolve_->maskVal = 0.5f;
+    materialForDissolve_->rgb = { 1.0f,0.4f,0.3f };
+    LogFile::Log("Rendertexture : Create : MaterialBuffer : Dissolve");
+
+};

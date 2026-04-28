@@ -32,7 +32,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     outputColor.rgb *= rcp(gMaterial.numSamples);
     
     PixelShaderOutput output;
-    output.color.rbg = outputColor;
+    output.color.rgb = outputColor;
     output.color.a = 1.0f;
     return output;
 }

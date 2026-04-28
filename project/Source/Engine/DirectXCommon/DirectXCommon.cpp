@@ -107,20 +107,15 @@ void DirectXCommon::RenderTexturePreDraw()
     commandList->GetCommandList()->RSSetViewports(1, &viewport);//Viewportを設定
     //シザー矩形の設定
     commandList->GetCommandList()->RSSetScissorRects(1, &scissorRect);//Scirssorを設定
-
-
-    dsvHandle_ = dsvHandle;
+ 
+    barrier.SettingBarrier(depthTextureData_.depthStencilResource.Get(),
+        D3D12_RESOURCE_STATE_DEPTH_WRITE,
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
 }
 
 void DirectXCommon::DrawRenderTexture()
 {
-
-    barrier.SettingBarrier(depthTextureData_.depthStencilResource.Get(),
-        D3D12_RESOURCE_STATE_DEPTH_WRITE,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-
-
     auto& renderTextureDataA = renderTexture_.GetRenderTextureData(0);
     auto& renderTextureDataB = renderTexture_.GetRenderTextureData(1);
 
@@ -132,7 +127,7 @@ void DirectXCommon::DrawRenderTexture()
     // 4. テクスチャAを RTV(書き込み用) にする
     barrier.SettingBarrierSRVforRTV(renderTextureDataA.resource);
     // 5. B(1)を読み込み、A にるみナンスアウトラインを描画
-    renderTexture_.Draw(PSO::kEffectLuminanceBasedOutline, renderTextureDataA.rtvHandleCPU, 1);
+    renderTexture_.DrawOutLine(renderTextureDataA.rtvHandleCPU, 1, depthTextureData_.srvIndex);
     // 6. 次の処理のために、テクスチャAを SRV(読み込み用) に戻す
     barrier.SettingBarrierRTVforSRV(renderTextureDataA.resource);
 
@@ -165,12 +160,18 @@ void DirectXCommon::DrawRenderTexture()
     //TransitionBarrierの設定
     barrier.SettingBarrierRTVforSRV(renderTextureDataA.resource);
 
+    //TransitionBarrierの設定
+    barrier.SettingBarrierSRVforRTV(renderTextureDataB.resource);
+    renderTexture_.DrawDissolve(renderTextureDataB.rtvHandleCPU, 0, TextureFactory::NOIZE0);
+    //TransitionBarrierの設定
+    barrier.SettingBarrierRTVforSRV(renderTextureDataB.resource);
+
      // 4. 【重要】描画先を画面(バックバッファ)のRTVにする
     // バックバッファは PreDraw で既に RENDER_TARGET 状態になっています
     UINT backBufferIndex = swapChainClass.GetSwapChain()->GetCurrentBackBufferIndex();
     auto backBufferRTV = GetRTVCPUDescriptorHandle(backBufferIndex);
 
-    renderTexture_.DrawOutLine(backBufferRTV, 0, depthTextureData_.srvIndex);
+    renderTexture_.Draw(PSO::kEffectNone, backBufferRTV, 1);
 
 }
 
