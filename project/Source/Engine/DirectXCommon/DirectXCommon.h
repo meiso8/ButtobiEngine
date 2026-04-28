@@ -36,6 +36,14 @@ public:
     static const uint32_t kMaxSoundCount;
     static const uint32_t kMaxModelCount;
 private:
+
+    struct DepthTextureData {
+        Microsoft::WRL::ComPtr<ID3D12Resource> depthStencilResource = nullptr;
+        uint32_t srvIndex = 0;
+        D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU = {};
+        D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU = {};
+    };
+private:
     Window* window_ = nullptr;
     DXGIFactory dxgiFactory = {};
 
@@ -43,7 +51,7 @@ private:
     static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvDescriptorHeap;
 
     static Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> dsvDescriptorHeap;
-
+    D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_;
     static std::unique_ptr< DxcCompiler> dxcCompiler;
     static std::unique_ptr<CommandList> commandList;
 
@@ -55,7 +63,8 @@ private:
     RenderTargetView rtvClass = {};
     RenderTexture renderTexture_ = {};
     Fence fence = {};
-    Microsoft::WRL::ComPtr <ID3D12Resource> depthStencilResource = nullptr;
+
+    DepthTextureData depthTextureData_;
 
     D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
     D3D12_VIEWPORT viewport = {};
@@ -63,20 +72,36 @@ private:
     TransitionBarrier barrier = {};
     std::chrono::steady_clock::time_point reference_;
 
-    
+
+private:
+    // 1. コンストラクタとデストラクタを private にして、外部で new できないようにする
+    DirectXCommon() = default;
+    ~DirectXCommon();
+
 public:
 
-    ~DirectXCommon();
+    // 2. コピーと代入を禁止する（インスタンスが2つに増えるのを防ぐため）
+    DirectXCommon(const DirectXCommon&) = delete;
+    DirectXCommon& operator=(const DirectXCommon&) = delete;
+    // 3. インスタンスを取得するための GetInstance 関数（必ず static にする）
+    static DirectXCommon* GetInstance()
+    {
+        // 関数内の static 変数は、プログラム実行中に1回だけ作られる
+        // （C++11以降ではスレッドセーフが保証されているため安全です）
+        static DirectXCommon instance;
+        return &instance;
+    }
 
     /// @brief 初期化
     /// @param window windowクラスを渡す
     void Initialize(Window& window);
-
+    void CreateDepthStencilResourceSRV();
     /// @brief 描画前処理
 /// @param color 画面の色を指定する
     void RenderTexturePreDraw();
     void DrawRenderTexture();
     void RenderTexturePostDraw();
+    void SetRenderTextureCamera(Camera* camera) { renderTexture_.SetCamera(camera); }
     /// @brief 描画前処理
     /// @param color 画面の色を指定する
     void PreDraw(Vector4& color);
@@ -133,7 +158,6 @@ public:
     /// @param height 
     /// @return StencilTexture
    static Microsoft::WRL::ComPtr<ID3D12Resource> CreateDepthStencileTextureResource(
-        const Microsoft::WRL::ComPtr<ID3D12Device>& device,
         int32_t width,
         int32_t height);
 

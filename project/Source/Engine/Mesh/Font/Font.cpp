@@ -116,7 +116,7 @@ void Font::Draw(const LightMode& lightMode
     materialResource_.SetLightMode(lightMode);
     transform_.scale = { scale_.x * size_.x,scale_.y * size_.y,1.0f };
     transform_.rotate = { 0.0f,0.0f,rotate_ };
-    transform_.translate = { position_.x,position_.y,0.5f };
+    transform_.translate = { position_.x,position_.y,0.0f };
 
     worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 

@@ -6,11 +6,12 @@
 #include "DebugUI.h"
 #endif
 #include"Log.h"
+#include"MakeMatrix.h"
 
 
 void RenderTexture::Create()
 {
-    kRenderTargetClearValue_ = { 1.0f,0.0f,0.0f,1.0f };
+    kRenderTargetClearValue_ = { 0.0f,1.0f,0.0f,1.0f };
 
     CreateResource(0);
     CreateResource(1);
@@ -21,6 +22,7 @@ void RenderTexture::Create()
     CreateMaterialBufferForBoxFilter();
     CreateMaterialBufferForGaussianFilter();
     CreateMaterialLuminanceBasedOutline();
+    CreateMaterialDepthBasedOutline();
 }
 
 void RenderTexture::CreateResource(const uint32_t index)
@@ -38,7 +40,7 @@ void RenderTexture::CreateResource(const uint32_t index)
     D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
     rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
     rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-    renderTextureDatas_[index].rtvHandleCPU = DirectXCommon::GetRTVCPUDescriptorHandle(index+3);
+    renderTextureDatas_[index].rtvHandleCPU = DirectXCommon::GetRTVCPUDescriptorHandle(index + 3);
     DirectXCommon::GetDevice()->CreateRenderTargetView(renderTextureDatas_[index].resource.Get(), &rtvDesc, renderTextureDatas_[index].rtvHandleCPU);
 
     LogFile::Log("Rendertexture : CreateRTVDesc");
@@ -58,13 +60,19 @@ void RenderTexture::CreateResource(const uint32_t index)
 
     DirectXCommon::GetDevice()->CreateShaderResourceView(renderTextureDatas_[index].resource.Get(), &renderTextureSrvDesc, renderTextureDatas_[index].srvHandleCPU);
     LogFile::Log("Rendertexture : CreateShaderResourceView");
+
+
+
 }
+
 
 void RenderTexture::Draw(const PSO::EffectType& effectType, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index)
 {
     auto* commandList = DirectXCommon::GetCommandList();
     // 1. 書き込み先（RTV）の設定とクリア
     commandList->OMSetRenderTargets(1, &dstRtvHandle, false, nullptr);
+
+
     commandList->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::OFFSCREEN));
     commandList->SetPipelineState(PSO::GetGraphicsPipelineStateOffScreen(effectType).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
@@ -75,8 +83,30 @@ void RenderTexture::Draw(const PSO::EffectType& effectType, const D3D12_CPU_DESC
     commandList->DrawInstanced(3, 1, 0, 0);
 }
 
+void RenderTexture::DrawOutLine(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index,const uint32_t depthSrvIndex)
+{
+    auto* commandList = DirectXCommon::GetCommandList();
+    // 1. 書き込み先（RTV）の設定とクリア
+    commandList->OMSetRenderTargets(1, &dstRtvHandle, false, nullptr);
+
+    commandList->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::DEPTH_BASED_OUTLINE));
+
+    commandList->SetPipelineState(PSO::GetGraphicsPipelineStateOffScreen(PSO::kEffectDepthBasedOutline).Get());//PSOを設定
+    //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    //SRVのDescriptorTableの先頭を設定。0はrootParameter[0]である。
+    commandList->SetGraphicsRootConstantBufferView(0, materialResource_[PSO::kEffectDepthBasedOutline]->GetGPUVirtualAddress());
+    SrvManager::SetGraphicsRootDescriptorTable(1, depthSrvIndex);
+    SrvManager::SetGraphicsRootDescriptorTable(2, renderTextureDatas_[index].srvIndex);
+
+    commandList->DrawInstanced(3, 1, 0, 0);
+}
+
 void RenderTexture::Update()
 {
+    assert(camera_);
+    materialForDepthBasedOutline_->projectionInverse = Inverse(camera_->GetProjectionMatrixForOutline());
+
 #ifdef _DEVELOP
     if (ImGui::TreeNode("GrayScale")) {
         DebugUI::CheckColor(materialForGrayScale_->color, "RenderTextureColor");
@@ -91,13 +121,13 @@ void RenderTexture::Update()
     }
 
     if (ImGui::TreeNode("Vignette")) {
-        DebugUI::CheckFloat(materialForVignette_->correctVal,"correctVal");
+        DebugUI::CheckFloat(materialForVignette_->correctVal, "correctVal");
         DebugUI::CheckFloat(materialForVignette_->viignetteVal, "viignetteVal");
         ImGui::TreePop();
     }
 
     if (ImGui::TreeNode("BoxFilter")) {
-        ImGui::DragFloat( "kernel", &materialForBoxFilter_->kernel,1.0f,0.0f,1001.0f );
+        ImGui::DragFloat("kernel", &materialForBoxFilter_->kernel, 1.0f, 0.0f, 1001.0f);
         ImGui::TreePop();
     }
 
@@ -108,12 +138,21 @@ void RenderTexture::Update()
     }
 
     if (ImGui::TreeNode("LuminanceBasedOutline")) {
-        ImGui::DragFloat("weightVal", &materialForLuminanceBasedOutline_->weightVal);
+        ImGui::DragFloat("weightVal", &materialForLuminanceBasedOutline_->weightVal, 0.1f);
         ImGui::TreePop();
     }
 
+    if (ImGui::TreeNode("DepthBasedOutline")) {
+        DebugUI::ShowMatrix4x4(materialForDepthBasedOutline_->projectionInverse);
+        ImGui::TreePop();
+    }
 
 #endif
+}
+
+void RenderTexture::SetCamera(Camera* camera)
+{
+    camera_ = camera;
 }
 
 void RenderTexture::CreateMaterialBufferForGrayScale()
@@ -163,7 +202,7 @@ void RenderTexture::CreateMaterialBUfferForFullScreen()
 
     //書き込むためのアドレスを取得
     HRESULT result = materialResource_[PSO::kEffectNone]->Map(0, nullptr, reinterpret_cast<void**>(&materialForFullScreen_));
-    materialForFullScreen_->color = {1.0f,1.0f,1.0f,1.0f};
+    materialForFullScreen_->color = { 1.0f,1.0f,1.0f,1.0f };
 
     LogFile::Log("Rendertexture : Create : MaterialBuffer : GrayScale");
 }
@@ -181,21 +220,33 @@ void RenderTexture::CreateMaterialBufferForGaussianFilter()
     materialForGaussianFilter_->kernel = 1;
 
     LogFile::Log("Rendertexture : Create : MaterialBuffer : GrayScale");
-
-
-    
 }
 
 void RenderTexture::CreateMaterialLuminanceBasedOutline()
 {
     //マテリアル用のリソースを作る。
-    materialResource_[PSO::kEffectLuminanceBasedOutline] = DirectXCommon::CreateBufferResource(sizeof(MaterialForGaussianFilter));
+    materialResource_[PSO::kEffectLuminanceBasedOutline] = DirectXCommon::CreateBufferResource(sizeof(MaterialForLuminanceBasedOutline));
     //マテリアルにデータを書き込む
 
     //書き込むためのアドレスを取得
     HRESULT result = materialResource_[PSO::kEffectLuminanceBasedOutline]->Map(0, nullptr, reinterpret_cast<void**>(&materialForLuminanceBasedOutline_));
     materialForLuminanceBasedOutline_->weightVal = 6.0f;
 
-
     LogFile::Log("Rendertexture : Create : MaterialBuffer : LuminanceBasedOutline");
+}
+
+void RenderTexture::CreateMaterialDepthBasedOutline()
+{
+
+    //マテリアル用のリソースを作る。
+    materialResource_[PSO::kEffectDepthBasedOutline] = DirectXCommon::CreateBufferResource(sizeof(MaterialForDepthBasedOutline));
+    //マテリアルにデータを書き込む
+
+    //書き込むためのアドレスを取得
+    HRESULT result = materialResource_[PSO::kEffectDepthBasedOutline]->Map(0, nullptr, reinterpret_cast<void**>(&materialForDepthBasedOutline_));
+    materialForDepthBasedOutline_->projectionInverse = MakeIdentity4x4();
+
+    LogFile::Log("Rendertexture : Create : MaterialBuffer : DepthBasedOutline");
+
+
 }

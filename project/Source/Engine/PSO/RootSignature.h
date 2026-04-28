@@ -22,6 +22,7 @@ public:
         BOXFILTER,
         GAUSSIANFILTER,
         LUMINANCE_BASED_OUTLINE,
+        DEPTH_BASED_OUTLINE,
         TYPES,
     };
 

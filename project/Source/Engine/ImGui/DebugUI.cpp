@@ -210,6 +210,28 @@ void DebugUI::CheckJsonFile()
 #endif
 }
 
+void DebugUI::CheckSRVIndex() {
+#ifdef USE_IMGUI
+    static int index = 0;
+
+    ImGui::Begin("SRVTexture");
+    // 例：表示したいSRVのインデックス番号
+    // （テクスチャを読み込んだ時のインデックスや、RenderTextureのsrvIndexなど）
+    ImGui::SliderInt("srvIndex", &index,0,SrvManager::kMaxSRVCount-1);
+
+    // SrvManager から GPUハンドルを取得
+    D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = SrvManager::GetGPUDescriptorHandle(index);
+
+    // ImGui::Imageに渡すために ImTextureID (void* 型) にキャストする
+    ImTextureID texID = reinterpret_cast<ImTextureID>(gpuHandle.ptr);
+
+    // 画像の表示 (引数: テクスチャID, 表示サイズ(横, 縦))
+    ImGui::Image(texID, ImVec2(128.0f, 72.0f));
+
+    ImGui::End();
+#endif
+}
+
 void DebugUI::CheckSpotLight()
 {
 #ifdef USE_IMGUI

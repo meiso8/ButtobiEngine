@@ -5,6 +5,7 @@
 #include<stdint.h>
 #include<PSO.h>
 #include"hlslTypeToCpp.h"
+#include"Camera.h"
 
 struct MaterialForRenderTexture {
     float4 color;
@@ -41,6 +42,12 @@ struct MaterialForLuminanceBasedOutline
     float padding[3];
 };
 
+struct MaterialForDepthBasedOutline
+{
+    float32_t4x4 projectionInverse;
+    float padding[48];              // 192バイト追加 (計256バイト)
+};
+
 class RenderTexture
 
 {
@@ -54,10 +61,14 @@ public:
         D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU = {};
         D3D12_CPU_DESCRIPTOR_HANDLE rtvHandleCPU = {};
     };
+
+
 private:
+    Camera* camera_ = nullptr;
     Vector4 kRenderTargetClearValue_;
     const Vector4 sepiaColor_ = { 1.0f,74.0f / 107.0f,43.0f / 107.0f,1.0f };
     std::array< RenderTextureData, 2> renderTextureDatas_;
+
     std::array<Microsoft::WRL::ComPtr <ID3D12Resource>, PSO::kCountOfEffect> materialResource_;
     MaterialForRenderTexture* materialForGrayScale_ = nullptr;
     MaterialForVignette* materialForVignette_ = nullptr;
@@ -66,10 +77,12 @@ private:
     MaterialForRenderTexture* materialForFullScreen_ = nullptr;
     MaterialForGaussianFilter* materialForGaussianFilter_ = nullptr;
     MaterialForLuminanceBasedOutline* materialForLuminanceBasedOutline_ = nullptr;
+    MaterialForDepthBasedOutline* materialForDepthBasedOutline_ = nullptr;
 public:
 
     void Create();
     void CreateResource(const uint32_t index);
+
     const Vector4& GetColor() {
         return kRenderTargetClearValue_;
     }
@@ -77,8 +90,9 @@ public:
         return renderTextureDatas_[index];
     }
     void Draw(const PSO::EffectType& effectType, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index);
+    void DrawOutLine(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index, const uint32_t depthSrvIndex);
     void Update();
-
+    void SetCamera(Camera* camera);
 private:
     void CreateMaterialBufferForGrayScale();
     void CreateMaterialBufferForVignette();
@@ -86,5 +100,6 @@ private:
     void CreateMaterialBUfferForFullScreen();
     void CreateMaterialBufferForGaussianFilter();
     void CreateMaterialLuminanceBasedOutline();
+    void CreateMaterialDepthBasedOutline();
 };
 

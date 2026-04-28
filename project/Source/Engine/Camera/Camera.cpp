@@ -8,14 +8,11 @@ float Camera::height_;
 void Camera::Initialize(const PROJECTION_TYPE& type) {
 
     projectionType_ = type;
-
+    nearZ_ = 0.01f;
     farZ_ = 1000.0f;
     offset_ = { 0.0f };
     InitializeTransform();
     UpdateProjectionMatrix();
-
-    //座標が確定後リソースを作成
-    CreateResource();
 
     sphericalCoordinate_.radius = 0.0f;
     sphericalCoordinate_.azimuthal = 0.0f;
@@ -33,6 +30,12 @@ void Camera::InitializeTransform()
     rotate_ = { 0.0f,0.0f,0.0f };
     translate_ = { 0.0f,0.0f,-10.0f };
     worldMat_ = MakeIdentity4x4();
+}
+
+const Matrix4x4& Camera::GetProjectionMatrixForOutline()
+{
+ 
+    return projectionMat_;
 }
 
 void Camera::UpdateMatrix() {
@@ -76,6 +79,7 @@ Camera::Camera()
 {
     SetScreenSize(static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()));
     Initialize(PERSPECTIVE);
+    //座標が確定後リソースを作成
     CreateResource();
 }
 

@@ -36,6 +36,7 @@ public:
     static void CheckFPS();
     static void CheckSound();
     static void CheckJsonFile();
+    static void CheckSRVIndex();
   /*  static void CheckDamageStruct(Damage& damage, const char* label);*/
     /// @brief 入力
     /// @param input 

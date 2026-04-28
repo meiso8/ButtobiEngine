@@ -21,7 +21,7 @@ public:
     // 垂直方向視野角
     float fovAngleY_ = kFovAngle_;
     float farZ_ = 1000.0f;
-    float nearZ_ = 0.1f;
+   float  nearZ_ = 0.01f;
 
     Vector2 offset_ = { 0.0f };
 
@@ -74,7 +74,7 @@ public:
 
     Vector3 GetWorldPos();
     void InitializeTransform();
-    
+    const Matrix4x4& GetProjectionMatrixForOutline();
     ID3D12Resource* GetResource() {
         return cameraResource_.Get();
     }
