@@ -21,6 +21,7 @@ enum ShaderType {
     kLuminanceBasedOutline,
     kDepthBasedOutline,
     kRadialBlur,
+    kDissolve,
     Shaders,
 };
 

@@ -6,6 +6,7 @@
 #include<PSO.h>
 #include"hlslTypeToCpp.h"
 #include"Camera.h"
+#include"Texture.h"
 
 struct MaterialForRenderTexture {
     float4 color;
@@ -54,6 +55,11 @@ struct MaterialForRadialBlur
     float32_t blurWidth;
 };
 
+struct MaterialForDissolve
+{
+    float32_t maskVal;
+    float32_t padding[3];
+};
 
 class RenderTexture
 
@@ -77,16 +83,16 @@ private:
     std::array< RenderTextureData, 2> renderTextureDatas_;
 
     std::array<Microsoft::WRL::ComPtr <ID3D12Resource>, PSO::kCountOfEffect> materialResource_;
+    
     MaterialForRenderTexture* materialForGrayScale_ = nullptr;
     MaterialForVignette* materialForVignette_ = nullptr;
     MaterialForBoxFilter* materialForBoxFilter_ = nullptr;
-
     MaterialForRenderTexture* materialForFullScreen_ = nullptr;
     MaterialForGaussianFilter* materialForGaussianFilter_ = nullptr;
     MaterialForLuminanceBasedOutline* materialForLuminanceBasedOutline_ = nullptr;
     MaterialForDepthBasedOutline* materialForDepthBasedOutline_ = nullptr;
     MaterialForRadialBlur* materialForRadialBlur_ = nullptr;
-
+    MaterialForDissolve* materialForDissolve_ = nullptr;
 public:
 
     void Create();
@@ -100,8 +106,12 @@ public:
     }
     void Draw(const PSO::EffectType& effectType, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index);
     void DrawOutLine(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index, const uint32_t depthSrvIndex);
+    void DrawDissolve(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index, const TextureFactory::Handle& textureHandle);
     void Update();
     void SetCamera(Camera* camera);
+protected:
+    /// @brief テクスチャハンドル
+    uint32_t textureHandle_ = 0;
 private:
     void CreateMaterialBufferForGrayScale();
     void CreateMaterialBufferForVignette();
@@ -111,5 +121,6 @@ private:
     void CreateMaterialLuminanceBasedOutline();
     void CreateMaterialDepthBasedOutline();
     void CreateMaterialRadialBlur();
+    void CreateMaterialDissolve();
 };
 

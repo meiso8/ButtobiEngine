@@ -35,6 +35,7 @@ public:
         kEffectLuminanceBasedOutline,
         kEffectDepthBasedOutline,
         kEffectRadialBlur,
+        kEffectDissolve,
         kCountOfEffect,
 
     };

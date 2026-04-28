@@ -51,7 +51,6 @@ private:
     static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvDescriptorHeap;
 
     static Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> dsvDescriptorHeap;
-    D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_;
     static std::unique_ptr< DxcCompiler> dxcCompiler;
     static std::unique_ptr<CommandList> commandList;
 

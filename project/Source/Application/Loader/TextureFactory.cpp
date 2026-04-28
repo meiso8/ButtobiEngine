@@ -6,8 +6,10 @@ void TextureFactory::Load()
     Texture::Load("Resource/Textures/uvChecker.png", UV_CHECKER);
     Texture::Load("Resource/Textures/circle2.png", CIRCLE);
     Texture::Load("Resource/Textures/gradationLine.png", GRADATION_LINE);
-    Texture::Load("Resource/Textures/numbers.png", NUMBERS);
+    Texture::Load("Resource/Textures/noise0.png", NOIZE0);
+    Texture::Load("Resource/Textures/noise1.png", NOIZE1);
 
+    Texture::Load("Resource/Textures/numbers.png", NUMBERS);
     Texture::Load("Resource/Textures/ui.png", UI);
 
     Texture::Load("Resource/Textures/skip.png", SKIP);

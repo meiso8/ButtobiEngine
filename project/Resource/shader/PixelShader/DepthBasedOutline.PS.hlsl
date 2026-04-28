@@ -28,10 +28,7 @@ static const float32_t kPrewittVerticalKernel[3][3] =
 float32_t Luminance(float32_t3 v)
 {
     return dot(v, float32_t3(0.2125f, 0.7154f, 0.0721f));
-
 }
-
-
 
 struct PixelShaderOutput
 {
