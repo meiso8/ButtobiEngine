@@ -9,7 +9,8 @@ public:
     ~ResultScene() override;
     void Initialize()override;
     void Update()override;
-    void Draw()override;
+    void DrawModel()override;
+    void DrawSprite()override;
    void SceneChangeUpdate()override;
 private:
     bool isSkipDraw_ = false;

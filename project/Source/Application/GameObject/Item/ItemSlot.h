@@ -66,7 +66,7 @@ public:
     bool AddItem(const std::shared_ptr<Item>& item);
     void UseItem(int index);
     void CombineItems(int indexA, int indexB);
-    void DrawInfoUI();
+    void DrawUI();
     void Draw(Camera& camera);
     void GetAnimation(const std::shared_ptr<Item>& item, const Vector2& screenPos);
     std::array<std::shared_ptr<Item>, kMaxSlots_>& GetItemInSlot() {return  slots_; };

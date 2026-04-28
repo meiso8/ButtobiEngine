@@ -108,7 +108,7 @@ void ResultScene::Update()
 
 }
 
-void ResultScene::Draw()
+void ResultScene::DrawSprite()
 {
     sceneChange_->Draw();
     Sprite::PreDraw();
@@ -118,7 +118,14 @@ void ResultScene::Draw()
     if (isSkipDraw_) {
         skipSprite_->Draw();
     }
-  
+
+}
+
+
+
+void ResultScene::DrawModel()
+{
+ 
 }
 
 void ResultScene::SceneChangeUpdate()

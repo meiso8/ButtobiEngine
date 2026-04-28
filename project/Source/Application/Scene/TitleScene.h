@@ -11,7 +11,8 @@ public:
     ~TitleScene() override;
     void Initialize()override;
     void Update()override;
-    void Draw()override;
+    void DrawModel()override;
+    void DrawSprite()override;
     void Debug()override;
    void SceneChangeUpdate()override;
 private:

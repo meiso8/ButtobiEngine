@@ -67,7 +67,7 @@ void DirectXCommon::Initialize(Window& window)
 void DirectXCommon::CreateDepthStencilResourceSRV()
 {
     D3D12_SHADER_RESOURCE_VIEW_DESC depthTextureSrvDesc{};
-    depthTextureSrvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+    depthTextureSrvDesc.Format = DXGI_FORMAT_R32_FLOAT;
     depthTextureSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
     depthTextureSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
     depthTextureSrvDesc.Texture2D.MipLevels = 1;
@@ -88,24 +88,18 @@ void DirectXCommon::RenderTexturePreDraw()
     //2.描画用のRTVとDSVを設定する 
     D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
-    barrier.SettingBarrier(depthTextureData_.depthStencilResource.Get(),
-        D3D12_RESOURCE_STATE_DEPTH_WRITE,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-
     commandList->GetCommandList()->OMSetRenderTargets(1, &renderTextureData.rtvHandleCPU, false, &dsvHandle);
-
-    barrier.SettingBarrier(
-        depthTextureData_.depthStencilResource.Get(),
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-        D3D12_RESOURCE_STATE_DEPTH_WRITE);
-
+    
     //3.指定した色で画面全体をクリアする
     Vector4 color = renderTexture_.GetColor();
     float clearColor[] = { color.x,color.y,color.z,color.w };//青っぽい色。RGBAの順
     commandList->GetCommandList()->ClearRenderTargetView(renderTextureData.rtvHandleCPU, clearColor, 0, nullptr);
 
+
+
     //指定した深度で画面全体をクリアする
     commandList->GetCommandList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+    
 
     SrvManager::PreDraw();
 
@@ -122,6 +116,11 @@ void DirectXCommon::RenderTexturePreDraw()
 void DirectXCommon::DrawRenderTexture()
 {
 
+    barrier.SettingBarrier(depthTextureData_.depthStencilResource.Get(),
+        D3D12_RESOURCE_STATE_DEPTH_WRITE,
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+
+
     auto& renderTextureDataA = renderTexture_.GetRenderTextureData(0);
     auto& renderTextureDataB = renderTexture_.GetRenderTextureData(1);
 
@@ -134,29 +133,29 @@ void DirectXCommon::DrawRenderTexture()
 
     // 4. テクスチャAを RTV(書き込み用) にする
     barrier.SettingBarrierSRVforRTV(renderTextureDataA.resource);
-    renderTexture_.DrawOutLine(renderTextureDataA.rtvHandleCPU, 1, depthTextureData_.srvIndex);
+    // 5. B(1)を読み込み、A にるみナンスアウトラインを描画
+    renderTexture_.Draw(PSO::kEffectLuminanceBasedOutline, renderTextureDataA.rtvHandleCPU, 1);
     // 6. 次の処理のために、テクスチャAを SRV(読み込み用) に戻す
     barrier.SettingBarrierRTVforSRV(renderTextureDataA.resource);
 
     //TransitionBarrierの設定
     barrier.SettingBarrierSRVforRTV(renderTextureDataB.resource);
-    // 5. B(1)を読み込み、A にるみナンスアウトラインを描画
-    renderTexture_.Draw(PSO::kEffectLuminanceBasedOutline, renderTextureDataB.rtvHandleCPU, 0);
+    //ガウスフィルターを描画
+    renderTexture_.Draw(PSO::kEffectGaussianFilter, renderTextureDataB.rtvHandleCPU, 0);
     //TransitionBarrierの設定
     barrier.SettingBarrierRTVforSRV(renderTextureDataB.resource);
 
     // 4. テクスチャAを RTV(書き込み用) にする
     barrier.SettingBarrierSRVforRTV(renderTextureDataA.resource);
-    //ガウスフィルターを描画
-    renderTexture_.Draw(PSO::kEffectGaussianFilter, renderTextureDataA.rtvHandleCPU, 1);
-
+    // ボックスフィルターを描画
+    renderTexture_.Draw(PSO::kEffectBoxFilter, renderTextureDataA.rtvHandleCPU, 1);
     // 6. 次の処理のために、テクスチャAを SRV(読み込み用) に戻す
     barrier.SettingBarrierRTVforSRV(renderTextureDataA.resource);
 
     //TransitionBarrierの設定
     barrier.SettingBarrierSRVforRTV(renderTextureDataB.resource);
-    // ボックスフィルターを描画
-    renderTexture_.Draw(PSO::kEffectBoxFilter, renderTextureDataB.rtvHandleCPU, 0);
+    // 5.画面 にビネットを
+    renderTexture_.Draw(PSO::kEffectVignette, renderTextureDataB.rtvHandleCPU, 0);
     //TransitionBarrierの設定
     barrier.SettingBarrierRTVforSRV(renderTextureDataB.resource);
 
@@ -164,9 +163,8 @@ void DirectXCommon::DrawRenderTexture()
     // バックバッファは PreDraw で既に RENDER_TARGET 状態になっています
     UINT backBufferIndex = swapChainClass.GetSwapChain()->GetCurrentBackBufferIndex();
     auto backBufferRTV = GetRTVCPUDescriptorHandle(backBufferIndex);
-   
-    // 5.画面 にビネットを
-    renderTexture_.Draw(PSO::kEffectVignette, backBufferRTV, 1);
+
+    renderTexture_.DrawOutLine(backBufferRTV, 1, depthTextureData_.srvIndex);
 
 }
 
@@ -174,9 +172,14 @@ void DirectXCommon::RenderTexturePostDraw()
 { 
     auto& renderTextureData = renderTexture_.GetRenderTextureData(0);
     barrier.SettingBarrierRTVforSRV(renderTextureData.resource);
+
+    barrier.SettingBarrier(
+        depthTextureData_.depthStencilResource.Get(),
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+        D3D12_RESOURCE_STATE_DEPTH_WRITE);
 }
 
-void DirectXCommon::PreDraw(Vector4& color)
+void DirectXCommon::PreDraw()
 {
 
     //これからの流れ
@@ -198,6 +201,7 @@ void DirectXCommon::PreDraw(Vector4& color)
 
     commandList->GetCommandList()->OMSetRenderTargets(1, &rtvClass.GetHandle(backBufferIndex), false, nullptr);
     //3.指定した色で画面全体をクリアする
+    Vector4 color =renderTexture_.GetColor();
     float clearColor[] = { color.x,color.y,color.z,color.w };//青っぽい色。RGBAの順
     commandList->GetCommandList()->ClearRenderTargetView(rtvClass.GetHandle(backBufferIndex), clearColor, 0, nullptr);
 
@@ -367,7 +371,7 @@ void DirectXCommon::InitializeRenderTargetView()
 void DirectXCommon::InitializeDepthStencilView()
 {
     //DSVの設定 DepthStencilView
-    dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;//基本的にはResourceに合わせる。
+    dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;//基本的にはResourceに合わせる。
     dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;//2dTexture
     // DSVHeapの先頭にDSVを作る
     device->CreateDepthStencilView(depthTextureData_.depthStencilResource.Get(), &dsvDesc, dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
@@ -584,7 +588,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::CreateDepthStencileTexture
     resourceDesc.Height = height;//高さ
     resourceDesc.MipLevels = 1;//mipmapの数
     resourceDesc.DepthOrArraySize = 1;//奥行き　or 配列Textureの配列数
-    resourceDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;//DepthStencilとして利用可能なフォーマット
+    resourceDesc.Format = DXGI_FORMAT_R32_TYPELESS;//DepthStencilとして利用可能なフォーマット
     resourceDesc.SampleDesc.Count = 1;//サンプリングカウント
     resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;//2次元
     resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;//DepthStencilとして使う通知
@@ -596,7 +600,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::CreateDepthStencileTexture
     //深度値クリア設定
     D3D12_CLEAR_VALUE depthClearValue{};
     depthClearValue.DepthStencil.Depth = 1.0f;//1.0f(最大値)でクリア
-    depthClearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;//フォーマット。Resourceと合わせる
+    depthClearValue.Format = DXGI_FORMAT_D32_FLOAT;//フォーマット。Resourceと合わせる
 
     //Resourceの生成
     Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;

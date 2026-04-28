@@ -14,7 +14,8 @@ public:
     FreeTypeScene();
     void Initialize()override;
     void Update()override;
-    void Draw()override;
+    void DrawModel()override;
+    void DrawSprite()override;
 private:
     void CreateParticle();
 private:

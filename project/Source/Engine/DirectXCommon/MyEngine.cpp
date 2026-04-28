@@ -61,7 +61,6 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     imGuiClass.Initialize(*wc, directXCommon->GetDevice().Get(), directXCommon->GetSwapChain(), directXCommon->GetSwapChainRtv());
     LogFile::Log("InitImGui");
 #endif
-
     directXCommon->InitializeRenderTexture();
     directXCommon->CreateDepthStencilResourceSRV();
 
@@ -185,28 +184,29 @@ void MyEngine::Run() {
 
 }
 
-void MyEngine::PreCommandSet(Vector4 screenColor) {
+void MyEngine::PreCommandSet() {
 
 #ifdef USE_IMGUI
     //ImGuiの内部コマンドを生成する
     imGuiClass.Render();
 #endif
-
+   //ポストエフェクトの前設定
     directXCommon->RenderTexturePreDraw();
     // シーンの描画
-    SceneManager::Draw();
-
+    SceneManager::DrawModel();
+    //ポストエフェクトとのあと設定
     directXCommon->RenderTexturePostDraw();
 
-    directXCommon->PreDraw(screenColor);
+    directXCommon->PreDraw();
 }
-void MyEngine::DrawCommandSet()
-{
-    directXCommon->DrawRenderTexture();
-}
-;
 
 void MyEngine::PostCommandSet() {
+
+    //ポストエフェクト
+    directXCommon->DrawRenderTexture();
+    // シーンの描画
+    SceneManager::DrawSprite();
+
 #ifdef USE_IMGUI
     //諸々の描画処理が終了下タイミングでImGuiの描画コマンドを積む
     imGuiClass.DrawImGui(CommandList::GetCommandList().Get());

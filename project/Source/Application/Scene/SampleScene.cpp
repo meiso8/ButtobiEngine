@@ -67,6 +67,7 @@ void SampleScene::Initialize() {
     SetSceneChange();
 
     camera_->Initialize();
+    camera_->nearZ_ = 1.0f;
     camera_->UpdateMatrix();
 
     uIManager_->Initialize();
@@ -271,8 +272,6 @@ void SampleScene::Debug()
     DebugUI::Button("ChangeCamera", func);
     DebugUI::CheckParticle(*particleEmitters_[0], "Emitter0");
 
-    itemManager_->DrawInfoUI();
-
 #endif // !USE_IMGUI
 }
 
@@ -378,7 +377,7 @@ void SampleScene::CreateParticle()
     enemyGroup->accelerationField.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,15.0f,25.0f} };
 }
 
-void SampleScene::Draw() {
+void SampleScene::DrawModel() {
 
 #ifdef _DEVELOP
 
@@ -413,13 +412,27 @@ void SampleScene::Draw() {
     player_->Draw(*currentCamera_, kLightModeHalfL);
 
     ParticleManager::GetInstance()->Draw();
+  
+}
+
+void SampleScene::DrawSprite() {
+
+    Sprite::PreDraw();
+    
+    itemManager_->DrawUI();
+
     uIManager_->DrawPauseScreen();
     if (amenStage_) amenStage_->DrawUI();
 
+
+    
     memoManager_->DrawUI();
     uIManager_->DrawCurPos();
     player_->DrawRaySprite();
+
     uIManager_->DrawEffect();
 
     sceneChange_->Draw();
+
+
 }

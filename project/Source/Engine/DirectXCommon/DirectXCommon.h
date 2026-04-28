@@ -103,8 +103,7 @@ public:
     void RenderTexturePostDraw();
     void SetRenderTextureCamera(Camera* camera) { renderTexture_.SetCamera(camera); }
     /// @brief 描画前処理
-    /// @param color 画面の色を指定する
-    void PreDraw(Vector4& color);
+    void PreDraw();
     /// @brief 描画後処理
     void PostDraw();
     /// @brief フレーム終了処理

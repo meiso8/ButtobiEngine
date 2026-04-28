@@ -39,15 +39,15 @@ void Item::Init()
 }
 void Item::DrawInfoUI()
 {
-#ifdef USE_IMGUI
-
-    ImGui::Begin("Item");
-    //ImGui::Text(description_.c_str());
-    DebugUI::CheckObject3d(*object_, name_.c_str());
-
-    ImGui::End();
-
-#endif
+//#ifdef USE_IMGUI
+//
+//    ImGui::Begin("Item");
+//    //ImGui::Text(description_.c_str());
+//    DebugUI::CheckObject3d(*object_, name_.c_str());
+//
+//    ImGui::End();
+//
+//#endif
 }
 
 void Item::Draw(Camera& camera)
@@ -167,9 +167,9 @@ void ItemSlot::Update()
 
     for (auto& sprite : slotSprites_) {
         if (IsCollision(pos, *sprite)) {
-            sprite->SetColor({ 1.0f,0.0f,0.0f,0.5f });
+            sprite->SetColor({ 1.0f,0.0f,0.0f,1.0f });
         } else {
-            sprite->SetColor({ 1.0f,1.0f,1.0f,0.5f });
+            sprite->SetColor({ 1.0f,1.0f,1.0f,1.0f });
         }
 
     }
@@ -238,11 +238,11 @@ void ItemSlot::CombineItems(int indexA, int indexB)
     }
 }
 
-void ItemSlot::DrawInfoUI()
+void ItemSlot::DrawUI()
 {
-    for (auto& item : slots_) {
-        if (item) {
-            item->DrawInfoUI();
+    for (auto& sprite : slotSprites_) {
+        if (sprite) {
+            sprite->Draw();
         }
     }
 
@@ -250,25 +250,20 @@ void ItemSlot::DrawInfoUI()
 
 void ItemSlot::Draw(Camera& camera)
 {
-    Sprite::PreDraw();
-    for (auto& sprite : slotSprites_) {
-        if (sprite) {
-            sprite->Draw();
-        }
-    }
 
     for (auto& item : slots_) {
-        if (item &&!item->isUsed_) {
+        if (item && !item->isUsed_) {
             item->Draw(*itemCamera_);
         }
     }
+
 
 }
 
 void ItemSlot::GetAnimation(const std::shared_ptr<Item>& item, const Vector2& screenPos)
 {
     //すでに使われていたら入れない
-    if (item->isGet_&&item->aniTimer_ >= 5.0f||item->isUsed_) {
+    if (item->isGet_ && item->aniTimer_ >= 5.0f || item->isUsed_) {
         return;
     }
 
