@@ -344,6 +344,10 @@ void RootSignature::Create() {
     descriptionRootSignature[DEPTH_BASED_OUTLINE].pParameters = rootParametersForDepthBasedOutline;//ルートパラメータ配列へのポインタ
     descriptionRootSignature[DEPTH_BASED_OUTLINE].NumParameters = _countof(rootParametersForDepthBasedOutline);//配列の長さ
 
+    descriptionRootSignature[RADIAL_BLUR].pParameters = rootParametersForOffScreen;//ルートパラメータ配列へのポインタ
+    descriptionRootSignature[RADIAL_BLUR].NumParameters = _countof(rootParametersForOffScreen);//配列の長さ
+
+
     //シリアライズしてバイナリにする
     Microsoft::WRL::ComPtr <ID3DBlob> signatureBlob = nullptr;
     Microsoft::WRL::ComPtr <ID3DBlob> errorBlob = nullptr;

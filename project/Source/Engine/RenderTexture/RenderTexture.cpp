@@ -23,6 +23,7 @@ void RenderTexture::Create()
     CreateMaterialBufferForGaussianFilter();
     CreateMaterialLuminanceBasedOutline();
     CreateMaterialDepthBasedOutline();
+    CreateMaterialRadialBlur();
 }
 
 void RenderTexture::CreateResource(const uint32_t index)
@@ -71,8 +72,6 @@ void RenderTexture::Draw(const PSO::EffectType& effectType, const D3D12_CPU_DESC
     auto* commandList = DirectXCommon::GetCommandList();
     // 1. 書き込み先（RTV）の設定とクリア
     commandList->OMSetRenderTargets(1, &dstRtvHandle, false, nullptr);
-
-
     commandList->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::OFFSCREEN));
     commandList->SetPipelineState(PSO::GetGraphicsPipelineStateOffScreen(effectType).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
@@ -144,6 +143,14 @@ void RenderTexture::Update()
 
     if (ImGui::TreeNode("DepthBasedOutline")) {
         DebugUI::ShowMatrix4x4(materialForDepthBasedOutline_->projectionInverse);
+        ImGui::TreePop();
+    }
+
+    if (ImGui::TreeNode("RadialBulr")) {
+        ImGui::DragFloat2("center",&materialForRadialBlur_->center.x);
+        ImGui::DragInt("numSamples",&materialForRadialBlur_->numSamples);
+        ImGui::DragFloat("center", &materialForRadialBlur_->blurWidth);
+
         ImGui::TreePop();
     }
 
@@ -231,7 +238,6 @@ void RenderTexture::CreateMaterialLuminanceBasedOutline()
     //書き込むためのアドレスを取得
     HRESULT result = materialResource_[PSO::kEffectLuminanceBasedOutline]->Map(0, nullptr, reinterpret_cast<void**>(&materialForLuminanceBasedOutline_));
     materialForLuminanceBasedOutline_->weightVal = 0.0f;
-
     LogFile::Log("Rendertexture : Create : MaterialBuffer : LuminanceBasedOutline");
 }
 
@@ -250,3 +256,21 @@ void RenderTexture::CreateMaterialDepthBasedOutline()
 
 
 }
+
+
+void RenderTexture::CreateMaterialRadialBlur()
+{
+
+    //マテリアル用のリソースを作る。
+    materialResource_[PSO::kEffectRadialBlur] = DirectXCommon::CreateBufferResource(sizeof(MaterialForRadialBlur));
+    //マテリアルにデータを書き込む
+
+    //書き込むためのアドレスを取得
+    HRESULT result = materialResource_[PSO::kEffectRadialBlur]->Map(0, nullptr, reinterpret_cast<void**>(&materialForRadialBlur_));
+    materialForRadialBlur_->center = { 0.5f,0.5f };
+    materialForRadialBlur_->numSamples = 10;
+    materialForRadialBlur_->blurWidth = 0.01f;
+
+    LogFile::Log("Rendertexture : Create : MaterialBuffer : DepthBasedOutline");
+}
+

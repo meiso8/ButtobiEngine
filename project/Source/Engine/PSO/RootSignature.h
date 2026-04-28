@@ -23,6 +23,7 @@ public:
         GAUSSIANFILTER,
         LUMINANCE_BASED_OUTLINE,
         DEPTH_BASED_OUTLINE,
+        RADIAL_BLUR,
         TYPES,
     };
 

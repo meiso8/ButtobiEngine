@@ -266,6 +266,18 @@ void PSO::CreateALLPSO()
         kDepthBasedOutline,
         kTriangle,
         InputLayout::kInputLayoutTypeOffScreen);
+
+
+    graphicsPipelineStateOffScreen_[kEffectRadialBlur] = Create(
+        *rootSignature,
+        *inputLayout,
+        blendStates[kBlendModeNone],
+        rasterizerStates[kCullModeBack],
+        depthStencils[kNone],
+        kRadialBlur,
+        kTriangle,
+        InputLayout::kInputLayoutTypeOffScreen);
+
 }
 
 PSO::~PSO()
