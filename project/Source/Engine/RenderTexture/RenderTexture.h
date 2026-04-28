@@ -45,7 +45,6 @@ struct MaterialForLuminanceBasedOutline
 struct MaterialForDepthBasedOutline
 {
     float32_t4x4 projectionInverse;
-    float padding[48];              // 192バイト追加 (計256バイト)
 };
 
 class RenderTexture

@@ -88,16 +88,7 @@ void DirectXCommon::RenderTexturePreDraw()
     //2.描画用のRTVとDSVを設定する 
     D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
-    barrier.SettingBarrier(depthTextureData_.depthStencilResource.Get(),
-        D3D12_RESOURCE_STATE_DEPTH_WRITE,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-
     commandList->GetCommandList()->OMSetRenderTargets(1, &renderTextureData.rtvHandleCPU, false, &dsvHandle);
-
-    barrier.SettingBarrier(
-        depthTextureData_.depthStencilResource.Get(),
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-        D3D12_RESOURCE_STATE_DEPTH_WRITE);
 
     //3.指定した色で画面全体をクリアする
     Vector4 color = renderTexture_.GetColor();
@@ -127,45 +118,41 @@ void DirectXCommon::DrawRenderTexture()
 
     //TransitionBarrierの設定
     barrier.SettingBarrierSRVforRTV(renderTextureDataB.resource);
-    // 2. A(0)を読み込み、B にグレースケールを描画
     renderTexture_.Draw(PSO::kEffectGrayScale, renderTextureDataB.rtvHandleCPU, 0);
-    //TransitionBarrierの設定
     barrier.SettingBarrierRTVforSRV(renderTextureDataB.resource);
 
     // 4. テクスチャAを RTV(書き込み用) にする
     barrier.SettingBarrierSRVforRTV(renderTextureDataA.resource);
+    
+    barrier.SettingBarrier(depthTextureData_.depthStencilResource.Get(),
+        D3D12_RESOURCE_STATE_DEPTH_WRITE,
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
     renderTexture_.DrawOutLine(renderTextureDataA.rtvHandleCPU, 1, depthTextureData_.srvIndex);
-    // 6. 次の処理のために、テクスチャAを SRV(読み込み用) に戻す
+    barrier.SettingBarrier(
+        depthTextureData_.depthStencilResource.Get(),
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+        D3D12_RESOURCE_STATE_DEPTH_WRITE);
     barrier.SettingBarrierRTVforSRV(renderTextureDataA.resource);
 
     //TransitionBarrierの設定
     barrier.SettingBarrierSRVforRTV(renderTextureDataB.resource);
-    // 5. B(1)を読み込み、A にるみナンスアウトラインを描画
     renderTexture_.Draw(PSO::kEffectLuminanceBasedOutline, renderTextureDataB.rtvHandleCPU, 0);
-    //TransitionBarrierの設定
     barrier.SettingBarrierRTVforSRV(renderTextureDataB.resource);
 
     // 4. テクスチャAを RTV(書き込み用) にする
     barrier.SettingBarrierSRVforRTV(renderTextureDataA.resource);
-    //ガウスフィルターを描画
     renderTexture_.Draw(PSO::kEffectGaussianFilter, renderTextureDataA.rtvHandleCPU, 1);
-
-    // 6. 次の処理のために、テクスチャAを SRV(読み込み用) に戻す
     barrier.SettingBarrierRTVforSRV(renderTextureDataA.resource);
 
     //TransitionBarrierの設定
     barrier.SettingBarrierSRVforRTV(renderTextureDataB.resource);
-    // ボックスフィルターを描画
     renderTexture_.Draw(PSO::kEffectBoxFilter, renderTextureDataB.rtvHandleCPU, 0);
-    //TransitionBarrierの設定
     barrier.SettingBarrierRTVforSRV(renderTextureDataB.resource);
 
      // 4. 【重要】描画先を画面(バックバッファ)のRTVにする
     // バックバッファは PreDraw で既に RENDER_TARGET 状態になっています
     UINT backBufferIndex = swapChainClass.GetSwapChain()->GetCurrentBackBufferIndex();
     auto backBufferRTV = GetRTVCPUDescriptorHandle(backBufferIndex);
-   
-    // 5.画面 にビネットを
     renderTexture_.Draw(PSO::kEffectVignette, backBufferRTV, 1);
 
 }
@@ -584,7 +571,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::CreateDepthStencileTexture
     resourceDesc.Height = height;//高さ
     resourceDesc.MipLevels = 1;//mipmapの数
     resourceDesc.DepthOrArraySize = 1;//奥行き　or 配列Textureの配列数
-    resourceDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;//DepthStencilとして利用可能なフォーマット
+    resourceDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;//DepthStencilとして利用可能なフォーマット
     resourceDesc.SampleDesc.Count = 1;//サンプリングカウント
     resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;//2次元
     resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;//DepthStencilとして使う通知
