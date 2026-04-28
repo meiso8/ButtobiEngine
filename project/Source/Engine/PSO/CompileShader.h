@@ -20,6 +20,7 @@ enum ShaderType {
     kGaussianFilter,
     kLuminanceBasedOutline,
     kDepthBasedOutline,
+    kRadialBlur,
     Shaders,
 };
 

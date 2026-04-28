@@ -47,6 +47,14 @@ struct MaterialForDepthBasedOutline
     float32_t4x4 projectionInverse;
 };
 
+struct MaterialForRadialBlur
+{
+    float32_t2 center;
+    int32_t numSamples;
+    float32_t blurWidth;
+};
+
+
 class RenderTexture
 
 {
@@ -77,6 +85,8 @@ private:
     MaterialForGaussianFilter* materialForGaussianFilter_ = nullptr;
     MaterialForLuminanceBasedOutline* materialForLuminanceBasedOutline_ = nullptr;
     MaterialForDepthBasedOutline* materialForDepthBasedOutline_ = nullptr;
+    MaterialForRadialBlur* materialForRadialBlur_ = nullptr;
+
 public:
 
     void Create();
@@ -100,5 +110,6 @@ private:
     void CreateMaterialBufferForGaussianFilter();
     void CreateMaterialLuminanceBasedOutline();
     void CreateMaterialDepthBasedOutline();
+    void CreateMaterialRadialBlur();
 };
 

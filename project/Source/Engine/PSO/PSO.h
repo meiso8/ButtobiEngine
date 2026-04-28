@@ -34,6 +34,7 @@ public:
         kEffectGaussianFilter,
         kEffectLuminanceBasedOutline,
         kEffectDepthBasedOutline,
+        kEffectRadialBlur,
         kCountOfEffect,
 
     };

@@ -150,19 +150,27 @@ void DirectXCommon::DrawRenderTexture()
     // 6. 次の処理のために、テクスチャAを SRV(読み込み用) に戻す
     barrier.SettingBarrierRTVforSRV(renderTextureDataA.resource);
 
+
     //TransitionBarrierの設定
     barrier.SettingBarrierSRVforRTV(renderTextureDataB.resource);
-    // 5.画面 にビネットを
-    renderTexture_.Draw(PSO::kEffectVignette, renderTextureDataB.rtvHandleCPU, 0);
+    // 5.画面 にRadialBlur
+    renderTexture_.Draw(PSO::kEffectRadialBlur, renderTextureDataB.rtvHandleCPU, 0);
     //TransitionBarrierの設定
     barrier.SettingBarrierRTVforSRV(renderTextureDataB.resource);
+
+    //TransitionBarrierの設定
+    barrier.SettingBarrierSRVforRTV(renderTextureDataA.resource);
+    // 5.画面 にビネットを
+    renderTexture_.Draw(PSO::kEffectVignette, renderTextureDataA.rtvHandleCPU, 1);
+    //TransitionBarrierの設定
+    barrier.SettingBarrierRTVforSRV(renderTextureDataA.resource);
 
      // 4. 【重要】描画先を画面(バックバッファ)のRTVにする
     // バックバッファは PreDraw で既に RENDER_TARGET 状態になっています
     UINT backBufferIndex = swapChainClass.GetSwapChain()->GetCurrentBackBufferIndex();
     auto backBufferRTV = GetRTVCPUDescriptorHandle(backBufferIndex);
 
-    renderTexture_.DrawOutLine(backBufferRTV, 1, depthTextureData_.srvIndex);
+    renderTexture_.DrawOutLine(backBufferRTV, 0, depthTextureData_.srvIndex);
 
 }
 
