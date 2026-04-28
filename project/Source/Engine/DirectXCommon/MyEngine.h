@@ -24,7 +24,7 @@
 
 class MyEngine {
 private:
-    static std::unique_ptr<DirectXCommon> directXCommon;
+    static DirectXCommon* directXCommon;
 #ifdef USE_IMGUI
     ImGuiClass imGuiClass = {};
 #endif // USE_IMGUI
@@ -38,6 +38,7 @@ private:
     static std::unique_ptr<ParticleManager> particleManager_;
     bool endRequest_ = false;
 protected:
+
     void Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight);
     void PreCommandSet(Vector4 screenColor = { 0.5f, 0.5f, 0.5f, 1.0f });
     void DrawCommandSet();

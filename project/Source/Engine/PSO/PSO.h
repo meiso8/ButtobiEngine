@@ -33,6 +33,7 @@ public:
         kEffectBoxFilter,
         kEffectGaussianFilter,
         kEffectLuminanceBasedOutline,
+        kEffectDepthBasedOutline,
         kCountOfEffect,
 
     };

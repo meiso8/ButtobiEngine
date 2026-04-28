@@ -3,6 +3,7 @@
 #include"AABB.h"
 #include"DrawGrid.h"
 #include"DebugUI.h"
+#include"MyEngine.h"
 
 
 FreeTypeScene::FreeTypeScene()
@@ -41,8 +42,14 @@ FreeTypeScene::FreeTypeScene()
 
     object3d_ = std::make_unique<Object3d>();
     object3d_->Create();
-    object3d_->SetMesh(ringMesh_.get());
+    object3d_->SetMesh(cubeMesh_.get());
     object3d_->GetMaterial().environmentCoefficient = 0.5f;
+
+
+    object3d2_ = std::make_unique<Object3d>();
+    object3d2_->Create();
+    object3d2_->SetMesh(cubeMesh_.get());
+
     //object3d_->SetTextureHandle(TextureFactory::WHITE_1X1);
 
 
@@ -53,6 +60,8 @@ void FreeTypeScene::Initialize()
     ParticleManager::ResetAll();
 
     camera_->Initialize();
+    camera_->nearZ_ = 10.0f;
+
     currentCamera_ = camera_.get();
     CreateParticle();
 }
@@ -69,6 +78,8 @@ void FreeTypeScene::Update()
     //    text_.SetString(inputText_);
     //}
 
+
+
     //デバック
     text_.Debug();
 
@@ -81,18 +92,27 @@ void FreeTypeScene::Update()
         sceneChange_->SetState(SceneChange::kFadeIn, 30);
         SceneManager::SetNestScene("Title");
     }
-
+    currentCamera_->UpdateMatrix();
+   DirectXCommon::GetInstance()->SetRenderTextureCamera(currentCamera_);
 #ifdef _DEVELOP
+
     if (Input::IsTriggerKey(DIK_F1)) {
         SwitchCamera();
     }
 
+    DebugUI::CheckCamera(*currentCamera_);
+
     DebugUI::CheckObject3d(*object3d_, "Ring");
     DebugUI::CheckParticle(*particleEmitters_[0], "Emitter0");
+    DebugUI::CheckSRVIndex();
+
+
 #endif //_DEVELOP
 
 
     object3d_->Update();
+    object3d2_->Update();
+
 
     for (int i = 0; i < particleEmitters_.size(); ++i) {
         particleEmitters_[i]->UpdateTimer();
@@ -103,7 +123,7 @@ void FreeTypeScene::Update()
     // 共通更新
     ParticleManager::GetInstance()->Update(*currentCamera_);
 
-    currentCamera_->UpdateMatrix();
+
 
 
 }
@@ -111,16 +131,19 @@ void FreeTypeScene::Update()
 void FreeTypeScene::Draw()
 {
 
+
+    skyBoxObj_->Draw(*currentCamera_);
 #ifdef _DEVELOP
     // デバッグカメラ
     DrawGrid::Draw(*currentCamera_);
 #endif //_DEVELOP
 
-    skyBoxObj_->Draw(*currentCamera_);
-    object3d_->Draw(*currentCamera_,BlendMode::kBlendModeAdd);
+    object3d_->Draw(*currentCamera_);
+    object3d2_->Draw(*currentCamera_);
+ 
+
 
     ParticleManager::GetInstance()->Draw();
-
 
     Sprite::PreDraw();
     sprite_->Draw();
@@ -128,8 +151,6 @@ void FreeTypeScene::Draw()
     text_.Draw();
     pressSpaceText_.Draw();
     sceneChange_->Draw();
-
-
 }
 
 void FreeTypeScene::CreateParticle()

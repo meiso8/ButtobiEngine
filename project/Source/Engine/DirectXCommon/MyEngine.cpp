@@ -1,7 +1,6 @@
 #include "MyEngine.h"
 #include"SpriteCommon.h"
 #include"Texture.h"
-#include<algorithm>
 #include"SpriteCamera.h"
 #include"DrawGrid.h"
 #include"Particle.h"
@@ -22,7 +21,7 @@ std::unique_ptr<PSO> MyEngine::pso = nullptr;
 std::unique_ptr <Input> MyEngine::input = nullptr;
 std::unique_ptr<Window> MyEngine::wc = nullptr;
 
-std::unique_ptr<DirectXCommon> MyEngine::directXCommon = nullptr;
+DirectXCommon* MyEngine::directXCommon = nullptr;
 std::unique_ptr<SrvManager> MyEngine::srvManager = nullptr;
 std::unique_ptr<ParticleManager>  MyEngine::particleManager_ = nullptr;
 std::unique_ptr<LogFile> MyEngine::logFile = nullptr;
@@ -51,7 +50,7 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     //コントローラー
     VibrateManager::Initialize();
 
-    directXCommon = std::make_unique<DirectXCommon>();
+    directXCommon =DirectXCommon::GetInstance();
     directXCommon->Initialize(*wc);
     LogFile::Log("CreateDirectXCommon");
     srvManager = std::make_unique<SrvManager>();
@@ -62,8 +61,9 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     imGuiClass.Initialize(*wc, directXCommon->GetDevice().Get(), directXCommon->GetSwapChain(), directXCommon->GetSwapChainRtv());
     LogFile::Log("InitImGui");
 #endif
-    
+
     directXCommon->InitializeRenderTexture();
+    directXCommon->CreateDepthStencilResourceSRV();
 
     pso = std::make_unique<PSO>();
     pso->CreateALLPSO();
@@ -250,7 +250,6 @@ void MyEngine::Finalize() {
 #endif
 
     directXCommon->EndFrame();
-    directXCommon.reset();
 
     srvManager.reset();
 

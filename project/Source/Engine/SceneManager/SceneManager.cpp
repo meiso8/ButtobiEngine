@@ -1,5 +1,6 @@
 #include "SceneManager.h"
 #include"Input.h"
+#include"DirectXCommon.h"
 
 BaseScene::BaseScene()
 {
@@ -12,6 +13,8 @@ BaseScene::BaseScene()
     // デバッグカメラの初期化
     debugCamera_ = std::make_unique<DebugCamera>();
 #endif //_DEVELOP
+
+   DirectXCommon::GetInstance()->SetRenderTextureCamera(camera_.get());
 }
 
 void BaseScene::Initialize()

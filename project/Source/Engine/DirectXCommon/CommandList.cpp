@@ -19,6 +19,7 @@ void CommandList::Create() {
     //コマンドリストを生成する
     result = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator_.Get(), nullptr,
         IID_PPV_ARGS(&commandList_));
+
     //コマンドリスト生成が上手くいかなかったので起動できない
     assert(SUCCEEDED(result));
 };

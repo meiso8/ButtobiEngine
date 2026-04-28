@@ -20,6 +20,14 @@ void RootSignature::Create() {
 #pragma endregion
 
 #pragma region//DescriptorRange
+
+    //DepthBasedOutline
+    D3D12_DESCRIPTOR_RANGE descriptorRangeForDepthBasedOutline[1] = {};
+    descriptorRangeForDepthBasedOutline[0].BaseShaderRegister = 1;//1から始める Texture2D<float32_t4> gTexture : register(t1); 
+    descriptorRangeForDepthBasedOutline[0].NumDescriptors = 1;//1つ
+    descriptorRangeForDepthBasedOutline[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SRV
+    descriptorRangeForDepthBasedOutline[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//オフセット自動計算
+
     //DescriptorRange
     D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
     descriptorRange[0].BaseShaderRegister = 2;//2から始める Texture2D<float32_t4> gTexture : register(t2); 
@@ -77,7 +85,7 @@ void RootSignature::Create() {
 
 #pragma region//Sampler
     //Smaplerの設定
-    D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
+    D3D12_STATIC_SAMPLER_DESC staticSamplers[2] = {};
     staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;//バイナリフィルタ
     staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;//0-1の範囲外をリピート
     staticSamplers[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
@@ -86,6 +94,15 @@ void RootSignature::Create() {
     staticSamplers[0].MaxLOD = D3D12_FLOAT32_MAX;//ありったけのMipmapを使う
     staticSamplers[0].ShaderRegister = 0;
     staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+
+    staticSamplers[1].Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;//ぽいんとフィルタ
+    staticSamplers[1].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;//0-1の範囲外をリピート
+    staticSamplers[1].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+    staticSamplers[1].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+    staticSamplers[1].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;//比較せぬ
+    staticSamplers[1].MaxLOD = D3D12_FLOAT32_MAX;//ありったけのMipmapを使う
+    staticSamplers[1].ShaderRegister = 1;
+    staticSamplers[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
 
     for (uint32_t i = 0; i < TYPES; ++i) {
         //同じサンプラーをセットする
@@ -144,7 +161,7 @@ void RootSignature::Create() {
     //DirectionalLight b3
     rootParameters[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
     rootParameters[8].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-    rootParameters[8].Descriptor.ShaderRegister =3;//レジスタ番号1を使う
+    rootParameters[8].Descriptor.ShaderRegister = 3;//レジスタ番号1を使う
 
     //SpotLight t5
     rootParameters[9].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
@@ -271,6 +288,27 @@ void RootSignature::Create() {
 
 #pragma endregion
 
+#pragma region//DepthBasedOutline
+    D3D12_ROOT_PARAMETER rootParametersForDepthBasedOutline[3] = {};
+
+    //Material b0
+    rootParametersForDepthBasedOutline[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+    rootParametersForDepthBasedOutline[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParametersForDepthBasedOutline[0].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
+
+    //DepthTexture t1
+    rootParametersForDepthBasedOutline[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParametersForDepthBasedOutline[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParametersForDepthBasedOutline[1].DescriptorTable.pDescriptorRanges = descriptorRangeForDepthBasedOutline;//Tableの中身の配列を指定
+    rootParametersForDepthBasedOutline[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForDepthBasedOutline);//Tableで利用する数
+    //Texture t2
+    rootParametersForDepthBasedOutline[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParametersForDepthBasedOutline[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParametersForDepthBasedOutline[2].DescriptorTable.pDescriptorRanges = descriptorRange;//Tableの中身の配列を指定
+    rootParametersForDepthBasedOutline[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);//Tableで利用する数
+
+
+#pragma endregion
 
     descriptionRootSignature[NORMAL].pParameters = rootParameters;//ルートパラメータ配列へのポインタ
     descriptionRootSignature[NORMAL].NumParameters = _countof(rootParameters);//配列の長さ
@@ -302,6 +340,9 @@ void RootSignature::Create() {
     descriptionRootSignature[GAUSSIANFILTER].NumParameters = _countof(rootParametersForOffScreen);//配列の長さ
     descriptionRootSignature[LUMINANCE_BASED_OUTLINE].pParameters = rootParametersForOffScreen;//ルートパラメータ配列へのポインタ
     descriptionRootSignature[LUMINANCE_BASED_OUTLINE].NumParameters = _countof(rootParametersForOffScreen);//配列の長さ
+
+    descriptionRootSignature[DEPTH_BASED_OUTLINE].pParameters = rootParametersForDepthBasedOutline;//ルートパラメータ配列へのポインタ
+    descriptionRootSignature[DEPTH_BASED_OUTLINE].NumParameters = _countof(rootParametersForDepthBasedOutline);//配列の長さ
 
     //シリアライズしてバイナリにする
     Microsoft::WRL::ComPtr <ID3DBlob> signatureBlob = nullptr;

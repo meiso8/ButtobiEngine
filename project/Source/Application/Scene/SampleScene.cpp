@@ -8,18 +8,13 @@
 #include"DebugUI.h"
 //グリッド表示
 #include"DrawGrid.h"
-#include"Sound.h"
 #include "ParticleEmitter.h"
 #include"Particle.h"
 
-#include"Random.h"
-#include"MakeMatrix.h"
-#include"Collision.h"
-
 #include"Easing.h"
 #include"SoundManager/SoundManager.h"
-#include"Puzzle/SlidePuzzleSystem.h"
 #include"UI/PauseScreen.h"
+
 
 SampleScene::SampleScene()
 {
@@ -58,6 +53,8 @@ SampleScene::SampleScene()
         CreateParticle();
         uIManager_->CreateHpGage(*medjedStage_->GetEnemy()->GetHpsPtr(), *player_->GetHpsPtr());
     }
+
+
 
 }
 

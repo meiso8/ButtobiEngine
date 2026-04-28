@@ -25,9 +25,11 @@ private:
     std::unique_ptr<Sprite>sprite_ = nullptr;
     std::unique_ptr<SkyboxObject3d> skyBoxObj_ = nullptr;
     std::unique_ptr<Object3d> object3d_ = nullptr;
+    std::unique_ptr<Object3d> object3d2_ = nullptr;
+
     std::unique_ptr<CubeMesh> cubeMesh_ = nullptr;
     std::unique_ptr<RingMesh>ringMesh_ = nullptr;
     std::array<std::unique_ptr<ParticleEmitter>, 1>particleEmitters_;
-
+    int srvIndex = 0;
 };
 
