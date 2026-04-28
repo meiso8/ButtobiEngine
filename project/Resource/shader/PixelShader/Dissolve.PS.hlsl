@@ -4,6 +4,7 @@
 struct Material
 {
     float maskVal;
+    float32_t3 rgb;
 };
 
 ConstantBuffer<Material> gMaterial : register(b0);
@@ -26,8 +27,12 @@ PixelShaderOutput main(VertexShaderOutput input)
     {
         discard;
     }
+ 
+    float32_t edge = 1.0f - smoothstep(0.5f, 0.53f, mask);
+    
     
     PixelShaderOutput output;
     output.color = gTexture.Sample(gSampler, input.texcoord);
+    output.color.rgb += edge * gMaterial.rgb;
     return output;
 }

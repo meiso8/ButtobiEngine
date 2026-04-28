@@ -58,7 +58,7 @@ struct MaterialForRadialBlur
 struct MaterialForDissolve
 {
     float32_t maskVal;
-    float32_t padding[3];
+    float32_t3 rgb;
 };
 
 class RenderTexture

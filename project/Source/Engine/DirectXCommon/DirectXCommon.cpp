@@ -162,7 +162,7 @@ void DirectXCommon::DrawRenderTexture()
 
     //TransitionBarrierの設定
     barrier.SettingBarrierSRVforRTV(renderTextureDataB.resource);
-    renderTexture_.DrawDissolve(renderTextureDataB.rtvHandleCPU, 0, TextureFactory::NOIZE1);
+    renderTexture_.DrawDissolve(renderTextureDataB.rtvHandleCPU, 0, TextureFactory::NOIZE0);
     //TransitionBarrierの設定
     barrier.SettingBarrierRTVforSRV(renderTextureDataB.resource);
 

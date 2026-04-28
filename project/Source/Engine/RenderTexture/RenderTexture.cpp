@@ -171,7 +171,8 @@ void RenderTexture::Update()
     }
 
     if (ImGui::TreeNode("Dissolve")) {
-        ImGui::DragFloat("center", &materialForDissolve_->maskVal,0.01f,0.0f,1.0f);
+        ImGui::DragFloat("maskVal", &materialForDissolve_->maskVal,0.01f,0.0f,1.0f);
+        ImGui::ColorEdit3("color", &materialForDissolve_->rgb.x);
         ImGui::TreePop();
     }
 
@@ -302,7 +303,7 @@ void RenderTexture::CreateMaterialDissolve() {
     //書き込むためのアドレスを取得
     HRESULT result = materialResource_[PSO::kEffectDissolve]->Map(0, nullptr, reinterpret_cast<void**>(&materialForDissolve_));
     materialForDissolve_->maskVal = 0.5f;
-
+    materialForDissolve_->rgb = { 1.0f,0.4f,0.3f };
     LogFile::Log("Rendertexture : Create : MaterialBuffer : Dissolve");
 
 };
