@@ -18,12 +18,10 @@ public:
     }
     void SetIsOpen(const bool& isOpen) { isOpen_ = isOpen; }
     const bool& GetIsOpen() {
-        return isOpen_
-            ;
+        return isOpen_ ;
     };
     const bool& GetIsOpenEnd() {
-        return isOpenEnd_
-            ;
+        return isOpenEnd_;
     };
 private:
     std::unique_ptr<Object3d> object_;

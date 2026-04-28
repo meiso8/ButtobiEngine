@@ -22,8 +22,7 @@ public:
         object_->SetTextureHandle(handle);
     };
     void SetTranslate(const Vector3& translate) {
-        object_->worldTransform_.translate_ = translate
-            ;
+        object_->worldTransform_.translate_ = translate;
     }
     void SetCubeSize(const AABB& aabb) {
         SetAABB(aabb);

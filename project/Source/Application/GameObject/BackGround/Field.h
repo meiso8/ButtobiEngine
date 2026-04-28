@@ -13,8 +13,7 @@ private:
     std::unique_ptr <Object3d> object3d_;
     std::unique_ptr<CircleMesh> circleMesh_ = nullptr;
     Circle& GetCircle() {
-        return circle_
-            ;
+        return circle_;
     };
 
 public:
