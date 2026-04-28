@@ -126,9 +126,7 @@ void DirectXCommon::DrawRenderTexture()
 
     //TransitionBarrierの設定
     barrier.SettingBarrierSRVforRTV(renderTextureDataB.resource);
-    // 2. A(0)を読み込み、B にグレースケールを描画
     renderTexture_.Draw(PSO::kEffectGrayScale, renderTextureDataB.rtvHandleCPU, 0);
-    //TransitionBarrierの設定
     barrier.SettingBarrierRTVforSRV(renderTextureDataB.resource);
 
     // 4. テクスチャAを RTV(書き込み用) にする
