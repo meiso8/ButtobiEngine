@@ -19,7 +19,8 @@ public:
     virtual ~BaseScene() = default;
     virtual void Initialize();
     virtual void Update();
-    virtual void Draw();
+    virtual void DrawModel() = 0;
+    virtual void DrawSprite() = 0;
     virtual void Debug();
     virtual void SceneChangeUpdate();
     bool GetIsEndScene() {
@@ -39,7 +40,8 @@ class SceneManager {
 public:
     static void Finalize();
     static void Update();
-    static void Draw();
+    static void DrawModel();
+    static void DrawSprite();
     static void Debug();
     static void SetMap(const std::string& name, std::unique_ptr<BaseScene> scene);
     static void SetNestScene(const std::string& name);

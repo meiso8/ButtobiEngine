@@ -40,7 +40,8 @@ public:
     void InitMedjedScene();
 
     void Update()override;
-    void Draw()override;
+    void DrawModel()override;
+    void DrawSprite()override;
     void Debug()override;
     void CheckAllCollision();
     void BackToTitle();

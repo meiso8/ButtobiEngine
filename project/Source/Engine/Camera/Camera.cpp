@@ -8,7 +8,7 @@ float Camera::height_;
 void Camera::Initialize(const PROJECTION_TYPE& type) {
 
     projectionType_ = type;
-    nearZ_ = 0.01f;
+    nearZ_ = 0.1f;
     farZ_ = 1000.0f;
     offset_ = { 0.0f };
     InitializeTransform();

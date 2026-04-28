@@ -9,8 +9,6 @@ UIManager::UIManager()
     uiSprite_ = std::make_unique<Sprite>();
     uiSprite_->Create(TextureFactory::UI, { 0.0f,0.0f });
 
-
-
     curPos_ = std::make_unique<CurPos>();
     curPos_->Initialize();
     

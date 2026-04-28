@@ -60,7 +60,7 @@ void FreeTypeScene::Initialize()
     ParticleManager::ResetAll();
 
     camera_->Initialize();
-    camera_->nearZ_ = 10.0f;
+    camera_->nearZ_ = 1.0f;
 
     currentCamera_ = camera_.get();
     CreateParticle();
@@ -93,7 +93,7 @@ void FreeTypeScene::Update()
         SceneManager::SetNestScene("Title");
     }
     currentCamera_->UpdateMatrix();
-   DirectXCommon::GetInstance()->SetRenderTextureCamera(currentCamera_);
+    DirectXCommon::GetInstance()->SetRenderTextureCamera(currentCamera_);
 #ifdef _DEVELOP
 
     if (Input::IsTriggerKey(DIK_F1)) {
@@ -128,7 +128,17 @@ void FreeTypeScene::Update()
 
 }
 
-void FreeTypeScene::Draw()
+void FreeTypeScene::DrawSprite() {
+
+    Sprite::PreDraw();
+    sprite_->Draw();
+    text_.Draw();
+    pressSpaceText_.Draw();
+    sceneChange_->Draw();
+
+};
+
+void FreeTypeScene::DrawModel()
 {
 
 
@@ -140,17 +150,8 @@ void FreeTypeScene::Draw()
 
     object3d_->Draw(*currentCamera_);
     object3d2_->Draw(*currentCamera_);
- 
-
 
     ParticleManager::GetInstance()->Draw();
-
-    Sprite::PreDraw();
-    sprite_->Draw();
-
-    text_.Draw();
-    pressSpaceText_.Draw();
-    sceneChange_->Draw();
 }
 
 void FreeTypeScene::CreateParticle()

@@ -13,7 +13,7 @@ public:
     void Init();
     void Update();
     void Draw(Camera& camera);
-    void DrawInfoUI();
+    void DrawUI();
     bool HasItem(const std::string& name);
     void GenerateItems(const std::vector<std::string>& itemNames);
 

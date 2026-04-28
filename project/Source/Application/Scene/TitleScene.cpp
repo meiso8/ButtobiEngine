@@ -125,7 +125,11 @@ void TitleScene::Update()
     }
 }
 
-void TitleScene::Draw()
+void TitleScene::DrawModel()
+{
+}
+
+void TitleScene::DrawSprite()
 {
     Sprite::PreDraw();
     for (auto& sprite : test3Sprites_) {

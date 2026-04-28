@@ -230,7 +230,7 @@ void RenderTexture::CreateMaterialLuminanceBasedOutline()
 
     //書き込むためのアドレスを取得
     HRESULT result = materialResource_[PSO::kEffectLuminanceBasedOutline]->Map(0, nullptr, reinterpret_cast<void**>(&materialForLuminanceBasedOutline_));
-    materialForLuminanceBasedOutline_->weightVal = 6.0f;
+    materialForLuminanceBasedOutline_->weightVal = 0.0f;
 
     LogFile::Log("Rendertexture : Create : MaterialBuffer : LuminanceBasedOutline");
 }

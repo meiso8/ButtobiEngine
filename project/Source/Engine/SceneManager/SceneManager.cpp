@@ -26,9 +26,7 @@ void BaseScene::Update()
 {
 }
 
-void BaseScene::Draw()
-{
-}
+
 
 void BaseScene::Debug()
 {
@@ -82,10 +80,16 @@ void SceneManager::Update()
     currentScene_->Update();
 }
 
-void SceneManager::Draw()
+void SceneManager::DrawModel()
 {
-    currentScene_->Draw();
+    currentScene_->DrawModel();
 }
+
+void SceneManager::DrawSprite()
+{
+    currentScene_->DrawSprite();
+}
+
 
 void SceneManager::Debug()
 {

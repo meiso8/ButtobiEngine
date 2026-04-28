@@ -50,17 +50,16 @@ void ItemManager::Update() {
 }
 
 void ItemManager::Draw(Camera& camera) {
+  
     for (auto& [name, item] : items_) {
         item->Draw(camera);
     }
     itemSlot_.Draw(camera);
 }
 
-void ItemManager::DrawInfoUI() {
-    for (auto& [name, item] : items_) {
-        item->DrawInfoUI();
-    }
-    itemSlot_.DrawInfoUI();
+void ItemManager::DrawUI() {
+
+    itemSlot_.DrawUI();
 }
 
 bool ItemManager::HasItem(const std::string& name) {
