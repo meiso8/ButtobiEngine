@@ -40,8 +40,7 @@ void MaterialResource::SetColor(const Vector4& color) {
 
 
 void MaterialResource::SetUV(const Matrix4x4& transform) {
-    material_->uvTransform = transform
-        ;
+    material_->uvTransform = transform;
 }
 
 void MaterialResource::SetLightMode(uint32_t lightType)

@@ -14,8 +14,7 @@ public:
 
    static void Initialize(const float& width, const float& height);
     static Matrix4x4& GetViewProjectionMatrix() {
-        return viewProjectionMat_
-            ;
+        return viewProjectionMat_;
     };
 
 };
