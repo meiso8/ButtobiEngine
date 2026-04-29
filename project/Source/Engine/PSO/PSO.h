@@ -89,7 +89,11 @@ private:
         InputLayout& inputLayout,
         BlendState& blendState,
         RasterizerState& rasterizerState,
-        DepthStencil& depthStencil, const ShaderType shaderType, const TopologyType topologyType,const InputLayout::InputLayoutType inputLayoutType);
+        DepthStencil& depthStencil,
+        bool useDepthFormat, 
+        const ShaderType shaderType,
+        const TopologyType topologyType,
+        const InputLayout::InputLayoutType inputLayoutType);
 public:
     static std::unique_ptr<RootSignature>rootSignature;
 private:

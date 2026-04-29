@@ -3,10 +3,8 @@
 #include "Viewport.h"
 #include "ScissorRect.h"
 #include<cassert>
-#include"StringUtility.h"
 #include <thread>
 #include"SRVmanager/SrvManager.h"
-#include"DebugUI.h"
 using namespace Microsoft::WRL;
 ComPtr<ID3D12Device> DirectXCommon::device = nullptr;
 
@@ -80,11 +78,11 @@ void DirectXCommon::CreateDepthStencilResourceSRV()
 
 void DirectXCommon::RenderTexturePreDraw()
 {
- 
     barrier.SettingBarrier(
         depthTextureData_.depthStencilResource.Get(),
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
         D3D12_RESOURCE_STATE_DEPTH_WRITE);
+
     auto& renderTextureData = renderTexture_.GetRenderTextureData(0);
     //TransitionBarrierの設定
     barrier.SettingBarrierSRVforRTV(renderTextureData.resource);
@@ -103,7 +101,6 @@ void DirectXCommon::RenderTexturePreDraw()
 
     //指定した深度で画面全体をクリアする
     commandList->GetCommandList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-    
 
     SrvManager::PreDraw();
 
@@ -113,14 +110,12 @@ void DirectXCommon::RenderTexturePreDraw()
     commandList->GetCommandList()->RSSetScissorRects(1, &scissorRect);//Scirssorを設定
 
 
+
 }
 
 void DirectXCommon::DrawRenderTexture()
 {
 
-    barrier.SettingBarrier(depthTextureData_.depthStencilResource.Get(),
-        D3D12_RESOURCE_STATE_DEPTH_WRITE,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     auto& renderTextureDataA = renderTexture_.GetRenderTextureData(0);
     auto& renderTextureDataB = renderTexture_.GetRenderTextureData(1);
@@ -190,12 +185,12 @@ void DirectXCommon::DrawRenderTexture()
 void DirectXCommon::RenderTexturePostDraw()
 { 
 
-
+    barrier.SettingBarrier(depthTextureData_.depthStencilResource.Get(),
+        D3D12_RESOURCE_STATE_DEPTH_WRITE,
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     auto& renderTextureData = renderTexture_.GetRenderTextureData(0);
     barrier.SettingBarrierRTVforSRV(renderTextureData.resource);
-    auto& renderTextureData1 = renderTexture_.GetRenderTextureData(1);
-    barrier.SettingBarrierRTVforSRV(renderTextureData1.resource);
 
 }
 
@@ -218,7 +213,6 @@ void DirectXCommon::PreDraw()
     barrier.SettingBarrier(swapChainResources[backBufferIndex],
         D3D12_RESOURCE_STATE_PRESENT,
         D3D12_RESOURCE_STATE_RENDER_TARGET);
-
     commandList->GetCommandList()->OMSetRenderTargets(1, &rtvClass.GetHandle(backBufferIndex), false, nullptr);
     //3.指定した色で画面全体をクリアする
     Vector4 color =renderTexture_.GetColor();
@@ -231,8 +225,6 @@ void DirectXCommon::PreDraw()
     commandList->GetCommandList()->RSSetViewports(1, &viewport);//Viewportを設定
     //シザー矩形の設定
     commandList->GetCommandList()->RSSetScissorRects(1, &scissorRect);//Scirssorを設定
-
-   
 
 }
 
@@ -264,6 +256,8 @@ void DirectXCommon::PostDraw()
 
     //7.次のフレーム用のコマンドリストを準備
     commandList->PrepareCommand();
+
+
 
 #pragma endregion
 

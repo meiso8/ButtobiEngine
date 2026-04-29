@@ -24,6 +24,7 @@ Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
     BlendState& blendState,
     RasterizerState& rasterizerState,
     DepthStencil& depthStencil,
+    bool useDepthFormat,
     const ShaderType shaderType,
     const TopologyType topologyType,
     const InputLayout::InputLayoutType inputLayoutType ) {
@@ -46,8 +47,15 @@ Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
     graphicsPipelineStateDesc.SampleDesc.Count = 1;
     graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
     //DepthStencilの設定   
+
+
     graphicsPipelineStateDesc.DepthStencilState = depthStencil.GetDesc();
-    graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    if (useDepthFormat) {
+        graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+    } else {
+        graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_UNKNOWN;
+    }
+
 
     switch (topologyType)
     {
@@ -123,6 +131,7 @@ void PSO::CreateALLPSO()
                 blendStates[b],
                 rasterizerStates[c],
                 depthStencils[kAll],
+                true,
                 kNormal,
                 kTriangle,
                 InputLayout::kInputLayoutTypeNormal
@@ -136,7 +145,9 @@ void PSO::CreateALLPSO()
             *inputLayout,
             blendStates[b],
             rasterizerStates[kCullModeNone],
-            depthStencils[kZero], kParticle, kTriangle, InputLayout::kInputLayoutTypeNormal
+            depthStencils[kZero],
+            true, 
+            kParticle, kTriangle, InputLayout::kInputLayoutTypeNormal
         );
     }
 
@@ -148,6 +159,7 @@ void PSO::CreateALLPSO()
             blendStates[kBlendModeNone],
             rasterizerStates[kCullModeBack],
             depthStencils[kAll],
+            true,
             kNormal,
             kLine, InputLayout::kInputLayoutTypeNormal);
 
@@ -157,7 +169,9 @@ void PSO::CreateALLPSO()
             *inputLayout,
             blendStates[b],
             rasterizerStates[kCullModeBack],
-            depthStencils[kAll], kSprite, kTriangle, InputLayout::kInputLayoutTypeNormal
+            depthStencils[kAll], 
+            true,
+            kSprite, kTriangle, InputLayout::kInputLayoutTypeNormal
         );
 
     }
@@ -168,7 +182,9 @@ void PSO::CreateALLPSO()
             *inputLayout,
             blendStates[b],
             rasterizerStates[kCullModeBack],
-            depthStencils[kAll], kFont, kTriangle, InputLayout::kInputLayoutTypeNormal
+            depthStencils[kAll],
+            true,
+            kFont, kTriangle, InputLayout::kInputLayoutTypeNormal
         );
     }
 
@@ -181,6 +197,7 @@ void PSO::CreateALLPSO()
                 blendStates[b],
                 rasterizerStates[c],
                 depthStencils[kAll],
+                true,
                 kSkinning,
                 kTriangle, InputLayout::kInputLayoutTypeSkinning
             );
@@ -194,6 +211,7 @@ void PSO::CreateALLPSO()
             blendStates[kBlendModeNone],
             rasterizerStates[kCullModeNone],
             depthStencils[kZero],
+            true,
             kSkyBox,
             kTriangle,
             InputLayout::kInputLayoutTypeNormal);
@@ -205,6 +223,7 @@ void PSO::CreateALLPSO()
         blendStates[kBlendModeNone],
         rasterizerStates[kCullModeBack],
         depthStencils[kNone],
+        false,
         kOffScreen,
         kTriangle,
         InputLayout::kInputLayoutTypeOffScreen);
@@ -215,6 +234,7 @@ void PSO::CreateALLPSO()
         blendStates[kBlendModeNone],
         rasterizerStates[kCullModeBack],
         depthStencils[kNone],
+        false,
         kGrayScale,
         kTriangle,
         InputLayout::kInputLayoutTypeOffScreen);
@@ -225,6 +245,7 @@ void PSO::CreateALLPSO()
         blendStates[kBlendModeNone],
         rasterizerStates[kCullModeBack],
         depthStencils[kNone],
+        false,
         kVignette,
         kTriangle,
         InputLayout::kInputLayoutTypeOffScreen);
@@ -235,6 +256,7 @@ void PSO::CreateALLPSO()
         blendStates[kBlendModeNone],
         rasterizerStates[kCullModeBack],
         depthStencils[kNone],
+        false,
         kBoxFilter,
         kTriangle,
         InputLayout::kInputLayoutTypeOffScreen);
@@ -245,6 +267,7 @@ void PSO::CreateALLPSO()
         blendStates[kBlendModeNone],
         rasterizerStates[kCullModeBack],
         depthStencils[kNone],
+        false,
         kGaussianFilter,
         kTriangle,
         InputLayout::kInputLayoutTypeOffScreen);
@@ -256,6 +279,7 @@ void PSO::CreateALLPSO()
         blendStates[kBlendModeNone],
         rasterizerStates[kCullModeBack],
         depthStencils[kNone],
+        false,
         kLuminanceBasedOutline,
         kTriangle,
         InputLayout::kInputLayoutTypeOffScreen);
@@ -265,7 +289,8 @@ void PSO::CreateALLPSO()
         *inputLayout,
         blendStates[kBlendModeNone],
         rasterizerStates[kCullModeBack],
-        depthStencils[kNone],
+        depthStencils[kNone], 
+        false,
         kDepthBasedOutline,
         kTriangle,
         InputLayout::kInputLayoutTypeOffScreen);
@@ -277,6 +302,7 @@ void PSO::CreateALLPSO()
         blendStates[kBlendModeNone],
         rasterizerStates[kCullModeBack],
         depthStencils[kNone],
+        false,
         kRadialBlur,
         kTriangle,
         InputLayout::kInputLayoutTypeOffScreen);
@@ -289,6 +315,7 @@ void PSO::CreateALLPSO()
         blendStates[kBlendModeNone],
         rasterizerStates[kCullModeBack],
         depthStencils[kNone],
+        false,
         kDissolve,
         kTriangle,
         InputLayout::kInputLayoutTypeOffScreen);
@@ -302,6 +329,7 @@ void PSO::CreateALLPSO()
             blendStates[b],
             rasterizerStates[kCullModeBack],
             depthStencils[kNone],
+            false,
             kRandom,
             kTriangle, 
             InputLayout::kInputLayoutTypeOffScreen
