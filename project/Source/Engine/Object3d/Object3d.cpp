@@ -130,7 +130,7 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
         DirectionalLightManager::SetGraphicsRootConstantBufferView();
         PointLightManager::SetGraphicsRootDescriptorTable();
         SpotLightManager::SetGraphicsRootDescriptorTable();
-        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetHandle(TextureFactory::ART1));
+        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetHandle(TextureFactory::SKYBOX_TEX));
         meshCommon_->Draw(commandList_);
     }
 }

@@ -51,5 +51,5 @@ void TextureFactory::Load()
     Texture::Load("Resource/Textures/eye.png", EYE);
     Texture::Load("Resource/Textures/world.png", WORLD);
 
-    Texture::Load("Resource/Textures/test.dds", ART1);
+    Texture::Load("Resource/Textures/test.dds", SKYBOX_TEX);
 }

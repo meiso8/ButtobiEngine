@@ -26,7 +26,7 @@ FreeTypeScene::FreeTypeScene()
     pressSpaceText_.SetAlign(TextAlign::Center);
     pressSpaceText_.SetBlendMode(BlendMode::kBlendModeNormal);
     sprite_ = std::make_unique<Sprite>();
-    sprite_->Create(TextureFactory::ART1, { 0,0 });
+    sprite_->Create(TextureFactory::NUMBERS, { 0,0 });
     sprite_->SetSize({ 1280,720 });
 
 
@@ -131,7 +131,7 @@ void FreeTypeScene::Update()
 void FreeTypeScene::DrawSprite() {
 
     Sprite::PreDraw();
-    sprite_->Draw();
+ /*   sprite_->Draw();*/
     text_.Draw();
     pressSpaceText_.Draw();
     sceneChange_->Draw();
@@ -179,7 +179,7 @@ void FreeTypeScene::CreateParticle()
     emitter0.blendMode = kBlendModeScreen;
     emitter0.movement = ParticleMovements::kParticleNormal;
     emitter0.rotateAABB_ = { .min = {0.0f,0.0f,-3.14f},.max = {0.0f,0.0f,3.14f} };
-    emitter0.scaleAABB_ = { .min = {0.0f,0.4f,1.0f},.max = {0.0f,1.5f,0.0f} };
+    emitter0.scaleAABB_ = { .min = {0.0f,0.4f,0.0f},.max = {0.0f,1.5f,1.0f} };
 
     auto& group = ParticleManager::GetInstance()->GetParticleGroup(emitter0.name);
     group->accelerationField.acceleration.y = 0.0f;

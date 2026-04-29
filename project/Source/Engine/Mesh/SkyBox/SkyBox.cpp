@@ -269,7 +269,7 @@ void SkyboxObject3d::Create()
     Update();
 
     skyBox_ = std::make_unique<Skybox>();
-    skyBox_->Create(TextureFactory::ART1);
+    skyBox_->Create(TextureFactory::SKYBOX_TEX);
 }
 
 

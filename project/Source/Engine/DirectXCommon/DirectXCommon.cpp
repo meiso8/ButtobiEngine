@@ -74,10 +74,12 @@ void DirectXCommon::CreateDepthStencilResourceSRV()
     depthTextureData_.srvHandleGPU = SrvManager::GetGPUDescriptorHandle(depthTextureData_.srvIndex);
     DirectXCommon::GetDevice()->CreateShaderResourceView(depthTextureData_.depthStencilResource.Get(), &depthTextureSrvDesc, depthTextureData_.srvHandleCPU);
     LogFile::Log("Rendertexture : DepthTextureResource : CreateShaderResourceView");
+
 }
 
 void DirectXCommon::RenderTexturePreDraw()
 {
+
     barrier.SettingBarrier(
         depthTextureData_.depthStencilResource.Get(),
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
@@ -97,8 +99,6 @@ void DirectXCommon::RenderTexturePreDraw()
     float clearColor[] = { color.x,color.y,color.z,color.w };//青っぽい色。RGBAの順
     commandList->GetCommandList()->ClearRenderTargetView(renderTextureData.rtvHandleCPU, clearColor, 0, nullptr);
 
-
-
     //指定した深度で画面全体をクリアする
     commandList->GetCommandList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
@@ -108,9 +108,6 @@ void DirectXCommon::RenderTexturePreDraw()
     commandList->GetCommandList()->RSSetViewports(1, &viewport);//Viewportを設定
     //シザー矩形の設定
     commandList->GetCommandList()->RSSetScissorRects(1, &scissorRect);//Scirssorを設定
-
-
-    LogFile::Log("Rendertexture : PreDraw");
 
 
 }
@@ -127,6 +124,7 @@ void DirectXCommon::DrawRenderTexture()
     renderTexture_.Draw(PSO::kEffectGrayScale, renderTextureDataB.rtvHandleCPU, 0);
     barrier.SettingBarrierRTVforSRV(renderTextureDataB.resource);
 
+   
     // 4. テクスチャAを RTV(書き込み用) にする
     barrier.SettingBarrierSRVforRTV(renderTextureDataA.resource);
     // 5. B(1)を読み込み、A にるみナンスアウトラインを描画
@@ -165,7 +163,7 @@ void DirectXCommon::DrawRenderTexture()
 
 
     barrier.SettingBarrierSRVforRTV(renderTextureDataB.resource);
-    renderTexture_.DrawRandom(kBlendModeMultiply,renderTextureDataB.rtvHandleCPU, 0);
+    renderTexture_.DrawRandom(kBlendModeMultiply, renderTextureDataB.rtvHandleCPU, 0);
     //TransitionBarrierの設定
     barrier.SettingBarrierRTVforSRV(renderTextureDataB.resource);
 
@@ -181,8 +179,6 @@ void DirectXCommon::DrawRenderTexture()
     auto backBufferRTV = GetRTVCPUDescriptorHandle(backBufferIndex);
 
     renderTexture_.Draw(PSO::kEffectNone, backBufferRTV, 1);
-
-    LogFile::Log("Rendertexture : Draw");
 }
 
 void DirectXCommon::RenderTexturePostDraw()
@@ -217,6 +213,7 @@ void DirectXCommon::PreDraw()
     barrier.SettingBarrier(swapChainResources[backBufferIndex],
         D3D12_RESOURCE_STATE_PRESENT,
         D3D12_RESOURCE_STATE_RENDER_TARGET);
+
     commandList->GetCommandList()->OMSetRenderTargets(1, &rtvClass.GetHandle(backBufferIndex), false, nullptr);
     //3.指定した色で画面全体をクリアする
     Vector4 color =renderTexture_.GetColor();
@@ -230,7 +227,6 @@ void DirectXCommon::PreDraw()
     //シザー矩形の設定
     commandList->GetCommandList()->RSSetScissorRects(1, &scissorRect);//Scirssorを設定
 
-    LogFile::Log("PreDraw");
 
 }
 
@@ -263,7 +259,6 @@ void DirectXCommon::PostDraw()
     //7.次のフレーム用のコマンドリストを準備
     commandList->PrepareCommand();
 
-    LogFile::Log("PostDraw");
 }
 
 void DirectXCommon::EndFrame()
@@ -591,7 +586,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::CreateRenderTextureResourc
         &heapProperties,//Heapの設定
         D3D12_HEAP_FLAG_NONE,//Heapの特殊な設定。特になし
         &resourceDesc,//Resourceの設定
-        D3D12_RESOURCE_STATE_RENDER_TARGET,// レンダーターゲットとして設定する
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,// SRVとする
         &clearValue,//Clear最適地。
         IID_PPV_ARGS(&resource));//ポインタのポインタ
 
