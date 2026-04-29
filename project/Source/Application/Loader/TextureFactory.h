@@ -51,7 +51,7 @@ public:
         EYE,
 
         WORLD,
-        ART1,
+        SKYBOX_TEX,
 
         // ======================
         TEXTURES,

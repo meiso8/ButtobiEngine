@@ -126,7 +126,7 @@ void AnimationObject3d::Draw(Camera& camera, const BlendMode& blendMode, const C
         DirectionalLightManager::SetGraphicsRootConstantBufferView();
         PointLightManager::SetGraphicsRootDescriptorTable();
         SpotLightManager::SetGraphicsRootDescriptorTable();
-        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetHandle(TextureFactory::ART1));
+        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetHandle(TextureFactory::SKYBOX_TEX));
         skinningModel_->Draw(commandList_);
     }
 
