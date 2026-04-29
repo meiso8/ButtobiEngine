@@ -17,6 +17,8 @@ void TransitionBarrier::SettingBarrier(
     barrier_.Transition.StateBefore = stateBefore;
     //遷移後のResourceState
     barrier_.Transition.StateAfter = stateAfter;
+
+    barrier_.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
     //TransitionBarrierを張る
     CommandList::GetCommandList()->ResourceBarrier(1, &barrier_);
 }

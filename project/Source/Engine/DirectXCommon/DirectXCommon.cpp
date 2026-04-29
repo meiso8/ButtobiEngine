@@ -80,7 +80,11 @@ void DirectXCommon::CreateDepthStencilResourceSRV()
 
 void DirectXCommon::RenderTexturePreDraw()
 {
-
+ 
+    barrier.SettingBarrier(
+        depthTextureData_.depthStencilResource.Get(),
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+        D3D12_RESOURCE_STATE_DEPTH_WRITE);
     auto& renderTextureData = renderTexture_.GetRenderTextureData(0);
     //TransitionBarrierの設定
     barrier.SettingBarrierSRVforRTV(renderTextureData.resource);
@@ -107,15 +111,17 @@ void DirectXCommon::RenderTexturePreDraw()
     commandList->GetCommandList()->RSSetViewports(1, &viewport);//Viewportを設定
     //シザー矩形の設定
     commandList->GetCommandList()->RSSetScissorRects(1, &scissorRect);//Scirssorを設定
- 
-    barrier.SettingBarrier(depthTextureData_.depthStencilResource.Get(),
-        D3D12_RESOURCE_STATE_DEPTH_WRITE,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+
 
 }
 
 void DirectXCommon::DrawRenderTexture()
 {
+
+    barrier.SettingBarrier(depthTextureData_.depthStencilResource.Get(),
+        D3D12_RESOURCE_STATE_DEPTH_WRITE,
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+
     auto& renderTextureDataA = renderTexture_.GetRenderTextureData(0);
     auto& renderTextureDataB = renderTexture_.GetRenderTextureData(1);
 
@@ -183,13 +189,14 @@ void DirectXCommon::DrawRenderTexture()
 
 void DirectXCommon::RenderTexturePostDraw()
 { 
+
+
+
     auto& renderTextureData = renderTexture_.GetRenderTextureData(0);
     barrier.SettingBarrierRTVforSRV(renderTextureData.resource);
+    auto& renderTextureData1 = renderTexture_.GetRenderTextureData(1);
+    barrier.SettingBarrierRTVforSRV(renderTextureData1.resource);
 
-    barrier.SettingBarrier(
-        depthTextureData_.depthStencilResource.Get(),
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-        D3D12_RESOURCE_STATE_DEPTH_WRITE);
 }
 
 void DirectXCommon::PreDraw()
@@ -388,6 +395,10 @@ void DirectXCommon::InitializeDepthStencilView()
     dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;//2dTexture
     // DSVHeapの先頭にDSVを作る
     device->CreateDepthStencilView(depthTextureData_.depthStencilResource.Get(), &dsvDesc, dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
+
+    barrier.SettingBarrier(depthTextureData_.depthStencilResource.Get(),
+        D3D12_RESOURCE_STATE_DEPTH_WRITE,
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 }
 
 void DirectXCommon::InitializeFence()
