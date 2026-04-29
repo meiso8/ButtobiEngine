@@ -309,6 +309,15 @@ void RootSignature::Create() {
 
 
 #pragma endregion
+#pragma region//RandomParam
+
+    D3D12_ROOT_PARAMETER rootParametersForRandom[1] = {};
+    //Material b0
+    rootParametersForRandom[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+    rootParametersForRandom[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParametersForRandom[0].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
+
+#pragma endregion
 
 
     descriptionRootSignature[NORMAL].pParameters = rootParameters;//ルートパラメータ配列へのポインタ
@@ -350,6 +359,10 @@ void RootSignature::Create() {
 
     descriptionRootSignature[DISSOLVE].pParameters = rootParametersForDepthBasedOutline;//ルートパラメータ配列へのポインタ
     descriptionRootSignature[DISSOLVE].NumParameters = _countof(rootParametersForDepthBasedOutline);//配列の長さ
+
+    descriptionRootSignature[RANDOM].pParameters = rootParametersForRandom;
+    descriptionRootSignature[RANDOM].NumParameters = _countof(rootParametersForRandom);//配列の長さ
+
 
     //シリアライズしてバイナリにする
     Microsoft::WRL::ComPtr <ID3DBlob> signatureBlob = nullptr;

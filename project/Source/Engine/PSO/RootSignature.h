@@ -25,6 +25,7 @@ public:
         DEPTH_BASED_OUTLINE,
         RADIAL_BLUR,
         DISSOLVE,
+        RANDOM,
         TYPES,
     };
 

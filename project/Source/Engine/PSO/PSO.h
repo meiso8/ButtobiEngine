@@ -36,6 +36,7 @@ public:
         kEffectDepthBasedOutline,
         kEffectRadialBlur,
         kEffectDissolve,
+    /*    kEffectRandom,*/
         kCountOfEffect,
 
     };
@@ -75,7 +76,10 @@ public:
     static Microsoft::WRL::ComPtr <ID3D12PipelineState>& GetGraphicsPipelineStateOffScreen(uint32_t effectType){
         return graphicsPipelineStateOffScreen_[effectType];
     }
-
+    static Microsoft::WRL::ComPtr <ID3D12PipelineState>& GetGraphicsPipelineStateRandom(uint32_t blendMode) {
+        return graphicsPipelineStateRandom_[blendMode];
+        ;
+    }
     void CreateALLPSO();
     static RootSignature* GetRootSignature() { return rootSignature.get(); }
     ~PSO();
@@ -99,7 +103,7 @@ private:
 
     static Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineStateSkyBox_;
     static std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfEffect> graphicsPipelineStateOffScreen_;
-
+    static std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> graphicsPipelineStateRandom_;
     std::unique_ptr<InputLayout>inputLayout = nullptr;
     std::vector<BlendState> blendStates = {};
     std::vector<RasterizerState> rasterizerStates = {};

@@ -160,11 +160,17 @@ void DirectXCommon::DrawRenderTexture()
     //TransitionBarrierの設定
     barrier.SettingBarrierRTVforSRV(renderTextureDataA.resource);
 
-    //TransitionBarrierの設定
+
     barrier.SettingBarrierSRVforRTV(renderTextureDataB.resource);
-    renderTexture_.DrawDissolve(renderTextureDataB.rtvHandleCPU, 0, TextureFactory::NOIZE0);
+    renderTexture_.DrawRandom(kBlendModeMultiply,renderTextureDataB.rtvHandleCPU, 0);
     //TransitionBarrierの設定
     barrier.SettingBarrierRTVforSRV(renderTextureDataB.resource);
+
+    ////TransitionBarrierの設定
+    //barrier.SettingBarrierSRVforRTV(renderTextureDataA.resource);
+    //renderTexture_.DrawDissolve(renderTextureDataA.rtvHandleCPU, 1, TextureFactory::NOIZE0);
+    ////TransitionBarrierの設定
+    //barrier.SettingBarrierRTVforSRV(renderTextureDataA.resource);
 
      // 4. 【重要】描画先を画面(バックバッファ)のRTVにする
     // バックバッファは PreDraw で既に RENDER_TARGET 状態になっています

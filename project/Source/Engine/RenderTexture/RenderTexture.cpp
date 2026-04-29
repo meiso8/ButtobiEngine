@@ -25,6 +25,7 @@ void RenderTexture::Create()
     CreateMaterialDepthBasedOutline();
     CreateMaterialRadialBlur();
     CreateMaterialDissolve();
+    CreateMaterialRandom();
 }
 
 void RenderTexture::CreateResource(const uint32_t index)
@@ -83,7 +84,20 @@ void RenderTexture::DrawDissolve(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle,
     commandList->DrawInstanced(3, 1, 0, 0);
 
 
+}
+void RenderTexture::DrawRandom(const BlendMode& blendMode,const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index)
+{
+    auto* commandList = DirectXCommon::GetCommandList();
+    // 1. 書き込み先（RTV）の設定とクリア
+    commandList->OMSetRenderTargets(1, &dstRtvHandle, false, nullptr);
+    commandList->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::RANDOM));
+    commandList->SetPipelineState(PSO::GetGraphicsPipelineStateRandom(blendMode).Get());//PSOを設定
+    commandList->SetGraphicsRootConstantBufferView(0, materialResourceRandom_->GetGPUVirtualAddress());
+    //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    commandList->DrawInstanced(3, 1, 0, 0);
 };
+
 void RenderTexture::Draw(const PSO::EffectType& effectType, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index)
 {
     auto* commandList = DirectXCommon::GetCommandList();
@@ -173,6 +187,11 @@ void RenderTexture::Update()
     if (ImGui::TreeNode("Dissolve")) {
         ImGui::DragFloat("maskVal", &materialForDissolve_->maskVal,0.01f,0.0f,1.0f);
         ImGui::ColorEdit3("color", &materialForDissolve_->rgb.x);
+        ImGui::TreePop();
+    }
+
+    if (ImGui::TreeNode("Random")) {
+        ImGui::DragFloat("time", &materialForRandom_->time, 0.01f);
         ImGui::TreePop();
     }
 
@@ -306,4 +325,15 @@ void RenderTexture::CreateMaterialDissolve() {
     materialForDissolve_->rgb = { 1.0f,0.4f,0.3f };
     LogFile::Log("Rendertexture : Create : MaterialBuffer : Dissolve");
 
+}
+void RenderTexture::CreateMaterialRandom()
+{
+    //マテリアル用のリソースを作る。
+    materialResourceRandom_ = DirectXCommon::CreateBufferResource(sizeof(MaterialForDissolve));
+    //マテリアルにデータを書き込む
+
+    //書き込むためのアドレスを取得
+    HRESULT result = materialResourceRandom_->Map(0, nullptr, reinterpret_cast<void**>(&materialForRandom_));
+    materialForRandom_->time = 1.0f;
+    LogFile::Log("Rendertexture : Create : MaterialBuffer : Dissolve");
 };
