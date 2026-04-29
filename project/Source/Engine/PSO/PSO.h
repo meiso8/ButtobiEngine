@@ -1,8 +1,7 @@
 #pragma once
 
 #include<d3d12.h>
-#include<dxgi1_6.h>
-#include<dxcapi.h>
+
 //ComPtr(コムポインタ)
 #include<wrl.h>
 #include"RootSignature.h"
@@ -13,7 +12,7 @@
 #include"Depth.h"//StencilTextureの作成関数　奥行き
 #include<memory>
 #include<array>
-
+#include<vector>
 
 
 class PSO {
@@ -85,13 +84,14 @@ public:
     ~PSO();
 private:
     Microsoft::WRL::ComPtr <ID3D12PipelineState> Create(
-        RootSignature& rootSignature,
         InputLayout& inputLayout,
         BlendState& blendState,
         RasterizerState& rasterizerState,
         DepthStencil& depthStencil,
-        bool useDepthFormat, 
-        const ShaderType shaderType,
+        bool useDepthFormat,
+        const RootSignature::TYPE& rootSignatureType,
+        const DxcCompiler::VS_TYPE& vsShaderType,
+        const  DxcCompiler::PS_TYPE& psShaderType,
         const TopologyType topologyType,
         const InputLayout::InputLayoutType inputLayoutType);
 public:

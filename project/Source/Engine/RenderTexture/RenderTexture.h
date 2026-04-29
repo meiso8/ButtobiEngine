@@ -84,7 +84,7 @@ public:
 
 private:
     Camera* camera_ = nullptr;
-    Vector4 kRenderTargetClearValue_;
+    Vector4 kRenderTargetClearValue_ = {1.0f,1.0f,1.0f,1.0f};
     const Vector4 sepiaColor_ = { 1.0f,74.0f / 107.0f,43.0f / 107.0f,1.0f };
     std::array< RenderTextureData, 2> renderTextureDatas_;
 

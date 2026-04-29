@@ -110,6 +110,8 @@ void DirectXCommon::RenderTexturePreDraw()
     commandList->GetCommandList()->RSSetScissorRects(1, &scissorRect);//Scirssorを設定
 
 
+    LogFile::Log("Rendertexture : PreDraw");
+
 
 }
 
@@ -180,6 +182,7 @@ void DirectXCommon::DrawRenderTexture()
 
     renderTexture_.Draw(PSO::kEffectNone, backBufferRTV, 1);
 
+    LogFile::Log("Rendertexture : Draw");
 }
 
 void DirectXCommon::RenderTexturePostDraw()
@@ -192,6 +195,7 @@ void DirectXCommon::RenderTexturePostDraw()
     auto& renderTextureData = renderTexture_.GetRenderTextureData(0);
     barrier.SettingBarrierRTVforSRV(renderTextureData.resource);
 
+    LogFile::Log("Rendertexture : PosDraw : SettingBarrier");
 }
 
 void DirectXCommon::PreDraw()
@@ -226,6 +230,8 @@ void DirectXCommon::PreDraw()
     //シザー矩形の設定
     commandList->GetCommandList()->RSSetScissorRects(1, &scissorRect);//Scirssorを設定
 
+    LogFile::Log("PreDraw");
+
 }
 
 void DirectXCommon::PostDraw()
@@ -257,10 +263,7 @@ void DirectXCommon::PostDraw()
     //7.次のフレーム用のコマンドリストを準備
     commandList->PrepareCommand();
 
-
-
-#pragma endregion
-
+    LogFile::Log("PostDraw");
 }
 
 void DirectXCommon::EndFrame()
@@ -349,7 +352,7 @@ void DirectXCommon::CreateDepthBuffer()
 
     depthTextureData_.depthStencilResource = CreateDepthStencileTextureResource(window_->GetClientWidth(), window_->GetClientHeight());
 
-
+    LogFile::Log("CreateDepthBuffer");
 
 }
 
@@ -390,9 +393,7 @@ void DirectXCommon::InitializeDepthStencilView()
     // DSVHeapの先頭にDSVを作る
     device->CreateDepthStencilView(depthTextureData_.depthStencilResource.Get(), &dsvDesc, dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
-    barrier.SettingBarrier(depthTextureData_.depthStencilResource.Get(),
-        D3D12_RESOURCE_STATE_DEPTH_WRITE,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    LogFile::Log("InitializeDepthStencilView");
 }
 
 void DirectXCommon::InitializeFence()
@@ -406,6 +407,8 @@ void DirectXCommon::InitializeFence()
 void DirectXCommon::InitializeViewPort()
 {
     viewport = CreateViewport(static_cast<float>(window_->GetClientWidth()), static_cast<float>(window_->GetClientHeight()));
+
+    LogFile::Log("InitializeViewPort");
 }
 
 void DirectXCommon::ScissorRectSetting()
@@ -427,7 +430,7 @@ void DirectXCommon::CreateDXCCompiler()
 void DirectXCommon::InitializeFixFPS()
 {
     reference_ = std::chrono::steady_clock::now();
-
+    LogFile::Log("InitializeFixFPS");
 }
 
 void DirectXCommon::UpdateFixFPS()
@@ -453,6 +456,7 @@ void DirectXCommon::UpdateFixFPS()
     //現在の時間を記録する
     reference_ = std::chrono::steady_clock::now();
 
+    LogFile::Log("UpdateFixFPS");
 
 }
 
@@ -626,7 +630,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::CreateDepthStencileTexture
         &heapProperties,//Heapの設定
         D3D12_HEAP_FLAG_NONE,//Heapの特殊な設定。特になし。
         &resourceDesc,//Resourceの設定
-        D3D12_RESOURCE_STATE_DEPTH_WRITE,//深度値を書き込む状態にしておく
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,//深度値を最初は使う状態にする
         &depthClearValue,//Clear最適地
         IID_PPV_ARGS(&resource));
     assert(SUCCEEDED(hr));

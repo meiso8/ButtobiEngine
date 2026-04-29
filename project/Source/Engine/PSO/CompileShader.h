@@ -3,32 +3,41 @@
 #include <dxcapi.h>
 #include<string>
 #include<wrl.h>
-#include<vector>
-
-//CompileShader関数
-enum ShaderType {
-    kNormal,
-    kParticle,
-    kSprite,
-    kSkinning,
-    kFont,
-    kSkyBox,
-    kOffScreen,
-    kGrayScale,
-    kVignette,
-    kBoxFilter,
-    kGaussianFilter,
-    kLuminanceBasedOutline,
-    kDepthBasedOutline,
-    kRadialBlur,
-    kDissolve,
-    kRandom,
-    Shaders,
-};
+#include<array>
 
 class DxcCompiler
 {
 public:
+    //CompileShader関数
+    enum VS_TYPE {
+        VS_Normal,
+        VS_Particle,
+        VS_Sprite,
+        VS_Skinning,
+        VS_SkyBox,
+        VS_OffScreen,
+        VS_Shaders,
+    };
+
+    enum PS_TYPE {
+
+        PS_Normal,
+        PS_Particle,
+        PS_Sprite,
+        PS_Font,
+        PS_SkyBox,
+        PS_OffScreen,
+        PS_GrayScale,
+        PS_Vignette,
+        PS_BoxFilter,
+        PS_GaussianFilter,
+        PS_LuminanceBasedOutline,
+        PS_DepthBasedOutline,
+        PS_RadialBlur,
+        PS_Dissolve,
+        PS_Random,
+        PS_Shaders,
+    };
 
     void Initialize();
     void ShaderSetting();
@@ -39,8 +48,8 @@ private:
     IDxcCompiler3* dxcCompiler_ = nullptr;
     IDxcIncludeHandler* includeHandler_ = nullptr;
 
-    std::vector<Microsoft::WRL::ComPtr<IDxcBlob>> vertexShaderBlobs_;
-    std::vector<Microsoft::WRL::ComPtr<IDxcBlob>>pixelShaderBlobs_;
+    std::array<Microsoft::WRL::ComPtr<IDxcBlob>,VS_Shaders> vertexShaderBlobs_;
+    std::array<Microsoft::WRL::ComPtr<IDxcBlob>,PS_Shaders>pixelShaderBlobs_;
 
 private:
     Microsoft::WRL::ComPtr<IDxcBlob>CompileShader(

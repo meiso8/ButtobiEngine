@@ -29,131 +29,44 @@ void DxcCompiler::ShaderSetting() {
 
     //Shaderをコンパイルする
 
-    vertexShaderBlobs_.push_back(CompileShader(L"Resource/shader/VertexShader/Object3d.VS.hlsl", L"vs_6_0"));
-    assert(vertexShaderBlobs_[kNormal] != nullptr);
+    //NormalShader
+    vertexShaderBlobs_[VS_Normal] = CompileShader(L"Resource/shader/VertexShader/Object3d.VS.hlsl", L"vs_6_0");
+    pixelShaderBlobs_[PS_Normal] = CompileShader(L"Resource/shader/PixelShader/Object3d.PS.hlsl", L"ps_6_0");
+    //ParticleShader
+    vertexShaderBlobs_[VS_Particle] = CompileShader(L"Resource/shader/VertexShader/Particle.VS.hlsl", L"vs_6_0");
+    pixelShaderBlobs_[PS_Particle] = CompileShader(L"Resource/shader/PixelShader/Particle.PS.hlsl", L"ps_6_0");
+    //Sprite
+    vertexShaderBlobs_[VS_Sprite] = CompileShader(L"Resource/shader/VertexShader/Sprite.VS.hlsl", L"vs_6_0");
+    pixelShaderBlobs_[PS_Sprite] = CompileShader(L"Resource/shader/PixelShader/Sprite.PS.hlsl", L"ps_6_0");
+    //SkinninigはVSのみ　PixelShaderはNormalと同じにする
+    vertexShaderBlobs_[VS_Skinning] = CompileShader(L"Resource/shader/VertexShader/SkinningObject3d.VS.hlsl", L"vs_6_0");
+    //FontのVSはSpriteと同じにする
+    pixelShaderBlobs_[PS_Font] = CompileShader(L"Resource/shader/PixelShader/Font.PS.hlsl", L"ps_6_0");
+    //skybox
+    vertexShaderBlobs_[VS_SkyBox] = CompileShader(L"Resource/shader/VertexShader/Skybox.VS.hlsl", L"vs_6_0");
+    pixelShaderBlobs_[PS_SkyBox] = CompileShader(L"Resource/shader/PixelShader/Skybox.PS.hlsl", L"ps_6_0");
+    //offscreen
+    vertexShaderBlobs_[VS_OffScreen] = CompileShader(L"Resource/shader/VertexShader/Fullscreen.VS.hlsl", L"vs_6_0");
+    pixelShaderBlobs_[PS_OffScreen] = CompileShader(L"Resource/shader/PixelShader/Fullscreen.PS.hlsl", L"ps_6_0");
+    //Grayscale
+    pixelShaderBlobs_[PS_GrayScale] = CompileShader(L"Resource/shader/PixelShader/Grayscale.PS.hlsl", L"ps_6_0");
+    //Vignette
+    pixelShaderBlobs_[PS_Vignette] = CompileShader(L"Resource/shader/PixelShader/Vignette.PS.hlsl", L"ps_6_0");
+    //BoxFilter
+    pixelShaderBlobs_[PS_BoxFilter] = CompileShader(L"Resource/shader/PixelShader/BoxFilter.PS.hlsl", L"ps_6_0");
+    //GaussianFilter
+    pixelShaderBlobs_[PS_GaussianFilter] =CompileShader(L"Resource/shader/PixelShader/GaussianFilter.PS.hlsl", L"ps_6_0");
+    //PS_LuminanceBasedOutline
+    pixelShaderBlobs_[PS_LuminanceBasedOutline] = CompileShader(L"Resource/shader/PixelShader/LuminanceBasedOutline.PS.hlsl", L"ps_6_0");
+    //DepthBasedOutline
+    pixelShaderBlobs_[PS_DepthBasedOutline] =CompileShader(L"Resource/shader/PixelShader/DepthBasedOutline.PS.hlsl", L"ps_6_0");
+    //RadialBlur
+    pixelShaderBlobs_[PS_RadialBlur] = CompileShader(L"Resource/shader/PixelShader/RadialBlur.PS.hlsl", L"ps_6_0");
+    //Dissolve
+    pixelShaderBlobs_[PS_Dissolve] = CompileShader(L"Resource/shader/PixelShader/Dissolve.PS.hlsl", L"ps_6_0");
+    //Random         
+    pixelShaderBlobs_[PS_Random] = CompileShader(L"Resource/shader/PixelShader/Random.PS.hlsl", L"ps_6_0");
 
-    pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/PixelShader/Object3d.PS.hlsl", L"ps_6_0"));
-    assert(pixelShaderBlobs_[kNormal] != nullptr);
-
-    vertexShaderBlobs_.push_back(CompileShader(L"Resource/shader/VertexShader/Particle.VS.hlsl",  L"vs_6_0"));
-    assert(vertexShaderBlobs_[kParticle] != nullptr);
-
-    pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/PixelShader/Particle.PS.hlsl", L"ps_6_0"));
-    assert(pixelShaderBlobs_[kParticle] != nullptr);
-
-    vertexShaderBlobs_.push_back(CompileShader(L"Resource/shader/VertexShader/Sprite.VS.hlsl", L"vs_6_0"));
-    assert(vertexShaderBlobs_[kSprite] != nullptr);
-
-    pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/PixelShader/Sprite.PS.hlsl", L"ps_6_0"));
-    assert(pixelShaderBlobs_[kSprite] != nullptr);
-
-    vertexShaderBlobs_.push_back(CompileShader(L"Resource/shader/VertexShader/SkinningObject3d.VS.hlsl",  L"vs_6_0"));
-    assert(vertexShaderBlobs_[kSkinning] != nullptr);
-    //Normalと同じなので
-    pixelShaderBlobs_.push_back(pixelShaderBlobs_[kNormal]);
-    assert(pixelShaderBlobs_[kSkinning] != nullptr);
-
-
-    {
-        //Font用
-        vertexShaderBlobs_.push_back(vertexShaderBlobs_[kSprite]);
-        assert(vertexShaderBlobs_[kFont] != nullptr);
-
-        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/PixelShader/Font.PS.hlsl",L"ps_6_0"));
-        assert(pixelShaderBlobs_[kFont] != nullptr);
-    }
-
-    {
-        //skybox
-        vertexShaderBlobs_.push_back(CompileShader(L"Resource/shader/VertexShader/Skybox.VS.hlsl",L"vs_6_0"));
-        assert(vertexShaderBlobs_[kSkyBox] != nullptr);
-        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/PixelShader/Skybox.PS.hlsl", L"ps_6_0"));
-        assert(pixelShaderBlobs_[kSkyBox] != nullptr);
-    }
-
-    {
-        //offscreen
-        vertexShaderBlobs_.push_back(CompileShader(L"Resource/shader/VertexShader/Fullscreen.VS.hlsl", L"vs_6_0"));
-        assert(vertexShaderBlobs_[kOffScreen] != nullptr);
-
-
-        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/PixelShader/Fullscreen.PS.hlsl",L"ps_6_0"));
-        assert(pixelShaderBlobs_[kOffScreen] != nullptr);
-    }
-
-    {
-        //オフスクリーンで同じなためこのように記入するが後で最適化を行いたい
-        vertexShaderBlobs_.push_back(vertexShaderBlobs_[kOffScreen]);
-        assert(vertexShaderBlobs_[kGrayScale] != nullptr);
-        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/PixelShader/Grayscale.PS.hlsl", L"ps_6_0"));
-        assert(pixelShaderBlobs_[kGrayScale] != nullptr);
-    }
-
-    {
-        //オフスクリーンで同じなためこのように記入するが後で最適化を行いたい
-        vertexShaderBlobs_.push_back(vertexShaderBlobs_[kOffScreen]);
-        assert(vertexShaderBlobs_[kVignette] != nullptr);
-        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/PixelShader/Vignette.PS.hlsl", L"ps_6_0"));
-        assert(pixelShaderBlobs_[kVignette] != nullptr);
-    }
-
-
-    {
-        //オフスクリーンで同じなためこのように記入するが後で最適化を行いたい
-        vertexShaderBlobs_.push_back(vertexShaderBlobs_[kOffScreen]);
-        assert(vertexShaderBlobs_[kBoxFilter] != nullptr);
-        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/PixelShader/BoxFilter.PS.hlsl", L"ps_6_0"));
-        assert(pixelShaderBlobs_[kBoxFilter] != nullptr);
-    }
-
-    {
-        //オフスクリーンで同じなためこのように記入するが後で最適化を行いたい
-        vertexShaderBlobs_.push_back(vertexShaderBlobs_[kOffScreen]);
-        assert(vertexShaderBlobs_[kGaussianFilter] != nullptr);
-        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/PixelShader/GaussianFilter.PS.hlsl",L"ps_6_0"));
-        assert(pixelShaderBlobs_[kGaussianFilter] != nullptr);
-    }
-    
-    //エッジ
-    {
-        //オフスクリーンで同じなためこのように記入するが後で最適化を行いたい
-        vertexShaderBlobs_.push_back(vertexShaderBlobs_[kOffScreen]);
-        assert(vertexShaderBlobs_[kLuminanceBasedOutline] != nullptr);
-        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/PixelShader/LuminanceBasedOutline.PS.hlsl", L"ps_6_0"));
-        assert(pixelShaderBlobs_[kLuminanceBasedOutline] != nullptr);
-    }
-
-    {
-        //オフスクリーンで同じなためこのように記入するが後で最適化を行いたい
-        vertexShaderBlobs_.push_back(vertexShaderBlobs_[kOffScreen]);
-        assert(vertexShaderBlobs_[kDepthBasedOutline] != nullptr);
-        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/PixelShader/DepthBasedOutline.PS.hlsl", L"ps_6_0"));
-        assert(pixelShaderBlobs_[kDepthBasedOutline] != nullptr);
-    }
-
-    {
-        //オフスクリーンで同じなためこのように記入するが後で最適化を行いたい
-        vertexShaderBlobs_.push_back(vertexShaderBlobs_[kOffScreen]);
-        assert(vertexShaderBlobs_[kRadialBlur] != nullptr);
-        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/PixelShader/RadialBlur.PS.hlsl", L"ps_6_0"));
-        assert(pixelShaderBlobs_[kRadialBlur] != nullptr);
-    }
-
-    {
-        //オフスクリーンで同じなためこのように記入するが後で最適化を行いたい
-        vertexShaderBlobs_.push_back(vertexShaderBlobs_[kOffScreen]);
-        assert(vertexShaderBlobs_[kDissolve] != nullptr);
-        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/PixelShader/Dissolve.PS.hlsl", L"ps_6_0"));
-        assert(pixelShaderBlobs_[kDissolve] != nullptr);
-    }
-    
-    {
-        //オフスクリーンで同じなためこのように記入するが後で最適化を行いたい
-        vertexShaderBlobs_.push_back(vertexShaderBlobs_[kOffScreen]);
-        assert(vertexShaderBlobs_[kRandom] != nullptr);
-        pixelShaderBlobs_.push_back(CompileShader(L"Resource/shader/PixelShader/Random.PS.hlsl", L"ps_6_0"));
-        assert(pixelShaderBlobs_[kRandom] != nullptr);
-    }
 }
 
 //CompileShader関数
