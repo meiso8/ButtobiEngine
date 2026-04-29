@@ -1,5 +1,6 @@
 import bpy
 import math
+import bpy_extras
 
 bl_info = {
     "name": "レベルエディタ",
@@ -41,33 +42,65 @@ class MYADDON_OT_create_ico_sphere(bpy.types.Operator):
         print("ICO球を生成しました。")
         return {'FINISHED'}
     
-class MYADDON_OT_export_scene(bpy.types.Operator):
+#多重継承　オペレータかつエクスポートヘルパー
+class MYADDON_OT_export_scene(bpy.types.Operator,bpy_extras.io_utils.ExportHelper):
     bl_idname = "myaddon.myaddon_ot_export_scene"
     bl_label = "シーン出力"
     bl_description = "シーン情報をExportします"
 
-    def execute(self,context):
-        print("シーン情報をExportします")
+    #出力するファイルの拡張子
+    filename_ext = ".scene"
+
+    def write_and_print(self,file,str):
+        print(str)
+        file.write(str)
+        file.write('\n')
+
+
+    def parse_scene_recursive(self,file,object,level):
+        """シーン解析用再帰関数"""
+
+        indent = ''
+        for i in range(level):
+            indent += "\t"
+
+        self.write_and_print(file,indent + object.type + " - " + object.name)
+        trans,rot, scale = object.matrix_local.decompose()
+        rot = rot.to_euler()
+        rot.x = math.degrees(rot.x)
+        rot.y = math.degrees(rot.y)
+        rot.z = math.degrees(rot.z)
+        self.write_and_print(file,indent + "Trans(%f,%f,%f)" % (trans.x,trans.y,trans.z))
+        self.write_and_print(file,indent + "Rot(%f,%f,%f)"% (rot.x,rot.y,rot.z))
+        self.write_and_print(file,indent + "Scale(%f,%f,%f)"% (scale.x,scale.y,scale.z))
+        self.write_and_print(file,'')
         
-        for object in bpy.context.scene.objects:
-            print(object.type + " - " + object.name)
-            trans,rot, scale = object.matrix_local.decompose()
-            rot = rot.to_euler()
-            rot.x = math.degrees(rot.x)
-            rot.y = math.degrees(rot.y)
-            rot.z = math.degrees(rot.z)
-            print("Trans(%f,%f,%f)" % (trans.x,trans.y,trans.z))
-            print("Rot(%f,%f,%f)"% (rot.x,rot.y,rot.z))
-            print("Scale(%f,%f,%f)"% (scale.x,scale.y,scale.z))
+        #子ノードに進む
+        for child in object.children:
+            self.parse_scene_recursive(file,child,level + 1)
 
-            if object.parent:
-                print("Parent:",object.parent.name)
-            print()
+    def export(self):
+        """ファイルに出力"""
+        print("シーン情報出力開始... %r" % self.filepath);
 
-        print("シーン情報をExportしました")
+        with open(self.filepath, "wt") as file:
+            self.write_and_print(file,"SCENE")
+
+            for object in bpy.context.scene.objects:
+                     
+                if (object.parent):
+                    continue
+
+                self.parse_scene_recursive(file,object,0);
+
+    
+    def execute(self,context):
+        print("シーン情報をExportします")      
+        self.export()
         self.report({'INFO'},"シーン情報をExportしました")
-
+        print("シーン情報をExportしました")
         return {'FINISHED'}
+    
 
 
 
