@@ -61,6 +61,12 @@ struct MaterialForDissolve
     float32_t3 rgb;
 };
 
+struct MaterialForRandom
+{
+    float time;
+    float padding[3];
+};
+
 class RenderTexture
 
 {
@@ -93,6 +99,9 @@ private:
     MaterialForDepthBasedOutline* materialForDepthBasedOutline_ = nullptr;
     MaterialForRadialBlur* materialForRadialBlur_ = nullptr;
     MaterialForDissolve* materialForDissolve_ = nullptr;
+
+    Microsoft::WRL::ComPtr <ID3D12Resource>materialResourceRandom_;
+    MaterialForRandom* materialForRandom_ = nullptr;
 public:
 
     void Create();
@@ -107,6 +116,7 @@ public:
     void Draw(const PSO::EffectType& effectType, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index);
     void DrawOutLine(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index, const uint32_t depthSrvIndex);
     void DrawDissolve(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index, const TextureFactory::Handle& textureHandle);
+    void DrawRandom(const BlendMode& blendMode,const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index);
     void Update();
     void SetCamera(Camera* camera);
 protected:
@@ -122,5 +132,6 @@ private:
     void CreateMaterialDepthBasedOutline();
     void CreateMaterialRadialBlur();
     void CreateMaterialDissolve();
+    void CreateMaterialRandom();
 };
 

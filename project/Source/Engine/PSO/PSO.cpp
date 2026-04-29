@@ -14,7 +14,10 @@ std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> PSO::
 std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> PSO::graphicsPipelineStateFont_;
 Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::graphicsPipelineStateSkyBox_;
 std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, PSO::kCountOfEffect> PSO::graphicsPipelineStateOffScreen_;
+std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> PSO::graphicsPipelineStateRandom_;
 std::array<std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfCullMode>, kCountOfBlendMode>PSO::graphicsPipelineStatesSkinning_;
+
+
 Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
     RootSignature& rootSignature,
     InputLayout& inputLayout,
@@ -290,6 +293,23 @@ void PSO::CreateALLPSO()
         kTriangle,
         InputLayout::kInputLayoutTypeOffScreen);
 
+
+
+    for (int b = 0; b < kCountOfBlendMode; ++b) {
+        graphicsPipelineStateRandom_[b] = Create(
+            *rootSignature,
+            *inputLayout,
+            blendStates[b],
+            rasterizerStates[kCullModeBack],
+            depthStencils[kNone],
+            kRandom,
+            kTriangle, 
+            InputLayout::kInputLayoutTypeOffScreen
+        );
+    }
+
+
+    
 }
 
 PSO::~PSO()
