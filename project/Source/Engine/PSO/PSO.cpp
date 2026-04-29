@@ -19,24 +19,25 @@ std::array<std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfCullM
 
 
 Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
-    RootSignature& rootSignature,
     InputLayout& inputLayout,
     BlendState& blendState,
     RasterizerState& rasterizerState,
     DepthStencil& depthStencil,
     bool useDepthFormat,
-    const ShaderType shaderType,
+    const RootSignature::TYPE& rootSignatureType,
+    const DxcCompiler::VS_TYPE& vsShaderType,
+    const  DxcCompiler::PS_TYPE& psShaderType,
     const TopologyType topologyType,
     const InputLayout::InputLayoutType inputLayoutType ) {
 
     D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
 
-    graphicsPipelineStateDesc.pRootSignature = rootSignature.GetRootSignature(shaderType);//RootSignature
+    graphicsPipelineStateDesc.pRootSignature = rootSignature->GetRootSignature(rootSignatureType);//RootSignature
     graphicsPipelineStateDesc.InputLayout = inputLayout.GetDescs(inputLayoutType);//InputLayout
-    graphicsPipelineStateDesc.VS = { DirectXCommon::GetDxcCompiler()->GetVertexShaderBlob(shaderType)->GetBufferPointer(),
-    DirectXCommon::GetDxcCompiler()->GetVertexShaderBlob(shaderType)->GetBufferSize() };//VertexShader
-    graphicsPipelineStateDesc.PS = { DirectXCommon::GetDxcCompiler()->GetPixelShaderBlob(shaderType)->GetBufferPointer(),
-    DirectXCommon::GetDxcCompiler()->GetPixelShaderBlob(shaderType)->GetBufferSize() };//PixelShader
+    graphicsPipelineStateDesc.VS = { DirectXCommon::GetDxcCompiler()->GetVertexShaderBlob(vsShaderType)->GetBufferPointer(),
+    DirectXCommon::GetDxcCompiler()->GetVertexShaderBlob(vsShaderType)->GetBufferSize() };//VertexShader
+    graphicsPipelineStateDesc.PS = { DirectXCommon::GetDxcCompiler()->GetPixelShaderBlob(psShaderType)->GetBufferPointer(),
+    DirectXCommon::GetDxcCompiler()->GetPixelShaderBlob(psShaderType)->GetBufferSize() };//PixelShader
     graphicsPipelineStateDesc.BlendState = blendState.GetDesc();//BlendState
     graphicsPipelineStateDesc.RasterizerState = rasterizerState.GetDesc();//RasterizerState
     //書き込むRTVの情報
@@ -126,13 +127,14 @@ void PSO::CreateALLPSO()
     for (uint32_t b = 0; b < kCountOfBlendMode; ++b) {
         for (uint32_t c = 0; c < kCountOfCullMode; ++c) {
             graphicsPipelineStates_[b][c] = Create(
-                *rootSignature,
                 *inputLayout,
                 blendStates[b],
                 rasterizerStates[c],
                 depthStencils[kAll],
                 true,
-                kNormal,
+                RootSignature::NORMAL,
+                DxcCompiler::VS_Normal,
+                DxcCompiler::PS_Normal,
                 kTriangle,
                 InputLayout::kInputLayoutTypeNormal
             );
@@ -140,51 +142,63 @@ void PSO::CreateALLPSO()
     }
 
     for (int b = 0; b < kCountOfBlendMode; ++b) {
-        graphicsPipelineStatesParticle_[b] = Create(
-            *rootSignature,
+        graphicsPipelineStatesParticle_[b] = Create(  
             *inputLayout,
             blendStates[b],
             rasterizerStates[kCullModeNone],
             depthStencils[kZero],
             true, 
-            kParticle, kTriangle, InputLayout::kInputLayoutTypeNormal
+            RootSignature::PARTICLE,
+            DxcCompiler::VS_Particle,
+            DxcCompiler::PS_Particle,
+            kTriangle, 
+            InputLayout::kInputLayoutTypeNormal
         );
     }
 
 
     graphicsPipelineStatesLine_ =
         Create(
-            *rootSignature,
-            *inputLayout,
+           *inputLayout,
             blendStates[kBlendModeNone],
             rasterizerStates[kCullModeBack],
             depthStencils[kAll],
             true,
-            kNormal,
-            kLine, InputLayout::kInputLayoutTypeNormal);
+            RootSignature::NORMAL,
+            DxcCompiler::VS_Normal,
+            DxcCompiler::PS_Normal,
+            kLine,
+            InputLayout::kInputLayoutTypeNormal
+        );
 
     for (int b = 0; b < kCountOfBlendMode; ++b) {
         graphicsPipelineStateSprite_[b] = Create(
-            *rootSignature,
             *inputLayout,
             blendStates[b],
             rasterizerStates[kCullModeBack],
-            depthStencils[kAll], 
-            true,
-            kSprite, kTriangle, InputLayout::kInputLayoutTypeNormal
+            depthStencils[kNone], 
+            false,
+            RootSignature::SPRITE,
+            DxcCompiler::VS_Sprite,
+            DxcCompiler::PS_Sprite,
+            kTriangle,
+            InputLayout::kInputLayoutTypeNormal
         );
 
     }
 
     for (int b = 0; b < kCountOfBlendMode; ++b) {
         graphicsPipelineStateFont_[b] = Create(
-            *rootSignature,
             *inputLayout,
             blendStates[b],
             rasterizerStates[kCullModeBack],
-            depthStencils[kAll],
-            true,
-            kFont, kTriangle, InputLayout::kInputLayoutTypeNormal
+            depthStencils[kNone],
+            false,
+            RootSignature::FONT,
+            DxcCompiler::VS_Sprite,
+            DxcCompiler::PS_Font,
+            kTriangle, 
+            InputLayout::kInputLayoutTypeNormal
         );
     }
 
@@ -192,151 +206,158 @@ void PSO::CreateALLPSO()
     for (uint32_t b = 0; b < kCountOfBlendMode; ++b) {
         for (uint32_t c = 0; c < kCountOfCullMode; ++c) {
             graphicsPipelineStatesSkinning_[b][c] = Create(
-                *rootSignature,
                 *inputLayout,
                 blendStates[b],
                 rasterizerStates[c],
                 depthStencils[kAll],
                 true,
-                kSkinning,
-                kTriangle, InputLayout::kInputLayoutTypeSkinning
+                RootSignature::SKINNING,
+                DxcCompiler::VS_Skinning,
+                DxcCompiler::PS_Normal,
+                kTriangle, 
+                InputLayout::kInputLayoutTypeSkinning
             );
         }
     }
 
     graphicsPipelineStateSkyBox_ =
         Create(
-            *rootSignature,
             *inputLayout,
             blendStates[kBlendModeNone],
             rasterizerStates[kCullModeNone],
             depthStencils[kZero],
             true,
-            kSkyBox,
+            RootSignature::SKYBOX,
+            DxcCompiler::VS_SkyBox,
+            DxcCompiler::PS_SkyBox,
             kTriangle,
             InputLayout::kInputLayoutTypeNormal);
 
 
     graphicsPipelineStateOffScreen_[kEffectNone] = Create(
-        *rootSignature,
         *inputLayout,
         blendStates[kBlendModeNone],
         rasterizerStates[kCullModeBack],
         depthStencils[kNone],
         false,
-        kOffScreen,
+        RootSignature::OFFSCREEN,
+        DxcCompiler::VS_OffScreen,
+        DxcCompiler::PS_OffScreen,
         kTriangle,
         InputLayout::kInputLayoutTypeOffScreen);
 
     graphicsPipelineStateOffScreen_[kEffectGrayScale] = Create(
-        *rootSignature,
         *inputLayout,
         blendStates[kBlendModeNone],
         rasterizerStates[kCullModeBack],
         depthStencils[kNone],
         false,
-        kGrayScale,
+        RootSignature::GRAYSCALE,
+        DxcCompiler::VS_OffScreen,
+        DxcCompiler::PS_GrayScale,
         kTriangle,
         InputLayout::kInputLayoutTypeOffScreen);
 
     graphicsPipelineStateOffScreen_[kEffectVignette] = Create(
-        *rootSignature,
         *inputLayout,
         blendStates[kBlendModeNone],
         rasterizerStates[kCullModeBack],
         depthStencils[kNone],
         false,
-        kVignette,
+        RootSignature::VIGNETTE,
+        DxcCompiler::VS_OffScreen,
+        DxcCompiler::PS_Vignette,
         kTriangle,
         InputLayout::kInputLayoutTypeOffScreen);
 
     graphicsPipelineStateOffScreen_[kEffectBoxFilter] = Create(
-        *rootSignature,
         *inputLayout,
         blendStates[kBlendModeNone],
         rasterizerStates[kCullModeBack],
         depthStencils[kNone],
         false,
-        kBoxFilter,
+        RootSignature::BOXFILTER,
+        DxcCompiler::VS_OffScreen,
+        DxcCompiler::PS_BoxFilter,
         kTriangle,
         InputLayout::kInputLayoutTypeOffScreen);
 
     graphicsPipelineStateOffScreen_[kEffectGaussianFilter] = Create(
-        *rootSignature,
         *inputLayout,
         blendStates[kBlendModeNone],
         rasterizerStates[kCullModeBack],
         depthStencils[kNone],
         false,
-        kGaussianFilter,
+        RootSignature::GAUSSIANFILTER,
+        DxcCompiler::VS_OffScreen,
+        DxcCompiler::PS_GaussianFilter,
         kTriangle,
         InputLayout::kInputLayoutTypeOffScreen);
 
 
     graphicsPipelineStateOffScreen_[kEffectLuminanceBasedOutline] = Create(
-        *rootSignature,
         *inputLayout,
         blendStates[kBlendModeNone],
         rasterizerStates[kCullModeBack],
         depthStencils[kNone],
         false,
-        kLuminanceBasedOutline,
+        RootSignature::LUMINANCE_BASED_OUTLINE,
+        DxcCompiler::VS_OffScreen,
+        DxcCompiler::PS_LuminanceBasedOutline,
         kTriangle,
         InputLayout::kInputLayoutTypeOffScreen);
 
     graphicsPipelineStateOffScreen_[kEffectDepthBasedOutline] = Create(
-        *rootSignature,
         *inputLayout,
         blendStates[kBlendModeNone],
         rasterizerStates[kCullModeBack],
         depthStencils[kNone], 
         false,
-        kDepthBasedOutline,
+        RootSignature::DEPTH_BASED_OUTLINE,
+        DxcCompiler::VS_OffScreen,
+        DxcCompiler::PS_DepthBasedOutline,
         kTriangle,
         InputLayout::kInputLayoutTypeOffScreen);
 
 
     graphicsPipelineStateOffScreen_[kEffectRadialBlur] = Create(
-        *rootSignature,
         *inputLayout,
         blendStates[kBlendModeNone],
         rasterizerStates[kCullModeBack],
         depthStencils[kNone],
         false,
-        kRadialBlur,
+        RootSignature::RADIAL_BLUR,
+        DxcCompiler::VS_OffScreen,
+        DxcCompiler::PS_RadialBlur,
         kTriangle,
         InputLayout::kInputLayoutTypeOffScreen);
-
-
 
     graphicsPipelineStateOffScreen_[kEffectDissolve] = Create(
-        *rootSignature,
         *inputLayout,
         blendStates[kBlendModeNone],
         rasterizerStates[kCullModeBack],
         depthStencils[kNone],
         false,
-        kDissolve,
+        RootSignature::DISSOLVE,
+        DxcCompiler::VS_OffScreen,
+        DxcCompiler::PS_Dissolve,
         kTriangle,
         InputLayout::kInputLayoutTypeOffScreen);
-
-
 
     for (int b = 0; b < kCountOfBlendMode; ++b) {
         graphicsPipelineStateRandom_[b] = Create(
-            *rootSignature,
             *inputLayout,
             blendStates[b],
             rasterizerStates[kCullModeBack],
             depthStencils[kNone],
             false,
-            kRandom,
+            RootSignature::RANDOM,
+            DxcCompiler::VS_OffScreen,
+            DxcCompiler::PS_Random,
             kTriangle, 
             InputLayout::kInputLayoutTypeOffScreen
         );
     }
-
-
     
 }
 

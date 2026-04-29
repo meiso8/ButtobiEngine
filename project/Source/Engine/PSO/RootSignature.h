@@ -30,7 +30,7 @@ public:
     };
 
    void Create();
-   ID3D12RootSignature* GetRootSignature(uint32_t index) {
+   ID3D12RootSignature* GetRootSignature(TYPE index) {
        assert(index < rootSignatures_.size());
        return
        rootSignatures_[index].Get(); };
