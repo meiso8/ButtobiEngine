@@ -1,6 +1,11 @@
 import bpy
 import math
 import bpy_extras
+import gpu
+#シェーダ、トポロジー、頂点バッファ、インデックスをまとめたジオメトリバッチという描画に使用するモジュール
+import gpu_extras.batch
+import copy
+
 
 bl_info = {
     "name": "レベルエディタ",
@@ -18,6 +23,70 @@ bl_info = {
 #メニュー項目描画
 def draw_menu_manual(self,context):
     self.layout.operator("wm.url_open_preset",text ="Manual",icon ="HELP")
+
+class DrawCollider:
+    #描画ハンドル
+    handle = None
+    #3Dビューに登録する描画関数
+    def draw_collider():
+        #頂点データ動的配列に変更
+        vertices = {"pos":[]}
+        #インデックスデータ動的配列に変更
+        indices = []
+        #各頂点の、オブジェクト中心からのオフセット
+        offsets = [
+                    [-0.5,-0.5,-0.5],
+                    [+0.5,-0.5,-0.5],
+                    [-0.5,+0.5,-0.5],
+                    [+0.5,+0.5,-0.5],
+                    [-0.5,-0.5,+0.5],
+                    [+0.5,-0.5,+0.5],
+                    [-0.5,+0.5,+0.5],
+                    [+0.5,+0.5,+0.5],
+        ]
+
+        #立方体のX,Y,Z方向のサイズ
+        size = [2,2,2]
+
+        #走査
+        for object in bpy.context.scene.objects:
+          
+            start = len(vertices["pos"])
+
+            for offset in offsets:
+                pos = copy.copy(object.location)
+                pos[0]+=offset[0]*size[0]
+                pos[1]+=offset[1]*size[1]
+                pos[2]+=offset[2]*size[2]
+
+                vertices['pos'].append(pos)
+
+                #前面   
+                indices.append([start+0,start+1])
+                indices.append([start+2,start+3])
+                indices.append([start+0,start+2])
+                indices.append([start+1,start+3])
+                #奥面
+                indices.append([start+4,start+5])
+                indices.append([start+6,start+7])
+                indices.append([start+4,start+6])
+                indices.append([start+5,start+7])
+                #手前遠くをつなぐ辺
+                indices.append([start+0,start+4])
+                indices.append([start+1,start+5])
+                indices.append([start+2,start+6])
+                indices.append([start+3,start+7])              
+
+        #シェーダーを取得
+        shader = gpu.shader.from_builtin("UNIFORM_COLOR")
+        #バッチ作成
+        batch = gpu_extras.batch.batch_for_shader(shader, "LINES" , vertices, indices = indices)
+        #シェーダーのパラメータ
+        color = [0.5, 1.0, 1.0 ,1.0]
+        shader.bind()
+        shader.uniform_float("color", color)
+        #描画
+        batch.draw(shader)
 
 class MYADDON_OT_stretch_vertex(bpy.types.Operator):
     bl_idname = "myaddon.myaddon_ot_stretch_vertex"
@@ -170,14 +239,20 @@ classes = (
 def register():
     for cls in classes:
         bpy.utils.register_class(cls)
-
+    #メニューに項目を追加
     bpy.types.TOPBAR_MT_editor_menus.append(TOPBAR_MT_my_menu.submenu)
+    #3Dビューに描画関数を追加
+    DrawCollider.handle = bpy.types.SpaceView3D.draw_handler_add(DrawCollider.draw_collider, (), "WINDOW","POST_VIEW")
     print("レベルエディタが有効化されました。")
 
 def unregister():
     bpy.types.TOPBAR_MT_editor_menus.remove(TOPBAR_MT_my_menu.submenu)
+    #3Dビューから描画関数を削除
+    bpy.types.SpaceView3D.draw_handler_remove(DrawCollider.handle,"WINDOW")
+    #Blenderからクラスを削除
     for cls in classes:
         bpy.utils.unregister_class(cls)
+
     print("レベルエディタが無効化されました。")
 
 if __name__ == "__main__":
