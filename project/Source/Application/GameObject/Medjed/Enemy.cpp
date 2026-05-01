@@ -37,7 +37,7 @@ Enemy::Enemy()
     Init();
     SetAABB({ { -halfScale -halfScale*1.5f ,-halfScale }, { halfScale ,halfScale * 1.5f ,halfScale } });
     SetWorldMatrix(bodyPos_.worldTransform_.matWorld_);
-    SetCenter({ 0.0f,halfScale, 0.0f });
+    SetCenter({ 0.0f,0.0f, 0.0f });
 
     SetCollisionAttribute(kCollisionEnemy);
     // 敵は「プレイヤー」と「プレイヤーの弾」と衝突したい
