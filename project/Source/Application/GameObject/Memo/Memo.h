@@ -15,7 +15,6 @@ public:
     void Initialize();
     void Update();
     void Draw(Camera& camera);
-    Vector3 GetWorldPosition() const override;
     WorldTransform& GetWorldTransform() { return object_->worldTransform_; };
     void OnCollision(Collider* collider) override;
     void SetTexture(const TextureFactory::Handle& handle) {

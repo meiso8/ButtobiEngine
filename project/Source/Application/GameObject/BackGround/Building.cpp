@@ -113,9 +113,9 @@ FieldCollider::FieldCollider()
     object_->Create();
     object_->SetMesh(cube_.get());
 
-    SetType(kAABB);
     SetCollisionAttribute(kCollisionWall);
     SetCollisionMask(kCollisionPlayer | kCollisionPlayerEye|kCollisionEnemy|kCollisionMedjed|kCollisionMummy);
+    SetWorldMatrix(object_->worldTransform_.matWorld_);
 }
 
 void FieldCollider::Update()

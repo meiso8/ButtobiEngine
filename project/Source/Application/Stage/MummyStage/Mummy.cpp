@@ -21,11 +21,11 @@ Mummy::Mummy() {
     skinningModel_->CreateDatas(coffinModel_, coffinModel_);
     aniObj_->SetMeshAndData(skinningModel_.get());
 
-    SetType(kAABB);
     SetCollisionAttribute(kCollisionWall); // ミイラの衝突属性
     SetCollisionMask(kCollisionPlayer | kCollisionEnemy|kCollisionMummy); // プレイヤーや壁と衝突
 
     SetAABB({ {-1.0f, 0.0f, -0.25f}, {1.0f, 0.5f, 0.25f} });
+    SetWorldMatrix(aniObj_->worldTransform_.matWorld_);
 
 }
 

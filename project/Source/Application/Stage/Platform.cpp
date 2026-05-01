@@ -5,12 +5,10 @@
 
 Platform::Platform() {
 
-    SetType(kAABB);
     SetCollisionAttribute(kCollisionWall);
     SetCollisionMask(kCollisionPlayer | kCollisionEnemy | kCollisionMedjed | kCollisionDummyMedjed);
 
     SetAABB({ { -1.5f, 0.0f, -0.5f }, { 1.5f, 0.75f, 1.0f } });
-
 
     cubeMesh_ = std::make_unique<CubeMesh>();
     cubeMesh_->Create();
@@ -19,6 +17,8 @@ Platform::Platform() {
     object_->Create();
     object_->SetMesh(cubeMesh_.get()); // 台座用モデル
     object_->SetTextureHandle(TextureFactory::PUZZLE);
+    SetWorldMatrix(object_->worldTransform_.matWorld_);
+
 }
 
 void Platform::Initialize() {
@@ -37,9 +37,6 @@ void Platform::Draw(Camera& camera) {
     ColliderDraw(camera);
 }
 
-Vector3 Platform::GetWorldPosition() const {
-    return object_->worldTransform_.GetWorldPosition();
-}
 
 void Platform::OnCollision(Collider* collider)
 {

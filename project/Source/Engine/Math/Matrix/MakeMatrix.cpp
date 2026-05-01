@@ -706,3 +706,8 @@ Matrix4x4 MakeRotateAxisSinCos(const Vector3& n, const float& cos, const float& 
     return tnn;
 
 }
+
+Vector3 GetWorldTransformByMatrix(const Matrix4x4& mat)
+{
+    return { mat.m[3][0], mat.m[3][1], mat.m[3][2] };
+}

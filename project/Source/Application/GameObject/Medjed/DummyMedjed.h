@@ -25,12 +25,11 @@ public:
     virtual void Draw(Camera& camera);
     virtual void Update();
     void OnCollision(Collider* collider)override;
-    Vector3 GetWorldPosition() const override;
     virtual void Look(const Vector3& target);
-    virtual WorldTransform& GetWorldTransform()
-    {
+    virtual WorldTransform& GetWorldTransform() const {
         return object3d_->worldTransform_;
-    }
+    };
+
     virtual void GoToTarget(const Vector3& target);
     virtual void Hide();
     const bool IsHide() { return hideTimer_ >= 1.0f; };

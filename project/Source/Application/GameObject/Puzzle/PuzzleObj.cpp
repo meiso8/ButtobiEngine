@@ -11,10 +11,9 @@ PuzzleObj::PuzzleObj() {
 
     AABB aabb = { .min = {-0.25f,-0.25f,-0.25f},.max = {0.25f,0.25f,0.25f} };
 
-    SetType(kAABB);
     SetCollisionAttribute(kCollisionWall); // ミイラの衝突属性
     SetCollisionMask(kCollisionPlayer | kCollisionEnemy); // プレイヤーや壁と衝突
-
+ 
     // memoのサイズに合わせる
     SetAABB(aabb);
 
@@ -26,6 +25,8 @@ PuzzleObj::PuzzleObj() {
     object_ = std::make_unique<Object3d>();
     object_->Create();
     object_->SetMesh(cubeMesh_.get());
+    SetWorldMatrix(object_->worldTransform_.matWorld_);
+
 }
 
 void PuzzleObj::Initialize() {

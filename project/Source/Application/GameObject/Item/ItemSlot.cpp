@@ -18,10 +18,10 @@ Item::Item()
 {
     object_ = std::make_shared<Object3d>();
     object_->Create();
-    SetType(kAABB);
     SetAABB({ .min = { -0.5f,-0.5f,-0.5f},.max = { 0.5f,0.5f,0.5f } });
     SetCollisionAttribute(kCollisionItem);
     SetCollisionMask(!kCollisionItem);
+    SetWorldMatrix(object_->worldTransform_.matWorld_);
 }
 void Item::SetModel(const std::string& fileName)
 {

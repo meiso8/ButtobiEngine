@@ -5,6 +5,7 @@
 #include"Object3d.h"
 #include"AnimationObject3d.h"
 #include"SkinningModel.h"
+#include"Vector3.h"
 
 class DummyMummy : public Collider {
 public:
@@ -14,9 +15,6 @@ public:
     void Draw(Camera& camera);
     void OnCollision(Collider* collider) override;
     void SetCollisionType();
-    Vector3 GetWorldPosition() const override {
-        return object_->worldTransform_.GetWorldPosition();
-    }
     void SetIsOpen(const bool& isOpen) {
         isOpen_ = isOpen;
     };
@@ -30,7 +28,7 @@ public:
         return isHitCollision_;
     };
 private:
-
+    Vector3 GetWorldPos();
     static Vector3* targetPos_;
     std::unique_ptr<AnimationObject3d> object_;
    std::unique_ptr<SkinningModel>skinningModel_ = nullptr;

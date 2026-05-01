@@ -16,12 +16,13 @@ Papyrus::Papyrus() {
 
     AABB aabb = { {-2.5f,-1.0f,-0.063f}, {2.5f,1.0f,0.063f} };
 
-    SetType(kAABB);
     SetCollisionAttribute(kCollisionWall); //かべ
     SetCollisionMask(kCollisionPlayer | kCollisionEnemy|kCollisionMummy); // プレイヤーや壁と衝突
 
     // memoのサイズに合わせる
     SetAABB(aabb);
+    SetWorldMatrix(object_->worldTransform_.matWorld_);
+   
 }
 
 void Papyrus::Initialize() {

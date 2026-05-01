@@ -14,13 +14,12 @@ AmenRa::AmenRa() {
     object_->SetMesh(ModelManager::GetModel("AmenRa.obj"));
     object_->SetLightMode(kLightModeLReflectance);
     AABB aabb = { .min = {-1.0f,0.0f,-1.0f},.max = {1.0f,6.01f,1.0f} };
-
-    SetType(kAABB);
     SetCollisionAttribute(kCollisionWall); // ミイラの衝突属性
     SetCollisionMask(kCollisionPlayer | kCollisionEnemy); // プレイヤーや壁と衝突
 
-    // memoのサイズに合わせる
+    //サイズに合わせる
     SetAABB(aabb);
+    SetWorldMatrix(object_->worldTransform_.matWorld_);
 }
 
 void AmenRa::Initialize() {

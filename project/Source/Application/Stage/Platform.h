@@ -14,7 +14,6 @@ public:
     virtual void Initialize();
     virtual void Update();
     virtual void Draw(Camera& camera);
-    Vector3 GetWorldPosition() const override;
     WorldTransform& GetWorldTransform() { return object_->worldTransform_; };
     void OnCollision(Collider* collider) override;
     std::unique_ptr<CubeMesh>cubeMesh_ = nullptr;
