@@ -46,12 +46,12 @@ void ShotBulletManager::Update() {
                     Vector3 shotDirection = CoordinateTransform(toTarget, rotY);
                     shotDirection = Normalize(shotDirection);
 
-                    Vector3 shotPosition = enemy_->GetWorldPosition() + shotDirection * 0.5f;
+                    Vector3 shotPosition = enemy_->GetWorldTransform().GetWorldPosition() + shotDirection * 0.5f;
                     shotPosition.y += 0.5f;
                     bulletManager_->ShotBullet(shotPosition, shotDirection, shotSpeed_, shotSize_, Bullet::kEnemy);
                 }
             } else {
-                Vector3 shotPosition = enemy_->GetWorldPosition() + toTarget * 0.5f;
+                Vector3 shotPosition = enemy_->GetWorldTransform().GetWorldPosition() + toTarget * 0.5f;
                 shotPosition.y += 0.5f;
                 bulletManager_->ShotBullet(shotPosition, toTarget, shotSpeed_, shotSize_, Bullet::kEnemy);
             }

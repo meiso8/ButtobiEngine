@@ -1,10 +1,7 @@
 #define NOMINMAX
 #include"Collision.h"
 #include "Circle.h"
-#include"MakeMatrix.h"
-#include"CoordinateTransform.h"
 #include<algorithm>
-#include<cmath>
 
 Vector3 ClosestPoint(const Vector3& point, const Plane& plane) {
     return point - Distance(point, plane) * plane.normal;
@@ -418,5 +415,5 @@ bool IsCollision(const Vector2& p, const Rect& r) {
         p.y >= r.top && p.y <= r.top + r.height);
 }
 
-Vector3 Center(const AABB& aabb) { return (aabb.min + aabb.max) * 0.5f; };
+
 

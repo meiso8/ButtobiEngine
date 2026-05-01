@@ -21,10 +21,6 @@ class Player :public Collider
 {
 public:
     void OnCollision(Collider* collider)override;
-
-    /// @brief ワールド座標を取得する
-    /// @return ワールド座標
-    Vector3 GetWorldPosition() const  override;
     Player();
     void Init();
 

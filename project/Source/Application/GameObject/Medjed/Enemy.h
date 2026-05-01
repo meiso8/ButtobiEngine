@@ -26,7 +26,6 @@ public:
     void Init();
     void Draw(Camera& camera, const LightMode& lightMode);
     void Update();
-    Vector3 GetWorldPosition()const override;
     void SetIsApper(const bool& flag) { isAppear_ = flag; }
     const bool& GetIsApper() { return isAppear_; }
     Vector3 GetWorldPos()const

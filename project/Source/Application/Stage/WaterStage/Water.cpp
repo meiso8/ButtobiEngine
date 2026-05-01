@@ -23,10 +23,9 @@ Water::Water() {
     object_->GetWaveData(1).frequency = 4.0f;
 
     AABB aabb = { .min = {-12.5f,-0.5f,-12.5f},.max = {12.5f,0.5f,12.5f} };
-    SetType(kAABB);
     SetCollisionAttribute(kCollisionWater);
     SetCollisionMask(kCollisionPlayer); // プレイヤー
-
+    SetWorldMatrix(object_->worldTransform_.matWorld_);
     // memoのサイズに合わせる
     SetAABB(aabb);
 }

@@ -14,7 +14,7 @@ struct CollisionInfo {
 	float penetration;//めり込み量
 };
 
-Vector3 Center(const AABB& aabb);
+
 CollisionInfo GetCollisionInfo(const AABB& a, const AABB& b);
 void ResolveCollision(Vector3& pos, Vector3& velocity, const CollisionInfo& info);
 
@@ -34,24 +34,39 @@ private:
 	uint32_t collisionMask_ = 0xffffffff;		// 衝突マスク
 	ColliderType type_ = ColliderType::kSphere;
 	CollisionInfo collisionInfo_;
+	//新しく中心と座標を追加
+	Vector3 center_ = {0.0f,0.0f,0.0f};
+	Matrix4x4* worldMat_ = nullptr;
+
+	Vector3 tempWorldTransform_ = {0.0f};
+	bool isCalculatedThisFrame_ = false; // 今フレーム計算済みかどうかのフラグ
 #ifdef _DEBUG
 	//デバック用
 	std::unique_ptr<SphereMesh>sphereMesh_;
 	//デバック用
 	std::unique_ptr<CubeMesh>cubeMesh_;
-	//体の位置
+	//位置
 	Object3d object3d_;
 #endif // DEBUG
-
 public:
-
+	void InitCalcuatedTisFrameFlag();
 	Collider();
 	/// @brief 衝突時コールバック関数
-	virtual void OnCollision(Collider* collider) = 0;
-
-	/// @brief ワールド座標を取得する
-	/// @return ワールド座標
-	virtual Vector3 GetWorldPosition() const = 0;
+	virtual void OnCollision(Collider* collider);
+	/// @brief ワールド座標を取得する関数の作成
+	/// @return 
+	const Vector3& CalculateWorldPos();
+	/// @brief 中心点を設定する
+	/// @param center 
+	void SetCenter(const Vector3& center) {
+		center_ = center;
+	};
+	/// @brief ワールド座標を設定する
+	/// @param worldMat 
+	void SetWorldMatrix(Matrix4x4& worldMat) {
+		assert(&worldMat);
+		worldMat_ = &worldMat;
+	};
 
 	/// @brief 衝突半径を取得する
 	/// @return 衝突半径
@@ -60,26 +75,33 @@ public:
 	/// @brief 衝突半径を設定する
 	/// @param radius 衝突半径
 	void SetRadius(float radius) { 
+		type_ = ColliderType::kSphere;
 #ifdef _DEBUG
-		if (type_ == ColliderType::kSphere && sphereMesh_) {
+
+		if (sphereMesh_) {
 			sphereMesh_->SetVertex(Sphere{ {0.0f,0.0f,0.0f }, radius });
+			object3d_.SetMesh(sphereMesh_.get());
 		}
+
 #endif // DEBUG
 		radius_ = radius; }
 
 	const AABB& GetAABB() const { return aabb_; }
-	void SetAABB(const AABB& aabb) { 
-		
+	void SetAABB(const AABB& aabb) {
+
+		type_ = ColliderType::kAABB;
+
 #ifdef _DEBUG
-		if (type_ == ColliderType::kAABB && cubeMesh_) {
+		if (cubeMesh_) {
 			cubeMesh_->SetMinMax(aabb);
+			object3d_.SetMesh(cubeMesh_.get());
 		}
 #endif // DEBUG
-		
-		aabb_ = aabb; }
+
+		aabb_ = aabb;
+	};
 
 	ColliderType GetType() const { return type_; }
-	void SetType(const ColliderType& type);
 
 	/// @brief 衝突属性を取得する
 	/// @return 衝突属性

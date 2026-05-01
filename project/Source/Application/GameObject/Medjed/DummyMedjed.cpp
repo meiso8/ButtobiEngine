@@ -11,7 +11,7 @@ void DummyMedjed::Look(const Vector3& target)
 
     aniTimer_ += kInverseFPS * 0.25f;
     aniTimer_ = std::clamp(aniTimer_, 0.0f, 1.0f);
-    Vector3 direction = target - GetWorldPosition();
+    Vector3 direction = target - object3d_->worldTransform_.GetWorldPosition();
     float targetAngle = std::atan2(direction.x, direction.z);
     // 差分を最短経路に補正
     float delta = NormalizeAngle(targetAngle - startRotateY_);
@@ -41,10 +41,10 @@ DummyMedjed::DummyMedjed()
     object3d_->Create();
     object3d_->SetMesh(model_);
 
-    SetType(kAABB);
     SetAABB(localAABB_);
     SetCollisionAttribute(kCollisionDummyMedjed);
     SetCollisionMask(kCollisionPlayer | kCollisionMedjed);
+    SetWorldMatrix(object3d_->worldTransform_.matWorld_);
 
 }
 void DummyMedjed::Init()
@@ -85,9 +85,4 @@ void DummyMedjed::Update()
 
 void DummyMedjed::OnCollision(Collider* collider)
 {
-}
-
-Vector3 DummyMedjed::GetWorldPosition() const
-{
-    return object3d_->worldTransform_.GetWorldPosition();
 }

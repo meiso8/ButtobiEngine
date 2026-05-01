@@ -10,9 +10,10 @@
 #include"../Engine/ImGui/DebugUI.h"
 Block::Block()
 {
-    SetType(kAABB);
     SetCollisionAttribute(kCollisionFloor);
     SetCollisionMask(kCollisionPlayer | kCollisionEnemy | kCollisionMedjed | kCollisionDummyMedjed);
+  
+    SetAABB({ {-1.0f,-1.0f,-1.0f} ,{1.0f,1.0f,1.0f} });
 }
 
 void Block::Initialize()
@@ -20,6 +21,7 @@ void Block::Initialize()
     object_->Initialize();
     aniTimer_ = 0.0f;
     isPush_ = false;
+    SetWorldMatrix(object_->worldTransform_.matWorld_);
 
 }
 
@@ -260,7 +262,7 @@ void BlockMap::RayCastHit(RaySprite& raySprite)
         for (auto& block : y) {
             if (!block->GetIsPush()&&block->CanPushBlock()) {
                 AABB aabb = GetAABBWorldPos(block.get());
-                if (raySprite.IntersectsAABB(aabb, block->GetWorldPosition())) {
+                if (raySprite.IntersectsAABB(aabb, block->GetWorldTransform().GetWorldPosition())) {
 
                     block->SetColor({ 1.0f,0.0f,0.0f,1.0f });
                     block->RayCastHit();

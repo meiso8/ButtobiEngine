@@ -3,19 +3,17 @@
 
 Memo::Memo() {
 
-    SetType(kAABB);
     SetCollisionAttribute(kCollisionWall);
     SetCollisionMask(kCollisionPlayer);
 
-    // サイズ
-    //SetAABB({ { -0.125f, -0.0625f, -0.125f },{  0.125f, 0.0625f, 0.125f } });
-
+    SetAABB({ .min = {-0.5f,-0.5f,-0.5f}, .max = {0.5f,0.5f,0.5f} });
     cubeMesh_ = std::make_unique<CubeMesh>();
     cubeMesh_->Create();
     cubeMesh_->SetMinMax(GetAABB());
     object_ = std::make_unique<Object3d>();
     object_->Create();
     object_->SetMesh(cubeMesh_.get());
+    SetWorldMatrix(object_->worldTransform_.matWorld_);
 }
 
 void Memo::Initialize() {
@@ -32,11 +30,6 @@ void Memo::Draw(Camera& camera) {
     object_->Draw(camera);
     ColliderDraw(camera);
 }
-
-Vector3 Memo::GetWorldPosition() const {
-    return object_->worldTransform_.GetWorldPosition();
-}
-
 void Memo::OnCollision(Collider* collider)
 {
     OnCollisionCollider();

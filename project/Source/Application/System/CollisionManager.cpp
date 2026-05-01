@@ -7,7 +7,8 @@
 
 AABB GetAABBWorldPos(Collider* aabb)
 {
-    Vector3 pos = aabb->GetWorldPosition();
+    //中心点を考慮した座標を取得してくる
+    Vector3 pos = aabb->CalculateWorldPos();
     AABB aabbWorld = aabb->GetAABB();
     aabbWorld.min += pos;
     aabbWorld.max += pos;
@@ -16,13 +17,20 @@ AABB GetAABBWorldPos(Collider* aabb)
 
 Sphere GetSphereWorldPos(Collider* sphere)
 {
+    //中心点を考慮した座標を取得してくる
     return Sphere{
- .center = sphere->GetWorldPosition(),
- .radius = sphere->GetRadius()
+      .center = sphere->CalculateWorldPos(),
+      .radius = sphere->GetRadius()
     };
 }
 
 void CollisionManager::CheckAllCollisions() {
+
+    for (auto& collider : colliders_) {
+        //計算フラグをfalseにする
+        collider->InitCalcuatedTisFrameFlag();
+    }
+
     // リスト内のペアを総当たり
     std::list<Collider*>::iterator itrA = colliders_.begin();
     for (; itrA != colliders_.end(); ++itrA) {
@@ -58,7 +66,7 @@ void CollisionManager::CheckCollisionAABBPair(Collider* colliderA, Collider* col
     colliderB->SetCollisionInfo(GetCollisionInfo(worldPosA, worldPosB));
 
     // 衝突判定
-    if (colliderA->GetCollisionInfo().collided&& colliderB->GetCollisionInfo().collided) {
+    if (colliderA->GetCollisionInfo().collided && colliderB->GetCollisionInfo().collided) {
         colliderA->OnCollision(colliderB);
         colliderB->OnCollision(colliderA);
 

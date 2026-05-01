@@ -43,8 +43,8 @@ void MedjedManager::RayCastHit(RaySprite& raySprite) {
             dist = 10.0f;
 
         }
-
-        if (raySprite.IntersectsAABB(aabb, medjed->GetWorldPosition(), dist)) {
+       
+        if (raySprite.IntersectsAABB(aabb, medjed->GetWorldTransform().GetWorldPosition(), dist)) {
             if (auto correctMedjed = dynamic_cast<Medjed*>(medjed.get())) {
                 medjed->SetColor({ 1.0f,1.0f,1.0f,0.5f });
             } else {

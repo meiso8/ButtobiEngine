@@ -59,11 +59,10 @@ Medjed::Medjed() {
     skinningModel->CreateDatas(model_, model_);
     aniObj_->SetMeshAndData(skinningModel.get());
 
-    SetType(kAABB);
     SetAABB(localAABB_);
     SetCollisionAttribute(kCollisionMedjed);
     SetCollisionMask(kCollisionPlayer | kCollisionWall | kCollisionDummyMedjed);
-
+    SetWorldMatrix(aniObj_->worldTransform_.matWorld_);
 }
 
 void Medjed::Look(const Vector3& target)

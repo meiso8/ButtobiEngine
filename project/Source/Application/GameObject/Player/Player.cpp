@@ -52,10 +52,7 @@ void Player::OnCollision(Collider* collider)
     OnCollisionCollider();
 
 }
-Vector3 Player::GetWorldPosition() const
-{
-    return bodyPos_.worldTransform_.GetWorldPosition();
-}
+
 Player::Player() {
 
     //モデルを取得する
@@ -65,7 +62,6 @@ Player::Player() {
     localAabb_.min = { -radius , 0.0f ,-radius };
     localAabb_.max = { radius , 1.5f ,radius };
 
-    SetType(ColliderType::kAABB);
     SetAABB(localAabb_);
     SetCollisionAttribute(kCollisionPlayer);
     SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet | kCollisionMedjed | kCollisionDummyMedjed | kCollisionWall | kCollisionMummy | kCollisionWater | kCollisionFloor);
@@ -74,6 +70,8 @@ Player::Player() {
     bodyPos_.Create();
     //モデルやメッシュをセットする
     bodyPos_.SetMesh(model_);
+    SetWorldMatrix(bodyPos_.worldTransform_.matWorld_);
+
 
     raySprite_ = std::make_unique<RaySprite>();
     eyeCollider_ = std::make_unique<EyeCollider>();
@@ -111,7 +109,7 @@ void Player::Init()
 
 void Player::UpdateRay()
 {
-    raySprite_->UpdateRay(Ray{ .origin = eyeCollider_->GetWorldPosition(),.diff = GetForward() });
+    raySprite_->UpdateRay(Ray{ .origin = eyeCollider_->GetWorldTransform().GetWorldPosition(),.diff = GetForward()});
 }
 
 void Player::Draw(Camera& camera, const LightMode& lightType)

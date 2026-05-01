@@ -127,7 +127,7 @@ void MemoManager::RayCastHit(RaySprite& raySprite)
     for (auto& [handle, memo] : memos_) {
         AABB aabb = GetAABBWorldPos(memo.get());
 
-        if (raySprite.IntersectsAABB(aabb, memo->GetWorldPosition())) {
+        if (raySprite.IntersectsAABB(aabb, memo->GetWorldTransform().GetWorldPosition())) {
 
             memo->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 

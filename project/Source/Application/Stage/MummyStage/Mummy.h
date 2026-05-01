@@ -13,9 +13,6 @@ public:
     void Draw(Camera& camera);
     void OnCollision(Collider* collider) override;
     Platform* GetPlatform() { return platform_.get(); }
-    Vector3 GetWorldPosition() const override {
-        return aniObj_->worldTransform_.GetWorldPosition();
-    }
     void SetIsOpen(const bool& isOpen) { isOpen_ = isOpen; }
     const bool& GetIsOpen() {
         return isOpen_ ;
@@ -23,6 +20,10 @@ public:
     const bool& GetIsOpenEnd() {
         return isOpenEnd_;
     };
+    virtual WorldTransform& GetWorldTransform()
+    {
+        return object_->worldTransform_;
+    }
 private:
     std::unique_ptr<Object3d> object_;
     std::unique_ptr<AnimationObject3d> aniObj_;

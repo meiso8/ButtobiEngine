@@ -8,7 +8,7 @@
 #include"Model.h"
 #include"Collider.h"
 #include"DummyMedjed.h"
-Vector3 ClampLength(const Vector3& v, float maxLength);
+
 class Medjed :public DummyMedjed
 {
 private:
@@ -27,11 +27,9 @@ public:
     void Update()override;
     void Draw(Camera& camera)override;
     void OnCollision(Collider* collider)override;
-    Vector3 GetWorldPosition() const override;
-    WorldTransform& GetWorldTransform()override
-    {
-        return aniObj_->worldTransform_;
-    }
+
+    WorldTransform& GetWorldTransform()const { return aniObj_->worldTransform_; };
+    Vector3 GetWorldPosition() const;
     void GoToTarget(const Vector3& target)override;
 
     void MoveStart();

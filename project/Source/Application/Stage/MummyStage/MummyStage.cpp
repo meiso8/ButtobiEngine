@@ -105,13 +105,16 @@ bool MummyStage::IsRayCastHit(RaySprite& raySprite)
 
     AABB aabb = GetAABBWorldPos(mummy_.get());
 
-    if (raySprite.IntersectsAABB(aabb, mummy_->GetWorldPosition())) {
-        if (InputBind::IsClick())
+    if (raySprite.IntersectsAABB(aabb, mummy_->GetWorldTransform().GetWorldPosition())) {
+       
+        if (InputBind::IsClick()) {
             //Openしていなかったらmummyをあける
             if (!mummy_->GetIsOpen()) {
                 SoundManager::PlayCorrectSE();
                 mummy_->SetIsOpen(true);
             }
+        }
+           
 
         return true;
     }
@@ -127,7 +130,7 @@ void MummyStage::CheckCollision(CollisionManager& collisionManager)
         //オープンし終わったら
         if (mummy_->GetIsOpenEnd()) {
             //心臓を使う
-            itemManager_->UseItemFromSlot(GetMummy()->GetWorldPosition());
+            itemManager_->UseItemFromSlot(GetMummy()->GetWorldTransform().GetWorldPosition());
         }
 
     }

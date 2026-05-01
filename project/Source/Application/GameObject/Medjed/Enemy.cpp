@@ -35,11 +35,15 @@ Enemy::Enemy()
 
     float halfScale = kScale_ * 0.25f;
     Init();
-    SetType(kAABB);
-    SetAABB({ { -halfScale ,0.0f ,-halfScale }, { halfScale ,kScale_*1.5f ,halfScale } });
+    SetAABB({ { -halfScale -halfScale*1.5f ,-halfScale }, { halfScale ,halfScale * 1.5f ,halfScale } });
+    SetWorldMatrix(bodyPos_.worldTransform_.matWorld_);
+    SetCenter({ 0.0f,0.0f, 0.0f });
+
     SetCollisionAttribute(kCollisionEnemy);
     // 敵は「プレイヤー」と「プレイヤーの弾」と衝突したい
     SetCollisionMask(kCollisionPlayer | kCollisionPlayerBullet);
+ 
+ 
 }
 
 void Enemy::Init()
@@ -100,11 +104,6 @@ void Enemy::Update()
     bodyPos_.UpdateAniTimer();
     bodyPos_.Update();
     ColliderUpdate();
-}
-
-Vector3 Enemy::GetWorldPosition()const
-{
-    return bodyPos_.worldTransform_.GetWorldPosition() + Vector3{ 0.0f, GetRadius() * 0.5f, 0.0f };
 }
 
 void Enemy::OnCollision(Collider* collider)

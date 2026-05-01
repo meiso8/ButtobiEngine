@@ -11,10 +11,10 @@ public:
     void Update();
     void Draw(Camera& camera);
     void OnCollision(Collider* collider) override;
-    Vector3 GetWorldPosition() const override {
-        return object_->worldTransform_.GetWorldPosition();
-    }
     void SetColor(const Vector4& color) { object_->SetColor(color); };
+    Vector3 GetWorldPosition() {
+      return  object_->worldTransform_.GetWorldPosition();
+    }
 private:
     std::unique_ptr<Object3d> object_ = nullptr;
     std::unique_ptr<CubeMesh> cubeMesh_ = nullptr;

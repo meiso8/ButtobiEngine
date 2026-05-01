@@ -11,9 +11,6 @@ public:
     void Update();
     void Draw(Camera& camera);
     void OnCollision(Collider* collider) override;
-    Vector3 GetWorldPosition() const override {
-        return object_->worldTransform_.GetWorldPosition();
-    }
 private:
     std::unique_ptr<Object3d> object_;
 

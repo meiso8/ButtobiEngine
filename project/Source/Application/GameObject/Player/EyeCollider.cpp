@@ -7,11 +7,10 @@ EyeCollider::EyeCollider()
 {
     object_ = std::make_unique<Object3d>();
     object_->Create();
-
-    SetType(kAABB);
     SetCollisionAttribute(kCollisionPlayerEye);
     SetCollisionMask(kCollisionWall);
     SetAABB({ { -0.5f,-0.5f,-0.5f }, { 0.5f,0.5f,0.5f } });
+    SetWorldMatrix(object_->worldTransform_.matWorld_);
 }
 
 void EyeCollider::Update()

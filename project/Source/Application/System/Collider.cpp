@@ -1,6 +1,12 @@
 #define NOMINMAX
 #include "Collider.h"
 #include"Collision.h"
+#include"Matrix/MakeMatrix.h"
+
+void Collider::InitCalcuatedTisFrameFlag()
+{
+    isCalculatedThisFrame_ = false;
+}
 
 Collider::Collider()
 {
@@ -19,30 +25,46 @@ Collider::Collider()
     collisionInfo_.collided = false;
     collisionInfo_.normal = { 0.0f,0.0f,0.0f };
     collisionInfo_.penetration = { 0.0f };
+
+    center_ = { 0.0f,0.0f,0.0f };
+    float size = 0.5f;
+    aabb_ = { {-size ,-size ,-size }, {size,size,size} };
+
+    isCalculatedThisFrame_ = false;
 }
 
-void Collider::SetType(const ColliderType& type)
+void Collider::OnCollision(Collider* collider)
 {
+    (void)collider;
+}
 
-    type_ = type;
+const Vector3& Collider::CalculateWorldPos()
+{
+    if (isCalculatedThisFrame_) {
+        return tempWorldTransform_;
+    }
+    //中心点のローカル行列を計算する
+    Matrix4x4 child = MakeTranslateMatrix(center_);
+    assert(worldMat_);
+    //親の行列と掛け算する
+    child = Multiply(child, *worldMat_);
+    //行列から位置を取得する
+    tempWorldTransform_ = GetWorldTransformByMatrix(child);
 
 #ifdef _DEBUG
-
-    if (type == kSphere) {
-        object3d_.SetMesh(sphereMesh_.get());
-    } else if (type == kAABB) {
-        object3d_.SetMesh(cubeMesh_.get());
-    }
-
+    object3d_.worldTransform_.translate_ = tempWorldTransform_;
 #endif // _DEBUG
+
+    //計算終了
+    isCalculatedThisFrame_ = true;
+
+    return tempWorldTransform_;
 }
 
 void Collider::ColliderUpdate()
 {
 #ifdef _DEBUG
-
     object3d_.SetColor({ 1.0f,1.0f,0.0f,0.5f });
-    object3d_.worldTransform_.translate_ = GetWorldPosition();
     object3d_.Update();
 #endif // _DEBUG
 }
@@ -78,8 +100,8 @@ CollisionInfo GetCollisionInfo(const AABB& a, const AABB& b) {
     float overlapY = std::min(a.max.y - b.min.y, b.max.y - a.min.y);
     float overlapZ = std::min(a.max.z - b.min.z, b.max.z - a.min.z);
 
-    Vector3 centerA = Center(a);
-    Vector3 centerB = Center(b);
+    Vector3 centerA = Math::AABBCenter(a);
+    Vector3 centerB = Math::AABBCenter(b);
 
     //最小のオーバーラップ軸を分離する
     if (overlapX <= overlapY && overlapX <= overlapZ) {

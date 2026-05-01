@@ -18,9 +18,7 @@ DummyMummy::DummyMummy()
     skinningModel_->CreateDatas(model_, model_);
     object_->SetMeshAndData(skinningModel_.get());
 
-    SetType(kAABB);
-
-
+    SetWorldMatrix(object_->worldTransform_.matWorld_);
     // ミイラのサイズに合わせてAABBを設定（仮のサイズ）
     SetAABB({ {-0.75f, 0.0f, -0.75f}, {0.75f, 2.0f, 0.75f} });
 }
@@ -33,7 +31,7 @@ void DummyMummy::Initialize()
     Look(*targetPos_);
     object_->SetSkinning(false);
 
-    SetCollisionAttribute(kCollisionWall); 
+    SetCollisionAttribute(kCollisionWall);
     SetCollisionMask(kCollisionPlayer | kCollisionEnemy | kCollisionMummy);
 }
 
@@ -42,7 +40,7 @@ void DummyMummy::Update()
 
     if (isOpen_) {
 
-        float distance = Length(*targetPos_ - GetWorldPosition());
+        float distance = Length(*targetPos_ - GetWorldPos());
 
         if (distance > 10.0f) {
             //アニメーションも移動もスキップ 
@@ -53,7 +51,7 @@ void DummyMummy::Update()
             if (!isHitCollision_) {
                 Sound::PlayOriginSE(SoundFactory::WOO);
             }
-      
+
         }
 
 
@@ -109,9 +107,14 @@ void DummyMummy::SetCollisionType()
     SetCollisionMask(kCollisionPlayer | kCollisionEnemy | kCollisionMummy | kCollisionWall); // プレイヤーや壁と衝突
 }
 
+Vector3 DummyMummy::GetWorldPos()
+{
+    return object_->worldTransform_.GetWorldPosition();
+}
+
 void DummyMummy::Look(const Vector3& target)
 {
-    Vector3 direction = target - GetWorldPosition();
+    Vector3 direction = target - GetWorldPos();
     if (Length(direction) > 0.0f) {
         object_->worldTransform_.rotate_.y = std::atan2(direction.x, direction.z); // Y軸回転（ラジアン）
     }
