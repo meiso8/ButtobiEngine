@@ -510,7 +510,7 @@
     <ClCompile Include="Source\Engine\Mesh\Ring\RingMesh.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\LevelEditor\LevelEditor.cpp">
+    <ClCompile Include="Source\Engine\LevelEditor\LevelEditor.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Math\Structs\AABB.cpp">
@@ -1028,7 +1028,7 @@
     <ClInclude Include="Source\Engine\Mesh\Ring\RingMesh.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\LevelEditor\LevelEditor.h">
+    <ClInclude Include="Source\Engine\LevelEditor\LevelEditor.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

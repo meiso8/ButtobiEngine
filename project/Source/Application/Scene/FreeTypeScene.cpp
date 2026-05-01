@@ -4,6 +4,7 @@
 #include"DrawGrid.h"
 #include"DebugUI.h"
 #include"MyEngine.h"
+#include"Model.h"
 
 
 FreeTypeScene::FreeTypeScene()
@@ -51,8 +52,10 @@ FreeTypeScene::FreeTypeScene()
     object3d2_->SetMesh(cubeMesh_.get());
 
     //object3d_->SetTextureHandle(TextureFactory::WHITE_1X1);
-
-
+    levelEditor_ = std::make_unique<LevelEditor>();
+    levelEditor_->Load("test");
+    //オブジェクトをセットする
+    levelEditor_->CreateObject(objects_);
 }
 
 void FreeTypeScene::Initialize()
@@ -77,6 +80,7 @@ void FreeTypeScene::Update()
     //    }
     //    text_.SetString(inputText_);
     //}
+
 
 
 
@@ -113,6 +117,10 @@ void FreeTypeScene::Update()
     object3d_->Update();
     object3d2_->Update();
 
+    for (auto& obj : objects_) {
+        obj->obj_->Update();
+    }
+
 
     for (int i = 0; i < particleEmitters_.size(); ++i) {
         particleEmitters_[i]->UpdateTimer();
@@ -131,7 +139,7 @@ void FreeTypeScene::Update()
 void FreeTypeScene::DrawSprite() {
 
     Sprite::PreDraw();
- /*   sprite_->Draw();*/
+    /*   sprite_->Draw();*/
     text_.Draw();
     pressSpaceText_.Draw();
     sceneChange_->Draw();
@@ -150,6 +158,10 @@ void FreeTypeScene::DrawModel()
 
     object3d_->Draw(*currentCamera_);
     object3d2_->Draw(*currentCamera_);
+    for (auto& obj : objects_) {
+        obj->obj_->Draw(*currentCamera_);
+    }
+
 
     ParticleManager::GetInstance()->Draw();
 }

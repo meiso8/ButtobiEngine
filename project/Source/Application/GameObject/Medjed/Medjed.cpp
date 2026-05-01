@@ -45,12 +45,12 @@ void Medjed::GoToTarget(const Vector3& target)
 void Medjed::MoveStart()
 {
     aniObj_->InitTime();
-    aniObj_->SetAnimation(ModelManager::GetModel("medjedAnimation.gltf"));
+    aniObj_->SetAnimation(ModelManager::GetModel("medjedAnimation"));
 }
 
 Medjed::Medjed() {
 
-    model_ = ModelManager::GetModel("normalMed.gltf");
+    model_ = ModelManager::GetModel("normalMed");
 
     aniObj_ = std::make_unique<AnimationObject3d>();
     aniObj_->Create();

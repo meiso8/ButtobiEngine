@@ -4,6 +4,7 @@
 #include<memory>
 #include<vector>
 #include"SceneChange.h"
+#include"LevelEditor/LevelEditor.h"
 
 class BaseScene
 {
@@ -14,6 +15,10 @@ protected:
     std::unique_ptr<DebugCamera> debugCamera_ = nullptr;
     Camera* currentCamera_ = nullptr;
     std::unique_ptr <SceneChange> sceneChange_ = nullptr;
+    //レベルエディタ
+    std::unique_ptr<LevelEditor> levelEditor_ = nullptr;
+    std::vector<std::unique_ptr<LevelEditor::ObjectSet>>objects_;
+
 public:
     BaseScene();
     virtual ~BaseScene() = default;

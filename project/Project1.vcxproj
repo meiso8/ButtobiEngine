@@ -164,7 +164,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\Math\Structs\AABB.cpp" />
-    <ClCompile Include="Source\LevelEditor\LevelEditor.cpp" />
+    <ClCompile Include="Source\Engine\LevelEditor\LevelEditor.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Ring\RingMesh.cpp" />
     <ClCompile Include="Source\Engine\RenderTexture\RenderTexture.cpp" />
     <ClCompile Include="Source\Engine\Mesh\SkyBox\Skybox.cpp" />
@@ -314,7 +314,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\FreeTypeManager\Text.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\LevelEditor\LevelEditor.h" />
+    <ClInclude Include="Source\Engine\LevelEditor\LevelEditor.h" />
     <ClInclude Include="Source\Engine\Mesh\Ring\RingMesh.h" />
     <ClInclude Include="Source\Engine\RenderTexture\RenderTexture.h" />
     <ClInclude Include="Source\Engine\Mesh\SkyBox\Skybox.h" />

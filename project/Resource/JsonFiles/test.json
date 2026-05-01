@@ -1,0 +1,71 @@
+{
+    "name": "scene",
+    "objects": [
+        {
+            "type": "MESH",
+            "name": "normalMedjed",
+            "transform": {
+                "translation": [
+                    0.0,
+                    0.8452904224395752,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.4884533882141113
+                ]
+            },
+            "file_name": "normalMed"
+        },
+        {
+            "type": "MESH",
+            "name": "normalMedjed.001",
+            "transform": {
+                "translation": [
+                    -1.4174995422363281,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "normalMed"
+        },
+        {
+            "type": "MESH",
+            "name": "normalMedjed.002",
+            "transform": {
+                "translation": [
+                    1.5191700458526611,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    0.6802246570587158
+                ]
+            },
+            "file_name": "normalMed"
+        }
+    ]
+}

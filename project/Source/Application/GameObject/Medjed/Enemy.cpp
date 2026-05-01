@@ -22,11 +22,11 @@ Enemy::Enemy()
          {PHASE::EXIT, std::bind(&Enemy::Exit, this)},
     };
 
-    model_ = ModelManager::GetModel("normalMed.gltf");
+    model_ = ModelManager::GetModel("normalMed");
     //モデル
-    dancingModel_ = ModelManager::GetModel("medjedDance.gltf");
+    dancingModel_ = ModelManager::GetModel("medjedDance");
     //モデル
-    moveModel_ = ModelManager::GetModel("medjedAnimation.gltf");
+    moveModel_ = ModelManager::GetModel("medjedAnimation");
 
     skinningModel_ = std::make_unique<SkinningModel>();
     skinningModel_->CreateDatas(model_, dancingModel_);

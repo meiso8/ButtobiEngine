@@ -33,11 +33,6 @@ Collider::Collider()
     isCalculatedThisFrame_ = false;
 }
 
-void Collider::OnCollision(Collider* collider)
-{
-    (void)collider;
-}
-
 const Vector3& Collider::CalculateWorldPos()
 {
     if (isCalculatedThisFrame_) {
