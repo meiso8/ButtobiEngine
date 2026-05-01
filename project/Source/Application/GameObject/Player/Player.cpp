@@ -56,7 +56,7 @@ void Player::OnCollision(Collider* collider)
 Player::Player() {
 
     //モデルを取得する
-    model_ = ModelManager::GetModel("player.obj");
+    model_ = ModelManager::GetModel("player");
 
     float radius = 0.25f;
     localAabb_.min = { -radius , 0.0f ,-radius };

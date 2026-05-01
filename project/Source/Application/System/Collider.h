@@ -52,7 +52,9 @@ public:
 	void InitCalcuatedTisFrameFlag();
 	Collider();
 	/// @brief 衝突時コールバック関数
-	virtual void OnCollision(Collider* collider);
+	virtual void OnCollision(Collider* collider) {
+		(void)collider;
+	};
 	/// @brief ワールド座標を取得する関数の作成
 	/// @return 
 	const Vector3& CalculateWorldPos();

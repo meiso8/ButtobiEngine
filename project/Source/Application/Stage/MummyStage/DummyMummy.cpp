@@ -12,7 +12,7 @@ DummyMummy::DummyMummy()
     object_ = std::make_unique<AnimationObject3d>();
     object_->Create();
 
-    model_ = ModelManager::GetModel("dummyMummy.gltf");
+    model_ = ModelManager::GetModel("dummyMummy");
 
     skinningModel_ = std::make_unique<SkinningModel>();
     skinningModel_->CreateDatas(model_, model_);

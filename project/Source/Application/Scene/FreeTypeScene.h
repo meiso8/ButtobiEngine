@@ -31,6 +31,9 @@ private:
     std::unique_ptr<CubeMesh> cubeMesh_ = nullptr;
     std::unique_ptr<RingMesh>ringMesh_ = nullptr;
     std::array<std::unique_ptr<ParticleEmitter>, 1>particleEmitters_;
+
     int srvIndex = 0;
+
+
 };
 

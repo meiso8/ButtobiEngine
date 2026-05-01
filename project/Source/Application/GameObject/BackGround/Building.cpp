@@ -8,7 +8,7 @@
 #include"TimeManager.h"
 Building::Building() {
 
-    model_ = ModelManager::GetModel("mummyRoom.obj");
+    model_ = ModelManager::GetModel("mummyRoom");
 
     buildingPos_ = std::make_unique<Object3d>();
     buildingPos_->Create();

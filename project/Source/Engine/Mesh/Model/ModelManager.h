@@ -11,7 +11,7 @@ public:
     /// @brief モデルを取得します
     /// @param handle モデルハンドル
     /// @return Modelのポインタ
-    static Model* GetModel(const std::string& filename);
+    static Model* GetModel(const std::string& tag);
     static void Finalize();
     static void LoadModel(const std::string& directoryPath, const std::string& filename);
 private:

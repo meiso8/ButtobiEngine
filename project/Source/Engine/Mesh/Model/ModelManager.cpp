@@ -18,11 +18,11 @@ std::map < const std::string, std::unique_ptr< Model> > ModelManager::models_;
 
 // ========================================================================================================
 
-Model* ModelManager::GetModel(const std::string& filename)
+Model* ModelManager::GetModel(const std::string& tag)
 {
 
-    if (models_.contains(filename)) {
-        return models_.at(filename).get();
+    if (models_.contains(tag)) {
+        return models_.at(tag).get();
     }
 
     std::cerr << "モデルの取得に失敗しました！" << std::endl;
@@ -39,8 +39,12 @@ void ModelManager::Finalize()
 
 void ModelManager::LoadModel(const std::string& directoryPath, const std::string& filename)
 {
+
+    // .stem() で拡張子抜きのファイル名を取得し、.string() で std::string に変換
+    std::string tag = std::filesystem::path(filename).stem().string();
+
     //読み込み済みテクスチャを検索
-    if (models_.contains(filename)) {
+    if (models_.contains(tag)) {
         return;
     }
     //テクスチャ枚数上限チェック
@@ -158,7 +162,7 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
     model->Create();
 
     //ハンドルとモデルをセットにする
-    models_.insert(std::make_pair(filename, std::move(model)));
+    models_.insert(std::make_pair(tag, std::move(model)));
 
 }
 
