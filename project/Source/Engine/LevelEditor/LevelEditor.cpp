@@ -50,6 +50,10 @@ void LevelEditor::CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects)
 {
     for (auto& objectData : levelData_->objects) {
 
+        if (objectData.disabled) {
+            continue;
+        }
+
         std::unique_ptr<ObjectSet> newObjctData = std::make_unique<ObjectSet>();
 
         newObjctData->obj_ = std::make_unique<Object3d>();
@@ -78,6 +82,8 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
     //種別を取得
     std::string type = object["type"].get<std::string>();
     //種類ごとの処理
+
+
 
     //MESHがある場合
     if (type.compare("MESH") == 0) {
@@ -121,6 +127,11 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
                 .z = (float)collider["size"][1] 
             };
           
+        }
+
+        //無効かどうかのフラグ
+        if (object.contains("disabled")) {
+            objectData.disabled = object["disabled"];
         }
 
         //オブジェクト走査を再起関数にまとめ、再帰呼び出して枝を走査する

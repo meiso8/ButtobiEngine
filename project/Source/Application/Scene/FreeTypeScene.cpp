@@ -159,6 +159,7 @@ void FreeTypeScene::DrawModel()
     object3d_->Draw(*currentCamera_);
     object3d2_->Draw(*currentCamera_);
     for (auto& obj : objects_) {
+        
         obj->obj_->Draw(*currentCamera_);
     }
 
