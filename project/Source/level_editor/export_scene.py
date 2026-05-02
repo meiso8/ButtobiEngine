@@ -79,6 +79,10 @@ class MYADDON_OT_export_scene(bpy.types.Operator,bpy_extras.io_utils.ExportHelpe
         #まとめて1個分のjsonオブジェクトに登録
         json_object["transform"] = transform
 
+        #カスタムプロパティ'disabled'
+        if "disabled" in object:
+            json_object["disabled"] = object["disabled"]
+
         #カスタムプロパティ'file_name'
         if "file_name" in object:
             json_object["file_name"] = object["file_name"]
@@ -92,9 +96,7 @@ class MYADDON_OT_export_scene(bpy.types.Operator,bpy_extras.io_utils.ExportHelpe
             collider["size"] = object["collider_size"].to_list()
             json_object["collider"] = collider
 
-            #カスタムプロパティ'disabled'
-        if "disabled" in object:
-            json_object["disabled"] = object["disabled"]
+
 
         #1個分のjsonオブジェクトを親オブジェクトに登録　
         data_parent.append(json_object)

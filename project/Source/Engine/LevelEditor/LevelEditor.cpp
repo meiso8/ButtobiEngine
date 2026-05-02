@@ -40,6 +40,14 @@ void LevelEditor::Load(const std::string& fileName)
 
     //"objects"の全オブジェクトを走査
     for (nlohmann::json& object : deserialized["objects"]) {
+        //無効かどうかのフラグ
+        if (object.contains("disabled")) {
+            bool disabled = object["disabled"].get<bool>();
+
+            if (disabled) {
+                continue;
+            }
+        }
 
         LoadObject(object, levelData_.get());
     }
@@ -49,10 +57,6 @@ void LevelEditor::Load(const std::string& fileName)
 void LevelEditor::CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects)
 {
     for (auto& objectData : levelData_->objects) {
-
-        if (objectData.disabled) {
-            continue;
-        }
 
         std::unique_ptr<ObjectSet> newObjctData = std::make_unique<ObjectSet>();
 
@@ -129,10 +133,7 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
           
         }
 
-        //無効かどうかのフラグ
-        if (object.contains("disabled")) {
-            objectData.disabled = object["disabled"];
-        }
+
 
         //オブジェクト走査を再起関数にまとめ、再帰呼び出して枝を走査する
         if (object.contains("children")) {
