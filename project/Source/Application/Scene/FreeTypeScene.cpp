@@ -6,7 +6,6 @@
 #include"MyEngine.h"
 #include"Model.h"
 
-
 FreeTypeScene::FreeTypeScene()
 {
 

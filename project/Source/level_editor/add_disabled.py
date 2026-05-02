@@ -8,5 +8,5 @@ class MYADDON_OT_add_disabled(bpy.types.Operator):
 
     def execute(self, context):
         #['disabled']カスタムプロパティを追加
-        context.object["disabled"] =  False;
+        context.object["disabled"] =  True;
         return {"FINISHED"}

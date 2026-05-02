@@ -12,7 +12,8 @@ class OBJECT_PT_disabled(bpy.types.Panel):
 
     def draw(self,context):
         if "disabled" in context.object:
-            self.layout.prop(context.object,'["disabled"]',text=self.bl_label)
+       #['disabled']カスタムプロパティを追加
+            context.object["disabled"] =  True
         else:
             self.layout.operator(MYADDON_OT_add_disabled.bl_idname)
  
