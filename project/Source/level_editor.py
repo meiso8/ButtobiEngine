@@ -204,6 +204,10 @@ class MYADDON_OT_export_scene(bpy.types.Operator,bpy_extras.io_utils.ExportHelpe
             self.write_and_print(file,indent + "CC %f %f %f" % ( object["collider_center"][0],object["collider_center"][1],object["collider_center"][2]))
             self.write_and_print(file,indent + "CS %f %f %f" % ( object["collider_size"][0],object["collider_size"][1],object["collider_size"][2]))
 
+        #カスタムプロパティ'disabled'
+        if "disabled" in object:
+            self.write_and_print(file, indent + "D %s" % object["disabled"])
+
         self.write_and_print(file, indent + 'END')
         self.write_and_print(file,'')
         
@@ -246,6 +250,10 @@ class MYADDON_OT_export_scene(bpy.types.Operator,bpy_extras.io_utils.ExportHelpe
             collider["center"] = object["collider_center"].to_list()
             collider["size"] = object["collider_size"].to_list()
             json_object["collider"] = collider
+
+            #カスタムプロパティ'disabled'
+        if "disabled" in object:
+            json_object["disabled"] = object["disabled"]
 
         #1個分のjsonオブジェクトを親オブジェクトに登録　
         data_parent.append(json_object)
@@ -309,6 +317,31 @@ class MYADDON_OT_export_scene(bpy.types.Operator,bpy_extras.io_utils.ExportHelpe
         print("シーン情報をExportしました")
         return {'FINISHED'}
     
+class MYADDON_OT_add_disabled(bpy.types.Operator):
+    bl_idname = "myaddon.myaddon_ot_add_disabled"
+    bl_label = "表示切替"
+    bl_description = "['disabled']カスタムプロパティを追加します"
+    bl_options = {"REGISTER","UNDO"}
+
+    def execute(self, context):
+        #['disabled']カスタムプロパティを追加
+        context.object["disabled"] =  False;
+        return {"FINISHED"}
+
+class OBJECT_PT_disabled(bpy.types.Panel):
+    """オブジェクトの表示・非表示パネル"""
+    bl_idname = "OBJECT_PT_disabled"
+    bl_label = "Disabled"
+    bl_space_type = "PROPERTIES"
+    bl_region_type = "WINDOW"
+    bl_context = "object"
+
+    def draw(self,context):
+        if "disabled" in context.object:
+            self.layout.prop(context.object,'["disabled"]',text=self.bl_label)
+        else:
+            self.layout.operator(MYADDON_OT_add_disabled.bl_idname)
+ 
 
 class MYADDON_OT_add_filename(bpy.types.Operator):
     bl_idname = "myaddon.myaddon_ot_add_filename"
@@ -367,6 +400,8 @@ classes = (
     OBJECT_PT_file_name,
     MYADDON_OT_add_collider,
     OBJECT_PT_collider,
+    MYADDON_OT_add_disabled,
+  OBJECT_PT_disabled,
            )
 
 

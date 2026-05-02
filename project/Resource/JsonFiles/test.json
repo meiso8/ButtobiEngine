@@ -21,7 +21,8 @@
                     1.4884533882141113
                 ]
             },
-            "file_name": "normalMed"
+            "file_name": "normalMed",
+            "disabled": false
         },
         {
             "type": "MESH",
@@ -65,7 +66,8 @@
                     0.6802246570587158
                 ]
             },
-            "file_name": "normalMed"
+            "file_name": "normalMed",
+            "disabled": false
         }
     ]
 }

@@ -19,6 +19,7 @@ struct LevelData {
         std::string fileName;
         EulerTransform transform;
         ColliderData colliderData;
+        bool disabled = false;
     };
 
     std::vector<ObjectData>objects;
