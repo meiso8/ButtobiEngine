@@ -1,7 +1,6 @@
 #include "LevelEditor.h"
 #include"Model.h"
 
-
 void LevelEditor::Load(const std::string& fileName)
 {
     // =============================JSONファイルを読み込んでみる=============================
@@ -80,6 +79,7 @@ void LevelEditor::CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects)
     }
 }
 
+
 void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
 
     assert(object.contains("type"));
@@ -142,5 +142,28 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
                 LoadObject(child, levelData);
             }
         }
+    } else if (type.compare("PlayerSpawn") == 0) {
+
+        //要素追加
+        levelData->players.emplace_back(LevelData::PlayerSpawnData{});
+        LevelData::PlayerSpawnData& playerData = levelData->players.back();
+
+
+        nlohmann::json& transform = object["transform"];
+        //それぞれ座標系を合わせるため、yzの入れ替えを行っている
+        //平行移動
+        playerData.transform.translate.x = (float)transform["translation"][0];
+        playerData.transform.translate.y = (float)transform["translation"][2];
+        playerData.transform.translate.z = (float)transform["translation"][1];
+        //回転角 軸回転方向を変換しておく
+        playerData.transform.rotate.x = -(float)transform["rotation"][0];
+        playerData.transform.rotate.y = -(float)transform["rotation"][2];
+        playerData.transform.rotate.z = -(float)transform["rotation"][1];
+        //スケーリング
+        playerData.transform.scale.x = (float)transform["scaling"][0];
+        playerData.transform.scale.y = (float)transform["scaling"][2];
+        playerData.transform.scale.z = (float)transform["scaling"][1];
+
     }
+
 }

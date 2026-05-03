@@ -55,6 +55,10 @@ FreeTypeScene::FreeTypeScene()
     levelEditor_->Load("test");
     //オブジェクトをセットする
     levelEditor_->CreateObject(objects_);
+
+
+    player_ = std::make_unique<Player>();
+
 }
 
 void FreeTypeScene::Initialize()
@@ -65,6 +69,17 @@ void FreeTypeScene::Initialize()
     camera_->nearZ_ = 1.0f;
 
     currentCamera_ = camera_.get();
+
+    player_->Init();
+    auto* levelData = levelEditor_->GetLevelData();
+    if (!levelData->players.empty()) {
+        auto& playerData = levelData->players[0];
+        player_->SetBodyPos(playerData.transform.translate);
+        player_->SetBodyRotate(playerData.transform.rotate);
+        player_->SetBodyScale(playerData.transform.scale);
+    }
+    player_->Update();
+
     CreateParticle();
 }
 
@@ -79,6 +94,7 @@ void FreeTypeScene::Update()
     //    }
     //    text_.SetString(inputText_);
     //}
+
 
 
 
@@ -109,6 +125,7 @@ void FreeTypeScene::Update()
     DebugUI::CheckParticle(*particleEmitters_[0], "Emitter0");
     DebugUI::CheckSRVIndex();
 
+    DebugUI::CheckWorldTransform(player_->GetBodyWorldTransform(), "playerTransform");
 
 #endif //_DEVELOP
 
@@ -154,6 +171,8 @@ void FreeTypeScene::DrawModel()
     // デバッグカメラ
     DrawGrid::Draw(*currentCamera_);
 #endif //_DEVELOP
+
+    player_->Draw(*currentCamera_,LightMode::kLightModeHalfL);
 
     object3d_->Draw(*currentCamera_);
     object3d2_->Draw(*currentCamera_);

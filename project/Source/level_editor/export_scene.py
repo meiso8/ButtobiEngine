@@ -61,7 +61,12 @@ class MYADDON_OT_export_scene(bpy.types.Operator,bpy_extras.io_utils.ExportHelpe
 
         #シーンのオブジェクト1個分のjsonオブジェクト生成
         json_object = dict();
-        json_object["type"] = object.type
+        
+        if "type" in object:#カスタムプロパティで指定あり
+            json_object["type"] = object["type"]
+        else:
+            json_object["type"] = object.type
+
         json_object["name"] = object.name
 
         #Todo: その他の情報をパック
