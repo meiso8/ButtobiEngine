@@ -30,9 +30,7 @@ class MYADDON_OT_export_scene(bpy.types.Operator,bpy_extras.io_utils.ExportHelpe
         self.write_and_print(file,indent + object.type)
         trans,rot, scale = object.matrix_local.decompose()
         rot = rot.to_euler()
-        rot.x = math.degrees(rot.x)
-        rot.y = math.degrees(rot.y)
-        rot.z = math.degrees(rot.z)
+        #radianで出力
         self.write_and_print(file,indent + "T %f,%f,%f" % (trans.x,trans.y,trans.z))
         self.write_and_print(file,indent + "R %f,%f,%f"% (rot.x,rot.y,rot.z))
         self.write_and_print(file,indent + "S %f,%f,%f"% (scale.x,scale.y,scale.z))
@@ -61,7 +59,7 @@ class MYADDON_OT_export_scene(bpy.types.Operator,bpy_extras.io_utils.ExportHelpe
 
         #シーンのオブジェクト1個分のjsonオブジェクト生成
         json_object = dict();
-        
+
         if "type" in object:#カスタムプロパティで指定あり
             json_object["type"] = object["type"]
         else:
@@ -73,9 +71,7 @@ class MYADDON_OT_export_scene(bpy.types.Operator,bpy_extras.io_utils.ExportHelpe
         #オブジェクトのローカルトランスフォームから平行移動、回転、スケールを抽出
         trans,rot, scale = object.matrix_local.decompose()
         rot = rot.to_euler()
-        rot.x = math.degrees(rot.x)
-        rot.y = math.degrees(rot.y)
-        rot.z = math.degrees(rot.z)
+        #radianで出力
         #トランスフォーム情報をディクショナリに登録
         transform = dict()
         transform["translation"] = (trans.x,trans.y,trans.z)
