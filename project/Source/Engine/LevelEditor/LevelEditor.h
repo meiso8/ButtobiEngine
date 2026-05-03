@@ -21,7 +21,13 @@ struct LevelData {
         ColliderData colliderData;
     };
 
+    struct PlayerSpawnData {
+        EulerTransform transform;
+    };
+
     std::vector<ObjectData>objects;
+    //自キャラ配列
+    std::vector<PlayerSpawnData>players;
 };
 
 class LevelEditor
@@ -37,6 +43,8 @@ public:
 
     LevelData* GetLevelData() { return levelData_.get(); };
     void Load(const std::string& fileName);
+    /// @brief オブジェクトの作成関数
+    /// @param objects 
     void CreateObject(std::vector<std::unique_ptr<ObjectSet>>&objects);
 private:
     const std::string kDefaultBaseFirectory = "Resource/JsonFiles/";

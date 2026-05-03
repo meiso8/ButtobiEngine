@@ -49,7 +49,13 @@ public:
     Vector3& GetBodyPos() {
         return bodyPos_.worldTransform_.translate_;
     };
+
+    WorldTransform& GetBodyWorldTransform() {
+        return bodyPos_.worldTransform_;
+    }
     void SetBodyPos(const Vector3& pos) { bodyPos_.worldTransform_.translate_ = pos; };
+    void SetBodyRotate(const Vector3& rotate){ bodyPos_.worldTransform_.rotate_ = rotate; }
+    void SetBodyScale(const Vector3& scale) { bodyPos_.worldTransform_.scale_ = scale; }
     HPs* GetHpsPtr() { return &characterState_.hps; }
 
     EyeCollider* GetEyeCollider() {

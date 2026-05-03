@@ -13,7 +13,7 @@
                 "rotation": [
                     0.0,
                     -0.0,
-                    0.0
+                    -3.141592502593994
                 ],
                 "scaling": [
                     1.0,
@@ -21,8 +21,8 @@
                     1.4884533882141113
                 ]
             },
-            "file_name": "normalMed",
-            "disabled": false
+            "disabled": false,
+            "file_name": "normalMed"
         },
         {
             "type": "MESH",
@@ -44,8 +44,7 @@
                     1.0
                 ]
             },
-            "file_name": "normalMed",
-            "disabled": true
+            "file_name": "normalMed"
         },
         {
             "type": "MESH",
@@ -67,8 +66,29 @@
                     0.6802246570587158
                 ]
             },
-            "file_name": "normalMed",
-            "disabled": true
+            "disabled": false,
+            "file_name": "normalMed"
+        },
+        {
+            "type": "PlayerSpawn",
+            "name": "PlayerSpawn",
+            "transform": {
+                "translation": [
+                    0.021793782711029053,
+                    -2.7299704551696777,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -3.141592264175415
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
         }
     ]
 }

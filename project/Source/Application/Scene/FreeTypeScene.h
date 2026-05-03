@@ -7,6 +7,7 @@
 #include"Mesh/Cube/CubeMesh.h"
 #include"Mesh/Ring/RingMesh.h"
 #include"Particle/ParticleEmitter.h"
+#include"../GameObject/Player/Player.h"
 
 class FreeTypeScene : public BaseScene
 {
@@ -32,6 +33,7 @@ private:
     std::unique_ptr<RingMesh>ringMesh_ = nullptr;
     std::array<std::unique_ptr<ParticleEmitter>, 1>particleEmitters_;
 
+    std::unique_ptr<Player>player_ = nullptr;
     int srvIndex = 0;
 
 
