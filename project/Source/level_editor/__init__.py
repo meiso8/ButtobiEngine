@@ -33,6 +33,8 @@ from .add_disabled import MYADDON_OT_add_disabled
 from .disabled import OBJECT_PT_disabled
 from .spawn import MYADDON_OT_spawn_import_symbol
 from .spawn import MYADDON_OT_spawn_create_puton_symbol
+from .spawn import MYADDON_OT_spawn_player_create_puton_symbol
+from .spawn import MYADDON_OT_spawn_enemy_create_puton_symbol
 
 from .my_menu import TOPBAR_MT_my_menu
 
@@ -49,6 +51,8 @@ classes = (
     OBJECT_PT_disabled,
     MYADDON_OT_spawn_import_symbol,
     MYADDON_OT_spawn_create_puton_symbol,
+    MYADDON_OT_spawn_player_create_puton_symbol,
+    MYADDON_OT_spawn_enemy_create_puton_symbol,
     )
 
 

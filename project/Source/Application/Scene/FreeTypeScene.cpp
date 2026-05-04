@@ -80,25 +80,22 @@ void FreeTypeScene::Initialize()
     }
     player_->Update();
 
+    for (auto& enemyData : levelData->enemies) {
+        std::unique_ptr<Object3d> enemy = std::make_unique<Object3d>();
+        enemy->Create();
+        enemy->Initialize();
+        enemy->SetMesh(ModelManager::GetModel(enemyData.fileName));
+        enemy->worldTransform_.translate_ = enemyData.transform.translate;
+        enemy->worldTransform_.rotate_ = enemyData.transform.rotate;
+        enemy->worldTransform_.scale_ = enemyData.transform.scale;
+        enemies_.push_back(std::move(enemy));
+    }
+
     CreateParticle();
 }
 
 void FreeTypeScene::Update()
 {
-    //入力受付
-    //for (char32_t ch : Input::GetInputChars()) {
-    //    if (ch == U'\b') {
-    //        if (!inputText_.empty()) inputText_.pop_back();
-    //    } else if (ch >= 0x20) {
-    //        inputText_ += ch;
-    //    }
-    //    text_.SetString(inputText_);
-    //}
-
-
-
-
-
     //デバック
     text_.Debug();
 
@@ -133,6 +130,9 @@ void FreeTypeScene::Update()
     object3d_->Update();
     object3d2_->Update();
 
+    for (auto& enemy : enemies_) {
+        enemy->Update();
+    }
     for (auto& obj : objects_) {
         obj->obj_->Update();
     }
@@ -155,7 +155,6 @@ void FreeTypeScene::Update()
 void FreeTypeScene::DrawSprite() {
 
     Sprite::PreDraw();
-    /*   sprite_->Draw();*/
     text_.Draw();
     pressSpaceText_.Draw();
     sceneChange_->Draw();
@@ -171,6 +170,10 @@ void FreeTypeScene::DrawModel()
     // デバッグカメラ
     DrawGrid::Draw(*currentCamera_);
 #endif //_DEVELOP
+
+    for (auto& enemy : enemies_) {
+        enemy->Draw(*currentCamera_);
+    }
 
     player_->Draw(*currentCamera_,LightMode::kLightModeHalfL);
 

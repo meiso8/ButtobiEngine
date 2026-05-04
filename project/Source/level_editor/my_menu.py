@@ -4,7 +4,9 @@ from .stretch_vertex import MYADDON_OT_stretch_vertex
 from .create_ico_sphere import MYADDON_OT_create_ico_sphere
 from .export_scene import MYADDON_OT_export_scene
 from .spawn import MYADDON_OT_spawn_import_symbol
-from .spawn import MYADDON_OT_spawn_create_puton_symbol
+from .spawn import MYADDON_OT_spawn_player_create_puton_symbol
+from .spawn import MYADDON_OT_spawn_enemy_create_puton_symbol
+
 
 class TOPBAR_MT_my_menu(bpy.types.Menu):
         
@@ -26,7 +28,10 @@ class TOPBAR_MT_my_menu(bpy.types.Menu):
         self.layout.operator(MYADDON_OT_spawn_import_symbol.bl_idname,text = MYADDON_OT_spawn_import_symbol.bl_label)
         self.layout.separator()
         #シンボル作成
-        self.layout.operator(MYADDON_OT_spawn_create_puton_symbol.bl_idname,text = MYADDON_OT_spawn_create_puton_symbol.bl_label)
+        self.layout.operator(MYADDON_OT_spawn_player_create_puton_symbol.bl_idname,text = MYADDON_OT_spawn_player_create_puton_symbol.bl_label)
+        self.layout.separator()
+        #シンボル作成
+        self.layout.operator(MYADDON_OT_spawn_enemy_create_puton_symbol.bl_idname,text = MYADDON_OT_spawn_enemy_create_puton_symbol.bl_label)
         self.layout.separator()
         #メニュー項目描画
         self.layout.operator("wm.url_open_preset",text ="Manual",icon ="HELP")

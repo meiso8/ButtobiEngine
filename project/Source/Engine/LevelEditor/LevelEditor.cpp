@@ -125,12 +125,12 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
                     (float)collider["center"][2],
                     (float)collider["center"][1],
             };
-            objectData.colliderData.size = { 
+            objectData.colliderData.size = {
                 .x = (float)collider["size"][0] ,
                 .y = (float)collider["size"][2] ,
-                .z = (float)collider["size"][1] 
+                .z = (float)collider["size"][1]
             };
-          
+
         }
 
 
@@ -164,6 +164,44 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
         playerData.transform.scale.y = (float)transform["scaling"][2];
         playerData.transform.scale.z = (float)transform["scaling"][1];
 
+    } else if (type.compare("EnemySpawn") == 0) {
+        //要素追加
+        levelData->enemies.emplace_back(LevelData::EnemySpawnData{});
+        LevelData::EnemySpawnData& enemyData = levelData->enemies.back();
+
+        if (object.contains("file_name")) {
+            enemyData.fileName = object["file_name"];
+        }
+        SetTransform(object, enemyData.transform);
+
+
+        //オブジェクト走査を再起関数にまとめ、再帰呼び出して枝を走査する
+        if (object.contains("children")) {
+
+            for (nlohmann::json& child : object["children"]) {
+                LoadObject(child, levelData);
+            }
+        }
+
     }
 
+}
+
+void LevelEditor::SetTransform(nlohmann::json& object, EulerTransform& transform)
+{
+
+    nlohmann::json& loadTransform = object["transform"];
+    //それぞれ座標系を合わせるため、yzの入れ替えを行っている
+    //平行移動
+    transform.translate.x = (float)loadTransform["translation"][0];
+    transform.translate.y = (float)loadTransform["translation"][2];
+    transform.translate.z = (float)loadTransform["translation"][1];
+    //回転角 軸回転方向を変換しておく
+    transform.rotate.x = -(float)loadTransform["rotation"][0];
+    transform.rotate.y = -(float)loadTransform["rotation"][2];
+    transform.rotate.z = -(float)loadTransform["rotation"][1];
+    //スケーリング
+    transform.scale.x = (float)loadTransform["scaling"][0];
+    transform.scale.y = (float)loadTransform["scaling"][2];
+    transform.scale.z = (float)loadTransform["scaling"][1];
 }
