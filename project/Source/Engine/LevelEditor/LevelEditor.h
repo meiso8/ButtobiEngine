@@ -24,10 +24,16 @@ struct LevelData {
     struct PlayerSpawnData {
         EulerTransform transform;
     };
+    struct EnemySpawnData {
+        std::string fileName;
+        EulerTransform transform;
+    };
 
     std::vector<ObjectData>objects;
     //自キャラ配列
     std::vector<PlayerSpawnData>players;
+    //敵キャラ配列
+    std::vector<EnemySpawnData>enemies;
 };
 
 class LevelEditor
@@ -38,8 +44,6 @@ public:
         std::unique_ptr<Object3d> obj_ = nullptr;
         std::unique_ptr<Collider>collider_ = nullptr;
     };
-
-    std::vector<std::unique_ptr<ObjectSet>>objects_;
 
     LevelData* GetLevelData() { return levelData_.get(); };
     void Load(const std::string& fileName);
@@ -53,5 +57,6 @@ private:
     std::unique_ptr<LevelData>levelData_ = nullptr;
 private:
     void LoadObject(nlohmann::json& object, LevelData* levelData);
+    void SetTransform(nlohmann::json& object, EulerTransform& transform);
 };
 
