@@ -172,14 +172,16 @@ void MedjedManager::PlaceLockersRandomly() {
         while (true) {
 
             if (auto medjed = dynamic_cast<Medjed*>(locker.get())) {
-                Random::SetMinMax(rangeMin, rangeMax);
-                pos.x = Random::Get(); 
-                Random::SetMinMax(rangeMin, rangeMin*0.5f);
-                pos.y = Random::Get(); // Z座標として使う 
+                Random random;
+                random.SetMinMax(rangeMin, rangeMax);
+                pos.x = random.Get();
+                random.SetMinMax(rangeMin, rangeMin*0.5f);
+                pos.y = random.Get(); // Z座標として使う 
             } else {
-                Random::SetMinMax(rangeMin, rangeMax);
-                pos.x = Random::Get(); 
-                pos.y = Random::Get(); // Z座標として使う 
+                Random random;
+                random.SetMinMax(rangeMin, rangeMax);
+                pos.x =   random.Get(); 
+                pos.y =   random.Get(); // Z座標として使う 
             }
             
             if (!IsOverlapping(pos, placedPositions)) {

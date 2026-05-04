@@ -52,8 +52,9 @@ void DummyMedjed::Init()
     hideTimer_ = 0.0f;
     aniTimer_ = 0.0f;
     object3d_->Initialize();
-    Random::SetMinMax(0.0f, rotateRange_);
-    startRotateY_ = Random::Get();
+    Random random;
+    random.SetMinMax(0.0f,rotateRange_);
+    startRotateY_ = random.Get();
     object3d_->worldTransform_.rotate_.y = startRotateY_;
     object3d_->worldTransform_.translate_.y = startPosY_;
 }

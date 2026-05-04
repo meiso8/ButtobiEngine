@@ -3,7 +3,7 @@
 #include"Camera.h"
 #include"MakeMatrix.h"
 #include"PSO.h"
-#include"Random.h"
+
 #include"Collision.h"
 #include"SRVmanager/SrvManager.h"
 #include"Model.h"
@@ -17,7 +17,6 @@ using namespace  Microsoft::WRL;
 ParticleManager* ParticleManager::instance_ = nullptr;
 ID3D12GraphicsCommandList* ParticleManager::commandList_ = nullptr;
 std::unordered_map<std::string, std::unique_ptr <ParticleGroup> >ParticleManager::particleGroups;
-
 
 // ==========================================================================================================
 
@@ -34,7 +33,6 @@ void ParticleManager::CreateAll()
 
 ParticleManager::ParticleManager()
 {
-
 
 }
 void ParticleManager::Create()
@@ -60,46 +58,47 @@ Particle MakeNewParticle(const AABB& velocityAABB, const WorldTransform& transfo
 {
 
     Particle particle;
-    Random::SetMinMax(0.0f, 1.0f);
-    particle.lifeTime = (lifeTime < 0.0f) ? Random::Get() : lifeTime;
+    Random random(0.0f,1.0f);
+    random.SetMinMax(0.0f, 1.0f);
+    particle.lifeTime = (lifeTime < 0.0f) ? random.Get() : lifeTime;
 
-    Random::SetMinMax(velocityAABB.min.x, velocityAABB.max.x);
-    particle.velocity.x = Random::Get();
-    Random::SetMinMax(velocityAABB.min.y, velocityAABB.max.y);
-    particle.velocity.y = Random::Get();
-    Random::SetMinMax(velocityAABB.min.z, velocityAABB.max.z);
-    particle.velocity.z = Random::Get();
+     random.SetMinMax(velocityAABB.min.x, velocityAABB.max.x);
+    particle.velocity.x =  random.Get();
+     random.SetMinMax(velocityAABB.min.y, velocityAABB.max.y);
+    particle.velocity.y =  random.Get();
+     random.SetMinMax(velocityAABB.min.z, velocityAABB.max.z);
+    particle.velocity.z =  random.Get();
 
-    Random::SetMinMax(scaleAABB.min.x, scaleAABB.max.x);
-    float scaleX = Random::Get();
-    Random::SetMinMax(scaleAABB.min.y, scaleAABB.max.y);
-    float scaleY = Random::Get();
-    Random::SetMinMax(scaleAABB.min.z, scaleAABB.max.z);
-    float scaleZ = Random::Get();
+     random.SetMinMax(scaleAABB.min.x, scaleAABB.max.x);
+    float scaleX =  random.Get();
+     random.SetMinMax(scaleAABB.min.y, scaleAABB.max.y);
+    float scaleY =  random.Get();
+     random.SetMinMax(scaleAABB.min.z, scaleAABB.max.z);
+    float scaleZ =  random.Get();
 
     particle.transform.scale = transform.scale_ + Vector3{ scaleX ,scaleY, scaleZ };
     
     Vector3 newTransform = transform.GetWorldPosition();
-    Random::SetMinMax(translateAABB.min.x, translateAABB.max.x);
-    particle.transform.translate.x =  Random::Get()+ newTransform.x;
-    Random::SetMinMax(translateAABB.min.y, translateAABB.max.y);
-    particle.transform.translate.y = Random::Get() + newTransform.y;
-    Random::SetMinMax(translateAABB.min.z, translateAABB.max.z);
-    particle.transform.translate.z = Random::Get() + newTransform.z;
+     random.SetMinMax(translateAABB.min.x, translateAABB.max.x);
+    particle.transform.translate.x =   random.Get()+ newTransform.x;
+     random.SetMinMax(translateAABB.min.y, translateAABB.max.y);
+    particle.transform.translate.y =  random.Get() + newTransform.y;
+     random.SetMinMax(translateAABB.min.z, translateAABB.max.z);
+    particle.transform.translate.z =  random.Get() + newTransform.z;
 
 
-    Random::SetMinMax(rotateAABB.min.x, rotateAABB.max.x);
-    float rotateX = Random::Get();
-    Random::SetMinMax(rotateAABB.min.y, rotateAABB.max.y);
-    float rotateY = Random::Get();
-    Random::SetMinMax(rotateAABB.min.z, rotateAABB.max.z);
-    float rotateZ = Random::Get();
+     random.SetMinMax(rotateAABB.min.x, rotateAABB.max.x);
+    float rotateX =  random.Get();
+     random.SetMinMax(rotateAABB.min.y, rotateAABB.max.y);
+    float rotateY =  random.Get();
+     random.SetMinMax(rotateAABB.min.z, rotateAABB.max.z);
+    float rotateZ =  random.Get();
     particle.transform.rotate = Vector3{ rotateX,rotateY, rotateZ } + transform.rotate_;
     particle.currentTime = 0;
 
     if (color == Vector4{ 0.0f,0.0f,0.0f,0.0f }) {
-        Random::SetMinMax(0.0f, 1.0f);
-        particle.color = { Random::Get(),Random::Get(),Random::Get(),1.0f };
+         random.SetMinMax(0.0f, 1.0f);
+        particle.color = {  random.Get(), random.Get(), random.Get(),1.0f };
     } else {
         particle.color = color;
     }
@@ -111,13 +110,14 @@ Particle MakeNewParticle(const AABB& velocityAABB, const WorldTransform& transfo
 SphericalMove MakeNewSphericalCoordinate(const float& radius, const int& count, const int& maxCount, const float& radiusSpeed, const float& polarSpeed, const MinMax& polarSpeedMinMax, const MinMax& radiusSpeedMinMax)
 {
     SphericalMove spherical;
+    Random random;
     spherical.coordinate.azimuthal = 0.0f;
     spherical.coordinate.polar = std::numbers::pi_v<float>*2.0f / maxCount * count;
     spherical.coordinate.radius = radius;
-    Random::SetMinMax(polarSpeedMinMax.min, polarSpeedMinMax.max);
-    spherical.polarSpeed = polarSpeed + Random::Get();
-    Random::SetMinMax(radiusSpeedMinMax.min, radiusSpeedMinMax.max);
-    spherical.radiusSpeed = radiusSpeed + Random::Get();
+    random.SetMinMax(polarSpeedMinMax.min, polarSpeedMinMax.max);
+    spherical.polarSpeed = polarSpeed + random.Get();
+    random.SetMinMax(radiusSpeedMinMax.min, radiusSpeedMinMax.max);
+    spherical.radiusSpeed = radiusSpeed + random.Get();
     return spherical;
 }
 
