@@ -9,6 +9,12 @@
 #include"MakeMatrix.h"
 
 
+Microsoft::WRL::ComPtr<ID3D12Resource>& RenderTexture::GetMaterialResouce(const PSO::EffectType& effectType)
+{
+    assert(effectType < PSO::kCountOfEffect);
+    return materialResource_[effectType];
+}
+
 void RenderTexture::Create()
 {
     kRenderTargetClearValue_ = { 1.0f,0.0f,0.0f,1.0f };
@@ -85,7 +91,7 @@ void RenderTexture::DrawDissolve(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle,
 
 
 }
-void RenderTexture::DrawRandom(const BlendMode& blendMode,const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index)
+void RenderTexture::DrawRandom(const BlendMode& blendMode, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index)
 {
     auto* commandList = DirectXCommon::GetCommandList();
     // 1. 書き込み先（RTV）の設定とクリア
@@ -113,7 +119,7 @@ void RenderTexture::Draw(const PSO::EffectType& effectType, const D3D12_CPU_DESC
     commandList->DrawInstanced(3, 1, 0, 0);
 }
 
-void RenderTexture::DrawOutLine(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index,const uint32_t depthSrvIndex)
+void RenderTexture::DrawOutLine(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index, const uint32_t depthSrvIndex)
 {
     auto* commandList = DirectXCommon::GetCommandList();
     // 1. 書き込み先（RTV）の設定とクリア
@@ -157,17 +163,20 @@ void RenderTexture::Update()
     }
 
     if (ImGui::TreeNode("BoxFilter")) {
+
         ImGui::DragFloat("kernel", &materialForBoxFilter_->kernel, 1.0f, 0.0f, 1001.0f);
         ImGui::TreePop();
     }
 
     if (ImGui::TreeNode("GaussianFilter")) {
-        ImGui::DragInt("kernel", &materialForGaussianFilter_->kernel);
+
+        ImGui::DragInt("kernel", &materialForGaussianFilter_->kernel, 1, 1);
         ImGui::DragFloat("sigma", &materialForGaussianFilter_->sigma);
         ImGui::TreePop();
     }
 
     if (ImGui::TreeNode("LuminanceBasedOutline")) {
+ 
         ImGui::DragFloat("weightVal", &materialForLuminanceBasedOutline_->weightVal, 0.1f);
         ImGui::TreePop();
     }
@@ -178,19 +187,22 @@ void RenderTexture::Update()
     }
 
     if (ImGui::TreeNode("RadialBulr")) {
-        ImGui::DragFloat2("center",&materialForRadialBlur_->center.x,0.01f,0.0f,1.0f);
-        ImGui::DragInt("numSamples",&materialForRadialBlur_->numSamples);
+
+        ImGui::DragFloat2("center", &materialForRadialBlur_->center.x, 0.01f, 0.0f, 1.0f);
+        ImGui::DragInt("numSamples", &materialForRadialBlur_->numSamples);
         ImGui::DragFloat("center", &materialForRadialBlur_->blurWidth);
         ImGui::TreePop();
     }
 
     if (ImGui::TreeNode("Dissolve")) {
-        ImGui::DragFloat("maskVal", &materialForDissolve_->maskVal,0.01f,0.0f,1.0f);
+        //ImGui::Checkbox("useDissolve", &materialForDissolve_->useDissolve);
+        ImGui::DragFloat("maskVal", &materialForDissolve_->maskVal, 0.01f, 0.0f, 1.0f);
         ImGui::ColorEdit3("color", &materialForDissolve_->rgb.x);
         ImGui::TreePop();
     }
 
     if (ImGui::TreeNode("Random")) {
+        //ImGui::Checkbox("useRandom", &materialForRandom_->useRandom);
         ImGui::DragFloat("time", &materialForRandom_->time, 0.01f);
         ImGui::TreePop();
     }
@@ -279,6 +291,7 @@ void RenderTexture::CreateMaterialLuminanceBasedOutline()
     //書き込むためのアドレスを取得
     HRESULT result = materialResource_[PSO::kEffectLuminanceBasedOutline]->Map(0, nullptr, reinterpret_cast<void**>(&materialForLuminanceBasedOutline_));
     materialForLuminanceBasedOutline_->weightVal = 0.0f;
+
     LogFile::Log("Rendertexture : Create : MaterialBuffer : LuminanceBasedOutline");
 }
 
@@ -323,6 +336,7 @@ void RenderTexture::CreateMaterialDissolve() {
     HRESULT result = materialResource_[PSO::kEffectDissolve]->Map(0, nullptr, reinterpret_cast<void**>(&materialForDissolve_));
     materialForDissolve_->maskVal = 0.5f;
     materialForDissolve_->rgb = { 1.0f,0.4f,0.3f };
+
     LogFile::Log("Rendertexture : Create : MaterialBuffer : Dissolve");
 
 }
@@ -335,5 +349,6 @@ void RenderTexture::CreateMaterialRandom()
     //書き込むためのアドレスを取得
     HRESULT result = materialResourceRandom_->Map(0, nullptr, reinterpret_cast<void**>(&materialForRandom_));
     materialForRandom_->time = 1.0f;
+
     LogFile::Log("Rendertexture : Create : MaterialBuffer : Dissolve");
 };

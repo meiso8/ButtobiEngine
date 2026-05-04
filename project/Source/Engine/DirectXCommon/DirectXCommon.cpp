@@ -127,8 +127,22 @@ void DirectXCommon::DrawRenderTexture()
    
     // 4. テクスチャAを RTV(書き込み用) にする
     barrier.SettingBarrierSRVforRTV(renderTextureDataA.resource);
-    // 5. B(1)を読み込み、A にるみナンスアウトラインを描画
+    // 5. B(1)を読み込み、A に深度アウトラインを描画
     renderTexture_.DrawOutLine(renderTextureDataA.rtvHandleCPU, 1, depthTextureData_.srvIndex);
+    // 6. 次の処理のために、テクスチャAを SRV(読み込み用) に戻す
+    barrier.SettingBarrierRTVforSRV(renderTextureDataA.resource);
+
+    // 4. テクスチャAを RTV(書き込み用) にする
+    barrier.SettingBarrierSRVforRTV(renderTextureDataB.resource);
+    // 5. B(1)を読み込み、A にるみナンスアウトラインを描画
+    renderTexture_.Draw(PSO::kEffectLuminanceBasedOutline, renderTextureDataB.rtvHandleCPU, 0);
+    // 6. 次の処理のために、テクスチャAを SRV(読み込み用) に戻す
+    barrier.SettingBarrierRTVforSRV(renderTextureDataB.resource);
+    
+    // 4. テクスチャAを RTV(書き込み用) にする
+    barrier.SettingBarrierSRVforRTV(renderTextureDataA.resource);
+    // ボックスフィルターを描画
+    renderTexture_.Draw(PSO::kEffectBoxFilter, renderTextureDataA.rtvHandleCPU, 1);
     // 6. 次の処理のために、テクスチャAを SRV(読み込み用) に戻す
     barrier.SettingBarrierRTVforSRV(renderTextureDataA.resource);
 
@@ -139,39 +153,31 @@ void DirectXCommon::DrawRenderTexture()
     //TransitionBarrierの設定
     barrier.SettingBarrierRTVforSRV(renderTextureDataB.resource);
 
-    // 4. テクスチャAを RTV(書き込み用) にする
-    barrier.SettingBarrierSRVforRTV(renderTextureDataA.resource);
-    // ボックスフィルターを描画
-    renderTexture_.Draw(PSO::kEffectBoxFilter, renderTextureDataA.rtvHandleCPU, 1);
-    // 6. 次の処理のために、テクスチャAを SRV(読み込み用) に戻す
-    barrier.SettingBarrierRTVforSRV(renderTextureDataA.resource);
-
-
     //TransitionBarrierの設定
-    barrier.SettingBarrierSRVforRTV(renderTextureDataB.resource);
+    barrier.SettingBarrierSRVforRTV(renderTextureDataA.resource);
     // 5.画面 にRadialBlur
-    renderTexture_.Draw(PSO::kEffectRadialBlur, renderTextureDataB.rtvHandleCPU, 0);
-    //TransitionBarrierの設定
-    barrier.SettingBarrierRTVforSRV(renderTextureDataB.resource);
-
-    //TransitionBarrierの設定
-    barrier.SettingBarrierSRVforRTV(renderTextureDataA.resource);
-    // 5.画面 にビネットを
-    renderTexture_.Draw(PSO::kEffectVignette, renderTextureDataA.rtvHandleCPU, 1);
+    renderTexture_.Draw(PSO::kEffectRadialBlur, renderTextureDataA.rtvHandleCPU, 1);
     //TransitionBarrierの設定
     barrier.SettingBarrierRTVforSRV(renderTextureDataA.resource);
 
-
+    //TransitionBarrierの設定
     barrier.SettingBarrierSRVforRTV(renderTextureDataB.resource);
-    renderTexture_.DrawRandom(kBlendModeMultiply, renderTextureDataB.rtvHandleCPU, 0);
+    // 5.画面 にビネットを
+    renderTexture_.Draw(PSO::kEffectVignette, renderTextureDataB.rtvHandleCPU, 0);
     //TransitionBarrierの設定
     barrier.SettingBarrierRTVforSRV(renderTextureDataB.resource);
 
-    ////TransitionBarrierの設定
-    //barrier.SettingBarrierSRVforRTV(renderTextureDataA.resource);
-    //renderTexture_.DrawDissolve(renderTextureDataA.rtvHandleCPU, 1, TextureFactory::NOIZE0);
-    ////TransitionBarrierの設定
-    //barrier.SettingBarrierRTVforSRV(renderTextureDataA.resource);
+
+    barrier.SettingBarrierSRVforRTV(renderTextureDataA.resource);
+    renderTexture_.DrawRandom(kBlendModeMultiply, renderTextureDataA.rtvHandleCPU, 1);
+    //TransitionBarrierの設定
+    barrier.SettingBarrierRTVforSRV(renderTextureDataA.resource);
+
+    //TransitionBarrierの設定
+    barrier.SettingBarrierSRVforRTV(renderTextureDataB.resource);
+    renderTexture_.DrawDissolve(renderTextureDataB.rtvHandleCPU, 0, TextureFactory::NOIZE0);
+    //TransitionBarrierの設定
+    barrier.SettingBarrierRTVforSRV(renderTextureDataB.resource);
 
      // 4. 【重要】描画先を画面(バックバッファ)のRTVにする
     // バックバッファは PreDraw で既に RENDER_TARGET 状態になっています

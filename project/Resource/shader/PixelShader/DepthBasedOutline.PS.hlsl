@@ -37,7 +37,7 @@ struct PixelShaderOutput
 
 PixelShaderOutput main(VertexShaderOutput input)
 {
-        
+    
     PixelShaderOutput output;
     
     uint32_t width, height;

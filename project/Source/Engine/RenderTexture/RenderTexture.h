@@ -103,7 +103,7 @@ private:
     Microsoft::WRL::ComPtr <ID3D12Resource>materialResourceRandom_;
     MaterialForRandom* materialForRandom_ = nullptr;
 public:
-
+    Microsoft::WRL::ComPtr<ID3D12Resource>& GetMaterialResouce(const PSO::EffectType& effectType);
     void Create();
     void CreateResource(const uint32_t index);
 

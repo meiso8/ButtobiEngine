@@ -7,7 +7,6 @@ struct Material
     float4 color;
     bool useEffect;
     int type;
-    bool padding[2];
 };
 
 ConstantBuffer<Material> gMaterial : register(b0);

@@ -153,6 +153,8 @@ void MyEngine::Debug()
     DebugUI::CheckSpotLight();
     DebugUI::CheckPointLightData();
 
+    ImGui::ShowStyleEditor();
+
     SceneManager::Debug();
 
 #endif // USE_IMGUI

@@ -3,9 +3,10 @@
 
 struct Material
 {
-    float maskVal;
+    float32_t maskVal;
     float32_t3 rgb;
 };
+
 
 ConstantBuffer<Material> gMaterial : register(b0);
 

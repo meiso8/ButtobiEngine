@@ -114,13 +114,12 @@ void Player::UpdateRay()
 
 void Player::Draw(Camera& camera, const LightMode& lightType)
 {
+#ifdef _DEBUG
     bodyPos_.SetLightMode(lightType);
     bodyPos_.Draw(camera, kBlendModeNormal);
     eyeCollider_->Draw(camera);
-
-
-
     ColliderDraw(camera);
+#endif
 }
 
 void Player::DrawRaySprite()
