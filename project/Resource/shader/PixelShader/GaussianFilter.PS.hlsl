@@ -13,7 +13,7 @@ float gauss(float x, float y, float sigma)
 
 struct Material
 {
-    int kernel;
+    int32_t kernel;
     float sigma;
 };
 
@@ -28,6 +28,7 @@ struct PixelShaderOutput
 
 PixelShaderOutput main(VertexShaderOutput input)
 {
+    
     uint width, height;
     
     gTexture.GetDimensions(width, height);

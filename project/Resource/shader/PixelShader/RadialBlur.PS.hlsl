@@ -7,6 +7,7 @@ struct Material
     float32_t blurWidth;
 };
 
+
 ConstantBuffer<Material> gMaterial : register(b0);
 Texture2D<float4> gTexture : register(t2);
 SamplerState gSampler : register(s0);
@@ -18,7 +19,7 @@ struct PixelShaderOutput
 
 PixelShaderOutput main(VertexShaderOutput input)
 {
-        
+          
     float32_t2 direction = input.texcoord - gMaterial.center;
     float32_t3 outputColor = float32_t3(0.0f, 0.0f, 0.0f);
     

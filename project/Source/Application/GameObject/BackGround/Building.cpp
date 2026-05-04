@@ -124,13 +124,14 @@ void FieldCollider::Update()
     object_->UpdateUV();
 
     object_->Update();
-   
+    ColliderUpdate();
 }
 
 void FieldCollider::Draw(Camera& camera)
 {
     object_->Draw(camera);
    
+    ColliderDraw(camera);
 }
 
 void FieldCollider::Initialize()

@@ -17,6 +17,7 @@ void EyeCollider::Update()
 {
     object_->Update();
     ColliderUpdate();
+    SavePosition();
 }
 
 void EyeCollider::Draw(Camera& camera)
@@ -32,13 +33,17 @@ void EyeCollider::Initialize()
     object_->Initialize();
     object_->worldTransform_.translate_.y = kEyeDefaultPosY_;
     object_->worldTransform_.translate_.z = kEyeDefaultPosZ_;
+
+
 }
 
 void EyeCollider::OnCollision(Collider* collider)
 {
 
     if (collider->GetCollisionAttribute() == kCollisionWall) {
-
+        
+        BackToPrevPosition();
+        object_->Update(); // 座標を戻した状態で行列を再計算
     }
 
     OnCollisionCollider();

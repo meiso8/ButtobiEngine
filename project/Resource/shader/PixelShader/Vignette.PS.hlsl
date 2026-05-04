@@ -4,7 +4,6 @@ struct Material
 {
     float correctVal;
     float viignetteVal;
-    float padding[2];
 };
 
 

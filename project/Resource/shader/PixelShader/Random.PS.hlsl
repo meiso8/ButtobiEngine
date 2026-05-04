@@ -27,8 +27,7 @@ struct PixelShaderOutput
 PixelShaderOutput main(VertexShaderOutput input)
 {
     PixelShaderOutput output;
-    
-    float random = rand2dTo1d(input.texcoord *gMaterial.time);
-    output.color = float4(random,random,random,1.0f);
+    float random = rand2dTo1d(input.texcoord * gMaterial.time);
+    output.color = float4(random, random, random, 1.0f);
     return output;
 }

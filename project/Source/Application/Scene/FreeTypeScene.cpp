@@ -3,7 +3,6 @@
 #include"AABB.h"
 #include"DrawGrid.h"
 #include"DebugUI.h"
-#include"MyEngine.h"
 #include"Model.h"
 
 FreeTypeScene::FreeTypeScene()
@@ -57,7 +56,7 @@ FreeTypeScene::FreeTypeScene()
     levelEditor_->CreateObject(objects_);
 
 
-    player_ = std::make_unique<Player>();
+    //player_ = std::make_unique<Player>();
 
 }
 
@@ -70,15 +69,15 @@ void FreeTypeScene::Initialize()
 
     currentCamera_ = camera_.get();
 
-    player_->Init();
+    //player_->Init();
     auto* levelData = levelEditor_->GetLevelData();
-    if (!levelData->players.empty()) {
-        auto& playerData = levelData->players[0];
-        player_->SetBodyPos(playerData.transform.translate);
-        player_->SetBodyRotate(playerData.transform.rotate);
-        player_->SetBodyScale(playerData.transform.scale);
-    }
-    player_->Update();
+    //if (!levelData->players.empty()) {
+    //    auto& playerData = levelData->players[0];
+    //    player_->SetBodyPos(playerData.transform.translate);
+    //    player_->SetBodyRotate(playerData.transform.rotate);
+    //    player_->SetBodyScale(playerData.transform.scale);
+    //}
+    //player_->Update();
 
     for (auto& enemyData : levelData->enemies) {
         std::unique_ptr<Object3d> enemy = std::make_unique<Object3d>();
@@ -122,8 +121,6 @@ void FreeTypeScene::Update()
     DebugUI::CheckParticle(*particleEmitters_[0], "Emitter0");
     DebugUI::CheckSRVIndex();
 
-    DebugUI::CheckWorldTransform(player_->GetBodyWorldTransform(), "playerTransform");
-
 #endif //_DEVELOP
 
 
@@ -163,8 +160,6 @@ void FreeTypeScene::DrawSprite() {
 
 void FreeTypeScene::DrawModel()
 {
-
-
     skyBoxObj_->Draw(*currentCamera_);
 #ifdef _DEVELOP
     // デバッグカメラ
@@ -174,8 +169,6 @@ void FreeTypeScene::DrawModel()
     for (auto& enemy : enemies_) {
         enemy->Draw(*currentCamera_);
     }
-
-    player_->Draw(*currentCamera_,LightMode::kLightModeHalfL);
 
     object3d_->Draw(*currentCamera_);
     object3d2_->Draw(*currentCamera_);
