@@ -104,7 +104,7 @@ class MYADDON_OT_spawn_create_puton_symbol(bpy.types.Operator):
             for child in obj.children:
                 new_child = self.copy_hierarchy(child,target_collection)
                 new_child.parent = new_obj
-
+                new_child.name =  SpawnNames.names[self.self_type][SpawnNames.INSTANCE]
                 for mod in new_child.modifiers:
                     if mod.type == 'ARMATURE' and mod.object == obj:
                         mod.object = new_obj
