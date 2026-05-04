@@ -237,7 +237,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\SceneManager\SceneChange.cpp" />
     <ClCompile Include="Source\Application\System\CollisionManager.cpp" />
     <ClCompile Include="Source\Engine\Math\Matrix\Matrix3x3.cpp" />
-    <ClCompile Include="Source\Engine\Math\Random\Random.cpp" />
     <ClCompile Include="Source\Engine\Mesh\MeshCommon\MeshCommon.cpp" />
     <ClCompile Include="Source\Engine\SceneManager\SceneManager.cpp" />
     <ClCompile Include="Source\Application\Scene\SampleScene.cpp" />

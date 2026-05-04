@@ -57,6 +57,6 @@ private:
     std::unique_ptr<LevelData>levelData_ = nullptr;
 private:
     void LoadObject(nlohmann::json& object, LevelData* levelData);
-    void SetTransform(nlohmann::json& object, EulerTransform& transform);
+    void LoadTransform(nlohmann::json& object, EulerTransform& transform);
 };
 

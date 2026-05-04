@@ -10,7 +10,7 @@
 #include"SphericalCoordinate.h"
 #include"Texture.h"
 #include"ModelManager.h"
-
+#include"Random.h"
 #include<unordered_map>
 #include<list>
 #include<memory>
@@ -86,7 +86,9 @@ class ParticleManager
 {
 public:
     static const uint32_t kNumMaxInstance = 100;//インスタンス数
+
 private:
+
     RootSignature* rootSignature_ = nullptr;
     static ID3D12GraphicsCommandList* commandList_;
     static std::unordered_map<std::string, std::unique_ptr <ParticleGroup>>particleGroups;
