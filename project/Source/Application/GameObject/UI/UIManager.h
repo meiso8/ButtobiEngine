@@ -6,6 +6,8 @@
 #include"ButtonSprite/ButtonSprite.h"
 
 #include<unordered_map>
+
+class EyeCatch;
 class SlidePuzzleSystem;
 
 class UIManager
@@ -32,6 +34,6 @@ private:
     std::unique_ptr<Sprite> effectSprite_ = nullptr;
     std::unique_ptr<CurPos>  curPos_ = nullptr;
     std::unique_ptr<ButtonSprite>  buttonSprite_ = nullptr;
-
+    std::unique_ptr<EyeCatch>  eyeChatch_ = nullptr;
 };
 

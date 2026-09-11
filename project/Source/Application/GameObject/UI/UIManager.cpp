@@ -2,7 +2,7 @@
 #include"Window.h"
 #include"ItemManager/ItemManager.h"
 #include"Input.h"
-
+#include"EyeCatch/EyeCatch.h"
 UIManager::UIManager()
 {
     effectSprite_ = std::make_unique<Sprite>();
@@ -16,6 +16,9 @@ UIManager::UIManager()
 
     pauseScreen_ = std::make_unique<PauseScreen>();
     pauseScreen_->SetCurPosPtr(curPos_->GetScreenPosPtr());
+
+    eyeChatch_ = std::make_unique<EyeCatch>();
+
 }
 
 UIManager::~UIManager()
@@ -33,6 +36,7 @@ void UIManager::Initialize()
     buttonSprite_->Initialize();
     pauseScreen_->Initialize();
     curPos_->Initialize();
+    eyeChatch_->Initialize();
 }
 
 void UIManager::UpdateGage()
@@ -67,6 +71,13 @@ void UIManager::UpdatePauseScreen()
 
     pauseScreen_->Update();
 
+    if (buttonSprite_->IsThermographyCommandFirst()) {
+        //最初にサーモグラフィーが行われたら
+        
+        //アイキャッチアニメーションを再生する
+        eyeChatch_->Update();
+    }
+
 }
 
 void UIManager::DrawHPGage()
@@ -90,9 +101,15 @@ void UIManager::DrawCurPos()
 
     buttonSprite_->Draw();
 
+    if (buttonSprite_->IsThermographyCommandFirst()) {
+        //最初にサーモグラフィーが行われたらで一応囲うが後で修正するかもしれない。
+        eyeChatch_->Draw();
+    }
+
     if (pauseScreen_->GetIsActive()) {
         curPos_->Draw();
     }
+
 
 }
 

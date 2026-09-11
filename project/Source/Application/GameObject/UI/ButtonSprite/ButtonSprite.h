@@ -23,13 +23,17 @@ public:
     void Update();
     void Draw();
     void SetIsGetThermography(const bool flag) { isGetThermography_ = flag; }
+    bool IsThermographyCommandFirst() { return isGetThermographyFirst_; }
+
 private:
     std::array<std::unique_ptr<Sprite>,kButtonMaxCount> sprites_;
+    std::unique_ptr<Sprite> thermoGraphySprite_ = nullptr;
     bool isGetThermographyFirst_ = false;
     bool isGetThermography_ = false;
+    
     float scaleTimerDuration_ = 0.0f;
     float timer_ = 0.0f;
     Vector2 size_ = { 0.0f };
-   
+
 };
 

@@ -35,6 +35,7 @@ public:
     );
 public:
     void Create(const TextureFactory::Handle& textureHandle, const Vector2& position, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
+    Sprite();
     ~Sprite();
     void Update();
     void UpdateAnchorPoint();
@@ -43,6 +44,9 @@ public:
 
     void SetColor(const Vector4& color);
     void SetTexture(const TextureFactory::Handle& textureHandle);
+    /// @brief ガチのSRVハンドルを受け渡すところ
+    /// @param textureSrvHandle 
+    void SetSRVTextureHandle(const int32_t textureSrvHandle);
     void SetSize(const Vector2& size) { size_ = size; };
     void SetPosition(const Vector2& position) { position_ = position; }
     void SetRotate(const float& rotate) { rotate_ = rotate; }
