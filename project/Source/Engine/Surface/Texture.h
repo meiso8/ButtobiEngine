@@ -54,6 +54,7 @@ public:
     //テクスチャ番号からGPUハンドルを取得
     static D3D12_GPU_DESCRIPTOR_HANDLE GetSrvHandleGPU(const std::filesystem::path& filePath);
     static const DirectX::TexMetadata& GetMetaData(const uint32_t& handle);
+
 private:
     static ID3D12GraphicsCommandList* commandList_;
     static CbvSrvUavDescriptorHeap* srvDescriptorHeap_;

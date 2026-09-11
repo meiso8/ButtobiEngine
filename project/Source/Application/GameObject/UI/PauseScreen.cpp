@@ -187,7 +187,7 @@ void PauseScreen::SelectButton()
                     MemoManager::SetLookItem(false);
                     //パスワードシステムを無効化する
                     PasswordText::SetIsActive(false);
-;                   break;
+                   break;
                 case kBackToTitle:
                     isBackToTitle_ = true;
                     break;

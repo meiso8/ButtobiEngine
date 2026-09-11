@@ -88,6 +88,9 @@ public:
         HAND,
         MUSIC_HINT,
         WEB_SITE,
+        //サーモグラフィーUI
+        UI_THERMOGRAPHY,
+
         // ======================
         TEXTURES,
     };

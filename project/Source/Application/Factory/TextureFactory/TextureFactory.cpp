@@ -73,8 +73,8 @@ void TextureFactory::Load()
     Texture::LoadAndMapHandle("Resource/Textures/UI/UI_R.png", UI_R);
     Texture::LoadAndMapHandle("Resource/Textures/UI/UI_RB.png", UI_RB);
     Texture::LoadAndMapHandle("Resource/Textures/UI/UI_X.png", UI_X);
-
-
+    Texture::LoadAndMapHandle("Resource/Textures/UI/UI_THERMOGRAPHY.png", UI_THERMOGRAPHY);
+    
     Texture::LoadAndMapHandle("Resource/Textures/arrow.png", ARROW);
     Texture::LoadAndMapHandle("Resource/Textures/footprints.png", FOOTS_PRINTS);
     Texture::LoadAndMapHandle("Resource/Textures/meltGlass.png", MELT_GLASS);

@@ -35,6 +35,10 @@ void Sprite::Create(const TextureFactory::Handle& textureHandle, const Vector2& 
     AdjustTextureSize();
 }
 
+Sprite::Sprite() {
+
+}
+
 Sprite::~Sprite()
 {
     transformationMatrixResource_.UnMap();
@@ -101,6 +105,11 @@ void Sprite::SetTexture(const TextureFactory::Handle& textureHandle)
 {
     textureHandle_ = Texture::GetSRVHandle(textureHandle);
 
+}
+
+void Sprite::SetSRVTextureHandle(const int32_t textureSrvHandle)
+{
+    textureHandle_ = textureSrvHandle;
 }
 
 

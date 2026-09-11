@@ -12,6 +12,10 @@ namespace {
 }
 ButtonSprite::ButtonSprite()
 {
+
+    const float height = static_cast<float>(Window::GetClientHeight());
+    const float whidth = static_cast<float>(Window::GetClientWidth());
+    
     for (auto& sprite : sprites_) {
         sprite = std::make_unique<Sprite>();
         sprite->Create(TextureFactory::UV_CHECKER, { 0.0f,0.0f });
@@ -33,10 +37,15 @@ ButtonSprite::ButtonSprite()
 
     sprites_[kButton_UI_RB]->SetAnchorPoint({ 0.5f,0.5f });
 
+    thermoGraphySprite_ = std::make_unique<Sprite>();
+    thermoGraphySprite_->Create(TextureFactory::UI_THERMOGRAPHY, { whidth*0.5f,height*0.5f});
+    thermoGraphySprite_->SetAnchorPoint({ 0.5f,0.5f });
 
     for (auto& sprite : sprites_) {
         sprite->AdjustTextureSize();
     }
+
+
 }
 
 ButtonSprite::~ButtonSprite()
@@ -49,8 +58,10 @@ void ButtonSprite::Initialize()
     isGetThermography_ = false;
 
     isGetThermographyFirst_ = false;
+
     timer_ = 0.0f;
     size_ = { 1.0f,1.0f };
+
 }
 
 void ButtonSprite::Update()
@@ -59,8 +70,6 @@ void ButtonSprite::Update()
 
         if (InputBind::IsClickR()) {
             if (!isGetThermographyFirst_) {
-
-
                 isGetThermographyFirst_ = true;
             }
         }
@@ -72,8 +81,10 @@ void ButtonSprite::Update()
             sprites_[kButton_UI_RB]->SetColor({ 1.0f,1.0f,1.0f,1.0f });
             size_ = Lerp(size_, { 1.0f,1.0f }, kScaleSpeed_);
             sprites_[kButton_UI_RB]->SetScale(size_);
+            thermoGraphySprite_->SetScale(size_);
+
         } else {
-     
+    
             sprites_[kButton_UI_RB]->SetColor({ 0.0f,1.0f,1.0f,1.0f });
             scaleTimerDuration_ += TimeManager::DeltaTime();
             scaleTimerDuration_ = std::fmod(scaleTimerDuration_, kTimer_);
@@ -83,8 +94,14 @@ void ButtonSprite::Update()
                 timer_ = std::fmod(timer_, 1.0f);
                 TransformAni::PoyoPoyo(size_, timer_, 1.0f, 0.0625f);
                 sprites_[kButton_UI_RB]->SetScale(size_);
+                thermoGraphySprite_->SetScale(size_);
             }
         }
+    }
+
+    if (!isGetThermographyFirst_) {
+        //サーモ初めましての時のみ描画する
+        thermoGraphySprite_->Update();
     }
 
     for (int i = 0; i < kButtonMaxCount; ++i) {
@@ -109,9 +126,17 @@ void ButtonSprite::Draw()
     }
 
     if (isGetThermography_) {
+
+
+        if (!isGetThermographyFirst_) {
+            //サーモ初めましての時のみ描画する
+            thermoGraphySprite_->Draw();
+        }
+
         Sprite::PreDraw(kBlendModeScreen);
-        sprites_[kButton_UI_RB]->Draw();
+
   
+        sprites_[kButton_UI_RB]->Draw();
     }
 
 }
