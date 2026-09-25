@@ -260,7 +260,7 @@ void Player::Move()
     if (InputBind::IsPressMoveB()) { velocity_.z = -1.0f; }
 
     float length = Length(Vector2{ velocity_.x,velocity_.z });
-    speed_ = (InputBind::IsPressSpeedButton() || length <= 0.5f) ? 0.125f : 0.25f;
+    speed_ = (InputBind::IsPressSpeedButton() || length <= 0.75f) ? 0.0625f : 0.25f;
 
     if (fabs(velocity_.x) > 0.0f || fabs(velocity_.z) > 0.0f) {
 
@@ -291,8 +291,10 @@ void Player::Move()
         Vector3 horizontal = Normalize(Vector3{ velocity_.x, 0.0f, velocity_.z });
 
         auto& transform = aniObject_->GetTransform();
-        transform.translate += forward * horizontal.z * speed_;
-        transform.translate += right * horizontal.x * speed_;
+        Vector3 targetTranslate = transform.translate + (forward * horizontal.z + right * horizontal.x) * speed_;
+
+        transform.translate = Lerp(transform.translate,targetTranslate,0.5f);
+
 
         aniObject_->SetAnimation("Walk");
 
