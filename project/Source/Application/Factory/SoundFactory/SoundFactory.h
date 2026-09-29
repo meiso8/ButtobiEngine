@@ -64,6 +64,8 @@ public:
         Piano,
         //キータイプ音
         PC_Keyboard,
+        //ベル
+        BELL,
     };
 
    static void Load();

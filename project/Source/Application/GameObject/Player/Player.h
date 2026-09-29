@@ -58,7 +58,8 @@ public:
     //レイスプライトクラスを包含する
     RaySprite* GerRaySprite() { return raySprite_.get(); };
     Matrix4x4* GetHandMatrixPtr() { return &handMatrix_; }
-
+    //ジャンプ可能かどうかを外部から設定する
+    void SetCanJump(const bool canJump) { canJump_ = canJump; };
 
 
 
@@ -87,6 +88,7 @@ private:
     bool isZoom_ = false;
     //ズーム開始タイマー
     float zoomStartTimer_ = 0.0f;
+
     //目の位置
     std::unique_ptr<EyePosition>eyePosition_ = nullptr;
 #pragma endregion
@@ -103,6 +105,8 @@ private:
     bool isFloorHit_ = false;
 
 #pragma region//ジャンプ
+    //ジャンプ可能かどうか
+    bool canJump_ = false;
     //ジャンプフラグ
     bool isJump_ = false;
     //ジャンプスピード

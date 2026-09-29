@@ -55,8 +55,6 @@ GameScene::GameScene()
     //ステージマネージャーのインスタンスを取得する
     auto* stageManager = StageManager::GetInstance();
 
-    
-
     //プレイヤーをセットする
     stageManager->SetPlayer(player_.get());
     //メモ管理セット
@@ -151,7 +149,11 @@ void GameScene::Update() {
     if (!PauseScreen::GetIsActive() && !sceneChange_->IsStateTransition()) {
         //最初は移動しない
 
-
+        bool isInformationStage = stageManager->GetCurrentStageName() == "InformationStage";
+    
+        //最初のステージではないならジャンプ可能
+        player_->SetCanJump(!isInformationStage);
+        
     //アクティブなら更新しない
         player_->Update();
 

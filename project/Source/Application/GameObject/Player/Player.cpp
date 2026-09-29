@@ -121,6 +121,7 @@ Player::~Player()
 void Player::Init(const Vector3& pos)
 {
     isJump_ = false;
+    canJump_ = false;
     zoomTimer_ = 0.0f;
     zoomStartTimer_ = 0.0f;
 
@@ -307,6 +308,7 @@ void Player::Move()
 
 void Player::Jump()
 {
+    if (!canJump_) { return; }
 
     if (isFloorHit_) {
 
