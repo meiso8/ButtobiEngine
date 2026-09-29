@@ -114,6 +114,7 @@ public:
     static bool IsControllerDeadZone(BYTE& triggerButton);
     static void SetShowCursor(const bool flag);
     static Vector2& GetCursorPosition();
+    static bool IsMouseMove();
     static Vector2Int GetCursorPositionInt();
     static void SetCursorPosition(const Vector2& pos);
 private:

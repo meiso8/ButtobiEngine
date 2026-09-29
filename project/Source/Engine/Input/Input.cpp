@@ -369,6 +369,22 @@ Vector2& Input::GetCursorPosition()
     return cursorPos;
 }
 
+bool Input::IsMouseMove()
+{
+    if (preMouseState_.lX != mouseState_.lX) {
+        return true;
+    }
+
+    if (preMouseState_.lY != mouseState_.lY) {
+        return true;
+    }
+
+    if (preMouseState_.lZ != mouseState_.lZ) {
+        return true;
+    }
+    return false;
+}
+
 Vector2Int Input::GetCursorPositionInt()
 {
     POINT pos;
