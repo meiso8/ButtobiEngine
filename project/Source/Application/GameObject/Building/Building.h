@@ -19,6 +19,7 @@ public:
     void SetPos(const Vector3& pos);
     void SetTexture(const TextureFactory::Handle& handle) { object_->SetTextureHandle(handle); }
     void SetTemperature(const float temp) { object_->SetTemperature(temp); }
+    void SetColor(const Vector4& color) { object_->SetColor(color); }
 private:
     std::unique_ptr <Object3d> object_ = nullptr;
     std::unique_ptr < Primitive > cube_ = nullptr;

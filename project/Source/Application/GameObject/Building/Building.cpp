@@ -49,6 +49,9 @@ void Building::Init()
     SetWallAABB();
 
     SetWallPos();
+    //床の色をグレーにする
+    fieldPoses_[Floor]->SetColor({ 0.0625f,0.0625f,0.0625f,1.0f });
+
 }
 
 void Building::SetWallAABB()
