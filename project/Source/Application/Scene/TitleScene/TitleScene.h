@@ -19,6 +19,9 @@ private:
     std::unique_ptr<Sprite> startButton_ = nullptr;
     std::unique_ptr<Sprite> exitButton_ = nullptr;
     std::array<std::unique_ptr<Sprite> ,2>test3Sprites_;
+
+    std::unique_ptr<Sprite> markSprite_ = nullptr;
+
     bool isHoverStartButton_ = false;
     bool isHoverExitButton_ = false;
     float timer_ = 0.0f;

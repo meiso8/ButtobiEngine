@@ -40,6 +40,12 @@ TitleScene::TitleScene()
 
     }
 
+    //マーカー
+    Vector2 mousePos = Input::GetCursorPosition();
+    markSprite_ = std::make_unique<Sprite>();
+    markSprite_->Create(TextureFactory::Handle::EYE, mousePos);
+    markSprite_->SetAnchorPoint({ 0.5f, 0.5f });
+
 }
 
 TitleScene::~TitleScene()
@@ -70,7 +76,7 @@ void TitleScene::Update()
     Sound::PlayBGM(SoundFactory::BGM_ArabRuins);
 
     timer_ += TimeManager::DeltaTime();
-    float scale = sinf(timer_) * 0.125f+1.25f;
+    float scale = sinf(timer_) * 0.125f + 1.25f;
     titleSprite_->SetScale({ scale,scale });
 
     test3Sprites_[0]->GetUVTranslate().x += 0.001f;
@@ -81,9 +87,12 @@ void TitleScene::Update()
     }
     Vector2 mousePos = Input::GetCursorPosition();
     Vector2 stickPos = { 0.0f,0.0f };
+
+    bool isMouseMove = Input::IsMouseMove();
+
     Input::IsControllerStickPosMoveTrigger(BUTTON_LEFT, 0, &stickPos);
 
-    if (stickPos.y > 0.1f|| IsCollision(mousePos, *startButton_)) {
+    if (stickPos.y > 0.1f || isMouseMove && IsCollision(mousePos, *startButton_)) {
         isHoverExitButton_ = false;
 
         if (!isHoverStartButton_) {
@@ -93,7 +102,7 @@ void TitleScene::Update()
         }
     }
 
-    if (stickPos.y < -0.1f || IsCollision(mousePos, *exitButton_)) {
+    if (stickPos.y < -0.1f || isMouseMove && IsCollision(mousePos, *exitButton_)) {
         isHoverStartButton_ = false;
 
         if (!isHoverExitButton_) {
@@ -126,6 +135,9 @@ void TitleScene::Update()
     } else {
         exitButton_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
     }
+
+    markSprite_->SetPosition(mousePos);
+    markSprite_->Update();
 }
 
 void TitleScene::DrawModel()
@@ -141,6 +153,7 @@ void TitleScene::DrawSprite()
     titleSprite_->Draw();
     startButton_->Draw();
     exitButton_->Draw();
+    markSprite_->Draw();
 
     sceneChange_->Draw();
 }
