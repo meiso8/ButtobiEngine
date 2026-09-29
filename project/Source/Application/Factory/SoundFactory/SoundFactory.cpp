@@ -49,5 +49,6 @@ void SoundFactory::Load()
 
     Sound::LoadAndMap("Resource/Sounds/externals/PC-Keyboard04-08(Enter-Mid).mp3", PC_Keyboard);
 
+    Sound::LoadAndMap("Resource/Sounds/externals/Bell_Accent08-2(Bell_Only).mp3", BELL);
    
 }
