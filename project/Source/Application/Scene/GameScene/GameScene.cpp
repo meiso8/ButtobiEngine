@@ -37,7 +37,6 @@ GameScene::GameScene()
 
     //ライトマネージャーのインスタンスを生成
     lightingManager_ = std::make_unique<LightingManager>();
-
     lightingManager_->GetPlayerHandPos().Parent(player_->GetEyeWorldTransform());
     lightingManager_->SetDirection(&player_->GetEyeForward());
 
@@ -52,37 +51,16 @@ GameScene::GameScene()
     //メモ管理
     memoManager_ = std::make_unique<MemoManager>();
 
-    //ステージマネージャーのインスタンスを取得する
-    auto* stageManager = StageManager::GetInstance();
+    SetStages();
 
-    //プレイヤーをセットする
-    stageManager->SetPlayer(player_.get());
-    //メモ管理セット
-    stageManager->SetMemoManager(memoManager_.get());
-    //アイテム管理セット
-    stageManager->SetItemManager(itemManager_.get());
-    //カーソルのポジションをセットする
-    stageManager->SetUIManager(uIManager_.get());
-    //ライト管理をセットする
-    stageManager->SetLightingManager(lightingManager_.get());
-    stageManager->SetSceneChange(sceneChange_.get());
-    stageManager->SetCollisionManager(collisionManager_.get());
-
-    stageManager->SetMap("InformationStage", std::move(std::make_unique<InformationStage>()));
-    stageManager->SetMap("AmenStage", std::move(std::make_unique<AmenStage>()));
-    stageManager->SetMap("WaterStage", std::move(std::make_unique<WaterStage>()));
-    stageManager->SetMap("MedjedStage", std::move(std::make_unique<MedjedStage>()));
-    stageManager->SetMap("MummyStage", std::move(std::make_unique<MummyStage>()));
-    stageManager->SetMap("AnubisStage", std::move(std::make_unique<AnubisStage>()));
-    stageManager->SetMap("MeltStage", std::move(std::make_unique<MeltStage>()));
-    stageManager->SetMap("BastetStage", std::move(std::make_unique<BastetStage>()));
+    SoundManager::SetCollisionManager(collisionManager_.get());
+    SoundManager::SetRaySprite(player_->GerRaySprite());
 
     //スカイボックス
     skyboxObject3d_ = std::make_unique<SkyboxObject3d>();
     skyboxObject3d_->Create();
 
-    SoundManager::SetCollisionManager(collisionManager_.get());
-    SoundManager::SetRaySprite(player_->GerRaySprite());
+
 }
 
 void GameScene::Initialize() {
@@ -127,24 +105,11 @@ void GameScene::Update() {
 
     lightingManager_->UpdatePointLight();
 
-    if (isDebugCameraActive_) {
-        currentCamera_->UpdateMatrix();
-    } else {
-        //プレイヤーの目の位置をカメラの位置とする
-        camera_->SetWorldMatrix(player_->GetEyeMatrix());
-        camera_->SetFovAngleY(Easing::EaseOutBack(Camera::kFovAngle, Camera::kFovAngle * 0.5f, player_->GetZoomTimer()));
-        camera_->UpdateViewProjectionMatrix();
-    }
-
     if (PauseScreen::GetIsBackToTitle()) {
         BackToTitle();
     }
 
-
-
     auto* stageManager = StageManager::GetInstance();
-
-
 
     if (!PauseScreen::GetIsActive() && !sceneChange_->IsStateTransition()) {
         //最初は移動しない
@@ -163,6 +128,8 @@ void GameScene::Update() {
             stageManager->Initialize();
         }
     }
+
+    CameraUpdate();
 
     //ステージの更新処理
     stageManager->Update();
@@ -266,6 +233,48 @@ void GameScene::Debug()
 
 #endif // !USE_IMGUI
 
+
+}
+
+void GameScene::CameraUpdate()
+{
+
+    if (isDebugCameraActive_) {
+        currentCamera_->UpdateMatrix();
+    } else {
+        //プレイヤーの目の位置をカメラの位置とする
+        camera_->SetWorldMatrix(player_->GetEyeMatrix());
+        camera_->SetFovAngleY(Easing::EaseOutBack(Camera::kFovAngle, Camera::kFovAngle * 0.5f, player_->GetZoomTimer()));
+        camera_->UpdateViewProjectionMatrix();
+    }
+}
+
+void GameScene::SetStages()
+{
+    //ステージマネージャーのインスタンスを取得する
+    auto* stageManager = StageManager::GetInstance();
+
+    //プレイヤーをセットする
+    stageManager->SetPlayer(player_.get());
+    //メモ管理セット
+    stageManager->SetMemoManager(memoManager_.get());
+    //アイテム管理セット
+    stageManager->SetItemManager(itemManager_.get());
+    //カーソルのポジションをセットする
+    stageManager->SetUIManager(uIManager_.get());
+    //ライト管理をセットする
+    stageManager->SetLightingManager(lightingManager_.get());
+    stageManager->SetSceneChange(sceneChange_.get());
+    stageManager->SetCollisionManager(collisionManager_.get());
+
+    stageManager->SetMap("InformationStage", std::move(std::make_unique<InformationStage>()));
+    stageManager->SetMap("AmenStage", std::move(std::make_unique<AmenStage>()));
+    stageManager->SetMap("WaterStage", std::move(std::make_unique<WaterStage>()));
+    stageManager->SetMap("MedjedStage", std::move(std::make_unique<MedjedStage>()));
+    stageManager->SetMap("MummyStage", std::move(std::make_unique<MummyStage>()));
+    stageManager->SetMap("AnubisStage", std::move(std::make_unique<AnubisStage>()));
+    stageManager->SetMap("MeltStage", std::move(std::make_unique<MeltStage>()));
+    stageManager->SetMap("BastetStage", std::move(std::make_unique<BastetStage>()));
 
 }
 

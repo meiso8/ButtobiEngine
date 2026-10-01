@@ -55,4 +55,7 @@ private:
     std::unique_ptr<CollisionManager>collisionManager_ = nullptr;
 private:
     void Debug();
+
+    void CameraUpdate();
+    void SetStages();
 };

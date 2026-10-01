@@ -68,11 +68,39 @@ void CollisionManager::UpdateAllCollider()
 
 void CollisionManager::CheckCollisionSpherePair(Collider* colliderA, Collider* colliderB)
 {
-    // 衝突判定
-    if (IsCollision(ColliderWorldPos::GetSphereWorldPos(colliderA), ColliderWorldPos::GetSphereWorldPos(colliderB))) {
-        
-        OnCollision(colliderA, colliderB);
+    Sphere sphereA = ColliderWorldPos::GetSphereWorldPos(colliderA);
+    Sphere sphereB= ColliderWorldPos::GetSphereWorldPos(colliderB);
+
+    
+    //2つの急の中心点間距離を求める 
+    float distance = Length({ sphereA.center - sphereB.center });
+
+    if (distance <= sphereA.radius + sphereA.radius) {
+        Vector3 distance = sphereA.center - sphereB.center;
+
+        float dist = Length(distance);
+        if (std::abs(dist) < 0.00001f) {
+            distance = Vector3{ 1.0f, 0.0f, 0.0f };
+        } else {
+            distance = Normalize(distance);
+        }
+
+       float pene = sphereA.radius + sphereB.radius - dist;
+
+       CollisionInfo infoA;
+       infoA.collided = true;
+       infoA.normal = distance;
+       infoA.penetration = pene;
+
+       colliderA->SetCollisionInfo(infoA);
+       CollisionInfo another = infoA;
+       another.normal *= -1.0f;
+       //逆向きノーマルを入れる
+       colliderB->SetCollisionInfo(another);
+      
+       OnCollision(colliderA, colliderB);
     }
+
 }
 
 void CollisionManager::CheckCollisionAABBPair(Collider* colliderA, Collider* colliderB)
@@ -85,7 +113,9 @@ void CollisionManager::CheckCollisionAABBPair(Collider* colliderA, Collider* col
 
     // 衝突判定
     if (colliderA->GetCollisionInfo().collided && colliderB->GetCollisionInfo().collided) {
+
         OnCollision(colliderA, colliderB);
+
     }
 }
 
@@ -108,6 +138,7 @@ void CollisionManager::CheckCollisionSphereAABBPair(Collider* sphereC, Collider*
         aabbC->SetCollisionInfo(aabbInfo);
 
         OnCollision(aabbC, sphereC);
+
     }
 
 }
