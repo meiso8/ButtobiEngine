@@ -3,6 +3,7 @@
 class LightingManager
 {
 public:
+    static void NoonLightInit();
     void Initialize();
     void UpdatePointLight();
     void DirectionalLightUpdate();

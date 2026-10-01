@@ -216,10 +216,10 @@ void Player::Update()
         Sound::PlaySE(SoundFactory::SWITCH_ON);
     }
 
+    aniObject_->Update();
     //アニメーションタイマーのアップデート
     aniObject_->UpdateAniTimer();
 
-    aniObject_->Update();
     headMatrix_ = aniObject_->GetWorldJointMatrix("Head");
     handMatrix_ = aniObject_->GetWorldJointMatrix("Hand.L");
 
