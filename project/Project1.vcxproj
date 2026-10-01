@@ -170,6 +170,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\UI\Skip\Skip.cpp" />
+    <ClCompile Include="Source\Application\Scene\FirstStoryScene\FirstStoryScene.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\EyeCatch\EyeCatch.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\PasswordText\PasswordText.cpp">
       <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ProgramDatabase</DebugInformationFormat>
@@ -498,6 +500,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\Item\Ticket\Ticket.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\UI\Skip\Skip.h" />
+    <ClInclude Include="Source\Application\Scene\FirstStoryScene\FirstStoryScene.h" />
     <ClInclude Include="Source\Application\GameObject\UI\EyeCatch\EyeCatch.h" />
     <ClInclude Include="Source\Application\GameObject\UI\PasswordText\PasswordText.h" />
     <ClInclude Include="Source\Application\GameObject\Gate\Gate.h" />

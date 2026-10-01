@@ -43,6 +43,11 @@ void TimeManager::Update()
     gameTime_ += deltaTime_;
 }
 
+float TimeManager::GetLocalTimer(const float currentTimer, const float startTime, const float endTime)
+{
+    return (currentTimer - startTime) / (endTime - startTime);
+}
+
 float TimeManager::DeltaTime()
 {
     return deltaTime_;

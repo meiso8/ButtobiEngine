@@ -34,10 +34,6 @@ FreeTypeScene::FreeTypeScene()
     skyBoxObj_ = std::make_unique<SkyboxObject3d>();
     skyBoxObj_->Create();
 
-
-
- 
-
 }
 
 void FreeTypeScene::Initialize()

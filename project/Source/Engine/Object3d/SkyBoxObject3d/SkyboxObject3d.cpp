@@ -21,6 +21,14 @@ void SkyboxObject3d::Create()
 }
 
 
+SkyboxObject3d::SkyboxObject3d()
+{
+}
+
+SkyboxObject3d::~SkyboxObject3d()
+{
+}
+
 void SkyboxObject3d::Initialize()
 {
     worldTransform_.Initialize();

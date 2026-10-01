@@ -90,7 +90,8 @@ public:
         WEB_SITE,
         //サーモグラフィーUI
         UI_THERMOGRAPHY,
-
+        //スカイボックスのくもり
+        SKYBOX_CLOUD_TEX,
         // ======================
         TEXTURES,
     };

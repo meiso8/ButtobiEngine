@@ -189,6 +189,8 @@
     <ClCompile Include="Source\Application\GameObject\Item\Ticket\Ticket.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\PasswordText\PasswordText.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\EyeCatch\EyeCatch.cpp" />
+    <ClCompile Include="Source\Application\Scene\FirstStoryScene\FirstStoryScene.cpp" />
+    <ClCompile Include="Source\Application\GameObject\UI\Skip\Skip.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\ComputeShaderPSO\ComputeShaderPSO.h" />
@@ -409,6 +411,8 @@
     <ClInclude Include="Source\Application\GameObject\UI\PasswordText\PasswordText.h" />
     <ClInclude Include="Source\Engine\FreeTypeManager\GlyphRun.h" />
     <ClInclude Include="Source\Application\GameObject\UI\EyeCatch\EyeCatch.h" />
+    <ClInclude Include="Source\Application\Scene\FirstStoryScene\FirstStoryScene.h" />
+    <ClInclude Include="Source\Application\GameObject\UI\Skip\Skip.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png" />
