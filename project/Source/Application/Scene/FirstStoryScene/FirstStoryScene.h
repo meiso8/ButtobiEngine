@@ -4,6 +4,8 @@
 #include"SkyBoxObject3d.h"
 #include"LevelEditor/LevelEditor.h"
 #include <vector>
+#include"AnimationObject3d.h"
+
 class Skip;
 class FirstStoryScene :public BaseScene
 {
@@ -31,5 +33,8 @@ private:
     std::array<bool,3> isInterComeRing_;
     bool isHorror_ = false;
     std::unique_ptr<Skip>skip_ = nullptr;
+    //アニメーション付きオブジェクト
+    std::unique_ptr<AnimationObject3d> aniObject_ = nullptr;
+
 };
 
