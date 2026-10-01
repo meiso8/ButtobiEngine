@@ -17,7 +17,14 @@ struct CollisionInfo {
 
 CollisionInfo GetCollisionInfo(const Sphere& sphere, const AABB& AABB);
 CollisionInfo GetCollisionInfo(const AABB& a, const AABB& b);
+void SetPenetrantion(CollisionInfo& collisionInfo, const Vector3& centerA, const Vector3& centerB, const float overlapX, const float overlapY, const float overlapZ);
 void ResolveCollision(Vector3& pos, Vector3& velocity, const CollisionInfo& info);
+
+namespace ParentMatrix {
+	Vector3 GetWorldTransformByMatrix(const Matrix4x4& mat);
+	//複合的な親子関係は対応していない
+	Vector3 GetParentScaleByMatrix(const Matrix4x4& mat);
+}
 
 /// @brief 衝突判定オブジェクト
 class Collider {

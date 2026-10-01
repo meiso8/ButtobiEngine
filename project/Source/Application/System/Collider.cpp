@@ -2,6 +2,24 @@
 #include "Collider.h"
 #include"Collision.h"
 #include"Matrix/MakeMatrix.h"
+#include"Log.h"
+
+Vector3 ParentMatrix::GetWorldTransformByMatrix(const Matrix4x4& mat)
+{
+    return { mat.m[3][0], mat.m[3][1], mat.m[3][2] };
+}
+
+Vector3 ParentMatrix::GetParentScaleByMatrix(const Matrix4x4& mat)
+{
+    Vector3 scale;
+    // X軸ベクトルの長さ
+    scale.x = std::sqrt(mat.m[0][0] * mat.m[0][0] + mat.m[0][1] * mat.m[0][1] + mat.m[0][2] * mat.m[0][2]);
+    // Y軸ベクトルの長さ
+    scale.y = std::sqrt(mat.m[1][0] * mat.m[1][0] + mat.m[1][1] * mat.m[1][1] + mat.m[1][2] * mat.m[1][2]);
+    // Z軸ベクトルの長さ
+    scale.z = std::sqrt(mat.m[2][0] * mat.m[2][0] + mat.m[2][1] * mat.m[2][1] + mat.m[2][2] * mat.m[2][2]);
+    return scale;
+}
 
 void Collider::InitCalcuatedTisFrameFlag()
 {
@@ -43,7 +61,12 @@ const Vector3& Collider::CalculateWorldPos()
         return tempWorldTransform_;
     }
 
-    assert(worldMat_);
+    if (worldMat_ == nullptr) {
+        LogFile::Log("no worldMatrix");
+        tempWorldTransform_ = { 0.0f, 0.0f, 0.0f };
+        return tempWorldTransform_;
+    }
+
     // 親（Object3d）のワールド行列から「ワールド平行移動量」だけを取り出す
     Vector3 objectWorldPos = Math::GetWorldTransformByMatrix(*worldMat_);
 
@@ -52,7 +75,6 @@ const Vector3& Collider::CalculateWorldPos()
 
 #ifdef _DEVELOP
     object3d_->SetTranslate(tempWorldTransform_);
-
 #endif // _DEVELOP
 
     //計算終了
@@ -186,7 +208,6 @@ CollisionInfo GetCollisionInfo(const AABB& a, const AABB& b) {
 
     return result;
 
-
 }
 
 void ResolveCollision(Vector3& pos, Vector3& velocity, const CollisionInfo& info) {
@@ -195,9 +216,10 @@ void ResolveCollision(Vector3& pos, Vector3& velocity, const CollisionInfo& info
 
     pos += info.normal * info.penetration;
 
-    float normalVelocity = Dot(velocity, info.normal);
+    //一旦ここをコメントアウトして見る
+    //float normalVelocity = Dot(velocity, info.normal);
 
-    if (normalVelocity < 0.0f) {
-        velocity -= info.normal * normalVelocity;
-    }
+    //if (normalVelocity < 0.0f) {
+    //    velocity -= info.normal * normalVelocity;
+    //}
 }

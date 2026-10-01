@@ -51,7 +51,7 @@ void Player::OnCollision(Collider* collider)
         ) {
 
         ResolveCollision(aniObject_->GetTransform().translate, velocity_, GetCollisionInfo());
-
+        velocity_ = { 0.0f,0.0f,0.0f };
     }
 
     if (collider->GetCollisionAttribute() == CollisionTag::GetTag("CameraUp")) {
