@@ -118,7 +118,7 @@ void TitleScene::Update()
         if (InputBind::IsClick()) {
             Sound::PlaySE(SoundFactory::FALL);
             sceneChange_->SetState(SceneChange::kFadeIn, 0.5f);
-            SceneManager::SetNextScene("Game");
+            SceneManager::SetNextScene("FirstStory");
         }
     } else {
         startButton_->SetColor({ 1.0f,1.0f,1.0f,1.0f });

@@ -66,6 +66,10 @@ public:
         PC_Keyboard,
         //ベル
         BELL,
+        
+        //インターホン
+        INTERCOM,
+        CITY,
     };
 
    static void Load();

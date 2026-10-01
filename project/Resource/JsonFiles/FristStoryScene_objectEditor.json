@@ -1,0 +1,41 @@
+{
+    "name": "FirstStoryScene",
+    "objects": [
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/Entrance",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "entrance.obj",
+            "glassFactor": 0.0,
+            "lightMode": 2,
+            "name": "Object1",
+            "nextStageName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 3.140000104904175,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "type": "MESH"
+        }
+    ]
+}

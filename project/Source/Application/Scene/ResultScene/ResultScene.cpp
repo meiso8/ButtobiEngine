@@ -9,15 +9,15 @@
 #include"SkyboxObject3d.h"
 #include"Sprite.h"
 #include"Player/Player.h"
+#include"../../GameObject/UI/Skip/Skip.h"
 
 ResultScene::~ResultScene() {}
 
 ResultScene::ResultScene()
 {
 
-    skipSprite_ = std::make_unique<Sprite>();
-    skipSprite_->Create(TextureFactory::Handle::SKIP, { 1280.0f - 128.0f - 64.0f, 720.0f - 64.0f });
-    skipSprite_->SetAnchorPoint({ 0.5f, 0.5f });
+    skip_ = std::make_unique<Skip>();
+
 
     symbolSprite_ = std::make_unique<Sprite>();
     symbolSprite_->Create(TextureFactory::Handle::PUZZLE, { 640.0f, 360.0f });
@@ -61,8 +61,8 @@ void ResultScene::Initialize()
     fadeSpeed_ = 2.0f;
     Sound::StopAllSound();
     lookTimer_ = 0.0f;
-
-    isSkipDraw_ = false;
+    //スキップ
+    skip_->Initialize();
 
     medjed_->Initialize();
 
@@ -88,7 +88,7 @@ void ResultScene::Update()
 
             if (lookTimer_ <= 10.0f) {
                 lookTimer_ = 10.0f;
-                isSkipDraw_ = true;
+                skip_->SetIsDraw(true);
             }
         }
     }
@@ -99,7 +99,9 @@ void ResultScene::Update()
     const float deltaTime = TimeManager::DeltaTime();
     lookTimer_ += deltaTime;
     timer_ += deltaTime;
+    
     bool switchTex = timer_ >= switchInterval_;
+
     if (switchTex) {
         timer_ = 0.0f;
         currentIndex_ = (currentIndex_ + 1) % textureSequence_.size();
@@ -146,9 +148,8 @@ void ResultScene::DrawSprite()
     symbolSprite_->Draw();
     creditSprite_->Draw();
 
-    if (isSkipDraw_) {
-        skipSprite_->Draw();
-    }
+
+    skip_->Draw();
 
 }
 
