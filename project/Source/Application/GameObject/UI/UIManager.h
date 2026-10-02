@@ -26,7 +26,7 @@ public:
     void DrawPauseScreen();
     void DrawCurPos();
     void DrawEffect();
-    void CreateHpGage(HPs& enemyHp, HPs& playerHp);
+    void CreateHpGage(const HPs& enemyHp, const HPs& playerHp);
     Vector2* GetCurPosPtr() {return curPos_->GetScreenPosPtr(); };
 private:
     std::unique_ptr<PauseScreen> pauseScreen_;

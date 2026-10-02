@@ -54,7 +54,7 @@ void AnimationObject3d::InitTime()
     animationTime_ = 0.0f;
 }
 
-std::map<std::string, Animation>& AnimationObject3d::GetAnimations()
+const std::map<std::string, Animation>& AnimationObject3d::GetAnimations()const
 {
     return skinningModel_->GetModelData()->animations_;
 }
@@ -73,7 +73,7 @@ Matrix4x4 AnimationObject3d::GetWorldJointMatrix(const std::string name)
 
 void AnimationObject3d::UpdateAnimation()
 {
-    ModelData* modelData = skinningModel_->GetModelData();
+  const ModelData* modelData = skinningModel_->GetModelData();
     Skeleton* skeleton = skinningModel_->GetSkeleton();
     SkinCluster* skinCluster = skinningModel_->GetSkinCluster();
 
@@ -85,7 +85,7 @@ void AnimationObject3d::UpdateAnimation()
 
     assert(&animations);
 
-    Animation* animation = nullptr;
+    const Animation* animation = nullptr;
     if (animations.contains(currentAnimation_)) {
         animation = &animations.at(currentAnimation_);
     } else {
@@ -124,11 +124,11 @@ void AnimationObject3d::UpdateAniTimer(const bool& isLoop)
 {
     animationTime_ += TimeManager::DeltaTime();
 
-    ModelData* modelData = skinningModel_->GetModelData();
+   const ModelData* modelData = skinningModel_->GetModelData();
 
-    Animation* animation = nullptr;
+    const Animation* animation = nullptr;
 
-    auto& animetions = modelData->animations_;
+    const auto& animetions = modelData->animations_;
 
     if (animetions.contains(currentAnimation_)) {
         animation = &animetions.at(currentAnimation_);
@@ -150,7 +150,7 @@ void AnimationObject3d::UpdateAniTimer(const bool& isLoop)
 }
 bool AnimationObject3d::IsAnimEnd()
 {
-    ModelData* modelData = skinningModel_->GetModelData();
+    const ModelData* modelData = skinningModel_->GetModelData();
 
     auto& animetions = modelData->animations_;
 
@@ -161,7 +161,7 @@ bool AnimationObject3d::IsAnimEnd()
     LogFile::Log("not found animetion : IsAnimEnd return false");
     return false;
 }
-void AnimationObject3d::SetModelAndLoadAnimation(Model* model)
+void AnimationObject3d::SetModelAndLoadAnimation(const Model* model)
 {
     assert(model);
 
@@ -282,7 +282,7 @@ void AnimationObject3d::MeshDraw()
     commandList_->IASetVertexBuffers(0, 1, &skinningModel_->GetVertexBufferView());
 
     //モデルデータの取得
-    auto* modelData = skinningModel_->GetModelData();
+    const auto* modelData = skinningModel_->GetModelData();
     DrawModel(modelData);
 }
 

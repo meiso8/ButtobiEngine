@@ -74,7 +74,7 @@ void Player::OnCollision(Collider* collider)
 Player::Player() {
 
     //モデルを取得する
-    model_ = ModelManager::GetModel("player.gltf");
+   Model* model = ModelManager::GetModel("player.gltf");
 
     //半径をコライダーのAABBにセットする
     float radius = 0.25f;
@@ -101,8 +101,8 @@ Player::Player() {
     //それぞれのObject3dを作る
     aniObject_ = std::make_unique<AnimationObject3d>();
     aniObject_->Create();
-    aniObject_->SetMeshAndMaterial(model_);
-    aniObject_->SetModelAndLoadAnimation(model_);
+    aniObject_->SetMeshAndMaterial(model);
+    aniObject_->SetModelAndLoadAnimation(model);
     aniObject_->SetAnimation("Idle");
     SetWorldMatrix(aniObject_->GetWorldTransform());
 
@@ -377,16 +377,20 @@ void Player::Zoom()
     zoomTimer_ = std::clamp(zoomTimer_, 0.0f, 1.0f);
 }
 
-Vector3& Player::GetEyeForward()
+const Vector3& Player::GetEyeForward()
 {
     return eyePosition_->GetForward();
 }
-Vector3& Player::GetBodyForward()
+const Vector3& Player::GetBodyForward()
 {
     //前方を取得する
     static Vector3 forward;
     forward = Math::GetForward(aniObject_->GetWorldMatrix());
     return forward;
+}
+const Vector3& Player::GetEyeWorldPosition()
+{
+    return eyePosition_->GetWorldTransform().GetWorldPosition();
 }
 void Player::Thermography()
 {

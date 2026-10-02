@@ -266,7 +266,7 @@ protected:
     /// @brief モデルの描画
     /// @param modelData モデルデータを入れる
     /// @param commandList コマンドリストの挿入
-    void DrawModel(ModelData* modelData);
+    void DrawModel(const ModelData* modelData);
 
     void CreateTransformationMatrix();
     /// @brief メッシュデータの描画処理

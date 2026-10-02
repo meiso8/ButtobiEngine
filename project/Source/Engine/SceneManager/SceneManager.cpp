@@ -1,6 +1,7 @@
 #include "SceneManager.h"
 #include"DirectXCommon.h"
 #include"ObjectManager/ObjectManager.h"
+#include"Particle/Particle.h"
 
 std::map < std::string, std::unique_ptr<BaseScene>> SceneManager::scenes_;
 std::map <BaseScene*, std::string> SceneManager::sceneNames_;
@@ -94,6 +95,8 @@ void SceneManager::InitScene()
     //オブジェクトをクリアする
     ObjectManager::GetInstance()->Clear();
 
+    //パーティクルをすべてリセットする
+    ParticleManager::ResetAll();
     currentScene_->Initialize();
 
 }

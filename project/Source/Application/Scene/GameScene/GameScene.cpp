@@ -37,7 +37,7 @@ GameScene::GameScene()
 
     //ライトマネージャーのインスタンスを生成
     lightingManager_ = std::make_unique<LightingManager>();
-    lightingManager_->GetPlayerHandPos().Parent(player_->GetEyeWorldTransform());
+    lightingManager_->SetHandPosParent(&player_->GetEyeWorldTransform());
     lightingManager_->SetDirection(&player_->GetEyeForward());
 
     //衝突判定
@@ -65,8 +65,6 @@ GameScene::GameScene()
 
 void GameScene::Initialize() {
 
-    //パーティクルのリセット
-    ParticleManager::ResetAll();
     //ライト管理の初期化
     lightingManager_->Initialize();
 

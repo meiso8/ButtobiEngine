@@ -156,7 +156,7 @@ bool ItemManager::AddItemToSlot(const std::string& name) {
     return false;
 }
 
-std::shared_ptr<Item> ItemManager::RaycastHitItem(RaySprite& raySprite) {
+std::shared_ptr<Item> ItemManager::RaycastHitItem( RaySprite& raySprite) {
 
 
     for (auto& [name, item] : items_) {

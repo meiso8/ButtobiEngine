@@ -3,7 +3,7 @@
 #include"Model.h"
 #include"CollisionConfig.h"
 #include"TimeManager.h"
-Vector3* DummyMummy::targetPos_ = nullptr;
+const Vector3* DummyMummy::targetPos_ = nullptr;
 Model* DummyMummy::model_ = nullptr;
 
 #include"Sound.h"

@@ -36,36 +36,37 @@ public:
     /// @brief デバック表示
     void Debug();
 
-
-
     /// @brief 
     /// @return 
-    Vector3& GetEyeForward();
-    Vector3& GetBodyForward();
-
+    const Vector3& GetEyeForward();
+    const Vector3& GetBodyForward();
+    /// @brief 目の位置の行列を得る
+    /// @return 
     const Matrix4x4& GetEyeMatrix() {
         return eyePosition_->GetWorldMatrix();
     };
-    WorldTransform& GetEyeWorldTransform() {
+    /// @brief 目の位置のトランスフォームを得る
+    /// @return 
+    const WorldTransform& GetEyeWorldTransform() {
         return eyePosition_->GetWorldTransform();
     }
-    
-    EyePosition* GetEyePosition() {
-        return eyePosition_.get();
-    }
-
-    WorldTransform& GetBodyWorldTransform() {
+    /// @brief 目の位置のワールド座標を得る
+    /// @return 
+    const Vector3& GetEyeWorldPosition();
+    /// @brief 体のトランスフォームを得る
+    /// @return 
+    const WorldTransform& GetBodyWorldTransform() {
         return aniObject_->GetWorldTransform();
     }
     /// @brief 手の位置のマトリックスポインタを得る
     /// @return 手の位置
-    Matrix4x4* GetHandMatrixPtr() { return &handMatrix_; }
+    const Matrix4x4* GetHandMatrixPtr() { return &handMatrix_; }
 
     //レイスプライトクラスを包含する
     RaySprite* GerRaySprite() { return raySprite_.get(); };
     /// @brief HPの構造体を得る
     /// @return HP構造体
-    HPs* GetHpsPtr() { return &characterState_.hps; }
+    const HPs* GetHpsPtr() { return &characterState_.hps; }
 
     /// @brief 体の回転をセットする
     /// @param rotate 回転
@@ -74,8 +75,11 @@ public:
     /// @param scale セット
     void SetBodyScale(const Vector3& scale) { aniObject_->SetScale(scale); }
 
-
+    /// @brief 衝突時判定
+    /// @param collider 
     void OnCollision(Collider* collider)override;
+    /// @brief 敵に衝突したときの処理
+    /// @param hitPoint 
     void OnCollisionEnemy(const int hitPoint = 10);
 
 
@@ -124,7 +128,7 @@ private:
     //レイスプライトクラスを包含する
     std::unique_ptr<RaySprite> raySprite_ = nullptr;
     //キャラクター状態
-    CharacterState characterState_;
+    CharacterState characterState_{};
     //無敵フラグ
     bool isInvincible_ = false;
     //ヒットタイマー
@@ -152,20 +156,20 @@ private:
 
 #pragma region//物理情報
     //速度
-    Vector3 velocity_ = {0.0f};
+    Vector3 velocity_ = { 0.0f };
     //速度倍率を格納
     float speed_ = 0.0f;
 #pragma endregion
 
     //音声が鳴るタイマー
     float soundTimer_ = 0.0f;
-    //モデル
-    Model* model_ = nullptr;
     //アニメーション付きオブジェクト
     std::unique_ptr<AnimationObject3d> aniObject_ = nullptr;
 
 #pragma region//jointの行列を格納
+    /// @brief 頭
     Matrix4x4 headMatrix_{};
+    /// @brief 手
     Matrix4x4 handMatrix_{};
 #pragma endregion
 };

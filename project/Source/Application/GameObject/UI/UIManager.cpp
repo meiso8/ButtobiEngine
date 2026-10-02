@@ -119,7 +119,7 @@ void UIManager::DrawEffect()
     effectSprite_->Draw();
 }
 
-void UIManager::CreateHpGage(HPs& enemyHp, HPs& playerHp)
+void UIManager::CreateHpGage(const HPs& enemyHp, const HPs& playerHp)
 {
     hpGages_.emplace(GageType::kEnemy, std::make_unique<HPGage>());
     hpGages_[kEnemy]->SetHpPtr(&enemyHp);

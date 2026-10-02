@@ -24,6 +24,6 @@ public:
     void GenerateMemos(const std::vector<TextureFactory::Handle>& handles);
 
     void SetSpriteSize(const TextureFactory::Handle& handle);
-    void RayCastHit(RaySprite& raySprite);
+    void RayCastHit( RaySprite& raySprite);
     std::map<TextureFactory::Handle, std::unique_ptr<Memo>>& GetMemos() { return memos_; }
 };

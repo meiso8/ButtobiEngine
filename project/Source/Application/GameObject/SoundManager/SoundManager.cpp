@@ -8,7 +8,7 @@
 #include"../StageManager/StageManager.h"
 #include "ItemManager/ItemManager.h"
 
-RaySprite* SoundManager::raySprite_ = nullptr;
+const RaySprite* SoundManager::raySprite_ = nullptr;
 CollisionManager* SoundManager::collisionManager_ = nullptr;
 bool SoundManager::isMedjedApper_ = false;
 float SoundManager::bgmVolFactor_ = 0.0f;
@@ -25,7 +25,7 @@ std::unordered_map<std::string, std::function<void()>> SoundManager::UpdateFunct
 
 };
 
-void SoundManager::SetRaySprite(RaySprite* raySprite) {
+void SoundManager::SetRaySprite(const RaySprite* raySprite) {
     raySprite_ = raySprite;
 }
 
@@ -98,7 +98,7 @@ void SoundManager::PlayDistanceSE(
     for (const auto& collider : collisionManager_->GetColliders()) {
         if (collider->GetCollisionAttribute() == CollisionTag::GetTag(tagName)) {
             Vector3 targetPos = collider->CalculateWorldPos();
-            Vector3 soundPos = raySprite_->GetRay().origin;
+            const Vector3 soundPos = raySprite_->GetOrigin();
             float distance = Distance(targetPos, soundPos);
             if (distance <= firstSoundDistance) {
                 float vol = firstSoundDistance - distance;

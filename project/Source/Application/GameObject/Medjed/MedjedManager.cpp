@@ -84,7 +84,7 @@ void MedjedManager::Initialize()
     enemyApperTime_ = false;
     PlaceLockersRandomly();
     enemy_->Init();
-    enemy_->SetTarget(&raySprite_->GetRay().origin);
+    enemy_->SetTarget(&raySprite_->GetOrigin());
     GetMedjed()->MoveStart();
 }
 

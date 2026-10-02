@@ -19,7 +19,7 @@ public:
     ~AnimationObject3d();
     void Initialize()override;
     void InitTime();
-    void SetModelAndLoadAnimation(Model* model);
+    void SetModelAndLoadAnimation(const Model* model);
 
     //オーバーライド
     void Update()override;
@@ -42,7 +42,7 @@ public:
         currentAnimation_ = animName;
     };
     const std::string GetCurrentAnimation() { return currentAnimation_; }
-    std::map<std::string, Animation>& GetAnimations();
+   const std::map<std::string, Animation>& GetAnimations()const;
     Matrix4x4 GetWorldJointMatrix(const std::string name);
 private:
 

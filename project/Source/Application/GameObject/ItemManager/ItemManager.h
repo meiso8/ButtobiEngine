@@ -46,7 +46,7 @@ public:
     /// @brief アイテムがレイにヒットしているかを判定する関数
     /// @param raySprite レイスプライトクラスを入れる
     /// @return レイにヒットしているアイテムを返す
-    std::shared_ptr<Item> RaycastHitItem(RaySprite& raySprite);
+    std::shared_ptr<Item> RaycastHitItem( RaySprite& raySprite);
     /// @brief アイテムスロットからアイテムを使う関数
     /// @param startPos 置きたい始点位置
     /// @param endPos 置きたい終点位置
@@ -54,14 +54,14 @@ public:
     void UseItemFromSlot(const Vector3& startPos, const Vector3& endPos, const char* name);
     /// @brief プレイヤーの手の行列をセットする
     /// @param matrix 行列
-    void SetPlayerHandMatrix(Matrix4x4* matrix) { playerHandMatrix_ = matrix; }
+    void SetPlayerHandMatrix(const Matrix4x4* matrix) { playerHandMatrix_ = matrix; }
 private:
     /// @brief アイテムの辞書登録
     std::map<std::string, std::shared_ptr<Item>> items_;
     //アイテムスロットクラス
-    ItemSlot itemSlot_;
+    ItemSlot itemSlot_{};
     /// @brief 太陽円盤取得フラグの静的メンバ変数
     static bool isGetSolarDisc_;
     //プレイヤーの手の行列
-    Matrix4x4* playerHandMatrix_ = nullptr;
+    const Matrix4x4* playerHandMatrix_ = nullptr;
 };
