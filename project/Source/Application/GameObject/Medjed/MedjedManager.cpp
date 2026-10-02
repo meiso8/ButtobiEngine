@@ -3,7 +3,7 @@
 #include"CollisionConfig.h"
 #include <algorithm>
 #include"Random.h"
-#include"Player/RaySprite.h"
+#include"RaySprite/RaySprite.h"
 #include <cmath>
 #include "Vector2.h" // 必要なら自作の2Dベクトルクラスを用意してね
 #include"CollisionManager.h"
@@ -35,7 +35,7 @@ MedjedManager::~MedjedManager()
 
 }
 
-void MedjedManager::RayCastHit() {
+void MedjedManager::RayCastHit(RaySprite& raySprite) {
 
     if (GetIsApperMedjed()) {
         return;//一旦ここでリターンする
@@ -49,7 +49,7 @@ void MedjedManager::RayCastHit() {
             dist = 10.0f;
         }
 
-        if (raySprite_->Intersect(medjed.get(), dist)) {
+        if (raySprite.Intersect(medjed.get(), dist)) {
 
             //メジェドざまを当ててないとき
             if (!GetIsFindMedjed()) {
@@ -84,7 +84,7 @@ void MedjedManager::Initialize()
     enemyApperTime_ = false;
     PlaceLockersRandomly();
     enemy_->Init();
-    enemy_->SetTarget(&raySprite_->GetOrigin());
+    enemy_->SetTarget(&raySprite_->GetRay().origin);
     GetMedjed()->MoveStart();
 }
 

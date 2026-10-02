@@ -11,6 +11,7 @@ void WorldTransform::Initialize() {
 
 Vector3 WorldTransform::GetWorldPosition() const
 {
+
     return Math::GetWorldTransformByMatrix(matWorld_);
 }
 
@@ -43,6 +44,8 @@ void WorldTransformUpdate(WorldTransform& worldTransform)
     if (worldTransform.parent_) {
         worldTransform.matWorld_ = Multiply(worldTransform.matWorld_, worldTransform.parent_->matWorld_);
     }
+
+   
 }
 
 void WorldTransformUpdate(WorldTransform2D& worldTransform2D)

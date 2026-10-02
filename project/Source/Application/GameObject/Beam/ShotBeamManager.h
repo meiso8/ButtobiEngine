@@ -2,23 +2,24 @@
 
 #include "Medjed/Enemy.h"
 #include "BeamManager.h"
-#include"Player/RaySprite.h"
+
 #include"Player/Player.h"
 #include<memory>
 
 #include "ParticleEmitter.h"
+class RaySprite;
 
 class ShotBeamManager
 {
 public:
-	ShotBeamManager(Enemy* enemy, Player* player,BeamManager* beamManager,RaySprite* raySprite);
+	ShotBeamManager(Enemy* enemy, Player* player,BeamManager* beamManager);
 	void Initialize();
 	void Update();
-	void RayCastHit();
+	void RayCastHit(RaySprite& raySprite);
 private:
 	void CreateParticleEmitter();
 private:
-	RaySprite* raySprite_ = nullptr;
+
 	Player* player_ = nullptr;
 	Enemy* enemy_ = nullptr;
 	BeamManager* beamManager_ = nullptr;

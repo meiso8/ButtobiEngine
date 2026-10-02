@@ -73,9 +73,9 @@ void AnubisStage::DrawSprite()
 
 }
 
-void AnubisStage::CheckCollision(CollisionManager& collisionManager)
+void AnubisStage::CheckCollision(CollisionManager& collisionManager,RaySprite& raySprite)
 {
-    anubisBlockMap_->RayCastHit(*player_->GerRaySprite());
+    anubisBlockMap_->RayCastHit(raySprite);
 
     // 壁との当たり判定
     for (auto& [type, object] : backGround_->GetBuilding()->GetFieldPoses()) {

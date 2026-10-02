@@ -2,7 +2,7 @@
 #include"Sound.h"
 #include"TimeManager.h"
 #include "Collider.h"
-#include"Player/RaySprite.h"
+#include"RaySprite/RaySprite.h"
 #include "CollisionManager.h"
 #include"InputBind.h"
 #include"../StageManager/StageManager.h"
@@ -98,7 +98,7 @@ void SoundManager::PlayDistanceSE(
     for (const auto& collider : collisionManager_->GetColliders()) {
         if (collider->GetCollisionAttribute() == CollisionTag::GetTag(tagName)) {
             Vector3 targetPos = collider->CalculateWorldPos();
-            const Vector3 soundPos = raySprite_->GetOrigin();
+            const Vector3 soundPos = raySprite_->GetRay().origin;
             float distance = Distance(targetPos, soundPos);
             if (distance <= firstSoundDistance) {
                 float vol = firstSoundDistance - distance;

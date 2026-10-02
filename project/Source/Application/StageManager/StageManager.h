@@ -39,7 +39,9 @@ public:
     void SetPlayer(Player* player);
     void SetCollisionManager(CollisionManager* collisionManger);
     void SetLightingManager(LightingManager* lightingManager);
+    void SetRaySprite(RaySprite* raySprite);
 private:
+    RaySprite* raySprite_ = nullptr;
     CollisionManager* collisionManager_ = nullptr;
     MemoManager* memoManager_ = nullptr;
     SceneChange* sceneChange_ = nullptr;

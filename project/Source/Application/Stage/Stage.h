@@ -7,6 +7,8 @@
 #include"LightingManager.h"
 #include"LevelEditor/LevelEditor.h"
 
+class RaySprite;
+
 class Camera;
 class Stage
 {
@@ -33,13 +35,14 @@ public:
     static void SetPlayer(Player* player) { player_ = player; };
     static void SetUIManager(UIManager* uiManager) { uiManager_ = uiManager; };
     static void SetLightingManager(LightingManager* lightingManager) { lightingManager_ = lightingManager; }
+
     void ResetInitializeFlag();
     
     void UpdateObject();
     void DrawObject();
     void AddObjectCollision(CollisionManager& collisionManager);
 
-    virtual void CheckCollision(CollisionManager& collisionManager) = 0;
+    virtual void CheckCollision(CollisionManager& collisionManager, RaySprite& raySprite) = 0;
     virtual void Initialize() = 0;
     //ステージ遷移時初期化
     virtual void StageTransitionInitialize() = 0;

@@ -33,10 +33,10 @@ private:
     void PlaceLockersRandomly();
     bool IsOverlapping(const Vector2& pos, const std::vector<Vector2>& placedPositions);
 public:
-    void SetRaySprite(RaySprite* raySprite) { raySprite_ = raySprite; };
+
     MedjedManager();
     ~MedjedManager();
-    void RayCastHit();
+    void RayCastHit(RaySprite& raySprite);
 
     void Initialize();
     void Draw();

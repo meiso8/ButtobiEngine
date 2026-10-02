@@ -121,8 +121,8 @@ void StageManager::SetNestStage(const std::string& name)
 
 void StageManager::CheckCollision()
 {
-    if (currentStage_&& collisionManager_) {
-        currentStage_->CheckCollision(*collisionManager_);
+    if (currentStage_&& collisionManager_&&raySprite_) {
+        currentStage_->CheckCollision(*collisionManager_,*raySprite_);
         currentStage_-> AddObjectCollision(*collisionManager_);
     }
 }
@@ -158,5 +158,10 @@ void StageManager::SetCollisionManager(CollisionManager* collisionManger)
 void StageManager::SetLightingManager(LightingManager* lightingManager)
 {
     Stage::SetLightingManager(lightingManager);
+}
+
+void StageManager::SetRaySprite(RaySprite* raySprite)
+{
+    raySprite_ = raySprite;
 }
 

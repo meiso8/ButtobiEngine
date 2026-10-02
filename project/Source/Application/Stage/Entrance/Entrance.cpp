@@ -16,6 +16,6 @@ void Entrance::Draw()
 {
 }
 
-void Entrance::CheckCollision(CollisionManager& collisionManager)
+void Entrance::CheckCollision(CollisionManager& collisionManager, RaySprite& raySprite)
 {
 }

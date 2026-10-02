@@ -67,10 +67,10 @@ void BastetStage::Draw()
     bastet_->Draw();
 }
 
-void BastetStage::CheckCollision(CollisionManager& collisionManager)
+void BastetStage::CheckCollision(CollisionManager& collisionManager, RaySprite& raySprite)
 {
 
-    bastetBlockMap_->RayCastHit(*player_->GerRaySprite());
+    bastetBlockMap_->RayCastHit(raySprite);
 
     // 壁との当たり判定
     for (auto& [type, object] : backGround_->GetBuilding()->GetFieldPoses()) {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include"Player/RaySprite.h"
+#include"RaySprite/RaySprite.h"
 #include<memory>
 #include"Puzzle.h"
 #include"Camera.h"

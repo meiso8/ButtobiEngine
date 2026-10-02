@@ -7,15 +7,15 @@
 #include"MakeMatrix.h"
 #include"TimeManager.h"
 #include"DebugUI.h"
-
+#include"RaySprite/RaySprite.h"
 
 namespace {
     constexpr float kInterval_ = 2.0f;
 
 }
 
-ShotBeamManager::ShotBeamManager(Enemy* enemy, Player* player, BeamManager* beamManager, RaySprite* raySprite)
-    :enemy_(enemy), player_(player), beamManager_(beamManager), raySprite_(raySprite)
+ShotBeamManager::ShotBeamManager(Enemy* enemy, Player* player, BeamManager* beamManager)
+    :enemy_(enemy), player_(player), beamManager_(beamManager)
 {
     CreateParticleEmitter();
 }
@@ -60,7 +60,7 @@ void ShotBeamManager::Update()
 
         if (currentTime_ <= 0.0f) {
             
-            Vector3 target = raySprite_->GetRay().origin;
+            Vector3 target = player_->GetBodyWorldTransform().GetWorldPosition();
 
             if (beamManager_->ShotBeam(target, enemyEyeMatL, Beam::kEnemy) && beamManager_->ShotBeam(target, enemyEyeMatR, Beam::kEnemy)) {
                 Sound::PlaySE(SoundFactory::BEAM);
@@ -82,7 +82,7 @@ bool ShotBeamManager::IntersectsAABB(const Ray& ray, const AABB& aabb, const Vec
     }
     return false;
 }
-void ShotBeamManager::RayCastHit()
+void ShotBeamManager::RayCastHit(RaySprite& raySprite)
 {
     float min = 0.0f;
 
@@ -109,7 +109,7 @@ void ShotBeamManager::RayCastHit()
             length
         )) {
 
-            raySprite_->OnCollisionColor();
+            raySprite.OnCollisionColor();
 
             if (InputBind::IsClick()) {
 
@@ -117,7 +117,7 @@ void ShotBeamManager::RayCastHit()
                 if (beam->GetBeamType() != Beam::kPlayer) {
 
                     Sound::PlaySE(SoundFactory::FALL, 1.5f);
-                    Ray ray = raySprite_->GetRay();
+                    Ray ray = raySprite.GetRay();
                     //rayのオリジンから　rayの方向にLength分shotする
                     Vector3 target = ray.origin + ray.diff * length;
                     //親なし

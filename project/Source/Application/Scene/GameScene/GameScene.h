@@ -24,6 +24,7 @@ class PlaneMesh;
 class SphereMesh;
 class CubeMesh;
 class Model;
+class RaySprite;
 
 class GameScene :public BaseScene {
 
@@ -41,6 +42,7 @@ public:
 private:
 #pragma region//ゲームオブジェクト
     std::unique_ptr<Player>player_ = nullptr;
+    std::unique_ptr<RaySprite> raySprite_ = nullptr;
     std::unique_ptr<LightingManager>lightingManager_ = nullptr;
     std::shared_ptr<ItemManager> itemManager_ = nullptr;
     std::unique_ptr<UIManager> uIManager_ = nullptr;

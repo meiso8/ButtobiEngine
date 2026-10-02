@@ -25,7 +25,7 @@ public:
     void StageTransitionInitialize()override;
     void Update()override;
     void Draw()override;
-    void CheckCollision(CollisionManager& collisionManager)override;
+    void CheckCollision(CollisionManager& collisionManager, RaySprite& raySprite)override;
     void DrawSprite()override;
 };
 

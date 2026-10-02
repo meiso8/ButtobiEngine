@@ -9,14 +9,13 @@ class Collider;
 class RaySprite
 {
 private:
-
     //スプライト
     std::unique_ptr<Sprite>sprite_ = nullptr;
     float tMin_ = 0.0f;
     float tMax_ = 1.0f;
     Ray ray_ = {};
 private:
-    void Update();
+
     bool IntersectAABB(Collider* collider, const float kMaxDistance);
     bool IntersectSphere(Collider* collider, const float kMaxDistance);
     bool CanSelect(Collider* collider, const float kMaxDistance);
@@ -24,18 +23,19 @@ private:
 public:
 
     RaySprite();
-    void UpdateRay(const Ray ray) {
-        ray_ = ray;
-        Update();
-    };
+    ~RaySprite();
+    
+    void Initialize();
+    void Update();
+    void Draw();
 
+    void SetRay(const Ray ray) { ray_ = ray; };
+    const Ray& GetRay()const { return ray_; }
 
     void OnCollisionColor();
 
-    void Draw();
     bool Intersect (Collider* collider, const float kMaxDistance = 5.0f);
 
-    const Ray& GetRay()const { return ray_; }
-    const Vector3& GetOrigin()const { return ray_.origin; }
+
 };
 

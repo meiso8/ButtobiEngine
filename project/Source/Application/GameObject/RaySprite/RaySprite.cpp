@@ -20,6 +20,17 @@ RaySprite::RaySprite()
     sprite_->SetPosition({ width * 0.5f,height * 0.5f });
 }
 
+RaySprite::~RaySprite()
+{    
+
+}
+
+void RaySprite::Initialize()
+{
+    tMin_ = 0.0f;
+    tMax_ = 1.0f;
+    ray_ = {};
+}
 void RaySprite::OnCollisionColor()
 {
     sprite_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
@@ -46,6 +57,7 @@ bool RaySprite::Intersect(Collider* collider,const float kMaxDistance)
     if (type == Collider::kAABB) {
        return IntersectAABB(collider, kMaxDistance);
     }
+
 
     return false;
 }

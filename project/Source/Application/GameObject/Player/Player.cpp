@@ -106,7 +106,6 @@ Player::Player() {
     aniObject_->SetAnimation("Idle");
     SetWorldMatrix(aniObject_->GetWorldTransform());
 
-    raySprite_ = std::make_unique<RaySprite>();
     eyePosition_ = std::make_unique<EyePosition>();
     //体の位置を親に設定
     eyePosition_->SetParentMatrix(&headMatrix_);
@@ -152,8 +151,6 @@ void Player::Init(const Vector3& pos)
     //目の位置初期化
     eyePosition_->Initialize();
 
-    UpdateRay();
-
     velocity_ = { 0.0f,0.0f,0.0f };
     speed_ = { 0.5f };
 
@@ -181,10 +178,6 @@ void Player::Init(const Vector3& pos)
 
 
 
-void Player::UpdateRay()
-{
-    raySprite_->UpdateRay(Ray{ .origin = eyePosition_->GetWorldTransform().GetWorldPosition(),.diff = GetEyeForward() });
-}
 
 void Player::Draw()
 {
@@ -195,10 +188,6 @@ void Player::Draw()
 
 }
 
-void Player::DrawRaySprite()
-{
-    raySprite_->Draw();
-}
 
 void Player::Update()
 {
@@ -218,7 +207,6 @@ void Player::Update()
 
     Thermography();
     MouseLook();
-    UpdateRay();
 
     //クリックしたらサウンド
     if (InputBind::IsClick()) {
@@ -233,7 +221,7 @@ void Player::Update()
     handMatrix_ = aniObject_->GetWorldJointMatrix("Hand.L");
 
     eyePosition_->Update();
-
+    worldEyePos_ = eyePosition_->GetWorldTransform().GetWorldPosition();
 }
 
 void Player::Debug()
@@ -388,10 +376,7 @@ const Vector3& Player::GetBodyForward()
     forward = Math::GetForward(aniObject_->GetWorldMatrix());
     return forward;
 }
-const Vector3& Player::GetEyeWorldPosition()
-{
-    return eyePosition_->GetWorldTransform().GetWorldPosition();
-}
+
 void Player::Thermography()
 {
 

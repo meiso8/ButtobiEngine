@@ -5,7 +5,7 @@
 #include<algorithm>
 #include"TimeManager.h"
 #include"Sound.h"
-
+#include"RaySprite/RaySprite.h"
 MummyStage::MummyStage()
 {
     papyrus_ = std::make_unique<Papyrus>();
@@ -16,7 +16,7 @@ MummyStage::MummyStage()
         dummyMummy = std::make_unique<DummyMummy>();
     }
 
-    DummyMummy::SetTargetPosPtr(&player_->GerRaySprite()->GetRay().origin);
+    DummyMummy::SetTargetPosPtr(&player_->GetBodyWorldTransform().eTransform_.translate);
 }
 
 MummyStage::~MummyStage()
@@ -140,10 +140,10 @@ bool MummyStage::IsRayCastHit(RaySprite& raySprite)
     return false;
 }
 
-void MummyStage::CheckCollision(CollisionManager& collisionManager)
+void MummyStage::CheckCollision(CollisionManager& collisionManager, RaySprite& raySprite)
 {
 
-    if (IsRayCastHit(*player_->GerRaySprite())) {
+    if (IsRayCastHit(raySprite)) {
 
         //オープンし終わったら
         if (mummy_->GetIsOpenEnd()) {
