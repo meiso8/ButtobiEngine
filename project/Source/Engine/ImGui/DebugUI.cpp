@@ -1100,7 +1100,8 @@ void DebugUI::CheckObject3d(Object3d& object3d,const char* label)
 
                 for (auto& [name, animations] : aniObj->GetAnimations()) {
                     ImGui::Text(name.c_str());
-                    ImGui::SliderFloat("duration", &animations.duration, 0.0f, 1000000.0f);
+                    ImGui::Text("duration %f",animations.duration);
+    
                 }
 
                 ImGui::TreePop();

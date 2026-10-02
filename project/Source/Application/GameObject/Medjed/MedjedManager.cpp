@@ -84,7 +84,10 @@ void MedjedManager::Initialize()
     enemyApperTime_ = false;
     PlaceLockersRandomly();
     enemy_->Init();
-    enemy_->SetTarget(&raySprite_->GetRay().origin);
+    if (targetPos_) {
+        enemy_->SetTarget(targetPos_);
+    }
+ 
     GetMedjed()->MoveStart();
 }
 
@@ -128,7 +131,10 @@ void MedjedManager::UpdateEnemyApperTime()
 void MedjedManager::UpdateMedjedIfNotFind()
 {
     //メジェド一つだけ
-    GetMedjed()->Look(raySprite_->GetRay().origin);
+    if (!targetPos_) {
+        return;
+    }
+    GetMedjed()->Look(*targetPos_);
 
 }
 
@@ -136,7 +142,10 @@ void MedjedManager::UpdateMedjedIfFind()
 {
     for (auto& medjed : dummyMedjeds_) {
 
-        medjed->Look(raySprite_->GetRay().origin);
+        if (targetPos_) {
+            medjed->Look(*targetPos_);
+        }
+
 
         if (enemyApperTime_ >= kEnemyApperMaxTime_) {
             medjed->GoToTarget(enemy_->GetWorldPos());

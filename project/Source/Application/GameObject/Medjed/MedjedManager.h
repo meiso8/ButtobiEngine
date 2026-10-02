@@ -11,7 +11,7 @@ class MedjedManager
 {
 
 private:
-    RaySprite* raySprite_ = nullptr;
+
     std::vector < std::unique_ptr<DummyMedjed>>dummyMedjeds_;
     std::unique_ptr<Enemy>enemy_ = nullptr;
 
@@ -24,7 +24,7 @@ private:
     float enemyApperTime_ = 0.0f;
     const float kEnemyApperMaxTime_  = 4.0f;
     const float dummyMedjedHideTime_ = 6.0f;
-
+    const Vector3* targetPos_ = nullptr;
 private:
 
     void UpdateEnemyApperTime();
@@ -62,5 +62,6 @@ public:
         return enemy_.get();
     }
 
+    void SetTargetPos(const Vector3* pos) { targetPos_ = pos; }
 };
 

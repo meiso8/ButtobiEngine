@@ -42,6 +42,8 @@ void BastetStage::StageTransitionInitialize()
 
     //少し手前側に移動する
     player_->Init({ 0.0f, 0.0f, -5.0f });
+    //なにも生成しない
+    itemManager_->GenerateItems({});
 }
 
 void BastetStage::Update()

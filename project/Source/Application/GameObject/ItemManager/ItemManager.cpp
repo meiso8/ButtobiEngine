@@ -117,9 +117,11 @@ void ItemManager::Draw(Camera& camera) {
     for (auto& [name, item] : items_) {
         if (!item) continue;
         if (item->IsGet()) {
+            //スロットの方で描画するので抜ける
             continue;
         }
 
+        //使うべきステージじゃないときに使っていたら描画しない
         if (item->IsUsed() && !item->IsUseStage()) {
             continue;
         }

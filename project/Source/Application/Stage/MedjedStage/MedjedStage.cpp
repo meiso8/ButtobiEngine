@@ -15,7 +15,7 @@ MedjedStage::MedjedStage()
 {
     backGround_ = std::make_unique<BackGround>();
     medjedManager_ = std::make_unique<MedjedManager>();
-
+    medjedManager_->SetTargetPos(&player_->GetEyeWorldPosition());
     auto* enemy = medjedManager_->GetEnemy();
     rhythmBullet_ = std::make_unique<RhythmBullet>(enemy, player_);
     //パーティクルの作成
