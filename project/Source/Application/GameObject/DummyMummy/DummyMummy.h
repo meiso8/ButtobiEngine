@@ -21,7 +21,7 @@ public:
     const bool& GetIsOpen() {
         return isOpen_;
     };
-    static void SetTargetPosPtr(Vector3* pos) { targetPos_ = pos; };
+    static void SetTargetPosPtr(const Vector3* pos) { targetPos_ = pos; };
     void SetPosition(const Vector3& pos) { aniObj_->SetTranslate(pos); };
     void SetRotateY(const float& rotate) { aniObj_->GetTransform().rotate.y = rotate; };
     const bool& GetIsHitCollision() {
@@ -31,7 +31,7 @@ private:
     Vector3 GetWorldPos();
     void Look(const Vector3& target);
 private:
-    static Vector3* targetPos_;
+    static const Vector3* targetPos_;
     static Model* model_;
 
     std::unique_ptr<AnimationObject3d> aniObj_ = nullptr;

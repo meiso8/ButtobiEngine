@@ -7,7 +7,7 @@ class RaySprite;
 class SoundManager {
 public:
     SoundManager();
-    static void SetRaySprite(RaySprite* raySprite);
+    static void SetRaySprite(const RaySprite* raySprite);
     static void SetCollisionManager(CollisionManager* collisionManager);
 
     static void InitSound();
@@ -21,7 +21,7 @@ public:
     static void Update();
 private:
     static void PlayDistanceSE(const std::string tagName, const SoundFactory::TAG soundTag, const float firstSoundDistance, const float maxVol);
-    static RaySprite* raySprite_;
+    static const RaySprite* raySprite_;
     static CollisionManager* collisionManager_;
 
     //メンバ関数ポインタテーブル

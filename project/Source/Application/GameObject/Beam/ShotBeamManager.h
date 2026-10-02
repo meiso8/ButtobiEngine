@@ -24,5 +24,10 @@ private:
 	BeamManager* beamManager_ = nullptr;
 	std::array<std::unique_ptr < ParticleEmitter>,2> beamParticleEmitters_;
 	std::unique_ptr<ParticleEmitter> shockEmitter_ = nullptr;
+	float currentTime_ = 0.0f;
+	float tMin_ = 0.0f;
+	float tMax_ = 1.0f;
+
+	bool IntersectsAABB(const Ray& ray, const AABB& aabb, const Vector3& pos, const float kMaxDistance);
 };
 

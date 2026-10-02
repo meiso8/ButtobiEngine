@@ -15,7 +15,7 @@ public:
         modelData_ = std::move(modelData);
        
     }
-    ModelData* GetModelData() {
+    const ModelData* GetModelData()const {
         return modelData_.get();
     }
 private:

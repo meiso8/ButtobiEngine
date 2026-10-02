@@ -65,3 +65,8 @@ void LightingManager::DirectionalLightUpdate()
 
 }
 
+void LightingManager::SetHandPosParent(const WorldTransform* parent)
+{
+    playerHandPos_.Parent(*parent);
+}
+

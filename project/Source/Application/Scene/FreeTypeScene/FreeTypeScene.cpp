@@ -38,8 +38,6 @@ FreeTypeScene::FreeTypeScene()
 
 void FreeTypeScene::Initialize()
 {
-
-    ParticleManager::ResetAll();
     LevelEditor::GetInstance()->Load("FreeTypeScene_objectEditor", true);
     LevelEditor::GetInstance()->CreateObject(objects_);
 

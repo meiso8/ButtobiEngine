@@ -18,13 +18,13 @@ public:
 
     HPGage();
     ~HPGage();
-    void SetHpPtr(HPs* hp) { hps_ = hp; };
+    void SetHpPtr(const HPs* hp) { hps_ = hp; };
     void Setting(const Vector2& size, const Vector2& pos, const Vector2& anchorPoint);
     void Initialize();
     void Update();
     void Draw();
 private:
-    HPs* hps_ = 0;
+    const HPs* hps_ = nullptr;
     std::map<SpriteTypes, std::unique_ptr<Sprite>>sprites_;
     int preHP_ = 0;
     float timer_  = 0.0f;

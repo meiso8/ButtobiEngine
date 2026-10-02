@@ -27,7 +27,7 @@ public:
     SkinningModel();
     ~SkinningModel();
     void SetDescriptorHeap(CbvSrvUavDescriptorHeap* cbvSrvUavDescriptorHeap);
-    void SetModel(Model* model);
+    void SetModel(const Model* model);
     void SetRootSignatureAndGraphicsPipeline(
         ID3D12GraphicsCommandList* commandList,
         const BlendMode& blendMode,
@@ -45,9 +45,10 @@ public:
         return skinCluster_.get();
     };
 
-    ModelData* GetModelData() {
+   const ModelData* GetModelData()const {
         return modelData_;
     }
+
     SkinningCSResorce* GetCSResource() {
         return &skinningCSResorce_;
     };
@@ -61,7 +62,7 @@ private:
     CbvSrvUavDescriptorHeap* cbvSrvUavDescriptorHeap_ = nullptr;
     std::unique_ptr< Skeleton> skeleton_ = nullptr;
     std::unique_ptr< SkinCluster> skinCluster_ = nullptr;
-    ModelData* modelData_ = nullptr;
+    const ModelData* modelData_ = nullptr;
 
     SkinningCSResorce skinningCSResorce_;
 };

@@ -179,9 +179,11 @@ void Object3d::MeshDraw()
     }
 }
 
-void Object3d::DrawModel(ModelData* modelData)
+void Object3d::DrawModel(const ModelData* modelData)
 {
-
+    if (primitive_ == nullptr) {
+        return;
+    }
     commandList_->IASetIndexBuffer(&primitive_->GetIndexBufferView());
 
     // 2. マテリアルごとにループを回して描画

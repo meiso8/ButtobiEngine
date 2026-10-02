@@ -65,10 +65,10 @@ public:
     std::unordered_map <std::string, ColliderGroup>& GetColliderGroup() { return colliders_; };
     std::unordered_map < std::string, Matrix4x4>& GetEyeMats() { return eyeMats_; };
     //ターゲットの設定
-    void SetTarget(Vector3* target) { target_ = target; };
+    void SetTarget(const Vector3* target) { target_ = target; };
     //ターゲットに向かうベクトル
     Vector3 GetToTarget();
-    Vector3* GetTarget() { return target_; };
+    const Vector3* GetTarget() { return target_; };
     HPs* GetHpsPtr() { return &characterState_.hps; }
     const bool& GetIsDead() { return characterState_.isDead; }
     const PHASE GetPhase() { return phase_; }
@@ -84,7 +84,7 @@ private:
     float actionTime_ = 0.0f;
 
     //目標地点
-    Vector3* target_ = nullptr;
+    const Vector3* target_ = nullptr;
     //モデル
     Model* model_;
 

@@ -89,7 +89,7 @@ bool RaySprite::CanSelect(Collider* collider, const float kMaxDistance)
     return false;
 }
 
-void RaySprite::SetSprite(Collider* collider)
+void RaySprite::SetSprite(Collider* collider)const
 {
     //アイテムのタグからテクスチャをセットする
     if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Item")||

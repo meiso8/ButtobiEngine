@@ -27,7 +27,7 @@ void SkinningModel::SetDescriptorHeap(CbvSrvUavDescriptorHeap* cbvSrvUavDescript
     cbvSrvUavDescriptorHeap_ = cbvSrvUavDescriptorHeap;
 }
 
-void SkinningModel::SetModel(Model* model)
+void SkinningModel::SetModel(const Model* model)
 {
     //モデルのメッシュ
     modelData_ = model->GetModelData();

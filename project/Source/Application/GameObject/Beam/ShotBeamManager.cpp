@@ -10,10 +10,8 @@
 
 
 namespace {
-    const float kInterval_ = 2.0f;
-    float currentTime_ = kInterval_;
-    float tMin_ = 0.0f;
-    float tMax_ = 1.0f;
+    constexpr float kInterval_ = 2.0f;
+
 }
 
 ShotBeamManager::ShotBeamManager(Enemy* enemy, Player* player, BeamManager* beamManager, RaySprite* raySprite)
@@ -74,7 +72,7 @@ void ShotBeamManager::Update()
 
 
 }
-bool IntersectsAABB(const Ray& ray, const AABB& aabb, const Vector3& pos, const float kMaxDistance)
+bool ShotBeamManager::IntersectsAABB(const Ray& ray, const AABB& aabb, const Vector3& pos, const float kMaxDistance)
 {
     if (RayIntersectsAABB(ray, aabb, tMin_, tMax_)) {
         float dist = Distance(ray.origin, pos);
@@ -89,7 +87,7 @@ void ShotBeamManager::RayCastHit()
     float min = 0.0f;
 
     //中心点を考慮した座標を取得してくる
-    Vector3 pos = player_->GetEyePosition()->GetWorldTransform().GetWorldPosition();
+    const Vector3 pos = player_->GetEyeWorldPosition();
 
     AABB aabbWorld = { .min = {-0.25f,-0.25f,-0.25f},.max = {0.25f,0.25f,0.25f} };
     aabbWorld.min += pos;
@@ -107,7 +105,7 @@ void ShotBeamManager::RayCastHit()
         if (IntersectsAABB(
             ray,
             aabbWorld,
-            player_->GetEyePosition()->GetWorldTransform().GetWorldPosition(),
+            player_->GetEyeWorldPosition(),
             length
         )) {
 
