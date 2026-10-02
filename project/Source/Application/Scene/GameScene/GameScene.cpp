@@ -79,12 +79,8 @@ void GameScene::Initialize() {
     //アメンステージにする
 
     auto* stageManager = StageManager::GetInstance();
-
+    //インフォメーションステージに設定する
     stageManager->SetNestStage("InformationStage");
-#ifdef _DEVELOP
-    //stageManager->SetNestStage("InformationStage");
-
-#endif
 
     //カメラを初期化する
     camera_->Initialize();

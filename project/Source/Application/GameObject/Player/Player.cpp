@@ -31,11 +31,14 @@ void Player::OnCollision(Collider* collider)
         || collider->GetCollisionAttribute() == CollisionTag::GetTag("Mummy")
 
         ) {
+        //敵に当たった時
         OnCollisionEnemy();
     }
 
     if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Floor")|| collider->GetCollisionAttribute() == CollisionTag::GetTag("Block")) {
+       //床にヒットした
         isFloorHit_ = true;
+        //ジャンプしていたら一律ジャンプしていないことにする
         isJump_ = false;
     }
 
@@ -49,8 +52,9 @@ void Player::OnCollision(Collider* collider)
         || collider->GetCollisionAttribute() == CollisionTag::GetTag("Block")
 
         ) {
-
+        //壁や床との当たり判定をとり、
         ResolveCollision(aniObject_->GetTransform().translate, velocity_, GetCollisionInfo());
+        //速度を初期化する
         velocity_ = { 0.0f,0.0f,0.0f };
     }
 
@@ -58,10 +62,11 @@ void Player::OnCollision(Collider* collider)
         //カメラ上昇するコライダーに当たった時を記入していく
         eyePosition_->SiftToUp();
     } else {
+        //カメラを下に移動する
         eyePosition_->ShftToTDown();
     }
 
-
+    //コライダーに当たった時を得る
     OnCollisionCollider();
 
 }
@@ -71,10 +76,12 @@ Player::Player() {
     //モデルを取得する
     model_ = ModelManager::GetModel("player.gltf");
 
+    //半径をコライダーのAABBにセットする
     float radius = 0.25f;
-
     SetAABB(AABB{ .min = {-radius , 0.0f ,-radius},.max = { radius , 1.5f ,radius} });
+    //プレイヤーの属性を設定する
     SetCollisionAttribute(CollisionTag::GetTag("Player"));
+    //マスク属性を設定する
     SetCollisionMask(
         CollisionTag::GetTag("Enemy")
         | CollisionTag::GetTag("EnemyBulletCold")
@@ -120,8 +127,10 @@ Player::~Player()
 
 void Player::Init(const Vector3& pos)
 {
+    //ジャンプ
     isJump_ = false;
     canJump_ = false;
+    //ズーム
     zoomTimer_ = 0.0f;
     zoomStartTimer_ = 0.0f;
 
@@ -473,17 +482,21 @@ void Player::OnCollisionEnemy(const int hitPoint)
     }
 
     if (characterState_.isHit) {
+        //ヒットしていたらリターンする
         return;
     }
 
+    //クラッカーを鳴らす
     Sound::PlaySE(SoundFactory::CRACKER);
     //衝突フラグを真に
     characterState_.isHit = true;
+    //ヒットポイント
     characterState_.hps.hp -= hitPoint;
+    //ヒットタイマーを1にする
     hitTimer_ = 1.0f;
 
     if (characterState_.hps.hp <= 0.0f) {
-
+        //HPが0になったら死ぬ
         characterState_.isDead = true;
     }
 
