@@ -77,11 +77,11 @@ void AmenStage::DrawSprite()
 }
 
 
-void AmenStage::CheckCollision(CollisionManager& collisionManager)
+void AmenStage::CheckCollision(CollisionManager& collisionManager,RaySprite& raySprite)
 {
     if (!isGenerateItem_) {
         //アイテムを生成していないときスライドパズルのレイキャストをヒットさせる
-        slidePuzzleSystem_->RayCastHit(*player_->GerRaySprite());
+        slidePuzzleSystem_->RayCastHit(raySprite);
     }
 
     collisionManager.AddCollider(slidePuzzleSystem_->GetPuzzleObj());

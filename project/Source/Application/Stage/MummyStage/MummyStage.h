@@ -2,7 +2,6 @@
 #include"../Stage.h"
 #include"Mummy/Mummy.h"
 #include<memory>
-#include"Player/RaySprite.h"
 #include"Papyrus/Papyrus.h"
 #include "MummyRoom/MummyRoom.h" 
 #include"DummyMummy/DummyMummy.h"
@@ -30,7 +29,7 @@ public:
     void Draw()override;
 
     bool IsRayCastHit(RaySprite& raysprite);
-    void CheckCollision(CollisionManager& collisionManager)override;
+    void CheckCollision(CollisionManager& collisionManager, RaySprite& raySprite)override;
     Mummy* GetMummy() {
         return mummy_
             .get();

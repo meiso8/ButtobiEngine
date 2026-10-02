@@ -17,12 +17,7 @@ MedjedStage::MedjedStage()
     medjedManager_ = std::make_unique<MedjedManager>();
 
     auto* enemy = medjedManager_->GetEnemy();
-
-    rhythmBullet_ = std::make_unique<RhythmBullet>(enemy, player_, player_->GerRaySprite());
-
-
-    medjedManager_->SetRaySprite(player_->GerRaySprite());
-
+    rhythmBullet_ = std::make_unique<RhythmBullet>(enemy, player_);
     //パーティクルの作成
     CreateParticle();
     //HPゲージの追加
@@ -31,7 +26,7 @@ MedjedStage::MedjedStage()
 
 void MedjedStage::Initialize()
 {
-  
+
     StageTransitionInitialize();
     if (isInitialize_) {
         //いまコンストラクタでやればいいのではとなっている
@@ -49,12 +44,15 @@ void MedjedStage::StageTransitionInitialize()
 
     //ステージのロード
     LoadAndCreateObject("MedjedStage_objectEditor");
-    
+
     backGround_->Initialize();
     backGround_->Update();
 
+
     medjedManager_->Initialize();
+
     rhythmBullet_->Initialize();
+
 
     //パーティクルの初期化
     particleEmitters_[kMedjed_Particle]->GetEmitter().transform.Parent(GetMedjed()->GetWorldTransform());
@@ -74,7 +72,7 @@ void MedjedStage::Update()
     backGround_->Update();
 
     //メジェド様が出現したかどうかで音を区別する
-    SoundManager::SetMedjedApper(FindMedjed()&& medjedManager_->GetIsApperMedjed());
+    SoundManager::SetMedjedApper(FindMedjed() && medjedManager_->GetIsApperMedjed());
 
     if (FindMedjed()) {
 
@@ -82,9 +80,12 @@ void MedjedStage::Update()
 
         if (medjedManager_->GetIsApperMedjed()) {
             //メジェド出現！
-            rhythmBullet_->SetSound(SoundFactory::BGM_ArabRuins);
-            rhythmBullet_->Update();
-   
+            if (rhythmBullet_) {
+                rhythmBullet_->SetSound(SoundFactory::BGM_ArabRuins);
+                rhythmBullet_->Update();
+            }
+
+
         }
 
 
@@ -134,7 +135,10 @@ void MedjedStage::Draw()
     medjedManager_->Draw();
 
     if (FindMedjed()) {
-        rhythmBullet_->Draw();
+        if (rhythmBullet_) {
+            rhythmBullet_->Draw();
+        }
+
     }
 
 }
@@ -147,13 +151,15 @@ void MedjedStage::DrawSprite()
     }
 }
 
-void MedjedStage::CheckCollision(CollisionManager& collisionManager)
+void MedjedStage::CheckCollision(CollisionManager& collisionManager, RaySprite& raySprite)
 {
     //メジェドたちがヒットしているかどうか
-    medjedManager_->RayCastHit();
+    medjedManager_->RayCastHit(raySprite);
     //弾がヒットしているかどうか
-    rhythmBullet_->GetShotBulletManager()->RayCastHit();
-    rhythmBullet_->GetShotBeamManager()->RayCastHit();
+    if (rhythmBullet_) {
+        rhythmBullet_->GetShotBulletManager()->RayCastHit(raySprite);
+        rhythmBullet_->GetShotBeamManager()->RayCastHit(raySprite);
+    }
 
     //メジェド探したかどうか
     if (FindMedjed()) {

@@ -1,6 +1,7 @@
 #include "WaterStage.h"
 #include"SoundManager/SoundManager.h"
 #include"Sound.h"
+#include"RaySprite/RaySprite.h"
 
 WaterStage::WaterStage()
 {
@@ -71,10 +72,11 @@ void WaterStage::Draw()
  
 }
 
-void WaterStage::CheckCollision(CollisionManager& collisionManager)
+void WaterStage::CheckCollision(CollisionManager& collisionManager, RaySprite& raySprite)
 {
 
-    blockMap_->RayCastHit(*player_->GerRaySprite());
+    blockMap_->RayCastHit(raySprite);
+
     //Waterのかべ
     for (auto& [type, object] : papyrusWall_.get()->GetFieldPoses()) {
         collisionManager.AddCollider(object.get());

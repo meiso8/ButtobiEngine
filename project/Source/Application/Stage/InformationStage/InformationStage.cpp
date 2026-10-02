@@ -83,7 +83,7 @@ void InformationStage::Draw()
     gate_->Draw();
 }
 
-void InformationStage::CheckCollision(CollisionManager& collisionManager)
+void InformationStage::CheckCollision(CollisionManager& collisionManager, RaySprite& raySprite)
 {
 
 
@@ -93,7 +93,7 @@ void InformationStage::CheckCollision(CollisionManager& collisionManager)
 
         if (obj->collider_->GetCollisionAttribute() == CollisionTag::GetTag("TicketMac")) {
             auto* collider = obj->collider_.get();
-            if (player_->GerRaySprite()->Intersect(collider)) {
+            if (raySprite.Intersect(collider)) {
                 if (InputBind::IsClick()) {
                     passwordText_->SetIsActive(true);
                     break;

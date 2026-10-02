@@ -27,6 +27,8 @@
 #include"../Stage/MeltStage/MeltStage.h"
 #include"../Stage/BastetStage/BastetStage.h"
 #include"ObjectManager/ObjectManager.h"
+#include"RaySprite/RaySprite.h"
+
 GameScene::GameScene()
 {
     // 現在のカメラを設定
@@ -34,6 +36,8 @@ GameScene::GameScene()
 
     //プレイヤーのインスタンスを生成
     player_ = std::make_unique<Player>();
+    //レイスプライトクラス
+    raySprite_ = std::make_unique<RaySprite>();
 
     //ライトマネージャーのインスタンスを生成
     lightingManager_ = std::make_unique<LightingManager>();
@@ -54,7 +58,7 @@ GameScene::GameScene()
     SetStages();
 
     SoundManager::SetCollisionManager(collisionManager_.get());
-    SoundManager::SetRaySprite(player_->GerRaySprite());
+    SoundManager::SetRaySprite(raySprite_.get());
 
     //スカイボックス
     skyboxObject3d_ = std::make_unique<SkyboxObject3d>();
@@ -90,6 +94,9 @@ void GameScene::Initialize() {
     stageManager->Initialize();
     //現在のステージの初期化
     stageManager->TransitionStage();
+
+    //レイスプライトクラスの初期化
+    raySprite_->Initialize();
 }
 
 void GameScene::Update() {
@@ -115,6 +122,8 @@ void GameScene::Update() {
         
     //アクティブなら更新しない
         player_->Update();
+        raySprite_->SetRay(Ray{ .origin = player_->GetEyeWorldPosition(),.diff = player_->GetEyeForward()});
+        raySprite_->Update();
 
         //プレイヤーが死んだら初期化する
         if (player_->IsDead()) {
@@ -159,11 +168,11 @@ void GameScene::CheckAllCollision()
     //// ========================//Ray================================
 
     //アイテムがヒットしているか
-    auto hitItem = itemManager_->RaycastHitItem(*player_->GerRaySprite());
+    auto hitItem = itemManager_->RaycastHitItem(*raySprite_);
     if (hitItem) { itemManager_->GetItemSlot().OnTriggerItemPickup(hitItem); }
 
     //メモがヒットしているかどうか
-    memoManager_->RayCastHit(*player_->GerRaySprite());
+    memoManager_->RayCastHit(*raySprite_);
     //// ========================//Ray================================
 
     //コライダーの一斉クリア
@@ -255,6 +264,7 @@ void GameScene::SetStages()
     //ライト管理をセットする
     stageManager->SetLightingManager(lightingManager_.get());
     stageManager->SetSceneChange(sceneChange_.get());
+    stageManager->SetRaySprite(raySprite_.get());
     stageManager->SetCollisionManager(collisionManager_.get());
 
     stageManager->SetMap("InformationStage", std::move(std::make_unique<InformationStage>()));
@@ -303,8 +313,8 @@ void GameScene::DrawSprite() {
 
     memoManager_->DrawUI();
     uIManager_->DrawCurPos();
-    player_->DrawRaySprite();
-
+    //レイスプライトの描画
+    raySprite_->Draw();
     uIManager_->DrawEffect();
     sceneChange_->Draw();
 

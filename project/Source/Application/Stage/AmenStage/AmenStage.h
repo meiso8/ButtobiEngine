@@ -26,6 +26,6 @@ public:
     void Update()override;
     void Draw()override;
     void DrawSprite()override;
-    void CheckCollision(CollisionManager& collisionManager)override;
+    void CheckCollision(CollisionManager& collisionManager, RaySprite& raySprite)override;
 };
 

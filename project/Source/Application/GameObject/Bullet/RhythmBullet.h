@@ -6,8 +6,8 @@
 #include<memory>
 #include"../GameObject/Beam/BeamManager.h"
 #include"../GameObject/Beam/ShotBeamManager.h"
-#include"Player/RaySprite.h"
 
+class RaySprite;
 class Player;
 class RhythmBullet
 {
@@ -19,7 +19,7 @@ private:
     std::unique_ptr<BeamManager>beamManager_ = nullptr;
     std::unique_ptr<ShotBeamManager>shotBeamManager_ = nullptr;
 public:
-    RhythmBullet(Enemy* enemy,Player* player, RaySprite* raySprite);
+    RhythmBullet(Enemy* enemy,Player* player);
     void SetSound(const SoundFactory::TAG tag);
     void Initialize();
     void Update();

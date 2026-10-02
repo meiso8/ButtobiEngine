@@ -11,8 +11,8 @@
 #include"CoordinateTransform.h"
 #include"TimeManager.h"
 
-ShotBulletManager::ShotBulletManager(Enemy* enemy, BulletManager* bulletManager, RhythmManager* rhythmManager, RaySprite* raySprite)
-    :enemy_(enemy), bulletManager_(bulletManager), rhythmManager_(rhythmManager),raySprite_(raySprite)
+ShotBulletManager::ShotBulletManager(Enemy* enemy, BulletManager* bulletManager, RhythmManager* rhythmManager)
+    :enemy_(enemy), bulletManager_(bulletManager), rhythmManager_(rhythmManager)
 {
 }
 
@@ -70,7 +70,7 @@ void ShotBulletManager::Update() {
     }
 }
 
-void ShotBulletManager::RayCastHit()
+void ShotBulletManager::RayCastHit(RaySprite& raySprite)
 {
 
     for (auto& bullet : bulletManager_->GetBullets()) {
@@ -78,14 +78,14 @@ void ShotBulletManager::RayCastHit()
         if (!bullet->GetIsActive() && bullet->GetType() != Bullet::kPlayerCold && bullet->GetType() != Bullet::kPlayerHot) { continue; }
 
 
-        if (raySprite_->Intersect( bullet.get())) {
+        if (raySprite.Intersect( bullet.get())) {
 
             bullet->SetColor({ 1.0f,0.5f,0.5f,1.0f });
 
             if (InputBind::IsClick()) {
 
                 Sound::PlaySE(SoundFactory::CRACKER, 1.5f);
-                Vector3 shotDirection = raySprite_->GetRay().diff;
+                Vector3 shotDirection = raySprite.GetRay().diff;
                 Vector3 shotPosition = bullet->GetWorldPosition();
                 bullet->Shot(shotPosition, shotDirection, shotSpeed_, shotSize_, Bullet::kEnemyCold ? Bullet::kPlayerCold : Bullet::kPlayerHot);
 

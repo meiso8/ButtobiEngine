@@ -8,7 +8,7 @@
 #include"JsonFile.h"
 #include"PrimitiveFactory/PrimitiveFactory.h"
 #include"CollisionManager.h"
-#include"Player/RaySprite.h"
+#include"RaySprite/RaySprite.h"
 #include"InputBind.h"
 #include"SoundManager/SoundManager.h"
 #include"../../StageManager/StageManager.h"

@@ -2,6 +2,8 @@
 #include "ParticleEmitter.h"
 #include"DebugUI.h"
 #include"SoundManager/SoundManager.h"
+#include"RaySprite/RaySprite.h"
+
 MeltStage::MeltStage()
 {
     backGround_ = std::make_unique<BackGround>();
@@ -108,10 +110,10 @@ void MeltStage::Draw()
 
 }
 
-void MeltStage::CheckCollision(CollisionManager& collisionManager)
+void MeltStage::CheckCollision(CollisionManager& collisionManager, RaySprite& raySprite)
 {
 
-    meltBlockMap_->RayCastHit(*player_->GerRaySprite());
+    meltBlockMap_->RayCastHit(raySprite);
 
     //火のコライダーと当たっていたらがあるところで
 
@@ -119,7 +121,7 @@ void MeltStage::CheckCollision(CollisionManager& collisionManager)
 
         if (obj->collider_->GetCollisionAttribute() == CollisionTag::GetTag("Fire")) {
             auto* collider = obj->collider_.get();
-            if (player_->GerRaySprite()->Intersect(collider)) {
+            if (raySprite.Intersect(collider)) {
                 Vector3 pos = obj->obj_->GetWorldTransform().GetWorldPosition();
                 Vector3 eyePos  = player_->GetEyeWorldTransform().GetWorldPosition();
                 Vector3 offset = { 0.0f,0.75f,0.0f };
@@ -134,7 +136,7 @@ void MeltStage::CheckCollision(CollisionManager& collisionManager)
 
     if (meltBlockMap_->IsClear()) {
         //なぞ解きに正解したらコライダーなど追加
-        bastet_->RayCastHit(*player_->GerRaySprite());
+        bastet_->RayCastHit(raySprite);
         collisionManager.AddCollider(bastet_.get());
     }
     // 壁との当たり判定

@@ -6,8 +6,7 @@
 #include<numbers>
 #include"Transform.h"
 
-class WorldTransform {
-public://一旦public
+struct WorldTransform {
 
     EulerTransform eTransform_ = {
         .scale = {1.0f,1.0f,1.0f},
@@ -16,20 +15,20 @@ public://一旦public
     };
     Matrix4x4 matWorld_ = {0.0f};
     const WorldTransform* parent_ = nullptr;
-public:
+
     void Initialize();
     Vector3 GetWorldPosition()const;
     void Parent(const WorldTransform& parentWorldTransform);
+
 };
 
-class WorldTransform2D {
-public://一旦public
+struct WorldTransform2D {
     Vector2 scale_ = { 0.0f };
     float rotate_ = { 0.0f };
     Vector2 translate_ = { 0.0f };
     Matrix3x3 matWorld_ = { 0.0f };
     const WorldTransform2D* parent_ = nullptr;
-public:
+
     void Initialize();
     Vector2 GetWorldPosition()const;
 };

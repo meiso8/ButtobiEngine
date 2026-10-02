@@ -2,7 +2,7 @@
 #include"Memo.h"
 #include<map>
 #include"Sprite.h"
-#include"Player/RaySprite.h"
+#include"RaySprite/RaySprite.h"
 #include"Vector2.h"
 
 class MemoManager
