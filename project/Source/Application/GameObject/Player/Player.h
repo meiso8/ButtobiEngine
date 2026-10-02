@@ -36,7 +36,6 @@ public:
     /// @brief デバック表示
     void Debug();
 
-    HPs* GetHpsPtr() { return &characterState_.hps; }
 
 
     /// @brief 
@@ -50,26 +49,44 @@ public:
     WorldTransform& GetEyeWorldTransform() {
         return eyePosition_->GetWorldTransform();
     }
+    
+    EyePosition* GetEyePosition() {
+        return eyePosition_.get();
+    }
 
     WorldTransform& GetBodyWorldTransform() {
         return aniObject_->GetWorldTransform();
     }
+    /// @brief 手の位置のマトリックスポインタを得る
+    /// @return 手の位置
+    Matrix4x4* GetHandMatrixPtr() { return &handMatrix_; }
+
+    //レイスプライトクラスを包含する
+    RaySprite* GerRaySprite() { return raySprite_.get(); };
+    /// @brief HPの構造体を得る
+    /// @return HP構造体
+    HPs* GetHpsPtr() { return &characterState_.hps; }
+
+    /// @brief 体の回転をセットする
+    /// @param rotate 回転
     void SetBodyRotate(const Vector3& rotate) { aniObject_->SetRotate(rotate); }
+    /// @brief 体のスケールをセットする
+    /// @param scale セット
     void SetBodyScale(const Vector3& scale) { aniObject_->SetScale(scale); }
 
 
     void OnCollision(Collider* collider)override;
     void OnCollisionEnemy(const int hitPoint = 10);
 
-    EyePosition* GetEyePosition() {
-        return eyePosition_.get();
-    }
 
-    const bool& IsDead() { return characterState_.isDead; }
+    /// @brief　死亡判定を得る 
+    /// @return 死亡判定
+    const bool IsDead() { return characterState_.isDead; }
+    /// @brief ズームタイマーを得る
+    /// @return ズームタイマー
     const float& GetZoomTimer() { return zoomTimer_; }
-    //レイスプライトクラスを包含する
-    RaySprite* GerRaySprite() { return raySprite_.get(); };
-    Matrix4x4* GetHandMatrixPtr() { return &handMatrix_; }
+
+
     /// @brief ジャンプ可能かを設定する
     /// @param canJump ジャンプ可能か
     void SetCanJump(const bool canJump) { canJump_ = canJump; };

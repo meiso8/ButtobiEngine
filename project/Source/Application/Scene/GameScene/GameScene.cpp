@@ -168,12 +168,8 @@ void GameScene::CheckAllCollision()
     memoManager_->RayCastHit(*player_->GerRaySprite());
     //// ========================//Ray================================
 
+    //コライダーの一斉クリア
     collisionManager_->ClearColliders();
-
-    //めもとの当たり判定
-    //for (auto& [texture, memo] : memoManager_->GetMemos()) {
-    //    collisionManager_->AddCollider(memo.get());
-    //}
 
     //プレイヤーのコライダーを追加する
     collisionManager_->AddCollider(player_.get());
