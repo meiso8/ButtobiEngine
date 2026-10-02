@@ -49,7 +49,7 @@ public:
     }
     /// @brief 目の位置のワールド座標を得る
     /// @return 
-    const Vector3& GetEyeWorldPosition() { return worldEyePos_; };
+    const Vector3& GetEyeWorldPosition() const{ return worldEyePos_; };
     /// @brief 体のトランスフォームを得る
     /// @return 
     const WorldTransform& GetBodyWorldTransform() {
