@@ -20,15 +20,27 @@ class Player :public Collider
 {
 public:
 
-
+    /// @brief コンストラクタ
     Player();
+    /// @brief デストラクタ
     ~Player();
+    /// @brief 初期化処理
+    /// @param pos 位置を設定する
     void Init(const Vector3& pos);
+    /// @brief 描画処理
     void Draw();
+    /// @brief レイ位置にあるスプライト描画
     void DrawRaySprite();
+    /// @brief 更新
     void Update();
+    /// @brief デバック表示
     void Debug();
 
+    HPs* GetHpsPtr() { return &characterState_.hps; }
+
+
+    /// @brief 
+    /// @return 
     Vector3& GetEyeForward();
     Vector3& GetBodyForward();
 
@@ -44,7 +56,7 @@ public:
     }
     void SetBodyRotate(const Vector3& rotate) { aniObject_->SetRotate(rotate); }
     void SetBodyScale(const Vector3& scale) { aniObject_->SetScale(scale); }
-    HPs* GetHpsPtr() { return &characterState_.hps; }
+
 
     void OnCollision(Collider* collider)override;
     void OnCollisionEnemy(const int hitPoint = 10);
@@ -58,11 +70,10 @@ public:
     //レイスプライトクラスを包含する
     RaySprite* GerRaySprite() { return raySprite_.get(); };
     Matrix4x4* GetHandMatrixPtr() { return &handMatrix_; }
-    //ジャンプ可能かどうかを外部から設定する
+    /// @brief ジャンプ可能かを設定する
+    /// @param canJump ジャンプ可能か
     void SetCanJump(const bool canJump) { canJump_ = canJump; };
-
-
-
+    /// @brief サーモグラフィー
     void Thermography();
 
 private:
@@ -124,15 +135,15 @@ private:
 
 #pragma region//物理情報
     //速度
-    Vector3 velocity_;
+    Vector3 velocity_ = {0.0f};
     //速度倍率を格納
-    float speed_;
+    float speed_ = 0.0f;
 #pragma endregion
 
     //音声が鳴るタイマー
     float soundTimer_ = 0.0f;
     //モデル
-    Model* model_;
+    Model* model_ = nullptr;
     //アニメーション付きオブジェクト
     std::unique_ptr<AnimationObject3d> aniObject_ = nullptr;
 
