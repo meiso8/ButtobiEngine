@@ -1,0 +1,209 @@
+@charset "utf-8";
+
+h1 {
+  color: cadetblue;
+  padding-left: 16px;
+  border-left: 16px solid cadetblue;
+  border-bottom: 2px dashed cadetblue;
+}
+
+h2 {
+  color: white;
+}
+
+body {
+  font-family: 'Avenir', 'Helvetica Neue', 'Helvetica', 'Arial', 'Hiragino Sans', 'ヒラギノ角ゴシック', YuGothic, 'Yu Gothic', 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック', 'MS PGothic', monospace;
+  cursor: url('cursor.svg') 0 0, auto;
+  background-color: rgb(36, 36, 36);
+}
+
+#headTitle {
+  animation: fadeIn 0.7s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+}
+.center{
+    text-align: center;
+}
+/* フェードインさせたい要素の初期状態 */
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px); /* 30px 下にずらしておく */
+  transition: opacity 0.8s ease, transform 0.8s ease; /* 0.8秒かけて滑らかに変化 */
+}
+
+/* 画面内に入った時に追加されるクラス */
+.fade-in.is-show {
+  opacity: 1;
+  transform: translateY(0); /* 元の位置に戻る */
+}
+
+/* 学年ごとのグループ設定 */
+.year-section {
+  text-align: center;
+  /* 見出し文字を中央揃え */
+  margin-bottom: 40px;
+  /* 学年ごとの間隔 */
+}
+
+/* 見出しのデザイン */
+.year-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* 動画を中央寄せで並べる設定 */
+.video-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  /* 動画を中央に並べる */
+  gap: 20px;
+  /* 動画同士の隙間 */
+}
+
+.video-grid iframe {
+  max-width: 100%;
+  /* スマホ表示時の溢れ防止 */
+}
+
+details {
+  margin-bottom: 10px;
+  border: 1px solid rgb(36, 36, 36);
+  border-radius: 5px;
+  padding: 8px 12px;
+  background-color: rgb(67, 67, 67);
+  max-width: 400px;
+}
+
+summary {
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+}
+
+.hint-head{
+  color: white;
+}
+
+.hint-content {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed rgb(36, 36, 36);
+  color: white;
+}
+
+
+/* --- リンク全体の文字色設定 --- */
+a {
+  color: #4da6ff; /* 通常のリンク色（明るい水色） */
+  text-decoration: none; /* 下線を消したい場合（任意） */
+  transition: color 0.2s ease; /* 色変化を滑らかにする設定（任意） */
+}
+
+/* 訪問済みのリンク（すでにクリックしたことのあるページ） */
+a:visited {
+  color: #b388ff; /* 明るい薄紫色 */
+}
+
+/* マウスカーソルを乗せたとき */
+a:hover {
+  color: #99ccff; /* さらに明るい水色 */
+  text-decoration: underline; /* ホバー時に下線を表示 */
+}
+
+/* クリックした瞬間 */
+a:active {
+  color: #ff6666;
+}
+
+.profile{
+  color:white;
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateX(180px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+
+  40%,
+  100% {
+    opacity: 1;
+  }
+}
+
+.icons {
+  animation: popup 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes popup {
+  0% {
+    transform: translateY(40px) scale(0.8);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0) scale(1.0);
+  }
+
+  80%,
+  100% {
+    opacity: 1;
+  }
+}
+
+#welcomeToDarkWeb {
+  animation: fadeIn 0.7s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+  height: 32px;
+  font-size: 24px;
+  text-align: center;
+  border-radius: 8px;
+  color: white;
+  font-weight: 1000;
+  background-color:rgb(92, 78, 96);
+}
+
+.icons img {
+  width: 64px;
+  border-radius: 8px;
+}
+
+#iconLinks {
+  text-align: right;
+  padding-top: 16px;
+  padding-right:32px;
+  border-radius: 32px;
+  background-color:rgb(92, 78, 96);
+  height: 80px;
+}
+
+.backGround img {
+  animation: slideIn 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  width: 33%;
+  border-radius: 32px;
+}
+
+
+#detailed_info {
+  padding: 16px;
+  color: red;
+}
+
+.hint {
+  font-size: 24px;
+  font-weight: bolder;
+  color: white;
+}
