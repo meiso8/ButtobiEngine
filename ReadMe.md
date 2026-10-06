@@ -20,4 +20,4 @@
 - 2026/07/21 メルトシェーダーによる溶けるアニメーション作成
 
 [迷宮博物館WebSite](https://meiso-labyrinth.netlify.app/index.html)
-[WebSite]([https://meiso8.netlify.app/](https://meiso8.github.io/index.html))
+[WebSite](https://meiso8.github.io/index.html)
