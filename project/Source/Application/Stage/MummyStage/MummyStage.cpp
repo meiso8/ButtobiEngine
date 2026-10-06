@@ -87,6 +87,8 @@ void MummyStage::StageTransitionInitialize()
     // ミイラ前に移動
     player_->Init({ 0.0f, 0.0f, -5.0f });
 
+    itemManager_->GenerateItems({});
+
 }
 
 void MummyStage::Update() {

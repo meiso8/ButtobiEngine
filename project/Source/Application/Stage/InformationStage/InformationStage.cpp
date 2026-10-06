@@ -47,6 +47,8 @@ void InformationStage::StageTransitionInitialize()
 
     gate_->Initialize();
     gateSensor_->Initialize();
+
+    itemManager_->GenerateItems({});
 }
 
 void InformationStage::Update()

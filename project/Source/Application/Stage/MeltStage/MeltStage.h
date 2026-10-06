@@ -14,6 +14,7 @@ private:
     std::array<std::unique_ptr<ParticleEmitter>, 3>particleEmitters_;
     std::unique_ptr<Bastet>bastet_ = nullptr;
     bool isGenerateScarab_ = false;
+    bool isFirstSound_ = false;
 public:
     MeltStage();
     void Initialize()override;
