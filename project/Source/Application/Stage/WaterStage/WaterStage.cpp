@@ -25,7 +25,7 @@ void WaterStage::Initialize()
     blockMap_->Update();
 
 
-    itemApper_ = false;
+
 
     isInitialize_ = true;
 }
@@ -38,6 +38,10 @@ void WaterStage::StageTransitionInitialize()
     memoManager_->GenerateMemos({ TextureFactory::MEMO2, TextureFactory::BOOK2 });
 
     player_->Init({ 0.0f,0.0f, -10.0f });
+
+    itemManager_->GenerateItems({});
+
+    itemApper_ = false;
 }
 
 void WaterStage::Update()

@@ -37,6 +37,8 @@ void AnubisStage::StageTransitionInitialize()
 
     //少し手前側に移動する
     player_->Init({ 0.0f, 0.0f, -10.0f });
+
+    itemManager_->GenerateItems({});
 }
 
 void AnubisStage::Update()

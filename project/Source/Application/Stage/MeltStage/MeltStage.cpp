@@ -30,10 +30,9 @@ void MeltStage::Initialize()
    
     //空メモ
     memoManager_->GenerateMemos({ });
-    //アイテム生成する
-    itemManager_->GenerateItems({ "Glass" });
 
-    isGenerateScarab_ = false;
+    isFirstSound_ = false;
+
 
     isInitialize_ = true;
 }
@@ -47,7 +46,9 @@ void MeltStage::StageTransitionInitialize()
     //少し手前側に移動する
     player_->Init({ 0.0f, 0.0f, -5.0f });
     bastet_->LoadMap("MeltStage_BastetStep");
-
+    //アイテム生成する
+    itemManager_->GenerateItems({ "Glass" });
+    isGenerateScarab_ = false;
 
 }
 
@@ -74,13 +75,17 @@ void MeltStage::Update()
 
         if (!isGenerateScarab_) {
             //正解音が鳴る
-            SoundManager::PlayCorrectSE();
+            if (!isFirstSound_) {
+                SoundManager::PlayCorrectSE();
+                isFirstSound_ = true;
+            }
+      
             //スカラベを生成していないとき
             itemManager_->GenerateItems({ "Scarab" });
 
             std::shared_ptr scarab = itemManager_->GetItem("Scarab");
             //ガラスが溶け終わったら位置を変更する
-            Vector3 pos = item->GetWorldPosition() + Vector3{ 0.0f,0.25f,0.0f };
+            Vector3 pos = item->GetWorldPosition() + Vector3{ 0.0f,0.125f,0.0f };
             scarab->SetTranslate(pos);
             isGenerateScarab_ = true;
         }

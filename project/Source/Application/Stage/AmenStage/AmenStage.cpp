@@ -26,8 +26,7 @@ void AmenStage::Initialize()
         return;
     }
 
-    //アイテムの生成を初期化する
-    isGenerateItem_ = false;
+
     //スライドパズルシステムの初期化
     slidePuzzleSystem_->Initialize();
 
@@ -46,6 +45,10 @@ void AmenStage::StageTransitionInitialize()
     backGround_->Initialize();
     // ミイラ前に移動
     player_->Init({ 0.0f, 0.0f, -5.0f });
+
+    itemManager_->GenerateItems({});
+    ////アイテムの生成を初期化する
+    isGenerateItem_ = false;
 }
 
 void AmenStage::Update()
@@ -79,7 +82,7 @@ void AmenStage::DrawSprite()
 
 void AmenStage::CheckCollision(CollisionManager& collisionManager,RaySprite& raySprite)
 {
-    if (!isGenerateItem_) {
+    if (!slidePuzzleSystem_->GetIsGameEnd()) {
         //アイテムを生成していないときスライドパズルのレイキャストをヒットさせる
         slidePuzzleSystem_->RayCastHit(raySprite);
     }
