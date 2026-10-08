@@ -4,6 +4,7 @@
 #include"TitleScene/TitleScene.h"
 #include"ResultScene/ResultScene.h"
 #include"FirstStoryScene/FirstStoryScene.h"
+#include"SecondStoryScene/SecondStoryScene.h"
 
 #include"SceneManager.h"
 #include"Log.h"
@@ -15,11 +16,12 @@ void SceneFactory::Create()
     SceneManager::SetMap("Game", std::move(std::make_unique < GameScene>()));
     SceneManager::SetMap("Result", std::move(std::make_unique < ResultScene>()));
     SceneManager::SetMap("FirstStory", std::move(std::make_unique < FirstStoryScene>()));
+    SceneManager::SetMap("SecondStory", std::move(std::make_unique < SecondStoryScene>()));
     LogFile::Log("Create Scene\n");
 
     SceneManager::SetNextScene("Title");
 #ifdef _DEVELOP
-    SceneManager::SetNextScene("FirstStory");
+    SceneManager::SetNextScene("SecondStory");
 #endif
     SceneManager::InitScene();
 
