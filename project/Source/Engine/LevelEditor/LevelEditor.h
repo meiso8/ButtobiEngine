@@ -58,11 +58,14 @@ public:
     LevelData* GetLevelData() { return levelData_.get(); };
     void Load(const std::string& fileName, bool useButtobiEditor = false);
     /// @brief オブジェクトの作成関数
-    /// @param objects json
+    /// @param objects 
     void CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects);
     /// @brief ステージ移動トリガーの作成関数
     /// @param triggers ステージトリガーのvector
     void CreateStageChangeTriggers(std::vector<std::unique_ptr<StageChangeTrigger>>& triggers);
+    /// @brief オブジェクト3dのみの生成関数
+    /// @param object3ds 
+    void CreateObject3d(std::vector<std::unique_ptr<Object3d>>& object3ds);
 private:
     //マテリアル情報の読み込み
     void LoadMaterialData(LevelData::MaterialData& data, nlohmann::json& object);

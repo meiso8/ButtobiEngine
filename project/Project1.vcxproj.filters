@@ -192,6 +192,7 @@
     <ClCompile Include="Source\Application\Scene\FirstStoryScene\FirstStoryScene.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\Skip\Skip.cpp" />
     <ClCompile Include="Source\Application\Scene\SecondStoryScene\SecondStoryScene.cpp" />
+    <ClCompile Include="Source\Application\System\TreeGenerator\TreeGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\ComputeShaderPSO\ComputeShaderPSO.h" />
@@ -415,6 +416,7 @@
     <ClInclude Include="Source\Application\Scene\FirstStoryScene\FirstStoryScene.h" />
     <ClInclude Include="Source\Application\GameObject\UI\Skip\Skip.h" />
     <ClInclude Include="Source\Application\Scene\SecondStoryScene\SecondStoryScene.h" />
+    <ClInclude Include="Source\Application\System\TreeGenerator\TreeGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png" />

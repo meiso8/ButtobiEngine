@@ -1,1 +1,77 @@
-null
+{
+    "name": "SecondStoryScene",
+    "objects": [
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/Building",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Building.obj",
+            "glassFactor": 0.0,
+            "lightMode": 2,
+            "name": "Object11",
+            "nextStageName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": -3.1415908336639404,
+                    "y": 0.0015925478655844927,
+                    "z": -3.1415908336639404
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -0.07163870334625244,
+                    "y": 7.786942296661437e-05,
+                    "z": 44.98373031616211
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/Player",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "player.gltf",
+            "glassFactor": 0.0,
+            "lightMode": 2,
+            "name": "SecondStoryPlayer2",
+            "nextStageName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -0.47699999809265137,
+                    "y": 0.0,
+                    "z": 0.7509999871253967
+                }
+            },
+            "type": "EMPTY"
+        }
+    ]
+}

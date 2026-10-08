@@ -161,6 +161,56 @@ void LevelEditor::CreateStageChangeTriggers(std::vector<std::unique_ptr<StageCha
 
 }
 
+void LevelEditor::CreateObject3d(std::vector<std::unique_ptr<Object3d>>& object3ds)
+{
+    object3ds.clear();
+
+    for (auto& objectData : levelData_->objects) {
+
+        std::unique_ptr<Object3d> newObjctData = std::make_unique<Object3d>();
+        auto filePath = objectData.filePath;
+
+        Model* model = nullptr;
+
+        if (!filePath.directoryPath.empty()) {
+            model = ModelManager::LoadModelAndGet(filePath.directoryPath + "/" + filePath.fileName);
+        }
+
+        newObjctData->Create();
+        newObjctData->SetObjectType("MESH");
+
+        if (model) {
+            newObjctData->SetMeshAndMaterial(model);
+        } else {
+            auto* primitive = PrimitiveFactory::GetPrimitiveForName(objectData.filePath.fileName);
+            newObjctData->SetMeshAndMaterial(primitive);
+            //テクスチャハンドルを入れる
+            newObjctData->SetTextureHandle(static_cast<TextureFactory::Handle>(objectData.materialData.textureHandle));
+        }
+
+        newObjctData->SetColor(objectData.materialData.color);
+        newObjctData->SetTemperature(objectData.materialData.tempareture);
+        newObjctData->SetShininess(objectData.materialData.shininess);
+        //環境光
+        newObjctData->SetEnvironmentCoefficient(objectData.materialData.environmentCoefficient);
+        //ガラス度合い
+        newObjctData->SetGlassFactor(objectData.materialData.glassFactor);
+        //ライトモード
+        newObjctData->SetLightMode(static_cast<Object3d::LightMode>(objectData.materialData.lightMode));
+
+        newObjctData->SetObjectName(objectData.objectName);
+        newObjctData->RegisterObject();
+
+        auto& transform = newObjctData->GetWorldTransform();
+
+        transform.eTransform_ = objectData.transform;
+        //ここで一度 Object3d の行列計算(Update)を走らせて matWorld_ を確定させる！
+        newObjctData->Update();
+
+        object3ds.push_back(std::move(newObjctData));
+    }
+}
+
 
 void LevelEditor::LoadVector4(nlohmann::json& object, Vector4& vector)
 {
