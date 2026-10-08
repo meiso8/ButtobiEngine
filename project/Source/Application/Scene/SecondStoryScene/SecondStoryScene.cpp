@@ -84,21 +84,21 @@ void SecondStoryScene::Update()
     Debug();
 
 #ifdef _RELEASE
-    if (cameraTimer_ >= kEndTimer_) {
-        SceneChange();
-    } else {
+    //if (cameraTimer_ >= kEndTimer_) {
+    //    SceneChange();
+    //} else {
 
-        if (InputBind::IsClick()) {
+    //    if (InputBind::IsClick()) {
 
-            if (skip_->GetIsSkip()) {
-                cameraTimer_ = kEndTimer_;
-            } else {
-                Sound::PlaySE(SoundFactory::FALL);
-                skip_->SetIsDraw(true);
-            }
+    //        if (skip_->GetIsSkip()) {
+    //            cameraTimer_ = kEndTimer_;
+    //        } else {
+    //            Sound::PlaySE(SoundFactory::FALL);
+    //            skip_->SetIsDraw(true);
+    //        }
 
-        }
-    }
+    //    }
+    //}
 
 #endif
 
