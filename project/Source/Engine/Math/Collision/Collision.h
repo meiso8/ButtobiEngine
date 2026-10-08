@@ -169,7 +169,6 @@ bool IsCollision(const AABB& aabb, const Sphere& sphere);
 /// @param point 点
 /// @return 当たったかどうか
 bool IsCollision(const AABB& aabb, const Vector3& point);
-
 /// @brief AABBと線分の衝突判定
 /// @param aabb AABB
 /// @param segment 線分
@@ -191,4 +190,3 @@ bool IsCollisionInCircleLine(const Circle& smallCircle, const Circle& largeCircl
 
 //点と矩形
 bool IsCollision(const Vector2& p, const Rect& r);
-

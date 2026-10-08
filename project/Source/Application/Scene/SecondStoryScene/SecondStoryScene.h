@@ -5,7 +5,7 @@
 #include"LevelEditor/LevelEditor.h"
 #include <vector>
 #include"AnimationObject3d.h"
-
+class TreeGenerator;
 class Skip;
 class SecondStoryScene :public BaseScene
 {
@@ -28,6 +28,8 @@ private:
     std::unique_ptr<Skip>skip_ = nullptr;
     //アニメーション付きオブジェクト
     std::unique_ptr<AnimationObject3d> aniObject_ = nullptr;
+    //木のランダム生成クラス
+    std::unique_ptr<TreeGenerator>treeGenerator_ = nullptr;
 
 };
 

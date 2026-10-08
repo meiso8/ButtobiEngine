@@ -10,6 +10,7 @@
 #include"DebugUI.h"
 #include"PostProcessManager/PostProcessManager.h"
 #include"LightingManager.h"
+#include"TreeGenerator/TreeGenerator.h"
 
 SecondStoryScene::SecondStoryScene()
 {   // 現在のカメラを設定
@@ -28,6 +29,10 @@ SecondStoryScene::SecondStoryScene()
     aniObject_->SetMeshAndMaterial(model);
     aniObject_->SetModelAndLoadAnimation(model);
     aniObject_->SetAnimation("InterCome");
+
+    //木のランダム生成クラス
+    treeGenerator_ = std::make_unique<TreeGenerator>();
+
 }
 
 SecondStoryScene::~SecondStoryScene()
@@ -40,7 +45,7 @@ void SecondStoryScene::Initialize()
 //カメラを初期化する
     camera_->Initialize();
 
-    LevelEditor::GetInstance()->Load("FristStoryScene_objectEditor", true);
+    LevelEditor::GetInstance()->Load("SecondStoryScene_objectEditor", true);
     LevelEditor::GetInstance()->CreateObject(objects_);
 
     SetSceneChange();
@@ -69,6 +74,9 @@ void SecondStoryScene::Initialize()
     gaussianFilter->kernel = 0;
 
     LightingManager::NoonLightInit();
+
+    //木の生成
+    treeGenerator_->Initialize();
 }
 
 void SecondStoryScene::Update()
@@ -104,6 +112,9 @@ void SecondStoryScene::Update()
     aniObject_->Update();
     //アニメーションタイマーのアップデート
     aniObject_->UpdateAniTimer();
+
+
+    treeGenerator_->Update();
 }
 
 void SecondStoryScene::DrawModel()
@@ -116,7 +127,7 @@ void SecondStoryScene::DrawModel()
     }
 
      aniObject_->Draw();
-    
+     treeGenerator_->Draw();
 
 }
 
@@ -145,6 +156,8 @@ void SecondStoryScene::Debug()
 
     DebugUI::CheckObject3d(*aniObject_);
     ImGui::End();
+
+    treeGenerator_->Debug();
 
 #endif // !USE_IMGUI
 }
