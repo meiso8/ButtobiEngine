@@ -36,9 +36,8 @@ SecondStoryScene::~SecondStoryScene()
 }
 
 void SecondStoryScene::Initialize()
-
 {
-　    //カメラを初期化する
+//カメラを初期化する
     camera_->Initialize();
 
     LevelEditor::GetInstance()->Load("FristStoryScene_objectEditor", true);
