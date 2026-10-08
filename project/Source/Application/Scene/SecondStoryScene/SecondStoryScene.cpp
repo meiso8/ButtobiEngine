@@ -23,12 +23,12 @@ SecondStoryScene::SecondStoryScene()
 
     skip_ = std::make_unique<Skip>();
     //モデルを取得する
-    Model* model = ModelManager::GetModel("player.gltf");
+    Model* model = ModelManager::LoadModelAndGet("Resource/Models/Gentleman/gentleman.gltf");
     aniObject_ = std::make_unique<AnimationObject3d>();
     aniObject_->Create();
     aniObject_->SetMeshAndMaterial(model);
     aniObject_->SetModelAndLoadAnimation(model);
-    aniObject_->SetAnimation("InterCome");
+    aniObject_->SetAnimation("Bye-Bye");
 
     //木のランダム生成クラス
     treeGenerator_ = std::make_unique<TreeGenerator>();
@@ -61,7 +61,7 @@ void SecondStoryScene::Initialize()
     aniObject_->SetObjectName("SecondStoryPlayer");
     aniObject_->RegisterObject();
     aniObject_->SetTranslate({ -0.477f,0.0f,0.751f });
-    aniObject_->SetAnimation("InterCome");
+    aniObject_->SetAnimation("Bye-Bye");
     aniObject_->UpdateAniTimer();
 
     aniObject_->Update();
