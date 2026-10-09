@@ -16,12 +16,19 @@ Water::Water() {
     object_->Create();
     object_->SetMeshAndMaterial(ModelManager::GetModel("Water.obj"));
 
-    object_->GetWaveData(0).amplitude = 0.2f;
-    object_->GetWaveData(0).direction = Normalize(Vector3{ 0.134f,0.12f,0.98f });
-    object_->GetWaveData(0).frequency = 2.0f;
-    object_->GetWaveData(1).amplitude = 0.1f;
-    object_->GetWaveData(1).direction = { 1.0f,0.0f,0.0f };
-    object_->GetWaveData(1).frequency = 4.0f;
+
+    auto waveData0 = object_->GetWaveData(0);
+    waveData0.amplitude = 0.2f;
+    waveData0.direction = Normalize(Vector3{ 0.134f,0.12f,0.98f });
+    waveData0.frequency = 2.0f;
+    object_->SetWaveData(0, waveData0);
+
+    auto waveData1 = object_->GetWaveData(1);
+    waveData1.amplitude = 0.1f;
+    waveData1.direction = { 1.0f,0.0f,0.0f };
+    waveData1.frequency = 4.0f;
+    object_->SetWaveData(1, waveData1);
+
     object_->SetTemperature(0.1f);
 
     AABB aabb = { .min = {-12.5f,-0.5f,-12.5f},.max = {12.5f,0.5f,12.5f} };
@@ -41,12 +48,17 @@ void Water::Initialize() {
     isDrain_ = false;
     isPrePlayerHit_ = false;
     isPlayerHit_ = false;
-    object_->GetWaveData(0).time = 0.0f;
-    object_->GetWaveData(1).time = 0.0f;
+
     object_->Initialize();
+
+    //波データ
+    object_->SetWaveTime(0,0.0f);
+    object_->SetWaveTime(1,0.0f);
+    object_->SetWaveAmplitude(0, 0.2f);
+    object_->SetWaveAmplitude(1, 0.1f);
+
     object_->SetTranslate({ 0.0f,0.75f,0.0f });
-    object_->GetWaveData(0).amplitude = 0.2f;
-    object_->GetWaveData(1).amplitude = 0.1f;
+
     object_->SetObjectName("Water");
     object_->RegisterObject();
 }
@@ -55,8 +67,8 @@ void Water::Update() {
 
     if (!isPrePlayerHit_ && isPlayerHit_|| isPrePlayerHit_ && !isPlayerHit_) {
     
-        object_->GetWaveData(0).amplitude = 0.2f;
-        object_->GetWaveData(1).amplitude = 0.1f;
+        object_->SetWaveAmplitude(0, 0.2f);
+        object_->SetWaveAmplitude(1, 0.1f);
 
         Sound::PlayOriginSE(SoundFactory::WATER_DROP);
     }
@@ -66,12 +78,13 @@ void Water::Update() {
 
     if (isDrain_) {
         object_->GetTransform().translate.y = Lerp(object_->GetTransform().translate.y, -0.625f, 0.01f);
-        object_->GetWaveData(0).amplitude = Lerp(object_->GetWaveData(0).amplitude, 0.0f, 0.1f);
-        object_->GetWaveData(1).amplitude = Lerp(object_->GetWaveData(1).amplitude, 0.0f, 0.1f);
+        object_->SetWaveAmplitude(0, Lerp(object_->GetWaveData(0).amplitude, 0.0f, 0.1f));
+        object_->SetWaveAmplitude(1, Lerp(object_->GetWaveData(1).amplitude, 0.0f, 0.1f));
     }
 
-    object_->GetWaveData(0).time += TimeManager::DeltaTime();
-    object_->GetWaveData(1).time = object_->GetWaveData(0).time + 1.5f;
+    object_->SetWaveTime(0, object_->GetWaveData(0).time + TimeManager::DeltaTime());
+    object_->SetWaveTime(1, object_->GetWaveData(0).time + 1.5f);
+
     object_->Update();
 }
 

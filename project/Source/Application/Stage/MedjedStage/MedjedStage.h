@@ -34,13 +34,13 @@ public:
     void DrawSprite()override;
     void CheckCollision(CollisionManager& collisionManager,RaySprite& raySprite)override;
   
-    const bool& FindMedjed() { return medjedManager_->GetIsFindMedjed(); }
-    Medjed* GetMedjed() { return medjedManager_->GetMedjed(); };
-    Enemy* GetEnemy() { return medjedManager_->GetEnemy(); };
-    const bool& GetEnemyApper() {return medjedManager_->GetIsApperMedjed(); }
+
     void UpdateEmitter(const Particels& particles);
 private:
     void CreateParticle();
     void TransitionScene();
+
+    const bool& FindMedjed() { return medjedManager_->GetIsFindMedjed(); }
+    const bool& GetEnemyApper() { return medjedManager_->GetIsApperMedjed(); }
 };
 

@@ -10,18 +10,29 @@
 #include"MakeMatrix.h"
 #include"CoordinateTransform.h"
 #include"TimeManager.h"
+#include"RhythmManager.h"
 
-ShotBulletManager::ShotBulletManager(Enemy* enemy, BulletManager* bulletManager, RhythmManager* rhythmManager)
-    :enemy_(enemy), bulletManager_(bulletManager), rhythmManager_(rhythmManager)
+ShotBulletManager::ShotBulletManager(const Enemy* enemy)
+    :enemy_(enemy)
 {
+    rhythmManager_ = std::make_unique<RhythmManager>();
+    bulletManager_ = std::make_unique<BulletManager>();
+
 }
 
 void ShotBulletManager::Initialize() {
     currentTime_ = 0.0f;
+
+    rhythmManager_->Initialize();
+    bulletManager_->Initialize();
 }
 
 // Update内で時間を進める
 void ShotBulletManager::Update() {
+
+    rhythmManager_->Update();
+    //弾
+    bulletManager_->Update();
 
     currentTime_ += TimeManager::DeltaTime();
 
@@ -54,13 +65,13 @@ void ShotBulletManager::Update() {
                     Vector3 shotDirection = CoordinateTransform(toTarget, rotY);
                     shotDirection = Normalize(shotDirection);
 
-                    Vector3 shotPosition = enemy_->GetWorldTransform().GetWorldPosition() + shotDirection * 0.5f;
+                    Vector3 shotPosition = enemy_->GetWorldPos() + shotDirection * 0.5f;
                     shotPosition.y += 0.5f;
                     bulletManager_->ShotBullet(shotPosition, shotDirection, shotSpeed_, shotSize_, select == i ? Bullet::kEnemyHot : Bullet::kEnemyCold);
                 }
             } else {
 
-                Vector3 shotPosition = enemy_->GetWorldTransform().GetWorldPosition() + toTarget * 0.5f;
+                Vector3 shotPosition = enemy_->GetWorldPos() + toTarget * 0.5f;
                 shotPosition.y += 0.5f;
                 bulletManager_->ShotBullet(shotPosition, toTarget, shotSpeed_, shotSize_, rand() % 2 == 0 ? Bullet::kEnemyHot : Bullet::kEnemyCold);
             }
@@ -95,4 +106,14 @@ void ShotBulletManager::RayCastHit(RaySprite& raySprite)
             bullet->SetColor({ 1.0f,1.0f,1.0f,1.0f });
         }
     }
+}
+
+void ShotBulletManager::Draw()
+{
+    bulletManager_->Draw();
+}
+
+void ShotBulletManager::SetSound(const SoundFactory::TAG& tag)
+{
+    rhythmManager_->SetSound(tag);
 }

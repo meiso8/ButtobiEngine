@@ -14,15 +14,15 @@ void Glass::Init()
     object_->SetTranslate({ 8.5f,1.111f,-5.0f });
     object_->SetTemperature(0.2f);
 
-    auto& material = object_->GetMaterial();
-    material.refraction = 0.667f;
-    material.glassFactor = 1.0f;
-    material.lightMode = Object3d::LightMode::kLightModeLReflectance;
+    object_->SetLightMode(Object3d::LightMode::kLightModeLReflectance);
+    object_->SetRefraction(0.667f);
+    object_->SetGlassFactor(1.0f);
 
-    auto& melt = object_->GetMeltData();
+    auto melt = object_->GetMeltData();
     melt.size = 0.4f;
     melt.thickness = 0.0f;
     melt.time = 0.0f;
+    object_->SetMeleData(melt);
 
     startPos_ = { 0.0f };
     endPos_ = { 0.0f };
@@ -36,15 +36,20 @@ void Glass::Update()
     if (isUsed_) {
 
         //溶ける
-        auto& melt = object_->GetMeltData();
-        melt.time += TimeManager::DeltaTime();
-        melt.time = std::clamp(melt.time, 0.0f, 20.0f);
+        float meltTime = object_->GetMeltData().time;
 
-        if (melt.time >= 7.5f) {
+       meltTime += TimeManager::DeltaTime();
+
+
+       meltTime = std::clamp(meltTime, 0.0f, 20.0f);
+       object_->SetMeltDataTime(meltTime);
+       
+
+        if (meltTime >= 7.5f) {
             isMelt_ = true;
         }
 
-        float time = melt.time / 20.0f;
+        float time = meltTime / 20.0f;
         time = std::min(time, 1.0f);
 
         //温度の設定

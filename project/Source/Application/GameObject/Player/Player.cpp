@@ -462,7 +462,7 @@ void Player::MouseLook()
 
 }
 
-void Player::OnCollisionEnemy(const int hitPoint)
+const void Player::OnCollisionEnemy(const int hitPoint)
 {
 
     if (isInvincible_) {

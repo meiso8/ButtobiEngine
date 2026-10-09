@@ -31,7 +31,7 @@ void Bullet::Initialize() {
     lifeDuration_ = 2.0f;
     isActive_ = false;
     size_ = 3.0f;
-    body_->GetBalloonData().expansion = 0.0f;
+    body_->SetBalloonExpansion(0.0f);
 
 
 }

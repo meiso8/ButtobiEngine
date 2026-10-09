@@ -51,21 +51,24 @@ void Fountain::Update()
 {
     object_->Update();
 
-    waterObject_->GetWaveData(0).frequency = 4.0f;
-    waterObject_->GetWaveData(0).amplitude = 0.03f;
-    waterObject_->GetWaveData(1).frequency = 4.0f;
-    waterObject_->GetWaveData(1).amplitude = 0.03f;
+    auto waveData0 = waterObject_->GetWaveData(0);
+   waveData0.frequency = 4.0f;
+   waveData0.amplitude = 0.03f;
+   waveData0.time += TimeManager::DeltaTime() * 2.0f;
 
-    waterObject_->GetWaveData(1).direction = { 0.0f,0.0f,1.0f };
+   auto waveData1 = waterObject_->GetWaveData(1);
+   waveData1.frequency = 4.0f;
+   waveData1.amplitude = 0.03f;
+   waveData1.direction = { 0.0f,0.0f,1.0f };
 
-
+    waterObject_->SetWaveData(0, waveData0);
+    waterObject_->SetWaveData(1, waveData1);
     waterObject_->Update();
 
     auto& emitter0 = particleEmitter_[0]->GetEmitter();
 
     splashTimer_ -= TimeManager::DeltaTime();
-    waterObject_->GetWaveData(0).time += TimeManager::DeltaTime()*2.0f;
-    //waterObject_->GetWaveData(1).time = splashTimer_;
+  
 
     if (splashTimer_ <= splashTime_ * 0.5f) {
         emitter0.accelerationField_.acceleration.y = -4.0f;

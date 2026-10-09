@@ -149,7 +149,7 @@ void MummyStage::CheckCollision(CollisionManager& collisionManager, RaySprite& r
 
         //オープンし終わったら
         if (mummy_->GetIsOpenEnd()) {
-            const Vector3 mummyPos = GetMummy()->GetWorldTransform().GetWorldPosition();
+            const Vector3 mummyPos = mummy_->GetWorldTransform().GetWorldPosition();
             Vector3 endPosOffset_ = { -0.3f,0.3f,0.01f };
             Vector3 startPosOffset_ = { -0.3f,0.5f,0.01f };
 
@@ -167,8 +167,8 @@ void MummyStage::CheckCollision(CollisionManager& collisionManager, RaySprite& r
     }
 
     //ミイラの台も一緒に
-    collisionManager.AddCollider(GetMummy());
-    collisionManager.AddCollider(GetMummy()->GetPlatform());
+    collisionManager.AddCollider(mummy_.get());
+    collisionManager.AddCollider(mummy_ ->GetPlatform());
     collisionManager.AddCollider(papyrus_.get());
 
     //Waterのかべ

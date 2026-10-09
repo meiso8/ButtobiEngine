@@ -29,8 +29,6 @@ void TransformAni::LookTarget(WorldTransform& worldTransform, const Vector3& tar
     // 正規化して方向ベクトルにする
     direction = Normalize(direction);
     // Y軸回転（左右）
-
     worldTransform.eTransform_.rotate.y = std::atan2(direction.x, direction.z);
-   // // X軸回転（上下）
-   //worldTransform.eTransform_.rotate.x = -std::asin(direction.y); // 上を向くとマイナスになるように
+
 }
