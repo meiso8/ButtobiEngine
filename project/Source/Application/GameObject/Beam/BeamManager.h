@@ -13,7 +13,7 @@ public:
 	void Initialize();
 	void Update();
 	void Draw();
-	bool ShotBeam(const Vector3& target, Matrix4x4* parent, const Beam::BeamType  beamType);
+	bool ShotBeam(const Vector3& target,const Matrix4x4* parent, const Beam::BeamType  beamType);
 	const std::vector<std::unique_ptr<Beam>>& GetBeams() const {
 		return beams_;
 	};

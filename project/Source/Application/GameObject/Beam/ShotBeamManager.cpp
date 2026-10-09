@@ -49,8 +49,11 @@ void ShotBeamManager::Update()
 
         currentTime_ -= TimeManager::DeltaTime();
 
-        Matrix4x4* enemyEyeMatL = &enemy_->GetEyeMats().at("eye_L");
-        Matrix4x4* enemyEyeMatR = &enemy_->GetEyeMats().at("eye_R");
+        //目のマトリックスを得る
+         const Matrix4x4* enemyEyeMatL = &enemy_->GetEyeMats().at("eye_L");
+         const Matrix4x4* enemyEyeMatR = &enemy_->GetEyeMats().at("eye_R");
+
+         //目から発射する
         emitter0.transform.eTransform_.translate = Math::GetWorldTransformByMatrix(*enemyEyeMatL);
         emitter1.transform.eTransform_.translate = Math::GetWorldTransformByMatrix(*enemyEyeMatR);
 
