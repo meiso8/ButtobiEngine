@@ -74,7 +74,7 @@ void TreeGenerator::Draw()
 
 void TreeGenerator::Debug()
 {
-
+#ifdef USE_IMGUI
     ImGui::Begin("TreeGenerator");
 
     ImGui::SliderInt("generateNum", &generateNum_, 0, 1000);
@@ -163,6 +163,7 @@ void TreeGenerator::Debug()
     }
 
     ImGui::End();
+#endif
 }
 
 void TreeGenerator::Save()
