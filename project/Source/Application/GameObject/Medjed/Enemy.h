@@ -28,16 +28,11 @@ public:
         MAX_PHASE
     };
 
-
     struct ColliderGroup {
         Matrix4x4 matrix_;
         std::unique_ptr<Collider> collider_ = nullptr;
     };
 
-
-public:
-    //体の位置
-    std::unique_ptr<AnimationObject3d>bodyPos_ = nullptr;
 public:
 
     //コンストラクタ
@@ -49,31 +44,72 @@ public:
     void Draw(const Object3d::LightMode& lightMode);
     //更新
     void Update();
+    /// @brief 衝突コールバック
+    /// @param collder 
+    void OnCollision(Collider* collder)override;
+   
+    // =======================//フラグ//===================================
 
-    void SoundFootStep(const SoundFactory::TAG tag);
-
-    //フラグのカプセル化
     void SetIsApper(const bool& flag) { isAppear_ = flag; }
     const bool& GetIsApper() { return isAppear_; }
+
+    //ショット
     bool GetIsShotStart() { return isShotStart_; }
     void SetIsShotStart(const bool flag) { isShotStart_ = flag; }
 
-    Vector3 GetWorldPos() { return  bodyPos_->GetWorldTransform().GetWorldPosition(); }
-    WorldTransform& GetWorldTransform() { return bodyPos_->GetWorldTransform(); }
-    void OnCollision(Collider* collder)override;
+    //状態
+    HPs* GetHpsPtr() { return &characterState_.hps; }
+    const bool& GetIsDead() { return characterState_.isDead; }
 
-    std::unordered_map <std::string, ColliderGroup>& GetColliderGroup() { return colliders_; };
-    std::unordered_map < std::string, Matrix4x4>& GetEyeMats() { return eyeMats_; };
+    // =======================//フェーズ//===================================
+
+    const PHASE GetPhase() { return phase_; }
+
+    // =======================//トランスフォーム//===================================
+
+    const Vector3& GetWorldPos() { return  bodyPos_->GetWorldTransform().GetWorldPosition(); }
+    const WorldTransform& GetWorldTransform() { return bodyPos_->GetWorldTransform(); }
+
+    // =======================//行列//===================================
+    //目のマトリックスの取得
+    const std::unordered_map < std::string, Matrix4x4>& GetEyeMats() { return eyeMats_; };
+    // =======================//コライダー//===================================
+    //コライダーグループの取得
+    const std::unordered_map <std::string, ColliderGroup>& GetColliderGroup() { return colliders_; };
+
+    //=====================//ターゲット//=========================
+    
     //ターゲットの設定
     void SetTarget(const Vector3* target) { target_ = target; };
     //ターゲットに向かうベクトル
     Vector3 GetToTarget();
     const Vector3* GetTarget() { return target_; };
-    HPs* GetHpsPtr() { return &characterState_.hps; }
-    const bool& GetIsDead() { return characterState_.isDead; }
-    const PHASE GetPhase() { return phase_; }
-
 private:
+    //フェーズの設定
+    void SetPhase(const PHASE phase);
+    //各フェーズ
+    void Appear();
+    void Round();
+    void Fireball();
+    void Exit();
+    void AlphaWalk();
+    void Beam();
+
+    void UpdateTimer();
+    void Look();
+    bool PoyoPoyoUpdateAndGetEnd(const float& endTimer = 0.25f);
+    void HitUpdate();
+    void LerpScale();
+    void RotateY(const float& timer);
+
+    /// @brief 足音のストップ
+    /// @param tag 
+    void SoundFootStep(const SoundFactory::TAG tag);
+private:
+
+    //体の位置
+    std::unique_ptr<AnimationObject3d>bodyPos_ = nullptr;
+
     //キャラクターの共通でもつ状態
     CharacterState characterState_;
     //フラグ
@@ -86,7 +122,7 @@ private:
     //目標地点
     const Vector3* target_ = nullptr;
     //モデル
-    Model* model_;
+    Model* model_ = nullptr;
 
     Circle enemyRoundCircle_ = { {0.0f,0.0f,0.0f} ,10.0f };
     Circle enemyFieldCircle_ = { {0.0f,0.0f,0.0f} ,9.0f };
@@ -108,24 +144,9 @@ private:
     float startRotateY_ = 0.0f;
     float roundSpeedY = 1.0f;
 
+    //目の行列
     std::unordered_map < std::string, Matrix4x4>eyeMats_;
 
-private:
-    //フェーズの設定
-    void SetPhase(const PHASE phase);
-    //各フェーズ
-    void Appear();
-    void Round();
-    void Fireball();
-    void Exit();
-    void AlphaWalk();
-    void Beam();
 
-    void UpdateTimer();
-    void Look();
-    bool PoyoPoyoUpdateAndGetEnd(const float& endTimer = 0.25f);
-    void HitUpdate();
-    void LerpScale();
-    void RotateY(const float& timer);
 };
 

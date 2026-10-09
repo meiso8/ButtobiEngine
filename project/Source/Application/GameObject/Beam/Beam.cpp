@@ -145,7 +145,7 @@ void Beam::Draw()
 }
 
 
-bool Beam::Shot(const Vector3& target, const  BeamType& type, const Vector3& startPos, Matrix4x4* parent)
+bool Beam::Shot(const Vector3& target, const  BeamType& type, const Vector3& startPos, const Matrix4x4* parent)
 {
 
     endPos_ = target;

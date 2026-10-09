@@ -38,7 +38,7 @@ void BeamManager::Draw()
 	}
 }
 
-bool BeamManager::ShotBeam(const Vector3& target,Matrix4x4* parent,const Beam::BeamType  beamType)
+bool BeamManager::ShotBeam(const Vector3& target,const Matrix4x4* parent,const Beam::BeamType  beamType)
 {
 	bool isShot = false;
 

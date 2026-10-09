@@ -21,7 +21,7 @@ public:
     void Initialize();
     void Update();
     void Draw();
-    bool Shot(const Vector3& target, const  BeamType& type, const Vector3& startPos, Matrix4x4* parent);
+    bool Shot(const Vector3& target, const  BeamType& type, const Vector3& startPos,const Matrix4x4* parent);
     bool GetIsActive() { return isActive_; };
 
     Ray& GetRay() { return ray_; }
@@ -38,7 +38,7 @@ private:
     Point point_ = { 0.0f };
     BeamType type_;
     Ray ray_;
-    Matrix4x4* parent_ = nullptr;
+    const Matrix4x4* parent_ = nullptr;
     std::unique_ptr<Primitive>beam_ = nullptr;
     std::unique_ptr<BeamObject3d> object3d_ = nullptr;
 
