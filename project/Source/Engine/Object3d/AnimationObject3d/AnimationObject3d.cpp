@@ -14,6 +14,7 @@
 #include"Log.h"
 #include "ComputeShaderPSO/ComputeShaderPSO.h"
 #include"ObjectManager/ObjectManager.h"
+
 AnimationObject3d::AnimationObject3d() {
     animationTime_ = 0.0f;
     worldMatrix_ = MakeIdentity4x4();
@@ -71,6 +72,16 @@ Matrix4x4 AnimationObject3d::GetWorldJointMatrix(const std::string name)
     return MakeIdentity4x4();
 }
 
+void AnimationObject3d::ImGuiDebugBone()
+{
+#ifdef _DEBUG
+    if (debugBone_) {
+        debugBone_->Debug();
+    }
+
+#endif
+}
+
 void AnimationObject3d::UpdateAnimation()
 {
   const ModelData* modelData = skinningModel_->GetModelData();
@@ -78,6 +89,17 @@ void AnimationObject3d::UpdateAnimation()
     SkinCluster* skinCluster = skinningModel_->GetSkinCluster();
 
     assert(modelData);
+
+    if (isSkinning_) {
+        worldMatrix_ = worldTransform_.matWorld_;
+    } else {
+        worldMatrix_ = worldTransform_.matWorld_ * modelData->rootNode.localMatrix;
+    }
+
+#ifdef _DEBUG
+    debugBone_->Update(worldTransform_.matWorld_);
+#endif
+
     assert(skeleton);
     assert(skinCluster);
 
@@ -109,15 +131,7 @@ void AnimationObject3d::UpdateAnimation()
        Skin::UpdateSkinCluster(*skinCluster, *skeleton);
     }
 
-    if (isSkinning_) {
-        worldMatrix_ = worldTransform_.matWorld_;
-    } else {
-        worldMatrix_ = worldTransform_.matWorld_* modelData->rootNode.localMatrix;
-    }
 
-#ifdef _DEBUG
-    debugBone_->Update(worldTransform_.matWorld_);
-#endif
 }
 
 void AnimationObject3d::UpdateAniTimer(const bool& isLoop)
@@ -168,7 +182,10 @@ void AnimationObject3d::SetModelAndLoadAnimation(const Model* model)
     skinningModel_->SetModel(model);
 
 #ifdef _DEBUG
-    debugBone_->Create(*skinningModel_->GetSkeleton());
+    if (debugBone_) {
+        debugBone_->Create(*skinningModel_->GetSkeleton());
+    }
+   
 #endif
 
 }
@@ -193,6 +210,14 @@ void AnimationObject3d::Draw(
     if (useObjectManagerDraw) {
         ObjectManager::GetInstance()->SetDrawObject(material_->color.w, this);
     }
+
+#ifdef _DEBUG
+    if (debugBone_) {
+        debugBone_->Draw();
+    }
+
+#endif
+
 }
 
 void AnimationObject3d::DrawCommand(Camera& camera)
@@ -270,9 +295,6 @@ void AnimationObject3d::DrawCommand(Camera& camera)
     }
 
 
-#ifdef _DEBUG
-    debugBone_->Draw();
-#endif
 
 }
 

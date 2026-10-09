@@ -24,9 +24,9 @@ void CurPos::Update()
       
     }
 
-#ifdef _DEBUG
+#ifdef _DEVELOP
     ImGui::SliderFloat2("curPos", &curPosSpeed_.x, -10.0f, 10.0f);
-#endif // _DEBUG
+#endif // _DEVELOP
 
 
 
