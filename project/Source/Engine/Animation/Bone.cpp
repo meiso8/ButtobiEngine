@@ -3,6 +3,7 @@
 #include"Log.h"
 #include"Object3d.h"
 #include"PrimitiveFactory/PrimitiveFactory.h"
+#include"DebugUI.h"
 
 Skeleton Bone::CreateSkeleton(const Node& rootNode)
 {
@@ -83,10 +84,15 @@ void Bone::UpdateSkeleton(Skeleton& skeleton)
 void DebugBone::Draw()
 {
     for (auto& value : bones_) {
-        value->Draw(kBlendModeNormal, kCullModeNone, kZero_Depth_Stencil_Enable,true);
+        if (value) {
+            value->Draw(kBlendModeNormal, kCullModeNone, kZero_Depth_Stencil_Enable, true);
+        }
+     
     }
     for (auto& value : boneLines_) {
-        value->Draw(false,kBlendModeNormal, kCullModeNone, kZero_Depth_Stencil_Enable,true);
+        if (value) {
+            value->Draw(false, kBlendModeNormal, kCullModeNone, kZero_Depth_Stencil_Enable, true);
+        }
     }
 }
 
@@ -94,6 +100,14 @@ void DebugBone::Finalize()
 {
     bones_.clear();
 }
+
+void DebugBone::Debug()
+{
+#ifdef USE_IMGUI
+    DebugUI::CheckJoint(skeleton_->joints[0], skeleton_->joints);
+#endif
+}
+
 
 DebugBone::DebugBone()
 {
@@ -111,7 +125,6 @@ void DebugBone::Create(Skeleton& skeleton)
     for (Joint& joint : skeleton_->joints) {
 
         std::unique_ptr<Object3d> object3d = std::make_unique<Object3d>();
-        object3d = std::make_unique<Object3d>();
         object3d->Create();
         object3d->SetMeshAndMaterial(sphere_.get());
         object3d->SetTranslate(joint.transform.translate);
@@ -130,40 +143,6 @@ void DebugBone::Create(Skeleton& skeleton)
     }
 }
 
-#include"DebugUI.h"
-
-
-void CheckJoint(Joint& joint, std::vector<Joint>& joints)
-{
-
-#ifdef USE_IMGUI
-    ImGui::PushID(joint.index);
-
-    // ツリーのノードを作成（名前を表示）
-    // 子がいない場合は葉ノード（Bullet）にするオプション
-    ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
-    if (joint.children.empty()) {
-        flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_Bullet;
-    }
-
-    if (ImGui::TreeNodeEx(joint.name.c_str(), flags)) {
-        // ノードが開かれている間だけ中身を表示
-        DebugUI::CheckQuaternionTransform(joint.transform, "Transform");
-        DebugUI::ShowMatrix4x4(joint.localMatrix, "localMat");
-        DebugUI::ShowMatrix4x4(joint.skeletonSpaceMatrix, "skeletonSpaceMat");
-        ImGui::Separator();
-
-        // 子要素を再帰呼び出し
-        for (auto& child : joint.children) {
-            CheckJoint(joints[child], joints);
-        }
-
-        ImGui::TreePop(); // 開いたツリーを閉じる（超重要！）
-    }
-
-    ImGui::PopID();
-#endif
-}
 void DebugBone::Update(const Matrix4x4& parentMatrix)
 {
     for (int i = 0; i < bones_.size(); ++i) {
@@ -181,12 +160,5 @@ void DebugBone::Update(const Matrix4x4& parentMatrix)
 
     }
 
-#ifdef USE_IMGUI
 
-    ImGui::Begin("Bones");
-
-    CheckJoint(skeleton_->joints[0], skeleton_->joints);
-
-    ImGui::End();
-#endif
 }

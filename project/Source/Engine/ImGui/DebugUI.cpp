@@ -1717,3 +1717,38 @@ void DebugUI::CheckAABB(AABB& aabb, const char* label)
 
 }
 
+void DebugUI::CheckJoint(Joint& joint, std::vector<Joint>& joints)
+{
+#ifdef USE_IMGUI
+    ImGui::Begin("Bones");
+
+    ImGui::PushID(joint.index);
+
+    // ツリーのノードを作成（名前を表示）
+    // 子がいない場合は葉ノード（Bullet）にするオプション
+    ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
+    if (joint.children.empty()) {
+        flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_Bullet;
+    }
+
+    if (ImGui::TreeNodeEx(joint.name.c_str(), flags)) {
+        // ノードが開かれている間だけ中身を表示
+        DebugUI::CheckQuaternionTransform(joint.transform, "Transform");
+        DebugUI::ShowMatrix4x4(joint.localMatrix, "localMat");
+        DebugUI::ShowMatrix4x4(joint.skeletonSpaceMatrix, "skeletonSpaceMat");
+        ImGui::Separator();
+
+        // 子要素を再帰呼び出し
+        for (auto& child : joint.children) {
+            CheckJoint(joints[child], joints);
+        }
+
+        ImGui::TreePop(); // 開いたツリーを閉じる（超重要！）
+    }
+
+    ImGui::PopID();
+
+    ImGui::End();
+#endif
+}
+

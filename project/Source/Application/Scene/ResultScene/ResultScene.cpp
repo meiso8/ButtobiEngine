@@ -75,6 +75,12 @@ void ResultScene::Update()
 {
     Sound::PlayBGM(SoundFactory::BGM_SandCity);
 
+
+#ifdef _DEVELOP
+    ImGui::SliderFloat("scrollSpeed", &scrollSpeed_, -1.0f, 1.0f);
+    ImGui::SliderFloat("fadeSpeed_", &fadeSpeed_, -1.0f, 1.0f);
+#endif // _DEVELOP
+
 #ifdef _RELEASE
     //リリースビルド時にスキップできるようにする。
     if (InputBind::IsClick()) {
@@ -133,10 +139,6 @@ void ResultScene::Update()
 
     medjed_->Update(switchTex);
 
-#ifdef _DEBUG
-    ImGui::SliderFloat("scrollSpeed", &scrollSpeed_, -1.0f, 1.0f);
-    ImGui::SliderFloat("fadeSpeed_", &fadeSpeed_, -1.0f, 1.0f);
-#endif // _DEBUG
 
 
 }

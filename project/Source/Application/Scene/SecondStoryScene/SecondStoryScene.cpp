@@ -62,9 +62,6 @@ void SecondStoryScene::Initialize()
     aniObject_->RegisterObject();
     aniObject_->SetTranslate({ -0.477f,0.0f,0.751f });
     aniObject_->SetAnimation("Bye-Bye");
-    aniObject_->UpdateAniTimer();
-
-    aniObject_->Update();
 
     auto* gaussianFilter = PostProcessManager::GetInstance()->
         GetPostEffectMaterial(PostProcessManager::kModel)->
@@ -126,8 +123,9 @@ void SecondStoryScene::DrawModel()
         obj->obj_->Draw(kBlendModeNormal, kCullModeBack, kAll, false, TextureFactory::SKYBOX_CLOUD_TEX);
     }
 
-     aniObject_->Draw();
      treeGenerator_->Draw();
+
+     aniObject_->Draw();
 
 }
 
@@ -155,6 +153,7 @@ void SecondStoryScene::Debug()
     }
 
     DebugUI::CheckObject3d(*aniObject_);
+    aniObject_->ImGuiDebugBone();
     ImGui::End();
 
     treeGenerator_->Debug();

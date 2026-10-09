@@ -242,10 +242,14 @@ void ObjectManager::Draw(Camera& camera)
 
     // 3. ソートされた順に描画
     for (const auto& obj : objectAlpha_) {
+        if (obj.ptr == nullptr) {
+            continue;
+        }
         obj.ptr->DrawCommand(camera);
-        objectAlpha_.pop_back();
+
     }
 
+    objectAlpha_.clear();
 }
 
 void ObjectManager::SetDrawObject(float alpha, Object3d* object3d)

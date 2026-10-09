@@ -44,6 +44,10 @@ public:
     const std::string GetCurrentAnimation() { return currentAnimation_; }
    const std::map<std::string, Animation>& GetAnimations()const;
     Matrix4x4 GetWorldJointMatrix(const std::string name);
+
+
+    void ImGuiDebugBone();
+
 private:
 
     void UpdateAnimation();

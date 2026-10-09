@@ -58,4 +58,5 @@ public:
     void Update(const Matrix4x4& parentMatrix);
     void Draw();
     void Finalize();
+    void Debug();
 };

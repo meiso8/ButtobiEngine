@@ -56,7 +56,10 @@ void Beam::Initialize()
 
 
 #ifdef _DEBUG
-    lineObj_->SetVertex(ray_.origin, ray_.diff + ray_.origin);
+    if (lineObj_) {
+        lineObj_->SetVertex(ray_.origin, ray_.diff + ray_.origin);
+
+    }
 
 #endif
 
@@ -131,7 +134,10 @@ void Beam::Draw()
 {
 
 #ifdef _DEBUG
-    lineObj_->Draw( false);
+    if (lineObj_) {
+        lineObj_->Draw(false);
+    }
+
 #endif
 
     if (!isActive_) {
@@ -181,8 +187,11 @@ void Beam::UpdateObject()
     emitter_->Update();
 
 #ifdef _DEBUG
-    lineObj_->SetVertex(point_.startPos, point_.endPos);
-    lineObj_->Update();
+    if (lineObj_) {
+        lineObj_->SetVertex(point_.startPos, point_.endPos);
+        lineObj_->Update();
+    }
+
 
 #endif
 

@@ -41,6 +41,8 @@ struct PointLight;
 struct CharacterState;
 class CbvSrvUavDescriptorHeap;
 class Collider;
+struct Joint;
+
 #include "nlohmann/json.hpp"
 class DebugUI
 {
@@ -149,6 +151,8 @@ public:
     //AABBを調べる
     static void CheckAABB(AABB& aabb, const char* label = "AABB");
 
+
+    static void CheckJoint(Joint& joint, std::vector<Joint>& joints);
 private:
     /// @brief 光源
 /// @param directionalLights 
