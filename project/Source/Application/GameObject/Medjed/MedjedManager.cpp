@@ -201,7 +201,7 @@ void MedjedManager::PlaceLockersRandomly() {
 
             if (!IsOverlapping(pos, placedPositions)) {
                 placedPositions.push_back(pos);
-                dummy->GetWorldTransform().eTransform_.translate = { pos.x, 0.0f, pos.y };
+                dummy->SetTranslate({ pos.x, 0.0f, pos.y });
                 break; // 配置成功！ 
             }
         }

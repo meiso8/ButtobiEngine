@@ -111,7 +111,7 @@ void TreeGenerator::Debug()
                     };
 
                     std::string currentModelName = "unknow";
-                    if (auto model = dynamic_cast<Model*>(primitive)) {
+                    if (auto model = dynamic_cast<const Model*>(primitive)) {
 
                         for (const auto& [name, managerModel] : ModelManager::GetModels()) {
                             if (model == managerModel.get()) {
@@ -207,7 +207,7 @@ void TreeGenerator::Save()
         //輝度を追加
 
         //モデルだった場合ディレクトリパスの要素を追加
-        if (auto model = dynamic_cast<Model*>(primitive)) {
+        if (auto model = dynamic_cast<const Model*>(primitive)) {
             objectJson["directoryPath"] = model->GetModelData()->directoryPath_;
         } else {
             //テクスチャハンドルを設定する

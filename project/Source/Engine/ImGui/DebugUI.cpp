@@ -1045,7 +1045,7 @@ void DebugUI::CheckObject3d(Object3d& object3d,const char* label)
             };
 
             std::string currentModelName = "unknow";
-            if (auto model = dynamic_cast<Model*>(primitive)) {
+            if (auto model = dynamic_cast<const Model*>(primitive)) {
 
                 for (const auto& [name, managerModel] : ModelManager::GetModels()) {
                     if (model == managerModel.get()) {

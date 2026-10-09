@@ -98,7 +98,9 @@ protected:
     // ==============ID情報==================
     CResource<ObjectID>idResource_;
     // ==============メッシュ情報==================
-    Primitive* primitive_ = nullptr;
+    
+    //変更する
+    const Primitive* primitive_ = nullptr;
 
     // ==============/PSOの設定==================
     BlendMode blendMode_ = kBlendModeNormal;
@@ -224,7 +226,7 @@ public:
     TextureFactory::Handle GetTextureHandle(const TEXTURE_USAGE& textureUsage = TEXTURE_USAGE_DIFFUSE);
    
     // ==============メッシュ==================
-    Primitive* GetPrimitive() { return primitive_; }
+    const Primitive* GetPrimitive() { return primitive_; }
 
     // ==============重要==================
     Object3d() =default;
@@ -232,7 +234,7 @@ public:
     void Finalize();
     /// @brief メッシュの情報を設定しその情報からマテリアルを設定する
     /// @param mesh メッシュ
-    void SetMeshAndMaterial(Primitive* mesh);
+    void SetMeshAndMaterial(const Primitive* mesh);
     /// @brief オブジェクトの生成
     void Create();
     /// @brief 初期化

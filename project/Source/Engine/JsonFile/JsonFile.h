@@ -17,7 +17,7 @@ class JsonFile {
 public:
     ~JsonFile();
     static Json& GetJsonFiles(const std::string& Tag) { return jsonFiles_[Tag].data; };
-    static const std::unordered_map <std::string, JsonData > GetJsonData();
+    static const std::unordered_map <std::string, JsonData>& GetJsonData();
     static const size_t GetSize() { return jsonFiles_.size(); };
     static void SaveJson(const std::string& Tag);
     static void LoadJson(const std::string& Tag);

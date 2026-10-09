@@ -304,7 +304,7 @@ void ObjectManager::Save()
         //輝度を追加
 
         //モデルだった場合ディレクトリパスの要素を追加
-        if (auto model = dynamic_cast<Model*>(primitive)) {
+        if (auto model = dynamic_cast<const Model*>(primitive)) {
             objectJson["directoryPath"] = model->GetModelData()->directoryPath_;
         } else {
             //テクスチャハンドルを設定する

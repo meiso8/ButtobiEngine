@@ -160,7 +160,7 @@ void Object3d::MeshDraw()
     commandList_->IASetPrimitiveTopology(primitive_->GetTopology());
     commandList_->IASetVertexBuffers(0, 1, &primitive_->GetVertexBufferView());
 
-    if (auto model = dynamic_cast<Model*>(primitive_)) {
+    if (auto model = dynamic_cast<const Model*>(primitive_)) {
         //モデルデータの取得
         auto* modelData = model->GetModelData();
         DrawModel(modelData);
@@ -242,14 +242,14 @@ void Object3d::Finalize()
     idResource_.Reset();
 }
 
-void Object3d::SetMeshAndMaterial(Primitive* mesh)
+void Object3d::SetMeshAndMaterial(const Primitive* mesh)
 {
     //メッシュをセットする
     primitive_ = mesh;
     //メッシュが無かったらアサート
     assert(primitive_);
 
-    if (auto model = dynamic_cast<Model*>(primitive_)) {
+    if (auto model = dynamic_cast<const Model*>(primitive_)) {
         //一旦マテリアル0
 
         //マテリアルリソースが無かったらアサート
