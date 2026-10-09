@@ -120,9 +120,8 @@ void MedjedManager::UpdateEnemyApperTime()
 
     if (enemyApperTime_ >= kEnemyApperMaxTime_) {
         //敵出現時間になったら敵出現させる
-        auto* enemy = GetEnemy();
-        if (!enemy->GetIsApper()) {
-            enemy->SetIsApper(true);
+        if (!enemy_->GetIsApper()) {
+            enemy_->SetIsApper(true);
         }
       
     }
@@ -176,6 +175,11 @@ void MedjedManager::Update()
 
 }
 
+const Enemy::PHASE MedjedManager::GetEnemyPhase()
+{
+    return enemy_->GetPhase();
+}
+
 void MedjedManager::PlaceLockersRandomly() {
     std::vector<Vector2> placedPositions;
 
@@ -219,11 +223,11 @@ bool MedjedManager::IsOverlapping(const Vector2& pos, const std::vector<Vector2>
 }
 
 
-Medjed* MedjedManager::GetMedjed() {
+ Medjed* MedjedManager::GetMedjed() {
 
-    for (auto& locker : dummyMedjeds_) {
+    for (auto& med : dummyMedjeds_) {
 
-        if (auto medjed = dynamic_cast<Medjed*>(locker.get())) {
+        if (auto medjed = dynamic_cast<Medjed*>(med.get())) {
             return medjed;
         }
     }

@@ -28,7 +28,9 @@ void World::Init()
 
 void World::Update()
 {
-    object3d_->GetUVTransform().translate.x += std::numbers::pi_v<float> *0.0625f * 0.5f * TimeManager::DeltaTime();
+    auto uvTranslate = object3d_->GetUVTransform().translate;
+    uvTranslate.x + std::numbers::pi_v<float> *0.0625f * 0.5f * TimeManager::DeltaTime();
+    object3d_->SetUVTranslate(uvTranslate);
     object3d_->UpdateUV();
     object3d_->Update();
 }

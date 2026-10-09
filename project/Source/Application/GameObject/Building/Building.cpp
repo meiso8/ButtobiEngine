@@ -145,7 +145,7 @@ void FieldCollider::Draw()
 void FieldCollider::Initialize()
 {
     object_->Initialize();
-    object_->GetUVScale().x = 4.0f;
+    object_->SetUVScale({4.0f,1.0f,1.0f});
 }
 
 void FieldCollider::OnCollision(Collider* collider)

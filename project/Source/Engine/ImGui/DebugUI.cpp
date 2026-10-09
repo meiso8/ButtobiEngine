@@ -1007,7 +1007,7 @@ void DebugUI::CheckObject3d(Object3d& object3d,const char* label)
         ImGui::Checkbox("disable", &disable);
         object3d.SetDisabled(disable);
 
-        auto& material = object3d.GetMaterial();
+        auto material = object3d.GetMaterial();
 
         CheckObject3dMaterial(
             material.color,
@@ -1026,12 +1026,27 @@ void DebugUI::CheckObject3d(Object3d& object3d,const char* label)
             material.specular,
             "Material");
 
+        object3d.SetMaterial(material);
 
-        CheckTransform(object3d.GetUVTransform(), "UVTransfrom");
-        CheckWaveData(object3d.GetWaveData(0), "Wave0");
-        CheckWaveData(object3d.GetWaveData(1), "Wave1");
-        CheckBalloonData(object3d.GetBalloonData());
-        CheckMeltData(object3d.GetMeltData(), "meltData");
+        EulerTransform uvTransform = object3d.GetUVTransform();
+        CheckTransform(uvTransform, "UVTransfrom");
+        object3d.SetUVTransform(uvTransform);
+
+        Wave wave0 = object3d.GetWaveData(0);
+        CheckWaveData(wave0, "Wave0");
+        object3d.SetWaveData(0,wave0);
+
+        Wave wave1 = object3d.GetWaveData(1);
+        CheckWaveData(wave1, "Wave1");
+        object3d.SetWaveData(1, wave1);
+
+        Balloon balloon = object3d.GetBalloonData();
+        CheckBalloonData(balloon);
+        object3d.SetBalloonData(balloon);
+
+        Melt melt = object3d.GetMeltData();
+        CheckMeltData(melt, "meltData");
+        object3d.SetMeleData(melt);
 
         auto* primitive = object3d.GetPrimitive();
 

@@ -30,10 +30,5 @@ public:
 
     bool IsRayCastHit(RaySprite& raysprite);
     void CheckCollision(CollisionManager& collisionManager, RaySprite& raySprite)override;
-    Mummy* GetMummy() {
-        return mummy_
-            .get();
-    };
-
 };
 

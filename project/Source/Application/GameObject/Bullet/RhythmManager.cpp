@@ -4,6 +4,14 @@
 #include"DebugUI.h"
 #include"Sound.h"
 
+RhythmManager::RhythmManager()
+{
+}
+
+RhythmManager::~RhythmManager()
+{
+}
+
 void RhythmManager::Initialize() {
 
     timer_ = 0.0f;
@@ -41,7 +49,7 @@ void RhythmManager::AddBeat(float time)
 }
 
 
-bool RhythmManager::IsOnBeat(float currentTime, float tolerance) {
+const bool RhythmManager::IsOnBeat(float currentTime, float tolerance) {
 
     for (auto& beat : beats_) {
         if (!beat.hit && std::abs(currentTime - beat.time) <= tolerance) {

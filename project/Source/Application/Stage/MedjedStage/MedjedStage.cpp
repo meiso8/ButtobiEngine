@@ -4,6 +4,7 @@
 #include "ParticleEmitter.h"
 #include"../StageManager/StageManager.h"
 #include"DebugUI.h"
+#include"SoundFactory.h"
 
 const bool MedjedStage::IsClear()
 {
@@ -21,7 +22,7 @@ MedjedStage::MedjedStage()
     //パーティクルの作成
     CreateParticle();
     //HPゲージの追加
-    uiManager_->CreateHpGage(*GetEnemy()->GetHpsPtr(), *player_->GetHpsPtr());
+    uiManager_->CreateHpGage(*medjedManager_->GetEnemyHPsPtr(),*player_->GetHpsPtr());
 }
 
 void MedjedStage::Initialize()
@@ -55,7 +56,7 @@ void MedjedStage::StageTransitionInitialize()
 
 
     //パーティクルの初期化
-    particleEmitters_[kMedjed_Particle]->GetEmitter().transform.Parent(GetMedjed()->GetWorldTransform());
+    particleEmitters_[kMedjed_Particle]->GetEmitter().transform.Parent(medjedManager_->GetMedjedWorldTransform());
 
     //メモの生成
     memoManager_->GenerateMemos({ TextureFactory::BOOK3 });
@@ -93,12 +94,12 @@ void MedjedStage::Update()
         lightingManager_->DirectionalLightUpdate();
 
         if (GetEnemyApper()) {
-            particleEmitters_[kSky_Particle]->GetEmitter().transform.Parent(GetEnemy()->GetWorldTransform());
+            particleEmitters_[kSky_Particle]->GetEmitter().transform.Parent(medjedManager_->GetEnemyWorldTransform());
             UpdateEmitter(kSky_Particle);
         }
 
 
-        auto enemyPhase = GetEnemy()->GetPhase();
+        auto enemyPhase = medjedManager_->GetEnemyPhase();
 
         //透明移動じゃないときEmittする
         if (enemyPhase != Enemy::PHASE::ALPHA_WALK && enemyPhase != Enemy::PHASE::BEAM) {
@@ -172,13 +173,13 @@ void MedjedStage::CheckCollision(CollisionManager& collisionManager, RaySprite& 
 
             collisionManager.AddCollider(enemy);
 
-            for (auto& [name, group] : enemy->GetColliderGroup()) {
+            for ( auto& [name, group] : enemy->GetColliderGroup()) {
                 //各コライダーの登録
                 collisionManager.AddCollider(group.collider_.get());
             }
 
             //巨大メジェド出現し、弾を打ってくる
-            for (auto& bullet : rhythmBullet_->GetBulletManager()->GetBullets()) {
+            for (auto& bullet : rhythmBullet_->GetBullet()) {
                 if (bullet->GetIsActive()) {
                     collisionManager.AddCollider(bullet.get());
                 }
@@ -187,8 +188,8 @@ void MedjedStage::CheckCollision(CollisionManager& collisionManager, RaySprite& 
         }
 
     } else {
-        for (auto& locker : medjedManager_->GetAllMedjeds()) {
-            collisionManager.AddCollider(locker.get());
+        for (auto& medjed : medjedManager_->GetAllMedjeds()) {
+            collisionManager.AddCollider(medjed.get());
         }
 
     }

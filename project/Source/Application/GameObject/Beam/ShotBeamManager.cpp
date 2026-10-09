@@ -8,25 +8,31 @@
 #include"TimeManager.h"
 #include"DebugUI.h"
 #include"RaySprite/RaySprite.h"
+#include "BeamManager.h"
 
 namespace {
     constexpr float kInterval_ = 2.0f;
 
 }
 
-ShotBeamManager::ShotBeamManager(Enemy* enemy, Player* player, BeamManager* beamManager)
-    :enemy_(enemy), player_(player), beamManager_(beamManager)
+ShotBeamManager::ShotBeamManager(const Enemy* enemy, Player* player)
+    :enemy_(enemy), player_(player)
 {
+    beamManager_ = std::make_unique<BeamManager>();
     CreateParticleEmitter();
 }
 
 void ShotBeamManager::Initialize()
 {
+
+    beamManager_->Initialize();
     currentTime_ = kInterval_;
 }
 
 void ShotBeamManager::Update()
 {
+    
+    beamManager_->Update();
 
 #ifdef USE_IMGUI
     DebugUI::CheckEmitter(shockEmitter_->GetEmitter(), "shockEmitter");
@@ -134,6 +140,11 @@ void ShotBeamManager::RayCastHit(RaySprite& raySprite)
 
         }
     }
+}
+
+void ShotBeamManager::Draw()
+{
+    beamManager_->Draw();
 }
 
 void ShotBeamManager::CreateParticleEmitter()

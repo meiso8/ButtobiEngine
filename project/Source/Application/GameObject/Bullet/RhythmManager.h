@@ -9,12 +9,15 @@ struct RhythmBeat {
 
 class RhythmManager {
 public:
+    RhythmManager();
+    ~RhythmManager();
     void SetSound(const SoundFactory::TAG tag) { tag_ = tag; };
     void Initialize();
     void Update();
     void AddBeat(float time); // 任意のタイミングでビートを追加
-    bool IsOnBeat(float currentTime, float tolerance = 0.2f); // 許容範囲内かチェック
+    const bool IsOnBeat(float currentTime, float tolerance = 0.2f); // 許容範囲内かチェック
     const float kEndSoundTime_ = 66.0f;
+
 private:
     std::vector<RhythmBeat> beats_;
     float timer_ = 0.0f;

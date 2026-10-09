@@ -1,48 +1,35 @@
 #include "RhythmBullet.h"
 #include"RaySprite/RaySprite.h"
-RhythmBullet::RhythmBullet(Enemy* enemy, Player* player)
-{
-    rhythmManager_ = std::make_unique<RhythmManager>();
-    bulletManager_ = std::make_unique<BulletManager>();
 
-    beamManager_ = std::make_unique<BeamManager>();
-    shotBulletManager_ = std::make_unique<ShotBulletManager>(enemy, bulletManager_.get(), rhythmManager_.get());
-    shotBeamManager_ = std::make_unique<ShotBeamManager>(enemy, player,beamManager_.get());
+RhythmBullet::RhythmBullet(const Enemy* enemy,Player* player)
+{
+    shotBulletManager_ = std::make_unique<ShotBulletManager>(enemy);
+    shotBeamManager_ = std::make_unique<ShotBeamManager>(enemy, player);
 }
 
 void RhythmBullet::SetSound(const SoundFactory::TAG tag)
 {
-    rhythmManager_->SetSound(tag);
+    shotBulletManager_->SetSound(tag);
 }
 
 void RhythmBullet::Initialize()
 {
-
-    rhythmManager_->Initialize();
-    bulletManager_->Initialize();
     shotBulletManager_->Initialize();
-
-    beamManager_->Initialize();
     shotBeamManager_->Initialize();
-
 }
 
 void RhythmBullet::Update()
 {
-
-    rhythmManager_->Update();
-    //弾
-    bulletManager_->Update();
     shotBulletManager_->Update();
     //ビーム
-    beamManager_->Update();
+
     shotBeamManager_->Update();
 }
 
 void RhythmBullet::Draw()
 {
-    bulletManager_->Draw();
-    beamManager_->Draw();
+    shotBulletManager_->Draw();
+    shotBeamManager_->Draw();
 }
 
 

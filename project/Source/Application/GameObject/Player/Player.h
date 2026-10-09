@@ -52,7 +52,7 @@ public:
     const Vector3& GetEyeWorldPosition() const{ return worldEyePos_; };
     /// @brief 体のトランスフォームを得る
     /// @return 
-    const WorldTransform& GetBodyWorldTransform() {
+    const WorldTransform& GetBodyWorldTransform() const{
         return aniObject_->GetWorldTransform();
     }
     /// @brief 手の位置のマトリックスポインタを得る
@@ -74,7 +74,7 @@ public:
     void OnCollision(Collider* collider)override;
     /// @brief 敵に衝突したときの処理
     /// @param hitPoint 
-    void OnCollisionEnemy(const int hitPoint = 10);
+    const void OnCollisionEnemy(const int hitPoint = 10);
 
 
     /// @brief　死亡判定を得る 

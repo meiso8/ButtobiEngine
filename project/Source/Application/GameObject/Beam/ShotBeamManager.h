@@ -1,28 +1,30 @@
 #pragma once
 
 #include "Medjed/Enemy.h"
-#include "BeamManager.h"
-
 #include"Player/Player.h"
 #include<memory>
-
 #include "ParticleEmitter.h"
+
 class RaySprite;
+class BeamManager;
 
 class ShotBeamManager
 {
 public:
-	ShotBeamManager(Enemy* enemy, Player* player,BeamManager* beamManager);
+	ShotBeamManager(const Enemy* enemy, Player* player);
 	void Initialize();
 	void Update();
 	void RayCastHit(RaySprite& raySprite);
+	void Draw();
 private:
 	void CreateParticleEmitter();
 private:
+	//プレイヤーは書換を行うため保留とする
+	 Player* player_ = nullptr;
+	const Enemy* enemy_ = nullptr;
 
-	Player* player_ = nullptr;
-	Enemy* enemy_ = nullptr;
-	BeamManager* beamManager_ = nullptr;
+	std::unique_ptr<BeamManager>beamManager_ = nullptr;
+
 	std::array<std::unique_ptr < ParticleEmitter>,2> beamParticleEmitters_;
 	std::unique_ptr<ParticleEmitter> shockEmitter_ = nullptr;
 	float currentTime_ = 0.0f;

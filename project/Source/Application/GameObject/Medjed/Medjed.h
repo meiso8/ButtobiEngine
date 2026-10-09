@@ -21,14 +21,15 @@ public:
     void Draw()override;
     void OnCollision(Collider* collider)override;
 
-    const WorldTransform& GetWorldTransform() { return aniObj_->GetWorldTransform(); }
+    const WorldTransform& GetWorldTransform()const { return aniObj_->GetWorldTransform(); }
     void SetTranslate(const Vector3& translate) { aniObj_->SetTranslate(translate); }
     Vector3 GetWorldPosition() const;
     void GoToTarget(const Vector3& target)override;
 
     void MoveStart();
     const bool& GetIsFind()const { return isFind_; };
-    void SetIsFind(const bool& f) { isFind_ = f; };
+
+    const void SetIsFind(const bool& flag) { isFind_ = flag; };
     const  bool& GetIsHit() const { return isHit_; };
     void SetColor(const Vector4& color) { aniObj_->SetColor(color); };
 

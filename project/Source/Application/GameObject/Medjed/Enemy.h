@@ -51,38 +51,38 @@ public:
     // =======================//フラグ//===================================
 
     void SetIsApper(const bool& flag) { isAppear_ = flag; }
-    const bool& GetIsApper() { return isAppear_; }
+    const bool& GetIsApper()const { return isAppear_; }
 
     //ショット
-    bool GetIsShotStart() { return isShotStart_; }
+    bool GetIsShotStart() const{ return isShotStart_; }
     void SetIsShotStart(const bool flag) { isShotStart_ = flag; }
 
     //状態
-    HPs* GetHpsPtr() { return &characterState_.hps; }
-    const bool& GetIsDead() { return characterState_.isDead; }
+    const HPs* GetHpsPtr() const{ return &characterState_.hps; }
+    const bool& GetIsDead() const{ return characterState_.isDead; }
 
     // =======================//フェーズ//===================================
 
-    PHASE GetPhase() { return phase_; }
+    PHASE GetPhase()const { return phase_; }
 
     // =======================//トランスフォーム//===================================
 
-    Vector3 GetWorldPos() { return  bodyPos_->GetWorldTransform().GetWorldPosition(); }
-    const WorldTransform& GetWorldTransform() { return bodyPos_->GetWorldTransform(); }
+    Vector3 GetWorldPos() const{ return  bodyPos_->GetWorldTransform().GetWorldPosition(); }
+    const WorldTransform& GetWorldTransform()const { return bodyPos_->GetWorldTransform(); }
 
     // =======================//行列//===================================
     //目のマトリックスの取得
-    const std::unordered_map < std::string, Matrix4x4>& GetEyeMats() { return eyeMats_; };
+    const std::unordered_map < std::string, Matrix4x4>& GetEyeMats()const { return eyeMats_; };
     // =======================//コライダー//===================================
     //コライダーグループの取得
-    const std::unordered_map <std::string, ColliderGroup>& GetColliderGroup() { return colliders_; };
+    const std::unordered_map <std::string, ColliderGroup>& GetColliderGroup() const{ return colliders_; };
 
     //=====================//ターゲット//=========================
     
     //ターゲットの設定
     void SetTarget(const Vector3* target) { target_ = target; };
     //ターゲットに向かうベクトル
-    Vector3 GetToTarget();
+    Vector3 GetToTarget()const;
     const Vector3* GetTarget() { return target_; };
 private:
     //フェーズの設定

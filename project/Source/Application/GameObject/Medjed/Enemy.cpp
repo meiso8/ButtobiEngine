@@ -276,7 +276,7 @@ void Enemy::OnCollision(Collider* collider)
 
     }
 }
-Vector3 Enemy::GetToTarget()
+Vector3 Enemy::GetToTarget()const
 {
     if (target_) {
         return ToTargetVector(*target_, bodyPos_->GetWorldTransform().GetWorldPosition());
@@ -330,21 +330,25 @@ void Enemy::Appear()
     float time = phaseTimer_ / kApperTime_;
     time = std::clamp(time, 0.0f, 1.0f);
     Look();
-    auto& transform = bodyPos_->GetTransform();
-    transform.scale = Easing::EaseInBounce(startScale_, { kScale_,kScale_,kScale_ }, time);
 
+    Vector3 scale = Easing::EaseInBounce(startScale_, { kScale_,kScale_,kScale_ }, time);
     if (phaseTimer_ >= kApperEndTime_) {
         SetPhase(ROUND);
-        transform.scale = { kScale_,kScale_,kScale_ };
-    }
+        bodyPos_->SetScale(Easing::EaseInBounce(startScale_, { kScale_,kScale_,kScale_ }, time));
 
+        scale = { kScale_,kScale_,kScale_ };
+    }
+    bodyPos_->SetScale(scale);
 }
 
 void Enemy::Round()
 {
     bodyPos_->SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInBounce(0.0f,1.0f,fmod(phaseTimer_,1.0f)) });
-    auto& transform = bodyPos_->GetTransform();
-   transform.translate = Lerp(transform.translate, { 0.0f,0.0f,0.0f }, 0.5f);
+
+    Vector3 translate = bodyPos_->GetTranslate();
+    translate = Lerp(translate, { 0.0f,0.0f,0.0f }, 0.5f);
+    bodyPos_->SetTranslate(translate);
+
     Look();
     if (phaseTimer_ >= actionTime_) {
         SetPhase(FIREBALL);
@@ -418,9 +422,10 @@ void Enemy::AlphaWalk()
         velocity_ *= deltaTime * kMoveSpeed_;
 
         //Y軸方向には移動しない
-        auto& transform =bodyPos_->GetTransform();
-        transform.translate.x += velocity_.x;
-        transform.translate.z += velocity_.z;
+        auto translate = bodyPos_->GetTranslate();
+        translate.x += velocity_.x;
+        translate.z += velocity_.z;
+        bodyPos_->SetTranslate(translate);
 
         //足音の更新処理をここで呼び出す
         SoundFootStep(SoundFactory::MEDJED_FOOT_STEP_SMALL);
@@ -504,19 +509,18 @@ void Enemy::HitUpdate()
         }
 
     }
-
-
-
 }
 
 void Enemy::LerpScale()
 {
-    auto& transform = bodyPos_->GetTransform();
-   transform.scale = Lerp(Vector3{ transform.scale }, { kScale_,kScale_,kScale_ }, 0.5f);
+    auto scale = bodyPos_->GetScale();
+    scale = Lerp(Vector3{ scale }, { kScale_,kScale_,kScale_ }, 0.5f);
+    bodyPos_->SetScale(scale);
 }
 
 void Enemy::RotateY(const float& timer)
 {
-    auto& transform = bodyPos_->GetTransform();
-    transform.rotate.y = Easing::EaseInBack(startRotateY_, endRotateY_, timer);
+    Vector3 rotate;
+    rotate.y = Easing::EaseInBack(startRotateY_, endRotateY_, timer);
+    bodyPos_->SetRotate(rotate);
 }

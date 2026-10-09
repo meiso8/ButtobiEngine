@@ -154,22 +154,36 @@ public:
 
     // ==============膨張データ==================
 
-    Balloon& GetBalloonData() { return *expansionResource_.data; }
+    const Balloon& GetBalloonData() { return *expansionResource_.data; }
+    void SetBalloonData(const Balloon& balloon) { *expansionResource_.data = balloon; }
+    void SetBalloonExpansion(const float expansion) { expansionResource_.data->expansion = expansion; };
     void InitBalloonData();
 
     // ==============波データ==================
 
-    Wave& GetWaveData(size_t index) { return waveResource_.data[index]; };
+   const Wave& GetWaveData(const size_t index) { return waveResource_.data[index]; };
+   void SetWaveData(const size_t index,const Wave& wave ){ waveResource_.data[index] = wave; }
+   void SetWaveTime(const size_t index, const float time) { waveResource_.data[index].time = time; };
+   void SetWaveAmplitude(const size_t index, const float amplitude) { waveResource_.data[index].amplitude = amplitude; };
+   void SetWaveDirection(const size_t index, const Vector3& direction) { waveResource_.data[index].direction = direction; };
+   void SetWaveFrequency(const size_t index, const float frequency) { waveResource_.data[index].frequency = frequency; };
+
     void InitWaveData();
     void InitWaveDataIndex(const uint32_t& index);
 
     // ==============溶けデータ==================
 
-    Melt& GetMeltData() { return *meltResource_.data; };
+    const Melt& GetMeltData() { return *meltResource_.data; };
+    void SetMeleData(const Melt& data) { *meltResource_.data = data; }
+    void SetMeltDataTime(const float& time) { meltResource_.data->time = time; }
+    void SetMeltDataMeltTime(const float& meltTime) { meltResource_.data->meltTime = meltTime; }
     void InitMeltData();
 
     // ==============マテリアルデータ==================
-    Material& GetMaterial() { return *material_; };
+    const Material& GetMaterial() { return *material_; };
+    void SetMaterial(const Material& material) {
+        *material_ = material;
+    ;}
     //色の取得
     virtual Vector4& GetColor() { return material_->color; };
     //色の設定
@@ -197,13 +211,18 @@ public:
     float GetGlassFactor() { return material_->glassFactor; };
     //ガラス度合い
     void SetGlassFactor(const float factor) { material_->glassFactor = factor; }
+    void SetRefraction(const float refraction) { material_->refraction = refraction; }
+
     // ==============UVデータ==================
 
-    Vector3& GetUVScale() { return uvTransform_.scale; };
-    Vector3& GetUVRotate() { return uvTransform_.rotate; };
-    Vector3& GetUVTranslate() { return uvTransform_.translate; };
-    EulerTransform& GetUVTransform() { return uvTransform_; }
-    void SetUV(const EulerTransform& transform) { uvTransform_ = transform; };
+   const Vector3& GetUVScale() { return uvTransform_.scale; };
+   const Vector3& GetUVRotate() { return uvTransform_.rotate; };
+   const Vector3& GetUVTranslate() { return uvTransform_.translate; };
+   const EulerTransform& GetUVTransform() { return uvTransform_; }
+    void SetUVTransform(const EulerTransform& transform) { uvTransform_ = transform; };
+    void SetUVScale(const Vector3& scale) { uvTransform_.scale = scale; }
+    void SetUVRotate(const Vector3& rotate) { uvTransform_.rotate = rotate; }
+    void SetUVTranslate(const Vector3& translate) { uvTransform_.translate = translate; }
     void UpdateUV();
 
     // ==============テクスチャデータ==================
