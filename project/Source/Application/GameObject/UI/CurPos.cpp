@@ -61,7 +61,7 @@ void CurPos::Update()
 }
 
 
-Vector2 SnapCursorToNearestSprite(const Vector2& cursorPos, std::vector<std::unique_ptr<Sprite>>& sprites, float snapThreshold) {
+Vector2 SnapCursorToNearestSprite(const Vector2& cursorPos,const std::vector<std::unique_ptr<Sprite>>& sprites, float snapThreshold) {
     float minDist = std::numeric_limits<float>::max();
     Vector2 snappedPos = cursorPos;
     

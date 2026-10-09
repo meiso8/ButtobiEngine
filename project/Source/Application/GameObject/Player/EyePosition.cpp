@@ -116,7 +116,7 @@ void EyePosition::Initialize()
     time_ = 0.0f;
 }
 
-Vector3& EyePosition::GetForward()
+const Vector3& EyePosition::GetForward()
 {
     //前方を取得する
     static Vector3 forward;

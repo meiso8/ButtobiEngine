@@ -33,6 +33,6 @@ public:
     bool IsClear() { return isClear_; };
     void SetTexture(const TextureFactory::Handle& handle);
     //画像
-    std::vector< std::unique_ptr<Sprite>>& GetSprites() { return sprites_; };
+    const std::vector< std::unique_ptr<Sprite>>& GetSprites() { return sprites_; };
 };
 

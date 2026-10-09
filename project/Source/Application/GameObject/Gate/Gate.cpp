@@ -5,14 +5,16 @@
 
 Gate::Gate()
 {
-    model_ = ModelManager::LoadModelAndGet("Resource/Models/Gate/gate.gltf");
+    Model* model = ModelManager::LoadModelAndGet("Resource/Models/Gate/gate.gltf");
 
     aniObj_ = std::make_unique<AnimationObject3d>();
 
     aniObj_->Create();
-    aniObj_->SetMeshAndMaterial(model_);
     aniObj_->SetTemperature(0.2f);
-    aniObj_->SetModelAndLoadAnimation(model_);
+    if (model) {
+        aniObj_->SetMeshAndMaterial(model);
+        aniObj_->SetModelAndLoadAnimation(model);
+    }
 
     SetWorldMatrix(aniObj_->GetWorldTransform().matWorld_);
     //AABBを設定（仮のサイズ）
