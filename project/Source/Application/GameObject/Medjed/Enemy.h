@@ -63,11 +63,11 @@ public:
 
     // =======================//フェーズ//===================================
 
-    const PHASE GetPhase() { return phase_; }
+    PHASE GetPhase() { return phase_; }
 
     // =======================//トランスフォーム//===================================
 
-    const Vector3& GetWorldPos() { return  bodyPos_->GetWorldTransform().GetWorldPosition(); }
+    Vector3 GetWorldPos() { return  bodyPos_->GetWorldTransform().GetWorldPosition(); }
     const WorldTransform& GetWorldTransform() { return bodyPos_->GetWorldTransform(); }
 
     // =======================//行列//===================================

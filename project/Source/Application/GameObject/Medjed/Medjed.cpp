@@ -54,15 +54,15 @@ void Medjed::MoveStart()
 
 Medjed::Medjed() {
 
-    model_ = ModelManager::GetModel("medjed.gltf");
-   
+    SetModel(ModelManager::GetModel("medjed.gltf"));
+
     aniObj_ = std::make_unique<AnimationObject3d>();
     aniObj_->Create();
-    aniObj_->SetMeshAndMaterial(model_);
+    aniObj_->SetMeshAndMaterial(GetModelPtr());
     aniObj_->SetTemperature(1.0f);
-    aniObj_->SetModelAndLoadAnimation(model_);
+    aniObj_->SetModelAndLoadAnimation(GetModelPtr());
 
-    SetAABB(localAABB_);
+    SetAABB(GetLocalAABB());
     SetCollisionAttribute(CollisionTag::GetTag("Medjed"));
     SetCollisionMask(
         CollisionTag::GetTag("Player")
@@ -93,11 +93,12 @@ void Medjed::Update()
 
     isHit_ = false;
     if (isFind_) {
-        aniTimer_ += TimeManager::DeltaTime() * 0.25f;
-        aniTimer_ = std::clamp(aniTimer_, 0.0f, 1.0f);
+        float aniTimer = GetAniTimer() + TimeManager::DeltaTime() * 0.25f;
+        aniTimer = std::clamp(aniTimer, 0.0f, 1.0f);
+        SetAniTimer(aniTimer);
         SetColor({ 1.0f,1.0f,1.0f,1.0f });
-        aniObj_->SetMaskVol(Easing::EaseInOut(1.0f, 0.0f, aniTimer_));
-        aniObj_->SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInOut(0.0f,1.0f,aniTimer_) });
+        aniObj_->SetMaskVol(Easing::EaseInOut(1.0f, 0.0f, aniTimer));
+        aniObj_->SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInOut(0.0f,1.0f,aniTimer) });
     } else {
         SetColor({ 1.0f,1.0f,1.0f,0.0f });
     }
@@ -117,8 +118,10 @@ void Medjed::Init()
 {
 
     velocity_ = { 1.0f,0.0f,1.0f };
-    hideTimer_ = 0.0f;
-    aniTimer_ = 0.0f;
+
+    SetHideTimer(0.0f);
+    SetAniTimer(0.0f);
+ 
     isHit_ = false;
     isFind_ = false;
     aniObj_->Initialize();

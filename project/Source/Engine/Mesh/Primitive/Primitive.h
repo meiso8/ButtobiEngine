@@ -50,15 +50,15 @@ public:
         const bool usePSOKey = false,
         const RootSignature::TYPE rootSignatureType = RootSignature::TYPE::NORMAL,
         const DxcCompiler::VS_TYPE vsType = DxcCompiler::VS_TYPE::VS_Normal,
-        const DxcCompiler::PS_TYPE psType = DxcCompiler::PS_TYPE::PS_Normal);
+        const DxcCompiler::PS_TYPE psType = DxcCompiler::PS_TYPE::PS_Normal)const;
     virtual ~Primitive();
     void Finalize();
-    D3D12_VERTEX_BUFFER_VIEW& GetVertexBufferView() { return vertexBufferView_; };
-    D3D12_INDEX_BUFFER_VIEW& GetIndexBufferView() { return  indexBufferView_; };
-    UINT GetIndexCount() { return indexCount_; };
-    UINT GetVertexCount() { return vertexCount_; };
-    D3D_PRIMITIVE_TOPOLOGY& GetTopology() { return topology_; }
-    std::string& GetMeshName() { return meshName_; };
+    const D3D12_VERTEX_BUFFER_VIEW& GetVertexBufferView() const{ return vertexBufferView_; };
+    const D3D12_INDEX_BUFFER_VIEW& GetIndexBufferView()const { return  indexBufferView_; };
+    UINT GetIndexCount() const{ return indexCount_; };
+    UINT GetVertexCount() const{ return vertexCount_; };
+    const D3D_PRIMITIVE_TOPOLOGY& GetTopology() const{ return topology_; }
+    const std::string& GetMeshName() const{ return meshName_; };
 protected:
     UINT vertexCount_ = 0;
     CResource<VertexData> vertexResource_;

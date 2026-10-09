@@ -40,7 +40,7 @@ JsonFile::~JsonFile()
     jsonFiles_.clear();
 }
 
-const std::unordered_map <std::string, JsonData >JsonFile::GetJsonData()
+const std::unordered_map <std::string, JsonData >& JsonFile::GetJsonData()
 {
     return jsonFiles_;
 }

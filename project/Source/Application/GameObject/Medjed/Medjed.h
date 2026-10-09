@@ -11,12 +11,6 @@
 
 class Medjed :public DummyMedjed
 {
-private:
-    std::unique_ptr<AnimationObject3d> aniObj_ = nullptr;
-    Vector3 velocity_ = { 0.0f };
-
-    bool isFind_ = false;
-    bool isHit_ = false;
 
 public:
     Medjed();
@@ -27,7 +21,8 @@ public:
     void Draw()override;
     void OnCollision(Collider* collider)override;
 
-    WorldTransform& GetWorldTransform()const { return aniObj_->GetWorldTransform(); };
+    const WorldTransform& GetWorldTransform() { return aniObj_->GetWorldTransform(); }
+    void SetTranslate(const Vector3& translate) { aniObj_->SetTranslate(translate); }
     Vector3 GetWorldPosition() const;
     void GoToTarget(const Vector3& target)override;
 
@@ -36,5 +31,13 @@ public:
     void SetIsFind(const bool& f) { isFind_ = f; };
     const  bool& GetIsHit() const { return isHit_; };
     void SetColor(const Vector4& color) { aniObj_->SetColor(color); };
+
+private:
+    std::unique_ptr<AnimationObject3d> aniObj_ = nullptr;
+    Vector3 velocity_ = { 0.0f };
+
+    bool isFind_ = false;
+    bool isHit_ = false;
+
 };
 

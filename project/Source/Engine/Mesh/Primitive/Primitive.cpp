@@ -806,7 +806,7 @@ void Primitive::SetRootSignatureAndGraphicsPipeline(
     const RootSignature::TYPE rootSignatureType,
     const DxcCompiler::VS_TYPE vsType ,
     const DxcCompiler::PS_TYPE psType
-) {
+)const {
 
     commandList->SetGraphicsRootSignature(PSO::GetRootSignature()->GetRootSignature(rootSignatureType));
 
