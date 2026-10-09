@@ -153,7 +153,8 @@ void Enemy::Update()
         auto& collided = collider.collider_->GetCollisionInfo().collided;
 
         if (ImGui::TreeNode(name.c_str())) {
-            ImGui::Checkbox("isCollided", &collided);
+
+            ImGui::Text("isCollided %d", collided?"Yes":"No");
             ImGui::TreePop();
         }
 

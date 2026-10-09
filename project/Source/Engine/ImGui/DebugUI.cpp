@@ -1227,10 +1227,11 @@ void DebugUI::CheckCollider(Collider& collider, const char* label)
 
         //InFo
         if (ImGui::TreeNode("CollisionInfo")) {
-            auto& info = collider.GetCollisionInfo();
+            auto info = collider.GetCollisionInfo();
             ImGui::Checkbox("collided", &info.collided);
             ImGui::SliderFloat3("normal", &info.normal.x, -1000.0f, 1000.0f);
             ImGui::SliderFloat("penetration", &info.penetration, -1000.0f, 1000.0f);
+            collider.SetCollisionInfo(info);
             ImGui::TreePop();
         }
 

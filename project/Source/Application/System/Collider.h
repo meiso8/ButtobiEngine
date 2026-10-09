@@ -38,8 +38,8 @@ public:
 
 private:
 	float radius_ = 1.0f;	// 衝突半径
-	AABB aabb_;
-	Ray ray_;
+	AABB aabb_{};
+	Ray ray_{};
 
 	uint32_t collisionAttribute_ = 0xffffffff;	// 衝突属性
 	uint32_t collisionMask_ = 0xffffffff;		// 衝突マスク
@@ -62,7 +62,7 @@ public:
 	Collider();
 	virtual ~Collider();
 
-	void InitCalcuatedTisFrameFlag();
+	void InitCalcuatedTisFrameAndCollidedFlag();
 	/// @brief 衝突時コールバック関数
 	virtual void OnCollision(Collider* collider) {
 		(void)collider;
@@ -154,10 +154,10 @@ public:
 	void ColliderDraw();
 	void OnCollisionCollider();
 	void SetCollisionInfo(const CollisionInfo& info) { collisionInfo_ = info; };
-	CollisionInfo& GetCollisionInfo() {
+	const CollisionInfo& GetCollisionInfo() {
 		return collisionInfo_;
 	}
 
-		void ColliderUpdate();
+	void ColliderUpdate();
 };
 

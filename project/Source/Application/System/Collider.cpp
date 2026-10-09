@@ -21,9 +21,12 @@ Vector3 ParentMatrix::GetParentScaleByMatrix(const Matrix4x4& mat)
     return scale;
 }
 
-void Collider::InitCalcuatedTisFrameFlag()
+void Collider::InitCalcuatedTisFrameAndCollidedFlag()
 {
+    //計算フラグの初期化
     isCalculatedThisFrame_ = false;
+    //当たり判定フラグの初期化
+    collisionInfo_.collided = false;
 }
 
 Collider::Collider()
@@ -217,9 +220,9 @@ void ResolveCollision(Vector3& pos, Vector3& velocity, const CollisionInfo& info
     pos += info.normal * info.penetration;
 
     //一旦ここをコメントアウトして見る
-    //float normalVelocity = Dot(velocity, info.normal);
+    float normalVelocity = Dot(velocity, info.normal);
 
-    //if (normalVelocity < 0.0f) {
-    //    velocity -= info.normal * normalVelocity;
-    //}
+    if (normalVelocity < 0.0f) {
+        velocity -= info.normal * normalVelocity;
+    }
 }

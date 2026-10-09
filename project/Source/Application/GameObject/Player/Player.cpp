@@ -54,8 +54,8 @@ void Player::OnCollision(Collider* collider)
         ) {
         //壁や床との当たり判定をとり、
         ResolveCollision(aniObject_->GetTransform().translate, velocity_, GetCollisionInfo());
-        //速度を初期化する
-        velocity_ = { 0.0f,0.0f,0.0f };
+        ////速度を初期化する
+        //velocity_ = { 0.0f,0.0f,0.0f };
     }
 
     if (collider->GetCollisionAttribute() == CollisionTag::GetTag("CameraUp")) {
