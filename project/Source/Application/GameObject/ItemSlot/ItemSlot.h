@@ -23,7 +23,7 @@ public:
     void DrawUI();
     void Draw();
     void GetAnimation(const std::shared_ptr<Item>& item, const Vector2& screenPos);
-    std::array<std::shared_ptr<Item>, kMaxSlots_>& GetItemInSlot() {return  slots_; };
+    const std::array<std::shared_ptr<Item>, kMaxSlots_>& GetItemInSlot() {return  slots_; };
   
 private:
     std::unique_ptr<Camera> itemCamera_ = nullptr;

@@ -23,7 +23,7 @@ public:
     void ResetPushMap();
     void RayCastHit(RaySprite& raySprite);
     void ClearSet();
-    std::array< std::unique_ptr<Block>, kBlockColors>& GetMap() { return blocks_; }
+   const std::array< std::unique_ptr<Block>, kBlockColors>& GetMap() { return blocks_; }
 private:
     std::map<BlockColor, Vector4>colorMap_;
     std::array< std::unique_ptr<Block>, kBlockColors>blocks_;

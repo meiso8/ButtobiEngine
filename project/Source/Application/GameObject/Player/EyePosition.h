@@ -38,15 +38,15 @@ public:
     void Initialize();
     void Update();
 
-     Matrix4x4& GetWorldMatrix() {
+   const  Matrix4x4& GetWorldMatrix() {
         return transform_.matWorld_;
     }
-     WorldTransform& GetWorldTransform() { return transform_; };
+    const WorldTransform& GetWorldTransform() { return transform_; };
      void SetParentMatrix(Matrix4x4* parent) {
          parent_ = parent;
      };
 
-     Vector3& GetForward();
+    const Vector3& GetForward();
 
      void MouseLook(const float& rotateX);
 };

@@ -5,6 +5,11 @@ class RaySprite;
 
 class ItemManager {
 public:
+
+    /// @brief アイテムスロット取得関数
+    /// @return アイテムスロット
+    ItemSlot& GetItemSlot() { return itemSlot_; }
+
     /// @brief 太陽円盤取得フラグの取得静的関数
     /// @return 太陽円盤取得フラグ
     static bool IsGetSolarDisc() { return isGetSolarDisc_; }
@@ -40,9 +45,7 @@ public:
     /// @brief アイテムの生成
     /// @param itemNames アイテム名を入れる
     void GenerateItems(const std::vector<std::string>& itemNames);
-    /// @brief アイテムスロット取得関数
-    /// @return アイテムスロット
-    ItemSlot& GetItemSlot() { return itemSlot_; }
+
     /// @brief アイテムがレイにヒットしているかを判定する関数
     /// @param raySprite レイスプライトクラスを入れる
     /// @return レイにヒットしているアイテムを返す

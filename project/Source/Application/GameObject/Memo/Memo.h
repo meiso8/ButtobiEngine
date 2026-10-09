@@ -16,7 +16,7 @@ public:
     void Initialize();
     void Update();
     void Draw();
-    WorldTransform& GetWorldTransform() { return object_->GetWorldTransform(); };
+
     void OnCollision(Collider* collider) override;
     void SetTexture(const TextureFactory::Handle& handle) {
         object_->SetTextureHandle(handle);
@@ -31,5 +31,8 @@ public:
         object_->SetMeshAndMaterial(cubeMesh_.get());
     };
     void SetColor(const Vector4& color) { object_->SetColor(color); }
+
+
+    WorldTransform& GetWorldTransform() { return object_->GetWorldTransform(); };
 };
 

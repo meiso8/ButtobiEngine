@@ -24,7 +24,7 @@ public:
     bool Shot(const Vector3& target, const  BeamType& type, const Vector3& startPos,const Matrix4x4* parent);
     bool GetIsActive() { return isActive_; };
 
-    Ray& GetRay() { return ray_; }
+   const Ray& GetRay() { return ray_; }
 
 private:
     void UpdateObject();

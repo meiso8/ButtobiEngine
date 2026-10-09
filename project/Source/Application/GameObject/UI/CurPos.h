@@ -24,4 +24,4 @@ public:
     void SetSlidePuzzleSystem(SlidePuzzleSystem* puzzle) { slidePuzzleSystem_ = puzzle; };
 };
 
-Vector2 SnapCursorToNearestSprite(const Vector2& cursorPos, std::vector<std::unique_ptr<Sprite>>& sprites, float snapThreshold = 70.0f);
+Vector2 SnapCursorToNearestSprite(const Vector2& cursorPos, const std::vector<std::unique_ptr<Sprite>>& sprites, float snapThreshold = 70.0f);
