@@ -3,7 +3,7 @@
 #include<ctype.h>
 #include"../Mesh/PrimitiveFactory/PrimitiveFactory.h"
 
-const std::array<std::string, LevelEditor::kObjectTypeNames>  LevelEditor::objectTypeName_ = { "MESH","PlayerSpawn","EnemySpawn","StageChangeTrigger" };
+const std::array<std::string, LevelEditor::kObjectTypeNames>  LevelEditor::objectTypeName_ = { "MESH","PlayerSpawn","EnemySpawn","StageChangeTrigger","Tree"};
 
 void LevelEditor::Load(const std::string& fileName, bool useButtobiEditor)
 {
@@ -161,7 +161,7 @@ void LevelEditor::CreateStageChangeTriggers(std::vector<std::unique_ptr<StageCha
 
 }
 
-void LevelEditor::CreateObject3d(std::vector<std::unique_ptr<Object3d>>& object3ds)
+void LevelEditor::CreateObject3d(std::vector<std::unique_ptr<Object3d>>& object3ds, std::string objectType)
 {
     object3ds.clear();
 
@@ -177,7 +177,7 @@ void LevelEditor::CreateObject3d(std::vector<std::unique_ptr<Object3d>>& object3
         }
 
         newObjctData->Create();
-        newObjctData->SetObjectType("MESH");
+        newObjctData->SetObjectType(objectType);
 
         if (model) {
             newObjctData->SetMeshAndMaterial(model);
@@ -251,8 +251,8 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
     std::string type = object["type"].get<std::string>();
 
 
-    //MESH
-    if (type.compare(objectTypeName_[kMesh]) == 0) {
+    //MESHorTree
+    if (type.compare(objectTypeName_[kMesh]) == 0|| type.compare(objectTypeName_[kTree] )== 0) {
 
         //オブジェクト
         levelData->objects.emplace_back(LevelData::ObjectData{});

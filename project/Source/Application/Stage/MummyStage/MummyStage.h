@@ -6,6 +6,9 @@
 #include "MummyRoom/MummyRoom.h" 
 #include"DummyMummy/DummyMummy.h"
 #include<array>
+
+class ParticleEmitter;
+
 class MummyStage :public Stage
 {
 
@@ -18,7 +21,11 @@ private:
     std::unique_ptr<Papyrus> papyrus_ = nullptr;
     std::unique_ptr<MummyRoom> mummyRoom_ = nullptr; 
     std::array<std::unique_ptr<DummyMummy>, kMaxMummy_> dummyMummies_;
-
+    std::unique_ptr<ParticleEmitter> particleEmitter_ = nullptr;
+    bool isShowMedjed_ = false;
+private:
+        void CreateParticle();
+        void SetMummyTypeWall();
 public:
 
     MummyStage();

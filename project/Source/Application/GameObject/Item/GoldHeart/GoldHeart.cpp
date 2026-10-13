@@ -39,6 +39,8 @@ void GoldHeart::Use()
 {
     //アニメーションタイマーをリセットする
     aniTimer_ = 0.0f;
+    //アニメーション終了を初期化する
+    isAnimEnd_ = false;
     isUsed_ = true;
     //取得はしていない
     isGet_ = false;

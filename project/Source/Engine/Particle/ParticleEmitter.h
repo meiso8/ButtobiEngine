@@ -58,7 +58,7 @@ public:
     void Emit();
     Emitter& GetEmitter() { return emitter_; };
     void SetName(const std::string name) { emitter_.name = name; }
-    void SetMovement(ParticleMovements& movement) { emitter_.movement; }
+    void SetMovement(ParticleMovements& movement) { emitter_.movement = movement; }
     void SetParent(WorldTransform& parent);
     static void SetParticleManager(ParticleManager* particleManager);
 private:

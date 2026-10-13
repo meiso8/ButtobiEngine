@@ -28,7 +28,7 @@ void TreeGenerator::Initialize()
 {
 
     LevelEditor::GetInstance()->Load(jsonFileName_, true);
-    //LevelEditor::GetInstance()->CreateObject3d(trees_);
+    LevelEditor::GetInstance()->CreateObject3d(trees_,"Tree");
 
     LoadAABB();
 
@@ -302,8 +302,9 @@ void TreeGenerator::PlaceLockersRandomly() {
             tree->SetRotate({ 0.0f, rotateRanDom.Get() ,0.0f });
             tree->SetMeshAndMaterial(model);
             tree->SetObjectName("tree" + std::to_string(i));
-            tree->SetObjectType("MESH");
+            tree->SetObjectType("Tree");
             tree->GetWorldTransform().eTransform_.translate = { pos.x, 0.0f, pos.y };
+            tree->RegisterObject();
             trees_.push_back(std::move(tree));
 
         }
