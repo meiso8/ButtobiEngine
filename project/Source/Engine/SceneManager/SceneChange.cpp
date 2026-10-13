@@ -23,28 +23,31 @@ SceneChange::SceneChange()
     sprite_->SetSize(Vector2{ static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()) });
 }
 
-void SceneChange::SetState(State state, const float endTime)
+void SceneChange::SetState(State state, const float endTime, const bool skipEffect)
 {
     if (state == kUnKnown) { return; }
     if (state == state_) { return; }
     state_ = state;
     timer_ = 0.0f;
     endTime_ = endTime;
+    isSkipEffect_ = skipEffect;
 }
 
 void SceneChange::Initialize()
 {
     timer_ = 0.0f;
     state_ = kUnKnown;
-    isSkipFadeInAnimation_ = false;
+    isSkipEffect_ = false;
 }
 
 void SceneChange::FadeOut()
 {
 
-    float time = 1.0f - timer_ / endTime_;
+    if (isSkipEffect_) {
+        return;
+    }
 
-    
+    float time = 1.0f - timer_ / endTime_;
     sprite_->SetColor({ 0.0f,0.0f,0.0f,time });
 
     auto* grayScaleaterial = PostProcessManager::GetInstance()->
@@ -61,7 +64,7 @@ void SceneChange::FadeOut()
 void SceneChange::FadeIn()
 {
     
-    if (isSkipFadeInAnimation_) {
+    if (isSkipEffect_) {
         return;
     }
 
@@ -99,14 +102,14 @@ void SceneChange::SwitchScene()
         grayScaleaterial->useEffect = false;
        
         PostProcessManager::GetInstance()->GetPostEffectMaterial(PostProcessManager::kModel)->GetMaterialForMosaic()->useMosaic = false;
-
-
     }
     if (state_ == kFadeIn ) {
-        //シーン変更時にフェードインアニメーション設定の初期化をする
-        isSkipFadeInAnimation_ = false;
         state_ = kSceneEnd;
     }
+
+    //シーン変更時にフェードインアニメーション設定の初期化をする
+    isSkipEffect_ = false;
+
 }
 
 void SceneChange::Update()

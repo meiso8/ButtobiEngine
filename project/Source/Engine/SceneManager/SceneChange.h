@@ -28,7 +28,8 @@ public:
     /// @brief シーンの状態と終了時間を設定する
     /// @param state シーンの状態
     /// @param endTime 終了時間 
-    void SetState(State state, const float endTime);
+    /// @param skipEffect エフェクトスキップするかどうか 
+    void SetState(State state, const float endTime,const bool skipEffect = false);
     /// @brief 時間を得る
     /// @return 
     float GetTimer() { return timer_; }
@@ -44,7 +45,6 @@ public:
     bool IsEndScene() { return(state_ == kSceneEnd) ? true : false; }
    
     bool IsStateTransition() { return state_ == kFadeIn|| state_ == kFadeOut; }
-    void SetIsSkipAnimation(const bool skip) { isSkipFadeInAnimation_ = skip; }
     /// @brief シーンの更新
     void Update();
     SceneChange();
@@ -52,7 +52,7 @@ public:
 private:
      float timer_ = 0.0f;
      float endTime_ = 1.0f;
-     bool isSkipFadeInAnimation_ = false;
+     bool isSkipEffect_ = false;
     std::unique_ptr<Sprite> sprite_ = nullptr;
     State state_ = SceneChange::State::kUnKnown;
     //メンバ関数ポインタテーブル

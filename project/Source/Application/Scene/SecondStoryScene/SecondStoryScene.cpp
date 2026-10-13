@@ -225,7 +225,6 @@ void SecondStoryScene::Debug()
 
 void SecondStoryScene::SceneChange()
 {
-    sceneChange_->SetState(SceneChange::kFadeIn, 1.0f);
-    sceneChange_->SetIsSkipAnimation(true);
+    sceneChange_->SetState(SceneChange::kFadeIn, 1.0f,true);
     SceneManager::SetNextScene("Game");
 }
