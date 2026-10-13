@@ -113,7 +113,7 @@ public:
 
     /// @brief カメラ
     /// @param camera 
-    static void CheckCamera(CameraMatrix& cameraMatrix, CameraData& cameraOption, const char* label = "Camera");
+    static void CheckCamera(Camera& camera, const char* label = "Camera");
     static void CheckShericalCoordinate(SphericalCoordinate& sphericalCoordinate);
     static void CheckParticle(ParticleManager* particleManager);
     static void CheckEmitter(Emitter& emitter, const char* label = "Emitter");

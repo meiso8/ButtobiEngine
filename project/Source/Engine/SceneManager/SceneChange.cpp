@@ -36,6 +36,7 @@ void SceneChange::Initialize()
 {
     timer_ = 0.0f;
     state_ = kUnKnown;
+    isSkipFadeInAnimation_ = false;
 }
 
 void SceneChange::FadeOut()
@@ -59,6 +60,11 @@ void SceneChange::FadeOut()
 
 void SceneChange::FadeIn()
 {
+    
+    if (isSkipFadeInAnimation_) {
+        return;
+    }
+
     float time = timer_ / endTime_;
     sprite_->SetColor({ 0.0f,0.0f,0.0f,time });
 
@@ -66,8 +72,11 @@ void SceneChange::FadeIn()
         GetPostEffectMaterial(PostProcessManager::kModel)->
         GetMaterialGrayScale();
     grayScaleaterial->useEffect = true;
+    
     grayScaleaterial->type = PostEffectMaterial::RenderTextureEffectType::kGrayScale;
     grayScaleaterial->effectVol = EaseInQuadT(time);
+
+
     auto* mosaic = PostProcessManager::GetInstance()->GetPostEffectMaterial(PostProcessManager::kModel)->GetMaterialForMosaic();
     mosaic->useMosaic = true;
     mosaic->size = { Lerp(Window::GetClientWidth(),32,time) };
@@ -94,6 +103,8 @@ void SceneChange::SwitchScene()
 
     }
     if (state_ == kFadeIn ) {
+        //シーン変更時にフェードインアニメーション設定の初期化をする
+        isSkipFadeInAnimation_ = false;
         state_ = kSceneEnd;
     }
 }

@@ -31,5 +31,6 @@ private:
     //木のランダム生成クラス
     std::unique_ptr<TreeGenerator>treeGenerator_ = nullptr;
     float walkAnimationTimer_ = 0.0f;
+    const float kEndTimer_ = 7.5f;
 };
 
