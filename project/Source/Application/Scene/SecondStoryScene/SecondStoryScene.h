@@ -30,6 +30,6 @@ private:
     std::unique_ptr<AnimationObject3d> aniObject_ = nullptr;
     //木のランダム生成クラス
     std::unique_ptr<TreeGenerator>treeGenerator_ = nullptr;
-
+    float walkAnimationTimer_ = 0.0f;
 };
 

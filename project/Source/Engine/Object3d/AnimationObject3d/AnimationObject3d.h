@@ -44,14 +44,14 @@ public:
     const std::string GetCurrentAnimation() { return currentAnimation_; }
    const std::map<std::string, Animation>& GetAnimations()const;
     Matrix4x4 GetWorldJointMatrix(const std::string name);
-
+    const float GetCurrentAnimProgress();
 
     void ImGuiDebugBone();
 
 private:
 
     void UpdateAnimation();
-
+    const Animation* FindAndGetAnimation();
 private:
 
     float animationTime_ = 0.0f;
