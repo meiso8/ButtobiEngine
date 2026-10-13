@@ -252,7 +252,7 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
 
 
     //MESHorTree
-    if (type.compare(objectTypeName_[kMesh]) == 0|| type.compare(objectTypeName_[kTree])) {
+    if (type.compare(objectTypeName_[kMesh]) == 0|| type.compare(objectTypeName_[kTree] )== 0) {
 
         //オブジェクト
         levelData->objects.emplace_back(LevelData::ObjectData{});

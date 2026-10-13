@@ -304,6 +304,7 @@ void TreeGenerator::PlaceLockersRandomly() {
             tree->SetObjectName("tree" + std::to_string(i));
             tree->SetObjectType("Tree");
             tree->GetWorldTransform().eTransform_.translate = { pos.x, 0.0f, pos.y };
+            tree->RegisterObject();
             trees_.push_back(std::move(tree));
 
         }
