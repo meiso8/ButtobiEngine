@@ -72,6 +72,20 @@ Matrix4x4 AnimationObject3d::GetWorldJointMatrix(const std::string name)
     return MakeIdentity4x4();
 }
 
+const float AnimationObject3d::GetCurrentAnimProgress()
+{
+    const Animation* animation = FindAndGetAnimation();
+    if (animation) {
+        return TimeManager::GetLocalTimer(animationTime_,0.0f, animation->duration);
+    } else {
+        return 0.0f;
+        //もしアニメーションが見つからなかったら0.0fで返す
+        LogFile::Log("not found animetion : return 0.0f");
+    }
+}
+
+
+
 void AnimationObject3d::ImGuiDebugBone()
 {
 #ifdef _DEBUG
@@ -100,27 +114,9 @@ void AnimationObject3d::UpdateAnimation()
     debugBone_->Update(worldTransform_.matWorld_);
 #endif
 
-    assert(skeleton);
-    assert(skinCluster);
+    const Animation* animation = FindAndGetAnimation();
 
-    auto& animations = modelData->animations_;
-
-    assert(&animations);
-
-    const Animation* animation = nullptr;
-    if (animations.contains(currentAnimation_)) {
-        animation = &animations.at(currentAnimation_);
-    } else {
-
-        for (auto& [name, findAnimation] : animations) {
-            animation = &findAnimation;
-            //最新のアニメーションの名前を入れる
-            currentAnimation_ = name;
-            break;
-        }
-    }
-  
-    if (animation) {
+    if (animation&& skinCluster&& skeleton) {
         //アニメーションがあったら
 
         //アニメーションの更新を行って、骨ごとのLocal情報を更新する
@@ -134,11 +130,14 @@ void AnimationObject3d::UpdateAnimation()
 
 }
 
-void AnimationObject3d::UpdateAniTimer(const bool& isLoop)
+const Animation* AnimationObject3d::FindAndGetAnimation()
 {
-    animationTime_ += TimeManager::DeltaTime();
 
-   const ModelData* modelData = skinningModel_->GetModelData();
+    const ModelData* modelData = skinningModel_->GetModelData();
+
+    if (!modelData) {
+        return nullptr;
+    }
 
     const Animation* animation = nullptr;
 
@@ -156,24 +155,37 @@ void AnimationObject3d::UpdateAniTimer(const bool& isLoop)
         }
     }
 
-    if (isLoop) {
-        animationTime_ = std::fmod(animationTime_, animation->duration);
-    } else {
-        animationTime_ = std::clamp(animationTime_, 0.0f, animation->duration);
+    return animation;
+}
+
+void AnimationObject3d::UpdateAniTimer(const bool& isLoop)
+{
+    animationTime_ += TimeManager::DeltaTime();
+
+    //アニメーションを探す
+    const Animation* animation = FindAndGetAnimation();
+
+    if (animation) {
+        if (isLoop) {
+            animationTime_ = std::fmod(animationTime_, animation->duration);
+        } else {
+            animationTime_ = std::clamp(animationTime_, 0.0f, animation->duration);
+        }
     }
+
 }
 bool AnimationObject3d::IsAnimEnd()
 {
-    const ModelData* modelData = skinningModel_->GetModelData();
+    //アニメーションを探す
+    const Animation* animation = FindAndGetAnimation();
 
-    auto& animetions = modelData->animations_;
-
-    if (animetions.contains(currentAnimation_)) {
-        return  animationTime_ == animetions.at(currentAnimation_).duration;
+    if (animation) {
+        return animationTime_ >= animation->duration;
     }
     //もしアニメーションが見つからなかったらfalseで返す
     LogFile::Log("not found animetion : IsAnimEnd return false");
     return false;
+
 }
 void AnimationObject3d::SetModelAndLoadAnimation(const Model* model)
 {

@@ -60,8 +60,13 @@ void SecondStoryScene::Initialize()
     //aniObject_->SetTranslate(pos);
     aniObject_->SetObjectName("SecondStoryPlayer");
     aniObject_->RegisterObject();
-    aniObject_->SetTranslate({ -0.477f,0.0f,0.751f });
+    aniObject_->SetTranslate({ 0.0f,0.0f,0.0f });
     aniObject_->SetAnimation("Bye-Bye");
+    //Y軸回転させる
+    aniObject_->SetRotate({ 0.0f,Math::kPi,0.0f });
+
+
+    walkAnimationTimer_ = 0.0f;
 
     auto* gaussianFilter = PostProcessManager::GetInstance()->
         GetPostEffectMaterial(PostProcessManager::kModel)->
@@ -74,6 +79,7 @@ void SecondStoryScene::Initialize()
 
     //木の生成
     treeGenerator_->Initialize();
+
 }
 
 void SecondStoryScene::Update()
@@ -99,17 +105,41 @@ void SecondStoryScene::Update()
 
 #endif
 
-
     currentCamera_->UpdateMatrix();
 
     for (auto& obj : objects_) {
         obj->obj_->Update();
     }
 
-    aniObject_->Update();
-    //アニメーションタイマーのアップデート
-    aniObject_->UpdateAniTimer();
 
+    //アニメーションタイマーのアップデート
+    aniObject_->UpdateAniTimer(aniObject_->GetCurrentAnimation() == "Walk" ? true : false);
+
+    aniObject_->Update();
+
+
+    if (aniObject_->GetCurrentAnimation() == "Bye-Bye") {
+
+        //バイバイが終わったら
+        if (aniObject_->IsAnimEnd()) {
+            //歩く
+            aniObject_->SetAnimation("Walk");
+        }
+
+    } else if (aniObject_->GetCurrentAnimation() == "Walk") {
+
+        walkAnimationTimer_+=TimeManager::DeltaTime();
+
+
+        if (walkAnimationTimer_ <= 1.0f) {
+            //アイドルだったら
+            aniObject_->SetRotate({ 0.0f,Lerp(Math::kPi,0.0f,TimeManager::GetLocalTimer(walkAnimationTimer_,0.0f,1.0f)),0.0f });
+        } else {
+            aniObject_->SetRotate({ 0.0f,0.0f,0.0f });
+            aniObject_->SetTranslate({ 0.0f,0.0f,Lerp(0.0f,20.0f,TimeManager::GetLocalTimer(walkAnimationTimer_,1.0f,10.0f)) });
+        }
+      
+    }
 
     treeGenerator_->Update();
 }

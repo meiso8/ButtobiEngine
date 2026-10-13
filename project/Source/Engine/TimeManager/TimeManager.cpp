@@ -45,7 +45,13 @@ void TimeManager::Update()
 
 float TimeManager::GetLocalTimer(const float currentTimer, const float startTime, const float endTime)
 {
-    return (currentTimer - startTime) / (endTime - startTime);
+    if ((endTime - startTime) > 0.0f) {
+        return (currentTimer - startTime) / (endTime - startTime);
+    } else {
+        LogFile::Log("Zero or Minus Divided");
+        return 0.0f;
+    }
+   
 }
 
 float TimeManager::DeltaTime()
