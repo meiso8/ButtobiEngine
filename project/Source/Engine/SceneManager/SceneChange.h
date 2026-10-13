@@ -44,7 +44,7 @@ public:
     bool IsEndScene() { return(state_ == kSceneEnd) ? true : false; }
    
     bool IsStateTransition() { return state_ == kFadeIn|| state_ == kFadeOut; }
-
+    void SetIsSkipAnimation(const bool skip) { isSkipFadeInAnimation_ = skip; }
     /// @brief シーンの更新
     void Update();
     SceneChange();
@@ -52,7 +52,7 @@ public:
 private:
      float timer_ = 0.0f;
      float endTime_ = 1.0f;
-
+     bool isSkipFadeInAnimation_ = false;
     std::unique_ptr<Sprite> sprite_ = nullptr;
     State state_ = SceneChange::State::kUnKnown;
     //メンバ関数ポインタテーブル

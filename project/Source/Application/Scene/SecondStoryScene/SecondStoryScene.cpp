@@ -13,7 +13,8 @@
 #include"TreeGenerator/TreeGenerator.h"
 
 SecondStoryScene::SecondStoryScene()
-{   // 現在のカメラを設定
+{  
+    // 現在のカメラを設定
     currentCamera_ = camera_.get();
 
     //スカイボックス
@@ -44,6 +45,8 @@ void SecondStoryScene::Initialize()
 {
 //カメラを初期化する
     camera_->Initialize();
+    camera_->SetTranslate({ 0.0f,1.586f,-1.268 });
+    camera_->SetFovAngleY(0.4f);
 
     LevelEditor::GetInstance()->Load("SecondStoryScene_objectEditor", true);
     LevelEditor::GetInstance()->CreateObject(objects_);
@@ -75,6 +78,10 @@ void SecondStoryScene::Initialize()
     gaussianFilter->sigma = 1.0f;
     gaussianFilter->kernel = 0;
 
+    auto* grayScale=  PostProcessManager::GetInstance()->GetPostEffectMaterial(PostProcessManager::kModel)->GetMaterialGrayScale();
+    grayScale->useEffect = true;
+    grayScale->type = PostEffectMaterial::RenderTextureEffectType::kSepia;
+    grayScale->effectVol = 0.0f;
     LightingManager::NoonLightInit();
 
     //木の生成
@@ -87,23 +94,33 @@ void SecondStoryScene::Update()
     Debug();
 
 #ifdef _RELEASE
-    //if (cameraTimer_ >= kEndTimer_) {
-    //    SceneChange();
-    //} else {
+    if (walkAnimationTimer_ >= kEndTimer_) {
+        //終わりを迎えたらシーンチェンジ
+        SceneChange();
+    } else {
 
-    //    if (InputBind::IsClick()) {
+        if (InputBind::IsClick()) {
 
-    //        if (skip_->GetIsSkip()) {
-    //            cameraTimer_ = kEndTimer_;
-    //        } else {
-    //            Sound::PlaySE(SoundFactory::FALL);
-    //            skip_->SetIsDraw(true);
-    //        }
+            if (skip_->GetIsSkip()) {
+                walkAnimationTimer_ = kEndTimer_;
+            } else {
+                Sound::PlaySE(SoundFactory::FALL);
+                skip_->SetIsDraw(true);
+            }
 
-    //    }
-    //}
+        }
+    }
 
 #endif
+
+    if (aniObject_->GetCurrentAnimation() == "Bye-Bye") {
+
+    }    else if (aniObject_->GetCurrentAnimation() == "Walk") {
+        if (walkAnimationTimer_>=2.0f&& walkAnimationTimer_ <= 5.0f) {
+            camera_->SetFovAngleY(Lerp(0.4f, 1.8f, TimeManager::GetLocalTimer(walkAnimationTimer_, 2.0f, 5.0f)));
+        }
+        
+    }
 
     currentCamera_->UpdateMatrix();
 
@@ -118,27 +135,41 @@ void SecondStoryScene::Update()
     aniObject_->Update();
 
 
+
+    //グレースケール
+    auto* grayScale = PostProcessManager::GetInstance()->GetPostEffectMaterial(PostProcessManager::kModel)->GetMaterialGrayScale();
+
     if (aniObject_->GetCurrentAnimation() == "Bye-Bye") {
 
         //バイバイが終わったら
         if (aniObject_->IsAnimEnd()) {
             //歩く
             aniObject_->SetAnimation("Walk");
+            grayScale->useEffect = true;
+            grayScale->type = PostEffectMaterial::RenderTextureEffectType::kSepia;
+
         }
 
     } else if (aniObject_->GetCurrentAnimation() == "Walk") {
 
-        walkAnimationTimer_+=TimeManager::DeltaTime();
+        if (walkAnimationTimer_ <= kEndTimer_) {
+            walkAnimationTimer_ += TimeManager::DeltaTime();
 
 
-        if (walkAnimationTimer_ <= 1.0f) {
-            //アイドルだったら
-            aniObject_->SetRotate({ 0.0f,Lerp(Math::kPi,0.0f,TimeManager::GetLocalTimer(walkAnimationTimer_,0.0f,1.0f)),0.0f });
-        } else {
-            aniObject_->SetRotate({ 0.0f,0.0f,0.0f });
-            aniObject_->SetTranslate({ 0.0f,0.0f,Lerp(0.0f,20.0f,TimeManager::GetLocalTimer(walkAnimationTimer_,1.0f,10.0f)) });
+            if (walkAnimationTimer_ <= 1.0f) {
+                float localTimer = TimeManager::GetLocalTimer(walkAnimationTimer_, 0.0f, 1.0f);
+                //アイドルだったら
+                aniObject_->SetRotate({ 0.0f,Lerp(Math::kPi,0.0f,localTimer),0.0f });
+                grayScale->effectVol = Lerp(0.0f, 1.0f, localTimer);
+            } else {
+                aniObject_->SetRotate({ 0.0f,0.0f,0.0f });
+                aniObject_->SetTranslate({ 0.0f,0.0f,Lerp(0.0f,20.0f,TimeManager::GetLocalTimer(walkAnimationTimer_,1.0f,kEndTimer_)) });
+                grayScale->effectVol = 1.0f;
+            }
+
         }
-      
+  
+
     }
 
     treeGenerator_->Update();
@@ -195,5 +226,6 @@ void SecondStoryScene::Debug()
 void SecondStoryScene::SceneChange()
 {
     sceneChange_->SetState(SceneChange::kFadeIn, 1.0f);
+    sceneChange_->SetIsSkipAnimation(true);
     SceneManager::SetNextScene("Game");
 }

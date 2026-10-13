@@ -63,6 +63,11 @@ public:
     virtual void UpdateWorldMatrix();
 
     virtual void UpdateViewProjectionMatrix();
+    const CameraMatrix& GetCameraMatrix() { return cameraMatrix_; };
+    const CameraData& GetCameraData() { return cameraData_; };
+
+    void SetCameraMatrix(const CameraMatrix& cameraMatrix) { cameraMatrix_ = cameraMatrix; };
+    void SetCameraData(const CameraData& cameraData) { cameraData_ = cameraData; };
 
     const Matrix4x4& GetWorldMatrix() { return cameraMatrix_.worldMat; }
     const Matrix4x4& GetViewMatrix() { return cameraMatrix_.viewMat; }
@@ -74,6 +79,10 @@ public:
     const SphericalCoordinate& GetSphericalCoordinate() { return cameraData_.sphericalCoordinate; };
 
     void SetTransform(const EulerTransform& transform) { cameraData_.eTransform = transform;};
+    void SetTranslate(const Vector3& translate) { cameraData_.eTransform.translate = translate; }
+    void SetRotate(const Vector3& rotate) { cameraData_.eTransform.rotate = rotate; }
+
+
     void SetFovAngleY(const float fovAngle) { cameraData_.fovAngleY = fovAngle; };
     void SetFarZ(const float farZ) { cameraData_.farZ = farZ; };
     void SetNearZ(const float nearZ) { cameraData_.nearZ = nearZ; };

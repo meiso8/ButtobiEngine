@@ -45,7 +45,8 @@ const Matrix4x4& Camera::GetProjectionMatrixForOutline()
 void Camera::UpdateMatrix() {
 
 #ifdef USE_IMGUI
-    DebugUI::CheckCamera(cameraMatrix_, cameraData_,"Main Camera");
+    DebugUI::CheckCamera(*this, "Main Camera");
+
 #endif
 
     UpdateWorldMatrix();

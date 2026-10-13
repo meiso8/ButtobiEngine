@@ -28,7 +28,7 @@ void TreeGenerator::Initialize()
 {
 
     LevelEditor::GetInstance()->Load(jsonFileName_, true);
-    LevelEditor::GetInstance()->CreateObject3d(trees_);
+    //LevelEditor::GetInstance()->CreateObject3d(trees_);
 
     LoadAABB();
 

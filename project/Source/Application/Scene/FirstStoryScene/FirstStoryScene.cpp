@@ -118,20 +118,7 @@ void FirstStoryScene::Update()
 
 #endif
 
-
-
     CameraUpdate();
-
-
-    //if (isDebugCameraActive_) {
-
-    //}/* else {
-    //    //プレイヤーの目の位置をカメラの位置とする
-    //    camera_->SetWorldMatrix(player_->GetEyeMatrix());
-    //    camera_->SetFovAngleY(Easing::EaseOutBack(Camera::kFovAngle, Camera::kFovAngle * 0.5f, player_->GetZoomTimer()));
-    //    camera_->UpdateViewProjectionMatrix();
-    //}
-    //*/
 
     currentCamera_->UpdateMatrix();
 
@@ -261,5 +248,5 @@ void FirstStoryScene::PlayInterCome(const int32_t index)
 void FirstStoryScene::SceneChange()
 {
     sceneChange_->SetState(SceneChange::kFadeIn, 1.0f);
-    SceneManager::SetNextScene("Game");
+    SceneManager::SetNextScene("SecondStory");
 }

@@ -54,10 +54,16 @@ void DebugCamera::Create()
     LogFile::Log("Create DebugCamera");
 }
 
+void DebugCamera::SetMoveType(const MoveType moveType)
+{
+    moveType_ = moveType;
+}
+
 void DebugCamera::UpdateMatrix() {
 
 #ifdef USE_IMGUI
-    DebugUI::CheckCamera(cameraMatrix_, cameraData_, "Debug Camera");
+    DebugUI::CheckCamera(*this, "Debug Camera");
+
 #endif
 
     bool isUseImGui = false;
@@ -68,7 +74,16 @@ void DebugCamera::UpdateMatrix() {
     }
 #endif
     if (!isUseImGui) {
-        MouseInputMove();
+
+        if (moveType_ == Mouse) {
+             MouseInputMove();
+        } else {
+            //offsetを初期化する
+            cameraData_.offset = { 0.0f };
+            InputTranslate();
+            InputRotate();
+        }
+
     }
 
     Matrix4x4 matRotDelta = MakeIdentity4x4();
@@ -123,6 +138,8 @@ void DebugCamera::UpdateProjectionMatrix()
 
 void DebugCamera::InputTranslate() {
 
+    const float deltaTimme =TimeManager::DeltaTime();
+    speed_ = 5.0f * deltaTimme;
     if (Input::IsPressKey(DIK_A)) {
         MoveX(-speed_);
     }
@@ -150,7 +167,7 @@ void DebugCamera::InputTranslate() {
 };
 
 void DebugCamera::InputRotate() {
-
+    
     if (Input::IsPressKey(DIK_R)) {
 
         if (Input::IsTriggerKey(DIK_UP)) {

@@ -3,6 +3,11 @@
 
 class DebugCamera :public Camera
 {
+public:
+    enum MoveType {
+        KeyBorad,
+        Mouse,
+    };
 private:
     //XYZ軸回りのローカル回転角
     Vector3 deltaRotate_ = { 0.0f,0.0f,0.0f };
@@ -12,7 +17,10 @@ private:
     float rotateSpeed_ = 0.0f;
     //上下左右移動
     float speed_ = 0.0f;
+    MoveType moveType_ = KeyBorad;
 public:
+
+
     // 2. コピーと代入を禁止する（インスタンスが2つに増えるのを防ぐため）
     DebugCamera(const DebugCamera&) = delete;
     DebugCamera& operator=(const DebugCamera&) = delete;
@@ -30,6 +38,9 @@ public:
     void Initialize(const PROJECTION_TYPE& type = PROJECTION_TYPE::PERSPECTIVE)override;
     void Finalize();
     void Create();
+
+    void SetMoveType(const MoveType moveType);
+    const MoveType GetMoveType() { return moveType_; }
 private:
     DebugCamera() = default;
     ~DebugCamera() = default;

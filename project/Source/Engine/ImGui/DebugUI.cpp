@@ -26,6 +26,7 @@
 
 #include"PSO.h"
 #include"Camera.h"
+#include"DebugCamera.h"
 #include"JsonFile.h"
 #include"TimeManager.h"
 
@@ -69,15 +70,32 @@ void DebugUI::CheckFloat(float& value, const char* label) {
 #endif
 }
 
-void DebugUI::CheckCamera(CameraMatrix& cameraMatrix, CameraData& cameraData, const char* label) {
+
+void DebugUI::CheckCamera(Camera& camera, const char* label)
+{
 
 #ifdef USE_IMGUI
     ImGui::Begin("Camera");
 
     if (ImGui::TreeNode(label)) {
 
+        const CameraMatrix& matrix = camera.GetCameraMatrix();
+
+         CameraData cameraData = camera.GetCameraData();
+
+        if (auto debugCamera = dynamic_cast<DebugCamera*>(&camera)) {
+            DebugCamera::MoveType moveType = debugCamera->GetMoveType();
+            ImGui::Text("Type : %s", (moveType == DebugCamera::Mouse) ? "Mouse" : "KeyBorad");
+
+            if (ImGui::Button("ChangeMoveType")) {
+      
+                moveType = (moveType == DebugCamera::Mouse) ? DebugCamera::KeyBorad : DebugCamera::Mouse;
+            }
+            debugCamera->SetMoveType(moveType);
+        }
+
         CheckTransform(cameraData.eTransform, " worldMatrix");
-        ShowMatrix4x4(cameraMatrix.worldMat);
+        ShowMatrix4x4(matrix.worldMat);
 
         CheckShericalCoordinate(cameraData.sphericalCoordinate);
 
@@ -91,12 +109,17 @@ void DebugUI::CheckCamera(CameraMatrix& cameraMatrix, CameraData& cameraData, co
             cameraData.projectionType = (cameraData.projectionType == PERSPECTIVE) ? PARALLEL : PERSPECTIVE;
         }
 
+        camera.SetCameraData(cameraData);
+
         ImGui::TreePop();
 
     }
 
     ImGui::End();
 #endif
+
+
+
 }
 
 void DebugUI::CheckShericalCoordinate(SphericalCoordinate& sphericalCoordinate)
