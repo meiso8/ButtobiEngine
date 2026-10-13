@@ -31,11 +31,7 @@ void DummyMummy::Initialize()
     Look(*targetPos_);
     aniObj_->SetSkinning(false);
 
-    SetCollisionAttribute(CollisionTag::GetTag("Wall"));
-    SetCollisionMask(
-        CollisionTag::GetTag("Player")
-        | CollisionTag::GetTag("Enemy")
-        | CollisionTag::GetTag("Mummy"));
+    SetCollisionType(false);
 }
 
 void DummyMummy::Update()
@@ -101,16 +97,24 @@ void DummyMummy::OnCollision(Collider* collider)
 
 }
 
-void DummyMummy::SetCollisionType()
+void DummyMummy::SetCollisionType(const bool isMummy)
 {
+    if (isMummy) {
+        SetCollisionAttribute(CollisionTag::GetTag("Mummy")); // ミイラの衝突属性
+        SetCollisionMask(
+            CollisionTag::GetTag("Player")
+            | CollisionTag::GetTag("Enemy")
+            | CollisionTag::GetTag("Mummy")
+            | CollisionTag::GetTag("Wall")
+        ); // プレイヤーや壁と衝突
+    } else {
+        SetCollisionAttribute(CollisionTag::GetTag("Wall"));
+        SetCollisionMask(
+            CollisionTag::GetTag("Player")
+            | CollisionTag::GetTag("Enemy")
+            | CollisionTag::GetTag("Mummy"));
+    }
 
-    SetCollisionAttribute(CollisionTag::GetTag("Mummy")); // ミイラの衝突属性
-    SetCollisionMask(
-          CollisionTag::GetTag("Player")
-        | CollisionTag::GetTag("Enemy")
-        | CollisionTag::GetTag("Mummy")
-        | CollisionTag::GetTag("Wall")
-    ); // プレイヤーや壁と衝突
 }
 
 Vector3 DummyMummy::GetWorldPos()

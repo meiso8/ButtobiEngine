@@ -6,6 +6,10 @@
 #include"TimeManager.h"
 #include"Sound.h"
 #include"RaySprite/RaySprite.h"
+#include "ParticleEmitter.h"
+#include"DebugUI.h"
+
+
 MummyStage::MummyStage()
 {
     papyrus_ = std::make_unique<Papyrus>();
@@ -17,6 +21,8 @@ MummyStage::MummyStage()
     }
 
     DummyMummy::SetTargetPosPtr(&player_->GetBodyWorldTransform().eTransform_.translate);
+
+    CreateParticle();
 }
 
 MummyStage::~MummyStage()
@@ -71,6 +77,9 @@ void MummyStage::Initialize() {
         dummyMummies_[i]->Update();
     }
 
+    //メジェド様は一回現れるのさ
+    isShowMedjed_ = false;
+
     isInitialize_ = true;
 
 }
@@ -96,36 +105,57 @@ void MummyStage::Update() {
 
     auto item = itemManager_->GetItem("GoldHeart");
 
-    if (itemManager_ && item && item->IsUsed()) {
+    if (itemManager_ && item && item->IsUsed() && item->IsGetAnimEnd()) {
         //メジェドあらわる
-       
+        if (!isShowMedjed_) {
+            Sound::PlaySE(SoundFactory::BELL);
+            isShowMedjed_ = true;
+            //壁の当たり判定に戻す
+            SetMummyTypeWall();
+        }
+
     };
 
 
-    if (mummy_->GetIsOpen()) {
-        //棺が空いたら
-        for (auto& dummyMummy : dummyMummies_) {
-            if (!dummyMummy->GetIsOpen()) {
-                dummyMummy->SetIsOpen(true);
-                dummyMummy->SetCollisionType();
+    if (isShowMedjed_) {
+        //メジェド様が現れたらパーティクルを出す
+        particleEmitter_->Update();
+    } else {
+        //メジェド様が現れてないときミイラが動き出す
+
+        if (mummy_->GetIsOpen()) {
+            //棺が空いたら
+            for (auto& dummyMummy : dummyMummies_) {
+                if (!dummyMummy->GetIsOpen()) {
+                    dummyMummy->SetIsOpen(true);
+                    dummyMummy->SetCollisionType(true);
+                }
             }
+        }
+
+        for (auto& dummyMummy : dummyMummies_) {
+            dummyMummy->Update();
         }
     }
 
-    for (auto& dummyMummy : dummyMummies_) {
-        dummyMummy->Update();
-    }
+
 
     papyrus_->Update();
     mummy_->Update();
     mummyRoom_->Update();
+
+#ifdef USE_IMGUI
+
+    DebugUI::CheckEmitter(particleEmitter_->GetEmitter());
+
+#endif // !USE_IMGUI
 
 }
 
 bool MummyStage::IsRayCastHit(RaySprite& raySprite)
 {
 
-    if (raySprite.Intersect( mummy_.get())) {
+    if (raySprite.Intersect(mummy_.get())) {
 
         if (InputBind::IsClick()) {
             //Openしていなかったらmummyをあける
@@ -154,7 +184,7 @@ void MummyStage::CheckCollision(CollisionManager& collisionManager, RaySprite& r
             Vector3 startPosOffset_ = { -0.3f,0.5f,0.01f };
 
             //心臓を使う
-            itemManager_->UseItemFromSlot(mummyPos+ startPosOffset_, mummyPos+ endPosOffset_, "GoldHeart"
+            itemManager_->UseItemFromSlot(mummyPos + startPosOffset_, mummyPos + endPosOffset_, "GoldHeart"
             );
         }
 
@@ -168,7 +198,7 @@ void MummyStage::CheckCollision(CollisionManager& collisionManager, RaySprite& r
 
     //ミイラの台も一緒に
     collisionManager.AddCollider(mummy_.get());
-    collisionManager.AddCollider(mummy_ ->GetPlatform());
+    collisionManager.AddCollider(mummy_->GetPlatform());
     collisionManager.AddCollider(papyrus_.get());
 
     //Waterのかべ
@@ -190,4 +220,35 @@ void MummyStage::Draw() {
     mummy_->Draw();
 
 
+}
+
+void MummyStage::CreateParticle()
+{
+
+    particleEmitter_ = std::make_unique<ParticleEmitter>();
+    particleEmitter_->Initialize();
+
+    particleEmitter_->SetName("medjedParticle");
+    auto& emitter0 = particleEmitter_->GetEmitter();
+    emitter0.count = 8;
+    emitter0.startColor = { 1.0f,0.75f,0.75f,1.0f };
+    emitter0.endColor = { 1.0f,0.75f,0.75f,0.0f };
+    emitter0.frequencyTime = 0.25f;
+    emitter0.lifeTime = 6.0f;
+    emitter0.blendMode = kBlendModeMultiply;
+    emitter0.movement = ParticleMovements::kParticleSphere;
+    emitter0.radius = 3.0f;
+    float pi = std::numbers::pi_v<float>;
+    emitter0.rotateAABB_ = { .min = {-pi ,-pi ,-pi } ,.max = { pi, pi, pi} };
+    emitter0.isLoop_ = true;
+    emitter0.accelerationField_.acceleration.y = 5.0f;
+    emitter0.accelerationField_.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,40.0f,4.0f} };
+}
+
+void MummyStage::SetMummyTypeWall()
+{      
+    //棺が空いたら
+    for (auto& dummyMummy : dummyMummies_) {
+        dummyMummy->SetCollisionType(false);
+    }
 }

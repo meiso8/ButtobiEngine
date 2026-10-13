@@ -63,7 +63,6 @@ protected:
     float aniTimer_ = 0.0f;
     std::string useStage_ = "unKnown";
     bool isUsed_ = false;
-
     //取得する
     bool isGet_ = false;
     bool isAnimEnd_ = false;

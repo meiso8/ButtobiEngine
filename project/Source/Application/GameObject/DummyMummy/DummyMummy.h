@@ -14,7 +14,7 @@ public:
     void Update();
     void Draw();
     void OnCollision(Collider* collider) override;
-    void SetCollisionType();
+    void SetCollisionType(const bool isMummy);
     void SetIsOpen(const bool& isOpen) {
         isOpen_ = isOpen;
     };
