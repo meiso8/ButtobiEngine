@@ -278,8 +278,13 @@ void ObjectManager::Save()
 
     for (auto& object : objects_) {
 
+        if (object->GetObjectType() == "Tree") {
+            //木だったら飛ばす
+            continue;
+        }
+
         // オブジェクト名の取得
-        std::string name = object->GetObjectName() + std::to_string(object->GetObjectID());
+        std::string name = object->GetObjectName();
 
         std::string meshName = "empty";
 

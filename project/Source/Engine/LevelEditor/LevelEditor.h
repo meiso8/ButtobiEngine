@@ -28,6 +28,7 @@ public:
         kPlayerSpawn,
         kEnemySpawn,
         kStageChangeTrigger,
+        kTree,
         kObjectTypeNames,
     };
 
@@ -65,7 +66,7 @@ public:
     void CreateStageChangeTriggers(std::vector<std::unique_ptr<StageChangeTrigger>>& triggers);
     /// @brief オブジェクト3dのみの生成関数
     /// @param object3ds 
-    void CreateObject3d(std::vector<std::unique_ptr<Object3d>>& object3ds);
+    void CreateObject3d(std::vector<std::unique_ptr<Object3d>>& object3ds,std::string objectType = "MESH");
 private:
     //マテリアル情報の読み込み
     void LoadMaterialData(LevelData::MaterialData& data, nlohmann::json& object);

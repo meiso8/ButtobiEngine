@@ -45,7 +45,7 @@ void SecondStoryScene::Initialize()
 {
 //カメラを初期化する
     camera_->Initialize();
-    camera_->SetTranslate({ 0.0f,1.586f,-1.268 });
+    camera_->SetTranslate({ 0.0f,1.586f,-1.268f });
     camera_->SetFovAngleY(0.4f);
 
     LevelEditor::GetInstance()->Load("SecondStoryScene_objectEditor", true);
