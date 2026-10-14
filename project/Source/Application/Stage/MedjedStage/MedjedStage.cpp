@@ -16,25 +16,18 @@ MedjedStage::MedjedStage()
 {
     backGround_ = std::make_unique<BackGround>();
     medjedManager_ = std::make_unique<MedjedManager>();
-    medjedManager_->SetTargetPos(&player_->GetEyeWorldPosition());
+    auto player = GetPlayer();
+    medjedManager_->SetTargetPos(&player->GetEyeWorldPosition());
     auto* enemy = medjedManager_->GetEnemy();
-    rhythmBullet_ = std::make_unique<RhythmBullet>(enemy, player_);
+    rhythmBullet_ = std::make_unique<RhythmBullet>(enemy, player);
     //パーティクルの作成
     CreateParticle();
     //HPゲージの追加
-    uiManager_->CreateHpGage(*medjedManager_->GetEnemyHPsPtr(),*player_->GetHpsPtr());
+    GetUIManager()->CreateHpGage(*medjedManager_->GetEnemyHPsPtr(), *player->GetHpsPtr());
 }
 
 void MedjedStage::Initialize()
 {
-
-    StageTransitionInitialize();
-    if (isInitialize_) {
-        //いまコンストラクタでやればいいのではとなっている
-        return;
-    }
-
-    isInitialize_ = true;
 
 }
 
@@ -59,11 +52,11 @@ void MedjedStage::StageTransitionInitialize()
     particleEmitters_[kMedjed_Particle]->GetEmitter().transform.Parent(medjedManager_->GetMedjedWorldTransform());
 
     //メモの生成
-    memoManager_->GenerateMemos({ TextureFactory::BOOK3 });
+    GetMemoManager()->GenerateMemos({TextureFactory::BOOK3});
     //アイテムの生成
-    itemManager_->GenerateItems({ "SunRod" });
+    GetItemManager()->GenerateItems({"SunRod"});
 
-    player_->Init({ 0.0f, 0.0f, 0.0f });
+    GetPlayer()->Init({0.0f, 0.0f, 0.0f});
 }
 
 void MedjedStage::Update()
@@ -91,7 +84,7 @@ void MedjedStage::Update()
 
 
         //ライト管理
-        lightingManager_->DirectionalLightUpdate();
+        GetLightManager()->DirectionalLightUpdate();
 
         if (GetEnemyApper()) {
             particleEmitters_[kSky_Particle]->GetEmitter().transform.Parent(medjedManager_->GetEnemyWorldTransform());
@@ -107,7 +100,7 @@ void MedjedStage::Update()
         }
 
 
-        uiManager_->UpdateGage();
+        GetUIManager()->UpdateGage();
 
     }
 
@@ -148,7 +141,7 @@ void MedjedStage::DrawSprite()
 {
     if (FindMedjed()) {
         //HPゲー描画
-        uiManager_->DrawHPGage();
+        GetUIManager()->DrawHPGage();
     }
 }
 

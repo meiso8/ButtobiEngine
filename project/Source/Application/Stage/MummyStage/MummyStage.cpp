@@ -20,7 +20,7 @@ MummyStage::MummyStage()
         dummyMummy = std::make_unique<DummyMummy>();
     }
 
-    DummyMummy::SetTargetPosPtr(&player_->GetBodyWorldTransform().eTransform_.translate);
+    DummyMummy::SetTargetPosPtr(&GetPlayer()->GetBodyWorldTransform().eTransform_.translate);
 
     CreateParticle();
 }
@@ -31,13 +31,6 @@ MummyStage::~MummyStage()
 
 
 void MummyStage::Initialize() {
-
-
-    StageTransitionInitialize();
-
-    if (isInitialize_) {
-        return;
-    }
 
 
     mummyRoom_->Init();
@@ -80,8 +73,6 @@ void MummyStage::Initialize() {
     //メジェド様は一回現れるのさ
     isShowMedjed_ = false;
 
-    isInitialize_ = true;
-
 }
 
 void MummyStage::StageTransitionInitialize()
@@ -92,20 +83,20 @@ void MummyStage::StageTransitionInitialize()
     //ステージのロード
     LoadAndCreateObject("MummyStage_objectEditor");
 
-    memoManager_->GenerateMemos({ TextureFactory::BOOK,TextureFactory::MEMO5 });
+    GetMemoManager()->GenerateMemos({ TextureFactory::BOOK,TextureFactory::MEMO5 });
     // ミイラ前に移動
-    player_->Init({ 0.0f, 0.0f, -5.0f });
+    GetPlayer()->Init({ 0.0f, 0.0f, -5.0f });
 
-    itemManager_->GenerateItems({});
+    GetItemManager()->GenerateItems({});
 
 }
 
 void MummyStage::Update() {
 
 
-    auto item = itemManager_->GetItem("GoldHeart");
+    auto item = GetItemManager()->GetItem("GoldHeart");
 
-    if (itemManager_ && item && item->IsUsed() && item->IsGetAnimEnd()) {
+    if (GetItemManager() && item && item->IsUsed() && item->IsGetAnimEnd()) {
         //メジェドあらわる
         if (!isShowMedjed_) {
             Sound::PlaySE(SoundFactory::BELL);
@@ -184,7 +175,7 @@ void MummyStage::CheckCollision(CollisionManager& collisionManager, RaySprite& r
             Vector3 startPosOffset_ = { -0.3f,0.5f,0.01f };
 
             //心臓を使う
-            itemManager_->UseItemFromSlot(mummyPos + startPosOffset_, mummyPos + endPosOffset_, "GoldHeart"
+            GetItemManager()->UseItemFromSlot(mummyPos + startPosOffset_, mummyPos + endPosOffset_, "GoldHeart"
             );
         }
 

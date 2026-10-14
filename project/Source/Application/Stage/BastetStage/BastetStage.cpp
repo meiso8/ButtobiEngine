@@ -10,14 +10,8 @@ BastetStage::BastetStage()
 void BastetStage::Initialize()
 {
 
-    StageTransitionInitialize();
-
-    if (isInitialize_) {
-        return;
-    }
-
     //ライトの初期化
-    lightingManager_->Initialize();
+    GetLightManager()->Initialize();
 
     //背景の初期化
     backGround_->Initialize();
@@ -27,7 +21,6 @@ void BastetStage::Initialize()
     //バステトの初期化
     bastet_->Initialize();
 
-    isInitialize_ = true;
 }
 
 void BastetStage::StageTransitionInitialize()
@@ -36,14 +29,14 @@ void BastetStage::StageTransitionInitialize()
     //ステージのロード
     LoadAndCreateObject("BastetStage_objectEditor");
     //メモの生成
-    memoManager_->GenerateMemos({ TextureFactory::BOOK6 });
+    GetMemoManager()->GenerateMemos({TextureFactory::BOOK6});
     //バステト　
     bastet_->LoadMap("BastetStage_BastetStep");
 
     //少し手前側に移動する
-    player_->Init({ 0.0f, 0.0f, -5.0f });
+    GetPlayer()->Init({0.0f, 0.0f, -5.0f});
     //なにも生成しない
-    itemManager_->GenerateItems({});
+    GetItemManager()->GenerateItems({});
 }
 
 void BastetStage::Update()

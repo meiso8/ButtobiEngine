@@ -12,11 +12,6 @@ WaterStage::WaterStage()
 
 void WaterStage::Initialize()
 {
-    StageTransitionInitialize();
-
-    if (isInitialize_) {
-        return;
-    }
     water_->Initialize();
 
     papyrusWall_->Init();
@@ -24,10 +19,6 @@ void WaterStage::Initialize()
     blockMap_->Initialize();
     blockMap_->Update();
 
-
-
-
-    isInitialize_ = true;
 }
 
 void WaterStage::StageTransitionInitialize()
@@ -35,11 +26,12 @@ void WaterStage::StageTransitionInitialize()
     //ステージのロード
     LoadAndCreateObject("WaterStage_objectEditor");
 
-    memoManager_->GenerateMemos({ TextureFactory::MEMO2, TextureFactory::BOOK2 });
-
-    player_->Init({ 0.0f,0.0f, -10.0f });
-
-    itemManager_->GenerateItems({});
+    //メモ管理
+    GetMemoManager()->GenerateMemos({ TextureFactory::MEMO2, TextureFactory::BOOK2 });
+    //プレイヤー管理
+    GetPlayer()->Init({ 0.0f,0.0f,-10.0f });
+    //アイテム管理　なにも生成しない
+    GetItemManager()->GenerateItems({});
 
     itemApper_ = false;
 }
@@ -54,9 +46,9 @@ void WaterStage::Update()
         water_->SetIsDrain(true);
         if (!itemApper_) {
             itemApper_ = true;
-            itemManager_->GenerateItems({ "GoldHeart" });
+            GetItemManager()->GenerateItems({ "GoldHeart" });
         }
-        
+
     }
 
     water_->Update();
@@ -73,7 +65,7 @@ void WaterStage::Draw()
     //オブジェクトの描画
     DrawObject();
     water_->Draw();
- 
+
 }
 
 void WaterStage::CheckCollision(CollisionManager& collisionManager, RaySprite& raySprite)
