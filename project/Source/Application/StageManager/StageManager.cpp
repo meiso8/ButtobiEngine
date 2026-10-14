@@ -85,7 +85,15 @@ void StageManager::TransitionStage()
         ParticleManager::ResetAll();
         
         currentStage_ = nextStage_;
-        currentStage_->Initialize();
+        //ステージのシーン遷移のみの初期化
+        currentStage_->StageTransitionInitialize();
+
+        if (!currentStage_->GetIsInitialize()) {
+            //ステージ遷移に関係のない純粋な初期化
+            currentStage_->Initialize();
+            currentStage_->SetIsInitialize(true);
+        }
+  
        
         nextStage_ = nullptr;
         LogFile::Log("Initialize NextScene");

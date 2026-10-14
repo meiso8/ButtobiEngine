@@ -14,11 +14,6 @@ MeltStage::MeltStage()
 
 void MeltStage::Initialize()
 {
-    StageTransitionInitialize();
-
-    if (isInitialize_) {
-        return;
-    }
     //背景の初期化
     backGround_->Initialize();
 
@@ -29,12 +24,9 @@ void MeltStage::Initialize()
     bastet_->Initialize();
    
     //空メモ
-    memoManager_->GenerateMemos({ });
+    GetMemoManager()->GenerateMemos({ });
 
     isFirstSound_ = false;
-
-
-    isInitialize_ = true;
 }
 
 void MeltStage::StageTransitionInitialize()
@@ -44,10 +36,10 @@ void MeltStage::StageTransitionInitialize()
     //ステージのロード
     LoadAndCreateObject("MeltStage_objectEditor");
     //少し手前側に移動する
-    player_->Init({ 0.0f, 0.0f, -5.0f });
+    GetPlayer()->Init({ 0.0f, 0.0f, -5.0f });
     bastet_->LoadMap("MeltStage_BastetStep");
     //アイテム生成する
-    itemManager_->GenerateItems({ "Glass" });
+    GetItemManager()->GenerateItems({ "Glass" });
     isGenerateScarab_ = false;
 
 }
@@ -68,10 +60,10 @@ void MeltStage::Update()
 
     }
 
+    auto ItemManager = GetItemManager();
+    auto item = ItemManager->GetItem("Glass");
 
-    auto item = itemManager_->GetItem("Glass");
-
-    if (itemManager_ && item && item->IsUsed() && item->GetMelt()) {
+    if (ItemManager && item && item->IsUsed() && item->GetMelt()) {
 
         if (!isGenerateScarab_) {
             //正解音が鳴る
@@ -81,9 +73,9 @@ void MeltStage::Update()
             }
       
             //スカラベを生成していないとき
-            itemManager_->GenerateItems({ "Scarab" });
+            ItemManager->GenerateItems({ "Scarab" });
 
-            std::shared_ptr scarab = itemManager_->GetItem("Scarab");
+            std::shared_ptr scarab = ItemManager->GetItem("Scarab");
             //ガラスが溶け終わったら位置を変更する
             Vector3 pos = item->GetWorldPosition() + Vector3{ 0.0f,0.125f,0.0f };
             scarab->SetTranslate(pos);
@@ -122,17 +114,17 @@ void MeltStage::CheckCollision(CollisionManager& collisionManager, RaySprite& ra
 
     //火のコライダーと当たっていたらがあるところで
 
-    for (auto& obj : objects_) {
+    for (auto& obj : GetObjectSet()) {
 
         if (obj->collider_->GetCollisionAttribute() == CollisionTag::GetTag("Fire")) {
             auto* collider = obj->collider_.get();
             if (raySprite.Intersect(collider)) {
                 Vector3 pos = obj->obj_->GetWorldTransform().GetWorldPosition();
-                Vector3 eyePos  = player_->GetEyeWorldTransform().GetWorldPosition();
+                Vector3 eyePos  = GetPlayer()->GetEyeWorldTransform().GetWorldPosition();
                 Vector3 offset = { 0.0f,0.75f,0.0f };
 
                 //ガラスを使う
-                itemManager_->UseItemFromSlot(eyePos, pos+offset, "Glass"
+                GetItemManager()->UseItemFromSlot(eyePos, pos+offset, "Glass"
                 );
                 break;
             }

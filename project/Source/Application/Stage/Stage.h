@@ -12,7 +12,7 @@ class RaySprite;
 class Camera;
 class Stage
 {
-protected:
+private:
     static Player* player_;
     static ItemManager* itemManager_;
     static MemoManager* memoManager_;
@@ -24,8 +24,18 @@ protected:
     // 1. トリガーを管理するリストを用意
     std::vector<std::unique_ptr<StageChangeTrigger>> stageTriggers_;
     bool isInitialize_ = false;
+
+
 protected:
     void LoadAndCreateObject(const std::string& fileName );
+
+    Player* GetPlayer() {return player_; };
+    ItemManager* GetItemManager() { return itemManager_; };
+    MemoManager* GetMemoManager() { return memoManager_; };
+    UIManager* GetUIManager() { return  uiManager_; };
+    LightingManager* GetLightManager() { return  lightingManager_; };
+    const   std::vector<std::unique_ptr<LevelEditor::ObjectSet>>& GetObjectSet() { return objects_; }
+
 
 public:
     Stage();
@@ -37,7 +47,11 @@ public:
     static void SetLightingManager(LightingManager* lightingManager) { lightingManager_ = lightingManager; }
 
     void ResetInitializeFlag();
-    
+    void SetIsInitialize(const bool flag) { isInitialize_ = flag; }
+    bool GetIsInitialize() { return isInitialize_; }
+
+
+
     void UpdateObject();
     void DrawObject();
     void AddObjectCollision(CollisionManager& collisionManager);

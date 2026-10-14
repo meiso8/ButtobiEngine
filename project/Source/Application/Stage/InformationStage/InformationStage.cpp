@@ -13,25 +13,17 @@ InformationStage::InformationStage()
     gateSensor_->SetParent(gate_->GetWorldTransform());
     //チケット番号システム
     passwordText_ = std::make_unique<PasswordText>();
-    passwordText_->SetCurPosPtr(uiManager_->GetCurPosPtr());
+    passwordText_->SetCurPosPtr(GetUIManager()->GetCurPosPtr());
 }
 
 void InformationStage::Initialize()
 {
-
-    StageTransitionInitialize();
-
-    if (isInitialize_) {
-        return;
-    }
     room_->Init();
     room_->Update();
 
     passwordText_->Initialize();
 
     isGenerateTicket_ = false;
-
-    isInitialize_ = true;
 
 }
 
@@ -41,14 +33,14 @@ void InformationStage::StageTransitionInitialize()
     //ステージのロード
     LoadAndCreateObject("Information_objectEditor");
 
-    memoManager_->GenerateMemos({ });
+    GetMemoManager()->GenerateMemos({});
     // ミイラ前に移動
-    player_->Init({ 3.25f, 0.0f, -3.25f });
+    GetPlayer()->Init({3.25f, 0.0f, -3.25f});
 
     gate_->Initialize();
     gateSensor_->Initialize();
 
-    itemManager_->GenerateItems({});
+    GetItemManager()->GenerateItems({});
 }
 
 void InformationStage::Update()
@@ -59,7 +51,8 @@ void InformationStage::Update()
     //セットした後毎フレーム当たり判定を戻す
     gateSensor_->Update();
 
-    auto item = itemManager_->GetItem("Ticket");
+    auto itemManager = GetItemManager();
+    auto item = itemManager->GetItem("Ticket");
 
     if (item&& item->IsGet()) {
         //もし、チケットを手に入れたら
@@ -74,7 +67,7 @@ void InformationStage::Update()
     if (passwordText_->GetIsUnLock()) {
         if (!isGenerateTicket_) {
             isGenerateTicket_ = true;
-            itemManager_->GenerateItems({ "Ticket" });
+            itemManager->GenerateItems({ "Ticket" });
         }
     }
 }
@@ -89,9 +82,9 @@ void InformationStage::CheckCollision(CollisionManager& collisionManager, RaySpr
 {
 
 
-    //火のコライダーと当たっていたらがあるところで
+    //チケット販売機と当たっていたらがあるところで
 
-    for (auto& obj : objects_) {
+    for (auto& obj : GetObjectSet()) {
 
         if (obj->collider_->GetCollisionAttribute() == CollisionTag::GetTag("TicketMac")) {
             auto* collider = obj->collider_.get();

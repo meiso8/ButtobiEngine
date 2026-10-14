@@ -11,12 +11,6 @@ AnubisStage::AnubisStage()
 
 void AnubisStage::Initialize()
 {
-
-    StageTransitionInitialize();
-
-    if (isInitialize_) {
-        return;
-    }
     anubisBlockMap_->Initialize();
     anubisBlockMap_->Update();
 
@@ -24,7 +18,6 @@ void AnubisStage::Initialize()
     fountain_->Initialize();
     thoth_->Initialize();
 
-    isInitialize_ = true;
 }
 
 void AnubisStage::StageTransitionInitialize()
@@ -33,12 +26,12 @@ void AnubisStage::StageTransitionInitialize()
     //ステージのロード
     LoadAndCreateObject("AnubisStage_objectEditor");
 
-    memoManager_->GenerateMemos({ TextureFactory::BOOK5 });
+    GetMemoManager()->GenerateMemos({TextureFactory::BOOK5});
 
     //少し手前側に移動する
-    player_->Init({ 0.0f, 0.0f, -10.0f });
+    GetPlayer()->Init({0.0f, 0.0f, -10.0f});
 
-    itemManager_->GenerateItems({});
+    GetItemManager()->GenerateItems({});
 }
 
 void AnubisStage::Update()
