@@ -48,6 +48,5 @@ void MummyRoom::Draw()
 {
     buildingPos_->SetLightMode(Object3d::kLightModeHalfL);
     buildingPos_->Draw();
-
-     fieldPoses_[Floor]->Draw();
+    fieldPoses_[Floor]->Draw();
 }

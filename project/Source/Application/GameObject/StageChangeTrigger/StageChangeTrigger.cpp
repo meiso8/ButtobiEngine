@@ -35,6 +35,8 @@ void StageChangeTrigger::Create(
 {
     //オブジェクトの初期化
     object_->Initialize();
+    //オブジェクト名
+    object_->SetObjectName(data.objectName);
     //オブジェクト名の設定
     object_->SetObjectType("StageChangeTrigger");
     //温度の設定
@@ -118,4 +120,9 @@ void StageChangeTrigger::OnCollision(Collider* collider)
         std::string name = "GO to" + object_->GetNextStageName() + "Stage";
         LogFile::Log(name);
     }
+}
+
+const std::string StageChangeTrigger::GetObjectString()
+{
+    return object_->GetObjectName();
 }

@@ -265,7 +265,6 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
         LevelData::ObjectData& objectData = levelData->objects.back();
         //マテリアル情報
         LoadMaterialData(objectData.materialData, object);
-
         //名前
         LoadName(objectData.objectName, object, "name");
         //ファイルパス
@@ -304,16 +303,14 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
         LevelData::StageChangeTriggerData& stageChangeTriggerData = levelData->stageChangeTriggers_.back();
         //マテリアル情報
         LoadMaterialData(stageChangeTriggerData.materialData, object);
-
         //次のステージ
         LoadName(stageChangeTriggerData.nextStageName, object, "nextStageName");
-
         //名前
         LoadName(stageChangeTriggerData.openFlag, object, "openFlagName");
-        //名前
+        //オブジェクト名
+        LoadName(stageChangeTriggerData.objectName, object, "name");
+        //ロック
         LoadBool(stageChangeTriggerData.isLocked, object, "isLoked");
-
-
         //ファイルパス
         LoadMeshData(stageChangeTriggerData.filePath, object);
         //トランスフォーム

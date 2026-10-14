@@ -57,6 +57,31 @@ void Stage::AddObjectCollision(CollisionManager& collisionManager)
 
 }
 
+Object3d* Stage::GetObj(const std::string& name)
+{
+    for (auto& obj : objects_) {
+        if (obj->obj_->GetObjectName() == name) {
+            if (obj->obj_ != nullptr) {
+                return obj->obj_.get();
+            }
+           
+        }
+   
+    }
+
+    return nullptr;
+}
+
+StageChangeTrigger* Stage::GetStageTrigger(const std::string& name)
+{
+    for (auto& stage : stageTriggers_) {
+        if (stage->GetObjectString() == name) {
+            return stage.get();
+        }
+   }
+    return nullptr;
+}
+
 Stage::Stage()
 {
 }
