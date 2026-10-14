@@ -987,6 +987,11 @@ void DebugUI::CheckObject3d(Object3d& object3d,const char* label)
 
     auto* objectName = object3d.GetObjectName().c_str();
     static char tagBuffer[128] = "";
+
+    auto* openFlagName = object3d.GetOpenFlagName().c_str();
+    static char openFlagBuffer[128] = "";
+
+
     static bool isInitialized = false;
 
     // 初回呼び出し時のみ、引数で渡された文字列をバッファにコピー
@@ -994,6 +999,14 @@ void DebugUI::CheckObject3d(Object3d& object3d,const char* label)
         // 安全のためにバッファサイズを超えないようにコピー
         strncpy(tagBuffer, objectName, sizeof(tagBuffer) - 1);
         tagBuffer[sizeof(tagBuffer) - 1] = '\0'; // 終端ヌル文字を保証
+
+        if (openFlagName != nullptr) {
+            // 安全のためにバッファサイズを超えないようにコピー
+            strncpy(openFlagBuffer, openFlagName, sizeof(openFlagBuffer) - 1);
+            openFlagBuffer[sizeof(openFlagBuffer) - 1] = '\0'; // 終端ヌル文字を保証
+
+        }
+
         isInitialized = true;
     }
 
@@ -1005,6 +1018,15 @@ void DebugUI::CheckObject3d(Object3d& object3d,const char* label)
         if (ImGui::InputText("ObjectName", tagBuffer, IM_ARRAYSIZE(tagBuffer))) {
             object3d.SetObjectName(tagBuffer);
         };
+
+        //開閉フラグ名を入力
+        if (ImGui::InputText("openFlagName", openFlagBuffer, IM_ARRAYSIZE(openFlagBuffer))) {
+            object3d.SetOpenFlagName(openFlagBuffer);
+        };
+        //ロックフラグ
+        bool isLocked = object3d.GetIsLocked();
+        ImGui::Checkbox("IsLocked", &isLocked);
+        object3d.SetIsLocked(isLocked);
 
         std::string currentObjectTypeName = object3d.GetObjectType();
 

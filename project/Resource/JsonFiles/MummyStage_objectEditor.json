@@ -9,14 +9,20 @@
                 "z": 1.0
             },
             "disabled": false,
+            "environmentCoefficient": 0.0,
             "file_name": "Plane",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
             "name": "Object611",
             "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 0.0,
             "temperature": 1.0,
             "textureHandle": 22,
             "transform": {
                 "rotate": {
-                    "x": 1.5700000524520874,
+                    "x": 1.5699999332427979,
                     "y": -0.0,
                     "z": 0.0
                 },
@@ -26,7 +32,7 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": 0.00418660044670105,
+                    "x": 0.0041866302490234375,
                     "y": 0.6974138617515564,
                     "z": 3.176121234893799
                 }
@@ -42,9 +48,15 @@
             },
             "directoryPath": "Resource/Models/DownStaris",
             "disabled": false,
+            "environmentCoefficient": 0.0,
             "file_name": "DownStairs.obj",
-            "name": "Object2",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
+            "name": "Object",
             "nextStageName": "WaterStage",
+            "openFlagName": "",
+            "shininess": 250.0,
             "temperature": 0.0,
             "transform": {
                 "rotate": {
@@ -67,17 +79,23 @@
         },
         {
             "color": {
-                "w": 1.0,
+                "w": 0.0,
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "Resource/Models/UpStairs",
             "disabled": false,
-            "file_name": "UpStairs.obj",
-            "name": "Object3",
+            "environmentCoefficient": 0.0,
+            "file_name": "Plane",
+            "glassFactor": 0.0,
+            "isLoked": true,
+            "lightMode": 2,
+            "name": "Object",
             "nextStageName": "MedjedStage",
-            "temperature": 0.0,
+            "openFlagName": "GoMedjedStage",
+            "shininess": 250.0,
+            "temperature": 0.5,
+            "textureHandle": 0,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -86,13 +104,13 @@
                 },
                 "scale": {
                     "x": 1.0,
-                    "y": 1.0,
+                    "y": 1.3730486631393433,
                     "z": 1.0
                 },
                 "translate": {
                     "x": -9.767820358276367,
-                    "y": -1.1920928955078125e-07,
-                    "z": 10.400885581970215
+                    "y": 1.6875855922698975,
+                    "z": 10.427775382995605
                 }
             },
             "type": "StageChangeTrigger"
@@ -104,16 +122,22 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "Resource/Models/Papyrus",
+            "directoryPath": "Resource/Models/Player",
             "disabled": false,
-            "file_name": "Papyrus.obj",
-            "name": "Papyrus4",
+            "environmentCoefficient": 0.0,
+            "file_name": "player.gltf",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
+            "name": "Player",
             "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 250.0,
             "temperature": 0.0,
             "transform": {
                 "rotate": {
                     "x": 0.0,
-                    "y": 0.0,
+                    "y": 0.6396712064743042,
                     "z": 0.0
                 },
                 "scale": {
@@ -122,41 +146,9 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": 0.0,
-                    "y": 2.0,
-                    "z": 5.0
-                }
-            },
-            "type": "EMPTY"
-        },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "directoryPath": "Resource/Models/player",
-            "disabled": false,
-            "file_name": "player.obj",
-            "name": "Player5",
-            "nextStageName": "",
-            "temperature": 0.0,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": -7.509794235229492,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": -8.663122177124023,
+                    "x": -10.75,
                     "y": 0.0,
-                    "z": 1.7097939252853394
+                    "z": 7.747879505157471
                 }
             },
             "type": "EMPTY"

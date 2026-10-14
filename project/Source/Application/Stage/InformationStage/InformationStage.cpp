@@ -1,6 +1,7 @@
 #include "InformationStage.h"
 
 #include"InputBind.h"
+#include"FlagManager/FlagManager.h"
 
 InformationStage::InformationStage()
 {
@@ -57,6 +58,7 @@ void InformationStage::Update()
     if (item&& item->IsGet()) {
         //もし、チケットを手に入れたら
         gate_->SetCanOpen(true);
+        FlagManager::SetFlag("GetTicket");
     }
 
     gate_->Update();
@@ -68,6 +70,7 @@ void InformationStage::Update()
         if (!isGenerateTicket_) {
             isGenerateTicket_ = true;
             itemManager->GenerateItems({ "Ticket" });
+            FlagManager::SetFlag("GenerateTicket");
         }
     }
 }

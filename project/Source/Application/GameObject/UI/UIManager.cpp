@@ -3,6 +3,7 @@
 #include"ItemManager/ItemManager.h"
 #include"Input.h"
 #include"EyeCatch/EyeCatch.h"
+
 UIManager::UIManager()
 {
     effectSprite_ = std::make_unique<Sprite>();
@@ -50,10 +51,6 @@ void UIManager::UpdateGage()
 
 void UIManager::UpdatePauseScreen()
 {
-
-    //太陽円盤によってサーモ可能かどうか
-    buttonSprite_->SetIsGetThermography(ItemManager::IsGetSolarDisc());
-
     buttonSprite_->Update();
 
     if (pauseScreen_->GetIsActive()) {

@@ -6,6 +6,7 @@
 #include"DebugUI.h"
 #include"SoundFactory.h"
 
+
 const bool MedjedStage::IsClear()
 {
     //メジェド様が死亡

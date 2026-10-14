@@ -1,5 +1,6 @@
 #include "AnubisStage.h"
 #include"DebugUI.h"
+#include"FlagManager/FlagManager.h"
 
 AnubisStage::AnubisStage()
 {
@@ -43,6 +44,7 @@ void AnubisStage::Update()
         //なぞ解きをクリアしたらトートが出てくる
         if (!thoth_->GetIsActive()) {
             thoth_->SetIsActive(true);
+            FlagManager::SetFlag("ClearAnubisStage");
         }
     }
 

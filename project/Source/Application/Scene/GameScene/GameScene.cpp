@@ -17,6 +17,7 @@
 
 #include"SceneManager.h"
 
+#include"FlagManager/FlagManager.h"
 
 #include"../Stage/InformationStage/InformationStage.h"
 #include"../Stage/MummyStage/MummyStage.h"
@@ -28,6 +29,7 @@
 #include"../Stage/BastetStage/BastetStage.h"
 #include"ObjectManager/ObjectManager.h"
 #include"RaySprite/RaySprite.h"
+#include"FlagManager/FlagManager.h"
 
 GameScene::GameScene()
 {
@@ -97,6 +99,9 @@ void GameScene::Initialize() {
 
     //レイスプライトクラスの初期化
     raySprite_->Initialize();
+
+    //全ての初期化
+    FlagManager::InitializeFlags();
 }
 
 void GameScene::Update() {
@@ -217,9 +222,10 @@ void GameScene::Debug()
     DebugUI::CheckStageManager();
 
     //太陽円盤取得フラグ
-    bool isGetDisc = ItemManager::IsGetSolarDisc();
+    bool isGetDisc = FlagManager::HasFlag("GetSolarDisc");
     ImGui::Checkbox("isGetDisc", &isGetDisc);
-    ItemManager::SetIsGetSolarDisc(isGetDisc);
+    FlagManager::SetFlag("GetSolarDisc", isGetDisc);
+
     //コライダーの描画フラグ
     bool isColliderDraw =collisionManager_->GetIsDraw();
     ImGui::Checkbox("isColliderDraw", &isColliderDraw);
@@ -229,6 +235,7 @@ void GameScene::Debug()
     //プレイヤーのデバッグ
     player_->Debug();
 
+    FlagManager::DebugFlags();
 
 #endif // !USE_IMGUI
 

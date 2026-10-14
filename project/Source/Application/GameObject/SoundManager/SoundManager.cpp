@@ -7,6 +7,7 @@
 #include"InputBind.h"
 #include"../StageManager/StageManager.h"
 #include "ItemManager/ItemManager.h"
+#include"FlagManager/FlagManager.h"
 
 const RaySprite* SoundManager::raySprite_ = nullptr;
 CollisionManager* SoundManager::collisionManager_ = nullptr;
@@ -63,12 +64,14 @@ void SoundManager::Update()
 {
     //サーモグラフィー中はbgmを一律小さくする
 
-    if (ItemManager::IsGetSolarDisc() && InputBind::IsClickR()) {
+    bool hasSolarDisc = FlagManager::HasFlag("GetSolarDisc");
+
+    if (hasSolarDisc && InputBind::IsClickR()) {
         //サーモグラフィ
         Sound::PlayOriginSE(SoundFactory::Thermography, 2.0f);
     }
 
-    if (ItemManager::IsGetSolarDisc() && InputBind::IsClickPressR()) {
+    if (hasSolarDisc && InputBind::IsClickPressR()) {
         Sound::PlayLoopSE(SoundFactory::LookFor, 0.25f);
         bgmVolFactor_ = 0.0f;
 

@@ -112,6 +112,9 @@ void LevelEditor::CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects)
         newObjctData->obj_->SetLightMode(static_cast<Object3d::LightMode>(objectData.materialData.lightMode));
 
         newObjctData->obj_->SetObjectName(objectData.objectName);
+
+        //ロックされているかの情報は受け渡さない
+
         newObjctData->obj_->RegisterObject();
 
         auto& transform = newObjctData->obj_->GetWorldTransform();
@@ -199,6 +202,9 @@ void LevelEditor::CreateObject3d(std::vector<std::unique_ptr<Object3d>>& object3
         newObjctData->SetLightMode(static_cast<Object3d::LightMode>(objectData.materialData.lightMode));
 
         newObjctData->SetObjectName(objectData.objectName);
+
+        //ロックされているかなどの情報を渡さない。
+
         newObjctData->RegisterObject();
 
         auto& transform = newObjctData->GetWorldTransform();
@@ -301,6 +307,13 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
 
         //次のステージ
         LoadName(stageChangeTriggerData.nextStageName, object, "nextStageName");
+
+        //名前
+        LoadName(stageChangeTriggerData.openFlag, object, "openFlagName");
+        //名前
+        LoadBool(stageChangeTriggerData.isLocked, object, "isLoked");
+
+
         //ファイルパス
         LoadMeshData(stageChangeTriggerData.filePath, object);
         //トランスフォーム
@@ -353,6 +366,15 @@ void LevelEditor::LoadFloat(float& value, nlohmann::json& object, const std::str
         value = object[name];
     } else {
         value = 0.0f;
+    }
+}
+
+void LevelEditor::LoadBool(bool& value, nlohmann::json& object, const std::string& name)
+{
+    if (object.contains(name)) {
+        value = object[name];
+    } else {
+        value = false;
     }
 }
 

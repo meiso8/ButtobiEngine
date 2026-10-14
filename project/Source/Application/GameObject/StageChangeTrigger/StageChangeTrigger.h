@@ -14,6 +14,7 @@ public:
     // コライダーが何かに当たった時に呼ばれる
     void OnCollision(Collider* collider) override;
 private:
-    std::unique_ptr<Object3d> object_ = nullptr; 
+    std::unique_ptr<Object3d> object_ = nullptr;
+
 };
 

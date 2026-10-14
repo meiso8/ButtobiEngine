@@ -9,13 +9,6 @@ public:
     /// @brief アイテムスロット取得関数
     /// @return アイテムスロット
     ItemSlot& GetItemSlot() { return itemSlot_; }
-
-    /// @brief 太陽円盤取得フラグの取得静的関数
-    /// @return 太陽円盤取得フラグ
-    static bool IsGetSolarDisc() { return isGetSolarDisc_; }
-    /// @brief 太陽円盤取得フラグのセット
-    /// @param flag フラグをセット
-    static void SetIsGetSolarDisc(const bool flag) { isGetSolarDisc_ = flag; }
     ~ItemManager();
     /// @brief コンストラクタ
     ItemManager();
@@ -63,8 +56,6 @@ private:
     std::map<std::string, std::shared_ptr<Item>> items_;
     //アイテムスロットクラス
     ItemSlot itemSlot_{};
-    /// @brief 太陽円盤取得フラグの静的メンバ変数
-    static bool isGetSolarDisc_;
     //プレイヤーの手の行列
     const Matrix4x4* playerHandMatrix_ = nullptr;
 };

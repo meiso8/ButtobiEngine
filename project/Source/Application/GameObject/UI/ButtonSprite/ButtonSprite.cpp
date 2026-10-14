@@ -7,6 +7,7 @@
 #include"Sound.h"
 //ステージ情報が欲しいよね
 #include"../StageManager/StageManager.h"
+#include"FlagManager/FlagManager.h"
 
 namespace {
     const float kTimer_ = 10.0f;
@@ -58,7 +59,6 @@ ButtonSprite::~ButtonSprite()
 
 void ButtonSprite::Initialize()
 {
-    isGetThermography_ = false;
 
     isGetThermographyFirst_ = false;
     
@@ -73,7 +73,7 @@ void ButtonSprite::Initialize()
 
 void ButtonSprite::Update()
 {
-    if (isGetThermography_) {
+    if (FlagManager::HasFlag("GetSolarDisc")) {
 
         if (InputBind::IsClickR()) {
             if (!isGetThermographyFirst_) {
@@ -167,7 +167,7 @@ void ButtonSprite::Draw()
         sprites_[i]->Draw();
     }
 
-    if (isGetThermography_) {
+    if (FlagManager::HasFlag("GetSolarDisc")) {
 
 
         if (!isGetThermographyFirst_) {

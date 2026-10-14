@@ -22,13 +22,12 @@ public:
     void Initialize();
     void Update();
     void Draw();
-    void SetIsGetThermography(const bool flag) { isGetThermography_ = flag; }
+
     bool IsThermographyCommandFirst() { return isGetThermographyFirst_; }
 private:
     std::array<std::unique_ptr<Sprite>,kButtonMaxCount> sprites_;
     std::unique_ptr<Sprite> thermoGraphySprite_ = nullptr;
     bool isGetThermographyFirst_ = false;
-    bool isGetThermography_ = false;
     bool isInformationStage_ = false;
     bool isPreInformationStage_ = false;
     float scaleTimerDuration_ = 0.0f;

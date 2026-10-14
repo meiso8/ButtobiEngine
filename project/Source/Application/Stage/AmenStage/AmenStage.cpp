@@ -3,6 +3,7 @@
 #include"SoundManager/SoundManager.h"
 #include"Sound.h"
 #include"../StageManager/StageManager.h"
+#include"FlagManager/FlagManager.h"
 
 AmenStage::AmenStage()
 {
@@ -52,6 +53,7 @@ void AmenStage::Update()
     if (!isGenerateItem_ && slidePuzzleSystem_->GetIsGameEnd()) {
         //太陽円盤を生成する
         GetItemManager()->GenerateItems({"SolarDisc"});
+        FlagManager::SetFlag("ClearAmenPuzzle");
         isGenerateItem_ = true;
     }
 

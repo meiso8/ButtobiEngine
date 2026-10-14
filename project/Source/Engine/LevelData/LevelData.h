@@ -57,6 +57,8 @@ struct LevelData {
         MeshFileData filePath;
         EulerTransform transform;
         ColliderData colliderData;
+        std::string openFlag;
+        bool isLocked;
     };
 
     std::vector<ObjectData>objects;

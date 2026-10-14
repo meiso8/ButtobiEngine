@@ -9,7 +9,7 @@
 #include "ParticleEmitter.h"
 #include"DebugUI.h"
 
-
+#include"FlagManager/FlagManager.h"
 MummyStage::MummyStage()
 {
     papyrus_ = std::make_unique<Papyrus>();
@@ -103,14 +103,17 @@ void MummyStage::Update() {
             isShowMedjed_ = true;
             //壁の当たり判定に戻す
             SetMummyTypeWall();
+            FlagManager::SetFlag("ShowMedjed");
         }
 
     };
 
-
     if (isShowMedjed_) {
         //メジェド様が現れたらパーティクルを出す
         particleEmitter_->Update();
+        //メジェドが現れてメジェドステージに行ったらメジェドステージに行けるフラグを真にする
+        FlagManager::SetFlag("GoMedjedStage");
+
     } else {
         //メジェド様が現れてないときミイラが動き出す
 
@@ -128,8 +131,6 @@ void MummyStage::Update() {
             dummyMummy->Update();
         }
     }
-
-
 
     papyrus_->Update();
     mummy_->Update();

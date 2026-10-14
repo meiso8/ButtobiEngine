@@ -94,7 +94,6 @@ void StageManager::TransitionStage()
             currentStage_->SetIsInitialize(true);
         }
   
-       
         nextStage_ = nullptr;
         LogFile::Log("Initialize NextScene");
     }
