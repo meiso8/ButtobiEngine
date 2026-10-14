@@ -12,15 +12,12 @@ class Field
 private:
     std::unique_ptr <Object3d> object3d_ = nullptr;
     std::unique_ptr<Primitive> circleMesh_ = nullptr;
-    Circle& GetCircle() {
-        return circle_;
-    };
-
+    Circle circle_;
+    float uvTranslate_ = 0.0f;
 public:
     Field();
     void Init();
     void Update();
     void Draw();
-    Circle circle_;
-    float uvTranslate_ = 0.0f;
+
 };

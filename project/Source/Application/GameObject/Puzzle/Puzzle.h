@@ -4,13 +4,14 @@
 #include"Sprite.h"
 class Puzzle
 {
-public:
+private:
+
     //水平
     int horizontal_ = 4;
     //垂直
     int vertical_ = 4;
     int maxArrayNum_ = vertical_ * horizontal_;
-private:
+
     std::vector<int>panel_;
     //画像
     std::vector< std::unique_ptr<Sprite>>sprites_;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Medjed/Enemy.h"
+#include "Medjed/Enemy/Enemy.h"
 #include"Player/Player.h"
 #include<memory>
 #include "ParticleEmitter.h"

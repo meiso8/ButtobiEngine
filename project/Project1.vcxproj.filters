@@ -63,7 +63,7 @@
     <ClCompile Include="Source\Application\GameObject\Item\GoldHeart\GoldHeart.cpp" />
     <ClCompile Include="Source\Application\GameObject\Item\Crowbar\Crowbar.cpp" />
     <ClCompile Include="Source\Application\GameObject\ItemSlot\ItemSlot.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Medjed\MedjedManager.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MedjedManager\MedjedManager.cpp" />
     <ClCompile Include="Source\Engine\FreeTypeManager\FreeTypeManager.cpp" />
     <ClCompile Include="Source\Engine\Math\Structs\Line.cpp" />
     <ClCompile Include="Source\Application\Factory\ModelFactory\ModelFactory.cpp" />
@@ -83,15 +83,15 @@
     <ClCompile Include="Source\Engine\TimeManager\TimeManager.cpp" />
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\Application\GameObject\Building\Building.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Medjed\DummyMedjed.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Medjed\Medjed.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Medjed\DummyMedjed\DummyMedjed.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Medjed\Medjed\Medjed.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\HPIcon.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\HPGage.cpp" />
     <ClCompile Include="Source\Application\GameObject\Bullet\ShotBulletManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\Bullet\BulletManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\Bullet\Bullet.cpp" />
     <ClCompile Include="Source\Application\Scene\ResultScene\ResultScene.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Medjed\Enemy.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Medjed\Enemy\Enemy.cpp" />
     <ClCompile Include="Source\Application\GameObject\Field\Field.cpp" />
     <ClCompile Include="Source\Application\GameObject\Player\Player.cpp" />
     <ClCompile Include="Source\Application\System\Collider.cpp" />
@@ -193,6 +193,7 @@
     <ClCompile Include="Source\Application\GameObject\UI\Skip\Skip.cpp" />
     <ClCompile Include="Source\Application\Scene\SecondStoryScene\SecondStoryScene.cpp" />
     <ClCompile Include="Source\Application\System\TreeGenerator\TreeGenerator.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Medjed\FirstMedjed\FirstMedjed.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\ComputeShaderPSO\ComputeShaderPSO.h" />
@@ -259,7 +260,7 @@
     <ClInclude Include="Source\Application\GameObject\Item\GoldHeart\GoldHeart.h" />
     <ClInclude Include="Source\Application\GameObject\Item\Crowbar\Crowbar.h" />
     <ClInclude Include="Source\Application\GameObject\ItemSlot\ItemSlot.h" />
-    <ClInclude Include="Source\Application\GameObject\Medjed\MedjedManager.h" />
+    <ClInclude Include="Source\Application\GameObject\MedjedManager\MedjedManager.h" />
     <ClInclude Include="Source\Application\Factory\ModelFactory\ModelFactory.h" />
     <ClInclude Include="Source\Engine\FreeTypeManager\FreeTypeManager.h" />
     <ClInclude Include="Source\Engine\Mesh\Model\SkinningModel.h" />
@@ -283,15 +284,15 @@
     <ClInclude Include="Source\Engine\TimeManager\TimeManager.h" />
     <ClInclude Include="Source\Game.h" />
     <ClInclude Include="Source\Application\GameObject\Building\Building.h" />
-    <ClInclude Include="Source\Application\GameObject\Medjed\DummyMedjed.h" />
-    <ClInclude Include="Source\Application\GameObject\Medjed\Medjed.h" />
+    <ClInclude Include="Source\Application\GameObject\Medjed\DummyMedjed\DummyMedjed.h" />
+    <ClInclude Include="Source\Application\GameObject\Medjed\Medjed\Medjed.h" />
     <ClInclude Include="Source\Application\GameObject\UI\HPIcon.h" />
     <ClInclude Include="Source\Application\GameObject\UI\HPGage.h" />
     <ClInclude Include="Source\Application\GameObject\Bullet\ShotBulletManager.h" />
     <ClInclude Include="Source\Application\GameObject\Bullet\BulletManager.h" />
     <ClInclude Include="Source\Application\GameObject\Bullet\Bullet.h" />
     <ClInclude Include="Source\Application\Scene\ResultScene\ResultScene.h" />
-    <ClInclude Include="Source\Application\GameObject\Medjed\Enemy.h" />
+    <ClInclude Include="Source\Application\GameObject\Medjed\Enemy\Enemy.h" />
     <ClInclude Include="Source\Application\GameObject\CharacterState.h" />
     <ClInclude Include="Source\Application\GameObject\Field\Field.h" />
     <ClInclude Include="Source\Application\GameObject\Player\Player.h" />
@@ -417,6 +418,7 @@
     <ClInclude Include="Source\Application\GameObject\UI\Skip\Skip.h" />
     <ClInclude Include="Source\Application\Scene\SecondStoryScene\SecondStoryScene.h" />
     <ClInclude Include="Source\Application\System\TreeGenerator\TreeGenerator.h" />
+    <ClInclude Include="Source\Application\GameObject\Medjed\FirstMedjed\FirstMedjed.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png" />
