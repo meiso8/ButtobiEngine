@@ -16,6 +16,8 @@ MummyStage::MummyStage()
     mummy_ = std::make_unique<Mummy>();
     mummyRoom_ = std::make_unique<MummyRoom>();
 
+    firstMedjed_ = std::make_unique<FirstMedjed>();
+
     for (auto& dummyMummy : dummyMummies_) {
         dummyMummy = std::make_unique<DummyMummy>();
     }
@@ -38,7 +40,7 @@ void MummyStage::Initialize() {
 
     papyrus_->Initialize();
     mummy_->Initialize();
-
+    firstMedjed_->Initialize();
 
 
     const float distance = 7.0f;
@@ -70,9 +72,6 @@ void MummyStage::Initialize() {
         dummyMummies_[i]->Update();
     }
 
-    //メジェド様は一回現れるのさ
-    isShowMedjed_ = false;
-
 }
 
 void MummyStage::StageTransitionInitialize()
@@ -97,23 +96,42 @@ void MummyStage::Update() {
     auto item = GetItemManager()->GetItem("GoldHeart");
 
     if (GetItemManager() && item && item->IsUsed() && item->IsGetAnimEnd()) {
-        //メジェドあらわる
-        if (!isShowMedjed_) {
+
+        if (!firstMedjed_->GetIsAppear()) {
             Sound::PlaySE(SoundFactory::BELL);
-            isShowMedjed_ = true;
             //壁の当たり判定に戻す
             SetMummyTypeWall();
-            FlagManager::SetFlag("ShowMedjed");
-        }
+            //メジェドあらわる
+            firstMedjed_->SetIsAppear(true);
 
+            auto* stageTrigger = GetStageTrigger("GoToMedjedStage");
+
+            if (stageTrigger) {
+
+                Vector3 endPos = stageTrigger->GetWorldPos();
+                endPos.y = 0.0f;
+
+                const Vector3 mummyPos = mummy_->GetWorldTransform().GetWorldPosition();
+                Vector3 startPosOffset = { 0.0f,0.0f,3.0f };
+
+                Vector3 startPos = mummyPos + startPosOffset;
+                startPos.y = 0.0f;
+
+                firstMedjed_->SetStartPosAndEndPos(startPos, endPos);
+            }
+
+            FlagManager::SetFlag("ShowMedjed");
+            particleEmitter_->Emit();
+        }
     };
 
-    if (isShowMedjed_) {
+    if (firstMedjed_->GetIsAppear()) {
         //メジェド様が現れたらパーティクルを出す
         particleEmitter_->Update();
         //メジェドが現れてメジェドステージに行ったらメジェドステージに行けるフラグを真にする
         FlagManager::SetFlag("GoMedjedStage");
-
+        //メジェド様の更新処理
+        firstMedjed_->Update();
     } else {
         //メジェド様が現れてないときミイラが動き出す
 
@@ -135,7 +153,7 @@ void MummyStage::Update() {
     papyrus_->Update();
     mummy_->Update();
     mummyRoom_->Update();
-
+ 
 #ifdef USE_IMGUI
 
     DebugUI::CheckEmitter(particleEmitter_->GetEmitter());
@@ -172,11 +190,14 @@ void MummyStage::CheckCollision(CollisionManager& collisionManager, RaySprite& r
         //オープンし終わったら
         if (mummy_->GetIsOpenEnd()) {
             const Vector3 mummyPos = mummy_->GetWorldTransform().GetWorldPosition();
-            Vector3 endPosOffset_ = { -0.3f,0.3f,0.01f };
-            Vector3 startPosOffset_ = { -0.3f,0.5f,0.01f };
+            Vector3 endPosOffset = { -0.3f,0.3f,0.01f };
+            Vector3 startPosOffset = { -0.3f,0.5f,0.01f };
 
             //心臓を使う
-            GetItemManager()->UseItemFromSlot(mummyPos + startPosOffset_, mummyPos + endPosOffset_, "GoldHeart"
+            GetItemManager()->UseItemFromSlot(
+                mummyPos + startPosOffset,
+                mummyPos + endPosOffset,
+                "GoldHeart"
             );
         }
 
@@ -211,6 +232,7 @@ void MummyStage::Draw() {
 
     mummy_->Draw();
 
+    firstMedjed_->Draw();
 
 }
 
@@ -232,13 +254,13 @@ void MummyStage::CreateParticle()
     emitter0.radius = 3.0f;
     float pi = std::numbers::pi_v<float>;
     emitter0.rotateAABB_ = { .min = {-pi ,-pi ,-pi } ,.max = { pi, pi, pi} };
-    emitter0.isLoop_ = true;
+    emitter0.isLoop_ = false;
     emitter0.accelerationField_.acceleration.y = 5.0f;
     emitter0.accelerationField_.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,40.0f,4.0f} };
 }
 
 void MummyStage::SetMummyTypeWall()
-{      
+{
     //棺が空いたら
     for (auto& dummyMummy : dummyMummies_) {
         dummyMummy->SetCollisionType(false);

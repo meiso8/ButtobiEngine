@@ -58,6 +58,7 @@ struct LevelData {
         EulerTransform transform;
         ColliderData colliderData;
         std::string openFlag;
+        std::string objectName;
         bool isLocked;
     };
 

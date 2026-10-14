@@ -35,8 +35,8 @@ protected:
     UIManager* GetUIManager() { return  uiManager_; };
     LightingManager* GetLightManager() { return  lightingManager_; };
     const   std::vector<std::unique_ptr<LevelEditor::ObjectSet>>& GetObjectSet() { return objects_; }
-
-
+    Object3d* GetObj(const std::string& name);
+    StageChangeTrigger* GetStageTrigger(const std::string& name);
 public:
     Stage();
    virtual ~Stage();
