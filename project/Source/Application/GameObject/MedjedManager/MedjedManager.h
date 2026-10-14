@@ -1,9 +1,9 @@
 #pragma once
-#include"DummyMedjed.h"
+#include"Medjed/DummyMedjed/DummyMedjed.h"
 #include<memory>
 #include <vector>
-#include "Medjed.h"
-#include"Enemy.h"
+#include "Medjed/Medjed/Medjed.h"
+#include"Medjed/Enemy/Enemy.h"
 class Camera;
 class RaySprite;
 

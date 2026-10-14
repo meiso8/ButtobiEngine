@@ -7,7 +7,7 @@
 #include"SkinningModel.h"
 #include"Model.h"
 #include"Collider.h"
-#include"DummyMedjed.h"
+#include"../DummyMedjed/DummyMedjed.h"
 
 class Medjed :public DummyMedjed
 {

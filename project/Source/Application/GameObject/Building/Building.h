@@ -48,7 +48,7 @@ public:
     virtual void SetWallPos();
     virtual void Update();
     virtual void Draw();
-    std::unordered_map<AABBType, std::unique_ptr <FieldCollider>>& GetFieldPoses() { return fieldPoses_; };
+  const  std::unordered_map<AABBType, std::unique_ptr <FieldCollider>>& GetFieldPoses() { return fieldPoses_; };
 private:
     //壁の厚みを設定する定数
     const float kWallWidth_ = 30.0f;

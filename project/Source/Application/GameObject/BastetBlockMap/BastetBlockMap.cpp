@@ -35,23 +35,6 @@ BastetBlockMap::BastetBlockMap()
         blocks_[i]->SetColor(colorMap_[static_cast<BlockHz>(i)]);
     }
 
-    enum BlockHz {
-        kC,
-        kC_S,
-        kD,
-        kD_S,
-        kE,
-        kF,
-        kF_S,
-        kG,
-        kG_S,
-        kA,
-        kA_S,
-        kB,
-        kC_H,
-        kMaxHz,
-    };
-
     whiteMap_[0] = blocks_[kC].get();
     whiteMap_[1] = blocks_[kD].get();
     whiteMap_[2] = blocks_[kE].get();
@@ -144,7 +127,7 @@ void BastetBlockMap::Update()
 #ifdef USE_IMGUI
 
     ImGui::Begin("Debug");
-    if (ImGui::Button("AnubisBlockClear")) {
+    if (ImGui::Button("BastetBlockClear")) {
         ClearSet();
     }
     ImGui::End();

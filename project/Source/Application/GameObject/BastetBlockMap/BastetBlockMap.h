@@ -32,7 +32,7 @@ public:
     void ResetPushMap();
     void RayCastHit(RaySprite& raySprite);
     void ClearSet();
-    std::array< std::unique_ptr<Block>, kMaxHz>& GetMap() { return blocks_; }
+   const std::array< std::unique_ptr<Block>, kMaxHz>& GetMap() { return blocks_; }
 private:
     std::array<bool, kMaxHz>isPushs_;
     std::map<BlockHz, Vector4>colorMap_;

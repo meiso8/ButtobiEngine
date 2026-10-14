@@ -1,6 +1,6 @@
 #include "ShotBulletManager.h"
 
-#include "Medjed/Enemy.h"
+#include "Medjed/Enemy/Enemy.h"
 #include "BulletManager.h"
 
 #include"Sound.h"

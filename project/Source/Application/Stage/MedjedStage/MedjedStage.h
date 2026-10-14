@@ -1,6 +1,6 @@
 #pragma once
 #include"../Stage/Stage.h"
-#include"Medjed/MedjedManager.h"
+#include"MedjedManager/MedjedManager.h"
 #include"Bullet/RhythmBullet.h"
 #include"Player/Player.h"
 #include"CollisionManager.h"
