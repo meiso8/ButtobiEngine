@@ -1,5 +1,6 @@
 #include"BastetStage.h"
 #include "ParticleEmitter.h"
+#include"FlagManager/FlagManager.h"
 BastetStage::BastetStage()
 {
     backGround_ = std::make_unique<BackGround>();
@@ -48,7 +49,7 @@ void BastetStage::Update()
     bastet_->Update();
 
     if (bastetBlockMap_->IsClear()) {
-
+        FlagManager::SetFlag("ClearBastetBlockMap");
     }
 
 }

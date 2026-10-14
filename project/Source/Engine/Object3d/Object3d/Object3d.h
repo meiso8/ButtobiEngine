@@ -78,6 +78,9 @@ protected:
     std::string objectType_ = "EMPTY";
     //移動先シーン名
     std::string nextStageName_ = "";
+    //開くフラグ銘
+    std::string openFlagName_ = "";
+    bool isLocked_ = false;
 
     // ==============マテリアル==================
     //マテリアルに関しては継承先で色々と変えるためどうするか迷う。
@@ -143,6 +146,14 @@ public:
     // ==============次のステージをセットする==================
     const std::string& GetNextStageName() { return nextStageName_; };
     void SetNextStageName(const std::string& stageName) { nextStageName_ = stageName; }
+
+    // ==============開くフラグ銘==================
+    const std::string& GetOpenFlagName() { return openFlagName_; };
+    void SetOpenFlagName(const std::string& flagName) { openFlagName_ = flagName; }
+       // ==============ロックフラグ==================/
+    void SetIsLocked(const bool isLocked) { isLocked_ = isLocked; };
+    bool GetIsLocked() { return isLocked_; }
+
 
     // ==============ID情報==================
     void SetObjectID(uint32_t id) { if (idResource_.data) { idResource_.data->id = id; } }

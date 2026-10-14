@@ -6,6 +6,7 @@
 #include"Model.h"
 #include"DebugUI.h"
 #include"ObjectManager/ObjectManager.h"
+#include"FlagManager/FlagManager.h"
 
 StageChangeTrigger::StageChangeTrigger()
 {
@@ -63,6 +64,9 @@ void StageChangeTrigger::Create(
 
     //ステージ名の設定
     object_ -> SetNextStageName(data.nextStageName);
+    //シーン遷移のみ必要な情報を入れるため、この設計をどうするか考える
+    object_->SetOpenFlagName(data.openFlag);
+    object_->SetIsLocked(data.isLocked);
 
     //トランスフォームのセット
     object_->SetTransform(data.transform);
@@ -79,6 +83,14 @@ void StageChangeTrigger::Create(
 
 void StageChangeTrigger::Update()
 {
+
+    if (object_->GetIsLocked()) {
+        if (FlagManager::HasFlag(object_->GetOpenFlagName())) {
+            //UnLockされる
+            object_->SetIsLocked(false);
+        }
+    }
+
     object_->Update();
 
 }
@@ -86,12 +98,19 @@ void StageChangeTrigger::Update()
 
 void StageChangeTrigger::Draw()
 {
+
+    //ロックされていたら描画しないこととする
+    if (object_->GetIsLocked()) { return; }
+
     object_->Draw();
 }
 
 void StageChangeTrigger::OnCollision(Collider* collider)
 {
-
+    if (object_->GetIsLocked()) {
+        //ロックされていたらリターンする
+        return;
+    }
     // 衝突相手がプレイヤーかチェック
     if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Player")) {
         //次のステージに進む

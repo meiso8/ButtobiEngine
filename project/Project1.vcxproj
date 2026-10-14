@@ -170,6 +170,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\System\FlagManager\FlagManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\Medjed\FirstMedjed\FirstMedjed.cpp" />
     <ClCompile Include="Source\Application\Scene\SecondStoryScene\SecondStoryScene.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\Skip\Skip.cpp" />
@@ -503,6 +504,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\System\TreeGenerator\TreeGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\System\FlagManager\FlagManager.h" />
     <ClInclude Include="Source\Application\GameObject\Medjed\FirstMedjed\FirstMedjed.h" />
     <ClInclude Include="Source\Application\Scene\SecondStoryScene\SecondStoryScene.h" />
     <ClInclude Include="Source\Application\GameObject\UI\Skip\Skip.h" />

@@ -3,6 +3,7 @@
 #include"DebugUI.h"
 #include"SoundManager/SoundManager.h"
 #include"RaySprite/RaySprite.h"
+#include"FlagManager/FlagManager.h"
 
 MeltStage::MeltStage()
 {
@@ -80,6 +81,7 @@ void MeltStage::Update()
             Vector3 pos = item->GetWorldPosition() + Vector3{ 0.0f,0.125f,0.0f };
             scarab->SetTranslate(pos);
             isGenerateScarab_ = true;
+            FlagManager::SetFlag("GetScarab");
         }
 
 

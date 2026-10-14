@@ -19,6 +19,7 @@
 #include"Sound.h"
 #include"DebugUI.h"
 #include"ItemManager/ItemManager.h"
+#include"FlagManager/FlagManager.h"
 
 
 void Player::OnCollision(Collider* collider)
@@ -380,7 +381,7 @@ const Vector3& Player::GetBodyForward()
 void Player::Thermography()
 {
 
-    if (!ItemManager::IsGetSolarDisc()) {
+    if (!FlagManager::HasFlag("GetSolarDisc")) {
         //ソーラーディスク未取得は早期リターン
         return;
     }

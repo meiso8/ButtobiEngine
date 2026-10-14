@@ -16,8 +16,11 @@
 #include"../Item/Scarab/Scarab.h"
 #include"../Item/Ticket/Ticket.h"
 #include"Line.h"
+#include"FlagManager/FlagManager.h"
 
-bool ItemManager::isGetSolarDisc_ = false;
+namespace {
+     std::string solerDiscFlagName = "GetSolarDisc";
+}
 
 ItemManager::~ItemManager()
 {
@@ -84,8 +87,7 @@ void ItemManager::Init() {
     items_.clear(); // 既存のアイテムをクリア
     itemSlot_.Init();
     //太陽円盤取得フラグの初期化
-    isGetSolarDisc_ = false;
-
+    FlagManager::SetFlag(solerDiscFlagName,false);
 
 }
 
@@ -95,12 +97,12 @@ void ItemManager::Update() {
         item->Update();
     }
 
-    if (!isGetSolarDisc_) {
+    if (!FlagManager::HasFlag(solerDiscFlagName)) {
         //未取得時のみ探す
         auto item = GetItem("SolarDisc");
         //取得アニメーションの終了を検知したとき
         if (item && item->IsGet() && item->IsGetAnimEnd()) {
-            isGetSolarDisc_ = true;
+            FlagManager::SetFlag(solerDiscFlagName);
         };
     }
 

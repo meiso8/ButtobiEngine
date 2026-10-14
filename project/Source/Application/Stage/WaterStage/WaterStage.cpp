@@ -2,6 +2,7 @@
 #include"SoundManager/SoundManager.h"
 #include"Sound.h"
 #include"RaySprite/RaySprite.h"
+#include"FlagManager/FlagManager.h"
 
 WaterStage::WaterStage()
 {
@@ -47,6 +48,7 @@ void WaterStage::Update()
         if (!itemApper_) {
             itemApper_ = true;
             GetItemManager()->GenerateItems({ "GoldHeart" });
+            FlagManager::SetFlag("ClearWaterStage");
         }
 
     }
