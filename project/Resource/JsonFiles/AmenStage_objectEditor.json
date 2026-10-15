@@ -126,11 +126,11 @@
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
             "glassFactor": 0.0,
-            "isLoked": false,
+            "isLoked": true,
             "lightMode": 2,
-            "name": "Object",
+            "name": "MeltStageDoor",
             "nextStageName": "MeltStage",
-            "openFlagName": "",
+            "openFlagName": "GetSolarDisc",
             "shininess": 250.0,
             "temperature": 0.5,
             "textureHandle": 0,
@@ -251,7 +251,7 @@
             "transform": {
                 "rotate": {
                     "x": 0.0,
-                    "y": 0.22228792309761047,
+                    "y": -0.5782566070556641,
                     "z": 0.0
                 },
                 "scale": {
@@ -260,9 +260,47 @@
                     "z": 1.0
                 },
                 "translate": {
+                    "x": 3.540790557861328,
+                    "y": 0.0,
+                    "z": -13.557559967041016
+                }
+            },
+            "type": "EMPTY"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/Puzzle",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Puzzle.gltf",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
+            "name": "PuzzleObj",
+            "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 250.0,
+            "temperature": 0.75,
+            "transform": {
+                "rotate": {
                     "x": 0.0,
                     "y": 0.0,
-                    "z": -5.0
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -24.0,
+                    "y": 0.25,
+                    "z": -24.0
                 }
             },
             "type": "EMPTY"
