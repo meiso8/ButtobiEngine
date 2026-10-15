@@ -68,12 +68,15 @@ void ShotBeamManager::Update()
         }
 
         if (currentTime_ <= 0.0f) {
-            
+            //一旦ビームを初期化する
+            beamManager_->Initialize();
+
             Vector3 target = player_->GetBodyWorldTransform().GetWorldPosition();
 
             if (beamManager_->ShotBeam(target, enemyEyeMatL, Beam::kEnemy) && beamManager_->ShotBeam(target, enemyEyeMatR, Beam::kEnemy)) {
                 Sound::PlaySE(SoundFactory::BEAM);
-                Initialize();
+                //
+                currentTime_ = kInterval_;
             }
 
         }

@@ -165,15 +165,7 @@ void Enemy::Update()
 
 
     if (ImGui::Combo("CurrentPhase", &currentPhase, phase, IM_ARRAYSIZE(phase))) {
-        //APPEAR,
-        //ROUND,
-        //FIREBALL,
-        //ALPHA_WALK,
-        //BEAM,
-        //EXIT,
-
         SetPhase(static_cast<PHASE>(currentPhase));
-
     };
 
 
@@ -520,7 +512,7 @@ void Enemy::LerpScale()
 
 void Enemy::RotateY(const float& timer)
 {
-    Vector3 rotate;
+    Vector3 rotate = {0.0f};
     rotate.y = Easing::EaseInBack(startRotateY_, endRotateY_, timer);
     bodyPos_->SetRotate(rotate);
 }
