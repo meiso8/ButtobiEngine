@@ -43,8 +43,6 @@ void SceneManager::Debug()
 
 #ifdef USE_IMGUI
 
-    ImGui::Begin("Debug");
-
     if (ImGui::BeginCombo("Change Scene", GetCurrentSceneName().c_str())) {
 
         // マップ内のすべてのシーンをループして選択肢を作る
@@ -61,10 +59,7 @@ void SceneManager::Debug()
 
         ImGui::EndCombo();
     }
-
     if (ImGui::Button("Initialize")) { currentScene_->Initialize(); }
-
-    ImGui::End();
 
 #endif // USE_IMGUI
 
@@ -84,6 +79,8 @@ void SceneManager::SetNextScene(const std::string& name)
 
 void SceneManager::InitScene()
 {
+
+
     //次のシーンがセットされていたら次のシーンにする
     if (nextScene_) {
         currentScene_ = nextScene_;
@@ -97,6 +94,7 @@ void SceneManager::InitScene()
 
     //パーティクルをすべてリセットする
     ParticleManager::ResetAll();
+
     currentScene_->Initialize();
 
 }

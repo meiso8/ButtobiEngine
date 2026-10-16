@@ -33,6 +33,8 @@
 #include"DebugUI.h"
 #include"DebugCamera.h"
 #include"Animation/SkinCluster.h"
+#include"Font/Font.h"
+
 
 #include"../Application/GameObject/Puzzle/SlidePuzzleSystem.h"
 
@@ -44,7 +46,7 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     SetUnhandledExceptionFilter(ExportDump);
     //ログファイルの生成
     logFile = std::make_unique<LogFile>();
-    //WindowClassの生成
+    //WindowClassの生成f
     wc = std::make_unique<Window>(title, clientWidth, clientHeight);
     //InputClassの生成
     input = std::make_unique<Input>();
@@ -91,12 +93,12 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     LogFile::Log("InitImGui");
 #endif
 
-    auto* commandList = directXCommon_->GetCommandListClass()->Get();
+    auto* mainCommandList = directXCommon_->GetCommandListClass(DirectXCommon::kMain)->Get();
 
     directXCommon_->InitializeRenderTexture(rtvDescriptorHeap_.get(), srvDescriptorHeap_.get());
     //ポストプロセス管理の生成
     auto* ppm = PostProcessManager::GetInstance();
-    ppm->Create(commandList, srvDescriptorHeap_.get(), depthTexture_.get());
+    ppm->Create(mainCommandList, srvDescriptorHeap_.get(), depthTexture_.get());
     LogFile::Log("Create PostProcessManager");
 
     auto* pso = PSO::GetInstance();
@@ -116,131 +118,13 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     spotLightManager_ = ::std::make_unique<SpotLightManager>(srvDescriptorHeap_.get());
 #pragma endregion
 
-#pragma region//テクスチャやスプライト
-
-    //テクスチャ管理
-    texture_ = std::make_unique<Texture>();
-    texture_->Initialize();
-    texture_->SetCommandListAndSrvDescriptorHeap(commandList, srvDescriptorHeap_.get());
-
-    //共通のスプライト
-    spriteCommon_ = std::make_unique<SpriteCommon>();
-    //PSOの設定と初期化
-    spriteCommon_->Initialize(pso->GetRootSignature());
-
-    Sprite::SetCommandListAndSrvDescriptorHeap(
-        commandList,
-        srvDescriptorHeap_.get()
-    );
-
-    //スプライト用カメラ
-    SpriteCamera::Initialize(static_cast<float>(wc->GetClientWidth()), static_cast<float>(wc->GetClientHeight()));
-    LogFile::Log("Initialize　SpriteCamera");
-
-#pragma endregion
-
-
-    //テキストの初期化
-    freeTypeManager_ = std::make_unique<FreeTypeManager>();
-    freeTypeManager_->SetCommandListAndSrvDescriptorHeap(commandList, srvDescriptorHeap_.get());
 
 #pragma region //LoaderやFactory
     //サウンド管理
     Sound::Initialize();
     LogFile::Log("Initialize Sound");
 
-    //テスクチャ読み込み
-    TextureFactory::Load();
-    LogFile::Log("LoadAllTexture");
 
-    //音声の読み込み
-    SoundFactory::Load();
-    LogFile::Log("LoadAllSound");
-
-    //JsonFileの読み込み
-    JsonFile::LoadAllJsonFile();
-    LogFile::Log("LoadAllJsonFile");
-
-    //モデル読み込み
-    ModelFactory::Load();
-    LogFile::Log("LoadAllModel");
-
-    //プリミティブ生成
-    primitiveFactory_ = std::make_unique<PrimitiveFactory>();
-    primitiveFactory_->CreateAllPrimitive();
-    LogFile::Log("CreatePrimitive");
-
-    tagFactory_ = std::unique_ptr<TagFactory>();
-    //タグの作成
-    tagFactory_->SetTag();
-    LogFile::Log("Create Tag");
-
-#pragma endregion
-
-    //スキンの設定
-    Skin::SetSrvDescriptorHeap(srvDescriptorHeap_.get());
-
-    //オブジェクト管理の初期化
-    ObjectManager::GetInstance()->SetRenderTextureForModel(directXCommon_->GetRenderTexture());
-    ObjectManager::GetInstance()->SetCommandListAndSrvDescriptorHeap(
-        commandList,
-        srvDescriptorHeap_.get()
-    );
-    ObjectManager::GetInstance()->Initialize();
-
-
-#ifdef _DEVELOP
-    //グリット描画
-    DrawGrid::Create();
-#endif
-
-    //パーティクル管理
-    particleManager_ = std::make_unique<ParticleManager>();
-    //一旦後でRootSignatureについて考える
-    particleManager_->Create(pso->GetRootSignature());
-    particleManager_->SetCommandListAndSrvDescriptorHeap(commandList, srvDescriptorHeap_.get());
-    particleManager_->CreateAll();
-    //パーティクルエミッターへのセット
-    ParticleEmitter::SetParticleManager(particleManager_.get());
-
-    LogFile::Log("CreateparticleManager");
-
-
-    gpuParticleManager_ = std::make_unique<GPUParticleManager>();
-    gpuParticleManager_->Create(PSO::GetRootSignature(),srvDescriptorHeap_.get(),directXCommon_->GetCommandList());
-    gpuParticleManager_->Initialize();
-
-    /// @brief GPUパーティクルエミッター
-    gpuParticleEmitter_ = std::make_unique<GPUParticleEmitter>();
-    GPUParticleEmitter::SetCommandListAndCbvSrvUavDescriptorHeap(directXCommon_->GetCommandList(), srvDescriptorHeap_.get());
-    gpuParticleEmitter_->Create();
-    gpuParticleEmitter_->SetParticleGroup(gpuParticleManager_->GetGroup());
-#ifdef _DEVELOP
-    // デバッグカメラの初期化
-    DebugCamera::GetInstance()->Create();
-
-#endif //_DEVELOP
-
-    // =============================================
-    // シーンの生成
-    // =============================================
-    SceneFactory::Create();
-
-
-    //ポストプロセス管理にカメラを設定する
-    auto* camera = SceneManager::GetCurrentCamera();
-
-    if (camera) {
-        ppm->SetPostEffectMaterialCamera(camera, PostProcessManager::kSprite);
-        ppm->SetPostEffectMaterialCamera(camera, PostProcessManager::kModel);
-        LogFile::Log("Set RenderTexture Camera");
-    } else {
-        ppm->SetPostEffectMaterialCamera(DebugCamera::GetInstance(), PostProcessManager::kModel);
-        ppm->SetPostEffectMaterialCamera(DebugCamera::GetInstance(), PostProcessManager::kSprite);
-        LogFile::Log("Set Debug Camera");
-    }
-
-    LogFile::Log("LoopStart");
 }
 
 void ButtobiEngine::Update() {
@@ -257,6 +141,11 @@ void ButtobiEngine::Update() {
     imGuiClass.FrameStart();
 
 #endif
+
+}
+
+void ButtobiEngine::GameUpdate()
+{
     VibrateManager::Update();
     SceneManager::Update();
     //オブジェクト管理の更新
@@ -292,14 +181,15 @@ void ButtobiEngine::Update() {
     ppm->Update();
     //ポストプロセス用の更新
     directXCommon_->UpdateRenderTexture(srvDescriptorHeap_.get());
-
 }
+
+
 
 void ButtobiEngine::Debug()
 {
 #ifdef USE_IMGUI
 
-    ImGui::Begin("Debug");
+    ImGui::Begin("ButtobiEngine");
 
     DebugUI::CheckFPS();
     SceneManager::Debug();
@@ -312,12 +202,149 @@ void ButtobiEngine::Debug()
     ImGui::End();
 
     //Loaderをここで
-    imGuiClass.DrawModelLoaderWindow(srvDescriptorHeap_.get());
+    imGuiClass.DrawModelLoaderWindowAndCheckDroppedFile(srvDescriptorHeap_.get());
     //深度テクスチャのでばっく
     depthTexture_->DebugViewer(srvDescriptorHeap_.get());
 
 #endif // USE_IMGUI
 
+}
+
+void ButtobiEngine::Load()
+{
+    // ロード用（テクスチャ転送などに使う場合）
+    auto* loadCommandList = directXCommon_->GetCommandListClass(DirectXCommon::kLoad)->Get();
+    // 描画用
+    auto* mainCommandList = directXCommon_->GetCommandListClass(DirectXCommon::kMain)->Get();
+
+    auto* pso = PSO::GetInstance();
+
+#pragma region//テクスチャやスプライト
+
+    //テクスチャ管理
+    texture_ = std::make_unique<Texture>();
+    texture_->Initialize();
+    texture_->SetCommandListAndSrvDescriptorHeap(loadCommandList, srvDescriptorHeap_.get());
+
+    //共通のスプライト
+    spriteCommon_ = std::make_unique<SpriteCommon>();
+    //PSOの設定と初期化
+    spriteCommon_->Initialize(pso->GetRootSignature());
+
+    Sprite::SetCommandListAndSrvDescriptorHeap(
+        mainCommandList,
+        srvDescriptorHeap_.get()
+    );
+
+    //スプライト用カメラ
+    SpriteCamera::Initialize(static_cast<float>(wc->GetClientWidth()), static_cast<float>(wc->GetClientHeight()));
+    LogFile::Log("Initialize　SpriteCamera");
+
+#pragma endregion
+
+    //テキストの初期化
+    freeTypeManager_ = std::make_unique<FreeTypeManager>();
+    freeTypeManager_->SetCommandListAndSrvDescriptorHeap(loadCommandList, srvDescriptorHeap_.get());
+    Font::SetCommandListAndSrvDescriptorHeap(mainCommandList, srvDescriptorHeap_.get());
+
+    LogFile::Log("Set SrvDescriptorHeap to FreeType\n");
+
+    //テスクチャ読み込み
+    TextureFactory::Load();
+    LogFile::Log("LoadAllTexture");
+
+    //音声の読み込み
+    SoundFactory::Load();
+    LogFile::Log("LoadAllSound");
+
+    //JsonFileの読み込み
+    JsonFile::LoadAllJsonFile();
+    LogFile::Log("LoadAllJsonFile");
+
+    //モデル読み込み
+    ModelFactory::Load();
+    LogFile::Log("LoadAllModel");
+
+    //プリミティブ生成
+    primitiveFactory_ = std::make_unique<PrimitiveFactory>();
+    primitiveFactory_->CreateAllPrimitive();
+    LogFile::Log("CreatePrimitive");
+
+    tagFactory_ = std::unique_ptr<TagFactory>();
+    //タグの作成
+    tagFactory_->SetTag();
+    LogFile::Log("Create Tag");
+
+#pragma endregion
+
+
+    //スキンの設定
+    Skin::SetSrvDescriptorHeap(srvDescriptorHeap_.get());
+
+    //オブジェクト管理の初期化
+    ObjectManager::GetInstance()->SetRenderTextureForModel(directXCommon_->GetRenderTexture());
+    ObjectManager::GetInstance()->SetCommandListAndSrvDescriptorHeap(
+        mainCommandList,
+        srvDescriptorHeap_.get()
+    );
+    ObjectManager::GetInstance()->Initialize();
+
+
+#ifdef _DEVELOP
+    //グリット描画
+    DrawGrid::Create();
+#endif
+
+    //パーティクル管理
+    particleManager_ = std::make_unique<ParticleManager>();
+    //一旦後でRootSignatureについて考える
+    particleManager_->Create(pso->GetRootSignature());
+    particleManager_->SetCommandListAndSrvDescriptorHeap(mainCommandList, srvDescriptorHeap_.get());
+    particleManager_->CreateAll();
+    //パーティクルエミッターへのセット
+    ParticleEmitter::SetParticleManager(particleManager_.get());
+
+    LogFile::Log("CreateparticleManager");
+
+
+    gpuParticleManager_ = std::make_unique<GPUParticleManager>();
+    gpuParticleManager_->Create(PSO::GetRootSignature(), srvDescriptorHeap_.get(), mainCommandList);
+    gpuParticleManager_->Initialize();
+
+    /// @brief GPUパーティクルエミッター
+    gpuParticleEmitter_ = std::make_unique<GPUParticleEmitter>();
+    GPUParticleEmitter::SetCommandListAndCbvSrvUavDescriptorHeap(mainCommandList, srvDescriptorHeap_.get());
+    gpuParticleEmitter_->Create();
+    gpuParticleEmitter_->SetParticleGroup(gpuParticleManager_->GetGroup());
+#ifdef _DEVELOP
+    // デバッグカメラの初期化
+    DebugCamera::GetInstance()->Create();
+
+#endif //_DEVELOP
+
+    // =============================================
+    // シーンの生成
+    // =============================================
+    SceneFactory::Create();
+
+    SceneFactory::SetFirstScene();
+
+    //ポストプロセス管理にカメラを設定する
+    auto* camera = SceneManager::GetCurrentCamera();
+    auto* ppm = PostProcessManager::GetInstance();
+    if (camera) {
+        ppm->SetPostEffectMaterialCamera(camera, PostProcessManager::kSprite);
+        ppm->SetPostEffectMaterialCamera(camera, PostProcessManager::kModel);
+        LogFile::Log("Set RenderTexture Camera");
+    } else {
+        ppm->SetPostEffectMaterialCamera(DebugCamera::GetInstance(), PostProcessManager::kModel);
+        ppm->SetPostEffectMaterialCamera(DebugCamera::GetInstance(), PostProcessManager::kSprite);
+        LogFile::Log("Set Debug Camera");
+    }
+
+    directXCommon_->CloseLoadCommandList();
+
+    LogFile::Log("LoopStart");
 }
 
 ButtobiEngine::~ButtobiEngine()
@@ -360,22 +387,28 @@ void ButtobiEngine::PreCommandSet() {
     //ポストエフェクトの前設定
     directXCommon_->RenderTexturePreDraw(dsvDescriptorHeap_.get(), depthTexture_.get());
 
-    auto* commandList = directXCommon_->GetCommandListClass()->Get();
+    auto* commandList = directXCommon_->GetCommandListClass(DirectXCommon::kMain)->Get();
+
+
     //SRV管理の描画前処理
     srvDescriptorHeap_->PreDraw(commandList);
 
     directXCommon_->VeiwPortAndScissorRect();
 
 
+
+}
+
+void ButtobiEngine::GameDraw()
+{
 #ifdef _DEVELOP
 
-        DrawGrid::Draw();
-
+    DrawGrid::Draw();
 
 #endif //_DEVELOP
-
     // シーンの描画
     SceneManager::DrawModel();
+
     // カメラ
     auto* camera = SceneManager::GetCurrentCamera();
     //生成オブジェクト描画
@@ -390,7 +423,11 @@ void ButtobiEngine::PreCommandSet() {
         gpuParticleManager_->Draw(*camera);
 
     }
+}
 
+void ButtobiEngine::PostCommandSet(const bool isLoadEnd) {
+
+    auto* commandList = directXCommon_->GetCommandListClass(DirectXCommon::kMain)->Get();
     //ポストエフェクトのあと設定
     directXCommon_->RenderTexturePostDraw(depthTexture_.get());
     //描画前処理
@@ -399,31 +436,36 @@ void ButtobiEngine::PreCommandSet() {
     srvDescriptorHeap_->PreDraw(commandList);
     //ビューポートとシザー
     directXCommon_->VeiwPortAndScissorRect();
-}
-
-void ButtobiEngine::PostCommandSet() {
-
 
     //ポストエフェクト
     directXCommon_->DrawRenderTexture(rtvDescriptorHeap_.get());
 
     //directXCommon_->RenderTextureForSpritePreDraw();
-    // スプライトの描画
-    SceneManager::DrawSprite();
+    //// スプライトの描画
+    if (isLoadEnd) {
+        SceneManager::DrawSprite();
+    }
+
     //directXCommon_->RenderTextureForSpritePostDraw();
 
     //directXCommon_->DrawRenderTextureForSprite(rtvDescriptorHeap_.get());
 
 #ifdef USE_IMGUI
     //諸々の描画処理が終了下タイミングでImGuiの描画コマンドを積む
-    imGuiClass.DrawImGui(directXCommon_->GetCommandList());
+    imGuiClass.DrawImGui(directXCommon_->GetCommandList(DirectXCommon::kMain));
 
 #endif // _DEBUG
-    directXCommon_->PostDraw();
+    directXCommon_->PostDraw(isLoadEnd);
+
     //時間の更新を入れる
     time_->Update();
     //次のコマンド準備をする
-    directXCommon_->PrepareCommand();
+    directXCommon_->PrepareCommand(DirectXCommon::kMain);
+    if (isLoadEnd) {
+        directXCommon_->PrepareCommand(DirectXCommon::kLoad);
+    }
+
+
     //フォントの使用をリセットする
     freeTypeManager_->ResetFontUsage();
 };
@@ -437,7 +479,7 @@ void ButtobiEngine::Finalize() {
 
     //モデルの終了処理
     ModelManager::Finalize();
-    
+
     AnimationManager::Finalize();
 
     ObjectManager::GetInstance()->Clear();
@@ -455,9 +497,6 @@ void ButtobiEngine::Finalize() {
 
     //テキストの終了処理
     freeTypeManager_->Finalize();
- 
-
-
 
     //音の終了処理
     Sound::Finalize();
@@ -478,7 +517,7 @@ void ButtobiEngine::Finalize() {
 
     //ポイントライトの終了処理
     pointLightManager_->Finalize();
-    
+
     //方向ライトの終了処理
     directionalLightManager_->Finalize();
 

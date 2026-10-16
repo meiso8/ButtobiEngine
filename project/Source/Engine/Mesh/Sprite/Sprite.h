@@ -93,7 +93,7 @@ private:
 
 private:
     //コマンドリストの借り物
-    static ID3D12GraphicsCommandList* commandList_;
+    static ID3D12GraphicsCommandList* drawCommandList_;
     /// @brief　SRV管理の借り物
     static  CbvSrvUavDescriptorHeap* srvDescriptorHeap_;
     //頂点リソース

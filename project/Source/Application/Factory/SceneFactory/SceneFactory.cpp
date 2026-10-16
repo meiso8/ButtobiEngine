@@ -18,6 +18,10 @@ void SceneFactory::Create()
     SceneManager::SetMap("FirstStory", std::move(std::make_unique < FirstStoryScene>()));
     SceneManager::SetMap("SecondStory", std::move(std::make_unique < SecondStoryScene>()));
     LogFile::Log("Create Scene\n");
+}
+
+void SceneFactory::SetFirstScene()
+{
 
     SceneManager::SetNextScene("Title");
 #ifdef _DEVELOP
@@ -26,5 +30,4 @@ void SceneFactory::Create()
     SceneManager::InitScene();
 
     LogFile::Log("Init Scene\n");
-
 }

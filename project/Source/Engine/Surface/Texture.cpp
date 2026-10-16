@@ -177,9 +177,6 @@ void Texture::LoadTexture(const std::filesystem::path& filePath)
     //テクスチャデータの要素数番号をSRVのインデックスとする
     textureData.resource.Allocate(srvDescriptorHeap_);
 
-    //textureData.srvHandleCPU =  srvDescriptorHeap_->GetCPUDescriptorHandle(textureData.srvIndex);
-    //textureData.srvHandleGPU =  srvDescriptorHeap_->GetGPUDescriptorHandle(textureData.srvIndex);
     textureData.resource.CreateSRVforTexture(srvDescriptorHeap_);
-    //srvDescriptorHeap_->CreateSRVforTexture(textureData.srvIndex, textureData.resource.Get(), textureData.metadata);
 
 }

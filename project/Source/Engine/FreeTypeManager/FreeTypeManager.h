@@ -80,7 +80,7 @@ public:
     FreeTypeManager(const FreeTypeManager&) = delete;
     FreeTypeManager& operator=(const FreeTypeManager&) = delete;
 
-     void SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap);
+     void SetCommandListAndSrvDescriptorHeap( ID3D12GraphicsCommandList* loadCommandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap);
     /// @brief 終了処理
      void Finalize();
      /// @brief エンジンでCommandQueueを送った後にリセットする

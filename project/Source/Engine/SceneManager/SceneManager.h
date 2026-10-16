@@ -17,8 +17,10 @@ public:
     static void SetMap(const std::string& name, std::unique_ptr<BaseScene> scene);
     static void SetNextScene(const std::string& name);
     static void InitScene();
+
     static Camera* GetCurrentCamera() { return currentScene_->GetCurrentCamera(); };
     static std::string GetCurrentSceneName() { if (currentScene_) return sceneNames_.at(currentScene_); return "noScene"; }
+
 private:
     static BaseScene* currentScene_;
     static BaseScene* nextScene_;

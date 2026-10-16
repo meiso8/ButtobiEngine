@@ -2,6 +2,8 @@
 #include"ButtobiEngine.h"
 #include<map>
 #include"SceneManager.h"
+#include<thread>
+
 class Game:public ButtobiEngine
 {
 public:
@@ -11,7 +13,10 @@ public:
     void Draw()override;
     void Debug()override;
 private:
+    // ロード用スレッドの関数
+    void LoadAssets();
 
-    std::map<const std::string, std::unique_ptr<BaseScene>> scenes;
+    std::thread loadThread_;
+    std::atomic<bool> isLoading_{ true }; // ロード中かどうかを判定するフラグ（スレッドセーフ）
 };
 

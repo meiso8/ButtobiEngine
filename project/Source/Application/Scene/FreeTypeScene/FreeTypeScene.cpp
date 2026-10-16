@@ -73,7 +73,7 @@ void FreeTypeScene::Update()
     DebugUI::CheckEmitter(particleEmitters_[0]->GetEmitter());
     DebugUI::CheckEmitter(particleEmitters_[1]->GetEmitter());
 
-    ImGui::Begin("Debug");
+    ImGui::Begin("ButtobiEngine");
 
     if (ImGui::Button("SwitchCamera")) {
         SwitchCamera();

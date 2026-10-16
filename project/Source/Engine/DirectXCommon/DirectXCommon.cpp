@@ -50,7 +50,7 @@ void DirectXCommon::PreInitialize(Window& window)
     InitializeCommand();
     CreateSwapChain();
     //コマンドリストのセット
-    barrier.SetCommandList(commandList_->Get());
+    barrier.SetCommandList(commandList_[kMain]->Get());
 
 }
 void DirectXCommon::PostInitialize()
@@ -65,7 +65,7 @@ void DirectXCommon::PostInitialize()
 void DirectXCommon::RenderTexturePreDraw(DsvDescriptorHeap* dsvDescriptorHeap, DepthTexture* depthTexture)
 {
 
-    auto* commanList = commandList_->Get();
+    auto* commanList = commandList_[kMain]->Get();
 
     barrier.SettingBarrier(
         depthTexture->GetResource(),
@@ -116,7 +116,7 @@ void DirectXCommon::RenderTexturePreDraw(DsvDescriptorHeap* dsvDescriptorHeap, D
 void DirectXCommon::VeiwPortAndScissorRect()
 
 {
-    auto* commanList = commandList_->Get();
+    auto* commanList = commandList_[kMain]->Get();
     //ビューポート領域の設定
     commanList->RSSetViewports(1, &viewport);//Viewportを設定
     //シザー矩形の設定
@@ -179,8 +179,6 @@ void DirectXCommon::DrawRenderTextureForSprite(RtvDescriptorHeap* rtvDescriptorH
 void DirectXCommon::RenderTexturePostDraw(DepthTexture* depthTexture)
 {
 
-    auto* commanList = commandList_->Get();
-
     if (Input::IsTriggerMouse(0)) {
         Vector2Int pos = Input::GetCursorPositionInt();
         renderTexture_->CopyClickPixelCommand(pos.x, pos.y);
@@ -240,7 +238,7 @@ void DirectXCommon::PreDraw()
     //1.これから書き込むバックバッファのインデックスを取得
     UINT backBufferIndex = swapChainClass.GetSwapChain()->GetCurrentBackBufferIndex();
 
-    auto* commanList = commandList_->Get();
+    auto* commanList = commandList_[kMain]->Get();
 
     //TransitionBarrierの設定
     barrier.SettingBarrier(
@@ -256,12 +254,12 @@ void DirectXCommon::PreDraw()
 
 }
 
-void DirectXCommon::PostDraw()
+void DirectXCommon::PostDraw(const bool isEndLoad)
 {
     //1.これから書き込むバックバッファのインデックスを取得
     UINT backBufferIndex = swapChainClass.GetSwapChain()->GetCurrentBackBufferIndex();
 
-    auto* commanList = commandList_->Get();
+    auto* commanList = commandList_[kMain]->Get();
 
     //TransitionBarrierの設定
     barrier.SettingBarrier(
@@ -270,6 +268,38 @@ void DirectXCommon::PostDraw()
         D3D12_RESOURCE_STATE_PRESENT);
 
 
+
+    //4.コマンドリストの内容を確定させる。全てのコマンドを詰んでから　Closesすること。
+    commanList->Close();
+  
+    if (isEndLoad) {
+        auto* loadCommandList = commandList_[kLoad]->Get();
+        loadCommandList->Close();
+        //5.GPUにコマンドリストの実行を行わせる
+        ID3D12CommandList* commandLists[] = { commanList,loadCommandList };
+        commandQueue.GetCommandQueue()->ExecuteCommandLists(2, commandLists);
+    } else {
+        //5.GPUにコマンドリストの実行を行わせる
+        ID3D12CommandList* commandLists[] = { commanList };
+        commandQueue.GetCommandQueue()->ExecuteCommandLists(1, commandLists);
+    }
+
+    //6.GPUとOSに画面の交換を行うよう通知する
+    swapChainClass.GetSwapChain()->Present(1, 0);
+
+    //画面の更新が終わった直後GPUにシグナルを送る
+    fence.SendSignal(commandQueue);
+
+}
+
+void DirectXCommon::PrepareCommand(const CommandListType type)
+{    //7.次のフレーム用のコマンドリストを準備
+    commandList_[type]->PrepareCommand();
+}
+
+void DirectXCommon::CloseLoadCommandList()
+{
+    auto* commanList = commandList_[kLoad]->Get();
 
     //4.コマンドリストの内容を確定させる。全てのコマンドを詰んでから　Closesすること。
     commanList->Close();
@@ -282,17 +312,11 @@ void DirectXCommon::PostDraw()
 
     //画面の更新が終わった直後GPUにシグナルを送る
     fence.SendSignal(commandQueue);
-
-}
-
-void DirectXCommon::PrepareCommand()
-{    //7.次のフレーム用のコマンドリストを準備
-    commandList_->PrepareCommand();
 }
 
 void DirectXCommon::RenderTextureForSpritePreDraw()
 {
-    auto* commanList = commandList_->Get();
+    auto* commanList = commandList_[kMain]->Get();
 
     auto& renderTextureDataNormal = renderTextureForSprite_->GetRenderTextureData(RenderTexture::kNormal0);
     auto& renderTextureDataThermography = renderTextureForSprite_->GetRenderTextureData(RenderTexture::kThermography);
@@ -361,9 +385,14 @@ void DirectXCommon::InitializeDevice()
 
 void DirectXCommon::InitializeCommand()
 {
-    commandList_ = std::make_unique<CommandList>();
-    //コマンドリストの生成
-    commandList_->Create();
+    commandList_[kMain] = std::make_unique<CommandList>();
+    commandList_[kLoad] = std::make_unique<CommandList>();
+
+    for (auto& [type,commandList] : commandList_) {
+        //コマンドリストの生成
+        commandList->Create();
+    }
+
     LogFile::Log("Create CommandList\n");
 
     //コマンドキューの生成
@@ -438,12 +467,12 @@ void DirectXCommon::CreateDXCCompiler()
 void DirectXCommon::InitializeRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap, CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
     renderTexture_ = std::make_unique<RenderTexture>();
-    renderTexture_->SetCommandListAndSrvDescriptorHeap(commandList_->Get(), srvDescriptorHeap);
+    renderTexture_->SetCommandListAndSrvDescriptorHeap(commandList_[kMain]->Get(), srvDescriptorHeap);
     renderTexture_->Create(rtvDescriptorHeap, { 1.0f,0.0f,0.0f,1.0f });
 
     //スプライト用のレンダーテクスチャを作成
     renderTextureForSprite_ = std::make_unique<RenderTexture>();
-    renderTextureForSprite_->SetCommandListAndSrvDescriptorHeap(commandList_->Get(), srvDescriptorHeap);
+    renderTextureForSprite_->SetCommandListAndSrvDescriptorHeap(commandList_[kMain]->Get(), srvDescriptorHeap);
     renderTextureForSprite_->Create(rtvDescriptorHeap, { 0.0f,0.0f,0.0f,0.0f });
 
 }
