@@ -50,7 +50,8 @@ void DirectXCommon::PreInitialize(Window& window)
     InitializeCommand();
     CreateSwapChain();
     //コマンドリストのセット
-    barrier.SetCommandList(commandList_[kMain]->Get());
+    barrierMain_.SetCommandList(commandList_[kMain]->Get());
+    barrierLoad_.SetCommandList(commandList_[kLoad]->Get());
 
 }
 void DirectXCommon::PostInitialize()
@@ -67,7 +68,7 @@ void DirectXCommon::RenderTexturePreDraw(DsvDescriptorHeap* dsvDescriptorHeap, D
 
     auto* commanList = commandList_[kMain]->Get();
 
-    barrier.SettingBarrier(
+    barrierMain_.SettingBarrier(
         depthTexture->GetResource(),
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
         D3D12_RESOURCE_STATE_DEPTH_WRITE);
@@ -88,9 +89,9 @@ void DirectXCommon::RenderTexturePreDraw(DsvDescriptorHeap* dsvDescriptorHeap, D
     rtvHandles[2] = renderTextureDataID.rtvHandleCPU;
 
     //TransitionBarrierの設定
-    barrier.SettingBarrierSRVforRTV(renderTextureDataNormal.resource.Get());
-    barrier.SettingBarrierSRVforRTV(renderTextureDataThermography.resource.Get());
-    barrier.SettingBarrierSRVforRTV(renderTextureDataID.resource.Get());
+    barrierMain_.SettingBarrierSRVforRTV(renderTextureDataNormal.resource.Get());
+    barrierMain_.SettingBarrierSRVforRTV(renderTextureDataThermography.resource.Get());
+    barrierMain_.SettingBarrierSRVforRTV(renderTextureDataID.resource.Get());
 
     //描画用のRTVとDSVを設定する 
     D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvDescriptorHeap->GetDescriptorHeap()->GetCPUDescriptorHandleForHeapStart();
@@ -157,7 +158,7 @@ void DirectXCommon::DrawRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap)
 
     auto backBufferRTV = rtvDescriptorHeap->GetCPUDescriptorHandle(backBufferIndex);
 
-    ppm->Execute(modelLayer, backBufferRTV, &barrier, kBlendModeMultiply);
+    ppm->Execute(modelLayer, backBufferRTV, &barrierMain_, kBlendModeMultiply);
 
 
 }
@@ -172,7 +173,7 @@ void DirectXCommon::DrawRenderTextureForSprite(RtvDescriptorHeap* rtvDescriptorH
     auto backBufferRTV = rtvDescriptorHeap->GetCPUDescriptorHandle(backBufferIndex);
     PostProcessManager::Layer spriteLayer = PostProcessManager::kSprite;
     // ② スプライトのエフェクトをバックバッファに「上書き（アルファブレンド）」出力
-    ppm->Execute(spriteLayer, backBufferRTV, &barrier, kBlendModeNormal);
+    ppm->Execute(spriteLayer, backBufferRTV, &barrierMain_, kBlendModeNormal);
 
 }
 
@@ -184,20 +185,20 @@ void DirectXCommon::RenderTexturePostDraw(DepthTexture* depthTexture)
         renderTexture_->CopyClickPixelCommand(pos.x, pos.y);
     }
 
-    barrier.SettingBarrier(
+    barrierMain_.SettingBarrier(
         depthTexture->GetResource(),
         D3D12_RESOURCE_STATE_DEPTH_WRITE,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     auto& renderTextureData = renderTexture_->GetRenderTextureData(RenderTexture::kNormal0);
-    barrier.SettingBarrierRTVforSRV(renderTextureData.resource.Get());
+    barrierMain_.SettingBarrierRTVforSRV(renderTextureData.resource.Get());
 
     auto& renderTextureDataThermography = renderTexture_->GetRenderTextureData(RenderTexture::kThermography);
-    barrier.SettingBarrierRTVforSRV(renderTextureDataThermography.resource.Get());
+    barrierMain_.SettingBarrierRTVforSRV(renderTextureDataThermography.resource.Get());
 
     // ★追加: ID用テクスチャのバリアを元に戻す
     auto& renderTextureDataID = renderTexture_->GetRenderTextureData(RenderTexture::kObjectID);
-    barrier.SettingBarrierRTVforSRV(renderTextureDataID.resource.Get());
+    barrierMain_.SettingBarrierRTVforSRV(renderTextureDataID.resource.Get());
 }
 
 
@@ -207,7 +208,7 @@ void DirectXCommon::SettingIdTextureBarrierPost()
 
     auto& renderTextureDataID = renderTexture_->GetRenderTextureData(RenderTexture::kObjectID);
 
-    barrier.SettingBarrier(
+    barrierMain_.SettingBarrier(
         renderTextureDataID.resource.Get(),
         D3D12_RESOURCE_STATE_COPY_SOURCE,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
@@ -217,7 +218,7 @@ void DirectXCommon::SettingIdTextureBarrierPost()
 void DirectXCommon::SettingIdTextureBarrierPre()
 {
     auto& renderTextureDataID = renderTexture_->GetRenderTextureData(RenderTexture::kObjectID);
-    barrier.SettingBarrier(
+    barrierMain_.SettingBarrier(
         renderTextureDataID.resource.Get(),
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
         D3D12_RESOURCE_STATE_COPY_SOURCE);
@@ -241,7 +242,7 @@ void DirectXCommon::PreDraw()
     auto* commanList = commandList_[kMain]->Get();
 
     //TransitionBarrierの設定
-    barrier.SettingBarrier(
+    barrierMain_.SettingBarrier(
         swapChainResources[backBufferIndex],
         D3D12_RESOURCE_STATE_PRESENT,
         D3D12_RESOURCE_STATE_RENDER_TARGET);
@@ -249,12 +250,12 @@ void DirectXCommon::PreDraw()
     commanList->OMSetRenderTargets(1, &rtvClass.GetHandle(backBufferIndex), false, nullptr);
     //3.指定した色で画面全体をクリアする
     Vector4 color = renderTexture_->GetColor();
-    float clearColor[] = { color.x,color.y,color.z,color.w };//青っぽい色。RGBAの順
+    float clearColor[] = { color.x,color.y,color.z,color.w };
     commanList->ClearRenderTargetView(rtvClass.GetHandle(backBufferIndex), clearColor, 0, nullptr);
 
 }
 
-void DirectXCommon::PostDraw(const bool isEndLoad)
+void DirectXCommon::PostDraw()
 {
     //1.これから書き込むバックバッファのインデックスを取得
     UINT backBufferIndex = swapChainClass.GetSwapChain()->GetCurrentBackBufferIndex();
@@ -262,27 +263,17 @@ void DirectXCommon::PostDraw(const bool isEndLoad)
     auto* commanList = commandList_[kMain]->Get();
 
     //TransitionBarrierの設定
-    barrier.SettingBarrier(
+    barrierMain_.SettingBarrier(
         swapChainResources[backBufferIndex],
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_PRESENT);
 
-
-
     //4.コマンドリストの内容を確定させる。全てのコマンドを詰んでから　Closesすること。
     commanList->Close();
-  
-    if (isEndLoad) {
-        auto* loadCommandList = commandList_[kLoad]->Get();
-        loadCommandList->Close();
-        //5.GPUにコマンドリストの実行を行わせる
-        ID3D12CommandList* commandLists[] = { commanList,loadCommandList };
-        commandQueue.GetCommandQueue()->ExecuteCommandLists(2, commandLists);
-    } else {
-        //5.GPUにコマンドリストの実行を行わせる
-        ID3D12CommandList* commandLists[] = { commanList };
-        commandQueue.GetCommandQueue()->ExecuteCommandLists(1, commandLists);
-    }
+    //5.GPUにコマンドリストの実行を行わせる
+    
+    ID3D12CommandList* commandLists[] = { commanList };
+    commandQueue.GetCommandQueue()->ExecuteCommandLists(1, commandLists);
 
     //6.GPUとOSに画面の交換を行うよう通知する
     swapChainClass.GetSwapChain()->Present(1, 0);
@@ -297,9 +288,9 @@ void DirectXCommon::PrepareCommand(const CommandListType type)
     commandList_[type]->PrepareCommand();
 }
 
-void DirectXCommon::CloseLoadCommandList()
+void DirectXCommon::CloseLoadCommandList(const CommandListType type)
 {
-    auto* commanList = commandList_[kLoad]->Get();
+    auto* commanList = commandList_[type]->Get();
 
     //4.コマンドリストの内容を確定させる。全てのコマンドを詰んでから　Closesすること。
     commanList->Close();
@@ -307,8 +298,6 @@ void DirectXCommon::CloseLoadCommandList()
     //5.GPUにコマンドリストの実行を行わせる
     ID3D12CommandList* commandLists[] = { commanList };
     commandQueue.GetCommandQueue()->ExecuteCommandLists(1, commandLists);
-    //6.GPUとOSに画面の交換を行うよう通知する
-    swapChainClass.GetSwapChain()->Present(1, 0);
 
     //画面の更新が終わった直後GPUにシグナルを送る
     fence.SendSignal(commandQueue);
@@ -326,8 +315,8 @@ void DirectXCommon::RenderTextureForSpritePreDraw()
     rtvHandles[1] = renderTextureDataThermography.rtvHandleCPU;
 
     // SRVからRTVへバリア遷移
-    barrier.SettingBarrierSRVforRTV(renderTextureDataNormal.resource.Get());
-    barrier.SettingBarrierSRVforRTV(renderTextureDataThermography.resource.Get());
+    barrierMain_.SettingBarrierSRVforRTV(renderTextureDataNormal.resource.Get());
+    barrierMain_.SettingBarrierSRVforRTV(renderTextureDataThermography.resource.Get());
 
     // スプライト描画用のRTVをセット (深度バッファは不要なら nullptr)
     commanList->OMSetRenderTargets(2, rtvHandles, false, nullptr);
@@ -344,8 +333,8 @@ void DirectXCommon::RenderTextureForSpritePostDraw()
     auto& renderTextureDataNormal = renderTextureForSprite_->GetRenderTextureData(RenderTexture::kNormal0);
     auto& renderTextureDataThermography = renderTextureForSprite_->GetRenderTextureData(RenderTexture::kThermography);
 
-    barrier.SettingBarrierRTVforSRV(renderTextureDataNormal.resource.Get());
-    barrier.SettingBarrierRTVforSRV(renderTextureDataThermography.resource.Get()); 
+    barrierMain_.SettingBarrierRTVforSRV(renderTextureDataNormal.resource.Get());
+    barrierMain_.SettingBarrierRTVforSRV(renderTextureDataThermography.resource.Get());
 }
 
 // =============================================================================================
@@ -468,7 +457,8 @@ void DirectXCommon::InitializeRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap
 {
     renderTexture_ = std::make_unique<RenderTexture>();
     renderTexture_->SetCommandListAndSrvDescriptorHeap(commandList_[kMain]->Get(), srvDescriptorHeap);
-    renderTexture_->Create(rtvDescriptorHeap, { 1.0f,0.0f,0.0f,1.0f });
+    //グレー
+    renderTexture_->Create(rtvDescriptorHeap, { 0.5f,0.5f,0.5f,1.0f });
 
     //スプライト用のレンダーテクスチャを作成
     renderTextureForSprite_ = std::make_unique<RenderTexture>();

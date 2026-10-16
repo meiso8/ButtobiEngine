@@ -94,6 +94,7 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
 #endif
 
     auto* mainCommandList = directXCommon_->GetCommandListClass(DirectXCommon::kMain)->Get();
+    auto* loadCommandList = directXCommon_->GetCommandListClass(DirectXCommon::kLoad)->Get();
 
     directXCommon_->InitializeRenderTexture(rtvDescriptorHeap_.get(), srvDescriptorHeap_.get());
     //ポストプロセス管理の生成
@@ -124,6 +125,33 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     Sound::Initialize();
     LogFile::Log("Initialize Sound");
 
+    //テクスチャ管理
+    texture_ = std::make_unique<Texture>();
+    texture_->Initialize();
+    texture_->SetCommandListAndSrvDescriptorHeap(loadCommandList, srvDescriptorHeap_.get());
+
+    //共通のスプライト
+    spriteCommon_ = std::make_unique<SpriteCommon>();
+    //PSOの設定と初期化
+    spriteCommon_->Initialize(pso->GetRootSignature());
+
+    Sprite::SetCommandListAndSrvDescriptorHeap(
+        mainCommandList,
+        srvDescriptorHeap_.get()
+    );
+
+    //スプライト用カメラ
+    SpriteCamera::Initialize(static_cast<float>(wc->GetClientWidth()), static_cast<float>(wc->GetClientHeight()));
+    LogFile::Log("Initialize　SpriteCamera");
+
+    //アイキャッチの作成
+    eyeCatch_ = std::make_unique<EyeCatch>();
+    eyeCatch_->Initialize();
+
+    // ★ 追加: ここまでの kLoad に積まれたテクスチャ転送コマンドを一旦GPUにキックして完了を待つ
+    directXCommon_->CloseLoadCommandList(DirectXCommon::kLoad); 
+
+
 
 }
 
@@ -142,6 +170,13 @@ void ButtobiEngine::Update() {
 
 #endif
 
+
+
+}
+
+void ButtobiEngine::UpdateEyeCatch()
+{
+    eyeCatch_->Update(true);
 }
 
 void ButtobiEngine::GameUpdate()
@@ -212,6 +247,10 @@ void ButtobiEngine::Debug()
 
 void ButtobiEngine::Load()
 {
+
+    // キック後、非同期ロード用に kLoad コマンドリストを再準備（リセット）する
+    directXCommon_->PrepareCommand(DirectXCommon::kLoad);
+
     // ロード用（テクスチャ転送などに使う場合）
     auto* loadCommandList = directXCommon_->GetCommandListClass(DirectXCommon::kLoad)->Get();
     // 描画用
@@ -219,28 +258,6 @@ void ButtobiEngine::Load()
 
     auto* pso = PSO::GetInstance();
 
-#pragma region//テクスチャやスプライト
-
-    //テクスチャ管理
-    texture_ = std::make_unique<Texture>();
-    texture_->Initialize();
-    texture_->SetCommandListAndSrvDescriptorHeap(loadCommandList, srvDescriptorHeap_.get());
-
-    //共通のスプライト
-    spriteCommon_ = std::make_unique<SpriteCommon>();
-    //PSOの設定と初期化
-    spriteCommon_->Initialize(pso->GetRootSignature());
-
-    Sprite::SetCommandListAndSrvDescriptorHeap(
-        mainCommandList,
-        srvDescriptorHeap_.get()
-    );
-
-    //スプライト用カメラ
-    SpriteCamera::Initialize(static_cast<float>(wc->GetClientWidth()), static_cast<float>(wc->GetClientHeight()));
-    LogFile::Log("Initialize　SpriteCamera");
-
-#pragma endregion
 
     //テキストの初期化
     freeTypeManager_ = std::make_unique<FreeTypeManager>();
@@ -299,7 +316,7 @@ void ButtobiEngine::Load()
     particleManager_ = std::make_unique<ParticleManager>();
     //一旦後でRootSignatureについて考える
     particleManager_->Create(pso->GetRootSignature());
-    particleManager_->SetCommandListAndSrvDescriptorHeap(mainCommandList, srvDescriptorHeap_.get());
+    particleManager_->SetCommandListAndSrvDescriptorHeap(loadCommandList, srvDescriptorHeap_.get());
     particleManager_->CreateAll();
     //パーティクルエミッターへのセット
     ParticleEmitter::SetParticleManager(particleManager_.get());
@@ -308,12 +325,12 @@ void ButtobiEngine::Load()
 
 
     gpuParticleManager_ = std::make_unique<GPUParticleManager>();
-    gpuParticleManager_->Create(PSO::GetRootSignature(), srvDescriptorHeap_.get(), mainCommandList);
+    gpuParticleManager_->Create(PSO::GetRootSignature(), srvDescriptorHeap_.get(), loadCommandList);
     gpuParticleManager_->Initialize();
 
     /// @brief GPUパーティクルエミッター
     gpuParticleEmitter_ = std::make_unique<GPUParticleEmitter>();
-    GPUParticleEmitter::SetCommandListAndCbvSrvUavDescriptorHeap(mainCommandList, srvDescriptorHeap_.get());
+    GPUParticleEmitter::SetCommandListAndCbvSrvUavDescriptorHeap(loadCommandList, srvDescriptorHeap_.get());
     gpuParticleEmitter_->Create();
     gpuParticleEmitter_->SetParticleGroup(gpuParticleManager_->GetGroup());
 #ifdef _DEVELOP
@@ -342,7 +359,22 @@ void ButtobiEngine::Load()
         LogFile::Log("Set Debug Camera");
     }
 
-    directXCommon_->CloseLoadCommandList();
+    directXCommon_->CloseLoadCommandList(DirectXCommon::kLoad);
+
+    // ==========================================
+    // ② 初期化完了後、メインループでの描画用に mainCommandList に切り替える
+    // ==========================================
+    freeTypeManager_->SetCommandListAndSrvDescriptorHeap(mainCommandList, srvDescriptorHeap_.get());
+ 
+
+    Sprite::SetCommandListAndSrvDescriptorHeap(
+        mainCommandList,
+        srvDescriptorHeap_.get()
+    );
+    texture_->SetCommandListAndSrvDescriptorHeap(mainCommandList, srvDescriptorHeap_.get());
+    particleManager_->SetCommandListAndSrvDescriptorHeap(mainCommandList, srvDescriptorHeap_.get());
+    GPUParticleEmitter::SetCommandListAndCbvSrvUavDescriptorHeap(mainCommandList, srvDescriptorHeap_.get());
+    gpuParticleManager_->SetCommandList(mainCommandList);
 
     LogFile::Log("LoopStart");
 }
@@ -436,35 +468,30 @@ void ButtobiEngine::PostCommandSet(const bool isLoadEnd) {
     srvDescriptorHeap_->PreDraw(commandList);
     //ビューポートとシザー
     directXCommon_->VeiwPortAndScissorRect();
-
-    //ポストエフェクト
-    directXCommon_->DrawRenderTexture(rtvDescriptorHeap_.get());
-
-    //directXCommon_->RenderTextureForSpritePreDraw();
-    //// スプライトの描画
+ 
+    // スプライトの描画
     if (isLoadEnd) {
+        //ポストエフェクト
+        directXCommon_->DrawRenderTexture(rtvDescriptorHeap_.get());
         SceneManager::DrawSprite();
+
+    } else {
+        Sprite::PreDraw();
+        eyeCatch_->Draw();
     }
-
-    //directXCommon_->RenderTextureForSpritePostDraw();
-
-    //directXCommon_->DrawRenderTextureForSprite(rtvDescriptorHeap_.get());
 
 #ifdef USE_IMGUI
     //諸々の描画処理が終了下タイミングでImGuiの描画コマンドを積む
     imGuiClass.DrawImGui(directXCommon_->GetCommandList(DirectXCommon::kMain));
 
 #endif // _DEBUG
-    directXCommon_->PostDraw(isLoadEnd);
+    directXCommon_->PostDraw();
 
     //時間の更新を入れる
     time_->Update();
     //次のコマンド準備をする
     directXCommon_->PrepareCommand(DirectXCommon::kMain);
-    if (isLoadEnd) {
-        directXCommon_->PrepareCommand(DirectXCommon::kLoad);
-    }
-
+ 
 
     //フォントの使用をリセットする
     freeTypeManager_->ResetFontUsage();

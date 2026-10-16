@@ -9,13 +9,13 @@ EyeCatch::EyeCatch()
     const float whidth = static_cast<float>(Window::GetClientWidth());
     const float halfWidth = whidth * 0.5f;
     const float halfHeight = height * 0.5f;
-
+    Texture::LoadAndMapHandle("Resource/Textures/white1x1.png", TextureFactory:: WHITE_1X1);
     std::string directoryName = "Resource/Textures/EyeCatch/eyeCatch_";
 
     for (int32_t i = 0; i < sprites_.size(); ++i) {
         textureHandles_[i] = Texture::LoadAndGetIndex(directoryName + std::to_string(i) + ".png");
         sprites_[i] = std::make_unique<Sprite>();
-        sprites_[i]->Create(TextureFactory::UV_CHECKER,Vector2{ halfWidth, halfHeight });
+        sprites_[i]->Create(TextureFactory::WHITE_1X1,Vector2{ halfWidth, halfHeight });
         sprites_[i]->SetSRVTextureHandle(textureHandles_[i]);
         sprites_[i]->SetAnchorPoint({ 0.5f,0.5f });
         sprites_[i]->AdjustTextureSize();
@@ -34,7 +34,7 @@ void EyeCatch::Initialize()
     isAnimeEnd_ = false;
 }
 
-void EyeCatch::Update()
+void EyeCatch::Update(bool isLoop)
 {
     if (isAnimeEnd_) {
         //アニメ終了時リターンする
@@ -49,7 +49,12 @@ void EyeCatch::Update()
             //アニメーションタイマーを初期化する
             animationTimer_ = 0.0f;
         } else {
-            isAnimeEnd_ = true;
+            if (isLoop) {
+                Initialize();
+            } else {
+                isAnimeEnd_ = true;
+            }
+  
         }
     }
 

@@ -10,7 +10,7 @@ public:
     EyeCatch();
     ~EyeCatch();
     void Initialize();
-    void Update();
+    void Update( bool isLoop = false);
     void Draw();
 private:
     std::array<std::unique_ptr<Sprite>,8>  sprites_;

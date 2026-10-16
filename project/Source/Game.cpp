@@ -35,6 +35,7 @@ void Game::Update()
     if (isLoading_)
     {
         // ロード画面アニメーションなどの更新
+        ButtobiEngine::UpdateEyeCatch();
         return;
     }
 

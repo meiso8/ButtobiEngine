@@ -61,8 +61,9 @@ private:
 
     D3D12_VIEWPORT viewport = {};
     D3D12_RECT scissorRect = {};
-    TransitionBarrier barrier = {};
+    TransitionBarrier barrierMain_ = {};
 
+    TransitionBarrier barrierLoad_ = {};
 public:
     RenderTexture* GetRenderTexture() { return renderTexture_.get(); };
     void Finalize();
@@ -87,11 +88,11 @@ public:
     /// @brief 描画前処理
     void PreDraw();
     /// @brief 描画後処理
-    void PostDraw(const bool isEndLoad);
+    void PostDraw();
     /// @brief 次フレームの準備
     void PrepareCommand(const CommandListType type);
     
-    void CloseLoadCommandList();
+    void CloseLoadCommandList(const CommandListType type);
 
     void RenderTextureForSpritePreDraw();
     void RenderTextureForSpritePostDraw();

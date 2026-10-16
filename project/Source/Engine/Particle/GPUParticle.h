@@ -24,4 +24,5 @@ public:
     void Initialize();
 
     void Draw(Camera& camera);
+    void SetCommandList(ID3D12GraphicsCommandList* commandList) { commandList_ = commandList; };
 };
