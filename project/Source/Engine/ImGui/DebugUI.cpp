@@ -447,7 +447,6 @@ void DebugUI::CheckTextures(CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
 
 #ifdef USE_IMGUI
-
     if (ImGui::TreeNode("Textures")) {
 
         const std::vector<uint32_t>& srvIndexes = Texture::GetMappedSRVIndexes();
@@ -505,7 +504,6 @@ void DebugUI::CheckTextures(CbvSrvUavDescriptorHeap* srvDescriptorHeap)
         ImGui::TreePop();
 
     }
-
 #endif
 }
 
@@ -1593,11 +1591,9 @@ void DebugUI::CheckCaracterState(CharacterState& characterState, const char* lab
 
 void DebugUI::CheckFPS() {
 #ifdef USE_IMGUI
-    ImGui::Begin("Debug");
     ImVec4 color = (ImGui::GetIO().Framerate < 55.0f) ? ImVec4(1, 0, 0, 1) : ImVec4(0, 1, 0, 1);
     ImGui::TextColored(color, "FPS : %0.1f", ImGui::GetIO().Framerate);
     ImGui::TextColored(color, "DeltaTime : %f", TimeManager::DeltaTime());
-    ImGui::End();
 #endif
 }
 
@@ -1700,6 +1696,8 @@ void DebugUI::CheckPostEffect()
 {
 
 #ifdef USE_IMGUI
+
+    ImGui::Begin("PostEffect");
     auto* postProcessManager = PostProcessManager::GetInstance();
 
     if (ImGui::TreeNode("PostEffect Model")) {
@@ -1736,6 +1734,8 @@ void DebugUI::CheckPostEffect()
         CheckPostEffectMaterial(*spritelMaterial->GetMaterialForMosaic());
         ImGui::TreePop();
     }
+
+    ImGui::End();
 
 #endif
 

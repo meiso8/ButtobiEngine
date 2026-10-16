@@ -34,13 +34,19 @@ class DsvDescriptorHeap;
 
 class DirectXCommon
 {
+public:
+    enum CommandListType {
+        kLoad,
+        kMain,
+    };
+
 private:
     Window* window_ = nullptr;
     DXGIFactory dxgiFactory = {};
 
     static Microsoft::WRL::ComPtr<ID3D12Device> device;
     static std::unique_ptr< DxcCompiler> dxcCompiler;
-    std::unique_ptr<CommandList> commandList_ = nullptr;
+    std::unordered_map<CommandListType,std::unique_ptr<CommandList>>commandList_{};
 
     CommandQueue commandQueue = {};
     SwapChain swapChainClass;
@@ -55,7 +61,9 @@ private:
 
     D3D12_VIEWPORT viewport = {};
     D3D12_RECT scissorRect = {};
-    TransitionBarrier barrier = {};
+    TransitionBarrier barrierMain_ = {};
+
+    TransitionBarrier barrierLoad_ = {};
 public:
     RenderTexture* GetRenderTexture() { return renderTexture_.get(); };
     void Finalize();
@@ -82,8 +90,10 @@ public:
     /// @brief 描画後処理
     void PostDraw();
     /// @brief 次フレームの準備
-    void PrepareCommand();
+    void PrepareCommand(const CommandListType type);
     
+    void CloseLoadCommandList(const CommandListType type);
+
     void RenderTextureForSpritePreDraw();
     void RenderTextureForSpritePostDraw();
 
@@ -121,10 +131,10 @@ public:
     static DxcCompiler* GetDxcCompiler() { return dxcCompiler.get(); }
     /// @brief コマンドリストの取得関数
     /// @return コマンドリスト
-    ID3D12GraphicsCommandList* GetCommandList() { return commandList_->GetCommandList().Get(); };
+    ID3D12GraphicsCommandList* GetCommandList(const CommandListType type) { return commandList_[type]->GetCommandList().Get(); };
     /// @brief コマンドリストクラスの取得関数
 /// @return コマンドリスト
-    CommandList* GetCommandListClass() { return commandList_.get(); };
+    CommandList* GetCommandListClass(const CommandListType type) { return commandList_[type].get(); };
 private:
     void InitializeDevice();
     void InitializeCommand();

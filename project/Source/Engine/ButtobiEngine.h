@@ -25,7 +25,7 @@
 #include"DepthTexture/DepthTexture.h"
 #include"Particle/GPUParticle.h"
 #include"Particle/GPUParticleEmitter/GPUParticleEmitter.h"
-
+#include"../Application/GameObject/UI/EyeCatch/EyeCatch.h"
 
 class DirectXCommon;
 
@@ -84,6 +84,8 @@ private:
     std::unique_ptr<GPUParticleManager>gpuParticleManager_ = nullptr;
     /// @brief GPUパーティクルエミッター
     std::unique_ptr<GPUParticleEmitter>gpuParticleEmitter_ = nullptr;
+    /// @brief アイキャッチ
+    std::unique_ptr<EyeCatch>eyeCatch_ = nullptr;
 
 protected:
     
@@ -91,15 +93,18 @@ protected:
 
     void Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight);
     void PreCommandSet();
-    void PostCommandSet();
+    void PostCommandSet(const bool isLoadEnd);
     /// @brief 初期化処理　純粋仮想関数
     virtual void Initialize() = 0;
     virtual void Draw() = 0;
     virtual void Finalize();
     virtual void Update();
+    void UpdateEyeCatch();
+    void GameUpdate();
+    void GameDraw();
     virtual void Debug();
     bool IsEndRequest() { return endRequest_; }
-
+    void Load();
 public:
     ButtobiEngine() = default;
     ButtobiEngine(ButtobiEngine&) = delete;

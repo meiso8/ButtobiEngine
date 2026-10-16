@@ -9,13 +9,13 @@
 #include"CommandList.h"
 #include"Log.h"
 
-ID3D12GraphicsCommandList* Sprite::commandList_ = nullptr;
+ID3D12GraphicsCommandList* Sprite::drawCommandList_ = nullptr;
 /// @brief　SRV管理の借り物
 CbvSrvUavDescriptorHeap* Sprite::srvDescriptorHeap_ = nullptr;
 void Sprite::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
-    commandList_ = commandList;
-    assert(commandList_);
+    drawCommandList_ = commandList;
+    assert(drawCommandList_);
     LogFile::Log("Sprite　SetCommandList");
 
     srvDescriptorHeap_ = srvDescriptorHeap;
@@ -114,7 +114,7 @@ void Sprite::SetSRVTextureHandle(const int32_t textureSrvHandle)
 
 
 void Sprite::PreDraw(uint32_t blendMode) {
-    SpriteCommon::PreDraw(blendMode, commandList_);
+    SpriteCommon::PreDraw(blendMode, drawCommandList_);
 }
 
 void Sprite::Draw(
@@ -129,18 +129,18 @@ void Sprite::Draw(
     *transformationMatrixResource_.data = { Multiply(worldMatrix_, SpriteCamera::GetViewProjectionMatrix()),worldMatrix_ };
 
     //頂点バッファビューを設定
-    commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
+    drawCommandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
 
-    SpriteCommon::SetIndexBuffer(commandList_);
+    SpriteCommon::SetIndexBuffer(drawCommandList_);
 
     //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_.GetGPUVirtualAddress());
+    drawCommandList_->SetGraphicsRootConstantBufferView(0, materialResource_.GetGPUVirtualAddress());
     //TransformationMatrixCBufferの場所を設定
-    commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_.GetGPUVirtualAddress());
+    drawCommandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_.GetGPUVirtualAddress());
     //SRVのDescriptorTableの先頭を設定。rootParameter[2]
-    srvDescriptorHeap_->SetGraphicsRootDescriptorTable(2, textureHandle_, commandList_);
+    srvDescriptorHeap_->SetGraphicsRootDescriptorTable(2, textureHandle_, drawCommandList_);
 
-    SpriteCommon::DrawCall(commandList_);
+    SpriteCommon::DrawCall(drawCommandList_);
 
 };
 

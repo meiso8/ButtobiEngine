@@ -61,7 +61,7 @@ void SlidePuzzleSystem::Update(const Vector2& screenPos)
         isEnd_ = true;
     }
 
-    ImGui::Begin("Debug");
+    ImGui::Begin("Game");
     ImGui::Checkbox("isEndPuzzle", &isEnd_);
     ImGui::End();
 #endif //USE_IMGUI

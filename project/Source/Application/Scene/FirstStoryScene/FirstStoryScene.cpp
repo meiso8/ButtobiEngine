@@ -164,7 +164,7 @@ void FirstStoryScene::Debug()
 {
 #ifdef USE_IMGUI
 
-    ImGui::Begin("Debug");
+    ImGui::Begin("Game");
 
     if (ImGui::Button("SwitchCamera")) {
         SwitchCamera();

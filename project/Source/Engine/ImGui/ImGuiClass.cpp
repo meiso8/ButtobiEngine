@@ -210,7 +210,16 @@ void ImGuiClass::DropFiles(WPARAM wParam) {
 
 
 
-void HandleDroppedFile(const std::filesystem::path& fullPath) {
+void ImGuiClass::HandleDroppedFile() {
+
+   
+    // ファイルがドロップされたらDX12のリソースを生成
+    if (!ImGuiLoadFile::isFileDropped) {
+        return;
+    }
+
+
+    std::filesystem::path fullPath(ImGuiLoadFile::droppedFilePath);
 
     // 3. basePath から見た相対パスに変換する
     std::filesystem::path relativePath = std::filesystem::relative(fullPath, ImGuiLoadFile::projectPath);
@@ -240,24 +249,19 @@ void HandleDroppedFile(const std::filesystem::path& fullPath) {
         ImGui::Text(message.c_str());
     }
 
+    ImGuiLoadFile::isFileDropped = false; // フラグを下ろす
+
+
 }
 
-void ImGuiClass::DrawModelLoaderWindow(CbvSrvUavDescriptorHeap* srvDescriptorHeap)
+void ImGuiClass::DrawModelLoaderWindowAndCheckDroppedFile(CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
  
     ImGui::Begin("Assets");
 
-    // ファイルがドロップされたらDX12のリソースを生成
-    if (ImGuiLoadFile::isFileDropped) {
-        
-        std::filesystem::path fullPath(ImGuiLoadFile::droppedFilePath);
-
-        HandleDroppedFile(fullPath);
-
-        ImGuiLoadFile::isFileDropped = false; // フラグを下ろす
-    }
-
     ImGui::Text("%s", ImGuiLoadFile::droppedFilePath.string().c_str());
+
+    HandleDroppedFile();
 
     DebugUI::CheckTextures(srvDescriptorHeap);
     DebugUI::CheckModels();

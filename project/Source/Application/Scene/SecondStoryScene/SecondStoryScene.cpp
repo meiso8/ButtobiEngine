@@ -207,7 +207,7 @@ void SecondStoryScene::Debug()
 {
 #ifdef USE_IMGUI
 
-    ImGui::Begin("Debug");
+    ImGui::Begin("ButtobiEngine");
 
     if (ImGui::Button("SwitchCamera")) {
         SwitchCamera();

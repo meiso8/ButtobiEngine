@@ -62,7 +62,7 @@ void MeltBlockMap::Update()
 
 #ifdef USE_IMGUI
 
-    ImGui::Begin("Debug");
+    ImGui::Begin("Game");
     if (ImGui::Button("AnubisBlockClear")) {
         ClearSet();
     }

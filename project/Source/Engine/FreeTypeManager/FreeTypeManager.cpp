@@ -106,10 +106,10 @@ uint32_t FreeTypeManager::CreateFace(const string& fontPath, const uint32_t inde
 
 }
 
-void FreeTypeManager::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap)
+void FreeTypeManager::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* loadCommandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 
 {    //コマンドリストをセットする
-    commandList_ = commandList;
+    commandList_ = loadCommandList;
     assert(commandList_);
     
     LogFile::Log("SetCommandList to FreeType\n");
@@ -117,9 +117,7 @@ void FreeTypeManager::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandLi
     srvDescriptorHeap_ = srvDescriptorHeap;
     assert(srvDescriptorHeap_);
 
-    Font::SetCommandListAndSrvDescriptorHeap(commandList_, srvDescriptorHeap_);
 
-    LogFile::Log("Set SrvDescriptorHeap to FreeType\n");
 
 
 }

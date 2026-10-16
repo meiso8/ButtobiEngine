@@ -34,8 +34,11 @@ public:
     void Render();
     void DrawImGui(ID3D12GraphicsCommandList* commandList);
     void ShutDown();
-   void DrawModelLoaderWindow(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
+   void DrawModelLoaderWindowAndCheckDroppedFile(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
    static void DropFiles(WPARAM wParam);
+private:
+    void HandleDroppedFile();
+
 };
 
 
