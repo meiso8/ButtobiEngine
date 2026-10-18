@@ -18,8 +18,8 @@ public:
     void Draw();
 
     void OnCollision(Collider* collider) override;
-    void SetTexture(const TextureFactory::Handle& handle) {
-        object_->SetTextureHandle(handle);
+    void SetTexture(const uint32_t handle) {
+        object_->SetSRVHandle(handle);
     };
     void SetTranslate(const Vector3& translate) {
         object_->SetTranslate(translate);

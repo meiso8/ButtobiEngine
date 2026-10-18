@@ -33,7 +33,7 @@ void AmenStage::StageTransitionInitialize()
     //像の初期化
     amenRa_->Initialize();
     //メモの生成
-   GetMemoManager()->GenerateMemos({TextureFactory::MEMO1, TextureFactory::MEMO3,TextureFactory::MEMO4,TextureFactory::BOOK4});
+   GetMemoManager()->GenerateMemos({MemoManager::MEMO1, MemoManager::MEMO3,MemoManager::MEMO4,MemoManager::BOOK4});
     backGround_->Initialize();
     // ミイラ前に移動
     GetPlayer()->Init({0.0f, 0.0f, -5.0f});

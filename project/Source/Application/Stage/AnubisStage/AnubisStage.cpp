@@ -27,7 +27,7 @@ void AnubisStage::StageTransitionInitialize()
     //ステージのロード
     LoadAndCreateObject("AnubisStage_objectEditor");
 
-    GetMemoManager()->GenerateMemos({TextureFactory::BOOK5});
+    GetMemoManager()->GenerateMemos({ MemoManager::BOOK5});
 
     //少し手前側に移動する
     GetPlayer()->Init({0.0f, 0.0f, -10.0f});

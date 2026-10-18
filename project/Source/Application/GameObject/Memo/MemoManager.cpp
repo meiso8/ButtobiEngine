@@ -13,12 +13,35 @@ namespace {
    float minSpriteScale_ = { 1.0f};
 }
 
+std::string MemoManager::GetFilePath(const MemoType type)
+{
+
+    std::string fileName;
+
+    switch (type) {
+    case MEMO1: fileName = "memo01";   break;
+    case MEMO2:fileName = "memo02"; break;
+    case MEMO3:fileName = "memo03"; break;
+    case MEMO4:fileName = "memo04"; break;
+    case MEMO5:fileName = "memo05"; break;
+    case BOOK1:fileName = "book";  break;
+    case BOOK2:fileName = "book02"; break;
+    case BOOK3:fileName = "book03"; break;
+    case BOOK4:fileName = "book04"; break;
+    case BOOK5:fileName = "book05"; break;
+    case BOOK6:fileName = "book06"; break;
+    default:break;
+    }
+
+    return directoryFilePath + "/" + fileName + ".png";
+}
+
 MemoManager::MemoManager()
 {
     sprite_ = std::make_unique<Sprite>();
     float width = static_cast<float>(Window::GetClientWidth());
     float height = static_cast<float>(Window::GetClientHeight());
-    sprite_->Create(TextureFactory::MEMO1, { width * 0.5f, height * 0.5f });
+    sprite_->Create(TextureFactory::UV_CHECKER, { width * 0.5f, height * 0.5f });
     sprite_->SetAnchorPoint({ 0.5f,0.5f });
 
 }
@@ -76,7 +99,7 @@ void MemoManager::DrawUI()
 }
 
 
-void MemoManager::GenerateMemos(const std::vector<TextureFactory::Handle>& handles)
+void MemoManager::GenerateMemos(const std::vector<MemoType>& types)
 {
     memos_.clear(); // 既存のメモをクリア
 
@@ -100,25 +123,27 @@ void MemoManager::GenerateMemos(const std::vector<TextureFactory::Handle>& handl
         }
     }
 
-    for (const auto& handle : handles) {
+    for (const auto& type : types) {
         auto memo = std::make_unique<Memo>();
-        memo->SetTexture(handle);
-
         std::string key;
-        switch (handle) {
-        case TextureFactory::MEMO1: key = "memo1"; break;
-        case TextureFactory::MEMO2: key = "memo2"; break;
-        case TextureFactory::MEMO3: key = "memo3"; break;
-        case TextureFactory::MEMO4: key = "memo4"; break;
-        case TextureFactory::MEMO5: key = "memo5"; break;
-        case TextureFactory::BOOK:  key = "book1"; break;
-        case TextureFactory::BOOK2: key = "book2"; break;
-        case TextureFactory::BOOK3: key = "book3"; break;
-        case TextureFactory::BOOK4: key = "book4"; break;
-        case TextureFactory::BOOK5: key = "book5"; break;
-        case TextureFactory::BOOK6: key = "book6"; break;
-        default: continue;
+
+        switch (type) {
+        case MEMO1: key = "memo1";   break;
+         case MEMO2: key = "memo2";  break;
+         case MEMO3: key = "memo3";  break;
+         case MEMO4: key = "memo4";  break;
+         case MEMO5: key = "memo5";  break;
+         case BOOK1: key = "book1";  break;
+         case BOOK2: key = "book2";  break;
+         case BOOK3: key = "book3";  break;
+         case BOOK4: key = "book4";  break;
+         case BOOK5: key = "book5";  break;
+         case BOOK6: key = "book6";  break;
+          default: continue;
         }
+
+        uint32_t handle = Texture::AddTextureHandle(GetFilePath(type));
+        memo->SetTexture(handle);
 
         if (file.contains(key)) {
              EulerTransform transform;
@@ -134,13 +159,14 @@ void MemoManager::GenerateMemos(const std::vector<TextureFactory::Handle>& handl
         }
 
 
-        memos_[handle] = std::move(memo);
+        memos_[type] = std::move(memo);
     }
 }
 
-void MemoManager::SetSpriteSize(const TextureFactory::Handle& handle)
+void MemoManager::SetSpriteSize(const MemoType& type)
 {
-    sprite_->SetTexture(handle);
+    uint32_t handle = Texture::LoadAndGetIndex(GetFilePath(type));
+    sprite_->SetSRVTextureHandle(handle);
     sprite_->AdjustTextureSize();
 }
 

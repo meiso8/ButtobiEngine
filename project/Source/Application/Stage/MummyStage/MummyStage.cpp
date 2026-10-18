@@ -82,7 +82,7 @@ void MummyStage::StageTransitionInitialize()
     //ステージのロード
     LoadAndCreateObject("MummyStage_objectEditor");
 
-    GetMemoManager()->GenerateMemos({ TextureFactory::BOOK,TextureFactory::MEMO5 });
+    GetMemoManager()->GenerateMemos({ MemoManager::BOOK1,MemoManager::MEMO5 });
     // ミイラ前に移動
     GetPlayer()->Init({ 0.0f, 0.0f, -5.0f });
 

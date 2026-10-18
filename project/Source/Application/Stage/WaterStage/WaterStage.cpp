@@ -28,7 +28,7 @@ void WaterStage::StageTransitionInitialize()
     LoadAndCreateObject("WaterStage_objectEditor");
 
     //メモ管理
-    GetMemoManager()->GenerateMemos({ TextureFactory::MEMO2, TextureFactory::BOOK2 });
+    GetMemoManager()->GenerateMemos({ MemoManager::MEMO2, MemoManager::BOOK2 });
     //プレイヤー管理
     GetPlayer()->Init({ 0.0f,0.0f,-10.0f });
     //アイテム管理　なにも生成しない
