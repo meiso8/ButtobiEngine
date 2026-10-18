@@ -23,19 +23,6 @@ void TextureFactory::Load()
 
     Texture::LoadAndMapHandle("Resource/Textures/test3.png", TEST3);
 
-    Texture::LoadAndMapHandle("Resource/Textures/memo01.png", MEMO1);
-    Texture::LoadAndMapHandle("Resource/Textures/memo02.png", MEMO2);
-    Texture::LoadAndMapHandle("Resource/Textures/memo03.png", MEMO3);
-    Texture::LoadAndMapHandle("Resource/Textures/memo04.png", MEMO4);
-    Texture::LoadAndMapHandle("Resource/Textures/memo05.png", MEMO5);
-
-    Texture::LoadAndMapHandle("Resource/Textures/book.png", BOOK);
-    Texture::LoadAndMapHandle("Resource/Textures/book02.png", BOOK2);
-    Texture::LoadAndMapHandle("Resource/Textures/book03.png", BOOK3);
-    Texture::LoadAndMapHandle("Resource/Textures/book04.png", BOOK4);
-    Texture::LoadAndMapHandle("Resource/Textures/book05.png", BOOK5);
-    Texture::LoadAndMapHandle("Resource/Textures/book06.png", BOOK6);
-
     Texture::LoadAndMapHandle("Resource/Textures/none.png", NONE);
     Texture::LoadAndMapHandle("Resource/Textures/puzzle.png", PUZZLE);
     Texture::LoadAndMapHandle("Resource/Textures/puzzleNum.png", PUZZLE_NUM);

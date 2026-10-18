@@ -53,7 +53,7 @@ void MedjedStage::StageTransitionInitialize()
     particleEmitters_[kMedjed_Particle]->GetEmitter().transform.Parent(medjedManager_->GetMedjedWorldTransform());
 
     //メモの生成
-    GetMemoManager()->GenerateMemos({TextureFactory::BOOK3});
+    GetMemoManager()->GenerateMemos({ MemoManager::BOOK3});
     //アイテムの生成
     GetItemManager()->GenerateItems({"SunRod"});
 

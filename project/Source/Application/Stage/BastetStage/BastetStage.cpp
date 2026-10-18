@@ -30,7 +30,7 @@ void BastetStage::StageTransitionInitialize()
     //ステージのロード
     LoadAndCreateObject("BastetStage_objectEditor");
     //メモの生成
-    GetMemoManager()->GenerateMemos({TextureFactory::BOOK6});
+    GetMemoManager()->GenerateMemos({ MemoManager::BOOK6});
     //バステト　
     bastet_->LoadMap("BastetStage_BastetStep");
 
