@@ -12,11 +12,14 @@
             "environmentCoefficient": 0.0,
             "file_name": "Cube",
             "glassFactor": 0.0,
+            "isLoked": false,
             "lightMode": 2,
             "name": "Object1111111",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 250.0,
             "temperature": 0.0,
+            "textureFilePath": "Resource/Textures/none.png",
             "textureHandle": 29,
             "transform": {
                 "rotate": {
@@ -48,11 +51,14 @@
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
             "glassFactor": 0.0,
+            "isLoked": false,
             "lightMode": 2,
             "name": "Object2222222",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 250.0,
             "temperature": 0.20000000298023224,
+            "textureFilePath": "Resource/Textures/arrow.png",
             "textureHandle": 54,
             "transform": {
                 "rotate": {
@@ -84,11 +90,14 @@
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
             "glassFactor": 0.0,
+            "isLoked": false,
             "lightMode": 2,
             "name": "Object3333333",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 250.0,
             "temperature": 0.20000000298023224,
+            "textureFilePath": "Resource/Textures/normalGlass.png",
             "textureHandle": 57,
             "transform": {
                 "rotate": {
@@ -120,11 +129,14 @@
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
             "glassFactor": 0.0,
+            "isLoked": false,
             "lightMode": 2,
             "name": "Object4444444",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 250.0,
             "temperature": 0.0,
+            "textureFilePath": "Resource/Textures/sm.png",
             "textureHandle": 22,
             "transform": {
                 "rotate": {
@@ -156,11 +168,14 @@
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
             "glassFactor": 0.0,
+            "isLoked": false,
             "lightMode": 2,
             "name": "Object5555555",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 250.0,
             "temperature": 1.0,
+            "textureFilePath": "Resource/Textures/meltGlass.png",
             "textureHandle": 56,
             "transform": {
                 "rotate": {
@@ -181,7 +196,7 @@
             },
             "type": "MESH"
         },
-      {
+        {
         
           "collider": {
             "center": {
@@ -198,40 +213,43 @@
             "tag": "Wall",
             "type": "AABB"
           },
-          "color": {
-            "w": 1.0,
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0
-          },
-          "disabled": false,
-          "environmentCoefficient": 0.0,
-          "file_name": "Cube",
-          "glassFactor": 0.0,
-          "lightMode": 2,
-          "name": "Object97776",
-          "nextStageName": "",
-          "shininess": 368.4763488769531,
-          "temperature": 0.0,
-          "textureHandle": 29,
-          "transform": {
-            "rotate": {
-              "x": 0.0,
-              "y": -0.0,
-              "z": 0.0
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
             },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Cube",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
+            "name": "Object97776",
+            "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 368.4763488769531,
+            "temperature": 0.0,
+            "textureFilePath": "Resource/Textures/none.png",
+            "textureHandle": 29,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 8.496278762817383,
+                    "y": 0.5022550821304321,
+                    "z": -5.006439208984375
+                }
             },
-            "translate": {
-              "x": 8.496278762817383,
-              "y": 0.5022550821304321,
-              "z": -5.006439208984375
-            }
-          },
-          "type": "MESH"
+            "type": "MESH"
         },
         {
             "collider": {
@@ -259,11 +277,14 @@
             "environmentCoefficient": 0.0,
             "file_name": "Cube",
             "glassFactor": 0.0,
+            "isLoked": false,
             "lightMode": 2,
             "name": "Object108887",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 250.0,
             "temperature": 0.0,
+            "textureFilePath": "Resource/Textures/none.png",
             "textureHandle": 29,
             "transform": {
                 "rotate": {
@@ -295,11 +316,14 @@
             "environmentCoefficient": 0.0,
             "file_name": "Cube",
             "glassFactor": 0.0,
+            "isLoked": false,
             "lightMode": 2,
             "name": "Object11998",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 250.0,
             "temperature": 0.0,
+            "textureFilePath": "Resource/Textures/book.png",
             "textureHandle": 25,
             "transform": {
                 "rotate": {
@@ -331,11 +355,14 @@
             "environmentCoefficient": 0.0,
             "file_name": "Cube",
             "glassFactor": 0.0,
+            "isLoked": false,
             "lightMode": 2,
             "name": "Object1210109",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 250.0,
             "temperature": 0.0,
+            "textureFilePath": "Resource/Textures/none.png",
             "textureHandle": 29,
             "transform": {
                 "rotate": {
@@ -356,43 +383,45 @@
             },
             "type": "MESH"
         },
-      {
-
-        "color": {
-          "w": 1.0,
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Cube",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
+            "name": "Object13111110",
+            "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "textureFilePath": "Resource/Textures/book04.png",
+            "textureHandle": 28,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 0.9929179549217224,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 0.26789090037345886,
+                    "y": 1.0,
+                    "z": 3.2440059185028076
+                },
+                "translate": {
+                    "x": -10.141114234924316,
+                    "y": -0.22568875551223755,
+                    "z": -0.10545645654201508
+                }
+            },
+            "type": "MESH"
         },
-        "disabled": false,
-        "environmentCoefficient": 0.0,
-        "file_name": "Cube",
-        "glassFactor": 0.0,
-        "lightMode": 2,
-        "name": "Object13111110",
-        "nextStageName": "",
-        "shininess": 250.0,
-        "temperature": 0.0,
-        "textureHandle": 28,
-        "transform": {
-          "rotate": {
-            "x": 0.0,
-            "y": 0.9929179549217224,
-            "z": 0.0
-          },
-          "scale": {
-            "x": 0.26789090037345886,
-            "y": 1.0,
-            "z": 3.2440059185028076
-          },
-          "translate": {
-            "x": -10.141114234924316,
-            "y": -0.22568875551223755,
-            "z": -0.10545645654201508
-          }
-        },
-        "type": "MESH"
-      },
         {
             "collider": {
                 "center": {
@@ -419,11 +448,14 @@
             "environmentCoefficient": 0.0,
             "file_name": "Cube",
             "glassFactor": 0.0,
+            "isLoked": false,
             "lightMode": 2,
             "name": "Object141211",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 250.0,
             "temperature": 0.0,
+            "textureFilePath": "Resource/Textures/none.png",
             "textureHandle": 29,
             "transform": {
                 "rotate": {
@@ -456,9 +488,11 @@
             "environmentCoefficient": 0.0,
             "file_name": "GlassCup.obj",
             "glassFactor": 1.0,
+            "isLoked": false,
             "lightMode": 1,
             "name": "Object151312",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 100.0,
             "temperature": 0.0,
             "transform": {
@@ -491,11 +525,14 @@
             "environmentCoefficient": 0.0,
             "file_name": "Cube",
             "glassFactor": 0.0,
+            "isLoked": false,
             "lightMode": 2,
             "name": "Object121413",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 250.0,
             "temperature": 0.0,
+            "textureFilePath": "Resource/Textures/none.png",
             "textureHandle": 29,
             "transform": {
                 "rotate": {
@@ -527,11 +564,14 @@
             "environmentCoefficient": 0.0,
             "file_name": "Cube",
             "glassFactor": 0.0,
+            "isLoked": false,
             "lightMode": 2,
             "name": "Object131514",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 250.0,
             "temperature": 0.0,
+            "textureFilePath": "Resource/Textures/book04.png",
             "textureHandle": 28,
             "transform": {
                 "rotate": {
@@ -552,6 +592,137 @@
             },
             "type": "MESH"
         },
+      {
+        
+          "collider": {
+            "center": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "maskTag": 4294508547,
+            "size": {
+              "x": 6.180190563201904,
+              "y": 6.180190563201904,
+              "z": 6.180190563201904
+            },
+            "tag": "Wall",
+            "type": "Sphere"
+          },
+          "color": {
+            "w": 1.0,
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "directoryPath": "Resource/Models/Fountain",
+          "disabled": false,
+          "environmentCoefficient": 0.0,
+          "file_name": "Fountain.obj",
+          "glassFactor": 0.0,
+          "isLoked": false,
+          "lightMode": 2,
+          "name": "Fountain",
+          "nextStageName": "",
+          "openFlagName": "",
+          "shininess": 250.0,
+          "temperature": 0.0,
+          "transform": {
+            "rotate": {
+              "x": 0.0,
+              "y": -0.0,
+              "z": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "translate": {
+              "x": -10.025607109069824,
+              "y": 0.25578248500823975,
+              "z": 0.0
+            }
+          },
+          "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Cube",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
+            "name": "Object17",
+            "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "textureFilePath": "Resource/Textures/puzzleNum.png",
+            "textureHandle": 31,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -10.127548217773438,
+                    "y": -0.13944251835346222,
+                    "z": -2.361088991165161e-05
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/HeadObj",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "headObj.obj",
+            "glassFactor": 1.0,
+            "isLoked": false,
+            "lightMode": 1,
+            "name": "Object20",
+            "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 2.891838788986206,
+                    "y": -0.4135594964027405,
+                    "z": -3.0394372940063477
+                },
+                "scale": {
+                    "x": 4.3900017738342285,
+                    "y": 4.389998435974121,
+                    "z": 4.3900017738342285
+                },
+                "translate": {
+                    "x": 12.011425971984863,
+                    "y": 1.3135473728179932,
+                    "z": -5.021933555603027
+                }
+            },
+            "type": "MESH"
+        },
         {
             "color": {
                 "w": 1.0,
@@ -564,9 +735,11 @@
             "environmentCoefficient": 0.0,
             "file_name": "UpStairs.obj",
             "glassFactor": 0.0,
+            "isLoked": false,
             "lightMode": 2,
             "name": "Object15",
             "nextStageName": "AmenStage",
+            "openFlagName": "",
             "shininess": 250.0,
             "temperature": 0.0,
             "transform": {
@@ -588,93 +761,6 @@
             },
             "type": "StageChangeTrigger"
         },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "directoryPath": "Resource/Models/Player",
-            "disabled": false,
-            "environmentCoefficient": 0.0,
-            "file_name": "player.gltf",
-            "glassFactor": 0.0,
-            "lightMode": 2,
-            "name": "Player6",
-            "nextStageName": "",
-            "shininess": 250.0,
-            "temperature": 0.0,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": 0.8978520631790161,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 3.8151791095733643,
-                    "y": 0.0,
-                    "z": -6.872626781463623
-                }
-            },
-            "type": "EMPTY"
-        },
-      {
-        "collider": {
-          "center": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0
-          },
-          "maskTag": 4294508547,
-          "size": {
-            "x": 6.180190563201904,
-            "y": 6.180190563201904,
-            "z": 6.180190563201904
-          },
-          "tag": "Wall",
-          "type": "Sphere"
-        },
-        "color": {
-          "w": 1.0,
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "directoryPath": "Resource/Models/Fountain",
-        "disabled": false,
-        "environmentCoefficient": 0.0,
-        "file_name": "Fountain.obj",
-        "glassFactor": 0.0,
-        "lightMode": 2,
-        "name": "Fountain",
-        "nextStageName": "",
-        "shininess": 250.0,
-        "temperature": 0.0,
-        "transform": {
-          "rotate": {
-            "x": 0.0,
-            "y": -0.0,
-            "z": 0.0
-          },
-          "scale": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0
-          },
-          "translate": {
-            "x": -10.025607109069824,
-            "y": 0.25578248500823975,
-            "z": 0.0
-          }
-        },
-        "type": "MESH"
-      },
       {
         "collider": {
           "center": {
@@ -726,41 +812,81 @@
         },
         "type": "MESH"
       },
-      {
-        "color": {
-          "w": 1.0,
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/Glass",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "glass.obj",
+            "glassFactor": 1.0,
+            "isLoked": false,
+            "lightMode": 1,
+            "name": "Glass",
+            "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 368.4763488769531,
+            "temperature": 0.20000000298023224,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 8.5,
+                    "y": 1.1109999418258667,
+                    "z": -5.0
+                }
+            },
+            "type": "EMPTY"
         },
-        "directoryPath": "Resource/Models/HeadObj",
-        "disabled": false,
-        "environmentCoefficient": 0.0,
-        "file_name": "headObj.obj",
-        "glassFactor": 1.0,
-        "lightMode": 1,
-        "name": "Object20",
-        "nextStageName": "",
-        "shininess": 250.0,
-        "temperature": 0.0,
-        "transform": {
-          "rotate": {
-            "x": 2.891838788986206,
-            "y": -0.4135594964027405,
-            "z": -3.0394372940063477
-          },
-          "scale": {
-            "x": 4.3900017738342285,
-            "y": 4.389998435974121,
-            "z": 4.3900017738342285
-          },
-          "translate": {
-            "x": 12.011425971984863,
-            "y": 1.3135473728179932,
-            "z": -5.021933555603027
-          }
-        },
-        "type": "MESH"
-      }
+        {
+            "color": {
+                "w": 0.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/Cat",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "cat.obj",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 1,
+            "name": "Bastet",
+            "nextStageName": "BastetStage",
+            "openFlagName": "",
+            "shininess": 0.0,
+            "temperature": 0.20000000298023224,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "type": "EMPTY"
+        }
     ]
 }

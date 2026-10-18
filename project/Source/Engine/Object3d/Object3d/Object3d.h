@@ -250,11 +250,20 @@ public:
         textureHandles_[textureUsage] = Texture::GetSRVHandle(textureHandle);
     };
 
+    void SetSRVHandle(
+        const uint32_t srvHandle,
+        const TEXTURE_USAGE& textureUsage = TEXTURE_USAGE_DIFFUSE) {
+        textureHandles_[textureUsage] = srvHandle;
+    };
+
     /// @brief テクスチャハンドルの取得関数
     /// @param textureUsage テクスチャ利用
     /// @return ファクトリーで設定したテクスチャハンドル
     TextureFactory::Handle GetTextureHandle(const TEXTURE_USAGE& textureUsage = TEXTURE_USAGE_DIFFUSE);
-   
+    /// @brief ファイルパスを取得する
+    /// @param textureUsage 
+    /// @return 
+    std::filesystem::path GetTextureFilePath(const TEXTURE_USAGE& textureUsage = TEXTURE_USAGE_DIFFUSE);
     // ==============メッシュ==================
     const Primitive* GetPrimitive() { return primitive_; }
 
@@ -292,7 +301,6 @@ public:
     );
 
     virtual void DrawCommand(Camera& camera);
-
 
 protected:
     /// @brief モデルの描画

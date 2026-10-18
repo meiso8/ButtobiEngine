@@ -93,12 +93,19 @@ void LevelEditor::CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects)
         newObjctData->obj_->SetObjectType("MESH");
 
         if (model) {
+            //モデルデータと一緒にテクスチャもセットされる
             newObjctData->obj_->SetMeshAndMaterial(model);
         } else {
             auto* primitive = PrimitiveFactory::GetPrimitiveForName(objectData.filePath.fileName);
             newObjctData->obj_->SetMeshAndMaterial(primitive);
-            //テクスチャハンドルを入れる
-            newObjctData->obj_->SetTextureHandle(static_cast<TextureFactory::Handle>(objectData.materialData.textureHandle));
+            //テクスチャハンドルを入れる 
+          /*  newObjctData->obj_->SetTextureHandle(static_cast<TextureFactory::Handle>(objectData.materialData.textureHandle));*/
+            if (!objectData.materialData.textureFilePath.empty()) {
+                //テクスチャファイルパスを入れる。
+                newObjctData->obj_->SetSRVHandle(Texture::AddTextureHandle(objectData.materialData.textureFilePath));
+
+            }
+       
         }
 
         newObjctData->obj_->SetColor(objectData.materialData.color);
@@ -237,6 +244,8 @@ void LevelEditor::LoadMaterialData(LevelData::MaterialData& data, nlohmann::json
 {
     //テクスチャハンドル
     LoadTextureHandle(object, data.textureHandle);
+    //テクスチャファイルネーム
+    LoadName(data.textureFilePath, object, "textureFilePath");
     //色
     LoadVector4(object, data.color);
     //温度
@@ -248,6 +257,7 @@ void LevelEditor::LoadMaterialData(LevelData::MaterialData& data, nlohmann::json
     //ガラス度合
     LoadFloat(data.glassFactor, object, "glassFactor");
     LoadLightMode(data.lightMode, object);
+
 }
 
 void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {

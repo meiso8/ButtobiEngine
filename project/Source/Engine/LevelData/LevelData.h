@@ -22,6 +22,7 @@ struct LevelData {
 
     struct MaterialData {
         uint32_t textureHandle;
+        std::string textureFilePath;
         Vector4 color;
         float tempareture;
         float shininess;

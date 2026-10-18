@@ -320,6 +320,7 @@ void ObjectManager::Save()
         } else {
             //テクスチャハンドルを設定する
             objectJson["textureHandle"] = object->GetTextureHandle();
+            objectJson["textureFilePath"] = object->GetTextureFilePath();
         }
 
         if (colliderMaps_.contains(object)) {

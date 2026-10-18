@@ -1,12 +1,25 @@
 {
-    "name": "SampleScene",
+    "name": "GameScene",
     "objects": [
         {
-            "disabled": false,
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
             "directoryPath": "Resource/Models/Medjed",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
             "file_name": "medjed.gltf",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
             "name": "Object1",
             "nextStageName": "AnubisStage",
+            "openFlagName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -27,11 +40,24 @@
             "type": "StageChangeTrigger"
         },
         {
-            "disabled": false,
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
             "directoryPath": "Resource/Models/AmenRa",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
             "file_name": "AmenRa.obj",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
             "name": "Object2",
             "nextStageName": "AmenStage",
+            "openFlagName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -52,15 +78,28 @@
             "type": "StageChangeTrigger"
         },
         {
-            "disabled": false,
+            "color": {
+                "w": 0.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
             "directoryPath": "Resource/Models/Medjed",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
             "file_name": "medjed.gltf",
-            "name": "Medjed3",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
+            "name": "Medjed",
             "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 250.0,
+            "temperature": 1.0,
             "transform": {
                 "rotate": {
                     "x": 0.0,
-                    "y": -0.8153780698776245,
+                    "y": 0.5219252705574036,
                     "z": 0.0
                 },
                 "scale": {
@@ -69,19 +108,32 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": 7.775873184204102,
+                    "x": -3.4801626205444336,
                     "y": 0.0,
-                    "z": -7.32307243347168
+                    "z": -6.058211326599121
                 }
             },
             "type": "EMPTY"
         },
         {
-            "disabled": false,
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
             "directoryPath": "Resource/Models/Medjed",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
             "file_name": "medjed.gltf",
-            "name": "GiantEnemy1",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
+            "name": "GiantEnemy",
             "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 250.0,
+            "temperature": 1.0,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -102,51 +154,77 @@
             "type": "EMPTY"
         },
         {
-            "disabled": false,
-            "directoryPath": "Resource/Models/player",
-            "file_name": "player.obj",
-            "name": "Player4",
-            "nextStageName": "",
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": -19.63446807861328,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 0.0,
-                    "y": -0.5,
-                    "z": 0.0
-                }
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
             },
-            "type": "EMPTY"
-        },
-        {
-            "disabled": false,
             "directoryPath": "Resource/Models/sunMedal",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
             "file_name": "sunMedal.obj",
-            "name": "SunRod4",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
+            "name": "SunRod",
             "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 250.0,
+            "temperature": 0.5,
             "transform": {
                 "rotate": {
-                    "x": 1.0,
-                    "y": 6.547292232513428,
+                    "x": 0.0,
+                    "y": 0.0,
                     "z": 0.0
                 },
                 "scale": {
-                    "x": 0.03125,
-                    "y": 0.03125,
-                    "z": 0.03125
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
                 },
                 "translate": {
-                    "x": -0.03865993395447731,
-                    "y": -0.034057557582855225,
-                    "z": 0.10000000149011612
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "type": "EMPTY"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/Player",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "player.gltf",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
+            "name": "Player",
+            "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 0.27918541431427,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
                 }
             },
             "type": "EMPTY"
