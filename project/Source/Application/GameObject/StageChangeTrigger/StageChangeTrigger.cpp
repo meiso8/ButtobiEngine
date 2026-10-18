@@ -58,10 +58,18 @@ void StageChangeTrigger::Create(
         if (PrimitiveFactory::GetPrimitives().contains(data.filePath.fileName)) {
             //プリミティブだったら
             object_->SetMeshAndMaterial(PrimitiveFactory::GetPrimitiveForName(data.filePath.fileName));
+            if (!data.materialData.textureFilePath.empty()) {
+                //テクスチャファイルパスを入れる。
+                object_->SetSRVHandle(Texture::AddTextureHandle(data.materialData.textureFilePath));
+
+            }
         } else {
             object_->SetMeshAndMaterial(ModelManager::LoadModelAndGet(data.filePath.directoryPath  + "/" + data.filePath.fileName));
-            object_->SetTextureHandle(static_cast<TextureFactory::Handle>(data.materialData.textureHandle));
         }
+
+
+
+
     }
 
     //ステージ名の設定

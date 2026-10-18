@@ -219,7 +219,10 @@ TextureFactory::Handle Object3d::GetTextureHandle(const TEXTURE_USAGE& textureUs
     return Texture::GetTextureHandle(textureHandles_[textureUsage]);
 }
 
-
+std::filesystem::path Object3d::GetTextureFilePath(const TEXTURE_USAGE& textureUsage)
+{
+    return Texture::GetFilePathFromSRV(textureHandles_[textureUsage]);
+}
 
 Object3d::~Object3d()
 {
@@ -248,7 +251,7 @@ void Object3d::SetMeshAndMaterial(const Primitive* mesh)
     primitive_ = mesh;
     //メッシュが無かったらアサート
     assert(primitive_);
-
+    
     if (auto model = dynamic_cast<const Model*>(primitive_)) {
         //一旦マテリアル0
 

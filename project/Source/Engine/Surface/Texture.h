@@ -35,6 +35,7 @@ public:
     static void AddTextureHandleByIndex(const uint32_t& srvIndex);
     static uint32_t GetSRVHandle(const TextureFactory::Handle& handle) { return srvIndexes_[handle]; }
     static const std::filesystem::path& GetFilePath(const TextureFactory::Handle& handle) { return handleToPath_[srvIndexes_[handle]]; }
+    static const std::filesystem::path& GetFilePathFromSRV(const uint32_t& srvIndex) { return handleToPath_[srvIndex];}
     static TextureFactory::Handle GetTextureHandle(const uint32_t& srvIndex);
 public:
 

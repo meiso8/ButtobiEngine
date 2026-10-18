@@ -11,10 +11,15 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Cube",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
             "name": "Object5221111111",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 0.0,
             "temperature": 0.0,
+            "textureFilePath": "Resource/Textures/white1x1.png",
             "textureHandle": 0,
             "transform": {
                 "rotate": {
@@ -45,10 +50,15 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
             "name": "Object6222222",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 0.0,
             "temperature": 0.5,
+            "textureFilePath": "Resource/Textures/h.png",
             "textureHandle": 24,
             "transform": {
                 "rotate": {
@@ -80,8 +90,12 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "nbt_smt_ht.obj",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
             "name": "Object333333",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 0.0,
             "temperature": 0.5,
             "transform": {
@@ -113,10 +127,15 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
             "name": "Object744444",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 0.0,
             "temperature": 0.0,
+            "textureFilePath": "Resource/Textures/UI/UI_A.png",
             "textureHandle": 48,
             "transform": {
                 "rotate": {
@@ -147,10 +166,15 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
             "name": "Object855555",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 0.0,
             "temperature": 0.5,
+            "textureFilePath": "Resource/Textures/nb.png",
             "textureHandle": 21,
             "transform": {
                 "rotate": {
@@ -182,8 +206,12 @@
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
             "name": "Object8666",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 100.0,
             "temperature": 0.0,
             "transform": {
@@ -216,8 +244,12 @@
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
             "name": "Object9777",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 100.0,
             "temperature": 0.0,
             "transform": {
@@ -250,8 +282,12 @@
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
             "name": "Object10888",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 100.0,
             "temperature": 0.0,
             "transform": {
@@ -284,8 +320,12 @@
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
             "name": "Object11999",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 100.0,
             "temperature": 0.0,
             "transform": {
@@ -318,8 +358,12 @@
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
             "name": "Object12101010",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 100.0,
             "temperature": 0.0,
             "transform": {
@@ -352,8 +396,12 @@
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
             "name": "Object13111111",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 100.0,
             "temperature": 0.0,
             "transform": {
@@ -386,8 +434,12 @@
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
             "name": "Object14121212",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 100.0,
             "temperature": 0.0,
             "transform": {
@@ -420,8 +472,12 @@
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
             "name": "Object15131313",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 100.0,
             "temperature": 0.0,
             "transform": {
@@ -454,8 +510,12 @@
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
             "name": "Object16141414",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 100.0,
             "temperature": 0.0,
             "transform": {
@@ -488,8 +548,12 @@
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
             "name": "Object17151515",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 100.0,
             "temperature": 0.0,
             "transform": {
@@ -521,10 +585,15 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
             "name": "Object1816",
             "nextStageName": "",
+            "openFlagName": "",
             "shininess": 250.0,
             "temperature": 0.5,
+            "textureFilePath": "Resource/Textures/arrow.png",
             "textureHandle": 54,
             "transform": {
                 "rotate": {
@@ -556,8 +625,12 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "UpStairs.obj",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
             "name": "Object17",
             "nextStageName": "AmenStage",
+            "openFlagName": "",
             "shininess": 250.0,
             "temperature": 0.0,
             "transform": {
@@ -590,8 +663,12 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "UpStairs.obj",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
             "name": "Object18",
             "nextStageName": "AmenStage",
+            "openFlagName": "",
             "shininess": 250.0,
             "temperature": 0.0,
             "transform": {
@@ -620,18 +697,22 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "Resource/Models/player",
+            "directoryPath": "Resource/Models/Player",
             "disabled": false,
             "environmentCoefficient": 0.0,
-            "file_name": "player.obj",
-            "name": "Player5",
+            "file_name": "player.gltf",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
+            "name": "Player",
             "nextStageName": "",
-            "shininess": 491.148193359375,
+            "openFlagName": "",
+            "shininess": 250.0,
             "temperature": 0.0,
             "transform": {
                 "rotate": {
                     "x": 0.0,
-                    "y": 2.462508201599121,
+                    "y": -0.05675969272851944,
                     "z": 0.0
                 },
                 "scale": {
@@ -640,77 +721,9 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": -1.1580764055252075,
-                    "y": -0.5,
-                    "z": 6.242253303527832
-                }
-            },
-            "type": "EMPTY"
-        },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "directoryPath": "Resource/Models/Fountain",
-            "disabled": false,
-            "environmentCoefficient": 0.0,
-            "file_name": "Fountain.obj",
-            "name": "Fountain18",
-            "nextStageName": "",
-            "shininess": 250.0,
-            "temperature": 0.20000000298023224,
-            "transform": {
-                "rotate": {
                     "x": 0.0,
                     "y": 0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 0.0,
-                    "y": 0.25,
-                    "z": 0.0
-                }
-            },
-            "type": "EMPTY"
-        },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "directoryPath": "Resource/Models/Thoth",
-            "disabled": false,
-            "environmentCoefficient": 1.0,
-            "file_name": "thoth.obj",
-            "name": "thoth19",
-            "nextStageName": "",
-            "shininess": 50.0,
-            "temperature": 0.10000000149011612,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": 3.1415927410125732,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 0.0,
-                    "y": -3.0999999046325684,
-                    "z": 11.0
+                    "z": -10.0
                 }
             },
             "type": "EMPTY"
