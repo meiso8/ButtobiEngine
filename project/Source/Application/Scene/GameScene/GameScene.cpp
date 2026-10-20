@@ -28,6 +28,9 @@
 #include"../Stage/AnubisStage/AnubisStage.h"
 #include"../Stage/MeltStage/MeltStage.h"
 #include"../Stage/BastetStage/BastetStage.h"
+
+#include"../Stage/DebugStage/DebugStage.h"
+
 #include"ObjectManager/ObjectManager.h"
 #include"RaySprite/RaySprite.h"
 #include"FlagManager/FlagManager.h"
@@ -89,7 +92,7 @@ void GameScene::Initialize() {
 
     //カメラを初期化する
     camera_->Initialize();
-    camera_->UpdateMatrix();
+ /*   camera_->UpdateMatrix();*/
 
     //ステージ遷移の初期化
     sceneChange_->Initialize();
@@ -284,6 +287,8 @@ void GameScene::SetStages()
     stageManager->SetMap("AnubisStage", std::move(std::make_unique<AnubisStage>()));
     stageManager->SetMap("MeltStage", std::move(std::make_unique<MeltStage>()));
     stageManager->SetMap("BastetStage", std::move(std::make_unique<BastetStage>()));
+
+    stageManager->SetMap("DebugStage", std::move(std::make_unique<DebugStage>()));
 
 }
 

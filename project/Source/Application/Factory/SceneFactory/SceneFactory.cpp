@@ -25,7 +25,7 @@ void SceneFactory::SetFirstScene()
 
     SceneManager::SetNextScene("Title");
 #ifdef _DEVELOP
-    SceneManager::SetNextScene("SecondStory");
+    SceneManager::SetNextScene("Game");
 #endif
     SceneManager::InitScene();
 

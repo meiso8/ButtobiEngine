@@ -525,7 +525,7 @@ void FreeTypeManager::GetBitMap(uint32_t faceHandle, FT_UInt glyphIndex, FT_Int 
 
 }
 
-std::vector<GlyphRun> FreeTypeManager::LayoutString(uint32_t handle, const std::u32string& text, const Vector2& startPos)
+std::vector<GlyphRun> FreeTypeManager::LayoutString(uint32_t handle, const std::u32string& text, const Vector2& startPos, float maxWidth)
 {
     std::vector<GlyphRun> runs;
 
@@ -539,7 +539,6 @@ std::vector<GlyphRun> FreeTypeManager::LayoutString(uint32_t handle, const std::
     FT_UInt prevGlyph = 0;
 
     for (char32_t ch : text) {
-
 
         if (ch == U'\n' || ch == U'\r') {
             penX = startPos.x;
@@ -572,9 +571,18 @@ std::vector<GlyphRun> FreeTypeManager::LayoutString(uint32_t handle, const std::
 
         if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT) != 0) continue;
 
-        runs.push_back({ glyphIndex, { penX, penY } });
+        float advance = face->glyph->advance.x / 64.0f;
 
-        penX += face->glyph->advance.x / 64.0f;
+        // 改行判定
+        if (maxWidth > 0.0f && penX + advance > startPos.x + maxWidth) {
+            penX = startPos.x;
+            penY += face->size->metrics.height / 64.0f;
+            prevGlyph = 0;
+        }
+
+        runs.push_back({ glyphIndex, { penX, penY } });
+        penX += advance;
+
         prevGlyph = glyphIndex;
     }
 

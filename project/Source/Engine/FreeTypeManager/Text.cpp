@@ -34,31 +34,28 @@ void Text::SetBlendMode(const BlendMode& blendMode) {
 
 void Text::UpdateLayout() {
 
-    // まず仮レイアウト（位置は0始まり）を取得
-    glyphRuns_ = FreeTypeManager::LayoutString(fontHandle_, text_, { 0.0f, 0.0f });
+    glyphRuns_ = FreeTypeManager::LayoutString(fontHandle_, text_, { 0.0f, 0.0f }, Window::GetClientWidth());
 
-    // 中央・右寄せ対応
-    float totalWidth = 0.0f;
-    if (!glyphRuns_.empty()) {
-        const auto& last = glyphRuns_.back();
-        totalWidth = last.position.x - glyphRuns_.front().position.x;
+    // 中央・右寄せ対応（行ごとにオフセット）
+    std::unordered_map<float, float> lineWidths;
+    for (const auto& run : glyphRuns_) {
+        auto& size = FreeTypeManager::GetGlyphTextures({ fontHandle_, run.glyphIndex }).glyphSize;
+        lineWidths[run.position.y] += size.x;
     }
 
-    float offsetX = 0.0f;
-    switch (align_) {
-    case TextAlign::Center:
-        offsetX = -totalWidth * 0.5f;
-        break;
-    case TextAlign::Right:
-        offsetX = -totalWidth;
-        break;
-    default:
-        break;
-    }
-
-
-    // 最終的な位置を加算
     for (auto& run : glyphRuns_) {
+        float offsetX = 0.0f;
+        float lineWidth = lineWidths[run.position.y];
+        switch (align_) {
+        case TextAlign::Center:
+            offsetX = -lineWidth * 0.5f;
+            break;
+        case TextAlign::Right:
+            offsetX = -lineWidth;
+            break;
+        default:
+            break;
+        }
         run.position.x += position_.x + offsetX;
         run.position.y += position_.y;
     }

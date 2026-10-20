@@ -30,7 +30,7 @@ void AmenEasyStage::StageTransitionInitialize()
     //ステージのロード
     LoadAndCreateObject("AmenEasyStage_objectEditor");
     //メモの生成
-    GetMemoManager()->GenerateMemos({ MemoManager::BOOK4 });
+    GetMemoManager()->GenerateMemos({ MemoManager::TEXT1 });
     
     backGround_->Initialize();
     // ミイラ前に移動
