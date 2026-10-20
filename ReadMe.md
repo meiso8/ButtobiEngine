@@ -21,3 +21,16 @@
 
 [迷宮博物館WebSite](https://meiso-labyrinth.netlify.app/index.html)
 [WebSite](https://meiso8.github.io/index.html)
+
+## 外部ファイル
+- assimp
+- DirectXTex
+- freetype
+- imgui
+- imGuizmo
+- imguiDock
+- nolhman
+- utfcpp
+
+
+
