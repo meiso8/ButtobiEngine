@@ -13,6 +13,7 @@
 #include"RenderTexture/RenderTexture.h"
 #include"PostProcessManager/PostProcessManager.h"
 #include"PasswordText/PasswordText.h"
+#include"FlagManager/FlagManager.h"
 
 bool PauseScreen::isActive_ = false;
 bool PauseScreen::isPause_ = false;
@@ -74,7 +75,7 @@ void PauseScreen::Update()
 
 
     //タイトル
-    isLookGameItem_ = SlidePuzzleSystem::IsActive() || MemoManager::IsLookItem()|| PasswordText::GetIsActive();
+    isLookGameItem_ = FlagManager::HasFlag("SlidePuzzleIsActive") || MemoManager::IsLookItem()|| PasswordText::GetIsActive();
 
     auto* gaussianFilter = PostProcessManager::GetInstance()->
         GetPostEffectMaterial(PostProcessManager::kModel)->
@@ -183,7 +184,7 @@ void PauseScreen::SelectButton()
                     isPause_ = false;
                     isShowMenu_ = false;
                     pauseTimer_ = 0.0f;
-                    SlidePuzzleSystem::SetActive(false);
+                    FlagManager::SetFlag("SlidePuzzleIsActive", false);
                     MemoManager::SetLookItem(false);
                     //パスワードシステムを無効化する
                     PasswordText::SetIsActive(false);

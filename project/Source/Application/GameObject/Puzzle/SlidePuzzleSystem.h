@@ -5,12 +5,14 @@
 #include"Puzzle.h"
 #include"Camera.h"
 #include"PuzzleObj.h"
-
+#include"TextureFactory.h"
 class SlidePuzzleSystem {
 public:
-    SlidePuzzleSystem();
+    SlidePuzzleSystem(const int horizontal, const int vertical, TextureFactory::Handle handle);
     ~SlidePuzzleSystem();
-    void Initialize();
+    void Initialize(const Vector3& pos, const float& rotY);
+    static void InitStaticActiveFlag();
+    void SetCurrentPtr();
     void Update(const Vector2& screenPos);
     void Draw();
     void DrawUI();
@@ -18,17 +20,17 @@ public:
     bool GetIsGameEnd() {
         return isEnd_;
     };
-    static bool IsActive() { return isActive_; };
-    static void SetActive(bool active) { isActive_ = active; };
+
     PuzzleObj* GetPuzzleObj() {
         return puzzleObj_.get();
     };
-     static Puzzle* GetPuzzle() { return puzzle_.get(); };
+
+    static Puzzle* GetCurrentPuzzle() { return currentPuzzle_; };
 
 private:
-    static std::unique_ptr<Puzzle>puzzle_;
+    static Puzzle* currentPuzzle_;
+    std::unique_ptr<Puzzle>puzzle_ = nullptr;
     std::unique_ptr<PuzzleObj>puzzleObj_ = nullptr;
-
-    static bool isActive_;
-    static bool isEnd_;
+    bool isEnd_ = false;
+    bool isActive_ = false;
 };

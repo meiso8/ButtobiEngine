@@ -679,7 +679,7 @@ void DebugUI::CheckSprite(Sprite& sprite, const char* label) {
 
         if (ImGui::TreeNode("transform2D")) {
             ImGui::SliderFloat2("pos", &sprite.GetPosition().x, -1280.0f, 1280.0f);
-            ImGui::SliderFloat("rotation", &sprite.GetRotate(), 0.0f, std::numbers::pi_v<float>*2.0f);
+            ImGui::SliderFloat("rotation", &sprite.GetRotate(), 0.0f, Math::kPi *2.0f);
             ImGui::SliderFloat2("scale", &sprite.GetScale().x, -1280.0f, 1280.0f);
             ImGui::SliderFloat2("size", &sprite.GetSize().x, -1280.0f, 1280.0f);
             ImGui::TreePop();
@@ -713,7 +713,7 @@ void DebugUI::CheckQuaternionTransform(QuaternionTransform& quaternionTransform,
 #ifdef USE_IMGUI
     if (ImGui::TreeNode(label)) {
         ImGui::SliderFloat3("scale", &quaternionTransform.scale.x, 0.0f, 10.0f);
-        ImGui::SliderFloat4("rotation", &quaternionTransform.rotate.x, 0.0f, std::numbers::pi_v<float>*2.0f);
+        ImGui::SliderFloat4("rotation", &quaternionTransform.rotate.x, 0.0f, Math::kPi *2.0f);
         ImGui::SliderFloat3("translation", &quaternionTransform.translate.x, -1000.0f, 1000.0f);
         ImGui::TreePop();
     }
@@ -748,7 +748,7 @@ void DebugUI::CheckFont(Font& font, const char* label)
 
         if (ImGui::TreeNode("transform2D")) {
             ImGui::SliderFloat2("pos", &font.GetPosition().x, -1280.0f, 1280.0f);
-            ImGui::SliderFloat("rotation", &font.GetRotate(), 0.0f, std::numbers::pi_v<float>*2.0f);
+            ImGui::SliderFloat("rotation", &font.GetRotate(), 0.0f, Math::kPi *2.0f);
             ImGui::SliderFloat2("scale", &font.GetScale().x, -1280.0f, 1280.0f);
             ImGui::SliderFloat2("size", &font.GetSize().x, -1280.0f, 1280.0f);
             ImGui::TreePop();
@@ -1249,7 +1249,7 @@ void DebugUI::CheckTransforms(Vector3& scale, Vector3& rotate, Vector3& translat
 #ifdef USE_IMGUI
     if (ImGui::TreeNode(label)) {
         ImGui::SliderFloat3("scale", &scale.x, 0.0f, 10.0f);
-        ImGui::SliderFloat3("rotation", &rotate.x, 0.0f, std::numbers::pi_v<float>*2.0f);
+        ImGui::SliderFloat3("rotation", &rotate.x, 0.0f, Math::kPi *2.0f);
         ImGui::SliderFloat3("translation", &translate.x, -1000.0f, 1000.0f);
         ImGui::TreePop();
     }

@@ -6,6 +6,7 @@
 #include<algorithm>
 #include"DebugUI.h"
 #include"../Puzzle/SlidePuzzleSystem.h"
+#include"FlagManager/FlagManager.h"
 
 CurPos::CurPos()
 {
@@ -44,9 +45,9 @@ void CurPos::Update()
             screenPos_ = Input::GetCursorPosition();
         } 
         
-        if (SlidePuzzleSystem::IsActive()) {
+        if (FlagManager::HasFlag("SlidePuzzleIsActive")) {
 
-            screenPos_ = SnapCursorToNearestSprite(screenPos_, SlidePuzzleSystem::GetPuzzle()->GetSprites());
+            screenPos_ = SnapCursorToNearestSprite(screenPos_, SlidePuzzleSystem::GetCurrentPuzzle()->GetSprites());
 
         } 
     }

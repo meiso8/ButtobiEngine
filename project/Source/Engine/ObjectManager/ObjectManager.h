@@ -28,6 +28,11 @@ public:
     void RegisterObject(Object3d* gameObject);
     // オブジェクトの削除
     void UnregisterObject(Object3d* gameObject);
+    //オブジェクトに紐づけられたコライダーを入れる
+    void RegisterCollider(Collider* collider, Object3d* gameObject);
+    //オブジェクトに紐づけられたコライダーを削除する
+    void UnregisterCollider(Object3d* gameObject);
+
     // IDからオブジェクトを即座に検索（ピッキング用）
     Object3d* FindObjectByID(uint32_t id);
     // オブジェクトチェック
@@ -78,7 +83,11 @@ private:
     //オブジェクト
     std::vector<std::unique_ptr<Object3d>> createObjects_;
     //コライダーマップ
-    std::unordered_map<Object3d*, std::unique_ptr<Collider>>colliderMaps_;
+    std::unordered_map<Object3d*,Collider*>colliderMaps_;
+    //コライダー
+    std::vector<std::unique_ptr<Collider>> createColliders_;
+
+    bool isDrawCollider_  = true;
     //αソートする
 
     // 1. 構造体またはstd::pairのvectorを用意する

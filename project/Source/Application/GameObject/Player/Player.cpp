@@ -453,8 +453,8 @@ void Player::MouseLook()
 
     cameraRotateX_ = std::clamp(
         cameraRotateX_,
-        -std::numbers::pi_v<float> *0.5f,
-        std::numbers::pi_v<float> *0.5f);
+        -Math::kHPi,
+        Math::kHPi);
     auto& transform = aniObject_->GetTransform();
     transform.rotate.y = Lerp(transform.rotate.y, cameraRotateY_, 0.5f);
 

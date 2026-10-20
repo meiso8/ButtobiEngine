@@ -88,9 +88,7 @@ private:
     std::unique_ptr<EyeCatch>eyeCatch_ = nullptr;
 
 protected:
-    
     //継承するもの
-
     void Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight);
     void PreCommandSet();
     void PostCommandSet(const bool isLoadEnd);

@@ -9,7 +9,7 @@ public:
     PuzzleObj();
     ~PuzzleObj();
     
-    void Initialize();
+    void Initialize(const Vector3& pos, const float& rotY);
     void Update();
     void Draw();
     void OnCollision(Collider* collider) override;

@@ -103,7 +103,7 @@ void MummyStage::Update() {
             SetMummyTypeWall();
             //メジェドあらわる
             firstMedjed_->SetIsAppear(true);
-
+            //メジェドステージに行くステージトリガーを得る
             auto* stageTrigger = GetStageTrigger("GoToMedjedStage");
 
             if (stageTrigger) {
@@ -252,7 +252,7 @@ void MummyStage::CreateParticle()
     emitter0.blendMode = kBlendModeMultiply;
     emitter0.movement = ParticleMovements::kParticleSphere;
     emitter0.radius = 3.0f;
-    float pi = std::numbers::pi_v<float>;
+    float pi = Math::kPi;
     emitter0.rotateAABB_ = { .min = {-pi ,-pi ,-pi } ,.max = { pi, pi, pi} };
     emitter0.isLoop_ = false;
     emitter0.accelerationField_.acceleration.y = 5.0f;

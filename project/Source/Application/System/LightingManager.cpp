@@ -32,7 +32,7 @@ void LightingManager::Initialize()
     SpotLightManager::GetData(0).direction = { 0.0f,0.0f,1.0f };//スポットライトの方向
     SpotLightManager::GetData(0).distance = 0.1f;
     SpotLightManager::GetData(0).decay = 0.5f;
-    SpotLightManager::GetData(0).cosAngle = cosf(std::numbers::pi_v<float> / 8.0f);//スポットライトの余弦
+    SpotLightManager::GetData(0).cosAngle = cosf(Math::kPi / 8.0f);//スポットライトの余弦
     SpotLightManager::GetData(0).cosFalloffStart = 2.0f;
 
     playerHandPos_.Initialize();

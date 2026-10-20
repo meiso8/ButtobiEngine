@@ -119,45 +119,6 @@
         },
         {
             "color": {
-                "w": 0.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "disabled": false,
-            "environmentCoefficient": 0.0,
-            "file_name": "Plane",
-            "glassFactor": 0.0,
-            "isLoked": true,
-            "lightMode": 2,
-            "name": "MeltStageDoor",
-            "nextStageName": "MeltStage",
-            "openFlagName": "GetSolarDisc",
-            "shininess": 250.0,
-            "temperature": 0.5,
-            "textureFilePath": "Resource/Textures/white1x1.png",
-            "textureHandle": 0,
-            "transform": {
-                "rotate": {
-                    "x": -3.1415908336639404,
-                    "y": 0.0015925478655844927,
-                    "z": -3.1415908336639404
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.2245358228683472,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": -17.931665420532227,
-                    "y": 1.1074283123016357,
-                    "z": -25.398239135742188
-                }
-            },
-            "type": "StageChangeTrigger"
-        },
-        {
-            "color": {
                 "w": 1.0,
                 "x": 1.0,
                 "y": 1.0,

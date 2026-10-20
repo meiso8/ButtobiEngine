@@ -2,6 +2,7 @@
 #include"Model.h"
 #include<ctype.h>
 #include"../Mesh/PrimitiveFactory/PrimitiveFactory.h"
+#include"ObjectManager/ObjectManager.h"
 
 const std::array<std::string, LevelEditor::kObjectTypeNames>  LevelEditor::objectTypeName_ = { "MESH","PlayerSpawn","EnemySpawn","StageChangeTrigger","Tree"};
 
@@ -132,7 +133,9 @@ void LevelEditor::CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects)
 
         //コライダーの設定
         newObjctData->collider_ = std::make_unique<Collider>();
+        ObjectManager::GetInstance()->RegisterCollider(newObjctData->collider_.get(), newObjctData->obj_.get());
         newObjctData->collider_->SetCenter(objectData.colliderData.center);
+
 
         Vector3 size = objectData.colliderData.size;
         size *= 0.5f;

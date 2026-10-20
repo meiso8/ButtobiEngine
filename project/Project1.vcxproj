@@ -170,6 +170,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\Stage\AmenEasyStage\AmenEasyStage.cpp" />
     <ClCompile Include="Source\Application\System\FlagManager\FlagManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\Medjed\FirstMedjed\FirstMedjed.cpp" />
     <ClCompile Include="Source\Application\Scene\SecondStoryScene\SecondStoryScene.cpp" />
@@ -504,6 +505,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\System\TreeGenerator\TreeGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\Stage\AmenEasyStage\AmenEasyStage.h" />
     <ClInclude Include="Source\Application\System\FlagManager\FlagManager.h" />
     <ClInclude Include="Source\Application\GameObject\Medjed\FirstMedjed\FirstMedjed.h" />
     <ClInclude Include="Source\Application\Scene\SecondStoryScene\SecondStoryScene.h" />
@@ -735,6 +737,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resource\JsonFiles\AmenEasyStage_objectEditor.json" />
     <None Include="Resource\JsonFiles\Boss.json" />
     <None Include="Resource\JsonFiles\config.json" />
     <None Include="Resource\JsonFiles\memo.json" />

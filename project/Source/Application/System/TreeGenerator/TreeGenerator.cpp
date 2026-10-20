@@ -266,7 +266,7 @@ void TreeGenerator::PlaceLockersRandomly() {
     random.SetMinMax(rangeMin_, rangeMax_);
 
     Random rotateRanDom;
-    rotateRanDom.SetMinMax(0.0f, std::numbers::pi_v<float>);
+    rotateRanDom.SetMinMax(0.0f, Math::kPi);
 
 
     for (int32_t i = 0; i < generateNum_; ++i) {

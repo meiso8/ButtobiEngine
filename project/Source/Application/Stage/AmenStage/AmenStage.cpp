@@ -4,10 +4,12 @@
 #include"Sound.h"
 #include"../StageManager/StageManager.h"
 #include"FlagManager/FlagManager.h"
+#include"TextureFactory.h"
+
 
 AmenStage::AmenStage()
 {
-    slidePuzzleSystem_ = std::make_unique<SlidePuzzleSystem>();
+    slidePuzzleSystem_ = std::make_unique<SlidePuzzleSystem>(4, 4, TextureFactory::PUZZLE);
     amenRa_ = std::make_unique<AmenRa>();
     backGround_ = std::make_unique<BackGround>();
 }
@@ -21,7 +23,7 @@ AmenStage::~AmenStage()
 void AmenStage::Initialize()
 {
     //スライドパズルシステムの初期化
-    slidePuzzleSystem_->Initialize();
+    slidePuzzleSystem_->Initialize({ -24.0f,0.25f,-24.0f },0.0f);
 
 }
 
@@ -41,6 +43,8 @@ void AmenStage::StageTransitionInitialize()
     GetItemManager()->GenerateItems({});
     ////アイテムの生成を初期化する
     isGenerateItem_ = false;
+    //スライドパズルシステム
+    slidePuzzleSystem_->SetCurrentPtr();
 }
 
 void AmenStage::Update()
@@ -51,8 +55,12 @@ void AmenStage::Update()
     backGround_->Update();
 
     if (!isGenerateItem_ && slidePuzzleSystem_->GetIsGameEnd()) {
-        //太陽円盤を生成する
-        GetItemManager()->GenerateItems({"SolarDisc"});
+        //太陽円盤を生成しない
+//        GetItemManager()->GenerateItems({"SolarDisc"});
+
+        //auto item = GetItemManager()->GetItem("SolarDisc");
+        //item->SetTranslate({ -24.0f,0.1f,-24.0f });
+
         FlagManager::SetFlag("ClearAmenPuzzle");
         isGenerateItem_ = true;
     }
