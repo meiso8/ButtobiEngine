@@ -196,6 +196,7 @@
     <ClCompile Include="Source\Application\GameObject\Medjed\FirstMedjed\FirstMedjed.cpp" />
     <ClCompile Include="Source\Application\System\FlagManager\FlagManager.cpp" />
     <ClCompile Include="Source\Application\Stage\AmenEasyStage\AmenEasyStage.cpp" />
+    <ClCompile Include="Source\Application\Stage\DebugStage\DebugStage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\ComputeShaderPSO\ComputeShaderPSO.h" />
@@ -423,6 +424,7 @@
     <ClInclude Include="Source\Application\GameObject\Medjed\FirstMedjed\FirstMedjed.h" />
     <ClInclude Include="Source\Application\System\FlagManager\FlagManager.h" />
     <ClInclude Include="Source\Application\Stage\AmenEasyStage\AmenEasyStage.h" />
+    <ClInclude Include="Source\Application\Stage\DebugStage\DebugStage.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png" />

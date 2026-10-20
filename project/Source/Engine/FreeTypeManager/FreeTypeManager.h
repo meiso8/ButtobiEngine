@@ -138,8 +138,9 @@ public:
     /// @param faceHandle  faceのハンドル
     /// @param text text
     /// @param startPos 始点
+    /// @param maxWidth 最大描画範囲
     /// @return 文字の情報のvectorを取得する
-    static std::vector<GlyphRun> LayoutString(uint32_t faceHandle, const std::u32string& text, const Vector2& startPos);
+    static std::vector<GlyphRun> LayoutString(uint32_t faceHandle, const std::u32string& text, const Vector2& startPos, float maxWidth);
     /// @brief Spriteが作成済みだったら取得し、無かったら作成する
     /// @param key　keyを入れる 
     /// @return Font*
