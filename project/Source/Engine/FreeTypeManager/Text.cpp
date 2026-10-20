@@ -34,7 +34,7 @@ void Text::SetBlendMode(const BlendMode& blendMode) {
 
 void Text::UpdateLayout() {
 
-    glyphRuns_ = FreeTypeManager::LayoutString(fontHandle_, text_, { 0.0f, 0.0f }, Window::GetClientWidth());
+    glyphRuns_ = FreeTypeManager::LayoutString(fontHandle_, text_, { 0.0f, 0.0f },static_cast<float>( Window::GetClientWidth()));
 
     // 中央・右寄せ対応（行ごとにオフセット）
     std::unordered_map<float, float> lineWidths;
