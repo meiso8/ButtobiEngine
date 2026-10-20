@@ -55,7 +55,7 @@ void ShotBulletManager::Update() {
             if (rand() % 2 == 0) {
 
                 const int bulletCount = 5;
-                const float spreadAngle = std::numbers::pi_v<float> / 6.0f; // ±30度の範囲
+                const float spreadAngle = Math::kPi/ 6.0f; // ±30度の範囲
 
                 int select = rand() % bulletCount;
 

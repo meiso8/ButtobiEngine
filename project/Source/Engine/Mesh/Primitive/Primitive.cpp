@@ -600,7 +600,7 @@ MeshData PrimitiveGenerator::CreateSphere(const Sphere& sphere, const uint32_t k
 
     data.vertices.resize(6 * kSubdivision * kSubdivision);
 
-    const float pi = std::numbers::pi_v<float>;
+    const float pi = Math::kPi;
     const float kLonEvery = 2.0f * pi / float(kSubdivision);
     const float kLatEvery = pi / float(kSubdivision);
 
@@ -673,7 +673,7 @@ MeshData PrimitiveGenerator::CreateCylinder(const bool isFlip, const float topRa
 
     data.meshName = "Cylinder";
 
-    const float radianPreDivide = 2.0f * std::numbers::pi_v<float> / float(cylinderDivide);
+    const float radianPreDivide = 2.0f * Math::kPi / float(cylinderDivide);
 
     data.vertices.resize(cylinderDivide * 6);
 
@@ -734,7 +734,7 @@ MeshData PrimitiveGenerator::CreateBeam(const float firstSize)
     Vector2 size = { 0.5f,0.5f };
 
     //i 1~4
-    float pi = std::numbers::pi_v<float>;
+    float pi = Math::kPi;
 
     const float firstPi = pi / 6.0f;
     const float stepPi = pi / 3.0f;

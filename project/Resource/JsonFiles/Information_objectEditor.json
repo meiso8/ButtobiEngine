@@ -91,7 +91,7 @@
       "glassFactor": 0.0,
       "lightMode": 2,
       "name": "Object3",
-      "nextStageName": "AmenStage",
+      "nextStageName": "AmenEasyStage",
       "shininess": 250.0,
       "temperature": 0.0,
       "textureHandle": 0,

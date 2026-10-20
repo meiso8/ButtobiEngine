@@ -17,7 +17,7 @@ private:
     float rotateSpeed_ = 0.0f;
     //上下左右移動
     float speed_ = 0.0f;
-    MoveType moveType_ = KeyBorad;
+    MoveType moveType_ = Mouse;
 public:
 
 

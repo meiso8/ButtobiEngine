@@ -300,7 +300,7 @@ void Enemy::SetPhase(const PHASE phase)
     if (phase_ == FIREBALL) {
         auto& transform = bodyPos_->GetTransform();
         startRotateY_ = transform.rotate.y;
-        endRotateY_ = startRotateY_ + std::numbers::pi_v<float>*2.0f;
+        endRotateY_ = startRotateY_ + Math::kPi *2.0f;
 
         //ここを変更する
         int randNum = rand() % 4;

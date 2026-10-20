@@ -738,7 +738,7 @@
             "isLoked": false,
             "lightMode": 2,
             "name": "Object15",
-            "nextStageName": "AmenStage",
+            "nextStageName": "AmenEasyStage",
             "openFlagName": "",
             "shininess": 250.0,
             "temperature": 0.0,

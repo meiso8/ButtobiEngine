@@ -36,7 +36,7 @@ Puzzle::Puzzle(const int horizontal, const int vertical)
     centerPos_ = { float(Window::GetClientWidth() * 0.5f),float(Window::GetClientHeight() * 0.5f) };
 
     sprite_ = make_unique<Sprite>();
-    sprite_->Create(TextureFactory::PUZZLE, centerPos_);
+    sprite_->Create(TextureFactory::PUZZLE1, centerPos_);
     sprite_->SetAnchorPoint({ 0.5f,0.5f });
 
     Vector2 size = sprite_->GetSize();

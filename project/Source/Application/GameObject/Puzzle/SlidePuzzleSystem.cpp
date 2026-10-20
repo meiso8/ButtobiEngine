@@ -4,15 +4,14 @@
 #include"CollisionManager.h"
 #include"InputBind.h"
 #include"TimeManager.h"
+#include"FlagManager/FlagManager.h"
 
-bool SlidePuzzleSystem::isActive_ = false;
-bool SlidePuzzleSystem::isEnd_ = false;
-std::unique_ptr<Puzzle>SlidePuzzleSystem::puzzle_ = nullptr;
+ Puzzle* SlidePuzzleSystem::currentPuzzle_ =nullptr;
 
-SlidePuzzleSystem::SlidePuzzleSystem()
+SlidePuzzleSystem::SlidePuzzleSystem(const int horizontal, const int vertical, TextureFactory::Handle handle)
 {
-    puzzle_ = std::make_unique<Puzzle>(3,3);
-    puzzle_->SetTexture(TextureFactory::PUZZLE1);
+    puzzle_ = std::make_unique<Puzzle>(horizontal, vertical);
+    puzzle_->SetTexture(handle);
     puzzleObj_ = std::make_unique<PuzzleObj>();
 }
 
@@ -20,36 +19,56 @@ SlidePuzzleSystem::~SlidePuzzleSystem()
 {
     puzzle_.reset();
     puzzleObj_.reset();
+    currentPuzzle_ = nullptr;
 }
 
-
-void SlidePuzzleSystem::Initialize()
+void SlidePuzzleSystem::Initialize(const Vector3& pos,const float& rotY)
 {
-
+    FlagManager::SetFlag("SlidePuzzleIsActive",false);
     isActive_ = false;
     isEnd_ = false;
     puzzle_->Init();
-    puzzleObj_->Initialize();
+    puzzleObj_->Initialize(pos, rotY);
+
+}
+
+void SlidePuzzleSystem::InitStaticActiveFlag()
+{
+    FlagManager::SetFlag("SlidePuzzleIsActive", false);
+}
+
+void SlidePuzzleSystem::SetCurrentPtr()
+{
+
+    //最近のパズルを入れる
+    currentPuzzle_ = puzzle_.get();
 }
 
 void SlidePuzzleSystem::Update(const Vector2& screenPos)
 {
+
+
+
     //クリアしたら
-    if (puzzle_->IsClear()) {
+    if (currentPuzzle_->IsClear()) {
         if (!isEnd_) {
             SoundManager::PlayCorrectSE();
             //開ける
             puzzleObj_->SetIsOpen(true);
+            //開けたとき一律でアクティブフラグを下げる
+            FlagManager::SetFlag("SlidePuzzleIsActive", false);
             isActive_ = false;
             isEnd_ = true;
-      
         }
     }
 
-    if (isActive_) {
-  
-        puzzle_->Game(screenPos);
+    if (!FlagManager::HasFlag("SlidePuzzleIsActive")) {
+        //一律でフラグがfalseな時はアクティブをfalseにする
+        isActive_ = false;
+    }
 
+    if (isActive_) {
+        currentPuzzle_->Game(screenPos);
     }
 
     puzzleObj_->Update();
@@ -76,7 +95,7 @@ void SlidePuzzleSystem::Draw()
 void SlidePuzzleSystem::DrawUI()
 {
     if (isActive_) {
-        puzzle_->Draw();
+        currentPuzzle_->Draw();
     }
 }
 
@@ -94,8 +113,9 @@ void SlidePuzzleSystem::RayCastHit(RaySprite& ray)
         if (InputBind::IsClick()) {
             if (!isActive_) {
                 isActive_ = true;
+                //一律でスライドパズルをアクティブにする
+                FlagManager::SetFlag("SlidePuzzleIsActive", true);
             }
-
         }
     }
 

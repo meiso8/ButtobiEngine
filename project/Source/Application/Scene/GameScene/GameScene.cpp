@@ -23,6 +23,7 @@
 #include"../Stage/MummyStage/MummyStage.h"
 #include"../Stage/WaterStage/WaterStage.h"
 #include"../Stage/MedjedStage/MedjedStage.h"
+#include"../Stage/AmenEasyStage/AmenEasyStage.h"
 #include"../Stage/AmenStage/AmenStage.h"
 #include"../Stage/AnubisStage/AnubisStage.h"
 #include"../Stage/MeltStage/MeltStage.h"
@@ -275,6 +276,7 @@ void GameScene::SetStages()
     stageManager->SetCollisionManager(collisionManager_.get());
 
     stageManager->SetMap("InformationStage", std::move(std::make_unique<InformationStage>()));
+    stageManager->SetMap("AmenEasyStage", std::move(std::make_unique<AmenEasyStage>()));
     stageManager->SetMap("AmenStage", std::move(std::make_unique<AmenStage>()));
     stageManager->SetMap("WaterStage", std::move(std::make_unique<WaterStage>()));
     stageManager->SetMap("MedjedStage", std::move(std::make_unique<MedjedStage>()));

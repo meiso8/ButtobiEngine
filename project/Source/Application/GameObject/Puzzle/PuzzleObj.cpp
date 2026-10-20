@@ -29,11 +29,12 @@ PuzzleObj::~PuzzleObj()
 {
 }
 
-void PuzzleObj::Initialize() {
+void PuzzleObj::Initialize(const Vector3& pos,const float& rotY) {
 
     isOpen_ = false;
     aniObj_->Initialize();
-    aniObj_->SetTranslate({ -24.0f,0.25f,-24.0f });
+    aniObj_->SetTranslate(pos);
+    aniObj_->SetRotate({ 0.0f,rotY,0.0f });
     aniObj_->SetObjectName("PuzzleObj");
     aniObj_->RegisterObject();
 }

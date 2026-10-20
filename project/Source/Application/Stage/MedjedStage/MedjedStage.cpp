@@ -219,7 +219,7 @@ void MedjedStage::CreateParticle()
     emitter0.blendMode = kBlendModeMultiply;
     emitter0.movement = ParticleMovements::kParticleSphere;
     emitter0.radius = 3.0f;
-    float pi = std::numbers::pi_v<float>;
+    float pi = Math::kPi;
     emitter0.rotateAABB_ = { .min = {-pi ,-pi ,-pi } ,.max = { pi, pi, pi} };
     emitter0.isLoop_ = true;
     emitter0.accelerationField_.acceleration.y = 5.0f;

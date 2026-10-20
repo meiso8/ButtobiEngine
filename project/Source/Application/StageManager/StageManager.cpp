@@ -6,7 +6,7 @@
 #include"CollisionManager.h"
 #include"SoundManager/SoundManager.h"
 #include"Particle/Particle.h"
-
+#include"Puzzle/SlidePuzzleSystem.h"
 StageManager::~StageManager()
 {
     LogFile::Log("Destory StageManager");
@@ -83,9 +83,11 @@ void StageManager::TransitionStage()
         SoundManager::InitSound();
         //パーティクルのリセット
         ParticleManager::ResetAll();
-        
+        //ステージ切り替え時にアクティブフラグを下げる
+        SlidePuzzleSystem::InitStaticActiveFlag();
         currentStage_ = nextStage_;
         //ステージのシーン遷移のみの初期化
+
         currentStage_->StageTransitionInitialize();
 
         if (!currentStage_->GetIsInitialize()) {

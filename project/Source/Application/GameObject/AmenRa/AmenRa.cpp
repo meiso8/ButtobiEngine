@@ -34,7 +34,7 @@ void AmenRa::Initialize() {
     object_->Initialize();
     auto& transform = object_->GetTransform();
     transform.translate = {0.0f,0.0f,0.0f};
-    transform.rotate.y = std::numbers::pi_v<float>;
+    transform.rotate.y = Math::kPi;
     object_->SetObjectName("AmenRa");
     object_->RegisterObject();
 }

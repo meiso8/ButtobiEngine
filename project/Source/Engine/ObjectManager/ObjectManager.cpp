@@ -21,11 +21,15 @@ namespace MatArray {
     void ConvertMatArray(const Matrix4x4& srcMatrix, float dstArray[16])
     {
         // 行列のメモリ構造をそのまま16個のfloat配列にコピー
-        std::memcpy(dstArray, &srcMatrix.m[0][0], sizeof(float) * 16);
+        if (dstArray) {
+            std::memcpy(dstArray, &srcMatrix.m[0], sizeof(float) * 16);
+        }
+     
     }
     void ConvertArrayToMat(const float dstArray[16], Matrix4x4& srcMatrix) {
-        std::memcpy(&srcMatrix.m[0][0], dstArray, sizeof(float) * 16);
-
+        if (dstArray) {
+            std::memcpy(&srcMatrix.m[0], dstArray, sizeof(float) * 16);
+        }
     }
 
 }
@@ -63,12 +67,8 @@ void ObjectManager::UnregisterObject(Object3d* gameObject) {
         objects_.erase(it, objects_.end());
     }
 
-    //colliderMapを削除する
-// コライダーマップから削除する際、コライダー内の object3d_ も解除しておく
-    auto itr = colliderMaps_.find(gameObject);
-    if (itr != colliderMaps_.end()) {
-        colliderMaps_.erase(itr);
-    }
+    UnregisterCollider(gameObject);
+
     // 【追加】実体を管理している unique_ptr の配列からも削除して完全に解放する
     auto itCreate = std::remove_if(createObjects_.begin(), createObjects_.end(),
         [gameObject](const std::unique_ptr<Object3d>& obj) {
@@ -78,7 +78,35 @@ void ObjectManager::UnregisterObject(Object3d* gameObject) {
         createObjects_.erase(itCreate, createObjects_.end());
     }
 
+}
 
+void ObjectManager::RegisterCollider(Collider* collider, Object3d* gameObject)
+{
+    if (!collider|| !gameObject) return;
+    //コライダーマップに登録する
+    colliderMaps_[gameObject] = collider;
+}
+
+void ObjectManager::UnregisterCollider(Object3d* gameObject)
+{
+    //colliderMapを削除する
+// コライダーマップから削除する際、コライダー内の object3d_ も解除しておく
+    auto itr = colliderMaps_.find(gameObject);
+    if (itr != colliderMaps_.end()) {
+
+        Collider* targetCollider = itr->second;
+
+        colliderMaps_.erase(itr);
+
+        auto itCreate = std::remove_if(createColliders_.begin(), createColliders_.end(),
+            [targetCollider](const std::unique_ptr<Collider>& obj) {
+                return obj.get() == targetCollider; // 退避させたポインタと比較する
+            });
+
+        if (itCreate != createColliders_.end()) {
+            createColliders_.erase(itCreate, createColliders_.end());
+        }
+    }
 }
 
 Object3d* ObjectManager::FindObjectByID(uint32_t id) {
@@ -97,6 +125,8 @@ void ObjectManager::ClickObject(Camera& camera)
 #ifdef USE_IMGUI
 
     ImGui::Begin("Object3ds");
+
+    ImGui::Checkbox("DrawCollider?", &isDrawCollider_);
 
     DebugUI::CreateJsonFile(kJsonFileName_.c_str());
     //フィルターかけてObjecFileNameを探す
@@ -214,7 +244,7 @@ void ObjectManager::Update()
 void ObjectManager::CheckCollision(CollisionManager* collisionManager)
 {
     for (auto& [objPtr, collider] : colliderMaps_) {
-        collisionManager->AddCollider(collider.get());
+        collisionManager->AddCollider(collider);
     }
 }
 
@@ -225,9 +255,11 @@ void ObjectManager::Draw(Camera& camera)
     }
 
 #ifdef _DEVELOP
+    if (isDrawCollider_) {
+        for (auto& [objPtr, collider] : colliderMaps_) {
+            collider->ColliderDraw();
+        }
 
-    for (auto& [objPtr, collider] : colliderMaps_) {
-        collider->ColliderDraw();
     }
 
 #endif
@@ -644,7 +676,9 @@ void ObjectManager::ColliderCheck(Camera& camera)
 
         if (!colliderMaps_.contains(colliderObjectPtr_)) {
             if (ImGui::Button("AddCollider")) {
-                colliderMaps_[colliderObjectPtr_] = std::make_unique<Collider>();
+                std::unique_ptr<Collider> newCollider = std::make_unique<Collider>();
+                auto it = createColliders_.insert(createColliders_.begin(), std::move(newCollider));
+                colliderMaps_[colliderObjectPtr_] = it->get();
                 //コライダーに自分のワールドマトリックスを追加する
                 colliderMaps_[colliderObjectPtr_]->SetWorldMatrix(colliderObjectPtr_->GetWorldTransform().matWorld_);
             }
@@ -654,7 +688,7 @@ void ObjectManager::ColliderCheck(Camera& camera)
             if (colliderMaps_.contains(colliderObjectPtr_)) {
                 auto& collider = colliderMaps_.at(colliderObjectPtr_);
                 DebugUI::CheckCollider(*collider, "collider");
-                UpdateImGuizmoForCollider(camera, collider.get(), colliderObjectPtr_->GetWorldMatrix());
+                UpdateImGuizmoForCollider(camera, collider, colliderObjectPtr_->GetWorldMatrix());
             }
         }
 
