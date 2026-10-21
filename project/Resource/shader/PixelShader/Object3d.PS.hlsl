@@ -76,7 +76,9 @@ PixelShaderOutput main(VertexShaderOutput input)
     
     if (mask <= gMaterial.maskVal)
     {
-        discard;
+
+        output.color = float4(1.0f, 1.0f, 1.0f, 0.0f);
+        return output;
     }
     
     if (gMaterial.lightMode == 0)
