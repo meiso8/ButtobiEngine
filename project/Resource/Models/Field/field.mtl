@@ -1,4 +1,4 @@
-# Blender 4.4.1 MTL File: 'None'
+# Blender 4.4.1 MTL File: 'Field.blend'
 # www.blender.org
 
 newmtl Material.001
@@ -19,4 +19,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-map_Kd -s -0.19999996 0.7000003 1 field2.png
+map_Kd -s 1.5 10 10 field2.png
