@@ -271,6 +271,60 @@
             "type": "MESH"
         },
         {
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "maskTag": 4294967295,
+                "size": {
+                    "x": 2.0,
+                    "y": 2.0,
+                    "z": 2.0
+                },
+                "tag": "unKnown",
+                "type": "Sphere"
+            },
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Cube",
+            "glassFactor": 0.0,
+            "isLoked": false,
+            "lightMode": 2,
+            "name": "Object",
+            "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "textureFilePath": "Resource/Textures/puzzle1.png",
+            "textureHandle": 7,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.0,
+                    "y": 0.25,
+                    "z": -1.0
+                }
+            },
+            "type": "MESH"
+        },
+        {
             "color": {
                 "w": 0.0,
                 "x": 1.0,
@@ -316,36 +370,37 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "Resource/Models/UpStairs",
             "disabled": false,
             "environmentCoefficient": 0.0,
-            "file_name": "UpStairs.obj",
+            "file_name": "Cube",
             "glassFactor": 0.0,
             "isLoked": false,
             "lightMode": 2,
             "name": "Object",
-            "nextStageName": "InformationStage",
+            "nextStageName": "",
             "openFlagName": "",
-            "shininess": 250.0,
-            "temperature": 0.0,
+            "shininess": 1.0,
+            "temperature": 0.5,
+            "textureFilePath": "Resource/Textures/textMemo.png",
+            "textureHandle": 111,
             "transform": {
                 "rotate": {
-                    "x": 3.1415908336639404,
+                    "x": -1.0058268308639526,
                     "y": -0.0,
-                    "z": 3.1415908336639404
+                    "z": 0.0
                 },
                 "scale": {
                     "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
+                    "y": 0.16268466413021088,
+                    "z": 0.9999997615814209
                 },
                 "translate": {
-                    "x": -4.826872235241808e-11,
-                    "y": -2.6522367988945916e-05,
-                    "z": -9.742053985595703
+                    "x": 0.0,
+                    "y": 0.44036704301834106,
+                    "z": -3.729978322982788
                 }
             },
-            "type": "StageChangeTrigger"
+            "type": "EMPTY"
         },
         {
             "color": {
@@ -369,7 +424,7 @@
             "transform": {
                 "rotate": {
                     "x": 0.0,
-                    "y": 0.4632284641265869,
+                    "y": 0.05216541886329651,
                     "z": 0.0
                 },
                 "scale": {
@@ -378,9 +433,9 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": 2.523251533508301,
+                    "x": 1.0014184713363647,
                     "y": 0.0,
-                    "z": -8.617799758911133
+                    "z": -6.315192222595215
                 }
             },
             "type": "EMPTY"
@@ -407,7 +462,7 @@
             "transform": {
                 "rotate": {
                     "x": 0.0,
-                    "y": 0.0,
+                    "y": 3.1415927410125732,
                     "z": 0.0
                 },
                 "scale": {
@@ -417,88 +472,49 @@
                 },
                 "translate": {
                     "x": 0.0,
-                    "y": 1.0,
+                    "y": 1.25,
                     "z": -1.0
                 }
             },
             "type": "EMPTY"
         },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "disabled": false,
-            "environmentCoefficient": 0.0,
-            "file_name": "Cube",
-            "glassFactor": 0.0,
-            "isLoked": false,
-            "lightMode": 2,
-            "name": "Object",
-            "nextStageName": "",
-            "openFlagName": "",
-            "shininess": 250.0,
-            "temperature": 0.0,
-            "textureFilePath": "Resource/Textures/puzzle1.png",
-            "textureHandle": 7,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 0.0,
-                    "y": 0.5,
-                    "z": -1.0
-                }
-            },
-            "type": "MESH"
+      {
+        "color": {
+          "w": 1.0,
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
         },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "directoryPath": "Resource/Models/SolarDisc",
-            "disabled": false,
-            "environmentCoefficient": 0.0,
-            "file_name": "SolarDisc.obj",
-            "glassFactor": 0.0,
-            "isLoked": false,
-            "lightMode": 1,
-            "name": "SolarDisc",
-            "nextStageName": "",
-            "openFlagName": "",
-            "shininess": 250.0,
-            "temperature": 0.5,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": -24.0,
-                    "y": 0.10000000149011612,
-                    "z": -24.0
-                }
-            },
-            "type": "EMPTY"
-        }
+        "directoryPath": "Resource/Models/Door",
+        "disabled": false,
+        "environmentCoefficient": 0.0,
+        "file_name": "door.obj",
+        "glassFactor": 0.0,
+        "isLoked": false,
+        "lightMode": 2,
+        "name": "Door",
+        "nextStageName": "InformationStage",
+        "openFlagName": "",
+        "shininess": 250.0,
+        "temperature": 0.0,
+        "transform": {
+          "rotate": {
+            "x": -3.1415908336639404,
+            "y": 0.0015925478655844927,
+            "z": -3.1415908336639404
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "translate": {
+            "x": 0.00037482252810150385,
+            "y": -2.520512509818218e-07,
+            "z": -10.53390121459961
+          }
+        },
+        "type": "StageChangeTrigger"
+      }
     ]
 }
