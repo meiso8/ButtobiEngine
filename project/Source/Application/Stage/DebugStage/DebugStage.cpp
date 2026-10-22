@@ -1,15 +1,21 @@
 #include "DebugStage.h"
 
 #include"InputBind.h"
+#include"Network/Network.h"
 
 DebugStage::DebugStage()
 {
+    network_ = std::make_unique<Network>();
+}
+
+DebugStage::~DebugStage()
+{
+   /* network_->Finalize();*/
 }
 
 void DebugStage::Initialize()
 {
-
-
+    network_->Initialize();
 }
 
 void DebugStage::StageTransitionInitialize()
@@ -25,6 +31,8 @@ void DebugStage::StageTransitionInitialize()
 void DebugStage::Update()
 {
     GetMemoManager()->Debug();
+    network_->Update();
+    
 }
 
 void DebugStage::Draw()

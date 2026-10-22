@@ -6,6 +6,8 @@
 #include"InputBind.h"
 #include"Sound.h"
 
+
+
 bool PasswordText::isActive_ = true;
 PasswordText::PasswordText()
 {
@@ -29,7 +31,6 @@ PasswordText::PasswordText()
     infoText_.SetBlendMode(BlendMode::kBlendModeNormal);
 
     float width = static_cast<float>(Window::GetClientWidth());
-
     float height = static_cast<float>(Window::GetClientHeight());
 
     webSprite_ = std::make_unique<Sprite>();
