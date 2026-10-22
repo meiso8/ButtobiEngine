@@ -2,7 +2,7 @@
 
 #include"InputBind.h"
 #include"FlagManager/FlagManager.h"
-
+#include"Network/Network.h"
 InformationStage::InformationStage()
 {
     room_ = std::make_unique<InformationRoom>();
@@ -15,6 +15,8 @@ InformationStage::InformationStage()
     //チケット番号システム
     passwordText_ = std::make_unique<PasswordText>();
     passwordText_->SetCurPosPtr(GetUIManager()->GetCurPosPtr());
+    //ネットワーク
+    netWork_ = std::make_unique<Network>();
 }
 
 void InformationStage::Initialize()
@@ -26,6 +28,8 @@ void InformationStage::Initialize()
 
     isGenerateTicket_ = false;
 
+    netWork_->Initialize();
+    netWork_->Update();
 }
 
 void InformationStage::StageTransitionInitialize()
@@ -66,13 +70,17 @@ void InformationStage::Update()
     //パスワードシステム
     passwordText_->Update();
 
-    if (passwordText_->GetIsUnLock()) {
+
+    if (netWork_->GetTicketAcquired()) {
         if (!isGenerateTicket_) {
             isGenerateTicket_ = true;
             itemManager->GenerateItems({ "Ticket" });
             FlagManager::SetFlag("GenerateTicket");
         }
     }
+    //if (passwordText_->GetIsUnLock()) {
+ 
+    //}
 }
 
 void InformationStage::Draw()

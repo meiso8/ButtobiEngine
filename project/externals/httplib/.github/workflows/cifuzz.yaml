@@ -1,0 +1,42 @@
+name: CIFuzz
+
+# The fuzzers only build httplib.h and the targets under test/fuzzing, so a
+# pull request that touches neither has nothing for CIFuzz to exercise. Fuzzing
+# is by far the longest job in CI (10 minutes of fuzzing on top of building the
+# OSS-Fuzz image), and skipping it for documentation-only changes keeps the
+# full 600 seconds for the pull requests that do reach the parsers.
+on:
+  pull_request:
+    paths:
+      - 'httplib.h'
+      - 'test/fuzzing/**'
+      - '.github/workflows/cifuzz.yaml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  Fuzzing:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Build Fuzzers
+      id: build
+      uses: google/oss-fuzz/infra/cifuzz/actions/build_fuzzers@master
+      with:
+        oss-fuzz-project-name: 'cpp-httplib'
+        dry-run: false
+        language: c++
+    - name: Run Fuzzers
+      uses: google/oss-fuzz/infra/cifuzz/actions/run_fuzzers@master
+      with:
+        oss-fuzz-project-name: 'cpp-httplib'
+        fuzz-seconds: 600
+        dry-run: false
+        language: c++
+    - name: Upload Crash
+      uses: actions/upload-artifact@v4
+      if: failure() && steps.build.outcome == 'success'
+      with:
+        name: artifacts
+        path: ./out/artifacts

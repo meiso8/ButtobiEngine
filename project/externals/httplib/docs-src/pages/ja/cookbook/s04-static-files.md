@@ -1,0 +1,62 @@
+---
+title: "S04. 静的ファイルサーバーを設定する"
+order: 23
+status: "draft"
+---
+
+HTML、CSS、画像などの静的ファイルを配信したいときは、`set_mount_point()`を使います。URLパスとローカルディレクトリを結びつけるだけで、そのディレクトリの中身がまるごと配信されます。
+
+## 基本の使い方
+
+```cpp
+httplib::Server svr;
+if (!svr.set_mount_point("/", "./public")) {
+  // ./publicが存在しない
+  return 1;
+}
+svr.listen("0.0.0.0", 8080);
+```
+
+`set_mount_point()`はディレクトリが存在しないと`false`を返すので、戻り値を確認しておきましょう。
+
+`./public/index.html`には`http://localhost:8080/index.html`で、`./public/css/style.css`には`http://localhost:8080/css/style.css`でアクセスできます。ディレクトリ構造がそのままURLに反映されます。
+
+ディレクトリへのリクエストには、その中の`index.html`を返します。末尾のスラッシュがないリクエスト（`/docs`）は、`/docs/`へリダイレクト（301）されます。マウントしたディレクトリの外を指すシンボリックリンクには403を返します。
+
+## 複数のマウントポイント
+
+マウントポイントは複数登録できます。
+
+```cpp
+svr.set_mount_point("/", "./public");
+svr.set_mount_point("/assets", "./dist/assets");
+svr.set_mount_point("/uploads", "./var/uploads");
+```
+
+同じパスに複数のマウントを登録することもできます。その場合は登録した順に探し、最初に見つかったファイルを返します。
+
+## APIハンドラと組み合わせる
+
+静的ファイルとAPIハンドラは共存できます。GETとHEADのリクエストでは、まずマウントポイントからファイルを探し、見つからなければ`Get()`などで登録したハンドラを呼びます。
+
+```cpp
+svr.Get("/api/users", [](const auto &req, auto &res) {
+  res.set_content("[]", "application/json");
+});
+
+svr.set_mount_point("/", "./public");
+```
+
+これでSPAのように、`/api/*`はハンドラで、それ以外は`./public/`から配信、という構成が作れます。
+
+## MIMEタイプを追加する
+
+拡張子からContent-Typeを決める対応表は組み込まれていますが、独自の拡張子を追加することもできます。
+
+```cpp
+svr.set_file_extension_and_mimetype_mapping("wasm", "application/wasm");
+```
+
+> **Warning:** 静的ファイル配信系のメソッドは**スレッドセーフではありません**。起動後（`listen()`以降）には呼ばないでください。起動前にまとめて設定しましょう。
+
+> ダウンロード用のレスポンスを返したい場合は[S06. ファイルダウンロードレスポンスを返す](../s06-download-response)も参考になります。
