@@ -21,7 +21,7 @@ namespace {
     const float halfPi = Math::kPi * 0.5f;
 }
 
-std::unordered_map<std::string, std::unique_ptr <ParticleGroup> >ParticleManager::particleGroups;
+std::unordered_map<std::string, std::unique_ptr<ParticleGroup> >ParticleManager::particleGroups;
 
 // ==========================================================================================================
 

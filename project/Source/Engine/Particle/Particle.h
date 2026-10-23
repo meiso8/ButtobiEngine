@@ -119,7 +119,7 @@ private:
     Camera* camera_ = nullptr;
 
     static const uint32_t kNumMaxInstance = 1000;//インスタンス数
-    static std::unordered_map<std::string, std::unique_ptr <ParticleGroup>>particleGroups;
+    static std::unordered_map<std::string, std::unique_ptr<ParticleGroup>>particleGroups;
 
     Matrix4x4 backToFrontMatrix{};
     Matrix4x4 billboardMatrix{};
@@ -132,8 +132,8 @@ public:
     
     void Emit(Emitter& emitter);
 
-    std::unordered_map<std::string, std::unique_ptr <ParticleGroup>>& GetParticleGroups();
-    std::unique_ptr <ParticleGroup>& GetParticleGroup(const std::string& name) {
+    std::unordered_map<std::string, std::unique_ptr<ParticleGroup>>& GetParticleGroups();
+    std::unique_ptr<ParticleGroup>& GetParticleGroup(const std::string& name) {
         assert(particleGroups.contains(name));
         return particleGroups[name];
     };

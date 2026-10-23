@@ -15,7 +15,7 @@ protected:
     std::unique_ptr<Camera> camera_ = nullptr;
 
     Camera* currentCamera_ = nullptr;
-    std::unique_ptr <SceneChange> sceneChange_ = nullptr;
+    std::unique_ptr<SceneChange> sceneChange_ = nullptr;
 
 public:
     Camera* GetCurrentCamera() { return currentCamera_; };

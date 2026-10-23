@@ -66,15 +66,14 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     rtvDescriptorHeap_ = std::make_unique<RtvDescriptorHeap>();
     //dsvDescriptorHeap_の生成
     dsvDescriptorHeap_ = std::make_unique<DsvDescriptorHeap>();
+    //SRV管理
+    srvDescriptorHeap_ = std::make_unique<CbvSrvUavDescriptorHeap>();
 
     directXCommon_->InitializeRenderTargetView(rtvDescriptorHeap_.get());
     LogFile::Log("DirectXCommon Initialize Render Target View\n");
 
     directXCommon_->PostInitialize();
     LogFile::Log("DirectXCommon PostInitialize\n");
-
-    //SRV管理
-    srvDescriptorHeap_ = std::make_unique<CbvSrvUavDescriptorHeap>();
 
     //深度テクスチャの作成
     depthTexture_ = std::make_unique<DepthTexture>();

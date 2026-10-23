@@ -40,14 +40,13 @@ private:
     /// @brief ウィンドウクラス
     std::unique_ptr<Window> wc = nullptr;
     /// @brief 入力
-    std::unique_ptr <Input> input = nullptr;
+    std::unique_ptr<Input> input = nullptr;
     /// @brief 時間管理
     std::unique_ptr<TimeManager> time_ = nullptr;
     /// @brief DirectXCommon後で改変する
     std::unique_ptr<DirectXCommon> directXCommon_ = nullptr;
     /// @brief RTV管理
     std::unique_ptr<RtvDescriptorHeap> rtvDescriptorHeap_ = nullptr;
-
     /// @brief DSV管理
     std::unique_ptr<DsvDescriptorHeap> dsvDescriptorHeap_ = nullptr;
     /// @brief SRV管理

@@ -48,7 +48,7 @@ private:
 
 #endif
 
-    std::unique_ptr < ParticleEmitter> emitter_ = nullptr;
+    std::unique_ptr<ParticleEmitter> emitter_ = nullptr;
 
     Vector3 endPos_ = { 0.0f };
     Vector3 startPos_ = { 0.0f };
