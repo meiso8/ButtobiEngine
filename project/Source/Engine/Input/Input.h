@@ -38,7 +38,9 @@ public:
         return copy;
     }
 
-    HRESULT Initialize(Window& window);
+    /// @brief 初期化関数
+    /// @param window ウィンドウクラスを入れる
+    void Initialize(Window& window);
     /// @brief キーを押した状態 
     static bool IsPressKey(const uint8_t& key);
     /// @briefキーを押した瞬間

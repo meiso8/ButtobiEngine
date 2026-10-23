@@ -50,8 +50,8 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     wc = std::make_unique<Window>(title, clientWidth, clientHeight);
     //InputClassの生成
     input = std::make_unique<Input>();
-    HRESULT result = input->Initialize(*wc);
-    assert(SUCCEEDED(result));
+    input->Initialize(*wc);
+
     //コントローラーの振動管理
     VibrateManager::Initialize();
     //FPSや時間管理の生成
