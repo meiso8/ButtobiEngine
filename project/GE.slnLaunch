@@ -1,6 +1,11 @@
 [
   {
     "Name": "新しいプロファイル",
-    "Projects": []
+    "Projects": [
+      {
+        "Path": "Project1.vcxproj",
+        "Action": "Start"
+      }
+    ]
   }
 ]
