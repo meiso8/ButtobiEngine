@@ -80,7 +80,7 @@ void LevelEditor::CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects)
 
     for (auto& objectData : levelData_->objects) {
 
-        std::unique_ptr<ObjectSet> newObjctData = std::make_unique<ObjectSet>();
+        std::unique_ptr<ObjectSet> newObjectData = std::make_unique<ObjectSet>();
         auto filePath = objectData.filePath;
 
         Model* model = nullptr;
@@ -89,71 +89,71 @@ void LevelEditor::CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects)
             model = ModelManager::LoadModelAndGet(filePath.directoryPath + "/" + filePath.fileName);
         }
 
-        newObjctData->obj_ = std::make_unique<Object3d>();
-        newObjctData->obj_->Create();
-        newObjctData->obj_->SetObjectType("MESH");
+        newObjectData->obj_ = std::make_unique<Object3d>();
+        newObjectData->obj_->Create();
+        newObjectData->obj_->SetObjectType("MESH");
 
         if (model) {
             //モデルデータと一緒にテクスチャもセットされる
-            newObjctData->obj_->SetMeshAndMaterial(model);
+            newObjectData->obj_->SetMeshAndMaterial(model);
         } else {
             auto* primitive = PrimitiveFactory::GetPrimitiveForName(objectData.filePath.fileName);
-            newObjctData->obj_->SetMeshAndMaterial(primitive);
+            newObjectData->obj_->SetMeshAndMaterial(primitive);
             //テクスチャハンドルを入れる 
-          /*  newObjctData->obj_->SetTextureHandle(static_cast<TextureFactory::Handle>(objectData.materialData.textureHandle));*/
+
             if (!objectData.materialData.textureFilePath.empty()) {
                 //テクスチャファイルパスを入れる。
-                newObjctData->obj_->SetSRVHandle(Texture::AddTextureHandle(objectData.materialData.textureFilePath));
+                newObjectData->obj_->SetSRVHandle(Texture::AddTextureHandle(objectData.materialData.textureFilePath));
 
             }
        
         }
 
-        newObjctData->obj_->SetColor(objectData.materialData.color);
-        newObjctData->obj_->SetTemperature(objectData.materialData.tempareture);
-        newObjctData->obj_->SetShininess(objectData.materialData.shininess);
+        newObjectData->obj_->SetColor(objectData.materialData.color);
+        newObjectData->obj_->SetTemperature(objectData.materialData.tempareture);
+        newObjectData->obj_->SetShininess(objectData.materialData.shininess);
         //環境光
-        newObjctData->obj_->SetEnvironmentCoefficient(objectData.materialData.environmentCoefficient);
+        newObjectData->obj_->SetEnvironmentCoefficient(objectData.materialData.environmentCoefficient);
         //ガラス度合い
-        newObjctData->obj_->SetGlassFactor(objectData.materialData.glassFactor);
+        newObjectData->obj_->SetGlassFactor(objectData.materialData.glassFactor);
         //ライトモード
-        newObjctData->obj_->SetLightMode(static_cast<Object3d::LightMode>(objectData.materialData.lightMode));
+        newObjectData->obj_->SetLightMode(static_cast<Object3d::LightMode>(objectData.materialData.lightMode));
 
-        newObjctData->obj_->SetObjectName(objectData.objectName);
+        newObjectData->obj_->SetObjectName(objectData.objectName);
 
         //ロックされているかの情報は受け渡さない
 
-        newObjctData->obj_->RegisterObject();
+        newObjectData->obj_->RegisterObject();
 
-        auto& transform = newObjctData->obj_->GetWorldTransform();
+        auto& transform = newObjectData->obj_->GetWorldTransform();
 
         transform.eTransform_ = objectData.transform;
         //ここで一度 Object3d の行列計算(Update)を走らせて matWorld_ を確定させる！
-        newObjctData->obj_->Update();
+        newObjectData->obj_->Update();
 
         //コライダーの設定
-        newObjctData->collider_ = std::make_unique<Collider>();
-        ObjectManager::GetInstance()->RegisterCollider(newObjctData->collider_.get(), newObjctData->obj_.get());
-        newObjctData->collider_->SetCenter(objectData.colliderData.center);
+        newObjectData->collider_ = std::make_unique<Collider>();
+        ObjectManager::GetInstance()->RegisterCollider(newObjectData->collider_.get(), newObjectData->obj_.get());
+        newObjectData->collider_->SetCenter(objectData.colliderData.center);
 
 
         Vector3 size = objectData.colliderData.size;
         size *= 0.5f;
         if (objectData.colliderData.type == "Sphere") {
-            newObjctData->collider_->SetRadius(size.x);
+            newObjectData->collider_->SetRadius(size.x);
         }
 
         if (objectData.colliderData.type == "AABB") {
-            newObjctData->collider_->SetAABB({ .min = -size ,.max = size });
+            newObjectData->collider_->SetAABB({ .min = -size ,.max = size });
         }
 
         //属性の設定
-        newObjctData->collider_->SetCollisionAttribute(CollisionTag::GetTag(objectData.colliderData.tag));
-        newObjctData->collider_->SetCollisionMask(objectData.colliderData.maskTag);
+        newObjectData->collider_->SetCollisionAttribute(CollisionTag::GetTag(objectData.colliderData.tag));
+        newObjectData->collider_->SetCollisionMask(objectData.colliderData.maskTag);
 
         //コライダーに自分のワールドマトリックスのポインタを追加する
-        newObjctData->collider_->SetWorldMatrix(newObjctData->obj_->GetWorldTransform().matWorld_);
-        objects.push_back(std::move(newObjctData));
+        newObjectData->collider_->SetWorldMatrix(newObjectData->obj_->GetWorldTransform().matWorld_);
+        objects.push_back(std::move(newObjectData));
     }
 }
 
@@ -180,7 +180,7 @@ void LevelEditor::CreateObject3d(std::vector<std::unique_ptr<Object3d>>& object3
 
     for (auto& objectData : levelData_->objects) {
 
-        std::unique_ptr<Object3d> newObjctData = std::make_unique<Object3d>();
+        std::unique_ptr<Object3d> newObjectData = std::make_unique<Object3d>();
         auto filePath = objectData.filePath;
 
         Model* model = nullptr;
@@ -189,41 +189,41 @@ void LevelEditor::CreateObject3d(std::vector<std::unique_ptr<Object3d>>& object3
             model = ModelManager::LoadModelAndGet(filePath.directoryPath + "/" + filePath.fileName);
         }
 
-        newObjctData->Create();
-        newObjctData->SetObjectType(objectType);
+        newObjectData->Create();
+        newObjectData->SetObjectType(objectType);
 
         if (model) {
-            newObjctData->SetMeshAndMaterial(model);
+            newObjectData->SetMeshAndMaterial(model);
         } else {
             auto* primitive = PrimitiveFactory::GetPrimitiveForName(objectData.filePath.fileName);
-            newObjctData->SetMeshAndMaterial(primitive);
+            newObjectData->SetMeshAndMaterial(primitive);
             //テクスチャハンドルを入れる
-            newObjctData->SetTextureHandle(static_cast<TextureFactory::Handle>(objectData.materialData.textureHandle));
+            newObjectData->SetTextureHandle(static_cast<TextureFactory::Handle>(objectData.materialData.textureHandle));
         }
 
-        newObjctData->SetColor(objectData.materialData.color);
-        newObjctData->SetTemperature(objectData.materialData.tempareture);
-        newObjctData->SetShininess(objectData.materialData.shininess);
+        newObjectData->SetColor(objectData.materialData.color);
+        newObjectData->SetTemperature(objectData.materialData.tempareture);
+        newObjectData->SetShininess(objectData.materialData.shininess);
         //環境光
-        newObjctData->SetEnvironmentCoefficient(objectData.materialData.environmentCoefficient);
+        newObjectData->SetEnvironmentCoefficient(objectData.materialData.environmentCoefficient);
         //ガラス度合い
-        newObjctData->SetGlassFactor(objectData.materialData.glassFactor);
+        newObjectData->SetGlassFactor(objectData.materialData.glassFactor);
         //ライトモード
-        newObjctData->SetLightMode(static_cast<Object3d::LightMode>(objectData.materialData.lightMode));
+        newObjectData->SetLightMode(static_cast<Object3d::LightMode>(objectData.materialData.lightMode));
 
-        newObjctData->SetObjectName(objectData.objectName);
+        newObjectData->SetObjectName(objectData.objectName);
 
         //ロックされているかなどの情報を渡さない。
 
-        newObjctData->RegisterObject();
+        newObjectData->RegisterObject();
 
-        auto& transform = newObjctData->GetWorldTransform();
+        auto& transform = newObjectData->GetWorldTransform();
 
         transform.eTransform_ = objectData.transform;
         //ここで一度 Object3d の行列計算(Update)を走らせて matWorld_ を確定させる！
-        newObjctData->Update();
+        newObjectData->Update();
 
-        object3ds.push_back(std::move(newObjctData));
+        object3ds.push_back(std::move(newObjectData));
     }
 }
 
@@ -323,7 +323,7 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
         //オブジェクト名
         LoadName(stageChangeTriggerData.objectName, object, "name");
         //ロック
-        LoadBool(stageChangeTriggerData.isLocked, object, "isLoked");
+        LoadBool(stageChangeTriggerData.isLocked, object, "isLocked");
         //ファイルパス
         LoadMeshData(stageChangeTriggerData.filePath, object);
         //トランスフォーム

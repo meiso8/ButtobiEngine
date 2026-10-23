@@ -724,7 +724,7 @@ Vector3 Math::GetForward(const Matrix4x4& mat)
     return Normalize({ mat.m[2][0],mat.m[2][1], mat.m[2][2] });
 }
 
-Matrix4x4 Math::GetBillBordMatrix(const Matrix4x4& cameraWorldMatrix)
+Matrix4x4 Math::GetBillboardMatrix(const Matrix4x4& cameraWorldMatrix)
 {
 
     Matrix4x4 mat = Multiply(MakeRotateYMatrix(std::numbers::pi_v<float>), cameraWorldMatrix);

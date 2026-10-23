@@ -338,7 +338,7 @@ void ObjectManager::Save()
             {"type", object->GetObjectType() },
             {"nextStageName",object->GetNextStageName()},
             {"openFlagName",object->GetOpenFlagName()},
-            {"isLoked",object->GetIsLocked()},
+            {"isLocked",object->GetIsLocked()},
 
         };
 

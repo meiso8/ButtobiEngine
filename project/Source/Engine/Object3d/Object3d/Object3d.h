@@ -185,7 +185,7 @@ public:
     // ==============溶けデータ==================
 
     const Melt& GetMeltData() { return *meltResource_.data; };
-    void SetMeleData(const Melt& data) { *meltResource_.data = data; }
+    void SetMelteData(const Melt& data) { *meltResource_.data = data; }
     void SetMeltDataTime(const float& time) { meltResource_.data->time = time; }
     void SetMeltDataMeltTime(const float& meltTime) { meltResource_.data->meltTime = meltTime; }
     void InitMeltData();

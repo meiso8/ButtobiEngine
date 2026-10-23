@@ -28,7 +28,7 @@ public:
     void Draw(const BlendMode& blendMode = kBlendModeNormal, 
         const CullMode& cullMode = kCullModeBack,
         const MaskMode maskMode = kAll,
-        const bool usePSOKye =false, 
+        const bool usePSOKey =false, 
         const TextureFactory::Handle skyBoxTexture = TextureFactory::Handle::SKYBOX_TEX,
         const TextureFactory::Handle dissolveTexture = TextureFactory::Handle::NOIZE0,
         const bool useObjectManagerDraw = true

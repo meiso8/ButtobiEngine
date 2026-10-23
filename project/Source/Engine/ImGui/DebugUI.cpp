@@ -1089,7 +1089,7 @@ void DebugUI::CheckObject3d(Object3d& object3d,const char* label)
 
         Melt melt = object3d.GetMeltData();
         CheckMeltData(melt, "meltData");
-        object3d.SetMeleData(melt);
+        object3d.SetMelteData(melt);
 
         auto* primitive = object3d.GetPrimitive();
 
