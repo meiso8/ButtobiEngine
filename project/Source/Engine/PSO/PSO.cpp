@@ -416,7 +416,7 @@ void PSO::CreateALLPSO()
         rtvFormat
     );
 
-    //Romdomならコレになります。kEffectRandomは一応あるけど。。エラーになりマスね。
+    //Ramdomならコレになります。kEffectRandomは一応あるけど。。エラーになりマスね。
     for (int b = 0; b < kCountOfBlendMode; ++b) {
         graphicsPipelineStateRandom_[b] = Create(
             static_cast<BlendMode>(b),

@@ -75,7 +75,7 @@ void SlidePuzzleSystem::Update(const Vector2& screenPos)
 
 #ifdef USE_IMGUI
 
-    //デバック用に一旦
+    //デバッグ用に一旦
     if (Input::IsTriggerKey(DIK_P)) {
         isEnd_ = true;
     }

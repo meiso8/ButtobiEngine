@@ -61,10 +61,10 @@ void Player::OnCollision(Collider* collider)
 
     if (collider->GetCollisionAttribute() == CollisionTag::GetTag("CameraUp")) {
         //カメラ上昇するコライダーに当たった時を記入していく
-        eyePosition_->SiftToUp();
+        eyePosition_->ShiftToUp();
     } else {
         //カメラを下に移動する
-        eyePosition_->ShftToTDown();
+        eyePosition_->ShftToDown();
     }
 
     //コライダーに当たった時を得る
@@ -230,7 +230,7 @@ void Player::Debug()
 #ifdef USE_IMGUI
 
     ImGui::Begin("Player");
-    DebugUI::CheckCaracterState(characterState_, "CharacterStage");
+    DebugUI::CheckCharacterState(characterState_, "CharacterStage");
     ImGui::Checkbox("isInvincible", &isInvincible_);
     ImGui::SliderFloat3("velocity_", &velocity_.x, -1000.0f, 1000.0f);
     DebugUI::CheckObject3d(*aniObject_);

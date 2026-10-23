@@ -7,8 +7,8 @@ public:
         UV_CHECKER,
         CIRCLE,
         GRADATION_LINE,
-        NOIZE0,
-        NOIZE1,
+        NOISE0,
+        NOISE1,
     
         NUMBERS,
         
@@ -22,7 +22,7 @@ public:
 
 
         BUTTON_BACK_TO_GAME,
-        BUTTON_BACK_TO_TITL,
+        BUTTON_BACK_TO_TITLE,
 
         TEST3,
 
@@ -67,7 +67,7 @@ public:
 
     
         ARROW,
-        FOOTS_PRINTS,
+        FOOT_PRINT,
         MELT_GLASS,
         NORMAL_GLASS,
         MUSIC,

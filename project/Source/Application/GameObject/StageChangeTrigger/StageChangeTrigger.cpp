@@ -40,7 +40,7 @@ void StageChangeTrigger::Create(
     //オブジェクト名の設定
     object_->SetObjectType("StageChangeTrigger");
     //温度の設定
-    object_->SetTemperature(data.materialData.tempareture);
+    object_->SetTemperature(data.materialData.temperature);
     //カラーの設定
     object_->SetColor(data.materialData.color);
     //輝度の設定
@@ -124,7 +124,7 @@ void StageChangeTrigger::OnCollision(Collider* collider)
     // 衝突相手がプレイヤーかチェック
     if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Player")) {
         //次のステージに進む
-        StageManager::GetInstance()->SetNestStage(object_->GetNextStageName());
+        StageManager::GetInstance()->SetNextStage(object_->GetNextStageName());
         std::string name = "GO to" + object_->GetNextStageName() + "Stage";
         LogFile::Log(name);
     }

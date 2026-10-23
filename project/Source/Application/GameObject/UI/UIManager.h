@@ -1,5 +1,5 @@
 #pragma once
-#include"HPGage.h"
+#include"HPGauge.h"
 #include"HPIcon.h"
 #include"PauseScreen.h"
 #include"CurPos.h"
@@ -22,7 +22,7 @@ public:
     void Initialize();
     void UpdateGage();
     void UpdatePauseScreen();
-    void DrawHPGage();
+    void DrawHPGauge();
     void DrawPauseScreen();
     void DrawCurPos();
     void DrawEffect();
@@ -30,10 +30,10 @@ public:
     Vector2* GetCurPosPtr() {return curPos_->GetScreenPosPtr(); };
 private:
     std::unique_ptr<PauseScreen> pauseScreen_;
-    std::unordered_map<GageType, std::unique_ptr<HPGage>>hpGages_;
+    std::unordered_map<GageType, std::unique_ptr<HPGauge>>hpGauges_;
     std::unique_ptr<Sprite> effectSprite_ = nullptr;
     std::unique_ptr<CurPos>  curPos_ = nullptr;
     std::unique_ptr<ButtonSprite>  buttonSprite_ = nullptr;
-    std::unique_ptr<EyeCatch>  eyeChatch_ = nullptr;
+    std::unique_ptr<EyeCatch>  eyeCatch_ = nullptr;
 };
 

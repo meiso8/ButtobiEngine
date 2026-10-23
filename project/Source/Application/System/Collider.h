@@ -17,7 +17,7 @@ struct CollisionInfo {
 
 CollisionInfo GetCollisionInfo(const Sphere& sphere, const AABB& AABB);
 CollisionInfo GetCollisionInfo(const AABB& a, const AABB& b);
-void SetPenetrantion(CollisionInfo& collisionInfo, const Vector3& centerA, const Vector3& centerB, const float overlapX, const float overlapY, const float overlapZ);
+void SetPenetration(CollisionInfo& collisionInfo, const Vector3& centerA, const Vector3& centerB, const float overlapX, const float overlapY, const float overlapZ);
 void ResolveCollision(Vector3& pos, Vector3& velocity, const CollisionInfo& info);
 
 namespace ParentMatrix {
@@ -53,7 +53,7 @@ private:
 	Vector3 tempWorldTransform_ = {0.0f};
 	bool isCalculatedThisFrame_ = false; // 今フレーム計算済みかどうかのフラグ
 #ifdef _DEVELOP
-	//デバック用
+	//デバッグ用
 	std::unique_ptr<Primitive>debugMesh_ = nullptr;
 	//位置
 	std::unique_ptr<Object3d> object3d_ = nullptr;
@@ -62,7 +62,7 @@ public:
 	Collider();
 	virtual ~Collider();
 
-	void InitCalcuatedTisFrameAndCollidedFlag();
+	void InitCalculatedThisFrameAndCollidedFlag();
 	/// @brief 衝突時コールバック関数
 	virtual void OnCollision(Collider* collider) {
 		(void)collider;

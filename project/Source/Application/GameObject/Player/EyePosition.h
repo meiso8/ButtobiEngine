@@ -32,9 +32,9 @@ public:
     //カメラの上昇か下降時
     bool IsCameraUpOrDown() { return isUp_ || isDown_; };
     //上昇をセットする
-    void SiftToUp();
+    void ShiftToUp();
     //下降をセットする
-    void ShftToTDown();
+    void ShftToDown();
     void Initialize();
     void Update();
 

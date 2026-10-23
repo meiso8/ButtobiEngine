@@ -9,7 +9,7 @@
 #include"Puzzle/SlidePuzzleSystem.h"
 StageManager::~StageManager()
 {
-    LogFile::Log("Destory StageManager");
+    LogFile::Log("Destroy StageManager");
 }
 
 void StageManager::Finalize()
@@ -116,7 +116,7 @@ void StageManager::SetMap(const std::string& name, std::unique_ptr<Stage> stage)
     stageNames_[stages_[name].get()] = name;
 }
 
-void StageManager::SetNestStage(const std::string& name)
+void StageManager::SetNextStage(const std::string& name)
 {
     // すでに遷移予約が入っている場合は重複予約しない
     if (nextStage_ != nullptr) return;
@@ -159,9 +159,9 @@ void StageManager::SetPlayer(Player* player)
     Stage::SetPlayer(player);
 }
 
-void StageManager::SetCollisionManager(CollisionManager* collisionManger)
+void StageManager::SetCollisionManager(CollisionManager* collisionManager)
 {
-    collisionManager_ = collisionManger;
+    collisionManager_ = collisionManager;
 }
 
 void StageManager::SetLightingManager(LightingManager* lightingManager)

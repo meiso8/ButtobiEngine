@@ -2,13 +2,13 @@
 #include"Block/Block.h"
 class MeltBlockMap
 {
-    //tempareture
+    //temperature
     enum BlockTempareture {
         kMiddle_Low,
         kMiddle_High,
         kLow,
         kHigh,
-        kMaxBolckTempareture,
+        kMaxBlockTemperature,
     };
 public:
     MeltBlockMap();
@@ -20,13 +20,13 @@ public:
     void ResetPushMap();
     void RayCastHit(RaySprite& raySprite);
     void ClearSet();
-   const std::array< std::unique_ptr<Block>, kMaxBolckTempareture>& GetMap() { return blocks_; }
+   const std::array< std::unique_ptr<Block>, kMaxBlockTemperature>& GetMap() { return blocks_; }
 private:
     std::map<int, Vector4>colorMap_;
     //温度マップ
-    std::map<BlockTempareture, float>temparetureMap_;
+    std::map<BlockTempareture, float>temperatureMap_;
     //ブロック群
-    std::array< std::unique_ptr<Block>, kMaxBolckTempareture>blocks_;
+    std::array< std::unique_ptr<Block>, kMaxBlockTemperature>blocks_;
     //順番
     std::vector<int> steppedOrder_;
     //正しい順番

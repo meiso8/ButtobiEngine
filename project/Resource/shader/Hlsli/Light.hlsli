@@ -37,7 +37,7 @@ struct LightOutPut
     float3 specularLight;
 };
 
-float GetCosin(float NdotL, int lightMode)
+float GetCosine(float NdotL, int lightMode)
 {
     return (lightMode == 1) ? saturate(NdotL) : pow(NdotL * 0.5f + 0.5f, 2.0f);
 }
@@ -50,7 +50,7 @@ float3 CalculatePointLightDiffuse(float3 normal, float3 worldPos, PointLight lig
     float distance = length(toWorldPos);
     float factor = pow(saturate(-distance / light.radius + 1.0f), light.decay);
     float NdotL = dot(normal, -dir);
-    float cos = GetCosin(NdotL, lightMode);
+    float cos = GetCosine(NdotL, lightMode);
     return light.color.rgb * cos * light.intensity * factor;
     
 }
@@ -90,7 +90,7 @@ float3 CalculateSpotLightSpecular(float3 normal, float3 toEye, SpotLight light, 
 float3 CalculateDirectionalDiffuse(float3 normal, float3 dir, float3 color, float intensity, int lightMode)
 {
     float NdotL = dot(normal, -dir);
-    float cos = GetCosin(NdotL, lightMode);
+    float cos = GetCosine(NdotL, lightMode);
     return color.rgb * cos * intensity;
 }
 

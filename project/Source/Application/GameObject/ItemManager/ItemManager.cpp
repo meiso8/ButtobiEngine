@@ -19,7 +19,7 @@
 #include"FlagManager/FlagManager.h"
 
 namespace {
-     std::string solerDiscFlagName = "GetSolarDisc";
+     std::string solarDiscFlagName = "GetSolarDisc";
 }
 
 ItemManager::~ItemManager()
@@ -87,7 +87,7 @@ void ItemManager::Init() {
     items_.clear(); // 既存のアイテムをクリア
     itemSlot_.Init();
     //太陽円盤取得フラグの初期化
-    FlagManager::SetFlag(solerDiscFlagName,false);
+    FlagManager::SetFlag(solarDiscFlagName,false);
 
 }
 
@@ -97,12 +97,12 @@ void ItemManager::Update() {
         item->Update();
     }
 
-    if (!FlagManager::HasFlag(solerDiscFlagName)) {
+    if (!FlagManager::HasFlag(solarDiscFlagName)) {
         //未取得時のみ探す
         auto item = GetItem("SolarDisc");
         //取得アニメーションの終了を検知したとき
         if (item && item->IsGet() && item->IsGetAnimEnd()) {
-            FlagManager::SetFlag(solerDiscFlagName);
+            FlagManager::SetFlag(solarDiscFlagName);
         };
     }
 

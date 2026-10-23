@@ -13,7 +13,7 @@ void ModelFactory::Load() {
     ModelManager::LoadModel("Resource/Models/mummyRoom/mummyRoom.obj");
     ModelManager::LoadModel("Resource/Models/mummy/coffin.gltf");
 
-    ModelManager::LoadModel("Resource/Models/hart/hart.obj");
+    ModelManager::LoadModel("Resource/Models/Heart/heart.obj");
     ModelManager::LoadModel("Resource/Models/sunMedal/sunMedal.obj");
     ModelManager::LoadModel("Resource/Models/sunMedal/crowbarItem.obj");
     ModelManager::LoadModel("Resource/Models/SolarDisc/SolarDisc.obj");

@@ -30,14 +30,14 @@ public:
     void TransitionStage();
     void TransitionScene(const std::string& sceneName);
     void SetMap(const std::string& name, std::unique_ptr<Stage> stage);
-    void SetNestStage(const std::string& name);
+    void SetNextStage(const std::string& name);
     void CheckCollision();
     void SetSceneChange(SceneChange* sceneChange) { sceneChange_ = sceneChange; }
     void SetMemoManager(MemoManager* memoManager);
     void SetItemManager(ItemManager* itemManager);
     void SetUIManager(UIManager* uiManager);
     void SetPlayer(Player* player);
-    void SetCollisionManager(CollisionManager* collisionManger);
+    void SetCollisionManager(CollisionManager* collisionManager);
     void SetLightingManager(LightingManager* lightingManager);
     void SetRaySprite(RaySprite* raySprite);
 private:

@@ -7,8 +7,8 @@
 #include"LineObject3d.h"
 
 namespace {
-    const float kBeamDuretion_ = 1.5f;
-    const float kLigeDuration_ = 2.0f;
+    const float kBeamDuration_ = 1.5f;
+    const float kLifeDuration_ = 2.0f;
 
 }
 
@@ -113,7 +113,7 @@ void Beam::Update()
         lifeTimer_ -= TimeManager::DeltaTime();
     }
 
-    float time = (kLigeDuration_ - lifeTimer_) / kBeamDuretion_;
+    float time = (kLifeDuration_ - lifeTimer_) / kBeamDuration_;
     time = std::clamp(time, 0.0f, 1.0f);
 
     Vector3 pos = { 0.0f };
@@ -172,7 +172,7 @@ bool Beam::Shot(const Vector3& target, const  BeamType& type, const Vector3& sta
 
     UpdateObject();
 
-    lifeTimer_ = kLigeDuration_;
+    lifeTimer_ = kLifeDuration_;
     isActive_ = true;
 
     return true;
@@ -200,10 +200,10 @@ void Beam::UpdateObject()
     float scaleZ = Length(point_.endPos - point_.startPos);
     Vector3 centerPos = Lerp(point_.startPos, point_.endPos, 0.5f);
 
-    auto& transfrom = object3d_->GetTransform();
-    transfrom.rotate = rotate;
-    transfrom.scale = { 1.0f,1.0f,scaleZ };
-    transfrom.translate = centerPos;
+    auto& transform = object3d_->GetTransform();
+    transform.rotate = rotate;
+    transform.scale = { 1.0f,1.0f,scaleZ };
+    transform.translate = centerPos;
 
     object3d_->Update();
 }

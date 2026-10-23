@@ -20,7 +20,7 @@ private:
     std::unique_ptr <Object3d> obj_ = nullptr;
     std::unique_ptr<ParticleEmitter>particleEmitter_ = nullptr;
     std::vector<EulerTransform> footSteps_;
-    bool isApper_ = false;
+    bool isAppear_ = false;
     float footStepTimer_  = 0.0f;
     uint32_t step_ = 0;
     std::string jsonFileName_ = "MeltStage_BastetStep";

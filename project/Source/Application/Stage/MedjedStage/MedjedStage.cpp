@@ -95,7 +95,7 @@ void MedjedStage::Update()
 
         auto enemyPhase = medjedManager_->GetEnemyPhase();
 
-        //透明移動じゃないときEmittする
+        //透明移動じゃないときEmitする
         if (enemyPhase != Enemy::PHASE::ALPHA_WALK && enemyPhase != Enemy::PHASE::BEAM) {
             UpdateEmitter(kMedjed_Particle);
         }
@@ -141,8 +141,8 @@ void MedjedStage::Draw()
 void MedjedStage::DrawSprite()
 {
     if (FindMedjed()) {
-        //HPゲー描画
-        GetUIManager()->DrawHPGage();
+        //HPゲージ描画
+        GetUIManager()->DrawHPGauge();
     }
 }
 
@@ -195,7 +195,7 @@ void MedjedStage::CheckCollision(CollisionManager& collisionManager, RaySprite& 
 
 }
 
-void MedjedStage::UpdateEmitter(const Particels& particles)
+void MedjedStage::UpdateEmitter(const Particles& particles)
 {
     particleEmitters_[particles]->Update();
 }

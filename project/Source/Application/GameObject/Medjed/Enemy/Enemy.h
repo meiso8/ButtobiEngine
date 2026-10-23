@@ -45,8 +45,8 @@ public:
     //更新
     void Update();
     /// @brief 衝突コールバック
-    /// @param collder 
-    void OnCollision(Collider* collder)override;
+    /// @param collider 
+    void OnCollision(Collider* collider)override;
    
     // =======================//フラグ//===================================
 

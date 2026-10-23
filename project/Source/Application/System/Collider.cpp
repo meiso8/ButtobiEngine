@@ -21,7 +21,7 @@ Vector3 ParentMatrix::GetParentScaleByMatrix(const Matrix4x4& mat)
     return scale;
 }
 
-void Collider::InitCalcuatedTisFrameAndCollidedFlag()
+void Collider::InitCalculatedThisFrameAndCollidedFlag()
 {
     //計算フラグの初期化
     isCalculatedThisFrame_ = false;

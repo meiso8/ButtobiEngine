@@ -145,8 +145,8 @@ void Enemy::Update()
 
     ImGui::Begin("Enemy");
 
-    DebugUI::CheckCaracterState(characterState_, "Enemy");
-    ImGui::Checkbox("isApper", &isAppear_);
+    DebugUI::CheckCharacterState(characterState_, "Enemy");
+    ImGui::Checkbox("isAppear", &isAppear_);
 
     for (auto& [name, collider] : colliders_) {
 
@@ -247,7 +247,7 @@ void Enemy::OnCollision(Collider* collider)
     OnCollisionCollider();
 
     if (collider->GetCollisionAttribute() == CollisionTag::GetTag("PlayerBulletCold") || collider->GetCollisionAttribute() == CollisionTag::GetTag("PlayerBulletHot")) {
-        //プレイヤーの弾の温度によって後でカエル
+        //プレイヤーの弾の温度によって後で変更する
         if (!characterState_.isHit) {
             characterState_.isHit = true;
 

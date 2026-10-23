@@ -41,7 +41,7 @@ PasswordText::PasswordText()
 
 void PasswordText::Initialize()
 {
-    passworldString_ = U"A3N91KH7";
+    passwordString_ = U"A3N91KH7";
     text_.SetString(U"");
     isUnLock_ = false;
     isActive_ = false;
@@ -93,8 +93,8 @@ void PasswordText::Update()
             }
         }
 
-        if (inputString_.size() >= passworldString_.size()) {
-            if (inputString_ == passworldString_) {
+        if (inputString_.size() >= passwordString_.size()) {
+            if (inputString_ == passwordString_) {
                 //チケット番号と同じ
 
                //成功音

@@ -30,7 +30,7 @@ public:
     void Draw();
     /// @brief 更新
     void Update();
-    /// @brief デバック表示
+    /// @brief デバッグ表示
     void Debug();
 
     /// @brief 

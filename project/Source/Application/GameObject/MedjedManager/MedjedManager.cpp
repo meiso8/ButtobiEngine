@@ -51,7 +51,7 @@ void MedjedManager::RayCastHit(RaySprite& raySprite) {
 
         if (raySprite.Intersect(medjed.get(), dist)) {
 
-            //メジェドざまを当ててないとき
+            //メジェドさまを当ててないとき
             if (!GetIsFindMedjed()) {
                 //Mouseをクリックしたら
                 if (InputBind::IsClick()) {

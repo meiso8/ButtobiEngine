@@ -5,7 +5,7 @@
 #include<map>
 #include"CharacterState.h"
 
-class HPGage
+class HPGauge
 {
 public:
 
@@ -16,8 +16,8 @@ public:
         layer1,
     };
 
-    HPGage();
-    ~HPGage();
+    HPGauge();
+    ~HPGauge();
     void SetHpPtr(const HPs* hp) { hps_ = hp; };
     void Setting(const Vector2& size, const Vector2& pos, const Vector2& anchorPoint);
     void Initialize();

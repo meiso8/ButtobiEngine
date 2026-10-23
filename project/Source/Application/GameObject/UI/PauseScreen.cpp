@@ -35,7 +35,7 @@ PauseScreen::PauseScreen()
     pos_[kBackToGame] = { 256.0f + 128.0f,  528.0f + sprites_[kBackToGame]->GetSize().y * 0.5f };
     sprites_[kBackToGame]->SetAnchorPoint({ 0.5f,0.5f });
 
-    sprites_[kBackToTitle]->Create(TextureFactory::BUTTON_BACK_TO_TITL, { 0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f });
+    sprites_[kBackToTitle]->Create(TextureFactory::BUTTON_BACK_TO_TITLE, { 0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f });
     pos_[kBackToTitle] = { width - sprites_[kBackToTitle]->GetSize().x * 0.5f - 256.0f,  528.0f + sprites_[kBackToTitle]->GetSize().y * 0.5f };
     sprites_[kBackToTitle]->SetAnchorPoint({ 0.5f,0.5f });
 

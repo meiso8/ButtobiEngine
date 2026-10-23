@@ -43,7 +43,7 @@ void Item::Init()
 
 void Item::Draw(const bool useItemCamera, Camera& camera)
 {
-    object_->Draw(kBlendModeNormal, kCullModeBack, kAll, false, TextureFactory::SKYBOX_TEX, TextureFactory::NOIZE0, !useItemCamera);
+    object_->Draw(kBlendModeNormal, kCullModeBack, kAll, false, TextureFactory::SKYBOX_TEX, TextureFactory::NOISE0, !useItemCamera);
 
     if (useItemCamera) {
         object_->DrawCommand(camera);
@@ -66,10 +66,10 @@ void Item::SetScreenStartPos()
 {
     object_->Initialize();
 
-    auto& trnasform = object_->GetTransform();
-    trnasform.translate.z = 1.0f;
+    auto& transform = object_->GetTransform();
+    transform.translate.z = 1.0f;
 
-    startPos_ = trnasform.translate;
+    startPos_ = transform.translate;
     object_->Update();
 }
 

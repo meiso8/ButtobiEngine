@@ -73,7 +73,7 @@ void PostProcessManager::Execute(
         barrier->SettingBarrierSRVforRTV(renderTextureData.resource.resource);
 
         if (effect == PSO::EffectType::kEffectDissolve) {
-            DrawDissolve(layer, renderTextureData.rtvHandleCPU, srcIndex, TextureFactory::NOIZE0);
+            DrawDissolve(layer, renderTextureData.rtvHandleCPU, srcIndex, TextureFactory::NOISE0);
         } else if (effect == PSO::EffectType::kEffectDepthBasedOutline) {
             DrawOutLine(layer, renderTextureData.rtvHandleCPU, srcIndex, depthTexture_->GetSRVIndex());
         } else if (effect == PSO::EffectType::kEffectThermography) {

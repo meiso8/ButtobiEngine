@@ -121,7 +121,7 @@ void DirectXCommon::ViewPortAndScissorRect()
     //ビューポート領域の設定
     commanList->RSSetViewports(1, &viewport);//Viewportを設定
     //シザー矩形の設定
-    commanList->RSSetScissorRects(1, &scissorRect);//Scirssorを設定
+    commanList->RSSetScissorRects(1, &scissorRect);//Scissorを設定
 }
 
 
@@ -258,7 +258,7 @@ void DirectXCommon::PostDraw()
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_PRESENT);
 
-    //コマンドリストの内容を確定させる。全てのコマンドを詰んでから　Closesすること。
+    //コマンドリストの内容を確定させる。全てのコマンドを積んでから　Closesする。
     commanList->Close();
     //GPUにコマンドリストの実行を行わせる
     
@@ -282,7 +282,7 @@ void DirectXCommon::CloseLoadCommandList(const CommandListType type)
 {
     auto* commanList = commandList_[type]->Get();
 
-    //コマンドリストの内容を確定させる。全てのコマンドを詰んでから　Closesすること。
+    //コマンドリストの内容を確定させる。全てのコマンドを積んでから　Closesする。
     commanList->Close();
 
     //GPUにコマンドリストの実行を行わせる
@@ -482,7 +482,7 @@ ComPtr<ID3D12DescriptorHeap> DirectXCommon::CreateDescriptorHeap(D3D12_DESCRIPTO
     //ディスクリプタヒープを生成する
     ComPtr<ID3D12DescriptorHeap> descriptorHeap = nullptr;
     D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
-    descriptorHeapDesc.Type = heapType;//連打ーターゲットビュー用
+    descriptorHeapDesc.Type = heapType;//レンダーターゲットビュー用
     descriptorHeapDesc.NumDescriptors = numDescriptors;
     descriptorHeapDesc.Flags = shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
     HRESULT hr = device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));

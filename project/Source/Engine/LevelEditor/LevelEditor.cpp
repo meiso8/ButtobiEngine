@@ -110,7 +110,7 @@ void LevelEditor::CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects)
         }
 
         newObjectData->obj_->SetColor(objectData.materialData.color);
-        newObjectData->obj_->SetTemperature(objectData.materialData.tempareture);
+        newObjectData->obj_->SetTemperature(objectData.materialData.temperature);
         newObjectData->obj_->SetShininess(objectData.materialData.shininess);
         //環境光
         newObjectData->obj_->SetEnvironmentCoefficient(objectData.materialData.environmentCoefficient);
@@ -202,7 +202,7 @@ void LevelEditor::CreateObject3d(std::vector<std::unique_ptr<Object3d>>& object3
         }
 
         newObjectData->SetColor(objectData.materialData.color);
-        newObjectData->SetTemperature(objectData.materialData.tempareture);
+        newObjectData->SetTemperature(objectData.materialData.temperature);
         newObjectData->SetShininess(objectData.materialData.shininess);
         //環境光
         newObjectData->SetEnvironmentCoefficient(objectData.materialData.environmentCoefficient);
@@ -252,7 +252,7 @@ void LevelEditor::LoadMaterialData(LevelData::MaterialData& data, nlohmann::json
     //色
     LoadVector4(object, data.color);
     //温度
-    LoadFloat(data.tempareture, object);
+    LoadFloat(data.temperature, object);
     //輝度の読みこみ
     LoadFloat(data.shininess, object, "shininess");
     //環境
@@ -302,7 +302,7 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
         LevelData::EnemySpawnData& enemyData = levelData->enemies.back();
 
         //温度
-        LoadFloat(enemyData.tempareture, object);
+        LoadFloat(enemyData.temperature, object);
         //トランスフォームの読み込み
         LoadTransform(object, enemyData.transform);
         //子供

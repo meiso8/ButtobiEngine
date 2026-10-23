@@ -34,7 +34,7 @@ public:
     /// @brief 全てを描画する
     /// @param camera カメラ
     void DrawAllCollider();
-    /// @brief コライダーをオブジェクト位置に移動するための更新処理　デバック用
+    /// @brief コライダーをオブジェクト位置に移動するための更新処理　デバッグ用
     void UpdateAllCollider();
     /// @brief 全てのコライダーを描画するフラグの取得
     /// @return フラグ

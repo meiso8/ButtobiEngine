@@ -54,7 +54,7 @@ void JsonFile::SaveJson(const std::string& Tag) {
         }
         file << jsonFiles_[Tag].data.dump(4); // インデント付きで保存（4スペース）
     } else {
-        throw std::runtime_error("Tag is UnKnown");
+        throw std::runtime_error("Tag is unknown");
     }
 
 }

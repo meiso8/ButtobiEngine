@@ -6,8 +6,8 @@ EyeCatch::EyeCatch()
 {
 
     const float height = static_cast<float>(Window::GetClientHeight());
-    const float whidth = static_cast<float>(Window::GetClientWidth());
-    const float halfWidth = whidth * 0.5f;
+    const float width = static_cast<float>(Window::GetClientWidth());
+    const float halfWidth = width * 0.5f;
     const float halfHeight = height * 0.5f;
     Texture::LoadAndMapHandle("Resource/Textures/white1x1.png", TextureFactory:: WHITE_1X1);
     std::string directoryName = "Resource/Textures/EyeCatch/eyeCatch_";

@@ -33,7 +33,7 @@ SkinCluster Skin::CreateSkinCluster(const Skeleton& skeleton, const ModelData& m
     VertexInfluence* mappedInfluence = nullptr;
     skinCluster.influenceResource->Map(0, nullptr, reinterpret_cast<void**>(&mappedInfluence));
     skinCluster.influenceResource->SetName(L"skinCluster_influenceResource");
-    std::memset(mappedInfluence, 0, sizeof(VertexInfluence) * modelData.vertices.size());//0埋め。wightを0にしておく
+    std::memset(mappedInfluence, 0, sizeof(VertexInfluence) * modelData.vertices.size());//0埋め。weightを0にしておく
     skinCluster.mappedInfluence = { mappedInfluence,modelData.vertices.size() };
 
     //influence用のsrvを作成

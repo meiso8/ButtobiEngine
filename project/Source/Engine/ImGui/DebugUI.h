@@ -48,7 +48,7 @@ class DebugUI
 {
 public:
     static void ShowMainViewPort(CbvSrvUavDescriptorHeap* srvDescriptorHeap, const uint32_t srvIndex);
-    static void CheckCaracterState(CharacterState& characterState, const char* label);
+    static void CheckCharacterState(CharacterState& characterState, const char* label);
     static void CheckFPS();
     static void CheckSound();
     static void CheckJsonFile();
@@ -124,7 +124,7 @@ public:
         Vector4& color,
         int32_t& lightMode,
         float& shininess,
-        float& tempereture,
+        float& temperature,
         Matrix4x4& uvMatrix,
         float& environmentCoefficient,
         float& maskVal,

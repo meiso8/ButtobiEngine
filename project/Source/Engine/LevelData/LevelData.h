@@ -10,7 +10,7 @@ struct LevelData {
     struct ColliderData {
         Vector3 center = { 0.0f,0.0f,0.0f };
         Vector3 size = { 1.0f,1.0f,1.0f };
-        std::string tag ="unKown";
+        std::string tag ="unknown";
         uint32_t maskTag = 0xffffffff;
         std::string type = "";
     };
@@ -24,7 +24,7 @@ struct LevelData {
         uint32_t textureHandle;
         std::string textureFilePath;
         Vector4 color;
-        float tempareture;
+        float temperature;
         float shininess;
         float environmentCoefficient;
         float glassFactor;
@@ -47,7 +47,7 @@ struct LevelData {
     };
 
     struct EnemySpawnData {
-        float tempareture;
+        float temperature;
         MeshFileData filePath;
         EulerTransform transform;
     };
