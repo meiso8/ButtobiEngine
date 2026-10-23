@@ -17,13 +17,13 @@ Matrix4x4 MakeScaleMatrix(const Vector3& scale);
 //2次元拡大縮小行列
 Matrix3x3 MakeScaleMatrix(const Vector2& scale);
 
-//1.X軸回転行列
+//X軸回転行列
 Matrix4x4 MakeRotateXMatrix(const float& radian);
 
-//1.Y軸回転行列
+//Y軸回転行列
 Matrix4x4 MakeRotateYMatrix(const float& radian);
 
-//1.Z軸回転行列
+//Z軸回転行列
 Matrix4x4 MakeRotateZMatrix(const float& radian);
 
 /// @brief XYZ回転/// @param radian /// @return 
@@ -41,16 +41,16 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 //2次元アフィン行列作成関数
 Matrix3x3 MakeAffineMatrix(const Vector2& scale, const float& theta, const Vector2& translate);
 
-//3.ビューポート変換行列　正規化デバイス座標系->スクリーン座標
+//ビューポート変換行列　正規化デバイス座標系->スクリーン座標
 Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth);
-//3.ビューポート変換行列　
+//ビューポート変換行列　
 Matrix3x3 MakeViewportMatrix(float left, float top, float width, float height);
-//2.正射影行列
+//正射影行列
 Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float bottom, float nearClip, float farClip);
 //2次元正射影行列
 Matrix3x3 MakeOrthographicMatrix(float left, float top, float right, float bottom);
 
-//1.透視投影行列
+//透視投影行列
 Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip);
 
 //転置行列
@@ -66,7 +66,7 @@ Matrix4x4 Inverse(const Matrix4x4& m);
 
 //任意軸回転行列作成関数
 Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
-//
+
 Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to);
 
 Matrix4x4 MakeRotateAxisSinCos(const Vector3& n, const float& cos, const float& sin);

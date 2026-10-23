@@ -6,7 +6,7 @@
 void IResource::Reset()
 {
     if (resource) {
-        //あんまっぷしておく？
+       //リソースがあればリセットをする
         resource.Reset();
     }
 }
@@ -99,7 +99,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> ResourceFactory::CreateReadbackBufferReso
 {
     Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;
 
-    // 1. ヒープの設定をREADBACKに変更
+    //  ヒープの設定をREADBACKに変更
     D3D12_HEAP_PROPERTIES heapProperties{};
     heapProperties.Type = D3D12_HEAP_TYPE_READBACK; // ここが重要
 
@@ -112,7 +112,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> ResourceFactory::CreateReadbackBufferReso
     resourceDesc.SampleDesc.Count = 1;
     resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-    // 2. 初期状態を COPY_DEST にする
+    // 初期状態を COPY_DEST にする
     if (SUCCEEDED(DirectXCommon::GetDevice()->CreateCommittedResource(
         &heapProperties,
         D3D12_HEAP_FLAG_NONE,
@@ -128,7 +128,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> ResourceFactory::CreateReadbackBufferReso
 }
 Microsoft::WRL::ComPtr<ID3D12Resource> ResourceFactory::CreateTextureResource(const DirectX::TexMetadata& metadata)
 {
-    //1. metadataを基にResourceの設定
+    //metadataを基にResourceの設定
     D3D12_RESOURCE_DESC resourceDesc{};
     resourceDesc.Width = UINT(metadata.width);//Textureの値
     resourceDesc.Height = UINT(metadata.height);//Textureの高さ
@@ -138,11 +138,11 @@ Microsoft::WRL::ComPtr<ID3D12Resource> ResourceFactory::CreateTextureResource(co
     resourceDesc.SampleDesc.Count = 1;//サンプリングカウント。1固定。
     resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION(metadata.dimension);//Textureの次元数。
 
-    //2.利用するHeapの設定
+    //利用するHeapの設定
     D3D12_HEAP_PROPERTIES heapProperties{};
     heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;//GPUで処理するために書き換え
 
-    //3.Resourceを生成する
+    //Resourceを生成する
     Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;
     HRESULT hr = DirectXCommon::GetDevice()->CreateCommittedResource(
         &heapProperties,//Heapの設定
@@ -172,7 +172,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> ResourceFactory::CreateRenderTextureResou
     resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;//2次元
     resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;//RenderTarget
 
-    //2.利用するHeapの設定
+    //利用するHeapの設定
     D3D12_HEAP_PROPERTIES heapProperties{};
     heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;//GPUで処理するために書き換え
 
@@ -183,7 +183,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> ResourceFactory::CreateRenderTextureResou
     clearValue.Color[2] = clearColor.z;
     clearValue.Color[3] = clearColor.w;
 
-    //3.Resourceを生成する
+    //Resourceを生成する
     Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;
     HRESULT hr = DirectXCommon::GetDevice()->CreateCommittedResource(
         &heapProperties,//Heapの設定

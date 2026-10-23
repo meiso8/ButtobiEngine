@@ -871,7 +871,7 @@ void Primitive::Create(const MeshData& meshData)
     vertexCount_ = static_cast<UINT>(meshData.vertices.size());
     indexCount_ = static_cast<UINT>(meshData.indices.size());
 
-    // 1. 頂点バッファの作成とデータ転送
+    // 頂点バッファの作成とデータ転送
     UINT vertexBufferSize = sizeof(VertexData) * vertexCount_;
     vertexResource_.CreateBufferResource(L"Primitive_VertexResource",vertexBufferSize);
 

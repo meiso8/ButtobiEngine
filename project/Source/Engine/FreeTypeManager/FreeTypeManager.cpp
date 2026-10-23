@@ -311,7 +311,7 @@ FreeTypeManager::FTTextureData FreeTypeManager::CreateResourceFromFTBitmap(const
 
     auto device = DirectXCommon::GetDevice();
 
-    // 1. デフォルトヒープにテクスチャ作成
+    //  デフォルトヒープにテクスチャ作成
     D3D12_RESOURCE_DESC texDesc = {};
     texDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
     texDesc.Width = width;
@@ -341,7 +341,7 @@ FreeTypeManager::FTTextureData FreeTypeManager::CreateResourceFromFTBitmap(const
         LogFile::Log("Texture creation failed!\n");
     }
 
-    // 2. アップロードヒープにデータをコピー
+    // アップロードヒープにデータをコピー
     UINT64 uploadBufferSize;
     device->GetCopyableFootprints(&texDesc, 0, 1, 0, nullptr, nullptr, nullptr, &uploadBufferSize);
 
@@ -363,7 +363,7 @@ FreeTypeManager::FTTextureData FreeTypeManager::CreateResourceFromFTBitmap(const
     }
 
 
-    // 3. 中間リソースにビットマップを書き込む
+    // 中間リソースにビットマップを書き込む
     D3D12_SUBRESOURCE_DATA subResourceData = {};
     subResourceData.pData = bitmap.buffer;
     subResourceData.RowPitch = bitmap.pitch;
@@ -377,7 +377,7 @@ FreeTypeManager::FTTextureData FreeTypeManager::CreateResourceFromFTBitmap(const
     UpdateSubresources(commandList_, result.texResource.resource.Get(), result.texResource.intermediateResource.Get(), 0, 0, 1, &subResourceData);
     result.texResource.intermediateResource.resource->SetName(L"Font_intermediateResource");
     result.texResource.resource->SetName(L"Font_Resource");
-    // 4. コピー先を PIXEL_SHADER_RESOURCE に遷移 テクスチャをシェーダーで使える状態に切り替える
+    // コピー先を PIXEL_SHADER_RESOURCE に遷移 テクスチャをシェーダーで使える状態に切り替える
     CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
         result.texResource.resource.Get(),
         D3D12_RESOURCE_STATE_COPY_DEST,

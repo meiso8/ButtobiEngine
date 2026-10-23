@@ -76,7 +76,7 @@ public:
     /// @brief ライブラリの初期化
     FreeTypeManager();
     ~FreeTypeManager();
-    // 2. コピーと代入を禁止する
+    // コピーと代入を禁止する
     FreeTypeManager(const FreeTypeManager&) = delete;
     FreeTypeManager& operator=(const FreeTypeManager&) = delete;
 

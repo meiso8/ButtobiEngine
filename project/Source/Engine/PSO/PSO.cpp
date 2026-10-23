@@ -526,15 +526,13 @@ void PSO::Finalize()
 
 Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::GetOrCreatePSO(const PSOKey& key)
 {
-    // 1. キャッシュに存在するかチェック
+    //  キャッシュに存在するかチェック
     auto it = psoCache_.find(key);
     if (it != psoCache_.end()) {
         return it->second; // すでに生成済みならそれを返す
     }
 
-    // 2. 存在しなければ新規作成 (ここで既存の Create 関数を呼ぶ)
-    // ※ instance_ は PSOクラスのシングルトンインスタンス等を想定
-
+    //  存在しなければ新規作成 (ここで既存の Create 関数を呼ぶ)
     assert(GetInstance()->inputLayout);
 
     std::vector<DXGI_FORMAT> rtvFormatsForTermoAndObjectID =
@@ -556,7 +554,7 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::GetOrCreatePSO(const PSOKey& ke
         rtvFormatsForTermoAndObjectID
     );
 
-    // 3. キャッシュに保存して返す
+    // キャッシュに保存して返す
     psoCache_[key] = newPso;
 
     return newPso;

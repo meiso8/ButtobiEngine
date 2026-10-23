@@ -75,7 +75,7 @@ Matrix3x3 MakeScaleMatrix(const Vector2& scale)
 ;
 
 
-//1.X軸回転行列
+//X軸回転行列
 Matrix4x4 MakeRotateXMatrix(const float& radian) {
 
 
@@ -104,7 +104,7 @@ Matrix4x4 MakeRotateXMatrix(const float& radian) {
     return result;
 };
 
-//1.Y軸回転行列
+//Y軸回転行列
 Matrix4x4 MakeRotateYMatrix(const float& radian) {
 
     Matrix4x4 result;
@@ -132,7 +132,7 @@ Matrix4x4 MakeRotateYMatrix(const float& radian) {
     return result;
 };
 
-//1.Z軸回転行列
+//Z軸回転行列
 Matrix4x4 MakeRotateZMatrix(const float& radian) {
 
     Matrix4x4 result;
@@ -291,7 +291,7 @@ Matrix3x3 MakeAffineMatrix(const Vector2& scale, const float& theta, const Vecto
 }
 ;
 
-//3.ビューポート変換行列　正規化デバイス座標系->スクリーン座標
+//ビューポート変換行列　正規化デバイス座標系->スクリーン座標
 Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth) {
 
 
@@ -342,7 +342,7 @@ Matrix3x3 MakeViewportMatrix(float left, float top, float width, float height)
 }
 ;
 
-//2.正射影行列
+//正射影行列
 Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float bottom, float nearClip, float farClip) {
 
     Matrix4x4 result;
@@ -393,7 +393,7 @@ Matrix3x3 MakeOrthographicMatrix(float left, float top, float right, float botto
 }
 ;
 
-//1.透視投影行列
+//透視投影行列
 Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip) {
 
     Matrix4x4 result;
@@ -500,7 +500,8 @@ Matrix4x4 Inverse(const Matrix4x4& m) {
 
 
     if (std::abs(abs) < 1e-6f) {
-        // 逆行列が作れない！→ 単位行列を返す or エラー処理
+        // 逆行列が作れない！
+        // 単位行列を返す or エラー処理
         return MakeIdentity4x4(); // または assert(false);
     }
 

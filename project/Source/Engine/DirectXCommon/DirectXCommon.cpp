@@ -172,7 +172,7 @@ void DirectXCommon::DrawRenderTextureForSprite(RtvDescriptorHeap* rtvDescriptorH
 
     auto backBufferRTV = rtvDescriptorHeap->GetCPUDescriptorHandle(backBufferIndex);
     PostProcessManager::Layer spriteLayer = PostProcessManager::kSprite;
-    // ② スプライトのエフェクトをバックバッファに「上書き（アルファブレンド）」出力
+    // スプライトのエフェクトをバックバッファに「上書き（アルファブレンド）」出力
     ppm->Execute(spriteLayer, backBufferRTV, &barrierMain_, kBlendModeNormal);
 
 }
@@ -226,17 +226,7 @@ void DirectXCommon::SettingIdTextureBarrierPre()
 
 void DirectXCommon::PreDraw()
 {
-
-    //これからの流れ
-    //1.  BackBufferを決定する
-    //2.  書き込む作業（画面のクリア）をしたいので、RTVを設定する
-    //3.  画面のクリアを行う
-    //4.  CommandListを閉じる
-    //5.  CommandListの実行（キック）
-    //6.  画面のスワップ（BackBufferとFrontBufferを入れ替える）
-    //7.  次のフレーム用にCommandListを再準備
-
-    //1.これから書き込むバックバッファのインデックスを取得
+    //これから書き込むバックバッファのインデックスを取得
     UINT backBufferIndex = swapChainClass.GetSwapChain()->GetCurrentBackBufferIndex();
 
     auto* commanList = commandList_[kMain]->Get();
@@ -248,7 +238,7 @@ void DirectXCommon::PreDraw()
         D3D12_RESOURCE_STATE_RENDER_TARGET);
 
     commanList->OMSetRenderTargets(1, &rtvClass.GetHandle(backBufferIndex), false, nullptr);
-    //3.指定した色で画面全体をクリアする
+    //指定した色で画面全体をクリアする
     Vector4 color = renderTexture_->GetColor();
     float clearColor[] = { color.x,color.y,color.z,color.w };
     commanList->ClearRenderTargetView(rtvClass.GetHandle(backBufferIndex), clearColor, 0, nullptr);
@@ -257,7 +247,7 @@ void DirectXCommon::PreDraw()
 
 void DirectXCommon::PostDraw()
 {
-    //1.これから書き込むバックバッファのインデックスを取得
+    //これから書き込むバックバッファのインデックスを取得
     UINT backBufferIndex = swapChainClass.GetSwapChain()->GetCurrentBackBufferIndex();
 
     auto* commanList = commandList_[kMain]->Get();
@@ -268,14 +258,14 @@ void DirectXCommon::PostDraw()
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_PRESENT);
 
-    //4.コマンドリストの内容を確定させる。全てのコマンドを詰んでから　Closesすること。
+    //コマンドリストの内容を確定させる。全てのコマンドを詰んでから　Closesすること。
     commanList->Close();
-    //5.GPUにコマンドリストの実行を行わせる
+    //GPUにコマンドリストの実行を行わせる
     
     ID3D12CommandList* commandLists[] = { commanList };
     commandQueue.GetCommandQueue()->ExecuteCommandLists(1, commandLists);
 
-    //6.GPUとOSに画面の交換を行うよう通知する
+    //GPUとOSに画面の交換を行うよう通知する
     swapChainClass.GetSwapChain()->Present(1, 0);
 
     //画面の更新が終わった直後GPUにシグナルを送る
@@ -284,7 +274,7 @@ void DirectXCommon::PostDraw()
 }
 
 void DirectXCommon::PrepareCommand(const CommandListType type)
-{    //7.次のフレーム用のコマンドリストを準備
+{    //次のフレーム用のコマンドリストを準備
     commandList_[type]->PrepareCommand();
 }
 
@@ -292,10 +282,10 @@ void DirectXCommon::CloseLoadCommandList(const CommandListType type)
 {
     auto* commanList = commandList_[type]->Get();
 
-    //4.コマンドリストの内容を確定させる。全てのコマンドを詰んでから　Closesすること。
+    //コマンドリストの内容を確定させる。全てのコマンドを詰んでから　Closesすること。
     commanList->Close();
 
-    //5.GPUにコマンドリストの実行を行わせる
+    //GPUにコマンドリストの実行を行わせる
     ID3D12CommandList* commandLists[] = { commanList };
     commandQueue.GetCommandQueue()->ExecuteCommandLists(1, commandLists);
 
@@ -321,7 +311,7 @@ void DirectXCommon::RenderTextureForSpritePreDraw()
     // スプライト描画用のRTVをセット (深度バッファは不要なら nullptr)
     commanList->OMSetRenderTargets(2, rtvHandles, false, nullptr);
 
-    //3.指定した色で画面全体をクリアする
+    //指定した色で画面全体をクリアする
     float clearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
     commanList->ClearRenderTargetView(rtvHandles[0], clearColor, 0, nullptr);
     commanList->ClearRenderTargetView(rtvHandles[1], clearColor, 0, nullptr);

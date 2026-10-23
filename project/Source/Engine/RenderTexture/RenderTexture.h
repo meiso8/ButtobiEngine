@@ -44,10 +44,10 @@ public:
 
     void SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap);
 
-    // 1. 描画コマンドの最後にコピー命令を積む関数 (PostDrawの直前に呼ぶ)
+    //  描画コマンドの最後にコピー命令を積む関数 (PostDrawの直前に呼ぶ)
     void CopyClickPixelCommand(int mouseX, int mouseY);
 
-    // 2. 次のフレームのUpdateなどで、安全にIDを読み出す関数
+    //  次のフレームのUpdateなどで、安全にIDを読み出す関数
     uint32_t GetClickedObjectID();
 
     const Vector4& GetColor() {

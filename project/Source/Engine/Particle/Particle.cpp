@@ -105,13 +105,13 @@ Particle MakeNewParticle(
 
     if (useRadialEmission) {
         float longitudeAngle = ((float)count / (float)maxCount) * (2.0f * Math::kPi);
-       //// 2. X軸とZ軸の回転量を計算
+       // X軸とZ軸の回転量を計算
        float rotateX = std::cos(longitudeAngle);
        float rotateZ = std::sin(longitudeAngle);
 
        float leanAmount = halfPi;
 
-       // 3. 回転を適用（Y軸は0、または基準の回転）
+       // 回転を適用（Y軸は0、または基準の回転）
        particle.transform.rotate.x = (rotateX * halfPi)+ halfPi + transform.eTransform_.rotate.x;
        particle.transform.rotate.y = longitudeAngle + transform.eTransform_.rotate.y;
        particle.transform.rotate.z = -(rotateZ * halfPi) + halfPi + transform.eTransform_.rotate.z;

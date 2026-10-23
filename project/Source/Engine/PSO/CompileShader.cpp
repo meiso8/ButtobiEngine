@@ -102,7 +102,7 @@ Microsoft::WRL::ComPtr<IDxcBlob> DxcCompiler::CompileShader(
     //Compilerに使用するProfile
     const wchar_t* profile) {
     // ここの中身をこの後書いていく
-    // 1.hlslファイルを読み込む
+    // hlslファイルを読み込む
 
 #pragma region //1.hlslファイルを読む
 //ここからシェーダーをコンパイルする旨をログに出す
@@ -120,8 +120,8 @@ Microsoft::WRL::ComPtr<IDxcBlob> DxcCompiler::CompileShader(
 
 #pragma endregion
 
-    // 2.Compileする
-#pragma region//2.Compileする
+    //Compileする
+#pragma region//Compileする
 
     LPCWSTR arguments[] = {
     filePath.c_str(),//コンパイル対象のhlslファイル名
@@ -149,7 +149,7 @@ Microsoft::WRL::ComPtr<IDxcBlob> DxcCompiler::CompileShader(
 
 #pragma endregion
 
-    // 3.警告・エラーが出ていないか確認する
+    // 警告・エラーが出ていないか確認する
 #pragma region //警告・エラーが出ていないか確認する
 //警告・エラーが出ていたらログに出して止める
     IDxcBlobUtf8* shaderError = nullptr;
@@ -166,7 +166,7 @@ Microsoft::WRL::ComPtr<IDxcBlob> DxcCompiler::CompileShader(
     }
 #pragma endregion
 
-    // 4.Compile結果を受け取って返す
+    // Compile結果を受け取って返す
 #pragma region//Compile結果を受け取って返す
     //コンパイル結果空実行用のバイナリ部分を取得 Blob = BinaryLargeObjectの略
     IDxcBlob* shaderBlob = nullptr;

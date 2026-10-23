@@ -157,13 +157,13 @@ void ObjectManager::ClickObject(Camera& camera)
     bool doRedo = (Input::IsPressKey(DIK_LSHIFT) && isTriggerCtrlZ);
     bool doUndo = isTriggerCtrlZ && !doRedo;
 
-    // 2. Undoボタンの描画 ＆ クリック判定
+    //  Undoボタンの描画 ＆ クリック判定
     if (ImGui::Button("Undo")) {
         doUndo = true;
     }
     ImGui::SameLine();
 
-    // 3. Redoボタンの描画 ＆ クリック判定
+    // Redoボタンの描画 ＆ クリック判定
     if (ImGui::Button("Redo")) {
         doRedo = true;
     }
@@ -265,14 +265,12 @@ void ObjectManager::Draw(Camera& camera)
 #endif
 
 
-    // 2. 距離やアルファ値が変わるため、描画直前にソートする
-// ※半透明オブジェクトは「奥から手前」に描画する必要があるため、通常は降順、
-// もし純粋にアルファ値の大きさで並べたいなら、目的に応じて比較演算子（< や >）を変えてください。
+    //  距離やアルファ値が変わるため、描画直前にソートする
     std::sort(objectAlpha_.begin(), objectAlpha_.end(), [](const AlphaObject& a, const AlphaObject& b) {
         return a.alpha > b.alpha; // アルファ値が大きい順（またはカメラから遠い順）
         });
 
-    // 3. ソートされた順に描画
+    //  ソートされた順に描画
     for (const auto& obj : objectAlpha_) {
         if (obj.ptr == nullptr) {
             continue;
@@ -381,7 +379,7 @@ void ObjectManager::Save()
             };
         }
 
-        // 4. 配列に要素を追加
+        // 配列に要素を追加
         json["objects"].push_back(objectJson);
     }
 
@@ -427,7 +425,7 @@ bool ObjectManager::UpdateImGuizmo(Camera& camera, Object3d* object3d)
         return false;
     }
 #ifdef USE_IMGUI
-    // 1. ImGuizmoのフレーム開始宣言（内部のコンテキストを初期化・更新します）
+    // ImGuizmoのフレーム開始宣言（内部のコンテキストを初期化・更新
     ImGuizmo::BeginFrame();
 
     static ImGuizmo::MODE currentMode = ImGuizmo::LOCAL;
@@ -584,7 +582,7 @@ bool ObjectManager::UpdateImGuizmoForCollider(Camera& camera, Collider* collider
         Matrix4x4 newColliderWorldMat;
         MatArray::ConvertArrayToMat(worldMat, newColliderWorldMat); // ※配列からMatrixに戻す関数があると便利です
 
-        // 3. 親の逆行列（Inverse）を掛けることで、新しい「ローカル行列（newChild）」を取り出す
+        //  親の逆行列（Inverse）を掛けることで、新しい「ローカル行列（newChild）」を取り出す
         Matrix4x4 invObjectMat = Inverse(objectMat);
         Matrix4x4 newChild = newColliderWorldMat * invObjectMat;
 

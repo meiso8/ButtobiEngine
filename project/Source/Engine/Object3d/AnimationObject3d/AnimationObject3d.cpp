@@ -266,7 +266,7 @@ void AnimationObject3d::DrawCommand(Camera& camera)
     commandList_->Dispatch(UINT(skinningModel_->GetModelData()->vertices.size() + 1023) / 1024, 1, 1);
 
     // ====================================================================
-   // 2. Compute Shader実行後：UAVステート -> 頂点バッファステートへ戻す
+   //  Compute Shader実行後：UAVステート -> 頂点バッファステートへ戻す
    // ====================================================================
     barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
     barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
