@@ -25,7 +25,7 @@
 #include"DepthTexture/DepthTexture.h"
 #include"Particle/GPUParticle.h"
 #include"Particle/GPUParticleEmitter/GPUParticleEmitter.h"
-#include"../Application/GameObject/UI/EyeCatch/EyeCatch.h"
+#include"EyeCatch/EyeCatch.h"
 
 class DirectXCommon;
 
