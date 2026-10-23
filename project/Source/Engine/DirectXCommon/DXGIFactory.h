@@ -8,7 +8,7 @@ class DXGIFactory
 {
 public:
     void Create();
-    Microsoft::WRL::ComPtr<IDXGIFactory7>& GetDigiFactory() {
+    Microsoft::WRL::ComPtr<IDXGIFactory7>& GetDxgiFactory() {
         return dxgiFactory_;
     };
 

@@ -41,7 +41,7 @@ namespace ResourceFactory {
     /// @param width 
     /// @param height 
     /// @return StencilTexture
-    Microsoft::WRL::ComPtr<ID3D12Resource> CreateDepthStencileTextureResource(
+    Microsoft::WRL::ComPtr<ID3D12Resource> CreateDepthStencilTextureResource(
         int32_t width,
         int32_t height);
 
@@ -106,7 +106,7 @@ struct SRVResource :public Resource<T> {
 };
 
 struct IntermediateResource :public IResource {
-    void UploadTextureData(const LPCWSTR& label, ID3D12GraphicsCommandList* commandList,ID3D12Resource* ohterResource, const DirectX::ScratchImage& mipImages);
+    void UploadTextureData(const LPCWSTR& label, ID3D12GraphicsCommandList* commandList,ID3D12Resource* otherResource, const DirectX::ScratchImage& mipImages);
 };
 
 struct SRVTextureResource :public IResource {

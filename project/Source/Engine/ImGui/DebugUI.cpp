@@ -85,11 +85,11 @@ void DebugUI::CheckCamera(Camera& camera, const char* label)
 
         if (auto debugCamera = dynamic_cast<DebugCamera*>(&camera)) {
             DebugCamera::MoveType moveType = debugCamera->GetMoveType();
-            ImGui::Text("Type : %s", (moveType == DebugCamera::Mouse) ? "Mouse" : "KeyBorad");
+            ImGui::Text("Type : %s", (moveType == DebugCamera::Mouse) ? "Mouse" : "KeyBoard");
 
             if (ImGui::Button("ChangeMoveType")) {
       
-                moveType = (moveType == DebugCamera::Mouse) ? DebugCamera::KeyBorad : DebugCamera::Mouse;
+                moveType = (moveType == DebugCamera::Mouse) ? DebugCamera::KeyBoard : DebugCamera::Mouse;
             }
             debugCamera->SetMoveType(moveType);
         }
@@ -97,7 +97,7 @@ void DebugUI::CheckCamera(Camera& camera, const char* label)
         CheckTransform(cameraData.eTransform, " worldMatrix");
         ShowMatrix4x4(matrix.worldMat);
 
-        CheckShericalCoordinate(cameraData.sphericalCoordinate);
+        CheckSphericalCoordinate(cameraData.sphericalCoordinate);
 
         ImGui::SliderFloat2("ofsset", &cameraData.offset.x, -1000.0f, 1000.0f);
         ImGui::SliderFloat("nearZ", &cameraData.nearZ, 0.0f, 1000.0f);
@@ -122,12 +122,12 @@ void DebugUI::CheckCamera(Camera& camera, const char* label)
 
 }
 
-void DebugUI::CheckShericalCoordinate(SphericalCoordinate& sphericalCoordinate)
+void DebugUI::CheckSphericalCoordinate(SphericalCoordinate& sphericalCoordinate)
 {
 
 #ifdef USE_IMGUI
 
-    if (ImGui::TreeNode("ShericalCoordinate")) {
+    if (ImGui::TreeNode("SphericalCoordinate")) {
         ImGui::SliderFloat("polar", &sphericalCoordinate.polar, -10.0f, 10.0f);
         ImGui::SliderFloat("azimuthal", &sphericalCoordinate.azimuthal, -10.0f, 10.0f);
         ImGui::SliderFloat("radius", &sphericalCoordinate.radius, -100.0f, 100.0f);
@@ -862,7 +862,7 @@ void DebugUI::CheckPostEffectMaterial(PostEffectMaterial::MaterialForVignette& m
 #ifdef USE_IMGUI
     if (ImGui::TreeNode("Vignette")) {
         DebugUI::CheckFloat(material.correctVal, "correctVal");
-        DebugUI::CheckFloat(material.viignetteVal, "viignetteVal");
+        DebugUI::CheckFloat(material.vignetteVal, "vignetteValue");
         ImGui::TreePop();
     }
 #endif
@@ -1089,7 +1089,7 @@ void DebugUI::CheckObject3d(Object3d& object3d,const char* label)
 
         Melt melt = object3d.GetMeltData();
         CheckMeltData(melt, "meltData");
-        object3d.SetMeleData(melt);
+        object3d.SetMelteData(melt);
 
         auto* primitive = object3d.GetPrimitive();
 
@@ -1616,7 +1616,7 @@ void DebugUI::CheckSound()
         ImGui::SliderFloat("volume", &volume, 0.0f, 10.0f);
 
 
-        for (auto& [filename, sound] : Sound::GetSouneDatas()) {
+        for (auto& [filename, sound] : Sound::GetSoundDatas()) {
 
             if (ImGui::TreeNode(filename.filename().string().c_str())) {
 
@@ -1719,19 +1719,19 @@ void DebugUI::CheckPostEffect()
     }
     if (ImGui::TreeNode("PostEffect Sprite")) {
 
-        auto* spritelMaterial = postProcessManager->GetPostEffectMaterial(PostProcessManager::kSprite);
+        auto* spriteMaterial = postProcessManager->GetPostEffectMaterial(PostProcessManager::kSprite);
 
-        CheckPostEffectMaterial(*spritelMaterial->GetMaterialGaussianFilter());
-        CheckPostEffectMaterial(*spritelMaterial->GetMaterialGrayScale());
-        CheckPostEffectMaterial(*spritelMaterial->GetMaterialForVignette());
-        CheckPostEffectMaterial(*spritelMaterial->GetMaterialForBoxFilter());
-        CheckPostEffectMaterial(*spritelMaterial->GetMaterialForLuminanceBasedOutline());
-        CheckPostEffectMaterial(*spritelMaterial->GetMaterialForDepthBasedOutline());
-        CheckPostEffectMaterial(*spritelMaterial->GetMaterialForRadialBlur());
-        CheckPostEffectMaterial(*spritelMaterial->GetMaterialForDissolve());
-        CheckPostEffectMaterial(*spritelMaterial->GetMaterialThermography());
-        CheckPostEffectMaterial(*spritelMaterial->GetMaterialForRandom());
-        CheckPostEffectMaterial(*spritelMaterial->GetMaterialForMosaic());
+        CheckPostEffectMaterial(*spriteMaterial->GetMaterialGaussianFilter());
+        CheckPostEffectMaterial(*spriteMaterial->GetMaterialGrayScale());
+        CheckPostEffectMaterial(*spriteMaterial->GetMaterialForVignette());
+        CheckPostEffectMaterial(*spriteMaterial->GetMaterialForBoxFilter());
+        CheckPostEffectMaterial(*spriteMaterial->GetMaterialForLuminanceBasedOutline());
+        CheckPostEffectMaterial(*spriteMaterial->GetMaterialForDepthBasedOutline());
+        CheckPostEffectMaterial(*spriteMaterial->GetMaterialForRadialBlur());
+        CheckPostEffectMaterial(*spriteMaterial->GetMaterialForDissolve());
+        CheckPostEffectMaterial(*spriteMaterial->GetMaterialThermography());
+        CheckPostEffectMaterial(*spriteMaterial->GetMaterialForRandom());
+        CheckPostEffectMaterial(*spriteMaterial->GetMaterialForMosaic());
         ImGui::TreePop();
     }
 

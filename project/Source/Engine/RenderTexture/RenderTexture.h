@@ -21,7 +21,7 @@ public:
         kNormal1,
         kThermography,
         kObjectID,
-        kMaxRenderTexutre,
+        kMaxRenderTexture,
     };
     struct RenderTextureData {
         TextureResource resource;
@@ -32,7 +32,7 @@ private:
 
     Vector4 renderTargetClearValue_ = { 1.0f,1.0f,1.0f,1.0f };
 
-    std::array< RenderTextureData, kMaxRenderTexutre> renderTextureDatas_;
+    std::array< RenderTextureData, kMaxRenderTexture> renderTextureDatas_;
     RenderTextureData thermographyTextureData_;
 
     //ID用リソース
@@ -58,7 +58,7 @@ public:
         return renderTextureDatas_[index];
     }
 
-    std::array< RenderTextureData, kMaxRenderTexutre>& GetRenderTextureDatas() { return renderTextureDatas_; };
+    std::array< RenderTextureData, kMaxRenderTexture>& GetRenderTextureDatas() { return renderTextureDatas_; };
 
     void Clear();
     ~RenderTexture();

@@ -158,7 +158,7 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
 void ButtobiEngine::Update() {
 
 
-    if (Window::ProcessMassage()) {
+    if (Window::ProcessMessage()) {
         endRequest_ = true;
     }
 
@@ -287,7 +287,7 @@ void ButtobiEngine::Load()
     primitiveFactory_->CreateAllPrimitive();
     LogFile::Log("CreatePrimitive");
 
-    tagFactory_ = std::unique_ptr<TagFactory>();
+    tagFactory_ = std::make_unique<TagFactory>();
     //タグの作成
     tagFactory_->SetTag();
     LogFile::Log("Create Tag");
@@ -425,7 +425,7 @@ void ButtobiEngine::PreCommandSet() {
     //SRV管理の描画前処理
     srvDescriptorHeap_->PreDraw(commandList);
 
-    directXCommon_->VeiwPortAndScissorRect();
+    directXCommon_->ViewPortAndScissorRect();
 
 
 
@@ -467,7 +467,7 @@ void ButtobiEngine::PostCommandSet(const bool isLoadEnd) {
     //SRV管理の描画前処理
     srvDescriptorHeap_->PreDraw(commandList);
     //ビューポートとシザー
-    directXCommon_->VeiwPortAndScissorRect();
+    directXCommon_->ViewPortAndScissorRect();
  
     // スプライトの描画
     if (isLoadEnd) {

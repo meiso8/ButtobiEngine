@@ -121,7 +121,7 @@ void GPUParticleManager::Draw(Camera& camera)
 {
     //マトリックスの更新
     particleGroup_->parViewResource.Map();
-    Matrix4x4 billboardMatrix = Math::GetBillBordMatrix(camera.GetWorldMatrix());
+    Matrix4x4 billboardMatrix = Math::GetBillboardMatrix(camera.GetWorldMatrix());
     particleGroup_->parViewResource.data->billboardMatrix = billboardMatrix;
     particleGroup_->parViewResource.data->viewProjection = camera.GetViewProjectionMatrix();
     particleGroup_->parViewResource.UnMap();

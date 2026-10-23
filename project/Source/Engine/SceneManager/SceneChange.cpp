@@ -50,12 +50,12 @@ void SceneChange::FadeOut()
     float time = 1.0f - timer_ / endTime_;
     sprite_->SetColor({ 0.0f,0.0f,0.0f,time });
 
-    auto* grayScaleaterial = PostProcessManager::GetInstance()->
+    auto* grayScaleMaterial = PostProcessManager::GetInstance()->
         GetPostEffectMaterial(PostProcessManager::kModel)->
         GetMaterialGrayScale();
-    grayScaleaterial->useEffect = true;
-    grayScaleaterial->type = PostEffectMaterial::RenderTextureEffectType::kGrayScale;
-    grayScaleaterial->effectVol = EaseOutQuadT(time);
+    grayScaleMaterial->useEffect = true;
+    grayScaleMaterial->type = PostEffectMaterial::RenderTextureEffectType::kGrayScale;
+    grayScaleMaterial->effectVol = EaseOutQuadT(time);
     auto* mosaic = PostProcessManager::GetInstance()->GetPostEffectMaterial(PostProcessManager::kModel)->GetMaterialForMosaic();
     mosaic->useMosaic = true;
     mosaic->size = { Lerp(Window::GetClientWidth(),32,time) };
@@ -71,13 +71,13 @@ void SceneChange::FadeIn()
     float time = timer_ / endTime_;
     sprite_->SetColor({ 0.0f,0.0f,0.0f,time });
 
-    auto* grayScaleaterial = PostProcessManager::GetInstance()->
+    auto* grayScaleMaterial = PostProcessManager::GetInstance()->
         GetPostEffectMaterial(PostProcessManager::kModel)->
         GetMaterialGrayScale();
-    grayScaleaterial->useEffect = true;
+    grayScaleMaterial->useEffect = true;
     
-    grayScaleaterial->type = PostEffectMaterial::RenderTextureEffectType::kGrayScale;
-    grayScaleaterial->effectVol = EaseInQuadT(time);
+    grayScaleMaterial->type = PostEffectMaterial::RenderTextureEffectType::kGrayScale;
+    grayScaleMaterial->effectVol = EaseInQuadT(time);
 
 
     auto* mosaic = PostProcessManager::GetInstance()->GetPostEffectMaterial(PostProcessManager::kModel)->GetMaterialForMosaic();
@@ -96,10 +96,10 @@ void SceneChange::SwitchScene()
     if (state_ == kFadeOut ) {
         state_ = kSceneStart;
         sprite_->SetColor({ 0.0f,0.0f,0.0f,0.0f});
-        auto* grayScaleaterial = PostProcessManager::GetInstance()->
+        auto* grayScaleMaterial = PostProcessManager::GetInstance()->
             GetPostEffectMaterial(PostProcessManager::kModel)->
             GetMaterialGrayScale();
-        grayScaleaterial->useEffect = false;
+        grayScaleMaterial->useEffect = false;
        
         PostProcessManager::GetInstance()->GetPostEffectMaterial(PostProcessManager::kModel)->GetMaterialForMosaic()->useMosaic = false;
     }

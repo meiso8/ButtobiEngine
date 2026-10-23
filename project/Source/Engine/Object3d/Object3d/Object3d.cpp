@@ -330,7 +330,7 @@ void Object3d::CreateWaveData()
 {
     int waveCount = 2;
     size_t bufferSize = (sizeof(Wave) * waveCount + 255) & ~255;
-    waveResource_.CreateBufferResource(L"Object3d_WaveDataResoource", bufferSize);
+    waveResource_.CreateBufferResource(L"Object3d_WaveDataResource", bufferSize);
 
     //書き込むためのアドレスを取得
     waveResource_.Map();

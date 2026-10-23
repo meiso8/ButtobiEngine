@@ -620,7 +620,7 @@ std::unordered_map<std::string, std::unique_ptr<ParticleGroup>>& ParticleManager
 
 void ParticleManager::UpdateBillBordMatrix(Camera& camera)
 {
-    billboardMatrix = Math::GetBillBordMatrix(camera.GetWorldMatrix());
+    billboardMatrix = Math::GetBillboardMatrix(camera.GetWorldMatrix());
 }
 
 void ParticleManager::UpdateWVPMatrix(Camera& camera, ParticleGroup& group)

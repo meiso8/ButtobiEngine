@@ -77,7 +77,7 @@ public:
     /// @brief 描画前処理
 /// @param color 画面の色を指定する
     void RenderTexturePreDraw(DsvDescriptorHeap* dsvDescriptorHeap, DepthTexture* depthTexture);
-    void VeiwPortAndScissorRect();
+    void ViewPortAndScissorRect();
     void DrawRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap);
     void DrawRenderTextureForSprite(RtvDescriptorHeap* rtvDescriptorHeap);
     void RenderTexturePostDraw(DepthTexture* depthTexture);

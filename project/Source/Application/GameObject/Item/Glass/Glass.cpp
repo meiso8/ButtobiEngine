@@ -22,7 +22,7 @@ void Glass::Init()
     melt.size = 0.4f;
     melt.thickness = 0.0f;
     melt.time = 0.0f;
-    object_->SetMeleData(melt);
+    object_->SetMelteData(melt);
 
     startPos_ = { 0.0f };
     endPos_ = { 0.0f };

@@ -77,5 +77,5 @@ namespace Math{
     //ワールド行列からワールド座標を取得する関数
     Vector3 GetWorldTransformByMatrix(const Matrix4x4& mat);
     Vector3 GetForward(const Matrix4x4& mat);
-    Matrix4x4 GetBillBordMatrix(const Matrix4x4& cameraWorldMatrix);
+    Matrix4x4 GetBillboardMatrix(const Matrix4x4& cameraWorldMatrix);
 }

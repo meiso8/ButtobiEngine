@@ -18,7 +18,7 @@ public:
         return swapChainDesc_
             ;
     };
-    void GetBuffer(UINT buffer, Microsoft::WRL::ComPtr <ID3D12Resource>& resurce);
+    void GetBuffer(UINT buffer, Microsoft::WRL::ComPtr <ID3D12Resource>& resource);
 
 private:
     Microsoft::WRL::ComPtr <IDXGISwapChain4> swapChain_ = nullptr;

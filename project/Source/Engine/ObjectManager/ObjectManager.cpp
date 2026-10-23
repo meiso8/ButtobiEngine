@@ -204,9 +204,9 @@ void ObjectManager::ClickObject(Camera& camera)
 #endif
 }
 
-void ObjectManager::SetRenderTextureForModel(RenderTexture* rendterTexture)
+void ObjectManager::SetRenderTextureForModel(RenderTexture* renderTexture)
 {
-    renderTexture_ = rendterTexture;
+    renderTexture_ = renderTexture;
 }
 
 void ObjectManager::Clear() {
@@ -338,7 +338,7 @@ void ObjectManager::Save()
             {"type", object->GetObjectType() },
             {"nextStageName",object->GetNextStageName()},
             {"openFlagName",object->GetOpenFlagName()},
-            {"isLoked",object->GetIsLocked()},
+            {"isLocked",object->GetIsLocked()},
 
         };
 

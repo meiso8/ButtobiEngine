@@ -188,7 +188,7 @@ void RootSignature::Create() {
     rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
     rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
     rootParameters[5].Descriptor.ShaderRegister = 4;//レジスタ番号4を使う
-    //Ballon b2
+    //Balloon b2
     rootParameters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
     rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
     rootParameters[6].Descriptor.ShaderRegister = 2;//レジスタ番号2を使う
@@ -432,7 +432,7 @@ void RootSignature::Create() {
 
 #pragma endregion
 
-#pragma region //BeamParaeters
+#pragma region //BeamParameters
 
     D3D12_ROOT_PARAMETER rootParametersForBeam[5] = {};
 

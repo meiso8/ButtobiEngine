@@ -148,7 +148,7 @@ public:
     void CreateAll();
     void Create( RootSignature* rootSignature);
     void SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap);
-    void CreateParticleGroup(const std::string name, const TextureFactory::Handle& textureHandle,const Primitive::MeshType& topoligyType, const bool& useModel = false, const float temperature = 1.0f, const std::string& modelFileName = "Box.obj");
+    void CreateParticleGroup(const std::string name, const TextureFactory::Handle& textureHandle,const Primitive::MeshType& topologyType, const bool& useModel = false, const float temperature = 1.0f, const std::string& modelFileName = "Box.obj");
 
     void Update(Camera& camera);
     void Draw();

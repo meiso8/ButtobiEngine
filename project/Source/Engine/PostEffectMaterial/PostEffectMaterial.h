@@ -29,7 +29,7 @@ public:
     struct MaterialForVignette
     {
         float correctVal;
-        float viignetteVal;
+        float vignetteVal;
         float padding[2];
     };
 
@@ -137,7 +137,7 @@ private:
     void CreateMaterialBufferForGrayScale();
     void CreateMaterialBufferForVignette();
     void CreateMaterialBufferForBoxFilter();
-    void CreateMaterialBUfferForFullScreen();
+    void CreateMaterialBufferForFullScreen();
     void CreateMaterialBufferForGaussianFilter();
     void CreateMaterialLuminanceBasedOutline();
     void CreateMaterialDepthBasedOutline();

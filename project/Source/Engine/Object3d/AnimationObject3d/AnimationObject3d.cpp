@@ -80,7 +80,7 @@ const float AnimationObject3d::GetCurrentAnimProgress()
     } else {
         return 0.0f;
         //もしアニメーションが見つからなかったら0.0fで返す
-        LogFile::Log("not found animetion : return 0.0f");
+        LogFile::Log("not found animation : return 0.0f");
     }
 }
 
@@ -141,13 +141,13 @@ const Animation* AnimationObject3d::FindAndGetAnimation()
 
     const Animation* animation = nullptr;
 
-    const auto& animetions = modelData->animations_;
+    const auto& animations = modelData->animations_;
 
-    if (animetions.contains(currentAnimation_)) {
-        animation = &animetions.at(currentAnimation_);
+    if (animations.contains(currentAnimation_)) {
+        animation = &animations.at(currentAnimation_);
     } else {
 
-        for (auto& [name, findAnimation] : animetions) {
+        for (auto& [name, findAnimation] : animations) {
             animation = &findAnimation;
             //最新のアニメーションの名前を入れる
             currentAnimation_ = name;
@@ -183,7 +183,7 @@ bool AnimationObject3d::IsAnimEnd()
         return animationTime_ >= animation->duration;
     }
     //もしアニメーションが見つからなかったらfalseで返す
-    LogFile::Log("not found animetion : IsAnimEnd return false");
+    LogFile::Log("not found animation : IsAnimEnd return false");
     return false;
 
 }
