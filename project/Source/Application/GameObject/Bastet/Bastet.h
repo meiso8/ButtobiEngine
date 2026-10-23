@@ -17,7 +17,7 @@ public:
 private:
     void CreateParticle();
 private:
-    std::unique_ptr <Object3d> obj_ = nullptr;
+    std::unique_ptr<Object3d> obj_ = nullptr;
     std::unique_ptr<ParticleEmitter>particleEmitter_ = nullptr;
     std::vector<EulerTransform> footSteps_;
     bool isAppear_ = false;

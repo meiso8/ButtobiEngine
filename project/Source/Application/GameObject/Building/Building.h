@@ -21,8 +21,8 @@ public:
     void SetTemperature(const float temp) { object_->SetTemperature(temp); }
     void SetColor(const Vector4& color) { object_->SetColor(color); }
 private:
-    std::unique_ptr <Object3d> object_ = nullptr;
-    std::unique_ptr < Primitive > cube_ = nullptr;
+    std::unique_ptr<Object3d> object_ = nullptr;
+    std::unique_ptr<Primitive > cube_ = nullptr;
 };
 
 class Building
@@ -36,7 +36,7 @@ public:
         Floor,
     };
 protected:
-    std::unique_ptr <Object3d> buildingPos_ = nullptr;
+    std::unique_ptr<Object3d> buildingPos_ = nullptr;
     Model* model_ = nullptr;
     std::unordered_map<AABBType, AABB>aabbs_;
     std::unordered_map<AABBType, std::unique_ptr <FieldCollider>>fieldPoses_;
@@ -48,7 +48,7 @@ public:
     virtual void SetWallPos();
     virtual void Update();
     virtual void Draw();
-  const  std::unordered_map<AABBType, std::unique_ptr <FieldCollider>>& GetFieldPoses() { return fieldPoses_; };
+  const  std::unordered_map<AABBType, std::unique_ptr<FieldCollider>>& GetFieldPoses() { return fieldPoses_; };
 private:
     //壁の厚みを設定する定数
     const float kWallWidth_ = 30.0f;
