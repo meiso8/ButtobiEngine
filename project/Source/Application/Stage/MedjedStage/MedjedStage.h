@@ -13,7 +13,7 @@ class MedjedStage :public Stage
 {
 private:
 
-    enum Particels {
+    enum Particles {
         kSky_Particle,
         kMedjed_Particle,
         kMaxParticles,
@@ -35,7 +35,7 @@ public:
     void CheckCollision(CollisionManager& collisionManager,RaySprite& raySprite)override;
   
 
-    void UpdateEmitter(const Particels& particles);
+    void UpdateEmitter(const Particles& particles);
 private:
     void CreateParticle();
     void TransitionScene();

@@ -1,9 +1,9 @@
-#include "HPGage.h"
+#include "HPGauge.h"
 #include"Easing.h"
 #include"DebugUI.h"
 #include"Input.h"
 #include"TimeManager.h"
-HPGage::HPGage()
+HPGauge::HPGauge()
 {
     sprites_.emplace(SpriteTypes::layer1, std::make_unique<Sprite>());
     sprites_.emplace(SpriteTypes::layer2, std::make_unique<Sprite>());
@@ -14,12 +14,12 @@ HPGage::HPGage()
     sprites_[MaxHp]->Create(TextureFactory::WHITE_1X1, { 640.0,64.0f }, { 0.0f,0.0f,0.0f,0.5f });
 }
 
-HPGage::~HPGage()
+HPGauge::~HPGauge()
 {
 
 }
 
-void HPGage::Setting(const Vector2& size, const Vector2& pos, const Vector2& anchorPoint)
+void HPGauge::Setting(const Vector2& size, const Vector2& pos, const Vector2& anchorPoint)
 {
     for (const auto& [type, sprite] : sprites_) {
 
@@ -30,14 +30,14 @@ void HPGage::Setting(const Vector2& size, const Vector2& pos, const Vector2& anc
     }
 }
 
-void HPGage::Initialize()
+void HPGauge::Initialize()
 {
     preHP_ = hps_->maxHp;
     timer_ = 0.0f;
     preScale_ = 0.0f;
 }
 
-void HPGage::Update()
+void HPGauge::Update()
 {
 
     if (hps_->hp != preHP_) {
@@ -61,7 +61,7 @@ void HPGage::Update()
     DebugUI::CheckSprite(*sprites_[layer1], "HPGage");
 }
 
-void HPGage::Draw()
+void HPGauge::Draw()
 {
     sprites_[layer1]->PreDraw();
 

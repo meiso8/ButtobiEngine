@@ -44,7 +44,7 @@ void EyePosition::EasingUpdate()
     transform_.eTransform_.rotate = Easing::EaseInOutBack(startRot_, endRot_, time_);
 }
 
-void EyePosition::ShftToTDown()
+void EyePosition::ShftToDown()
 {  
     if (isDown_) {
         //既に下降中だったらスキップする
@@ -71,7 +71,7 @@ void EyePosition::ShftToTDown()
     }
 }
 
-void EyePosition::SiftToUp()
+void EyePosition::ShiftToUp()
 {
     if (isUp_) {
         //安全処理として既に上昇していたらスキップする

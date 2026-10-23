@@ -520,7 +520,7 @@ void DebugUI::CheckStageManager()
             // 選択肢を表示（クリックされたら true を返す）
             if (ImGui::Selectable(nextStageName.c_str(), true)) {
                 // クリックされたらStageNameをセットする
-                stageManager->SetNestStage(nextStageName);
+                stageManager->SetNextStage(nextStageName);
                 break;
             }
         }
@@ -1072,7 +1072,7 @@ void DebugUI::CheckObject3d(Object3d& object3d,const char* label)
         object3d.SetMaterial(material);
 
         EulerTransform uvTransform = object3d.GetUVTransform();
-        CheckTransform(uvTransform, "UVTransfrom");
+        CheckTransform(uvTransform, "UVTransform");
         object3d.SetUVTransform(uvTransform);
 
         Wave wave0 = object3d.GetWaveData(0);
@@ -1386,7 +1386,7 @@ void DebugUI::CheckObject3dMaterial(
     Vector4& color,
     int32_t& lightMode,
     float& shininess,
-    float& tempereture,
+    float& temperature,
     Matrix4x4& uvMatrix,
     float& environmentCoefficient,
     float& maskVal,
@@ -1405,7 +1405,7 @@ float& specular,
         CheckColor(color, "color");
         CheckLightMode(lightMode, "lightMode");
         ImGui::SliderFloat("shininess", &shininess, 0.0f, 100.0f);
-        ImGui::SliderFloat("temperature", &tempereture, 0.0f, 1.0f);
+        ImGui::SliderFloat("temperature", &temperature, 0.0f, 1.0f);
         ShowMatrix4x4(uvMatrix, "uvMatrix");
         ImGui::SliderFloat("environmentCoefficient", &environmentCoefficient, 0.0f, 1.0f);
 
@@ -1570,7 +1570,7 @@ void DebugUI::ShowMainViewPort(CbvSrvUavDescriptorHeap* srvDescriptorHeap, const
 #endif
 }
 
-void DebugUI::CheckCaracterState(CharacterState& characterState, const char* label)
+void DebugUI::CheckCharacterState(CharacterState& characterState, const char* label)
 {
 #ifdef USE_IMGUI
 

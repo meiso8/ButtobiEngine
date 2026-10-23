@@ -5,13 +5,13 @@
 ResultMedjed::ResultMedjed()
 {
   aniObj_ = std::make_unique<AnimationObject3d>();
-  auto* modle = ModelManager::GetModel("medjed.gltf");
+  auto* model = ModelManager::GetModel("medjed.gltf");
 
   aniObj_ = std::make_unique<AnimationObject3d>();
   aniObj_->Create();
-  aniObj_->SetMeshAndMaterial(modle);
+  aniObj_->SetMeshAndMaterial(model);
   aniObj_->SetTemperature(1.0f);
-  aniObj_->SetModelAndLoadAnimation(modle);
+  aniObj_->SetModelAndLoadAnimation(model);
 
   anilists_ = {
   "Jump",

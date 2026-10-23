@@ -43,7 +43,7 @@ void Bastet::Initialize() {
 
     footStepTimer_ = 0.0f;
     step_ = 0;
-    isApper_ = false;
+    isAppear_ = false;
     obj_->Initialize();
     obj_->SetNextStageName("BastetStage");
     obj_->SetObjectName("Bastet");
@@ -88,7 +88,7 @@ void Bastet::Update() {
             SetCollisionAttribute(0);
         }
 
-        if (isApper_) {
+        if (isAppear_) {
             float alpha = Lerp(0.0f, 1.0f, kAlphaSpeed_);
             obj_->SetColor({ 1.0f,1.0f,1.0f,alpha });
 
@@ -191,12 +191,12 @@ void Bastet::Draw() {
 
 void Bastet::OnCollision(Collider* collider) {
 
-    if (isApper_) {
+    if (isAppear_) {
         return;
     }
     if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Player")) {
         // プレイヤーとぶつかったときの処理
-        isApper_ = true;
+        isAppear_ = true;
     }
 
 }
@@ -210,7 +210,7 @@ void Bastet::RayCastHit(RaySprite& raySprite)
             //正解音を鳴らす
            SoundManager::PlayCorrectSE();
            //次のステージに進む
-           StageManager::GetInstance()->SetNestStage(obj_->GetNextStageName());
+           StageManager::GetInstance()->SetNextStage(obj_->GetNextStageName());
         }
 
     }

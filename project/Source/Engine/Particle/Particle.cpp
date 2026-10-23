@@ -40,7 +40,7 @@ void ParticleManager::CreateAll()
     CreateParticleGroup("fireLight", TextureFactory::FIRE, Primitive::kPlane, false);
     CreateParticleGroup("firePoint", TextureFactory::CIRCLE, Primitive::kPlane, false);
 
-    CreateParticleGroup("footPrints", TextureFactory::FOOTS_PRINTS, Primitive::kPlane, false,0.5f);
+    CreateParticleGroup("footPrints", TextureFactory::FOOT_PRINT, Primitive::kPlane, false,0.5f);
 }
 
 // ==========================================================================================================

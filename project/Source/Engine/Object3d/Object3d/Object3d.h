@@ -111,7 +111,7 @@ protected:
     MaskMode maskMode_ = kAll;
     bool usePSOKey_ = false;
     TextureFactory::Handle skyBoxTexture_ = TextureFactory::Handle::SKYBOX_TEX;
-    TextureFactory::Handle dissolveTexture_ = TextureFactory::Handle::NOIZE0;
+    TextureFactory::Handle dissolveTexture_ = TextureFactory::Handle::NOISE0;
 private:
 
 public:
@@ -296,7 +296,7 @@ public:
         const MaskMode maskMode = kAll,
         const bool usePSOKey = false,
         const TextureFactory::Handle skyBoxTexture = TextureFactory::Handle::SKYBOX_TEX,
-        const TextureFactory::Handle dissolveTexture =TextureFactory::Handle::NOIZE0,
+        const TextureFactory::Handle dissolveTexture =TextureFactory::Handle::NOISE0,
         const bool useObjectManagerDraw = true
     );
 

@@ -24,7 +24,7 @@ struct LevelData {
         uint32_t textureHandle;
         std::string textureFilePath;
         Vector4 color;
-        float tempareture;
+        float temperature;
         float shininess;
         float environmentCoefficient;
         float glassFactor;
@@ -47,7 +47,7 @@ struct LevelData {
     };
 
     struct EnemySpawnData {
-        float tempareture;
+        float temperature;
         MeshFileData filePath;
         EulerTransform transform;
     };

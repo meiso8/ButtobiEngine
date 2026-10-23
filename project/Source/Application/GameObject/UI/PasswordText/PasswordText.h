@@ -19,7 +19,7 @@ private:
     std::u32string inputString_;
 
     //パスワード
-    std::u32string passworldString_;
+    std::u32string passwordString_;
     //実際の表示テキスト
     Text text_;
     //情報テキスト

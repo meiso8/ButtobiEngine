@@ -142,7 +142,7 @@ void MedjedStage::DrawSprite()
 {
     if (FindMedjed()) {
         //HPゲー描画
-        GetUIManager()->DrawHPGage();
+        GetUIManager()->DrawHPGauge();
     }
 }
 
@@ -195,7 +195,7 @@ void MedjedStage::CheckCollision(CollisionManager& collisionManager, RaySprite& 
 
 }
 
-void MedjedStage::UpdateEmitter(const Particels& particles)
+void MedjedStage::UpdateEmitter(const Particles& particles)
 {
     particleEmitters_[particles]->Update();
 }

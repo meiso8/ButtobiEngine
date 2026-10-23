@@ -145,8 +145,8 @@ void Enemy::Update()
 
     ImGui::Begin("Enemy");
 
-    DebugUI::CheckCaracterState(characterState_, "Enemy");
-    ImGui::Checkbox("isApper", &isAppear_);
+    DebugUI::CheckCharacterState(characterState_, "Enemy");
+    ImGui::Checkbox("isAppear", &isAppear_);
 
     for (auto& [name, collider] : colliders_) {
 

@@ -34,7 +34,7 @@ public:
     void ClearSet();
    const std::array< std::unique_ptr<Block>, kMaxHz>& GetMap() { return blocks_; }
 private:
-    std::array<bool, kMaxHz>isPushs_;
+    std::array<bool, kMaxHz>isPushFlags_;
     std::map<BlockHz, Vector4>colorMap_;
     std::array< Block*,8>whiteMap_;
     std::array<Block*,5>blackMap_;

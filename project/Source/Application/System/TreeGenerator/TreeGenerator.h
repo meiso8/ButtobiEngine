@@ -19,7 +19,7 @@ public:
 
 
     // 除外領域を外部から設定したい場合
-    void AddExcludeArea(const AABB& aaabb) { excludeAreas_.push_back(aaabb); }
+    void AddExcludeArea(const AABB& aabb) { excludeAreas_.push_back(aabb); }
     void ClearExcludeAreas() { excludeAreas_.clear(); }
 
 private:

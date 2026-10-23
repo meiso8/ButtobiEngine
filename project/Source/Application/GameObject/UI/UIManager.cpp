@@ -18,32 +18,32 @@ UIManager::UIManager()
     pauseScreen_ = std::make_unique<PauseScreen>();
     pauseScreen_->SetCurPosPtr(curPos_->GetScreenPosPtr());
 
-    eyeChatch_ = std::make_unique<EyeCatch>();
+    eyeCatch_ = std::make_unique<EyeCatch>();
 
 }
 
 UIManager::~UIManager()
 {
-    hpGages_.clear();
+    hpGauges_.clear();
 
 }
 
 void UIManager::Initialize()
 {
-    for (const auto& [type, gage] : hpGages_) {
-        gage->Initialize();
+    for (const auto& [type, gauge] : hpGauges_) {
+        gauge->Initialize();
     }
 
     buttonSprite_->Initialize();
     pauseScreen_->Initialize();
     curPos_->Initialize();
-    eyeChatch_->Initialize();
+    eyeCatch_->Initialize();
 }
 
 void UIManager::UpdateGage()
 {
-    for (const auto& [type, gage] : hpGages_) {
-        gage->Update();
+    for (const auto& [type, gauge] : hpGauges_) {
+        gauge->Update();
     }
 
 
@@ -72,15 +72,15 @@ void UIManager::UpdatePauseScreen()
         //最初にサーモグラフィーが行われたら
         
         //アイキャッチアニメーションを再生する
-        eyeChatch_->Update();
+        eyeCatch_->Update();
     }
 
 }
 
-void UIManager::DrawHPGage()
+void UIManager::DrawHPGauge()
 {
-    for (const auto& [type, gage] : hpGages_) {
-        gage->Draw();
+    for (const auto& [type, gauge] : hpGauges_) {
+        gauge->Draw();
     }
 
 }
@@ -100,7 +100,7 @@ void UIManager::DrawCurPos()
 
     if (buttonSprite_->IsThermographyCommandFirst()) {
         //最初にサーモグラフィーが行われたらで一応囲うが後で修正するかもしれない。
-        eyeChatch_->Draw();
+        eyeCatch_->Draw();
     }
 
     if (pauseScreen_->GetIsActive()) {
@@ -118,13 +118,13 @@ void UIManager::DrawEffect()
 
 void UIManager::CreateHpGage(const HPs& enemyHp, const HPs& playerHp)
 {
-    hpGages_.emplace(GageType::kEnemy, std::make_unique<HPGage>());
-    hpGages_[kEnemy]->SetHpPtr(&enemyHp);
-    hpGages_[kEnemy]->Setting({ 640.0f,16.0f }, { 640.0f,32.0f }, { 0.5f,0.0f });
+    hpGauges_.emplace(GageType::kEnemy, std::make_unique<HPGauge>());
+    hpGauges_[kEnemy]->SetHpPtr(&enemyHp);
+    hpGauges_[kEnemy]->Setting({ 640.0f,16.0f }, { 640.0f,32.0f }, { 0.5f,0.0f });
 
-    hpGages_.emplace(GageType::kPlayer, std::make_unique<HPGage>());
-    hpGages_[kPlayer]->SetHpPtr(&playerHp);
-    hpGages_[kPlayer]->Setting({ 640.0f,16.0f }, { 640.0f,static_cast<float>(Window::GetClientHeight()) - 136.0f }, { 0.5f,0.0f });
+    hpGauges_.emplace(GageType::kPlayer, std::make_unique<HPGauge>());
+    hpGauges_[kPlayer]->SetHpPtr(&playerHp);
+    hpGauges_[kPlayer]->Setting({ 640.0f,16.0f }, { 640.0f,static_cast<float>(Window::GetClientHeight()) - 136.0f }, { 0.5f,0.0f });
 
 }
 

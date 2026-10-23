@@ -56,7 +56,7 @@ void BastetBlockMap::Initialize()
 
     isClear_ = false;
 
-    for (auto& isPush : isPushs_) {
+    for (auto& isPush : isPushFlags_) {
         isPush = false;
     }
 
@@ -141,8 +141,8 @@ void BastetBlockMap::Update()
     for (int i = 0; i < kMaxHz; ++i)
         if (blocks_[i]->GetIsPush()) {
 
-            if (!isPushs_[i]) {
-                isPushs_[i] = true;
+            if (!isPushFlags_[i]) {
+                isPushFlags_[i] = true;
                 //どの音からピッチを変化させてみる
                 Sound::PlaySE(SoundFactory::Sound_C, 2.0f);
                 Sound::SetFrequencyRatio(SoundFactory::Sound_C, i);
@@ -174,7 +174,7 @@ void BastetBlockMap::Update()
 
     if (isReset) {
 
-        for (auto& isPush : isPushs_) {
+        for (auto& isPush : isPushFlags_) {
             isPush = false;
         }
         steppedOrder_.clear();

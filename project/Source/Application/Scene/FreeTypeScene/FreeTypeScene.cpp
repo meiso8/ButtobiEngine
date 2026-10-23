@@ -79,7 +79,7 @@ void FreeTypeScene::Update()
         SwitchCamera();
     };
 
-    DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
+    DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraActive");
 
     ImGui::End();
 

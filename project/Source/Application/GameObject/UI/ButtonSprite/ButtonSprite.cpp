@@ -17,7 +17,7 @@ ButtonSprite::ButtonSprite()
 {
 
     const float height = static_cast<float>(Window::GetClientHeight());
-    const float whidth = static_cast<float>(Window::GetClientWidth());
+    const float width = static_cast<float>(Window::GetClientWidth());
     
     for (auto& sprite : sprites_) {
         sprite = std::make_unique<Sprite>();
@@ -42,7 +42,7 @@ ButtonSprite::ButtonSprite()
     sprites_[kButton_UI_X]->SetAnchorPoint({ 0.5f,0.5f });
 
     thermoGraphySprite_ = std::make_unique<Sprite>();
-    thermoGraphySprite_->Create(TextureFactory::UI_THERMOGRAPHY, { whidth*0.5f,height*0.5f});
+    thermoGraphySprite_->Create(TextureFactory::UI_THERMOGRAPHY, { width*0.5f,height*0.5f});
     thermoGraphySprite_->SetAnchorPoint({ 0.5f,0.5f });
 
     for (auto& sprite : sprites_) {

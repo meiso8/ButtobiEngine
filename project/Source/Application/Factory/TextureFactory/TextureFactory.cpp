@@ -6,8 +6,8 @@ void TextureFactory::Load()
     Texture::LoadAndMapHandle("Resource/Textures/uvChecker.png", UV_CHECKER);
     Texture::LoadAndMapHandle("Resource/Textures/circle2.png", CIRCLE);
     Texture::LoadAndMapHandle("Resource/Textures/gradationLine.png", GRADATION_LINE);
-    Texture::LoadAndMapHandle("Resource/Textures/noise0.png", NOIZE0);
-    Texture::LoadAndMapHandle("Resource/Textures/noise1.png", NOIZE1);
+    Texture::LoadAndMapHandle("Resource/Textures/noise0.png", NOISE0);
+    Texture::LoadAndMapHandle("Resource/Textures/noise1.png", NOISE1);
 
     Texture::LoadAndMapHandle("Resource/Textures/numbers.png", NUMBERS);
     Texture::LoadAndMapHandle("Resource/Textures/puzzle1.png", PUZZLE1);
@@ -19,7 +19,7 @@ void TextureFactory::Load()
     Texture::LoadAndMapHandle("Resource/Textures/start.png", BUTTON_START);
 
     Texture::LoadAndMapHandle("Resource/Textures/back.png", BUTTON_BACK_TO_GAME);
-    Texture::LoadAndMapHandle("Resource/Textures/titleButton.png", BUTTON_BACK_TO_TITL);
+    Texture::LoadAndMapHandle("Resource/Textures/titleButton.png", BUTTON_BACK_TO_TITLE);
 
     Texture::LoadAndMapHandle("Resource/Textures/test3.png", TEST3);
 
@@ -63,7 +63,7 @@ void TextureFactory::Load()
     Texture::LoadAndMapHandle("Resource/Textures/UI/UI_THERMOGRAPHY.png", UI_THERMOGRAPHY);
     
     Texture::LoadAndMapHandle("Resource/Textures/arrow.png", ARROW);
-    Texture::LoadAndMapHandle("Resource/Textures/footprints.png", FOOTS_PRINTS);
+    Texture::LoadAndMapHandle("Resource/Textures/footprints.png", FOOT_PRINT);
     Texture::LoadAndMapHandle("Resource/Textures/meltGlass.png", MELT_GLASS);
     Texture::LoadAndMapHandle("Resource/Textures/normalGlass.png", NORMAL_GLASS);
 

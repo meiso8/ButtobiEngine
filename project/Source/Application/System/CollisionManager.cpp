@@ -26,7 +26,7 @@ void CollisionManager::CheckAllCollisions() {
 
     for (auto& collider : colliders_) {
         //計算フラグをfalseにする
-        collider->InitCalcuatedTisFrameAndCollidedFlag();
+        collider->InitCalculatedThisFrameAndCollidedFlag();
     }
 
     // リスト内のペアを総当たり

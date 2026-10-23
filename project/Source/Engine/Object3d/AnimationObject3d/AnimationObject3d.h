@@ -30,7 +30,7 @@ public:
         const MaskMode maskMode = kAll,
         const bool usePSOKey =false, 
         const TextureFactory::Handle skyBoxTexture = TextureFactory::Handle::SKYBOX_TEX,
-        const TextureFactory::Handle dissolveTexture = TextureFactory::Handle::NOIZE0,
+        const TextureFactory::Handle dissolveTexture = TextureFactory::Handle::NOISE0,
         const bool useObjectManagerDraw = true
     )override;
     void DrawCommand(Camera& camera)override;

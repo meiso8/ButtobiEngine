@@ -17,15 +17,15 @@ MeltBlockMap::MeltBlockMap()
     colorMap_[3] = COLOR::RED;
 
 
-    temparetureMap_[kHigh] = 1.0f;
-    temparetureMap_[kMiddle_High] = 0.75f;
-    temparetureMap_[kMiddle_Low] = 0.5f;
-    temparetureMap_[kLow] = 0.25f;
+    temperatureMap_[kHigh] = 1.0f;
+    temperatureMap_[kMiddle_High] = 0.75f;
+    temperatureMap_[kMiddle_Low] = 0.5f;
+    temperatureMap_[kLow] = 0.25f;
 
-    for (int i = 0; i < kMaxBolckTempareture; ++i)
+    for (int i = 0; i < kMaxBlockTemperature; ++i)
     {
         blocks_[i]->SetColor(colorMap_[i]);
-        blocks_[i]->SetTemperature(temparetureMap_[static_cast<BlockTempareture>(i)]);
+        blocks_[i]->SetTemperature(temperatureMap_[static_cast<BlockTempareture>(i)]);
     }
 }
 
@@ -36,9 +36,9 @@ void MeltBlockMap::Initialize()
 
     AABB aabb = blocks_[0]->GetAABB();
     float blockSize = aabb.max.x - aabb.min.x;
-    float offsetX = -kMaxBolckTempareture * blockSize + blockSize;
+    float offsetX = -kMaxBlockTemperature * blockSize + blockSize;
 
-    for (int i = 0; i < kMaxBolckTempareture; ++i) {
+    for (int i = 0; i < kMaxBlockTemperature; ++i) {
         blocks_[i]->Initialize();
 
         Vector3 pos = {
@@ -54,7 +54,7 @@ void MeltBlockMap::Initialize()
 void MeltBlockMap::Update()
 {
 
-    for (int i = 0; i < kMaxBolckTempareture; ++i) {
+    for (int i = 0; i < kMaxBlockTemperature; ++i) {
         blocks_[i]->Update();
         Vector4 color = colorMap_[i];
         blocks_[i]->SetColor(color);
@@ -74,7 +74,7 @@ void MeltBlockMap::Update()
 
     bool isReset = false;
 
-    for (int i = 0; i < kMaxBolckTempareture; ++i)
+    for (int i = 0; i < kMaxBlockTemperature; ++i)
         if (blocks_[i]->GetIsPush()) {
 
             // すでに踏んだ順番に追加（重複防止）
@@ -129,7 +129,7 @@ void MeltBlockMap::ResetPushMap()
 
 void MeltBlockMap::RayCastHit(RaySprite& raySprite)
 {
-    for (int i = 0; i < kMaxBolckTempareture; ++i) {
+    for (int i = 0; i < kMaxBlockTemperature; ++i) {
 
         if (!blocks_[i]->GetIsPush()) {
 

@@ -88,7 +88,7 @@ void GameScene::Initialize() {
 
     auto* stageManager = StageManager::GetInstance();
     //インフォメーションステージに設定する
-    stageManager->SetNestStage("InformationStage");
+    stageManager->SetNextStage("InformationStage");
 
     //カメラを初期化する
     camera_->Initialize();
@@ -221,7 +221,7 @@ void GameScene::Debug()
         SwitchCamera();
     };
 
-    DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
+    DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraActive");
     //ステージの確認
     DebugUI::CheckStageManager();
 

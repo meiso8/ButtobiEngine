@@ -7,7 +7,7 @@ public:
     GoldHeart() {
         name_ = "GoldHeart";
         description_ = "何かにはめ込むことで力を発揮する。";
-        SetModel("hart.obj");
+        SetModel("heart.obj");
         object_->SetLightMode(Object3d::kLightModeLReflectance);
         object_->SetObjectName(name_);
         object_->RegisterObject();

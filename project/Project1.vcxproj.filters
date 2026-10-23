@@ -86,7 +86,7 @@
     <ClCompile Include="Source\Application\GameObject\Medjed\DummyMedjed\DummyMedjed.cpp" />
     <ClCompile Include="Source\Application\GameObject\Medjed\Medjed\Medjed.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\HPIcon.cpp" />
-    <ClCompile Include="Source\Application\GameObject\UI\HPGage.cpp" />
+    <ClCompile Include="Source\Application\GameObject\UI\HPGauge.cpp" />
     <ClCompile Include="Source\Application\GameObject\Bullet\ShotBulletManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\Bullet\BulletManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\Bullet\Bullet.cpp" />
@@ -291,7 +291,7 @@
     <ClInclude Include="Source\Application\GameObject\Medjed\DummyMedjed\DummyMedjed.h" />
     <ClInclude Include="Source\Application\GameObject\Medjed\Medjed\Medjed.h" />
     <ClInclude Include="Source\Application\GameObject\UI\HPIcon.h" />
-    <ClInclude Include="Source\Application\GameObject\UI\HPGage.h" />
+    <ClInclude Include="Source\Application\GameObject\UI\HPGauge.h" />
     <ClInclude Include="Source\Application\GameObject\Bullet\ShotBulletManager.h" />
     <ClInclude Include="Source\Application\GameObject\Bullet\BulletManager.h" />
     <ClInclude Include="Source\Application\GameObject\Bullet\Bullet.h" />
