@@ -362,7 +362,7 @@ void ButtobiEngine::Load()
     directXCommon_->CloseLoadCommandList(DirectXCommon::kLoad);
 
     // ==========================================
-    // ② 初期化完了後、メインループでの描画用に mainCommandList に切り替える
+    // 初期化完了後、メインループでの描画用に mainCommandList に切り替える
     // ==========================================
     freeTypeManager_->SetCommandListAndSrvDescriptorHeap(mainCommandList, srvDescriptorHeap_.get());
  

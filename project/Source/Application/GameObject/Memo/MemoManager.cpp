@@ -182,7 +182,7 @@ void MemoManager::SaveMemos()
 
     file.clear();
 
-    // 2. 各Memoデータの保存
+    //  各Memoデータの保存
     for (const auto& [type, memo] : memos_) {
         if (!memo) continue;
 
@@ -213,7 +213,7 @@ void MemoManager::SaveMemos()
         }
     }
 
-    // 3. JSONファイルへ書き出し
+    // JSONファイルへ書き出し
     JsonFile::SaveJson("memo");
 }
 
@@ -292,12 +292,12 @@ void MemoManager::Debug()
             strncpy_s(textBuffer, sizeof(textBuffer), u8str.c_str(), _TRUNCATE);
            
             
-            // 3. ImGui で入力（変更があれば true が返る）
+            // ImGui で入力（変更があれば true が返る）
             if (ImGui::InputText("setString", textBuffer, sizeof(textBuffer))) {
-                // 4. 入力された char 配列を UTF-8 (std::string) に変換
+                //  入力された char 配列を UTF-8 (std::string) に変換
                 std::string inputU8 = textBuffer;
 
-                // 5. UTF-8 -> UTF-32 に変換して Memo にセット
+                // UTF-8 -> UTF-32 に変換して Memo にセット
                 std::u32string inputU32;
                 utf8::utf8to32(inputU8.begin(), inputU8.end(), std::back_inserter(inputU32));
 

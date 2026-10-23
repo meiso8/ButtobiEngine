@@ -90,7 +90,7 @@ private:
     bool isDrawCollider_  = true;
     //αソートする
 
-    // 1. 構造体またはstd::pairのvectorを用意する
+    // 構造体またはstd::pairのvectorを用意する
     struct AlphaObject {
         float alpha;
         Object3d* ptr;

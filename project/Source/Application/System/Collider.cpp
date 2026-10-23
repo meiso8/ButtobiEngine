@@ -144,7 +144,7 @@ CollisionInfo GetCollisionInfo(const Sphere& sphere, const AABB& AABB) {
 
     result.collided = true;
 
-    // 2. 球の中心がAABBの外側にある場合（表面での接触）
+    //  球の中心がAABBの外側にある場合（表面での接触）
     if (distanceSquared > 1e-6f) {
         float distance = std::sqrt(distanceSquared);
         result.normal = difference / distance; // 正規化（AABBからSphereへ向かうベクトル）
@@ -152,7 +152,7 @@ CollisionInfo GetCollisionInfo(const Sphere& sphere, const AABB& AABB) {
         return result;
     }
 
-    // 3. 球の中心がAABBの完全に内側にある場合（深くめり込んだ場合）
+    //  球の中心がAABBの完全に内側にある場合（深くめり込んだ場合）
     // 各面への距離を計算
     float distX_min = sphere.center.x - AABB.min.x;
     float distX_max = AABB.max.x - sphere.center.x;

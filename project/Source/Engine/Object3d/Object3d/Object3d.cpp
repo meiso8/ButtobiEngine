@@ -186,13 +186,13 @@ void Object3d::DrawModel(const ModelData* modelData)
     }
     commandList_->IASetIndexBuffer(&primitive_->GetIndexBufferView());
 
-    // 2. マテリアルごとにループを回して描画
+    //  マテリアルごとにループを回して描画
     for (const auto& section : modelData->sections) {
 
         // セクション名に対応するマテリアルデータを取得
         const auto& material = modelData->materials.at(section.materialName);
 
-        // 1. このセクション用のディフューズテクスチャのSRVインデックスを取得
+        //  このセクション用のディフューズテクスチャのSRVインデックスを取得
         int32_t srvIndex = material.textureData_[TEXTURE_USAGE_DIFFUSE].textureSrvIndex;
 
         if (srvIndex == -1) {
@@ -202,11 +202,11 @@ void Object3d::DrawModel(const ModelData* modelData)
 
         //拡散反射テクスチャ
         cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(2, srvIndex, commandList_);
-        // 3. インデックスの開始位置と個数を指定して描画コールを呼ぶ
+        //  インデックスの開始位置と個数を指定して描画コールを呼ぶ
         commandList_->DrawIndexedInstanced(
             section.indexCount,  // 描画するインデックス数
             1,
-            section.indexStart,  // ★開始インデックス位置
+            section.indexStart,  // 開始インデックス位置
             0,
             0
         );

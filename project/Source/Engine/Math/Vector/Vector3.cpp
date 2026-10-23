@@ -70,16 +70,16 @@ Vector3 CalculateLookAtRotate(const Vector3& startPos, const Vector3& endPos) {
 
     Vector3 rotate = { 0.0f, 0.0f, 0.0f };
 
-    // 1. Y軸まわりの回転 (Yaw: 左右の向き)
+    // Y軸まわりの回転 (Yaw: 左右の向き)
     // Z前方を基準として、Xにどれだけ傾いているか
     rotate.y = std::atan2(diff.x, diff.z);
 
-    // 2. X軸まわりの回転 (Pitch: 上下の傾き)
+    //  X軸まわりの回転 (Pitch: 上下の傾き)
     // 水平に進む距離に対して、Y（高さ）がどれだけ変化しているか
     // ※DirectXの座標系に合わせて、下を向く（Yマイナス）のときにプラス回転になるよう符号を調整しています
     rotate.x = std::atan2(-diff.y, horizontalLength);
 
-    // 3. Z軸まわりの回転 (Roll: ひねり)
+    //  Z軸まわりの回転 (Roll: ひねり)
     // レーザーの軸回転は不要なので 0 固定
     rotate.z = 0.0f;
 

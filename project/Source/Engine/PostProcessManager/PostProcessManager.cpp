@@ -98,7 +98,7 @@ void PostProcessManager::Execute(
 
 void PostProcessManager::DrawDissolve(const Layer& layer, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index, const TextureFactory::Handle& textureHandle) {
 
-    // 1. 書き込み先（RTV）の設定とクリア
+    // 書き込み先（RTV）の設定とクリア
     commandList_->OMSetRenderTargets(1, &dstRtvHandle, false, nullptr);
 
     commandList_->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::DISSOLVE));
@@ -117,7 +117,7 @@ void PostProcessManager::DrawDissolve(const Layer& layer, const D3D12_CPU_DESCRI
 }
 void PostProcessManager::DrawRandom(const Layer& layer, const BlendMode& blendMode, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index)
 {
-    // 1. 書き込み先（RTV）の設定とクリア
+    //  書き込み先（RTV）の設定とクリア
     commandList_->OMSetRenderTargets(1, &dstRtvHandle, false, nullptr);
     commandList_->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::RANDOM));
     commandList_->SetPipelineState(PSO::GetGraphicsPipelineStateRandom(blendMode).Get());//PSOを設定
@@ -137,7 +137,7 @@ void PostProcessManager::Finalize()
 
 void PostProcessManager::Draw(const Layer& layer, const PSO::EffectType& effectType, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index)
 {
-    // 1. 書き込み先（RTV）の設定とクリア
+    //  書き込み先（RTV）の設定とクリア
     commandList_->OMSetRenderTargets(1, &dstRtvHandle, false, nullptr);
 
     commandList_->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::OFFSCREEN));
@@ -153,7 +153,7 @@ void PostProcessManager::Draw(const Layer& layer, const PSO::EffectType& effectT
 
 void PostProcessManager::DrawOutLine(const Layer& layer, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index, const uint32_t depthSrvIndex)
 {
-    // 1. 書き込み先（RTV）の設定とクリア
+    // 書き込み先（RTV）の設定とクリア
     commandList_->OMSetRenderTargets(1, &dstRtvHandle, false, nullptr);
 
     commandList_->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::DEPTH_BASED_OUTLINE));
@@ -176,7 +176,7 @@ void PostProcessManager::DrawThermo(const Layer& layer, const D3D12_CPU_DESCRIPT
     // 書き込み先はスワップチェーン（画面出力用）など
     commandList_->OMSetRenderTargets(1, &dstRtvHandle, false, nullptr);
 
-    // ★ サーモグラフィー用のPSOやRootSignatureを設定
+    //サーモグラフィー用のPSOやRootSignatureを設定
     commandList_->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::THERMOGRAPHY));
     commandList_->SetPipelineState(PSO::GetGraphicsPipelineStateOffScreen(PSO::kEffectThermography).Get());
     commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

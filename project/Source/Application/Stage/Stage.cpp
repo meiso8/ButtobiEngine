@@ -13,7 +13,7 @@ void Stage::LoadAndCreateObject(const std::string& fileName)
     levelEditor->Load(fileName, true);
     //オブジェクトの生成
     levelEditor->CreateObject(objects_);
-    // ★ステージ遷移トリガーの生成と配置
+    //ステージ遷移トリガーの生成と配置
     levelEditor->CreateStageChangeTriggers(stageTriggers_);
 }
 

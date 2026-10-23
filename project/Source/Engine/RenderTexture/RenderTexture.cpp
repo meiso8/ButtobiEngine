@@ -65,7 +65,7 @@ void RenderTexture::CreateResource(
 
     // ------------------------------------------
 
-    // 3. SRVは必要に応じて作成する
+    // SRVは必要に応じて作成する
     if (createSRV) {
         //SRVの作成
         D3D12_SHADER_RESOURCE_VIEW_DESC renderTextureSrvDesc{};
@@ -105,7 +105,7 @@ void RenderTexture::CopyClickPixelCommand(int mouseX, int mouseY)
     barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
     commandList_->ResourceBarrier(1, &barrier);
 
-    // 2. コピー元のテクスチャ上の1ピクセルの位置（マウス位置）を指定
+    // コピー元のテクスチャ上の1ピクセルの位置（マウス位置）を指定
     D3D12_TEXTURE_COPY_LOCATION srcLocation{};
     srcLocation.pResource = idTexture;
     srcLocation.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
@@ -119,7 +119,7 @@ void RenderTexture::CopyClickPixelCommand(int mouseX, int mouseY)
     srcBox.bottom = mouseY + 1; // 1ピクセル高
     srcBox.back = 1;
 
-    // 3. コピー先のReadbackバッファの指定（バッファ構造なのでFOOTPRINT形式）
+    // コピー先のReadbackバッファの指定（バッファ構造なのでFOOTPRINT形式）
     D3D12_TEXTURE_COPY_LOCATION dstLocation{};
     dstLocation.pResource = idReadbackResource_.Get();
     dstLocation.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
@@ -130,12 +130,12 @@ void RenderTexture::CopyClickPixelCommand(int mouseX, int mouseY)
     dstLocation.PlacedFootprint.Footprint.Format = DXGI_FORMAT_R32_UINT; // IDのフォーマット
     dstLocation.PlacedFootprint.Footprint.RowPitch = 256; // アライメントの最低規則(256バイト)に合わせる
 
-    // 4. GPUコマンドリストにコピー命令を発行
+    //  GPUコマンドリストにコピー命令を発行
     commandList_->CopyTextureRegion(&dstLocation, 0, 0, 0, &srcLocation, &srcBox);
 
-    // 3. 元の状態に戻す
+    // 元の状態に戻す
     barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_SOURCE;
-    barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET; // ★1で指定した元の状態に戻す
+    barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET; // で指定した元の状態に戻す
     commandList_->ResourceBarrier(1, &barrier);
 
 }

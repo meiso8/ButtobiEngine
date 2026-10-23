@@ -28,7 +28,7 @@ namespace ImGuiLoadFile {
 namespace ImGuiLoadFile {
     // プロジェクトのルート（基準パス）を自動探索する関数
     fs::path FindProjectRoot() {
-        // 1. まず現在のカレントディレクトリ（実行位置）を取得
+        // まず現在のカレントディレクトリ（実行位置）を取得
         fs::path currentDir = fs::current_path();
 
         // ルートディレクトリ（C:\ など）に達するまで、上に遡るループ
@@ -131,10 +131,10 @@ void ImGuiClass::Initialize(Window& window,
 
 
     ImGuiIO& io = ImGui::GetIO();
-    // 1. 強制的にフォントをビルド
+    //  強制的にフォントをビルド
 
     io.Fonts->Build();
-    // 2. DX12バックエンドに、フォントテクスチャをGPUへアップロードさせる
+    //  DX12バックエンドに、フォントテクスチャをGPUへアップロードさせる
     ImGui_ImplDX12_CreateDeviceObjects();
     // ==========================================
 
@@ -215,10 +215,10 @@ void ImGuiClass::HandleDroppedFile() {
 
     std::filesystem::path fullPath(ImGuiLoadFile::droppedFilePath);
 
-    // 3. basePath から見た相対パスに変換する
+    //  basePath から見た相対パスに変換する
     std::filesystem::path relativePath = std::filesystem::relative(fullPath, ImGuiLoadFile::projectPath);
 
-    // 4. これをベースに分解する
+    //  これをベースに分解する
     std::string directoryPath = relativePath.generic_string();
 
     std::string ext = relativePath.extension().string();

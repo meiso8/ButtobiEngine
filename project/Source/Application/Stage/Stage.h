@@ -21,7 +21,7 @@ private:
 
     //レベルエディタ
     std::vector<std::unique_ptr<LevelEditor::ObjectSet>>objects_;
-    // 1. トリガーを管理するリストを用意
+    //  トリガーを管理するリストを用意
     std::vector<std::unique_ptr<StageChangeTrigger>> stageTriggers_;
     bool isInitialize_ = false;
 

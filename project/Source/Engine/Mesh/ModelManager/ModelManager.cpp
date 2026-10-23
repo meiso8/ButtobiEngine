@@ -94,7 +94,7 @@ void ModelManager::LoadModel(const std::filesystem::path& filePath)
 
         // 現在の頂点数を記録（インデックスのオフセット用） 
         uint32_t vertexOffset = static_cast<uint32_t>(modelData->vertices.size());
-        // ★ここが重要：このメッシュのインデックスが始まる位置を記録
+        //このメッシュのインデックスが始まる位置を記録
         uint32_t indexStart = static_cast<uint32_t>(modelData->indices.size());
 
         for (uint32_t vertexIndex = 0; vertexIndex < mesh->mNumVertices; ++vertexIndex) {

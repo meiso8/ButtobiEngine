@@ -34,7 +34,7 @@ ItemManager::ItemManager()
 
 void ItemManager::GenerateItems(const std::vector<std::string>& itemNames)
 {
-    // 1. 前のステージの「未取得」のアイテムだけを削除（所持品は残す）
+    //  前のステージの「未取得」のアイテムだけを削除（所持品は残す）
     for (auto it = items_.begin(); it != items_.end(); ) {
         if (!it->second->IsGet() && !it->second->IsUsed()) {
             it = items_.erase(it); // 未取得且未使用なら削除してイテレータを進める
@@ -166,7 +166,7 @@ std::shared_ptr<Item> ItemManager::RaycastHitItem( RaySprite& raySprite) {
     for (auto& [name, item] : items_) {
         if (!item) continue;
 
-        // ★ すでに取得済みのアイテムはレイキャスト（クリック判定）の対象外にする
+        // すでに取得済みのアイテムはレイキャスト（クリック判定）の対象外にする
         if (item->IsGet()) continue;
 
         const auto& obj = item->GetObject3d();

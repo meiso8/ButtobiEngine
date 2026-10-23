@@ -457,7 +457,7 @@ void DebugUI::CheckTextures(CbvSrvUavDescriptorHeap* srvDescriptorHeap)
         for (int i = 0; i < (int)srvIndexes.size(); ++i) {
 
 
-            // ★ 折り返し計算
+            // 折り返し計算
             if (i > 0) {
                 // 現在の行の残り横幅を取得
                 float lastX = ImGui::GetItemRectMax().x;
@@ -475,7 +475,7 @@ void DebugUI::CheckTextures(CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 
             uint32_t currentSrvIndex = srvIndexes[i];
 
-            // ★ 0 などの未割り当て、あるいは無効な定数(0xFFFFFFFF等)の場合は描画しないガードを入れる
+            //0 などの未割り当て、あるいは無効な定数(0xFFFFFFFF等)の場合は描画しないガードを入れる
             if (currentSrvIndex != 0 && currentSrvIndex < CbvSrvUavDescriptorHeap::kMaxCount_ && !Texture::GetMetaData(currentSrvIndex).IsCubemap()) {
 
                 // 安全であることを確認してからハンドルを取得
@@ -1321,10 +1321,10 @@ void DebugUI::CheckCollider(Collider& collider, const char* label)
             // すべてのタグをループして選択肢を作成
             for (const auto& [name, tagNum] : CollisionTag::GetAllTags()) {
 
-                // 1. 指定したフラグ(tagNum)が現在のマスクに含まれているかチェック
+                // 指定したフラグ(tagNum)が現在のマスクに含まれているかチェック
                 bool isSelected = (currentMask & tagNum) != 0;
 
-                // 2. Selectableの表示 (isSelected を渡すことでチェックマーク等の選択状態を表示)
+                //  Selectableの表示 (isSelected を渡すことでチェックマーク等の選択状態を表示)
                 if (ImGui::Selectable(name.c_str(), isSelected, ImGuiSelectableFlags_DontClosePopups)) {
 
                     if (isSelected) {
@@ -1353,7 +1353,7 @@ void DebugUI::CheckCollider(Collider& collider, const char* label)
             if (CollisionTag::GetAllTags().contains(tagBuffer)) {
                 ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "This tagName already exists!!!");
             } else {
-                // 3. 空文字でなければ追加ボタンを有効化
+                //  空文字でなければ追加ボタンを有効化
                 if (tagBuffer[0] != '\0') {
                     if (ImGui::Button("AddTag")) {
                         CollisionTag::AddTag(tagBuffer);
@@ -1493,7 +1493,7 @@ void DebugUI::CheckBlendMode(BlendMode& blendMode) {
 void DebugUI::ShowMainViewPort(CbvSrvUavDescriptorHeap* srvDescriptorHeap, const uint32_t srvIndex)
 {
 #ifdef USE_IMGUI
-    // 1. 画面の中心座標を計算
+    // 画面の中心座標を計算
     const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
     ImVec2 screen_center = ImVec2(
         main_viewport->WorkPos.x + main_viewport->WorkSize.x * 0.5f,
@@ -1502,14 +1502,14 @@ void DebugUI::ShowMainViewPort(CbvSrvUavDescriptorHeap* srvDescriptorHeap, const
 
     bool isTabTriggered = false;
 
-    // 'tab' キーが押されたらサイズ変更のトリガーを引く
+    // tabキーが押されたらサイズ変更のトリガーを引く
     if (Input::IsTriggerKey(DIK_TAB)) {
         useMaxGameWindow_ = !useMaxGameWindow_;
         isTabTriggered = true; // このフレームで切り替わったことを記録
     }
 
     if (useMaxGameWindow_) {
-        // 【最大化のとき】
+        // 最大化のとき
         // 画面の左上に配置し、画面全体のサイズ（WorkSize）を「常に(Always)」強制適用
         ImGui::SetNextWindowPos(main_viewport->WorkPos, ImGuiCond_Always);
         ImGui::SetNextWindowSize(main_viewport->WorkSize, ImGuiCond_Always);
@@ -1523,7 +1523,7 @@ void DebugUI::ShowMainViewPort(CbvSrvUavDescriptorHeap* srvDescriptorHeap, const
         }
     }
 
-    // 3. ウィンドウの開始（リサイズ禁止フラグは付けない）
+    //  ウィンドウの開始（リサイズ禁止フラグは付けない）
     if (ImGui::Begin("Game Window")) {
 
         float client_w = (float)Window::GetClientWidth();
@@ -1533,20 +1533,20 @@ void DebugUI::ShowMainViewPort(CbvSrvUavDescriptorHeap* srvDescriptorHeap, const
         if (client_h > 0.0f) {
             float target_aspect = client_w / client_h;
 
-            // 2. 現在のImGuiウィンドウ内の「利用可能な最大サイズ」を取得
+            //  現在のImGuiウィンドウ内の「利用可能な最大サイズ」を取得
             ImVec2 avail_size = ImGui::GetContentRegionAvail();
 
-            // 3. まず「横幅」を限界まで広げた場合のサイズを計算
+            //  まず「横幅」を限界まで広げた場合のサイズを計算
             float game_w = avail_size.x;
             float game_h = game_w / target_aspect;
 
-            // 4. もし縦幅がウィンドウからはみ出てしまう場合は、「縦幅」を限界まで広げる計算に切り替える
+            //  もし縦幅がウィンドウからはみ出てしまう場合は、「縦幅」を限界まで広げる計算に切り替える
             if (game_h > avail_size.y) {
                 game_h = avail_size.y;
                 game_w = game_h * target_aspect;
             }
 
-            // 5. 【重要】余ったスペースを計算して、ゲーム画面を中央に寄せる（レターボックス化）
+            //  余ったスペースを計算して、ゲーム画面を中央に寄せる（レターボックス化）
             float offset_x = (avail_size.x - game_w) * 0.5f;
             float offset_y = (avail_size.y - game_h) * 0.5f;
 

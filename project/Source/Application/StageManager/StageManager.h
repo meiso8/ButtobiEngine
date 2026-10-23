@@ -11,10 +11,10 @@ private:
     ~StageManager();
 public:
     void Finalize();
-    // 2. コピーと代入を禁止する（インスタンスが2つに増えるのを防ぐため）
+    //  コピーと代入を禁止する（インスタンスが2つに増えるのを防ぐため）
     StageManager(const StageManager&) = delete;
     StageManager& operator=(const StageManager&) = delete;
-    // 3. インスタンスを取得するための GetInstance 関数（必ず static にする）
+    // インスタンスを取得するための GetInstance 関数（必ず static にする）
     static StageManager* GetInstance()
     {
         static StageManager instance;

@@ -21,10 +21,10 @@ private:
 public:
 
 
-    // 2. コピーと代入を禁止する（インスタンスが2つに増えるのを防ぐため）
+    //  コピーと代入を禁止する（インスタンスが2つに増えるのを防ぐため）
     DebugCamera(const DebugCamera&) = delete;
     DebugCamera& operator=(const DebugCamera&) = delete;
-    // 3. インスタンスを取得するための GetInstance 関数（必ず static にする）
+    // インスタンスを取得するための GetInstance 関数（必ず static にする）
     static DebugCamera* GetInstance()
     {
         // 関数内の static 変数は、プログラム実行中に1回だけ作られる
