@@ -380,3 +380,5 @@ logs/
 
 !externals/assimp/lib/Debug/
 !externals/assimp/lib/Release/
+
+!Resource
