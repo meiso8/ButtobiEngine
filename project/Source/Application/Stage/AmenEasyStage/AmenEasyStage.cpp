@@ -21,7 +21,7 @@ AmenEasyStage::~AmenEasyStage()
 void AmenEasyStage::Initialize()
 {
     //スライドパズルシステムの初期化
-    slidePuzzleSystem_->Initialize({0.0f,1.25f,-1.0f},Math::kPi);
+    slidePuzzleSystem_->Initialize({0.0f,1.0f,-1.0f},Math::kPi);
 }
 
 void AmenEasyStage::StageTransitionInitialize()
