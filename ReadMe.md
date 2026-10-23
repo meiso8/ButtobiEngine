@@ -22,6 +22,8 @@
 [迷宮博物館WebSite](https://meiso-labyrinth.netlify.app/index.html)
 [WebSite](https://meiso8.github.io/index.html)
 
+# チーム制作でのチームメンバーに感謝します。
+
 ## 外部ファイル
 - assimp
 - DirectXTex
@@ -31,6 +33,7 @@
 - imguiDock
 - nolhman
 - utfcpp
+
 
 
 
