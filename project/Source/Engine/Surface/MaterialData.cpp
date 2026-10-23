@@ -12,7 +12,7 @@ MaterialData LoadMaterial::LoadMaterialFromAssimp(aiMaterial * material, const  
 
     MaterialData materialData;
 
-    // ★追加：拡散反射成分（ディフューズ色／ベースカラー）の取得
+    // 拡散反射成分（ディフューズ色／ベースカラー）の取得
     {
         aiColor3D color(1.0f, 1.0f, 1.0f); // 取得失敗時のデフォルトは白
         if (material->Get(AI_MATKEY_COLOR_DIFFUSE, color) == AI_SUCCESS)

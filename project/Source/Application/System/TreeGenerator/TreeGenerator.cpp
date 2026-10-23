@@ -41,7 +41,7 @@ void TreeGenerator::LoadAABB()
     // 保存されている JSON データを取得
     nlohmann::json& json = JsonFile::GetJsonFiles(jsonFileName_);
 
-    // "colliders" が存在し、かつ配列構造になっているか確認
+    // colliders が存在し、かつ配列構造になっているか確認
     if (json.contains("colliders") && json["colliders"].is_array()) {
         for (const auto& item : json["colliders"]) {
             AABB aabb;
@@ -214,7 +214,7 @@ void TreeGenerator::Save()
             objectJson["textureHandle"] = object->GetTextureHandle();
         }
 
-        // 4. 配列に要素を追加
+        //  配列に要素を追加
         json["objects"].push_back(objectJson);
     }
 
@@ -243,7 +243,7 @@ void TreeGenerator::SaveAABB()
             {"max", JsonFile::Vector3ToJson(aabb.max)},
         };
 
-        // 4. 配列に要素を追加
+        //  配列に要素を追加
         json["colliders"].push_back(objectJson);
         
         i++;
@@ -274,7 +274,7 @@ void TreeGenerator::PlaceLockersRandomly() {
         Vector2 pos;
         bool positionFound = false;
 
-        // 無限ループ防止のため最大試行回数を設定 (例: 1000回)
+        // 無限ループ防止のため最大試行回数を設定
         const int maxTries = 1000;
         int tries = 0;
 
@@ -283,8 +283,7 @@ void TreeGenerator::PlaceLockersRandomly() {
             pos.x = random.Get();
             pos.y = random.Get(); // Z座標として使う 
 
-            // 1. 建物の領域内でないか
-            // 2. 他の木と重なっていないか
+            // 建物の領域内でないか 他の木と重なっていないかを調べる
             if (!IsInExcludeArea(pos) && !IsOverlapping(pos, placedPositions)) {
                 positionFound = true;
                 break; // 配置成功
