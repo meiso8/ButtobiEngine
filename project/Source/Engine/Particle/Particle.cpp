@@ -277,7 +277,7 @@ void ParticleManager::Emit(Emitter& emitter)
 
     //加速場の設定
     particleGroups[emitter.name]->accelerationField = emitter.accelerationField_;
-    //動きによって球面座標をEmittする
+    //動きによって球面座標をEmitする
     if (emitter.movement == kParticleSphere || emitter.movement == kParticleShock) {
         particleGroups[emitter.name]->sphericalCoordinates.splice(particleGroups[emitter.name]->sphericalCoordinates.end(), EmitCoordinate(emitter.count, emitter.radius, emitter.radiusSpeed, emitter.polarSpeed, emitter.polarSpeedMinMax, emitter.radiusSpeedMinMax));
     }
@@ -496,7 +496,7 @@ void ParticleManager::Draw()
             commandList_->SetGraphicsRootConstantBufferView(0, group->materialResource.GetGPUVirtualAddress());
             //粒ごとのトランスフォーム
             srvDescriptorHeap_->SetGraphicsRootDescriptorTable(1, group->instancingResource.srvIndex, commandList_);
-            //テスクチャ
+            //テクスチャ
             srvDescriptorHeap_->SetGraphicsRootDescriptorTable(2, group->materialData.textureData_[TEXTURE_USAGE_DIFFUSE].textureSrvIndex,commandList_);
             //描画!（DrawCall/ドローコール）6個のインデックスを使用しインスタンスを描画。
 

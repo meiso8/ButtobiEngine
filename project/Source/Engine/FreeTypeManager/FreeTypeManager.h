@@ -160,7 +160,7 @@ private:
     /// @param handle 
     /// @param glyphIndex 
     static void CreateGlyphTexture(uint32_t handle, FT_UInt glyphIndex);
-    /// @brief リソールリリース
+    /// @brief リソースリリース
     /// @param resource 
     static void ReleaseResource(FTTextureData& resource);
 

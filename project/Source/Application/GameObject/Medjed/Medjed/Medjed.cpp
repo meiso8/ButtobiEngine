@@ -17,7 +17,7 @@ void Medjed::OnCollision(Collider* collider)
 
         if (!isHit_) {
             isHit_ = true;
-            if (!isFind_) {
+            if (!isFound_) {
                 Sound::PlayOriginSE(SoundFactory::VOICE_Asobimasyo, 2.0f);
             }
         }
@@ -92,7 +92,7 @@ void Medjed::Update()
     }
 
     isHit_ = false;
-    if (isFind_) {
+    if (isFound_) {
         float aniTimer = GetAniTimer() + TimeManager::DeltaTime() * 0.25f;
         aniTimer = std::clamp(aniTimer, 0.0f, 1.0f);
         SetAniTimer(aniTimer);
@@ -109,7 +109,7 @@ void Medjed::Update()
 #ifdef USE_IMGUI
 
     ImGui::Begin("Debug");
-    ImGui::Checkbox("isFinedMedjed", &isFind_);
+    ImGui::Checkbox("isFoundMedjed", &isFound_);
     ImGui::End();
 
 #endif
@@ -123,7 +123,7 @@ void Medjed::Init()
     SetAniTimer(0.0f);
  
     isHit_ = false;
-    isFind_ = false;
+    isFound_ = false;
     aniObj_->Initialize();
     aniObj_->SetMaskVol(0.0f);
     aniObj_->SetAnimation("Idle");

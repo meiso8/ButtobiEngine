@@ -134,7 +134,7 @@ void Texture::LoadTexture(const std::filesystem::path& filePath)
     //テクスチャファイルを読んでプログラムで扱えるようにする
     DirectX::ScratchImage image{};
     std::wstring filePathW = filePath.wstring();
-    //sRBG空間で作られた物として読む。
+    //sRGB空間で作られた物として読む。
     HRESULT hr;
 
     if (filePathW.ends_with(L".dds")) {
@@ -147,7 +147,7 @@ void Texture::LoadTexture(const std::filesystem::path& filePath)
     assert(SUCCEEDED(hr));
     const DirectX::TexMetadata metadata = image.GetMetadata();
 
-    //ミニマップの作成
+    //ミップマップの作成
     DirectX::ScratchImage mipImages{};
 
     if (DirectX::IsCompressed(image.GetMetadata().format)) {

@@ -27,9 +27,9 @@ public:
     void GoToTarget(const Vector3& target)override;
 
     void MoveStart();
-    const bool& GetIsFind()const { return isFind_; };
+    const bool& GetIsFind()const { return isFound_; };
 
-    const void SetIsFind(const bool& flag) { isFind_ = flag; };
+    const void SetIsFind(const bool& flag) { isFound_ = flag; };
     const  bool& GetIsHit() const { return isHit_; };
     void SetColor(const Vector4& color) { aniObj_->SetColor(color); };
 
@@ -37,7 +37,7 @@ private:
     std::unique_ptr<AnimationObject3d> aniObj_ = nullptr;
     Vector3 velocity_ = { 0.0f };
 
-    bool isFind_ = false;
+    bool isFound_ = false;
     bool isHit_ = false;
 
 };

@@ -54,7 +54,7 @@ void FirstStoryScene::Initialize()
     //camera_->UpdateMatrix();
     cameraTimer_ = 0.0f;
 
-    LevelEditor::GetInstance()->Load("FristStoryScene_objectEditor", true);
+    LevelEditor::GetInstance()->Load("FirstStoryScene_objectEditor", true);
     LevelEditor::GetInstance()->CreateObject(objects_);
 
     SetSceneChange();

@@ -898,7 +898,7 @@ void Primitive::Create(const MeshData& meshData)
         //インデックスはuint32_tとする
         indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
 
-        //インデックスリーソースにデータを書き込む
+        //インデックスリソースにデータを書き込む
         indexResource_.Map();
         std::memcpy(indexResource_.data, meshData.indices.data(), indexBufferSize);
         indexResource_.UnMap();

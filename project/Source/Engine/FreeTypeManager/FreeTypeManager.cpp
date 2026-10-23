@@ -166,7 +166,7 @@ void FreeTypeManager::GetBitMapGlyph(uint32_t faceHandle, FT_UInt glyphIndex)
 
     if (!LoadAndRenderGlyph(ftData.face, glyphIndex, FT_RENDER_MODE_NORMAL))
     {
-        LogFile::Log("LoadAndRenderGlyph faild\n");
+        LogFile::Log("LoadAndRenderGlyph failed\n");
         return;
     };
 
@@ -222,7 +222,7 @@ bool FreeTypeManager::LoadAndRenderGlyph(FT_Face& face, FT_UInt glyphIndex, FT_R
 
     //グリフの読み込み
     if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT|FT_LOAD_COLOR)) {
-        LogFile::Log("FT_Load_Glyph faild\n"); 
+        LogFile::Log("FT_Load_Glyph failed\n"); 
         assert(false);
         return false;
     }

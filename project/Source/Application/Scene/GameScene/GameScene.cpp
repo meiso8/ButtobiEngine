@@ -110,7 +110,7 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 
-    //デバック処理
+    //デバッグ処理
     Debug();
 
     lightingManager_->UpdatePointLight();

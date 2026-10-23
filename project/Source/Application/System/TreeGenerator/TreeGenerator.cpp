@@ -110,7 +110,7 @@ void TreeGenerator::Debug()
                         tree->SetTextureHandle(static_cast<TextureFactory::Handle>(textureIndex));
                     };
 
-                    std::string currentModelName = "unknow";
+                    std::string currentModelName = "unknown";
                     if (auto model = dynamic_cast<const Model*>(primitive)) {
 
                         for (const auto& [name, managerModel] : ModelManager::GetModels()) {

@@ -45,7 +45,7 @@ void Bullet::OnCollision(Collider* collider)
     lifeTimer_ = 0.0f;
     body_->SetTranslate({ 0.0f,-10.0f,0.0f });
     body_->Update();
-    //デバック用
+    //デバッグ用
     OnCollisionCollider();
 }
 Vector3 Bullet::GetWorldPosition()

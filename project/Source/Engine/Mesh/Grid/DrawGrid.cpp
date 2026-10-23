@@ -27,7 +27,7 @@ void DrawGrid::Finalize()
         }
     }
 
-    LogFile::Log("Finaliz DrawGrid");
+    LogFile::Log("Finalize DrawGrid");
 }
 
 void DrawGrid::Create()

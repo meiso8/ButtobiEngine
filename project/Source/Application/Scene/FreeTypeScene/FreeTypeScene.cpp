@@ -53,7 +53,7 @@ void FreeTypeScene::Initialize()
 
 void FreeTypeScene::Update()
 {
-    //デバック
+    //デバッグ
     text_.Debug();
 
 

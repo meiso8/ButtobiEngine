@@ -123,7 +123,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     float3 reflectVector = reflect(-toEye, N);
     float3 reflectionColor = gEnvironmentTexture.Sample(gSampler, reflectVector).rgb;
     
-    // Blend refrect reflect color
+    // Blend reflect color
     float3 glassColor = lerp(refractionColor, reflectionColor, fresnel) * baseColor.rgb + lightColor.specularLight;
     
     //SurfaceColor

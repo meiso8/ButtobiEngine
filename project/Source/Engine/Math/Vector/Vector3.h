@@ -3,7 +3,7 @@
 struct Vector3 {
     float x, y, z;
 
-    //複合代入演算子Compound Assignement Operator
+    //複合代入演算子Compound Assignment Operator
     Vector3& operator+=(float s) { x += s; y += s, z += s; return *this; }
     Vector3& operator-=(const Vector3& v) { x -= v.x, y -= v.y, z -= v.z; return *this; }
     Vector3& operator+=(const Vector3& v) { x += v.x, y += v.y, z += v.z; return *this; }

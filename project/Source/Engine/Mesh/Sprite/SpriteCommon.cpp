@@ -61,7 +61,7 @@ void SpriteCommon::CreateIndexResource() {
 #pragma endregion
 
 #pragma region//IndexResourceにデータを書き込む
-    //インデックスリーソースにデータを書き込む
+    //インデックスリソースにデータを書き込む
     indexResource_.Map();
 
     //頂点数を削減

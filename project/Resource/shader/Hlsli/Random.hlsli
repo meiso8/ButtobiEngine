@@ -3,11 +3,10 @@
 
 float rand2dTo1d(float2 value, float2 dotDir = float2(12.9898, 78.233))
 {
-    float2 samllValue = sin(value);
-    float random = dot(samllValue, dotDir);
+    float2 smallValue = sin(value);
+    float random = dot(smallValue, dotDir);
     random = frac(sin(random) * 143758.5453);
     return random;
-
 }
 
 
@@ -17,7 +16,7 @@ float rand3dTo1d(float3 value, float3 dotDir = float3(12.9898, 78.233, 37.719))
     float3 smallValue = sin(value);
     //get scalar value from 3d vector
     float random = dot(smallValue, dotDir);
-    //make value more random by making it bigger and then taking teh factional part
+    //make value more random by making it bigger and then taking the factional part
     random = frac(sin(random) * 143758.5453);
     return random;
 }

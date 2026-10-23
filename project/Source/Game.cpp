@@ -70,7 +70,7 @@ void Game::Debug()
     }
 
 #ifdef USE_IMGUI
-    // デバック用
+    //デバッグ用
     ButtobiEngine::Debug();
 #endif // USE_IMGUI
 

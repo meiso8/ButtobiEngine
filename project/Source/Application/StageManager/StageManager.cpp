@@ -9,7 +9,7 @@
 #include"Puzzle/SlidePuzzleSystem.h"
 StageManager::~StageManager()
 {
-    LogFile::Log("Destory StageManager");
+    LogFile::Log("Destroy StageManager");
 }
 
 void StageManager::Finalize()

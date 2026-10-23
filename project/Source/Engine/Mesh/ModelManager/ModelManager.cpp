@@ -132,7 +132,7 @@ void ModelManager::LoadModel(const std::filesystem::path& filePath)
             aiBone* bone = mesh->mBones[boneIndex];
             std::string jointName = bone->mName.C_Str();
             JointWeightData& jointWeightData = modelData->skinClusterData[jointName];
-            //InverseBinePoseMatrixの抽出
+            //InverseBindPoseMatrixの抽出
             aiMatrix4x4 bindPoseMatrixAssimp = bone->mOffsetMatrix.Inverse();
             aiVector3D scale, translate;
             aiQuaternion rotate;
@@ -140,11 +140,11 @@ void ModelManager::LoadModel(const std::filesystem::path& filePath)
             //左手系のBindPoseを作る
             Matrix4x4 bindPoseMatrix = MakeAffineMatrix(
                 { scale.x,scale.y,scale.z }, { rotate.x,-rotate.y,-rotate.z,rotate.w }, { -translate.x,translate.y,translate.z });
-            //InverseBindPosemMatrixにする
+            //InverseBindPoseMatrixにする
             jointWeightData.inverseBindPoseMatrix = Inverse(bindPoseMatrix);
-            //Wight情報を取り出す
+            //Weight情報を取り出す
             for (uint32_t weightIndex = 0; weightIndex < bone->mNumWeights; ++weightIndex) {
-                //mVertexIdは該当Mesh内でのIndexである MultiMesh/MuitiMaterial対応する際にはこのまま保存するのではなく、全体を通して改良が必要である。
+                //mVertexIdは該当Mesh内でのIndexである MultiMesh/MultiMaterial対応する際にはこのまま保存するのではなく、全体を通して改良が必要である。
                 jointWeightData.vertexWeights.push_back({ bone->mWeights[weightIndex].mWeight,bone->mWeights[weightIndex].mVertexId });
             }
 

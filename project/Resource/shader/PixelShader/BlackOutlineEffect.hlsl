@@ -41,7 +41,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     gTexture.GetDimensions(width, height);
     float32_t2 uvStepSize = float32_t2(rcp(width), rcp(height));
     
-    float32_t2 diffrence = float32_t2(0.0f, 0.0f);
+    float32_t2 difference = float32_t2(0.0f, 0.0f);
     
     for (int32_t x = 0; x < 3; ++x)
     {
@@ -54,13 +54,13 @@ PixelShaderOutput main(VertexShaderOutput input)
             float32_t2 texcoord = input.texcoord + index * uvStepSize;
             float32_t3 fetchColor = gTexture.Sample(gSampler, texcoord).rgb;
             float32_t luminance = Luminance(fetchColor);
-            diffrence.x += luminance * kPrewittHorizontalKernel[x][y];
-            diffrence.y += luminance * kPrewittVerticalKernel[x][y];
+            difference.x += luminance * kPrewittHorizontalKernel[x][y];
+            difference.y += luminance * kPrewittVerticalKernel[x][y];
         }
 
     }
     
-    float32_t weight = length(diffrence);
+    float32_t weight = length(difference);
     weight = saturate(weight);
     
     PixelShaderOutput output;

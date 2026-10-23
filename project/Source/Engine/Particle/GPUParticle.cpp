@@ -134,7 +134,7 @@ void GPUParticleManager::Draw(Camera& camera)
     //マテリアルの設定   ConstantBuffer<Material> gMaterial : register(b0);
     commandList_->SetGraphicsRootConstantBufferView(0, particleGroup_->materialResource.GetGPUVirtualAddress());
 
-    //テスクチャ Texture2D<float4> gTexture : register(t2);
+    //Texture Texture2D<float4> gTexture : register(t2);
     cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(1, particleGroup_->materialData.textureData_[TEXTURE_USAGE_DIFFUSE].textureSrvIndex, commandList_);
 
     // StructuredBuffer<Particle> gParticles : register(t11);

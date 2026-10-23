@@ -33,7 +33,7 @@ std::map<std::string, Animation>& AnimationManager::LoadAnimation(const std::fil
     
         {
             //NodeAnimatioinの解析
-             //assimpでは個々のNodeのAnimationをchannelと読んでいるのでchannelを回してnodeAnimetionの情報を取ってくる
+             //assimpでは個々のNodeのAnimationをchannelと呼んでいるのでchannelを回してnodeAnimetionの情報を取ってくる
             for (uint32_t channelIndex = 0; channelIndex < animationAssimp->mNumChannels; ++channelIndex) {
                 aiNodeAnim* nodeAnimationAssimp = animationAssimp->mChannels[channelIndex];
                 NodeAnimation& nodeAnimation = animation.nodeAnimations[nodeAnimationAssimp->mNodeName.C_Str()];

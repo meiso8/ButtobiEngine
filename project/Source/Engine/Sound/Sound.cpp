@@ -302,7 +302,7 @@ bool Sound::LoadFile(const std::filesystem::path& path)
     ComPtr<IMFMediaType> pOutType;
     pMFSourceReader->GetCurrentMediaType((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, &pOutType);
 
-    //オーディオデータ形式の作成　メディアタイプからWaveForMatexを生成
+    //オーディオデータ形式の作成　メディアタイプからWAVEFORMATEXを生成
     WAVEFORMATEX* waveFormat{ nullptr };
     MFCreateWaveFormatExFromMFMediaType(pOutType.Get(), &waveFormat, nullptr);
 

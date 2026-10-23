@@ -8,7 +8,7 @@ StructuredBuffer<Vertex> gInputVertices : register(t9);
 StructuredBuffer<VertexInfluence> gInfluences : register(t10);
 //SkinningAfterCulVertex UAV
 RWStructuredBuffer<Vertex> gOutputVertices : register(u0);
-//SkiningInformation
+//SkinningInformation
 ConstantBuffer<SkinningInformation> gSkinningInformation : register(b0);
 
 [numthreads(1024, 1, 1)]

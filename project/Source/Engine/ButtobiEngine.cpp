@@ -41,7 +41,7 @@
 void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight) {
 
 
-    //誰も捕捉しなかった場合に(Unhandled),補足する関数を登録
+    //誰も捕捉しなかった場合に(Unhandled),捕捉する関数を登録
     //main関数始まってすぐに登録すると良い
     SetUnhandledExceptionFilter(ExportDump);
     //ログファイルの生成
@@ -238,7 +238,7 @@ void ButtobiEngine::Debug()
 
     //Loaderをここで
     imGuiClass.DrawModelLoaderWindowAndCheckDroppedFile(srvDescriptorHeap_.get());
-    //深度テクスチャのでばっく
+    //深度テクスチャのDebug
     depthTexture_->DebugViewer(srvDescriptorHeap_.get());
 
 #endif // USE_IMGUI
@@ -266,7 +266,7 @@ void ButtobiEngine::Load()
 
     LogFile::Log("Set SrvDescriptorHeap to FreeType\n");
 
-    //テスクチャ読み込み
+    //Texture読み込み
     TextureFactory::Load();
     LogFile::Log("LoadAllTexture");
 
@@ -308,7 +308,7 @@ void ButtobiEngine::Load()
 
 
 #ifdef _DEVELOP
-    //グリット描画
+    //グリッド描画
     DrawGrid::Create();
 #endif
 
@@ -321,7 +321,7 @@ void ButtobiEngine::Load()
     //パーティクルエミッターへのセット
     ParticleEmitter::SetParticleManager(particleManager_.get());
 
-    LogFile::Log("CreateparticleManager");
+    LogFile::Log("CreateParticleManager");
 
 
     gpuParticleManager_ = std::make_unique<GPUParticleManager>();
@@ -481,7 +481,7 @@ void ButtobiEngine::PostCommandSet(const bool isLoadEnd) {
     }
 
 #ifdef USE_IMGUI
-    //諸々の描画処理が終了下タイミングでImGuiの描画コマンドを積む
+    //諸々の描画処理が終了タイミングでImGuiの描画コマンドを積む
     imGuiClass.DrawImGui(directXCommon_->GetCommandList(DirectXCommon::kMain));
 
 #endif // _DEBUG
@@ -499,7 +499,7 @@ void ButtobiEngine::PostCommandSet(const bool isLoadEnd) {
 
 void ButtobiEngine::Finalize() {
 
-    //デバックカメラの終了処理
+    //デバッグカメラの終了処理
     DebugCamera::GetInstance()->Finalize();
     //パーティクルの終了処理
     particleManager_->Finalize();
@@ -516,7 +516,7 @@ void ButtobiEngine::Finalize() {
 
 
 #ifdef _DEVELOP
-    //グリットを解放
+    //グリッドを解放
     DrawGrid::Finalize();
 #endif
     //プリミティブ生成工場の終了処理
@@ -571,7 +571,7 @@ void ButtobiEngine::Finalize() {
     //RTVManagerのリセット
     rtvDescriptorHeap_.reset();
 
-    //DirecectXCommonのリセット
+    //DirectXCommonのリセット
     directXCommon_->Finalize();
     directXCommon_.reset();
 

@@ -166,7 +166,7 @@ void ImGuiClass::Render() {
 
 void ImGuiClass::DrawImGui(ID3D12GraphicsCommandList* commandList) {
 
-    //諸々の描画処理が終了下タイミングでImGuiの描画コマンドを積む
+    //諸々の描画処理が終了タイミングでImGuiの描画コマンドを積む
 //実際のcommandListのImGuiの描画コマンドを積む
     ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
 

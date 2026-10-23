@@ -99,7 +99,7 @@ void DebugUI::CheckCamera(Camera& camera, const char* label)
 
         CheckSphericalCoordinate(cameraData.sphericalCoordinate);
 
-        ImGui::SliderFloat2("ofsset", &cameraData.offset.x, -1000.0f, 1000.0f);
+        ImGui::SliderFloat2("offset", &cameraData.offset.x, -1000.0f, 1000.0f);
         ImGui::SliderFloat("nearZ", &cameraData.nearZ, 0.0f, 1000.0f);
         ImGui::SliderFloat("farZ", &cameraData.farZ, 0.0f, 1000.0f);
         ImGui::SliderFloat("fovAngleY", &cameraData.fovAngleY, -6.28f, 6.28f);
@@ -627,7 +627,7 @@ void DebugUI::CheckXInput(const int& num)
     std::string numOK = std::to_string(num);
     if (ImGui::TreeNode(numOK.c_str())) {
 
-        ImGui::Text("Controller %s", Input::GetIsControllerConnected(num) ? "Connected" : "Unkown");
+        ImGui::Text("Controller %s", Input::GetIsControllerConnected(num) ? "Connected" : "Unknown");
         ImGui::Text("left %d", Input::GetControllerTriggerCount(BUTTON_LEFT, num));
         ImGui::Text("right %d", Input::GetControllerTriggerCount(BUTTON_RIGHT, num));
 
@@ -921,7 +921,7 @@ void DebugUI::CheckPostEffectMaterial(PostEffectMaterial::MaterialForDepthBasedO
 void DebugUI::CheckPostEffectMaterial(PostEffectMaterial::MaterialForRadialBlur& material)
 {
 #ifdef USE_IMGUI
-    if (ImGui::TreeNode("RadialBulr")) {
+    if (ImGui::TreeNode("RadialBlur")) {
 
         ImGui::DragFloat2("center", &material.center.x, 0.01f, 0.0f, 1.0f);
         ImGui::DragInt("numSamples", &material.numSamples, 1.0f, 1);
@@ -1102,7 +1102,7 @@ void DebugUI::CheckObject3d(Object3d& object3d,const char* label)
                 object3d.SetTextureHandle(static_cast<TextureFactory::Handle>(textureIndex));
             };
 
-            std::string currentModelName = "unknow";
+            std::string currentModelName = "unknown";
             if (auto model = dynamic_cast<const Model*>(primitive)) {
 
                 for (const auto& [name, managerModel] : ModelManager::GetModels()) {
@@ -1410,7 +1410,7 @@ float& specular,
         ImGui::SliderFloat("environmentCoefficient", &environmentCoefficient, 0.0f, 1.0f);
 
         ImGui::DragFloat("maskVal", &maskVal, 0.01f, 0.0f, 1.0f);
-        ImGui::ColorEdit3("maskEdigColor", &dissolveRgb.x);
+        ImGui::ColorEdit3("maskEdgeColor", &dissolveRgb.x);
         ImGui::SliderFloat("maskEdgeMin", &maskEdgeMin, 0.0f, maskEdgeMax);
         ImGui::SliderFloat("maskEdgeMax", &maskEdgeMax, maskEdgeMin, 1.0f);
         ImGui::SliderFloat("gamma", &gamma, 0.0f, 1000.0f);

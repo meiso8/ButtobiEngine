@@ -10,7 +10,7 @@ struct LevelData {
     struct ColliderData {
         Vector3 center = { 0.0f,0.0f,0.0f };
         Vector3 size = { 1.0f,1.0f,1.0f };
-        std::string tag ="unKown";
+        std::string tag ="unknown";
         uint32_t maskTag = 0xffffffff;
         std::string type = "";
     };

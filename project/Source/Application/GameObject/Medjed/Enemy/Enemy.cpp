@@ -247,7 +247,7 @@ void Enemy::OnCollision(Collider* collider)
     OnCollisionCollider();
 
     if (collider->GetCollisionAttribute() == CollisionTag::GetTag("PlayerBulletCold") || collider->GetCollisionAttribute() == CollisionTag::GetTag("PlayerBulletHot")) {
-        //プレイヤーの弾の温度によって後でカエル
+        //プレイヤーの弾の温度によって後で変更する
         if (!characterState_.isHit) {
             characterState_.isHit = true;
 

@@ -53,7 +53,7 @@ private:
 	Vector3 tempWorldTransform_ = {0.0f};
 	bool isCalculatedThisFrame_ = false; // 今フレーム計算済みかどうかのフラグ
 #ifdef _DEVELOP
-	//デバック用
+	//デバッグ用
 	std::unique_ptr<Primitive>debugMesh_ = nullptr;
 	//位置
 	std::unique_ptr<Object3d> object3d_ = nullptr;
