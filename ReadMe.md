@@ -17,7 +17,7 @@
 - Mr. Y.K
 - Mr. Y.M
 - Mr. D.J
-Thank you.
+## Thank you.
 
 2025/09から作成中の個人製作  
 - ゲーム【第三のめ】
