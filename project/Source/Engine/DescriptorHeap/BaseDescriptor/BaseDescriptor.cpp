@@ -42,7 +42,7 @@ D3D12_GPU_DESCRIPTOR_HANDLE BaseDescriptor::GetGPUDescriptorHandle(uint32_t inde
     return  DescriptorHandle::GetGPUDescriptorHandle(descriptorHeap_.Get(), descriptorSize_, index);
 }
 
-void BaseDescriptor::CreateDescriptorHeapAndSize(const D3D12_DESCRIPTOR_HEAP_TYPE& type, bool shaderVisible,const uint32_t kMaxCount)
+void BaseDescriptor::CreateDescriptorHeapAndSize(const D3D12_DESCRIPTOR_HEAP_TYPE& type, bool shaderVisible, const uint32_t kMaxCount)
 {
 
     maxCount_ = kMaxCount;

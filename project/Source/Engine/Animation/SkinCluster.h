@@ -46,6 +46,6 @@ public:
     static void SetSrvDescriptorHeap(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
     static SkinCluster CreateSkinCluster(const Skeleton& skeleton, const ModelData& modelData);
     static void UpdateSkinCluster(SkinCluster& skinCluster, const Skeleton& skeleton);
-    static void ReleaseSkinCluster(SkinCluster& slinCluster);
+    static void ReleaseSkinCluster(SkinCluster& skinCluster);
 };
 

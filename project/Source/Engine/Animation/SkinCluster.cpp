@@ -32,7 +32,7 @@ SkinCluster Skin::CreateSkinCluster(const Skeleton& skeleton, const ModelData& m
     skinCluster.influenceResource = ResourceFactory::CreateBufferResource(sizeof(VertexInfluence) * modelData.vertices.size());
     VertexInfluence* mappedInfluence = nullptr;
     skinCluster.influenceResource->Map(0, nullptr, reinterpret_cast<void**>(&mappedInfluence));
-    skinCluster.influenceResource->SetName(L"skinCluster_influenceResouce");
+    skinCluster.influenceResource->SetName(L"skinCluster_influenceResource");
     std::memset(mappedInfluence, 0, sizeof(VertexInfluence) * modelData.vertices.size());//0埋め。wightを0にしておく
     skinCluster.mappedInfluence = { mappedInfluence,modelData.vertices.size() };
 
@@ -86,18 +86,18 @@ void Skin::UpdateSkinCluster(SkinCluster& skinCluster, const Skeleton& skeleton)
     }
 }
 
-void Skin::ReleaseSkinCluster(SkinCluster& slinCluster)
+void Skin::ReleaseSkinCluster(SkinCluster& skinCluster)
 {
-    if (slinCluster.influenceResource) {
-        slinCluster.influenceResource->Unmap(0,nullptr);
-        slinCluster.influenceResource.Reset();
+    if (skinCluster.influenceResource) {
+        skinCluster.influenceResource->Unmap(0,nullptr);
+        skinCluster.influenceResource.Reset();
     }
 
-    slinCluster.inverseBindPoseMatrices.clear();
+    skinCluster.inverseBindPoseMatrices.clear();
 
-    if (slinCluster.paletteResource) {
-        slinCluster.paletteResource->Unmap(0, nullptr);
-        slinCluster.paletteResource.Reset();
+    if (skinCluster.paletteResource) {
+        skinCluster.paletteResource->Unmap(0, nullptr);
+        skinCluster.paletteResource.Reset();
     }
 
 

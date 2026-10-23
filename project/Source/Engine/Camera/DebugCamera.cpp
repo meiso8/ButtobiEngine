@@ -138,8 +138,8 @@ void DebugCamera::UpdateProjectionMatrix()
 
 void DebugCamera::InputTranslate() {
 
-    const float deltaTimme =TimeManager::DeltaTime();
-    speed_ = 5.0f * deltaTimme;
+    const float deltaTime =TimeManager::DeltaTime();
+    speed_ = 5.0f * deltaTime;
     if (Input::IsPressKey(DIK_A)) {
         MoveX(-speed_);
     }

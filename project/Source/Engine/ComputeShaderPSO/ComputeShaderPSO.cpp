@@ -34,19 +34,19 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> ComputeShaderPSO::Create(
     const DxcCompiler::CS_TYPE& csShaderType)
 {
 
-    D3D12_COMPUTE_PIPELINE_STATE_DESC computePiplineStateDesc{};
+    D3D12_COMPUTE_PIPELINE_STATE_DESC computePipelineStateDesc{};
 
     //シェーダーを取得
     auto& csShader = dxCompiler_->GetComputeShaderBlob(csShaderType);
     //ディスクを作成
-    computePiplineStateDesc.CS = {
+    computePipelineStateDesc.CS = {
         .pShaderBytecode = csShader->GetBufferPointer(),
         .BytecodeLength = csShader->GetBufferSize()
     };
     //ルートシグネチャを取得
-    computePiplineStateDesc.pRootSignature = rootSignature_->GetRootSignature(rootSignatureType);
+    computePipelineStateDesc.pRootSignature = rootSignature_->GetRootSignature(rootSignatureType);
     Microsoft::WRL::ComPtr<ID3D12PipelineState> computePipelineState = nullptr;
-    HRESULT hr = DirectXCommon::GetDevice()->CreateComputePipelineState(&computePiplineStateDesc, IID_PPV_ARGS(&computePipelineState));
+    HRESULT hr = DirectXCommon::GetDevice()->CreateComputePipelineState(&computePipelineStateDesc, IID_PPV_ARGS(&computePipelineState));
 
     return computePipelineState;
 }

@@ -1,7 +1,7 @@
 
 #include "../Hlsli/Object3d.hlsli"
 #include "../Hlsli/WaveData.hlsli"
-#include "../Hlsli/BallonData.hlsli"
+#include "../Hlsli/BalloonData.hlsli"
 #include"../Hlsli/Melt.hlsli"
 ConstantBuffer<TransformationMatrix> gTransformationMatrix : register(b1);
 ConstantBuffer<Balloon> gBalloon : register(b2);

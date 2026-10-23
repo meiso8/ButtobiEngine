@@ -33,7 +33,7 @@ public:
     };
 
 private:
-    const std::string kDefaultBaseFirectory = "Resource/JsonFiles/";
+    const std::string kDefaultBaseDirectory = "Resource/JsonFiles/";
     const std::string  kExtension = ".json";
     const uint32_t kMaxObjectCount_ = 1000;
     std::unique_ptr<LevelData>levelData_ = nullptr;

@@ -746,7 +746,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <None Include="Resource\JsonFiles\config.json" />
     <None Include="Resource\JsonFiles\memo.json" />
     <None Include="Resource\JsonFiles\notes.json" />
-    <None Include="Resource\shader\Hlsli\BallonData.hlsli" />
+    <None Include="Resource\shader\Hlsli\BalloonData.hlsli" />
     <None Include="Resource\shader\Hlsli\Dissolve.hlsli" />
     <None Include="Resource\shader\Hlsli\Melt.hlsli" />
     <None Include="Resource\shader\Hlsli\Object3dCommon.hlsli" />

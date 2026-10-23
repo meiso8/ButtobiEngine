@@ -8,7 +8,7 @@
 void GPU::SettingGPU(DXGIFactory& dxgiFactory) {
 
     //良い順にアダプタを頼む
-    for (UINT i = 0;   dxgiFactory.GetDigiFactory()->EnumAdapterByGpuPreference(i,
+    for (UINT i = 0;   dxgiFactory.GetDxgiFactory()->EnumAdapterByGpuPreference(i,
         DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&useAdapter_)) !=
         DXGI_ERROR_NOT_FOUND; ++i) {
         //アダプタの情報を取得する

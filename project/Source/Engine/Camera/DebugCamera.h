@@ -5,7 +5,7 @@ class DebugCamera :public Camera
 {
 public:
     enum MoveType {
-        KeyBorad,
+        KeyBoard,
         Mouse,
     };
 private:

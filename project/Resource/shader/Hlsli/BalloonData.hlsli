@@ -1,7 +1,7 @@
 
 
-#ifndef BALOON_FUNCTIONS_HLSLI
-#define BALOON_FUNCTIONS_HLSLI
+#ifndef BALLOON_FUNCTIONS_HLSLI
+#define BALLOON_FUNCTIONS_HLSLI
 struct Balloon
 {
     float expansion;
@@ -49,4 +49,4 @@ float4 UpdateExpansionData(float4 position, float3 normal,Balloon balloon)
 
 }
 
-#endif // BALOON_FUNCTIONS_HLSLI
+#endif // BALLOON_FUNCTIONS_HLSLI

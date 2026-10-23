@@ -66,7 +66,7 @@ void DirectXCommon::PostInitialize()
 void DirectXCommon::RenderTexturePreDraw(DsvDescriptorHeap* dsvDescriptorHeap, DepthTexture* depthTexture)
 {
 
-    auto* commanList = commandList_[kMain]->Get();
+    auto* commandList = commandList_[kMain]->Get();
 
     barrierMain_.SettingBarrier(
         depthTexture->GetResource(),
@@ -96,25 +96,25 @@ void DirectXCommon::RenderTexturePreDraw(DsvDescriptorHeap* dsvDescriptorHeap, D
     //描画用のRTVとDSVを設定する 
     D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvDescriptorHeap->GetDescriptorHeap()->GetCPUDescriptorHandleForHeapStart();
     // 第1引数を 3 に変更して3つのRTVを同時にバインド
-    commanList->OMSetRenderTargets(3, rtvHandles, false, &dsvHandle);
+    commandList->OMSetRenderTargets(3, rtvHandles, false, &dsvHandle);
 
     //指定した色で画面全体をクリアする
     Vector4 color = renderTexture_->GetColor();
     float clearColor[] = { color.x,color.y,color.z,color.w };//青っぽい色。RGBAの順
-    commanList->ClearRenderTargetView(renderTextureDataNormal.rtvHandleCPU, clearColor, 0, nullptr);
+    commandList->ClearRenderTargetView(renderTextureDataNormal.rtvHandleCPU, clearColor, 0, nullptr);
 
     //指定した深度で画面全体をクリアする
-    commanList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+    commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
     //温度バッファ(Index 1)のクリア処理を追加
     D3D12_CPU_DESCRIPTOR_HANDLE rtvTemp = renderTexture_->GetRenderTextureData(RenderTexture::kThermography).rtvHandleCPU;
-    commanList->ClearRenderTargetView(rtvTemp, clearColor, 0, nullptr);
+    commandList->ClearRenderTargetView(rtvTemp, clearColor, 0, nullptr);
 
     // IDバッファ(Index 2)のクリア処理
-    commanList->ClearRenderTargetView(renderTextureDataID.rtvHandleCPU, clearColor, 0, nullptr);
+    commandList->ClearRenderTargetView(renderTextureDataID.rtvHandleCPU, clearColor, 0, nullptr);
 }
 
-void DirectXCommon::VeiwPortAndScissorRect()
+void DirectXCommon::ViewPortAndScissorRect()
 
 {
     auto* commanList = commandList_[kMain]->Get();
@@ -387,7 +387,7 @@ void DirectXCommon::CreateSwapChain()
 //画面の幅。ウィンドウのクライアント領域を同じものにしておく
     swapChainClass.Create(
         *window_,
-        dxgiFactory.GetDigiFactory(),
+        dxgiFactory.GetDxgiFactory(),
         commandQueue.GetCommandQueue());
     LogFile::Log("CreateSwapChain\n");
 

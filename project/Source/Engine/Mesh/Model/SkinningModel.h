@@ -18,7 +18,7 @@ public:
         uint32_t numVertices;
     };
 
-    struct SkinningCSResorce {
+    struct SkinningCSResource {
         SRVResource<VertexData> inputVertexResource_;
         UAVResource<VertexData> outputVertexResource_;
         CResource<SkinningInformation> skinningInformationResource_;
@@ -49,8 +49,8 @@ public:
         return modelData_;
     }
 
-    SkinningCSResorce* GetCSResource() {
-        return &skinningCSResorce_;
+    SkinningCSResource* GetCSResource() {
+        return &skinningCSResource_;
     };
     Matrix4x4* GetJointMatrix(const std::string jointName);
 private:
@@ -64,6 +64,6 @@ private:
     std::unique_ptr< SkinCluster> skinCluster_ = nullptr;
     const ModelData* modelData_ = nullptr;
 
-    SkinningCSResorce skinningCSResorce_;
+    SkinningCSResource skinningCSResource_;
 };
 

@@ -204,9 +204,9 @@ void ObjectManager::ClickObject(Camera& camera)
 #endif
 }
 
-void ObjectManager::SetRenderTextureForModel(RenderTexture* rendterTexture)
+void ObjectManager::SetRenderTextureForModel(RenderTexture* renderTexture)
 {
-    renderTexture_ = rendterTexture;
+    renderTexture_ = renderTexture;
 }
 
 void ObjectManager::Clear() {

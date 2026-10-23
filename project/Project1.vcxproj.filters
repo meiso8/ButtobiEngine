@@ -442,7 +442,7 @@
     <None Include="Resource\JsonFiles\config.json" />
     <None Include="Resource\JsonFiles\memo.json" />
     <None Include="Resource\JsonFiles\notes.json" />
-    <None Include="Resource\shader\Hlsli\BallonData.hlsli" />
+    <None Include="Resource\shader\Hlsli\BalloonData.hlsli" />
     <None Include="Resource\shader\Hlsli\WaveData.hlsli" />
     <None Include="Resource\shader\Hlsli\Random.hlsli" />
     <None Include="Resource\shader\Hlsli\Dissolve.hlsli" />

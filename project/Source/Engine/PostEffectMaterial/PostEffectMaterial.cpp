@@ -20,7 +20,7 @@ void PostEffectMaterial::Update()
 
 void PostEffectMaterial::Create()
 {
-    CreateMaterialBUfferForFullScreen();
+    CreateMaterialBufferForFullScreen();
     CreateMaterialBufferForGrayScale();
     CreateMaterialBufferForVignette();
     CreateMaterialBufferForBoxFilter();
@@ -114,7 +114,7 @@ void PostEffectMaterial::CreateMaterialBufferForVignette()
 
     //マテリアルにデータを書き込む
     materialForVignette_.data->correctVal = 16.0f;
-    materialForVignette_.data->viignetteVal = 0.8f;
+    materialForVignette_.data->vignetteVal = 0.8f;
 
     LogFile::Log("Create : MaterialBuffer : Vignette\n");
 }
@@ -134,7 +134,7 @@ void PostEffectMaterial::CreateMaterialBufferForBoxFilter()
     LogFile::Log("Create : MaterialBuffer : BoxFilter\n");
 }
 
-void PostEffectMaterial::CreateMaterialBUfferForFullScreen()
+void PostEffectMaterial::CreateMaterialBufferForFullScreen()
 {
     //マテリアル用のリソースを作る。
     materialForFullScreen_.CreateBufferResource(L"FullScreen_MaterialResource");

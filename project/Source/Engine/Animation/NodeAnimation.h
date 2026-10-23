@@ -3,14 +3,14 @@
 #include"Keyframe.h"
 
 template <typename tValue>
-struct AnimatioinCurve {
+struct AnimationCurve {
     std::vector<Keyframe<tValue>> keyframes;
 };
 
 struct NodeAnimation {
-    AnimatioinCurve<Vector3> translate;
-    AnimatioinCurve<Quaternion> rotate;
-    AnimatioinCurve<Vector3> scale;
+    AnimationCurve<Vector3> translate;
+    AnimationCurve<Quaternion> rotate;
+    AnimationCurve<Vector3> scale;
 };
 
 

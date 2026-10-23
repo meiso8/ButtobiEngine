@@ -156,14 +156,14 @@ void PSO::CreateALLPSO()
 
     LogFile::Log("Create depthStencilDesc");
 
-    std::vector<DXGI_FORMAT> rtvFormatsForTermoAndObjectID =
+    std::vector<DXGI_FORMAT> rtvFormatsForThermoAndObjectID =
     {
         DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
         DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
         DXGI_FORMAT_R32_UINT
     };
 
-    std::vector<DXGI_FORMAT> rtvFormatsForTermo =
+    std::vector<DXGI_FORMAT> rtvFormatsForThermo =
     {
         DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
         DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
@@ -183,7 +183,7 @@ void PSO::CreateALLPSO()
                 DxcCompiler::PS_Normal,
                 kTriangle,
                 InputLayout::kInputLayoutTypeNormal,
-                rtvFormatsForTermoAndObjectID
+                rtvFormatsForThermoAndObjectID
             );
         }
     }
@@ -201,7 +201,7 @@ void PSO::CreateALLPSO()
             DxcCompiler::PS_Particle,
             kTriangle,
             InputLayout::kInputLayoutTypeNormal,
-            rtvFormatsForTermo
+            rtvFormatsForThermo
         );
     }
 
@@ -216,7 +216,7 @@ void PSO::CreateALLPSO()
         DxcCompiler::PS_Particle,
         kTriangle,
         InputLayout::kInputLayoutTypeNormal,
-        rtvFormatsForTermo
+        rtvFormatsForThermo
     );
 
     //SkyBoxはサーモアリ
@@ -231,7 +231,7 @@ void PSO::CreateALLPSO()
             DxcCompiler::PS_SkyBox,
             kTriangle,
             InputLayout::kInputLayoutTypeNormal,
-            rtvFormatsForTermo);
+            rtvFormatsForThermo);
 
     //Lineはサーモなし
     graphicsPipelineStatesLine_ =
@@ -260,7 +260,7 @@ void PSO::CreateALLPSO()
             DxcCompiler::PS_Sprite,
             kTriangle,
             InputLayout::kInputLayoutTypeNormal,
-            rtvFormatsForTermo
+            rtvFormatsForThermo
         );
 
     }
@@ -277,7 +277,7 @@ void PSO::CreateALLPSO()
             DxcCompiler::PS_Font,
             kTriangle,
             InputLayout::kInputLayoutTypeNormal,
-            rtvFormatsForTermo
+            rtvFormatsForThermo
         );
     }
 
@@ -535,7 +535,7 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::GetOrCreatePSO(const PSOKey& ke
     //  存在しなければ新規作成 (ここで既存の Create 関数を呼ぶ)
     assert(GetInstance()->inputLayout);
 
-    std::vector<DXGI_FORMAT> rtvFormatsForTermoAndObjectID =
+    std::vector<DXGI_FORMAT> rtvFormatsForThermoAndObjectID =
     {
         DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
         DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
@@ -551,7 +551,7 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::GetOrCreatePSO(const PSOKey& ke
         key.psShaderType,
         key.topologyType,
         key.inputLayoutType,
-        rtvFormatsForTermoAndObjectID
+        rtvFormatsForThermoAndObjectID
     );
 
     // キャッシュに保存して返す

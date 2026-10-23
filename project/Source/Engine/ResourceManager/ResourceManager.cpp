@@ -197,7 +197,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> ResourceFactory::CreateRenderTextureResou
 
     return resource;
 }
-Microsoft::WRL::ComPtr<ID3D12Resource> ResourceFactory::CreateDepthStencileTextureResource(int32_t width, int32_t height)
+Microsoft::WRL::ComPtr<ID3D12Resource> ResourceFactory::CreateDepthStencilTextureResource(int32_t width, int32_t height)
 {
     //生成するResourceの設定
     D3D12_RESOURCE_DESC resourceDesc{};
@@ -229,7 +229,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> ResourceFactory::CreateDepthStencileTextu
         &depthClearValue,//Clear最適地
         IID_PPV_ARGS(&resource));
     assert(SUCCEEDED(hr));
-    resource->SetName(L"DirectXCommon_DepthStencile_TextureResource");
+    resource->SetName(L"DirectXCommon_DepthStencil_TextureResource");
     return resource;
 }
 Microsoft::WRL::ComPtr<ID3D12Resource> ResourceFactory::UploadTextureData(ID3D12GraphicsCommandList* commandList, const Microsoft::WRL::ComPtr<ID3D12Resource>& texture, const DirectX::ScratchImage& mipImages)
@@ -255,12 +255,12 @@ Microsoft::WRL::ComPtr<ID3D12Resource> ResourceFactory::UploadTextureData(ID3D12
 ;
 
 
-void IntermediateResource::UploadTextureData(const LPCWSTR& label, ID3D12GraphicsCommandList*commandList, ID3D12Resource* ohterResource, const DirectX::ScratchImage& mipImages)
+void IntermediateResource::UploadTextureData(const LPCWSTR& label, ID3D12GraphicsCommandList*commandList, ID3D12Resource* otherResource, const DirectX::ScratchImage& mipImages)
 {
     if (IResource::resource) {
         return;
     }
 
-    IResource::resource = ResourceFactory::UploadTextureData(commandList, ohterResource,mipImages);
+    IResource::resource = ResourceFactory::UploadTextureData(commandList, otherResource,mipImages);
     IResource::resource->SetName(label);
 }

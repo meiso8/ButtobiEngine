@@ -10,7 +10,7 @@ void DepthTexture::CreateResource(CbvSrvUavDescriptorHeap* srvDescriptorHeap,int
 
     //stencileTextureResourceの作成 
     if (depthTextureData_.resource == nullptr) {
-        depthTextureData_.resource = ResourceFactory::CreateDepthStencileTextureResource(width, height);
+        depthTextureData_.resource = ResourceFactory::CreateDepthStencilTextureResource(width, height);
         LogFile::Log("CreateDepthBuffer\n");
     }
 

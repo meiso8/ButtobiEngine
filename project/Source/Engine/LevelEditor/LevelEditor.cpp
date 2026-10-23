@@ -10,7 +10,7 @@ void LevelEditor::Load(const std::string& fileName, bool useButtobiEditor)
 {
     // =============================JSONLoad============================
 
-    const std::string fullpath = kDefaultBaseFirectory + fileName + kExtension;
+    const std::string fullpath = kDefaultBaseDirectory + fileName + kExtension;
 
     std::ifstream file;
 
