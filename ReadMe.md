@@ -9,6 +9,8 @@
 
 2年次のチーム制作2回目 (タグ : TD2_2206_master_ver02)    
 - ゲーム【ベリベリベンジ】
+
+# チーム制作でのメンバーに感謝いたします。
   
 2025/09から作成中の個人製作  
 - ゲーム【第三のめ】
@@ -22,7 +24,7 @@
 [迷宮博物館WebSite](https://meiso-labyrinth.netlify.app/index.html)
 [WebSite](https://meiso8.github.io/index.html)
 
-# チーム制作でのチームメンバーに感謝します。
+
 
 ## 外部ファイル
 - assimp
