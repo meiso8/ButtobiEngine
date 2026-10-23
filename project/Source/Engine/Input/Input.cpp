@@ -23,7 +23,7 @@ std::array <bool, 4>Input::isControllerConnected_;
 
 bool Input::isDragging_ = false;
 
-HRESULT Input::Initialize(Window& window/*, int& fps*/) {
+void Input::Initialize(Window& window) {
 
     //fps_ = &fps;
 
@@ -87,10 +87,7 @@ HRESULT Input::Initialize(Window& window/*, int& fps*/) {
     result = mouse_->SetProperty(DIPROP_AXISMODE, &diprop.diph);
     assert(SUCCEEDED(result));
 
-
     LogFile::Log("Create Input Class");
-
-    return result;
 };
 
 bool Input::IsPressKey(const uint8_t& keyNum) {
