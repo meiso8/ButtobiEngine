@@ -69,7 +69,7 @@ void ObjectManager::UnregisterObject(Object3d* gameObject) {
 
     UnregisterCollider(gameObject);
 
-    // 【追加】実体を管理している unique_ptr の配列からも削除して完全に解放する
+    //実体を管理している unique_ptr の配列からも削除して完全に解放する
     auto itCreate = std::remove_if(createObjects_.begin(), createObjects_.end(),
         [gameObject](const std::unique_ptr<Object3d>& obj) {
             return obj.get() == gameObject;

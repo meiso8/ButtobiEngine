@@ -196,7 +196,7 @@ void DirectXCommon::RenderTexturePostDraw(DepthTexture* depthTexture)
     auto& renderTextureDataThermography = renderTexture_->GetRenderTextureData(RenderTexture::kThermography);
     barrierMain_.SettingBarrierRTVforSRV(renderTextureDataThermography.resource.Get());
 
-    // ★追加: ID用テクスチャのバリアを元に戻す
+    // ID用テクスチャのバリアを元に戻す
     auto& renderTextureDataID = renderTexture_->GetRenderTextureData(RenderTexture::kObjectID);
     barrierMain_.SettingBarrierRTVforSRV(renderTextureDataID.resource.Get());
 }

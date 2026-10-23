@@ -30,13 +30,13 @@ struct MeshData {
 struct MeshSection {
     uint32_t indexStart;    // このマテリアルの描画を開始するインデックス位置
     uint32_t indexCount;    // 描画するインデックス数
-    std::string materialName; // ★追加：このセクションが使用するマテリアル名
+    std::string materialName; //このセクションが使用するマテリアル名
 };
 
 struct ModelData :public MeshData {
 
     std::map<std::string, JointWeightData> skinClusterData;
-    std::vector<MeshSection> sections; // ★追加：マテリアルごとの範囲情報
+    std::vector<MeshSection> sections; //マテリアルごとの範囲情報
     std::map<std::string, MaterialData>materials;
     Node rootNode;
     std::map <std::string, Animation> animations_;

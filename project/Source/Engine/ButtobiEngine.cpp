@@ -148,7 +148,7 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     eyeCatch_ = std::make_unique<EyeCatch>();
     eyeCatch_->Initialize();
 
-    // ★ 追加: ここまでの kLoad に積まれたテクスチャ転送コマンドを一旦GPUにキックして完了を待つ
+    // ここまでの kLoad に積まれたテクスチャ転送コマンドを一旦GPUにキックして完了を待つ
     directXCommon_->CloseLoadCommandList(DirectXCommon::kLoad); 
 
 
