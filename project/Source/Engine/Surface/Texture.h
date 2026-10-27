@@ -14,7 +14,9 @@
 #include<unordered_map>
 #include"TextureFactory.h"
 #include<filesystem>
+#include <cstdlib>
 #include"ResourceManager/ResourceManager.h"
+
 class CbvSrvUavDescriptorHeap;
 
 class Texture
@@ -29,6 +31,9 @@ public:
     };
 
 public:
+
+
+
     static const std::vector<uint32_t>& GetMappedSRVIndexes() { return srvIndexes_; };
     static void LoadAndMapHandle(const std::filesystem::path& filePath, const TextureFactory::Handle& handle);
     static uint32_t AddTextureHandle(const std::filesystem::path& filePath);
@@ -65,5 +70,7 @@ private:
     /// @brief テクスチャファイルの読み込み
 /// @param filePath テクスチャファイルのパス
     static void LoadTexture(const std::filesystem::path& filePath);
+    //DDS変換
+    static void ConvertPngToDds(const std::filesystem::path& inputPng, const std::filesystem::path& outputDir);
 };
 

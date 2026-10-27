@@ -4,11 +4,17 @@
 #include"CbvSrvUavDescriptorHeap.h"
 #include"Log.h"
 
+
 std::vector<uint32_t> Texture::srvIndexes_;
 std::unordered_map<uint32_t, std::filesystem::path> Texture::handleToPath_;
 std::unordered_map<std::filesystem::path, Texture::TextureData> Texture::textureDatas;
 ID3D12GraphicsCommandList* Texture::commandList_ = nullptr;
 CbvSrvUavDescriptorHeap* Texture::srvDescriptorHeap_ = nullptr;
+
+namespace {
+    const std::string texconvPath = "externals/texconv/texconv.exe";
+    std::filesystem::path absoluteTexconvPath = std::filesystem::absolute(texconvPath);
+}
 
 void Texture::Initialize()
 {
@@ -137,6 +143,32 @@ void Texture::LoadTexture(const std::filesystem::path& filePath)
     //sRGB空間で作られた物として読む。
     HRESULT hr;
 
+    if (filePathW.ends_with(L".png")) {
+        std::filesystem::path ddsPath = filePath;
+        //ddsファイルとして変換する
+        ddsPath.replace_extension(".dds");
+
+        bool needConvert = false;
+        if (!std::filesystem::exists(ddsPath)) {
+            //ddsファイルがないとき
+            needConvert = true;
+        } else {
+            auto pngTime = std::filesystem::last_write_time(filePath);
+            auto ddsTime = std::filesystem::last_write_time(ddsPath);
+
+            if (pngTime > ddsTime) {
+                needConvert = true;
+            }
+        }
+
+        if (needConvert) {
+            LogFile::Log("Converting"+ filePath.filename().string() + "to DDS\n");
+            ConvertPngToDds(filePath, filePath.parent_path());
+            //ddsファイル名に変換した。
+            filePathW = ddsPath.wstring();
+        }
+    }
+
     if (filePathW.ends_with(L".dds")) {
         //.ddsで終わっていたらddsとみなす。
         hr = DirectX::LoadFromDDSFile(filePathW.c_str(), DirectX::DDS_FLAGS_NONE, nullptr, image);
@@ -178,5 +210,26 @@ void Texture::LoadTexture(const std::filesystem::path& filePath)
     textureData.resource.Allocate(srvDescriptorHeap_);
 
     textureData.resource.CreateSRVforTexture(srvDescriptorHeap_);
+
+}
+
+void Texture::ConvertPngToDds(const std::filesystem::path& inputPng, const std::filesystem::path& outputDir)
+{
+
+    // .\texconv.exe - y - o . - f BC6H_UF16 cloudy.dds
+    std::string command = absoluteTexconvPath.string() +
+        " -y" +
+        " -m 0" +
+        " -f BC7_UNORM" +
+        " -o \"" + outputDir.string() + "\"" +
+        " \"" + inputPng.string() + "\"";
+
+    LogFile::Log("Command: " + command + "\n");
+
+    int result = std::system(command.c_str());
+    if (result != 0) {
+        LogFile::Log("Failed to convert: "+ inputPng.string());
+    }
+
 
 }
