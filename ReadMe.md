@@ -16,7 +16,7 @@
 - Ms. H.K
 - Mr. Y.K
 - Mr. Y.M
-- Mr. D.J
+- Mr. J.D
 ## Thank you.
 
 2025/09から作成中の個人製作  
@@ -40,6 +40,8 @@
 - imguiDock
 - nlohmann
 - utfcpp
+
+- texconv
 
 
 
