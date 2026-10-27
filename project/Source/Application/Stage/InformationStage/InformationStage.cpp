@@ -71,16 +71,16 @@ void InformationStage::Update()
     passwordText_->Update();
 
 
-    if (netWork_->GetTicketAcquired()) {
+    //if (netWork_->GetTicketAcquired()) {
+
+    //}
+    if (passwordText_->GetIsUnLock()) {
         if (!isGenerateTicket_) {
             isGenerateTicket_ = true;
             itemManager->GenerateItems({ "Ticket" });
             FlagManager::SetFlag("GenerateTicket");
         }
     }
-    //if (passwordText_->GetIsUnLock()) {
- 
-    //}
 }
 
 void InformationStage::Draw()
