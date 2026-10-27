@@ -14,6 +14,7 @@ CbvSrvUavDescriptorHeap* Texture::srvDescriptorHeap_ = nullptr;
 namespace {
     const std::string texconvPath = "externals/texconv/texconv.exe";
     std::filesystem::path absoluteTexconvPath = std::filesystem::absolute(texconvPath);
+
 }
 
 void Texture::Initialize()
@@ -162,10 +163,18 @@ void Texture::LoadTexture(const std::filesystem::path& filePath)
         }
 
         if (needConvert) {
-            LogFile::Log("Converting"+ filePath.filename().string() + "to DDS\n");
-            ConvertPngToDds(filePath, filePath.parent_path());
-            //ddsファイル名に変換した。
-            filePathW = ddsPath.wstring();
+       
+            // 実行前に texconv.exe が実際に存在するかチェックする
+            if (std::filesystem::exists(absoluteTexconvPath)) {
+                LogFile::Log("Converting" + filePath.filename().string() + "to DDS\n");
+                ConvertPngToDds(filePath, filePath.parent_path());
+                //ddsファイル名に変換した。
+                filePathW = ddsPath.wstring();
+            } else {
+                LogFile::Log("Warning: texconv.exe not found at " + absoluteTexconvPath.string() + ". Skipping conversion.\n");
+            }
+     
+     
         }
     }
 
