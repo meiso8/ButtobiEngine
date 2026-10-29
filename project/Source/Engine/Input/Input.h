@@ -29,12 +29,12 @@ public:
     Input& operator=(Input&) = delete;
     ~Input();
     static void PushChar(char32_t ch) {
-        inputChars_.push_back(ch);
+        inputChar_ = ch;
     }
 
-    static std::vector<char32_t> GetInputChars() {
-        auto copy = inputChars_;
-        inputChars_.clear();
+    static char32_t GetInputChars() {
+        auto copy = inputChar_;
+        inputChar_ = '\0';
         return copy;
     }
 
@@ -50,6 +50,7 @@ public:
     /// @briefキーを離した瞬間
     static bool IsReleaseKey(const uint8_t& key);
     static bool IsAnyKeyPressed();
+    static bool IsAnyKeyTrigger();
     /// @brief キーの情報を取得する
     void Update();
     /// @brief マウスが押されている状態かどうかを取得する
@@ -120,7 +121,7 @@ public:
     static Vector2Int GetCursorPositionInt();
     static void SetCursorPosition(const Vector2& pos);
 private:
-    static inline std::vector<char32_t> inputChars_;
+    static inline char32_t inputChar_;
 
     static Window* window_;
     IDirectInputDevice8* keyboard_ = nullptr;
