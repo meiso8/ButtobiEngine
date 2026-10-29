@@ -137,6 +137,16 @@ bool Input::IsAnyKeyPressed() {
     return false;
 }
 
+bool Input::IsAnyKeyTrigger()
+{
+    for (int i = 0; i < 256; ++i) {
+        if (key_[i]&&!preKey_[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+
 
 void Input::Update() {
 

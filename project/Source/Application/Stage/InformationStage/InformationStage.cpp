@@ -67,9 +67,9 @@ void InformationStage::Update()
 
     gate_->Update();
 
+
     //パスワードシステム
     passwordText_->Update();
-
 
     //if (netWork_->GetTicketAcquired()) {
 
