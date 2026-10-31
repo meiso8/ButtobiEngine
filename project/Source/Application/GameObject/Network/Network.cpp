@@ -1,7 +1,6 @@
 
 #include "Network.h"
-//HTTPS通信を行うためのサポート
-#define CPPHTTPLIB_OPENSSL_SUPPORT 
+
 #include "httplib.h"
 #include <iostream>
 
