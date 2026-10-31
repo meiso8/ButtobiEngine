@@ -386,9 +386,10 @@ bool Input::IsMouseMove()
         return true;
     }
 
-    if (preMouseState_.lZ != mouseState_.lZ) {
+    //中ホイールを考慮しない事とする
+  /*  if (preMouseState_.lZ != mouseState_.lZ) {
         return true;
-    }
+    }*/
     return false;
 }
 

@@ -27,6 +27,59 @@ void Puzzle::Change(int x, int y)
 
 }
 
+Vector2 Puzzle::CheckMove(const Vector2 pos)
+{
+
+    int tempIndex = curentHoverIndex_;
+
+    if (tempIndex % vertical_ < vertical_ - 1) {
+        //右に移動で可能
+        if (InputBind::IsTriggerMoveR()) {
+            tempIndex += 1;
+        }
+    }
+
+
+    if (tempIndex % vertical_ > 0) {
+        //左に移動可能
+
+        if (InputBind::IsTriggerMoveL()) {
+            tempIndex -= 1;
+        }
+    }
+
+
+
+    if (tempIndex / vertical_ > 0) {
+        //上に移動可能
+
+        if (InputBind::IsTriggerMoveF()) {
+            tempIndex -= vertical_;
+        }
+    }
+
+    if (tempIndex / vertical_ < horizontal_ - 1) {
+        //下に移動可能
+
+        if (InputBind::IsTriggerMoveB()) {
+
+            tempIndex += vertical_;
+
+        }
+    }
+
+    if (InputBind::IsTriggerMoveB() || InputBind::IsTriggerMoveF() || InputBind::IsTriggerMoveL() || InputBind::IsTriggerMoveR()) {
+        if (panel_[tempIndex] < panel_.size() - 1) {
+            curentHoverIndex_ = tempIndex;
+            return  sprites_[panel_[curentHoverIndex_]]->GetPosition();
+        }
+    }
+    //元のポジション
+    return pos;
+}
+
+
+
 Puzzle::Puzzle(const int horizontal, const int vertical)
 {
     horizontal_ = horizontal;
@@ -92,12 +145,13 @@ void Puzzle::Game(const Vector2& screenPos)
 
         Sprite* sprite = sprites_[panel_[i]].get();
 
+
         if (IsCollision(screenPos, *sprite)) {
             sprite->SetColor({ 1.0f,0.0f,0.0f,1.0f });
-
+            curentHoverIndex_ = i;
             if (InputBind::IsClick()) {
                 clickedIndex = i;
-                Sound::PlaySE(SoundFactory::MOVE_ROCK,2.0f);
+                Sound::PlaySE(SoundFactory::MOVE_ROCK, 2.0f);
             }
 
         } else {
@@ -117,7 +171,7 @@ void Puzzle::Game(const Vector2& screenPos)
     }
 
     for (int i = 0; i < maxArrayNum_; ++i) {
-        if (panel_[i] < maxArrayNum_-1) {
+        if (panel_[i] < maxArrayNum_ - 1) {
             int col = i % horizontal_; // 横方向のインデックス（0〜3）
             int row = i / horizontal_; // 縦方向のインデックス（0〜3）
             sprites_[panel_[i]]->SetPosition({ centerPos_.x + col * size_.x,centerPos_.y + row * size_.y });
