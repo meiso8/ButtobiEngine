@@ -1,11 +1,12 @@
 #include "FlagManager.h"
 #include"ImGui.h"
-
+#include"Log.h"
 std::unordered_map < std::string, bool >FlagManager::flags_;
 
 void FlagManager::SetFlag(std::string flagName, bool flag)
 {
     flags_[flagName] = flag;
+    LogFile::Log(flagName + "Set : " + (flag ? "true" : "false") + "\n");
 }
 
 bool FlagManager::HasFlag(std::string flagName)

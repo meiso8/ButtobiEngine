@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+        <head>
+      <meta charset="utf-8">
+        <title>迷宮博物館</title>
+        <link rel = "stylesheet" href="style.css" type="text/css">
+        <link rel="icon" href="Images/favicon.png">
+        </head>
+          <body>
+              <header>
+                   <h1 class ="headTitle"> <img  src = "Images/favicon.png" alt = "egypt"/> <a href="index.html" class="title-link">迷宮博物館</a></h1>
+                   <nav class="nav-links">
+                         <a href="#about">概要</a>
+                       <a href="#ticket">チケット・料金案内</a>
+                       <a href="#opening_hours"> 開館時間案内</a>
+                   </nav>
+               
+              </header>
+
+       
+        <div class = "page">
+            <div class = "space"></div>
+            <div class ="ticket_body">
+          
+                <div id ="ticket">
+                 <img src = "Images/ticket.png" alt = "egypt"/>
+                    <div class = "ticket_info">
+                           <table border="0">
+  
+                               <tr>
+                                 <td>一般</td><td class = "price"><span class="price-general"></span> 円</td>
+                               </tr>
+                               <tr>
+                                 <td>大学・高校生</td><td class = "price"><span class="price-student"></span> 円</td>
+                               </tr>
+                                 <tr>
+                                 <td>小中学生</td><td class = "price"><span class="price-child"></span> 円</td>
+                               </tr>
+                           </table>
+
+                            <a class = "button" href="confirm.html">チケット購入</a> 
+                    </div>    
+                </div>
+
+                <div id ="about">
+                    <div class = "info_head">概要</div>
+                    <div>古代エジプトの棺、ミイラ、エジプト神話に登場する立像、楽器、食器</div> 
+                    <div>彼らの死生観など当時のエジプトの暮らしが垣間見えます。</div>
+                </div>
+
+                <div class ="ticket_detailed_info">     
+
+                      <div class = "info_head">チケット・料金案内</div>
+                      <div>当日券：一般 <span class="price-general"></span> 円、大学・高校生 <span class="price-student"></span> 円、小中学生 <span class="price-child"></span> 円</div>
+                      <div>※未就学児 無料</div>               
+                      <div id="event-period">開催期間：20XX年XX月XX日～XX月XX日（100日間）</div>
+          
+
+                      <div class ="cancellation_policy">
+                          <div class="ticket_info_head" >キャンセルポリシー</div>               
+
+                         <div>※お客様都合によるキャンセル・返金・変更はお受けしておりません。</div>
+                      </div>
+                </div>
+
+                <div id ="opening_hours">
+                    <div class = "info_head"> 開館時間案内</div>
+                    <div>開館時間：10:00～18:00（入場は閉館の30分前まで）</div>  
+                    <div>※元日の開館時間は未定です。</div>
+
+                 <div class = "space"></div>
+
+            </div>
+
+        </div>
+      
+        <div class = "space"></div>
+           <div class = "under"></div>
+      <script type="module">
+              import { PRICE } from "./config.js";
+    </script>
+
+               <script type="module" src="date.js"></script>
+    </body>
+
+</html>

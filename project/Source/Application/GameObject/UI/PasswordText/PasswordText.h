@@ -1,7 +1,10 @@
 #pragma once
 #include"../Engine/FreeTypeManager/Text.h"
-class Sprite;
+
 #include<memory>
+class Sprite;
+
+#include"Network/Network.h"
 class PasswordText
 {
 public:
@@ -15,13 +18,7 @@ public:
     static void SetIsActive(const bool isActive) { isActive_ = isActive; }
     void SetCurPosPtr(Vector2* curPosPtr) { curPosPtr_ = curPosPtr; }
 private:
-    //入力文字
-    std::u32string inputString_;
 
-    //パスワード
-    std::u32string passwordString_;
-    //実際の表示テキスト
-    Text text_;
     //情報テキスト
     Text infoText_;
     //ロックが解除される
@@ -30,5 +27,8 @@ private:
     //ウェブ用スプライト
     std::unique_ptr<Sprite>webSprite_ = nullptr;
     Vector2* curPosPtr_ = nullptr;
+
+    //ネットワークシステム
+    std::unique_ptr<Network>netWork_ = nullptr;
 };
 

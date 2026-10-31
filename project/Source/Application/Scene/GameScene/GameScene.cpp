@@ -113,7 +113,7 @@ void GameScene::Update() {
     //デバッグ処理
     Debug();
 
-    lightingManager_->UpdatePointLight();
+    lightingManager_->UpdateSpotLight();
 
     if (PauseScreen::GetIsBackToTitle()) {
         BackToTitle();

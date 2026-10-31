@@ -5,7 +5,7 @@
 #include"TimeManager.h"
 #include"DebugUI.h"
 
-bool LightingManager::isPointLightOn_ = false;
+bool LightingManager::isSpotLightOn_ = false;
 
 void LightingManager::NoonLightInit()
 {
@@ -17,32 +17,23 @@ void LightingManager::NoonLightInit()
 
 void LightingManager::Initialize()
 {
-    DirectionalLightManager::GetDirectionalLightData()->direction = { 0.0f,-1.0f,0.0f };
-    DirectionalLightManager::GetDirectionalLightData()->intensity = 0.0f;
 
-    PointLightManager::GetData(0).color = { 160.0f / 255.0f,1.0f,1.0f,1.0f };
-    PointLightManager::GetData(0).intensity = 1.0f;
-    PointLightManager::GetData(0).position = { 0.0f,15.0f,0.0f };
-    PointLightManager::GetData(0).radius = 30.0f;
-    PointLightManager::GetData(0).decay = 0.3f;
+    InitializeDirectionalLight();
 
-    SpotLightManager::GetData(0).color = { 1.0f,1.0f,1.0f,1.0f };
-    SpotLightManager::GetData(0).position = { 0.0f,0.0f,0.0f };//位置
-    SpotLightManager::GetData(0).intensity = { 25.0f };//輝度
-    SpotLightManager::GetData(0).direction = { 0.0f,0.0f,1.0f };//スポットライトの方向
-    SpotLightManager::GetData(0).distance = 0.1f;
-    SpotLightManager::GetData(0).decay = 0.5f;
-    SpotLightManager::GetData(0).cosAngle = cosf(Math::kPi / 8.0f);//スポットライトの余弦
-    SpotLightManager::GetData(0).cosFalloffStart = 2.0f;
+    InitializePointLight();
+
+    InitializeSpotLight();
+
+    InformationSceneLight();
 
     playerHandPos_.Initialize();
-    isPointLightOn_ = true;
+    isSpotLightOn_ = true;
 }
 
-void LightingManager::UpdatePointLight()
+void LightingManager::UpdateSpotLight()
 {
 
-    if (isPointLightOn_) {
+    if (isSpotLightOn_) {
         WorldTransformUpdate(playerHandPos_);
         SpotLightManager::GetData(0).color = { 1.0f,1.0f,1.0f,1.0f };
         SpotLightManager::GetData(0).position = playerHandPos_.GetWorldPosition();
@@ -59,7 +50,7 @@ void LightingManager::DirectionalLightUpdate()
         DirectionalLightManager::GetDirectionalLightData()->intensity += TimeManager::DeltaTime() * 2.0f;
     } else {
         DirectionalLightManager::GetDirectionalLightData()->intensity = 1.0f;
-        isPointLightOn_ = false;
+        isSpotLightOn_ = false;
         PointLightManager::InitData(0);
     }
 
@@ -68,5 +59,50 @@ void LightingManager::DirectionalLightUpdate()
 void LightingManager::SetHandPosParent(const WorldTransform* parent)
 {
     playerHandPos_.Parent(*parent);
+}
+
+void LightingManager::UpdateInformationSpotLight()
+{
+    SpotLightManager::GetData(1).intensity = { 100.0f };//輝度
+}
+
+void LightingManager::InitializeDirectionalLight()
+{
+    DirectionalLightManager::GetDirectionalLightData()->direction = { 0.0f,-1.0f,0.0f };
+    DirectionalLightManager::GetDirectionalLightData()->intensity = 0.0f;
+
+}
+
+void LightingManager::InitializePointLight()
+{
+    PointLightManager::GetData(0).color = { 160.0f / 255.0f,1.0f,1.0f,1.0f };
+    PointLightManager::GetData(0).intensity = 1.0f;
+    PointLightManager::GetData(0).position = { 0.0f,15.0f,0.0f };
+    PointLightManager::GetData(0).radius = 30.0f;
+    PointLightManager::GetData(0).decay = 0.3f;
+}
+
+void LightingManager::InitializeSpotLight()
+{
+    SpotLightManager::GetData(0).color = { 1.0f,1.0f,1.0f,1.0f };
+    SpotLightManager::GetData(0).position = { 0.0f,0.0f,0.0f };//位置
+    SpotLightManager::GetData(0).intensity = { 25.0f };//輝度
+    SpotLightManager::GetData(0).direction = { 0.0f,0.0f,1.0f };//スポットライトの方向
+    SpotLightManager::GetData(0).distance = 0.1f;
+    SpotLightManager::GetData(0).decay = 0.5f;
+    SpotLightManager::GetData(0).cosAngle = cosf(Math::kPi / 8.0f);//スポットライトの余弦
+    SpotLightManager::GetData(0).cosFalloffStart = 2.0f;
+}
+
+void LightingManager::InformationSceneLight()
+{
+    SpotLightManager::GetData(1).color = { 1.0f,1.0f,1.0f,1.0f };
+    SpotLightManager::GetData(1).position = { 0.0f,0.0f,0.0f };//位置
+    SpotLightManager::GetData(1).intensity = {0.0f };//輝度
+    SpotLightManager::GetData(1).direction = { 0.0f,1.0f,0.0f };//スポットライトの方向
+    SpotLightManager::GetData(1).distance = 0.1f;
+    SpotLightManager::GetData(1).decay = 0.5f;
+    SpotLightManager::GetData(1).cosAngle = cosf(Math::kPi / 8.0f);//スポットライトの余弦
+    SpotLightManager::GetData(1).cosFalloffStart = 2.0f;
 }
 

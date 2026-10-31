@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="Images/favicon.png">
+  <title>購入内容確認</title>
+</head>
+
+<body>
+
+  <header>
+    <h1 class="headTitle"> <img src="Images/favicon.png" alt="egypt" /> <a href="index.html"
+        class="title-link">迷宮博物館</a></h1>
+  </header>
+
+
+  <div class="page">
+    <div class="space"></div>
+
+    <div class="confirm-container">
+      <h1 class="confirm-title">購入内容の確認</h1>
+      <div class="ticket-image">
+        <img src="Images/ticket.png" alt="egypt" />
+      </div>
+      <div id="confirm-area">
+        <p>一般（<span class="price-general">2000</span>円）：<span id="c-general">1</span> 枚</p>
+        <p class="p-total">合計金額：<span id="c-total">2000</span>円</p>
+      </div>
+
+      <div class="button-container">
+        <button id="back-button">戻る</button>
+        <button id="buy-button">購入</button>
+
+      </div>
+      <div class="space"></div>
+
+    </div>
+    <div class="under"></div>
+  </div>
+  <script type="module">
+
+    document.getElementById("back-button").addEventListener("click", () => {
+      // ticket.html に移動
+      location.href = "index.html";
+    });
+
+document.getElementById("buy-button").addEventListener("click", () => {
+      localStorage.removeItem("ticketPurchase");
+      
+      // C++のローカルサーバーにPOST通信を送る
+      fetch('http://127.0.0.1:8080/api/purchase', {
+          method: 'POST'
+      })
+      .then(response => {
+          if (response.ok) {
+              alert('通信が成功し、購入が完了しました。');
+              // 通信が成功してから画面を移動する
+              location.href = "complete.html";
+          }
+      })
+      .catch(error => {
+          alert('通信失敗');
+      });
+    });
+
+  </script>
+  <script type="module" src="cancel.js"></script>
+
+</body>
+
+</html>
