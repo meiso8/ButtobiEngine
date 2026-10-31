@@ -4,10 +4,16 @@
 class Network
 {
 private:
-    std::atomic<bool> isTicketAcquired_ = false;
-public:
-    void Initialize();
-    void Update();
-    bool GetTicketAcquired() { return isTicketAcquired_; }
-};
 
+     std::atomic<bool> isTicketGet_ = false;
+public:
+    Network();
+    
+    ~Network();
+
+    bool GetIsTicketGet() {
+        return isTicketGet_;
+    }
+    void Initialize();
+    void OnButtonClicked();
+};

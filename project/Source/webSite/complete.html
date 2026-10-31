@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="Images/favicon.png">
+  <title>購入内容確認</title>
+</head>
+
+<body>
+
+  <header>
+    <h1 class="headTitle"> <img src="Images/favicon.png" alt="egypt" /> <a href="index.html"
+        class="title-link">迷宮博物館</a></h1>
+
+  </header>
+
+
+  <div class="page">
+    <div class="space"></div>
+
+
+
+    <div class="complete-container">
+      <h1>購入が完了しました。</h1>
+      <p>ご購入ありがとうございました。</p>
+    <p>ご入場の際には、以下のチケット番号をお持ちください。</p>
+      <div class="complete-card">
+        <p>チケット番号：<span id="secret-code"></span></p>
+     <div id="qrcode"></div>
+      </div>
+
+      <button id="back-home">ホームへ戻る</button>
+    </div>
+  <div class="space"></div>
+            <div class = "under"></div>
+  </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script type="module">
+  const secret ="A3N91KH7";
+  document.getElementById("secret-code").textContent = secret;
+
+  new QRCode(document.getElementById("qrcode"), {
+  text: secret,
+  width: 200,
+  height: 200
+  });
+
+  // ホームへ戻る
+  document.getElementById("back-home").addEventListener("click", () => {
+    location.href = "index.html";
+  });
+</script>
+
+
+
+</body>
+
+</html>

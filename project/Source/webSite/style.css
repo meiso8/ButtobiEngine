@@ -1,0 +1,358 @@
+@charset "utf-8";
+
+header{
+    align-items: center; /* h1 と nav の高さを揃える */
+    padding: 8px 2%;
+    background-color:#2c2c2c;
+    color:rgb(227, 221, 221);
+    display: flex;
+}
+
+.headTitle{
+    display: flex;
+    font-size: 48px; 
+    color: rgb(227, 221, 221);
+    margin :0;
+    padding:0;
+}
+
+.headTitle img{
+    padding-top: 8px;
+    padding-right: 8px;
+    height: 64px;
+    width: 64px;
+}
+.under{
+    padding:48px;
+    background-color:#2c2c2c;
+    color:rgb(227, 221, 221);
+}
+.space{
+    padding:16px;
+
+    color:rgb(227, 221, 221);
+}
+
+.nav-links {
+    display: flex;
+    gap: 30px; /* リンクの間隔 */
+ margin-top:auto;
+  margin-bottom:auto;
+      margin-left: auto;        /* ← これで右寄せ！ */
+}
+
+.nav-links a {
+    color: rgb(227, 221, 221);
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    padding-bottom: 1%;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
+.title-link {
+    color: inherit;          /* ← h1の色をそのまま使う */
+    text-decoration: none;   /* ← 下線を消す */
+}
+
+.title-link:hover {
+    text-decoration: none;   /* ← 下線を消す */
+}
+
+html, body {
+    margin: 0;          /* ← これが重要！ブラウザの余白を消す */
+    padding: 0;
+    background-color: #2c2c2c; /* ページ全体の背景色 */
+}
+body {
+font-family: 'Avenir','Helvetica Neue','Helvetica','Arial','Hiragino Sans','ヒラギノ角ゴシック',YuGothic,'Yu Gothic','メイリオ', Meiryo,'ＭＳ Ｐゴシック','MS PGothic',monospace;
+}
+
+table{
+    width:100%;
+    margin: auto;
+      padding-bottom: 2%;
+}
+
+td{
+    padding :2%;
+    padding-top :5%;
+    padding-right: 5%;
+    margin:auto;
+    font-weight: bold;
+
+}
+
+.page{
+      background-color:rgb(222, 222, 221);  
+}
+
+.ticket_body{
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color:rgb(245, 245, 245);
+         border-radius: 8px;
+    padding:1%;
+}
+
+#ticket{
+    display: flex;
+    align-items: flex-start;
+
+}
+
+.ticket_info {
+
+    width:33%;
+    margin:auto;
+  font-size: large;
+  display: flex;
+  flex-direction: column;
+     border: 2px solid #7d7d7d;
+     border-radius: 8px;
+     padding: 1%;
+}
+
+#ticket img{
+    padding: 2%;
+    width: 55%;
+    border-radius: 32px;
+}
+
+
+.ticket-image{
+  display: flex;
+}
+
+.ticket-image img{
+    width: 100%;
+    border-radius: 16px;
+    margin-bottom: 32px;
+}
+
+.price {
+    text-align: right;
+    color :cornflowerblue;
+}
+
+.button{   
+    font-weight: bold;
+    text-decoration: none;
+
+    text-align: center;
+    background:rgb(235, 111, 48);
+    color:white;
+    padding:3%;
+
+      border-radius: 8px;
+    width:75%;
+    height:25%;
+  margin:auto;
+    font-family: 'Avenir','Arial';
+    
+}
+
+.button:hover {
+  background: silver;/*背景色をシルバーに*/
+
+}
+
+.info_head{
+    border-top: 2px dashed #7d7d7d;
+    margin:auto;
+    font-weight: bold;
+    font-size: 48px;
+    padding-top: 1%;
+}
+
+.ticket_detailed_info{
+      padding: 2%;
+}
+
+#opening_hours{
+     padding-left: 2%;
+}
+
+#about{
+     padding-left: 2%;
+}
+
+
+.cancellation_policy{
+    padding-top:8px;
+    color:red;
+}
+
+
+.ticket_info_head{
+      color:black;
+    font-weight: bold;
+}
+
+
+.ticket-select ,
+.confirm-container  {
+  width: 60%;
+  margin: 32px auto;
+  background: #f5f5f5;
+  padding: 32px;
+  border-radius: 8px;
+}
+
+.ticket-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+.ticket-row input {
+  width: 64px;
+  font-size: 16px;
+}
+
+.total-price {
+  margin-top: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: right;
+}
+
+.right_pad {
+    font-weight: bold;
+  text-align: right;
+
+}
+
+.btn-disabled,
+.btn-active{
+  border: none;          /* 枠線を消す */
+  box-shadow: none;      /* 影を消す */
+  outline: none;         /* フォーカス枠を消す */
+  appearance: none;      /* ブラウザ標準のボタンスタイルを消す */
+    font-weight: bold;
+  font-size: 32px;
+ margin:auto;
+  border-radius: 8px;
+
+display: block;
+  margin: 24px auto;   /* 中央寄せ */
+  width: 35%;        /* ボタン幅（調整可） */
+    text-align: center;  /* テキスト中央 */
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;   /* 中央寄せ */
+    gap: 32px;                 /* ボタンの間隔 */
+    margin-top: 32px;
+}
+
+/* 戻るボタンと購入ボタンの共通デザイン */
+#back-button,
+#buy-button {
+  border: none;
+  box-shadow: none;
+  outline: none;
+  appearance: none;
+  background: rgb(208, 87, 26);
+  color: white;
+
+  font-weight: bold;
+  font-size: 28px;
+  padding: 8px 64px;
+
+  border-radius: 8px;
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+/* ホバー時 */
+.btn-active:hover,
+#back-button:hover,
+#buy-button:hover {
+  background: rgb(235, 111, 48);
+}
+
+/* 購入不可（合計0円） */
+.btn-disabled {
+  background-color: #ccc;
+  color: #666;
+cursor: default;
+}
+
+/* 購入可能（合計 > 0） */
+.btn-active  {
+   background:rgb(208, 87, 26);
+   color:white;
+  cursor: pointer;
+}
+
+/* 全体を中央に */
+.confirm-container {
+  text-align: center;
+  font-weight: bold;
+}
+
+/* タイトル */
+.confirm-title {
+  font-size: 32px;
+}
+.p-total
+{
+    font-size:32px;
+    color:rgb(235, 111, 48);
+}
+
+.btn-back:hover {
+  background: #222;
+}
+
+
+.complete-container {
+  width: 60%;
+  margin: 40px auto;
+  text-align: center;
+  background: #f5f5f5;
+  padding: 32px;
+  border-radius: 12px;
+}
+
+.complete-card {
+  margin-top: 24px;
+  padding: 24px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  font-size: 24px;
+  font-weight: bold;
+}
+
+#qrcode {
+  margin-top: 16px;
+  width: 200px;
+  height: 200px;
+    margin-right: auto;
+  margin-left: auto;
+}
+
+#back-home {
+  margin-top: 32px;
+  padding: 12px 32px;
+  font-size: 24px;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+  background: rgb(208, 87, 26);
+  color: white;
+  cursor: pointer;
+}
+
+#back-home:hover {
+  background: rgb(235, 111, 48);
+}

@@ -4,7 +4,7 @@
 #include"Gate/Gate.h"
 #include"GateSensor/GateSensor.h"
 #include"UI/PasswordText/PasswordText.h"
-class Network;
+
 class InformationStage :public Stage
 {
 private:
@@ -18,8 +18,7 @@ private:
     //チケット番号入力システム
     std::unique_ptr<PasswordText>passwordText_ = nullptr;
     bool isGenerateTicket_ = false;
-    //ネットワークシステム
-    std::unique_ptr<Network>netWork_ = nullptr;
+ 
 public:
     InformationStage();
     void Initialize()override;
