@@ -20,12 +20,15 @@ private:
     bool isClear_ = false;
     Vector2 size_ = { 0.0f };
     Vector2 centerPos_ = { 0.0 };
+    int curentHoverIndex_ = -1;
 private:
     //シャッフル
     void Shuffle();
     //選択したパネルと空白を切り替える
     void Change(int x, int y);
+ 
 public:
+    Vector2 CheckMove(const Vector2 pos);
     Puzzle(const int horizontal = 4, const int vertical = 4);
     ~Puzzle();
     void Init();

@@ -22,7 +22,7 @@ void CurPos::Update()
 {
 
     if (!Input::GetIsControllerConnected(0)) {
-      
+
     }
 
 #ifdef _DEVELOP
@@ -31,25 +31,28 @@ void CurPos::Update()
 
 
 
-
+    //コントローラー動いているとき
     if (Input::IsControllerStickPosMove(BUTTON_LEFT, 0, &curPosSpeed_)) {
         screenPos_.x += curPosSpeed_.x * kSpeed_;
         screenPos_.y -= curPosSpeed_.y * kSpeed_;
 
-
     } else {
-
-        Vector2 mouse = Input::GetMousePosFiltered();
- 
-        if (fabs(mouse.x) > 0.0f || fabs(mouse.y) > 0.0f) {
+      
+        if (Input::IsMouseMove()) {
+            //マウスを動かしているとき
             screenPos_ = Input::GetCursorPosition();
-        } 
-        
+        } else {
+            screenPos_= SlidePuzzleSystem::GetCurrentPuzzle()->CheckMove(screenPos_);
+        }
+
+        //もし左に行ったとき現在のインデックスより左側にパズルがあればその位置のスプライトの中心に移動する
+        //もし左に行ったとき現在のインデックスより左側に何もなっかったら移動できない
+
+        //スライドパズルがアクティブな時は
         if (FlagManager::HasFlag("SlidePuzzleIsActive")) {
-
             screenPos_ = SnapCursorToNearestSprite(screenPos_, SlidePuzzleSystem::GetCurrentPuzzle()->GetSprites());
-
-        } 
+        }
+   
     }
 
 
@@ -62,18 +65,20 @@ void CurPos::Update()
 }
 
 
-Vector2 SnapCursorToNearestSprite(const Vector2& cursorPos,const std::vector<std::unique_ptr<Sprite>>& sprites, float snapThreshold) {
+Vector2 SnapCursorToNearestSprite(const Vector2& cursorPos, const std::vector<std::unique_ptr<Sprite>>& sprites, float snapThreshold) {
+
+
     float minDist = std::numeric_limits<float>::max();
     Vector2 snappedPos = cursorPos;
-    
+
     for (auto& sprite : sprites) {
         Vector2 spritePos = sprite->GetPosition();
-        float dist = Distance(cursorPos, spritePos); 
+        float dist = Distance(cursorPos, spritePos);
         if (dist < minDist && dist < snapThreshold) {
             minDist = dist;
             snappedPos = spritePos;
- } 
-    } return snappedPos; 
+        }
+    } return snappedPos;
 }
 void CurPos::Draw()
 {

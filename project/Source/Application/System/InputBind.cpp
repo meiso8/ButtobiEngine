@@ -9,20 +9,36 @@ bool InputBind::IsClickPress() {
 }
 
 bool InputBind::IsPressMoveL() {
-    return (Input::IsPressKey(DIK_A));
+    return (Input::IsPressKey(DIK_A)|| Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_LEFT, 0));
 };
 bool InputBind::IsPressMoveR() {
-    return (Input::IsPressKey(DIK_D));
+    return (Input::IsPressKey(DIK_D)|| Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_RIGHT, 0));
 };
 bool InputBind::IsPressMoveF() {
-    return (Input::IsPressKey(DIK_W));
+    return (Input::IsPressKey(DIK_W)|| Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_UP, 0));
 };
 bool InputBind::IsPressMoveB() {
-    return (Input::IsPressKey(DIK_S));
+    return (Input::IsPressKey(DIK_S)|| Input::IsControllerPressButton(XINPUT_GAMEPAD_DPAD_DOWN, 0));
+}
+bool InputBind::IsTriggerMoveL()
+{
+    return (Input::IsTriggerKey(DIK_A) || Input::IsControllerTriggerButton(XINPUT_GAMEPAD_DPAD_LEFT, 0));
+}
+bool InputBind::IsTriggerMoveR()
+{
+    return (Input::IsTriggerKey(DIK_D) || Input::IsControllerTriggerButton(XINPUT_GAMEPAD_DPAD_RIGHT, 0));
+}
+bool InputBind::IsTriggerMoveF()
+{
+    return (Input::IsTriggerKey(DIK_W) || Input::IsControllerTriggerButton(XINPUT_GAMEPAD_DPAD_UP, 0));
+}
+bool InputBind::IsTriggerMoveB()
+{
+    return (Input::IsTriggerKey(DIK_S) || Input::IsControllerTriggerButton(XINPUT_GAMEPAD_DPAD_DOWN, 0));
 }
 bool InputBind::IsPressSpeedButton()
 {
-    return  (Input::IsPressKey(DIK_LSHIFT)/* || Input::IsControllerPressButton(XINPUT_GAMEPAD_LEFT_SHOULDER, 0)*/);
+    return  (Input::IsPressKey(DIK_LSHIFT));
 }
 bool InputBind::IsTriggerJump()
 {
