@@ -29,16 +29,7 @@ void Network::OnButtonClicked()
     std::thread([this]() {
 
         httplib::Server srv;
-
-
-        std::string mountPath = "";
-        if (std::filesystem::exists("Source/webSite")) {
-            mountPath = "Source/webSite"; // GE.slnと同じ階層が基準の場合
-        } else if (std::filesystem::exists("webSite")) {
-            mountPath = "webSite"; // Sourceフォルダ内が基準の場合
-        } else if (std::filesystem::exists("../../Source/webSite")) {
-            mountPath = "../../Source/webSite"; // x64/Debugフォルダなどから直接起動した場合
-        }
+        std::string mountPath = "Resource/webSite";
 
         if (mountPath.empty()) {
             LogFile::Log("エラー: webSiteフォルダが見つかりません。");
