@@ -382,3 +382,6 @@ logs/
 !externals/assimp/lib/Release/
 
 !Resource
+
+#Secret
+.env
