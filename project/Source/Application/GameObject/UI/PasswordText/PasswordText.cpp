@@ -18,7 +18,7 @@ PasswordText::PasswordText()
 
     //情報テキストa
     infoText_.SetString(U"サイトからチケットを購入してください");
-    infoText_.SetPosition({ 640, 360 });
+    infoText_.SetPosition({ 640, 256 });
     infoText_.SetColor({ 1, 1, 1, 1 });
     infoText_.SetAlign(Text::TextAlign::Center);
     infoText_.SetBlendMode(BlendMode::kBlendModeNormal);
@@ -27,7 +27,7 @@ PasswordText::PasswordText()
     float height = static_cast<float>(Window::GetClientHeight());
 
     webSprite_ = std::make_unique<Sprite>();
-    webSprite_->Create(TextureFactory::WEB_SITE, { width * 0.5f,256.0f });
+    webSprite_->Create(TextureFactory::WEB_SITE, { width * 0.5f,360.0f });
     webSprite_->SetAnchorPoint({ 0.5f,0.5f });
 
     //ネットワーク

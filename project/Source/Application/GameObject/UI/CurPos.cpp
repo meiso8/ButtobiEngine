@@ -42,12 +42,10 @@ void CurPos::Update()
             //マウスを動かしているとき
             screenPos_ = Input::GetCursorPosition();
         } else {
-            screenPos_= SlidePuzzleSystem::GetCurrentPuzzle()->CheckMove(screenPos_);
+            if (FlagManager::HasFlag("SlidePuzzleIsActive")) {
+                screenPos_ = SlidePuzzleSystem::GetCurrentPuzzle()->CheckMove(screenPos_);
+            }
         }
-
-        //もし左に行ったとき現在のインデックスより左側にパズルがあればその位置のスプライトの中心に移動する
-        //もし左に行ったとき現在のインデックスより左側に何もなっかったら移動できない
-
         //スライドパズルがアクティブな時は
         if (FlagManager::HasFlag("SlidePuzzleIsActive")) {
             screenPos_ = SnapCursorToNearestSprite(screenPos_, SlidePuzzleSystem::GetCurrentPuzzle()->GetSprites());
