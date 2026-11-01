@@ -54,6 +54,8 @@ BastetBlockMap::BastetBlockMap()
 void BastetBlockMap::Initialize()
 {
 
+    steppedOrder_.clear();
+
     isClear_ = false;
 
     for (auto& isPush : isPushFlags_) {

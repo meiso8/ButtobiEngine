@@ -26,6 +26,7 @@ AnubisBlockMap::AnubisBlockMap()
 void AnubisBlockMap::Initialize()
 {
     isClear_ = false;
+    steppedOrder_.clear();
 
     AABB aabb = blocks_[0]->GetAABB();
     float blockSize = aabb.max.x - aabb.min.x;

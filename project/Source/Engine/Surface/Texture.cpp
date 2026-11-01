@@ -150,20 +150,38 @@ void Texture::LoadTexture(const std::filesystem::path& filePath)
         ddsPath.replace_extension(".dds");
 
         bool needConvert = false;
+
+#ifdef _RELEASE
+
+        //リリース中なら問答無用でファイルを変換して読み込む
+        if (std::filesystem::exists(ddsPath)) {
+            filePathW = ddsPath.wstring();
+        }
+#endif
+
+#ifdef _DEVELOP
         if (!std::filesystem::exists(ddsPath)) {
             //ddsファイルがないとき
             needConvert = true;
+
         } else {
+
+//もしファイルが存在しているとき
             auto pngTime = std::filesystem::last_write_time(filePath);
             auto ddsTime = std::filesystem::last_write_time(ddsPath);
 
             if (pngTime > ddsTime) {
                 needConvert = true;
+            } else {
+                //今パートが必要ないがあるのでファイルパスを変更する
+                filePathW = ddsPath.wstring();
             }
+#endif
+
         }
 
         if (needConvert) {
-       
+
             // 実行前に texconv.exe が実際に存在するかチェックする
             if (std::filesystem::exists(absoluteTexconvPath)) {
                 LogFile::Log("Converting" + filePath.filename().string() + "to DDS\n");
@@ -173,8 +191,8 @@ void Texture::LoadTexture(const std::filesystem::path& filePath)
             } else {
                 LogFile::Log("Warning: texconv.exe not found at " + absoluteTexconvPath.string() + ". Skipping conversion.\n");
             }
-     
-     
+
+
         }
     }
 
@@ -237,7 +255,7 @@ void Texture::ConvertPngToDds(const std::filesystem::path& inputPng, const std::
 
     int result = std::system(command.c_str());
     if (result != 0) {
-        LogFile::Log("Failed to convert: "+ inputPng.string());
+        LogFile::Log("Failed to convert: " + inputPng.string());
     }
 
 

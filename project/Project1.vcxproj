@@ -75,7 +75,7 @@
     <IncludePath>$(SolutionDir)externals\freetype;$(SolutionDir)externals\imgui;$(SolutionDir)externals\assimp;$(SolutionDir)externals\DirectXTex;$(SolutionDir)externals\utfcpp;$(SolutionDir)externals\ImGuizmo;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg">
-    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+    <VcpkgEnableManifest>false</VcpkgEnableManifest>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
