@@ -176,7 +176,7 @@ void Texture::LoadTexture(const std::filesystem::path& filePath)
                 //今パートが必要ないがあるのでファイルパスを変更する
                 filePathW = ddsPath.wstring();
             }
-#endif
+
 
         }
 
@@ -194,6 +194,8 @@ void Texture::LoadTexture(const std::filesystem::path& filePath)
 
 
         }
+
+#endif
     }
 
     if (filePathW.ends_with(L".dds")) {
