@@ -56,6 +56,10 @@ private:
     std::unique_ptr<DsvDescriptorHeap> dsvDescriptorHeap_ = nullptr;
     /// @brief SRV管理
     std::unique_ptr<CbvSrvUavDescriptorHeap> srvDescriptorHeap_ = nullptr;
+    //シェーダーコンパイル
+    std::unique_ptr< DxcCompiler> dxcCompiler_ = nullptr;
+
+
     /// @brief 深度テクスチャ
     std::unique_ptr<DepthTexture> depthTexture_ = nullptr;
 

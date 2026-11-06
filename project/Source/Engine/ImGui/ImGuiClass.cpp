@@ -15,6 +15,8 @@
 #include"Log.h"
 #include"Texture.h"
 #include"DebugUI.h"
+#include"Device/Device.h"
+
 
 namespace fs = std::filesystem;
 
@@ -51,7 +53,7 @@ namespace ImGuiLoadFile {
 #ifdef USE_IMGUI
 void ImGuiClass::Initialize(Window& window,
     CbvSrvUavDescriptorHeap* srvDescriptorHeap,
-    const Microsoft::WRL::ComPtr<ID3D12Device>& device,
+    Device& device,
     SwapChain& swapChain,
     RenderTargetView& rtv) {
 
@@ -122,7 +124,7 @@ void ImGuiClass::Initialize(Window& window,
     style.GrabRounding = 8;
 
     ImGui_ImplWin32_Init(window.GetHwnd());
-    ImGui_ImplDX12_Init(device.Get(),
+    ImGui_ImplDX12_Init(device.GetDevice().Get(),
         swapChain.GetDesc().BufferCount,
         rtv.GetDesc().Format,
         srvDescriptorHeap->GetDescriptorHeap(),

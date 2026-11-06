@@ -4,11 +4,11 @@
 #include<cstdint>
 
 class CommandQueue;
-
+class Device;
 class Fence
 {
 public:
-    Fence(const Microsoft::WRL::ComPtr <ID3D12Device>& device);
+    Fence(Device& device);
     ~Fence();
     Microsoft::WRL::ComPtr<ID3D12Fence>& GetFence() {
         return fence_

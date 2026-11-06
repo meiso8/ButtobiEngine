@@ -1,11 +1,12 @@
 #include "Fence.h"
 #include<cassert>
 #include"CommandQueue.h"
+#include"Device/Device.h"
 
-Fence::Fence(const Microsoft::WRL::ComPtr<ID3D12Device>& device)
+Fence::Fence(Device& device)
 {
     HRESULT hr;
-    hr = device->CreateFence(fenceValue_, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence_));
+    hr = device.GetDevice()->CreateFence(fenceValue_, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence_));
     assert(SUCCEEDED(hr));
 }
 

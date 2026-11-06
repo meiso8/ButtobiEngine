@@ -6,8 +6,8 @@
 
 #include<iostream>
 #include"DirectXCommon.h"
-
-void RootSignature::Create() {
+#include"Device/Device.h"
+void RootSignature::Create(Device& device) {
 
 #pragma region//rootSignature
     //rootSignature作成
@@ -602,7 +602,7 @@ void RootSignature::Create() {
         }
 
         //バイナリ元に生成
-        result = DirectXCommon::GetDevice()->CreateRootSignature(0,
+        result = device.GetDevice()->CreateRootSignature(0,
             signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(),
             IID_PPV_ARGS(&rootSignatures_[i]));
 

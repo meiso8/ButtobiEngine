@@ -13,6 +13,7 @@
 class Font;
 class CommandList;
 class CbvSrvUavDescriptorHeap;
+class Device;
 
 struct GlyphKey {
     //フォントの種類のハンドル
@@ -62,6 +63,7 @@ private:
     //コマンドリストの借り物を格納する
     static ID3D12GraphicsCommandList* commandList_;
     static CbvSrvUavDescriptorHeap* srvDescriptorHeap_;
+    static Device* device_;
 
     //一つのライブラリで複数のFaceを保持できる
     static FT_Library library_;
@@ -81,6 +83,7 @@ public:
     FreeTypeManager& operator=(const FreeTypeManager&) = delete;
 
      void SetCommandListAndSrvDescriptorHeap( ID3D12GraphicsCommandList* loadCommandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap);
+     void SetDevice(Device* device);
     /// @brief 終了処理
      void Finalize();
      /// @brief エンジンでCommandQueueを送った後にリセットする

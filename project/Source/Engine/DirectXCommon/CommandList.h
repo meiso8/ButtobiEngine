@@ -3,11 +3,12 @@
 
 //ComPtr(コムポインタ)
 #include<wrl.h>
+class Device;
 
 class CommandList
 {
 public:
-    CommandList();
+    CommandList(Device& deviceClass);
     ~CommandList();
     Microsoft::WRL::ComPtr <ID3D12GraphicsCommandList>& GetCommandList() { return commandList_; };
     ID3D12GraphicsCommandList* Get() { return commandList_.Get(); };

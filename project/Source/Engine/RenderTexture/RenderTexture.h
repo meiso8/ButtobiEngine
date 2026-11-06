@@ -10,6 +10,7 @@
 class RtvDescriptorHeap;
 class CbvSrvUavDescriptorHeap;
 class CommandList;
+class Device;
 
 class RenderTexture
 
@@ -40,7 +41,7 @@ private:
     ID3D12GraphicsCommandList* commandList_ = nullptr;
     CbvSrvUavDescriptorHeap* srvDescriptorHeap_ = nullptr;
 public:
-    void Create(RtvDescriptorHeap* rtvDescriptorHeap, const Vector4& value);
+    void Create(Device* device, RtvDescriptorHeap* rtvDescriptorHeap, const Vector4& value);
 
     void SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap);
 
@@ -65,6 +66,7 @@ public:
 private:
     void CreateResource(
         const uint32_t index,
+        Device* device,
         RtvDescriptorHeap* rtvDescriptorHeap,
         DXGI_FORMAT format,
         bool createSRV

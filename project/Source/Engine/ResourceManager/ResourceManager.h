@@ -6,8 +6,13 @@
 #include"CbvSrvUavDescriptorHeap/CbvSrvUavDescriptorHeap.h"
 #include<stdint.h>
 
+class Device;
 
 namespace ResourceFactory {
+
+
+    void SetDevice(Device* device);
+
     /// @brief BufferResourceの作成関数
     /// @param sizeInBytes 
     /// @return BufferResource

@@ -8,10 +8,11 @@
 #include"ResourceManager/ResourceManager.h"
 
 class RtvDescriptorHeap;
+class Device;
 class RenderTargetView
 {
 public:
-    void Create(
+    void Create(Device& device,
         std::array<IResource, 2 >& swapChainResources,
         RtvDescriptorHeap* rtvDescriptorHeap
     );

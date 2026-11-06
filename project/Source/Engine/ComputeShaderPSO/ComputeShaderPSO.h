@@ -1,10 +1,12 @@
 #pragma once
 #include<d3d12.h>
 #include"RootSignature.h"
-#include"CompileShader.h"
+#include"CompileShader/CompileShader.h"
 
 //ComPtr(コムポインタ)
 #include<wrl.h>
+class Device;
+
 class ComputeShaderPSO
 {
 public:
@@ -19,6 +21,7 @@ private:
 
     DxcCompiler* dxCompiler_ = nullptr;
     RootSignature* rootSignature_ = nullptr;
+    Device* device_ = nullptr;
     Microsoft::WRL::ComPtr<ID3D12PipelineState> computePipelineStatesForSkinning_ = nullptr;
 
     std::array< Microsoft::WRL::ComPtr<ID3D12PipelineState>, kMaxParticlePSO> particlePSOs_;
@@ -46,7 +49,7 @@ public:
         return particlePSOs_.at(type);
     }
 
-    void CreatePSO(
+    void CreatePSO(Device* device,
         DxcCompiler* dxCompiler,
         RootSignature* rootSignature);
     void Finalize();

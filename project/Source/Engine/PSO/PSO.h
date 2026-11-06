@@ -6,7 +6,7 @@
 #include<wrl.h>
 #include"RootSignature.h"
 #include"InputLayout.h"
-#include"CompileShader.h"
+#include"CompileShader/CompileShader.h"
 #include"BlendState.h"
 #include"RasterizerState.h"
 #include"Depth.h"//StencilTextureの作成関数　奥行き
@@ -124,7 +124,8 @@ public:
     }
     static Microsoft::WRL::ComPtr<ID3D12PipelineState>& graphicsPipelineStatesGPUParticle() { return graphicsPipelineStatesGPUParticle_; };
     void CreateALLPSO();
-
+   static void SetDxcCompiler(DxcCompiler* dxcCompiler) { dxcCompiler_ = dxcCompiler; };
+   static void SetDevice(Device* device) { device_ = device; };
     static RootSignature* GetRootSignature() { return rootSignature.get(); }
     //終了処理
     void Finalize();
@@ -170,4 +171,7 @@ private:
     std::vector<BlendState> blendStates = {};
     std::vector<RasterizerState> rasterizerStates = {};
     std::vector<DepthStencil>  depthStencils = {};
+
+    static DxcCompiler* dxcCompiler_;
+    static Device* device_;
 };
