@@ -15,7 +15,6 @@
 
 #include"DrawGrid.h"
 
-
 #include"JsonFile.h"
 #include"Sound.h"
 
@@ -35,9 +34,6 @@
 #include"DebugCamera.h"
 #include"Animation/SkinCluster.h"
 #include"Font/Font.h"
-
-
-#include"../Application/GameObject/Puzzle/SlidePuzzleSystem.h"
 
 void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight) {
 
@@ -517,8 +513,6 @@ void ButtobiEngine::Finalize() {
     //オブジェクトの開放
     ObjectManager::GetInstance()->Finalize();
 
-
-
 #ifdef _DEVELOP
     //グリッドを解放
     DrawGrid::Finalize();
@@ -533,7 +527,6 @@ void ButtobiEngine::Finalize() {
     Sound::Finalize();
     //スプライトの終了処理
     spriteCommon_->Finalize();
-
 
     //テクスチャの終了処理
     texture_->Finalize();
@@ -551,7 +544,6 @@ void ButtobiEngine::Finalize() {
 
     //方向ライトの終了処理
     directionalLightManager_->Finalize();
-
 
 #pragma endregion
     //ComputeShader用PSO
