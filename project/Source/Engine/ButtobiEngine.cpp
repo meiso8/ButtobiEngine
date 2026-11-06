@@ -291,11 +291,7 @@ void ButtobiEngine::Load()
     primitiveFactory_ = std::make_unique<PrimitiveFactory>();
     primitiveFactory_->CreateAllPrimitive();
     LogFile::Log("CreatePrimitive");
-
-    tagFactory_ = std::make_unique<TagFactory>();
-    //タグの作成
-    tagFactory_->SetTag();
-    LogFile::Log("Create Tag");
+    TagFactory::Set();   //タグの作成
 
 #pragma endregion
 

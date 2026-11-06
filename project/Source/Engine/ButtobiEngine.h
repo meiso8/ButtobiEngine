@@ -83,8 +83,6 @@ private:
 
     /// @brief　プリミティブ生成工場
     std::unique_ptr<PrimitiveFactory> primitiveFactory_ = nullptr;
-    /// @brief タグ生成工場
-    std::unique_ptr<TagFactory> tagFactory_ = nullptr;
     /// @brief　パーティクル管理
     std::unique_ptr<ParticleManager> particleManager_ = nullptr;
     /// @brief GPUパーティクル管理
