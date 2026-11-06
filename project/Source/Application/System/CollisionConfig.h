@@ -22,6 +22,5 @@ private:
 
 class TagFactory {
 public:
-    void SetTag();
-
+    static void Set();
 };

@@ -64,9 +64,8 @@ void CollisionTag::LoadTagNames()
 
 }
 
-void TagFactory::SetTag()
+void TagFactory::Set()
 {
-
     CollisionTag::LoadTagNames();
 
     CollisionTag::AddTag("Player");
@@ -94,4 +93,5 @@ void TagFactory::SetTag()
 
     CollisionTag::SaveTagNames();
 
+    LogFile::Log("Create Tag");
 }
