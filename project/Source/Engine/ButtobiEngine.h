@@ -26,6 +26,7 @@
 #include"Particle/GPUParticle.h"
 #include"Particle/GPUParticleEmitter/GPUParticleEmitter.h"
 #include"EyeCatch/EyeCatch.h"
+#include"CommandListManager/CommandListManager.h"
 
 class DirectXCommon;
 
@@ -45,6 +46,10 @@ private:
     std::unique_ptr<TimeManager> time_ = nullptr;
     /// @brief DirectXCommon後で改変する
     std::unique_ptr<DirectXCommon> directXCommon_ = nullptr;
+    /// @brief コマンドの管理
+    std::unique_ptr<CommandListManager>commandListManager_ = nullptr;
+    /// @brief スワップチェイン
+    std::unique_ptr <SwapChain> swapChainClass_ = nullptr;
     /// @brief RTV管理
     std::unique_ptr<RtvDescriptorHeap> rtvDescriptorHeap_ = nullptr;
     /// @brief DSV管理

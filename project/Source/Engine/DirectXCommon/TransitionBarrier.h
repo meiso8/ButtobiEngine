@@ -5,6 +5,8 @@
 class TransitionBarrier
 {
 public:
+    TransitionBarrier();
+    ~TransitionBarrier();
     void SetCommandList(ID3D12GraphicsCommandList* commandList);
     void SettingBarrier(
         const Microsoft::WRL::ComPtr <ID3D12Resource>& resource,

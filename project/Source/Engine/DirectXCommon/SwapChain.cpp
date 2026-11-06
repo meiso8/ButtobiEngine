@@ -2,10 +2,10 @@
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
 #include<cassert>
+#include"Log.h"
 
-void SwapChain::Create(Window& window,
-    const Microsoft::WRL::ComPtr<IDXGIFactory7>& dxgiFactory,
-    const Microsoft::WRL::ComPtr<ID3D12CommandQueue>& commandQueue) {
+SwapChain::SwapChain(Window& window, const Microsoft::WRL::ComPtr<IDXGIFactory7>& dxgiFactory, const Microsoft::WRL::ComPtr<ID3D12CommandQueue>& commandQueue)
+{
 
     swapChainDesc_.Width = window.GetClientWidth();   //画面の幅。ウィンドウのクライアント領域を同じものにしておく
     swapChainDesc_.Height = window.GetClientHeight();//画面の高さ。ウィンドウのクライアント領域を同じものにしておく
@@ -21,7 +21,14 @@ void SwapChain::Create(Window& window,
         nullptr, nullptr,
         reinterpret_cast<IDXGISwapChain1**>(swapChain_.GetAddressOf()));
     assert(SUCCEEDED(result));
+#pragma region//SwapChainからResourceを引っ張ってくる
+    resources_[0].SetName(L"SwapChain resource 0\n");
+    resources_[1].SetName(L"SwapChain resource 1\n");
+    GetBuffer(0, resources_[0].resource);
+    GetBuffer(1, resources_[1].resource);
+#pragma endregion
 
+    LogFile::Log("CreateSwapChain\n");
 }
 
 void SwapChain::GetBuffer(UINT buffer, Microsoft::WRL::ComPtr<ID3D12Resource>& resource) {
@@ -31,4 +38,19 @@ void SwapChain::GetBuffer(UINT buffer, Microsoft::WRL::ComPtr<ID3D12Resource>& r
 
     //必要なものが作れないような場合、実際の製品であれば、メッセージを表示するなどする必要がある
    //ただ学生のうちはassertで止めてしまえばいい　ここら辺が失敗するPCというのは対象にしていないし、企業も使っていない
+}
+
+const Microsoft::WRL::ComPtr<ID3D12Resource>& SwapChain::GetCurrentResource()
+{
+    //これから書き込むバックバッファのインデックスを取得
+    UINT backBufferIndex = GetSwapChain()->GetCurrentBackBufferIndex();
+    return resources_[backBufferIndex].resource;
+}
+
+SwapChain::~SwapChain()
+{
+    for (auto& resource : resources_) {
+        resource.Reset();
+    }
+
 }

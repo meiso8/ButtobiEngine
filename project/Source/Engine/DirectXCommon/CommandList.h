@@ -7,7 +7,8 @@
 class CommandList
 {
 public:
-    void Create();
+    CommandList();
+    ~CommandList();
     Microsoft::WRL::ComPtr <ID3D12GraphicsCommandList>& GetCommandList() { return commandList_; };
     ID3D12GraphicsCommandList* Get() { return commandList_.Get(); };
     void PrepareCommand();

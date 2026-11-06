@@ -2,16 +2,19 @@
 #include<wrl.h>
 #include<d3d12.h>
 #include<cstdint>
-#include"CommandQueue.h"
+
+class CommandQueue;
 
 class Fence
 {
 public:
-    void Create(const Microsoft::WRL::ComPtr <ID3D12Device>& device);
+    Fence(const Microsoft::WRL::ComPtr <ID3D12Device>& device);
+    ~Fence();
     Microsoft::WRL::ComPtr<ID3D12Fence>& GetFence() {
         return fence_
             ;
     };
+  
     uint64_t GetValue() {
         return fenceValue_
             ;
@@ -19,7 +22,7 @@ public:
     void SendSignal(CommandQueue& commandQueue);
 private:
     //初期値0でFenceを作る
-    Microsoft::WRL::ComPtr<ID3D12Fence> fence_;
+    Microsoft::WRL::ComPtr<ID3D12Fence> fence_ = nullptr;
     uint64_t fenceValue_ = 0;
 };
 

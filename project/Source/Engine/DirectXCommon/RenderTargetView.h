@@ -5,13 +5,14 @@
 //ComPtr(コムポインタ)
 #include<wrl.h>
 #include<array>
+#include"ResourceManager/ResourceManager.h"
 
 class RtvDescriptorHeap;
 class RenderTargetView
 {
 public:
     void Create(
-        std::array< Microsoft::WRL::ComPtr <ID3D12Resource>,2>&swapChainResources,
+        std::array<IResource, 2 >& swapChainResources,
         RtvDescriptorHeap* rtvDescriptorHeap
     );
     D3D12_RENDER_TARGET_VIEW_DESC& GetDesc() { return rtvDesc_; }
