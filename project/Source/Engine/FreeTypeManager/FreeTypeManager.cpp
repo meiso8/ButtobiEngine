@@ -19,6 +19,7 @@ std::unordered_map<GlyphKey, std::vector<std::unique_ptr<Font>>> FreeTypeManager
 
 ID3D12GraphicsCommandList* FreeTypeManager::commandList_ = nullptr;
 CbvSrvUavDescriptorHeap* FreeTypeManager::srvDescriptorHeap_ = nullptr;
+Device* FreeTypeManager::device_ = nullptr;
 
 FreeTypeManager::FreeTypeManager()
 {    
@@ -120,6 +121,11 @@ void FreeTypeManager::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandLi
 
 
 
+}
+
+void FreeTypeManager::SetDevice(Device* device)
+{
+    device_ = device;
 }
 
 void FreeTypeManager::Finalize()
@@ -309,7 +315,9 @@ FreeTypeManager::FTTextureData FreeTypeManager::CreateResourceFromFTBitmap(const
     int height = bitmap.rows;
     DXGI_FORMAT format = DXGI_FORMAT_R8_UNORM;
 
-    auto device = DirectXCommon::GetDevice();
+    assert(device_);
+
+    auto device = device_->GetDevice();
 
     //  デフォルトヒープにテクスチャ作成
     D3D12_RESOURCE_DESC texDesc = {};

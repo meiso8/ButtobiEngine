@@ -9,41 +9,8 @@
 #include"Window.h"
 #include"SwapChain.h"
 #include"TransitionBarrier.h"
+#include"Device/Device.h"
 
-void CommandListManager::InitializeFence(const Microsoft::WRL::ComPtr<ID3D12Device>& device)
-{
-#pragma region //FenceとEventを生成する
-    fence_ = std::make_unique<Fence>(device);
-    LogFile::Log("CreateFence\n");
-#pragma endregion
-}
-
-void CommandListManager::InitializeCommandList()
-{
-    commandList_[kMain] = std::make_unique<CommandList>();
-    commandList_[kLoad] = std::make_unique<CommandList>();
-    LogFile::Log("Create CommandList\n");
-}
-
-void CommandListManager::InitializeCommandQueue(const Microsoft::WRL::ComPtr<ID3D12Device>& device)
-{
-    //コマンドキューの生成
-    commandQueue_ = std::make_unique<CommandQueue>(device);
-    LogFile::Log("Create CommandQueue\n");
-}
-
-
-void CommandListManager::InitializeViewport(const Window& window)
-{
-    viewport_ = CreateViewport(static_cast<float>(window.GetClientWidth()), static_cast<float>(window.GetClientHeight()));
-    LogFile::Log("InitializeViewPort\n");
-}
-
-void CommandListManager::InitializeScissorRect(const Window& window)
-{    //ViewportとScissor(シザー)
-    scissorRect_ = CreateScissorRect(window.GetClientWidth(), window.GetClientHeight());
-    LogFile::Log("Viewport And Scissor\n");
-}
 
 ID3D12GraphicsCommandList* CommandListManager::GetCommandList(const Type type)
 {
@@ -63,16 +30,6 @@ void CommandListManager::SetViewPortAndScissorRect(const Type type)
     //シザー矩形の設定
     commanList->RSSetScissorRects(1, &scissorRect_);//Scissorを設定
 }
-
-CommandListManager::CommandListManager(const Microsoft::WRL::ComPtr<ID3D12Device>& device, const Window& window)
-{
-    InitializeCommandList();
-    InitializeCommandQueue(device);
-    InitializeFence(device);
-    InitializeViewport(window);
-    InitializeScissorRect(window);
-}
-
 void CommandListManager::PostDraw(TransitionBarrier& barrier, SwapChain& swapChainClass)
 {
     auto* commanList = commandList_[kMain]->Get();
@@ -116,3 +73,48 @@ void CommandListManager::CloseLoadCommandList(const Type type)
     //画面の更新が終わった直後GPUにシグナルを送る
     fence_->SendSignal(*commandQueue_);
 }
+
+
+CommandListManager::CommandListManager(Device& device, const Window& window)
+{
+    InitializeCommandList(device);
+    InitializeCommandQueue(device);
+    InitializeFence(device);
+    InitializeViewport(window);
+    InitializeScissorRect(window);
+}
+
+void CommandListManager::InitializeFence(Device& deviceClass)
+{
+#pragma region //FenceとEventを生成する
+    fence_ = std::make_unique<Fence>(deviceClass);
+    LogFile::Log("CreateFence\n");
+#pragma endregion
+}
+
+void CommandListManager::InitializeCommandList(Device& deviceClass)
+{
+    commandList_[kMain] = std::make_unique<CommandList>(deviceClass);
+    commandList_[kLoad] = std::make_unique<CommandList>(deviceClass);
+    LogFile::Log("Create CommandList\n");
+}
+
+void CommandListManager::InitializeCommandQueue(Device& deviceClass)
+{
+    //コマンドキューの生成
+    commandQueue_ = std::make_unique<CommandQueue>(deviceClass);
+    LogFile::Log("Create CommandQueue\n");
+}
+
+void CommandListManager::InitializeViewport(const Window& window)
+{
+    viewport_ = CreateViewport(static_cast<float>(window.GetClientWidth()), static_cast<float>(window.GetClientHeight()));
+    LogFile::Log("InitializeViewPort\n");
+}
+
+void CommandListManager::InitializeScissorRect(const Window& window)
+{    //ViewportとScissor(シザー)
+    scissorRect_ = CreateScissorRect(window.GetClientWidth(), window.GetClientHeight());
+    LogFile::Log("Viewport And Scissor\n");
+}
+

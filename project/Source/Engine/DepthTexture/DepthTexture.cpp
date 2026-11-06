@@ -21,14 +21,14 @@ void DepthTexture::CreateResource(CbvSrvUavDescriptorHeap* srvDescriptorHeap,int
     depthTextureSrvDesc.Texture2D.MipLevels = 1;
 
     depthTextureData_.srvIndex = srvDescriptorHeap->Allocate();
-
-    DirectXCommon::GetDevice()->CreateShaderResourceView(
+    assert(device_);
+    device_->GetDevice()->CreateShaderResourceView(
         depthTextureData_.Get(),
         &depthTextureSrvDesc,
         srvDescriptorHeap->GetCPUDescriptorHandle(depthTextureData_.srvIndex)
     );
 
-    depthTextureData_.resource->SetName(L"depthTextureData_depthStencilResource");
+    depthTextureData_.resource->SetName(L"depthTextureData_depthStencilResource\n");
 
     LogFile::Log("DepthTextureResource : CreateShaderResourceView\n");
 
@@ -43,7 +43,8 @@ void DepthTexture::InitializeDepthStencilView(DsvDescriptorHeap* dsvDescriptorHe
     dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;//2dTexture
     // DSVHeapの先頭にDSVを作る
 //Deviceが出ちゃってるので何とかする
-    DirectXCommon::GetDevice()->CreateDepthStencilView(depthTextureData_.resource.Get(), &dsvDesc, dsvDescriptorHeap->GetDescriptorHeap()->GetCPUDescriptorHandleForHeapStart());
+    assert(device_);
+    device_->GetDevice()->CreateDepthStencilView(depthTextureData_.resource.Get(), &dsvDesc, dsvDescriptorHeap->GetDescriptorHeap()->GetCPUDescriptorHandleForHeapStart());
 
     LogFile::Log("Initialize DepthStencilView\n");
 }
@@ -51,7 +52,7 @@ void DepthTexture::InitializeDepthStencilView(DsvDescriptorHeap* dsvDescriptorHe
 void DepthTexture::DebugViewer(CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
 #ifdef USE_IMGUI
-    ImGui::Begin("PostEffect Viewer");
+    ImGui::Begin("PostEffect Viewer\n");
     // 例：表示したいSRVのインデックス番号
     DebugUI::CheckSRVTexture(depthTextureData_.srvIndex, srvDescriptorHeap);
     ImGui::End();

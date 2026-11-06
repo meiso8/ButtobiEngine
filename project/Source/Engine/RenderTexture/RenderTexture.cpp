@@ -9,17 +9,18 @@
 #include "DebugUI.h"
 #endif
 #include"Log.h"
+#include"Device/Device.h"
 
-void RenderTexture::Create(RtvDescriptorHeap* rtvDescriptorHeap, const Vector4& value)
+void RenderTexture::Create(Device* device,RtvDescriptorHeap* rtvDescriptorHeap, const Vector4& value)
 {
     renderTargetClearValue_ = value;
 
-    CreateResource(kNormal0, rtvDescriptorHeap, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, true);
-    CreateResource(kNormal1, rtvDescriptorHeap, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, true);
+    CreateResource(kNormal0, device, rtvDescriptorHeap, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, true);
+    CreateResource(kNormal1, device,rtvDescriptorHeap, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, true);
     //サーモグラフィー用テクスチャ
-    CreateResource(kThermography, rtvDescriptorHeap,DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, true);
+    CreateResource(kThermography, device, rtvDescriptorHeap,DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, true);
     //ObjectID用テクスチャ　
-    CreateResource(kObjectID, rtvDescriptorHeap,DXGI_FORMAT_R32_UINT, false);
+    CreateResource(kObjectID, device, rtvDescriptorHeap,DXGI_FORMAT_R32_UINT, false);
     //ObjectID用リソース
     idReadbackResource_.resource = ResourceFactory::CreateReadbackBufferResource(sizeof(uint32_t));
     idReadbackResource_.resource->SetName(L"RenderTexture_Id_ReadBackResource");
@@ -35,7 +36,8 @@ void RenderTexture::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList
 
 
 void RenderTexture::CreateResource(
-    const uint32_t index,
+    const uint32_t index, 
+    Device* device,
     RtvDescriptorHeap* rtvDescriptorHeap,
     DXGI_FORMAT format, bool createSRV)
 {
@@ -55,7 +57,7 @@ void RenderTexture::CreateResource(
     rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
     uint32_t rtvIndex = rtvDescriptorHeap->Allocate();
     renderTextureDatas_[index].rtvHandleCPU = rtvDescriptorHeap->GetCPUDescriptorHandle(rtvIndex);
-    DirectXCommon::GetDevice()->CreateRenderTargetView(
+   device->GetDevice()->CreateRenderTargetView(
         renderTextureDatas_[index].resource.Get(),
         &rtvDesc,
         renderTextureDatas_[index].rtvHandleCPU
@@ -78,7 +80,7 @@ void RenderTexture::CreateResource(
         uint32_t& srvIndex = renderTextureDatas_[index].resource.srvIndex;
         srvIndex = srvDescriptorHeap_->Allocate();
 
-        DirectXCommon::GetDevice()->CreateShaderResourceView(renderTextureDatas_[index].resource.Get(), &renderTextureSrvDesc, srvDescriptorHeap_->GetCPUDescriptorHandle(srvIndex));
+        device->GetDevice()->CreateShaderResourceView(renderTextureDatas_[index].resource.Get(), &renderTextureSrvDesc, srvDescriptorHeap_->GetCPUDescriptorHandle(srvIndex));
         LogFile::Log("Rendertexture : CreateShaderResourceView\n");
     }
 

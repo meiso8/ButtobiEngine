@@ -9,9 +9,8 @@
 #pragma comment(lib,"dxcompiler.lib")
 #include"StringUtility.h"
 
-
-void DxcCompiler::Initialize() {
-
+DxcCompiler::DxcCompiler()
+{
     //dxcCompilerを初期化
     HRESULT result = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils_));
     assert(SUCCEEDED(result));
@@ -21,9 +20,13 @@ void DxcCompiler::Initialize() {
     //現時点ではincludeはしないが、includeに対応するための設定を行っていく
     result = dxcUtils_->CreateDefaultIncludeHandler(&includeHandler_);
     assert(SUCCEEDED(result));
-
+    ShaderSetting();
+    LogFile::Log("Init DxcCompiler\n");
 }
 
+DxcCompiler::~DxcCompiler()
+{
+}
 
 void DxcCompiler::ShaderSetting() {
 

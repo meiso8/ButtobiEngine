@@ -3,6 +3,7 @@
 
 class CbvSrvUavDescriptorHeap;
 class DsvDescriptorHeap;
+class Device;
 
 class DepthTexture
 {
@@ -12,7 +13,9 @@ public:
    void DebugViewer(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
    ID3D12Resource* GetResource() { return depthTextureData_.Get(); };
    uint32_t GetSRVIndex() { return depthTextureData_.srvIndex; }
+   void SetDevice(Device* device) { device_ = device; };
 private:
     TextureResource depthTextureData_;
+    Device* device_ = nullptr;
 };
 

@@ -16,9 +16,12 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::graphicsPipelineStateSkyBox_;
 std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, PSO::kCountOfEffect> PSO::graphicsPipelineStateOffScreen_;
 std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> PSO::graphicsPipelineStateRandom_;
 
- Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::graphicsPipelineStatesGPUParticle_= nullptr;
+Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::graphicsPipelineStatesGPUParticle_ = nullptr;
 
 std::unordered_map<PSO::PSOKey, Microsoft::WRL::ComPtr<ID3D12PipelineState>, PSO::PSOKeyHasher> PSO::psoCache_;
+
+Device* PSO::device_ = nullptr;
+DxcCompiler* PSO::dxcCompiler_ = nullptr;
 
 Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
     const BlendMode& blendMode,
@@ -37,10 +40,10 @@ Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
     graphicsPipelineStateDesc.pRootSignature = rootSignature->GetRootSignature(rootSignatureType);//RootSignature
     graphicsPipelineStateDesc.InputLayout = inputLayout->GetDescs(inputLayoutType);//InputLayout
     graphicsPipelineStateDesc.VS = {
-    DirectXCommon::GetDxcCompiler()->GetVertexShaderBlob(vsShaderType)->GetBufferPointer(),
-    DirectXCommon::GetDxcCompiler()->GetVertexShaderBlob(vsShaderType)->GetBufferSize() };//VertexShader
-    graphicsPipelineStateDesc.PS = { DirectXCommon::GetDxcCompiler()->GetPixelShaderBlob(psShaderType)->GetBufferPointer(),
-    DirectXCommon::GetDxcCompiler()->GetPixelShaderBlob(psShaderType)->GetBufferSize() };//PixelShader
+   dxcCompiler_->GetVertexShaderBlob(vsShaderType)->GetBufferPointer(),
+   dxcCompiler_->GetVertexShaderBlob(vsShaderType)->GetBufferSize() };//VertexShader
+    graphicsPipelineStateDesc.PS = { dxcCompiler_->GetPixelShaderBlob(psShaderType)->GetBufferPointer(),
+   dxcCompiler_->GetPixelShaderBlob(psShaderType)->GetBufferSize() };//PixelShader
     graphicsPipelineStateDesc.BlendState = blendStates[blendMode].GetDesc();//BlendState
     graphicsPipelineStateDesc.RasterizerState = rasterizerStates[cullMode].GetDesc();//RasterizerState
 
@@ -88,7 +91,7 @@ Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
     Microsoft::WRL::ComPtr <ID3D12PipelineState>graphicsPipelineState;
 
     //実際に生成
-    HRESULT hr = DirectXCommon::GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
+    HRESULT hr = device_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
         IID_PPV_ARGS(&graphicsPipelineState));
     assert(SUCCEEDED(hr));
 
@@ -104,12 +107,12 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::CreateComputeShaderPSO(const Ro
     computePipelineStateDesc.pRootSignature = rootSignature->GetRootSignature(rootSignatureType);//RootSignature
     //CSを入れる
     computePipelineStateDesc.CS = {
-        .pShaderBytecode = DirectXCommon::GetDxcCompiler()->GetComputeShaderBlob(csShaderType)->GetBufferPointer(),
-        .BytecodeLength = DirectXCommon::GetDxcCompiler()->GetVertexShaderBlob(csShaderType)->GetBufferSize() };
+        .pShaderBytecode = dxcCompiler_->GetComputeShaderBlob(csShaderType)->GetBufferPointer(),
+        .BytecodeLength = dxcCompiler_->GetVertexShaderBlob(csShaderType)->GetBufferSize() };
     //PSOの作成
     Microsoft::WRL::ComPtr <ID3D12PipelineState>computePipelineState = nullptr;
     //ComputePipelineStateの作成
-    HRESULT hr = DirectXCommon::GetDevice()->CreateComputePipelineState(&computePipelineStateDesc, IID_PPV_ARGS(&computePipelineState));
+    HRESULT hr = device_->GetDevice()->CreateComputePipelineState(&computePipelineStateDesc, IID_PPV_ARGS(&computePipelineState));
     assert(SUCCEEDED(hr));
 
     return computePipelineState;
@@ -117,10 +120,14 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::CreateComputeShaderPSO(const Ro
 
 void PSO::CreateALLPSO()
 {
+
+    assert(dxcCompiler_);
+    assert(device_);
+
     //RootSignatureを生成する
     rootSignature = std::make_unique<RootSignature>();
     //具体的にShaderがどこかでデータを読めばいいのかの情報を取りまとめたもの
-    rootSignature->Create();
+    rootSignature->Create(*device_);
     LogFile::Log("CreateRootSignature");
 
     //InputLayout
@@ -534,6 +541,8 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::GetOrCreatePSO(const PSOKey& ke
 
     //  存在しなければ新規作成 (ここで既存の Create 関数を呼ぶ)
     assert(GetInstance()->inputLayout);
+    assert(dxcCompiler_);
+
 
     std::vector<DXGI_FORMAT> rtvFormatsForThermoAndObjectID =
     {

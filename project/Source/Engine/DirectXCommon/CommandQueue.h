@@ -5,11 +5,11 @@
 
 //ComPtr(コムポインタ)
 #include<wrl.h>
-
+class Device;
 class CommandQueue
 {
 public:
-    CommandQueue(const Microsoft::WRL::ComPtr<ID3D12Device>& device);
+    CommandQueue(Device& device);
     ~CommandQueue();
    const Microsoft::WRL::ComPtr<ID3D12CommandQueue>& GetCommandQueue() {
         return commandQueue_;};

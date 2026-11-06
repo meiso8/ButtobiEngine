@@ -3,15 +3,29 @@
 #include<d3d12.h>
 #include<wrl.h>
 #include<stdint.h>
+class Device;
 
 class BaseDescriptor
 {
+private:
+    static Device* device_;
+
+    /// @brief DescriptorHeapの作成関数
+    /// @param heapType ヒープタイプの指定
+    /// @param numDescriptors 
+    /// @param shaderVisible 
+    /// @return  DescriptorHeap
+    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(
+        D3D12_DESCRIPTOR_HEAP_TYPE heapType,
+        UINT numDescriptors,
+        bool shaderVisible);
 protected:
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>descriptorHeap_ = nullptr;
     uint32_t descriptorSize_ = 0;
     uint32_t useIndex_ = 0;
     uint32_t maxCount_ = 1;
 public:
+    static void SetDevice( Device* device) { device_ = device;};
     BaseDescriptor();
     ~BaseDescriptor();
     /// @brief アロケータ
@@ -36,5 +50,6 @@ protected:
         bool shaderVisible = true,
         const uint32_t kMaxCount = 1
     );
+    Device* ProtectedDevice() { return device_; };
 };
 

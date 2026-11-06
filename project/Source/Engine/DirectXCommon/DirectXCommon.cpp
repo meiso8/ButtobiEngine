@@ -16,20 +16,13 @@
 #include"../CommandListManager/CommandListManager.h"
 
 using namespace Microsoft::WRL;
-ComPtr<ID3D12Device> DirectXCommon::device = nullptr;
-std::unique_ptr< DxcCompiler> DirectXCommon::dxcCompiler = nullptr;
 
 DirectXCommon::~DirectXCommon()
 {
 
     renderTexture_->Clear();
     renderTextureForSprite_->Clear();
-  
-
-    if (device) {
-        device.Reset();
-  }
-  
+ 
 }
 
 void DirectXCommon::Finalize()
@@ -41,12 +34,6 @@ void DirectXCommon::InitializeBarrier(CommandListManager& commandListManager)
 {    //コマンドリストのセット
     barrierMain_.SetCommandList(commandListManager.GetCommandList(CommandListManager::kMain));
     barrierLoad_.SetCommandList(commandListManager.GetCommandList(CommandListManager::kLoad));
-}
-void DirectXCommon::PostInitialize()
-{
-
-    CreateDXCCompiler();
-
 }
 
 void DirectXCommon::RenderTexturePreDraw(CommandListManager& commandListManager,DsvDescriptorHeap* dsvDescriptorHeap, DepthTexture* depthTexture)
@@ -270,20 +257,16 @@ void DirectXCommon::InitializeDevice()
 #endif
 
     //DXGIFactoryの生成
-    dxgiFactory.Create();
+    dxgiFactory_.Create();
     LogFile::Log("CreateDXGIFactory\n");
 
     //使用するアダプタ(GPU)を決定する
-    gpu.SettingGPU(dxgiFactory);
+    gpu_.SettingGPU(dxgiFactory_);
     LogFile::Log("Set GPU\n");
 
-    //D3D12Deviceの生成
-    device = CreateD3D12Device(gpu);
-    //ファイルへのログ出力
-    LogFile::Log("Complete create D3D12Device!!!\n");//初期化完了のログを出す
-
+    device_ = std::make_unique<Device>(gpu_);
 #ifdef _DEBUG
-    debugError.Create(device);
+    debugError_.Create(device_->GetDevice());
     LogFile::Log("SetDebugError\n");
 #endif
     LogFile::Log("DirectXCommon PreInitialize");
@@ -293,7 +276,7 @@ void DirectXCommon::InitializeDevice()
 void DirectXCommon::InitializeRenderTargetView(SwapChain& swapChainClass,RtvDescriptorHeap* rtvDescriptorHeap)
 {
     //RTVを作る
-    rtvClass.Create(swapChainClass.GetResources(), rtvDescriptorHeap);
+    rtvClass.Create(*device_,swapChainClass.GetResources(), rtvDescriptorHeap);
     LogFile::Log("CreateRTV\n");
 }
 
@@ -303,14 +286,6 @@ void DirectXCommon::UpdateGameScreen(CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 }
 
 
-void DirectXCommon::CreateDXCCompiler()
-{
-    dxcCompiler = std::make_unique<DxcCompiler>();
-    dxcCompiler->Initialize();
-    dxcCompiler->ShaderSetting();
-    LogFile::Log("Init DxcCompiler\n");
-}
-
 void DirectXCommon::InitializeRenderTexture(CommandListManager& commandListManager,RtvDescriptorHeap* rtvDescriptorHeap, CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
     renderTexture_ = std::make_unique<RenderTexture>();
@@ -318,12 +293,12 @@ void DirectXCommon::InitializeRenderTexture(CommandListManager& commandListManag
 
     renderTexture_->SetCommandListAndSrvDescriptorHeap(commanList, srvDescriptorHeap);
     //グレー
-    renderTexture_->Create(rtvDescriptorHeap, { 0.5f,0.5f,0.5f,1.0f });
+    renderTexture_->Create(device_.get(), rtvDescriptorHeap, {0.5f,0.5f,0.5f,1.0f});
 
     //スプライト用のレンダーテクスチャを作成
     renderTextureForSprite_ = std::make_unique<RenderTexture>();
     renderTextureForSprite_->SetCommandListAndSrvDescriptorHeap(commanList, srvDescriptorHeap);
-    renderTextureForSprite_->Create(rtvDescriptorHeap, { 0.0f,0.0f,0.0f,0.0f });
+    renderTextureForSprite_->Create(device_.get(), rtvDescriptorHeap, { 0.0f,0.0f,0.0f,0.0f });
 
 }
 
@@ -343,20 +318,4 @@ void DirectXCommon::UpdateRenderTexture(CbvSrvUavDescriptorHeap* srvDescriptorHe
     ImGui::End();
 
 #endif
-}
-
-// =============================================================================================
-
-ComPtr<ID3D12DescriptorHeap> DirectXCommon::CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible)
-{
-    //ディスクリプタヒープを生成する
-    ComPtr<ID3D12DescriptorHeap> descriptorHeap = nullptr;
-    D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
-    descriptorHeapDesc.Type = heapType;//レンダーターゲットビュー用
-    descriptorHeapDesc.NumDescriptors = numDescriptors;
-    descriptorHeapDesc.Flags = shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    HRESULT hr = device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
-    //ディスクリプタヒープが作れなかったので起動できない
-    assert(SUCCEEDED(hr));
-    return descriptorHeap;
 }

@@ -56,8 +56,8 @@ public:
         CS_Shaders,
     };
 
-    void Initialize();
-    void ShaderSetting();
+    DxcCompiler();
+    ~DxcCompiler();
     Microsoft::WRL::ComPtr <IDxcBlob>& GetVertexShaderBlob(uint32_t index) { return vertexShaderBlobs_[index]; };
     Microsoft::WRL::ComPtr <IDxcBlob>& GetPixelShaderBlob(uint32_t index) { return pixelShaderBlobs_[index]; };
 
@@ -74,6 +74,7 @@ private:
     std::array<Microsoft::WRL::ComPtr<IDxcBlob>, CS_Shaders>computeShaderBlobs_;
 
 private:
+    void ShaderSetting();
     Microsoft::WRL::ComPtr<IDxcBlob>CompileShader(
         //CompilerするShaderファイルへのパス
         const std::wstring& filePath,

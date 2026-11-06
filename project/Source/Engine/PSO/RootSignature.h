@@ -5,6 +5,8 @@
 #include<cstdint>
 #include<array>
 #include<cassert>
+class Device;
+
 class RootSignature
 {
 public:
@@ -42,7 +44,7 @@ public:
         TYPES,
     };
 
-    void Create();
+    void Create(Device& device);
     ID3D12RootSignature* GetRootSignature(TYPE index) {
         assert(index < rootSignatures_.size());
         return

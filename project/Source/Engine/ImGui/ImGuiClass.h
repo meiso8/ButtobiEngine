@@ -20,13 +20,13 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 class Camera;
 class CommandList;
 class CbvSrvUavDescriptorHeap;
-
+class Device;
 class ImGuiClass
 {
 public:
     void Initialize(Window& window,
         CbvSrvUavDescriptorHeap* srvDescriptorHeap,
-        const Microsoft::WRL::ComPtr<ID3D12Device>& device,
+        Device& device,
         SwapChain& swapChain,
         RenderTargetView& rtv);
 

@@ -7,7 +7,7 @@
 #include"Log.h"
 #include"PSO.h"
 #include"ComputeShaderPSO/ComputeShaderPSO.h"
-
+#include"CompileShader/CompileShader.h"
 #include"CrashHandler.h"
 
 #include"SpriteCamera.h"
@@ -63,13 +63,16 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     directXCommon_->InitializeDevice();
 
     //コマンドリスト管理
-    commandListManager_ = std::make_unique<CommandListManager>(directXCommon_->GetDevice(),*wc);
+    commandListManager_ = std::make_unique<CommandListManager>(*directXCommon_->GetDeviceClass(),*wc);
     //バリアの設定
     directXCommon_->InitializeBarrier(*commandListManager_);
+    //リソース作成前にデバイスをセットする
+    ResourceFactory::SetDevice(directXCommon_->GetDeviceClass());
+
     //スワップチェインの生成
     swapChainClass_ = std::make_unique <SwapChain>(*wc, directXCommon_->GetDXGIFactory().GetDxgiFactory(), commandListManager_->GetCommandQueue());
 
-
+    BaseDescriptor::SetDevice(directXCommon_->GetDeviceClass());
     //rtvManagerの生成
     rtvDescriptorHeap_ = std::make_unique<RtvDescriptorHeap>();
     //dsvDescriptorHeap_の生成
@@ -80,11 +83,12 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     directXCommon_->InitializeRenderTargetView(*swapChainClass_,rtvDescriptorHeap_.get());
     LogFile::Log("DirectXCommon Initialize Render Target View\n");
 
-    directXCommon_->PostInitialize();
-    LogFile::Log("DirectXCommon PostInitialize\n");
+    //シェーダーコンパイル
+    dxcCompiler_ = std::make_unique< DxcCompiler>();
 
     //深度テクスチャの作成
     depthTexture_ = std::make_unique<DepthTexture>();
+    depthTexture_->SetDevice(directXCommon_->GetDeviceClass());
     depthTexture_->CreateResource(srvDescriptorHeap_.get(), wc->GetClientWidth(), wc->GetClientHeight());
     depthTexture_->InitializeDepthStencilView(dsvDescriptorHeap_.get());
 
@@ -92,8 +96,8 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     //ImGuiの初期化。
     imGuiClass.Initialize(
         *wc,
-        srvDescriptorHeap_.get()
-        , directXCommon_->GetDevice().Get(),
+        srvDescriptorHeap_.get(), 
+        *directXCommon_->GetDeviceClass(),
         *swapChainClass_,
         directXCommon_->GetSwapChainRtv()
     );
@@ -110,12 +114,14 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     LogFile::Log("Create PostProcessManager");
 
     auto* pso = PSO::GetInstance();
+    pso->SetDxcCompiler(dxcCompiler_.get());
+    pso->SetDevice(directXCommon_->GetDeviceClass());
     pso->CreateALLPSO();
     LogFile::Log("CreatePSO");
 
     auto* csPso = ComputeShaderPSO::GetInstance();
     //改造の余地あり
-    csPso->CreatePSO(DirectXCommon::GetDxcCompiler(), pso->GetRootSignature());
+    csPso->CreatePSO(directXCommon_->GetDeviceClass(), dxcCompiler_.get(), pso->GetRootSignature());
 
 #pragma region//LightManager
     //方向ライト管理の作成
@@ -264,6 +270,7 @@ void ButtobiEngine::Load()
     //テキストの初期化
     freeTypeManager_ = std::make_unique<FreeTypeManager>();
     freeTypeManager_->SetCommandListAndSrvDescriptorHeap(loadCommandList, srvDescriptorHeap_.get());
+    freeTypeManager_->SetDevice(directXCommon_->GetDeviceClass());
     Font::SetCommandListAndSrvDescriptorHeap(mainCommandList, srvDescriptorHeap_.get());
 
     LogFile::Log("Set SrvDescriptorHeap to FreeType\n");

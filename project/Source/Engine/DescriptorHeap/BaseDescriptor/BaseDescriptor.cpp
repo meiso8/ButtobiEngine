@@ -3,7 +3,9 @@
 #include<cassert>
 #include"DescriptorHandle/DescriptorHandle.h"
 #include"DirectXCommon.h"
+#include"Device/Device.h"
 
+Device* BaseDescriptor::device_ = nullptr;
 BaseDescriptor::BaseDescriptor()
 {
 }
@@ -44,16 +46,33 @@ D3D12_GPU_DESCRIPTOR_HANDLE BaseDescriptor::GetGPUDescriptorHandle(uint32_t inde
 
 void BaseDescriptor::CreateDescriptorHeapAndSize(const D3D12_DESCRIPTOR_HEAP_TYPE& type, bool shaderVisible, const uint32_t kMaxCount)
 {
-
     maxCount_ = kMaxCount;
 
     //DescriptorHeapを生成する
     if (descriptorHeap_ == nullptr) {
-        descriptorHeap_ = DirectXCommon::CreateDescriptorHeap(type, maxCount_, shaderVisible);
+        descriptorHeap_ = CreateDescriptorHeap(type, maxCount_, shaderVisible);
     }
 
-    descriptorSize_ = DirectXCommon::GetDevice()->GetDescriptorHandleIncrementSize(type);
+    assert(device_);
+    descriptorSize_ = device_->GetDevice()->GetDescriptorHandleIncrementSize(type);
 
     LogFile::Log("Create DescriptorHeap And Size\n");
 }
 
+
+Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> BaseDescriptor::CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible)
+{
+    if (!device_) {
+        return nullptr;
+    }
+    //ディスクリプタヒープを生成する
+    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap = nullptr;
+    D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
+    descriptorHeapDesc.Type = heapType;//レンダーターゲットビュー用
+    descriptorHeapDesc.NumDescriptors = numDescriptors;
+    descriptorHeapDesc.Flags = shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+    HRESULT hr = device_->GetDevice()->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
+    //ディスクリプタヒープが作れなかったので起動できない
+    assert(SUCCEEDED(hr));
+    return descriptorHeap;
+}

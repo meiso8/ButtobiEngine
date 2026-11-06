@@ -123,7 +123,7 @@
     <ClCompile Include="Source\Engine\Math\WorldTransform\WorldTransform.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\ScissorRect.cpp" />
     <ClCompile Include="Source\Engine\PSO\BlendState.cpp" />
-    <ClCompile Include="Source\Engine\PSO\CompileShader.cpp" />
+    <ClCompile Include="Source\Engine\CompileShader\CompileShader.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\Log.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\Fence.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\DebugError.cpp" />
@@ -199,6 +199,7 @@
     <ClCompile Include="Source\Application\Stage\DebugStage\DebugStage.cpp" />
     <ClCompile Include="Source\Application\GameObject\Network\Network.cpp" />
     <ClCompile Include="Source\Engine\CommandListManager\CommandListManager.cpp" />
+    <ClCompile Include="Source\Engine\Device\Device.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\ComputeShaderPSO\ComputeShaderPSO.h" />
@@ -324,7 +325,7 @@
     <ClInclude Include="Source\Engine\Camera\Camera.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\CommandList.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\CommandQueue.h" />
-    <ClInclude Include="Source\Engine\PSO\CompileShader.h" />
+    <ClInclude Include="Source\Engine\CompileShader\CompileShader.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\CrashHandler.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\D3DResourceLeakChecker.h" />
     <ClInclude Include="Source\Engine\Camera\DebugCamera.h" />
@@ -429,6 +430,7 @@
     <ClInclude Include="Source\Application\Stage\DebugStage\DebugStage.h" />
     <ClInclude Include="Source\Application\GameObject\Network\Network.h" />
     <ClInclude Include="Source\Engine\CommandListManager\CommandListManager.h" />
+    <ClInclude Include="Source\Engine\Device\Device.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png" />

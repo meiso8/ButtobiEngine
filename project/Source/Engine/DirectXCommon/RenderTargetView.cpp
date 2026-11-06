@@ -3,8 +3,9 @@
 #pragma comment(lib,"d3d12.lib")
 #include "DirectXCommon.h"
 #include"RtvDescriptorHeap.h"
+#include"Device/Device.h"
 
-void RenderTargetView::Create(
+void RenderTargetView::Create(Device& device,
     std::array<IResource, 2 >&swapChainResources,
     RtvDescriptorHeap* rtvDescriptorHeap
 ) {
@@ -18,7 +19,7 @@ void RenderTargetView::Create(
     for (int i = 0; i < 2; ++i) {
         uint32_t index = rtvDescriptorHeap->Allocate();
         rtvHandles_[i] = rtvDescriptorHeap->GetCPUDescriptorHandle(index);
-        DirectXCommon::GetDevice()->CreateRenderTargetView(swapChainResources[i].Get(), &rtvDesc_, rtvHandles_[i]);
+        device.GetDevice()->CreateRenderTargetView(swapChainResources[i].Get(), &rtvDesc_, rtvHandles_[i]);
         swapChainResources[i].SetName(L"swapChainResource");
     }
 

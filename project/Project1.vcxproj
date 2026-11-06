@@ -173,6 +173,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\Device\Device.cpp" />
     <ClCompile Include="Source\Engine\CommandListManager\CommandListManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\Network\Network.cpp" />
     <ClCompile Include="Source\Application\Stage\DebugStage\DebugStage.cpp" />
@@ -413,7 +414,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
     </ClCompile>
-    <ClCompile Include="Source\Engine\PSO\CompileShader.cpp">
+    <ClCompile Include="Source\Engine\CompileShader\CompileShader.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
     </ClCompile>
@@ -511,6 +512,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\System\TreeGenerator\TreeGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\Device\Device.h" />
     <ClInclude Include="Source\Engine\CommandListManager\CommandListManager.h" />
     <ClInclude Include="Source\Application\GameObject\Network\Network.h" />
     <ClInclude Include="Source\Application\Stage\DebugStage\DebugStage.h" />
@@ -665,7 +667,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Camera\Camera.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\CommandList.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\CommandQueue.h" />
-    <ClInclude Include="Source\Engine\PSO\CompileShader.h" />
+    <ClInclude Include="Source\Engine\CompileShader\CompileShader.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\CrashHandler.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\D3DResourceLeakChecker.h" />
     <ClInclude Include="Source\Engine\Camera\DebugCamera.h" />

@@ -1,10 +1,14 @@
 #include "ComputeShaderPSO.h"
 #include"DirectXCommon.h"
+#include"Device/Device.h"
 
 
-void ComputeShaderPSO::CreatePSO(DxcCompiler* dxCompiler,
+void ComputeShaderPSO::CreatePSO(
+    Device* device,
+    DxcCompiler* dxCompiler,
     RootSignature* rootSignature)
 {
+    device_ = device;
     dxCompiler_ = dxCompiler ;
     rootSignature_ = rootSignature;
 
@@ -46,7 +50,7 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> ComputeShaderPSO::Create(
     //ルートシグネチャを取得
     computePipelineStateDesc.pRootSignature = rootSignature_->GetRootSignature(rootSignatureType);
     Microsoft::WRL::ComPtr<ID3D12PipelineState> computePipelineState = nullptr;
-    HRESULT hr = DirectXCommon::GetDevice()->CreateComputePipelineState(&computePipelineStateDesc, IID_PPV_ARGS(&computePipelineState));
+    HRESULT hr = device_->GetDevice()->CreateComputePipelineState(&computePipelineStateDesc, IID_PPV_ARGS(&computePipelineState));
 
     return computePipelineState;
 }

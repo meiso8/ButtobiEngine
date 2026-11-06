@@ -13,6 +13,7 @@ class CommandList;
 class TransitionBarrier;
 class Window;
 class SwapChain;
+class Device;
 class CommandListManager
 
 {
@@ -29,13 +30,13 @@ private:
     D3D12_VIEWPORT viewport_ = {};
     D3D12_RECT scissorRect_ = {};
 
-    void InitializeCommandList();
-    void InitializeCommandQueue(const Microsoft::WRL::ComPtr<ID3D12Device>& device);
-    void InitializeFence(const Microsoft::WRL::ComPtr<ID3D12Device>& device);
+    void InitializeCommandList(Device& deviceClass);
+    void InitializeCommandQueue(Device& deviceClass);
+    void InitializeFence(Device& deviceClass);
     void InitializeViewport(const Window& window);
     void InitializeScissorRect(const Window& window);
 public:
-    CommandListManager(const Microsoft::WRL::ComPtr<ID3D12Device>& device, const Window& window);
+    CommandListManager(Device& device, const Window& window);
 
     /// @brief コマンドリストの取得関数
     /// @return コマンドリスト

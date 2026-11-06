@@ -2,6 +2,7 @@
 #include"DirectXCommon.h"
 
 #include "d3dx12.h"
+#include"Device/Device.h"
 
 void IResource::Reset()
 {
@@ -24,6 +25,12 @@ void IResource::SetName(const LPCWSTR& label)
     if (resource) {
         resource->SetName(label);
     }
+}
+namespace ResourceFactory {
+    Device* device_ = nullptr;
+    void SetDevice(Device* device) {
+        device_ = device;
+    };
 }
 
 Microsoft::WRL::ComPtr<ID3D12Resource> ResourceFactory::CreateBufferResourceForUAV(size_t sizeInBytes) {
@@ -50,7 +57,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> ResourceFactory::CreateBufferResourceForU
     //UAVの設定
     resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 
-    if (SUCCEEDED(DirectXCommon::GetDevice()->CreateCommittedResource(
+    if (SUCCEEDED(device_->GetDevice()->CreateCommittedResource(
         &heapProperties,
         D3D12_HEAP_FLAG_NONE,
         &resourceDesc,
@@ -85,7 +92,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> ResourceFactory::CreateBufferResource(siz
     //バッファの場合はこれにする決まり
     resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-    if (SUCCEEDED(DirectXCommon::GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
+    if (SUCCEEDED(device_->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
         &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
         IID_PPV_ARGS(&resource)))) {
         return resource;
@@ -113,7 +120,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> ResourceFactory::CreateReadbackBufferReso
     resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
     // 初期状態を COPY_DEST にする
-    if (SUCCEEDED(DirectXCommon::GetDevice()->CreateCommittedResource(
+    if (SUCCEEDED(device_->GetDevice()->CreateCommittedResource(
         &heapProperties,
         D3D12_HEAP_FLAG_NONE,
         &resourceDesc,
@@ -144,7 +151,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> ResourceFactory::CreateTextureResource(co
 
     //Resourceを生成する
     Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;
-    HRESULT hr = DirectXCommon::GetDevice()->CreateCommittedResource(
+    HRESULT hr = device_->GetDevice()->CreateCommittedResource(
         &heapProperties,//Heapの設定
         D3D12_HEAP_FLAG_NONE,//Heapの特殊な設定。特になし
         &resourceDesc,//Resourceの設定
@@ -185,7 +192,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> ResourceFactory::CreateRenderTextureResou
 
     //Resourceを生成する
     Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;
-    HRESULT hr = DirectXCommon::GetDevice()->CreateCommittedResource(
+    HRESULT hr = device_->GetDevice()->CreateCommittedResource(
         &heapProperties,//Heapの設定
         D3D12_HEAP_FLAG_NONE,//Heapの特殊な設定。特になし
         &resourceDesc,//Resourceの設定
@@ -221,7 +228,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> ResourceFactory::CreateDepthStencilTextur
 
     //Resourceの生成
     Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;
-    HRESULT hr = DirectXCommon::GetDevice()->CreateCommittedResource(
+    HRESULT hr = device_->GetDevice()->CreateCommittedResource(
         &heapProperties,//Heapの設定
         D3D12_HEAP_FLAG_NONE,//Heapの特殊な設定。特になし。
         &resourceDesc,//Resourceの設定
@@ -235,7 +242,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> ResourceFactory::CreateDepthStencilTextur
 Microsoft::WRL::ComPtr<ID3D12Resource> ResourceFactory::UploadTextureData(ID3D12GraphicsCommandList* commandList, const Microsoft::WRL::ComPtr<ID3D12Resource>& texture, const DirectX::ScratchImage& mipImages)
 {
     std::vector<D3D12_SUBRESOURCE_DATA>subresources;
-    DirectX::PrepareUpload(DirectXCommon::GetDevice().Get(), mipImages.GetImages(), mipImages.GetImageCount(), mipImages.GetMetadata(), subresources);
+    DirectX::PrepareUpload(device_->GetDevice().Get(), mipImages.GetImages(), mipImages.GetImageCount(), mipImages.GetMetadata(), subresources);
     uint64_t intermediateSize = GetRequiredIntermediateSize(texture.Get(), 0, UINT(subresources.size()));
     Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource = CreateBufferResource(intermediateSize);//中間リソース
     intermediateResource->SetName(L"texture:intermediateResource");
