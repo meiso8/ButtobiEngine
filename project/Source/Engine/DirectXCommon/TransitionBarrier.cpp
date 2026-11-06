@@ -1,6 +1,12 @@
 #include "TransitionBarrier.h"
 #include"Log.h"
 #include<cassert>
+TransitionBarrier::TransitionBarrier()
+{
+}
+TransitionBarrier::~TransitionBarrier()
+{
+}
 void TransitionBarrier::SetCommandList(ID3D12GraphicsCommandList* commandList)
 {
     commandList_ = commandList;

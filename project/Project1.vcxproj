@@ -173,6 +173,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\CommandListManager\CommandListManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\Network\Network.cpp" />
     <ClCompile Include="Source\Application\Stage\DebugStage\DebugStage.cpp" />
     <ClCompile Include="Source\Application\Stage\AmenEasyStage\AmenEasyStage.cpp" />
@@ -510,6 +511,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\System\TreeGenerator\TreeGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\CommandListManager\CommandListManager.h" />
     <ClInclude Include="Source\Application\GameObject\Network\Network.h" />
     <ClInclude Include="Source\Application\Stage\DebugStage\DebugStage.h" />
     <ClInclude Include="Source\Application\Stage\AmenEasyStage\AmenEasyStage.h" />

@@ -1,11 +1,16 @@
 #include "Fence.h"
-
 #include<cassert>
+#include"CommandQueue.h"
 
-void Fence::Create(const Microsoft::WRL::ComPtr <ID3D12Device>& device) {
+Fence::Fence(const Microsoft::WRL::ComPtr<ID3D12Device>& device)
+{
     HRESULT hr;
     hr = device->CreateFence(fenceValue_, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence_));
     assert(SUCCEEDED(hr));
+}
+
+Fence::~Fence()
+{
 }
 
 void Fence::SendSignal(CommandQueue& commandQueue)

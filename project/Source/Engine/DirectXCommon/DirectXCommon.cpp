@@ -1,7 +1,6 @@
 #include "DirectXCommon.h"
 #include"Log.h"
-#include "Viewport.h"
-#include "ScissorRect.h"
+
 #include<cassert>
 
 #include"CbvSrvUavDescriptorHeap.h"
@@ -14,6 +13,7 @@
 #include"Input.h"
 #include"ResourceManager/ResourceManager.h"
 #include"DepthTexture/DepthTexture.h"
+#include"../CommandListManager/CommandListManager.h"
 
 using namespace Microsoft::WRL;
 ComPtr<ID3D12Device> DirectXCommon::device = nullptr;
@@ -25,9 +25,6 @@ DirectXCommon::~DirectXCommon()
     renderTexture_->Clear();
     renderTextureForSprite_->Clear();
   
-    for (auto& resource : swapChainResources) {
-        resource.Reset();
-    }
 
     if (device) {
         device.Reset();
@@ -40,33 +37,22 @@ void DirectXCommon::Finalize()
     LogFile::Log("DirectXCommon Finalize\n");
 }
 
-void DirectXCommon::PreInitialize(Window& window)
-{
-    assert(&window);
-
-    window_ = &window;
-
-    InitializeDevice();
-    InitializeCommand();
-    CreateSwapChain();
-    //コマンドリストのセット
-    barrierMain_.SetCommandList(commandList_[kMain]->Get());
-    barrierLoad_.SetCommandList(commandList_[kLoad]->Get());
-
+void DirectXCommon::InitializeBarrier(CommandListManager& commandListManager)
+{    //コマンドリストのセット
+    barrierMain_.SetCommandList(commandListManager.GetCommandList(CommandListManager::kMain));
+    barrierLoad_.SetCommandList(commandListManager.GetCommandList(CommandListManager::kLoad));
 }
 void DirectXCommon::PostInitialize()
 {
-    InitializeFence();
-    InitializeViewPort();
-    ScissorRectSetting();
+
     CreateDXCCompiler();
 
 }
 
-void DirectXCommon::RenderTexturePreDraw(DsvDescriptorHeap* dsvDescriptorHeap, DepthTexture* depthTexture)
+void DirectXCommon::RenderTexturePreDraw(CommandListManager& commandListManager,DsvDescriptorHeap* dsvDescriptorHeap, DepthTexture* depthTexture)
 {
 
-    auto* commandList = commandList_[kMain]->Get();
+    auto* commandList = commandListManager.GetCommandList(CommandListManager::kMain);
 
     barrierMain_.SettingBarrier(
         depthTexture->GetResource(),
@@ -114,18 +100,8 @@ void DirectXCommon::RenderTexturePreDraw(DsvDescriptorHeap* dsvDescriptorHeap, D
     commandList->ClearRenderTargetView(renderTextureDataID.rtvHandleCPU, clearColor, 0, nullptr);
 }
 
-void DirectXCommon::ViewPortAndScissorRect()
 
-{
-    auto* commanList = commandList_[kMain]->Get();
-    //ビューポート領域の設定
-    commanList->RSSetViewports(1, &viewport);//Viewportを設定
-    //シザー矩形の設定
-    commanList->RSSetScissorRects(1, &scissorRect);//Scissorを設定
-}
-
-
-void DirectXCommon::DrawRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap)
+void DirectXCommon::DrawRenderTexture(SwapChain& swapChainClass,RtvDescriptorHeap* rtvDescriptorHeap)
 {
     auto* ppm = PostProcessManager::GetInstance();
 
@@ -163,7 +139,7 @@ void DirectXCommon::DrawRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap)
 
 }
 
-void DirectXCommon::DrawRenderTextureForSprite(RtvDescriptorHeap* rtvDescriptorHeap)
+void DirectXCommon::DrawRenderTextureForSprite(SwapChain& swapChainClass,RtvDescriptorHeap* rtvDescriptorHeap)
 {   
     auto* ppm = PostProcessManager::GetInstance();
     //描画先を画面(バックバッファ)のRTVにする
@@ -224,16 +200,16 @@ void DirectXCommon::SettingIdTextureBarrierPre()
         D3D12_RESOURCE_STATE_COPY_SOURCE);
 }
 
-void DirectXCommon::PreDraw()
+void DirectXCommon::PreDraw(SwapChain& swapChainClass,CommandListManager& commandListManager)
 {
     //これから書き込むバックバッファのインデックスを取得
     UINT backBufferIndex = swapChainClass.GetSwapChain()->GetCurrentBackBufferIndex();
 
-    auto* commanList = commandList_[kMain]->Get();
+    auto* commanList = commandListManager.GetCommandList(CommandListManager::kMain);
 
     //TransitionBarrierの設定
     barrierMain_.SettingBarrier(
-        swapChainResources[backBufferIndex],
+        swapChainClass.GetCurrentResource(),
         D3D12_RESOURCE_STATE_PRESENT,
         D3D12_RESOURCE_STATE_RENDER_TARGET);
 
@@ -245,57 +221,10 @@ void DirectXCommon::PreDraw()
 
 }
 
-void DirectXCommon::PostDraw()
+void DirectXCommon::RenderTextureForSpritePreDraw(CommandListManager& commandListManager)
 {
-    //これから書き込むバックバッファのインデックスを取得
-    UINT backBufferIndex = swapChainClass.GetSwapChain()->GetCurrentBackBufferIndex();
 
-    auto* commanList = commandList_[kMain]->Get();
-
-    //TransitionBarrierの設定
-    barrierMain_.SettingBarrier(
-        swapChainResources[backBufferIndex],
-        D3D12_RESOURCE_STATE_RENDER_TARGET,
-        D3D12_RESOURCE_STATE_PRESENT);
-
-    //コマンドリストの内容を確定させる。全てのコマンドを積んでから　Closesする。
-    commanList->Close();
-    //GPUにコマンドリストの実行を行わせる
-    
-    ID3D12CommandList* commandLists[] = { commanList };
-    commandQueue.GetCommandQueue()->ExecuteCommandLists(1, commandLists);
-
-    //GPUとOSに画面の交換を行うよう通知する
-    swapChainClass.GetSwapChain()->Present(1, 0);
-
-    //画面の更新が終わった直後GPUにシグナルを送る
-    fence.SendSignal(commandQueue);
-
-}
-
-void DirectXCommon::PrepareCommand(const CommandListType type)
-{    //次のフレーム用のコマンドリストを準備
-    commandList_[type]->PrepareCommand();
-}
-
-void DirectXCommon::CloseLoadCommandList(const CommandListType type)
-{
-    auto* commanList = commandList_[type]->Get();
-
-    //コマンドリストの内容を確定させる。全てのコマンドを積んでから　Closesする。
-    commanList->Close();
-
-    //GPUにコマンドリストの実行を行わせる
-    ID3D12CommandList* commandLists[] = { commanList };
-    commandQueue.GetCommandQueue()->ExecuteCommandLists(1, commandLists);
-
-    //画面の更新が終わった直後GPUにシグナルを送る
-    fence.SendSignal(commandQueue);
-}
-
-void DirectXCommon::RenderTextureForSpritePreDraw()
-{
-    auto* commanList = commandList_[kMain]->Get();
+    auto* commanList = commandListManager.GetCommandList(CommandListManager::kMain);
 
     auto& renderTextureDataNormal = renderTextureForSprite_->GetRenderTextureData(RenderTexture::kNormal0);
     auto& renderTextureDataThermography = renderTextureForSprite_->GetRenderTextureData(RenderTexture::kThermography);
@@ -337,8 +266,6 @@ void DirectXCommon::InitializeDevice()
         debugController->EnableDebugLayer();
         //さらにGPU側でもチェックを行うようにする
         debugController->SetEnableGPUBasedValidation(TRUE);
-
-  
     }
 #endif
 
@@ -359,52 +286,14 @@ void DirectXCommon::InitializeDevice()
     debugError.Create(device);
     LogFile::Log("SetDebugError\n");
 #endif
-
+    LogFile::Log("DirectXCommon PreInitialize");
 }
 
-void DirectXCommon::InitializeCommand()
-{
-    commandList_[kMain] = std::make_unique<CommandList>();
-    commandList_[kLoad] = std::make_unique<CommandList>();
 
-    for (auto& [type,commandList] : commandList_) {
-        //コマンドリストの生成
-        commandList->Create();
-    }
-
-    LogFile::Log("Create CommandList\n");
-
-    //コマンドキューの生成
-    commandQueue.Create(device);
-    LogFile::Log("Create CommandQueue\n");
-
-}
-
-void DirectXCommon::CreateSwapChain()
-{
-
-    //スワップチェインの生成
-//画面の幅。ウィンドウのクライアント領域を同じものにしておく
-    swapChainClass.Create(
-        *window_,
-        dxgiFactory.GetDxgiFactory(),
-        commandQueue.GetCommandQueue());
-    LogFile::Log("CreateSwapChain\n");
-
-#pragma region//SwapChainからResourceを引っ張ってくる
-    //SwapChainからResourceを引っ張ってくる
-    swapChainClass.GetBuffer(0, swapChainResources[0]);
-    swapChainClass.GetBuffer(1, swapChainResources[1]);
-    LogFile::Log("Pull Resource from SwapChain\n");
-
-#pragma endregion
-
-}
-
-void DirectXCommon::InitializeRenderTargetView(RtvDescriptorHeap* rtvDescriptorHeap)
+void DirectXCommon::InitializeRenderTargetView(SwapChain& swapChainClass,RtvDescriptorHeap* rtvDescriptorHeap)
 {
     //RTVを作る
-    rtvClass.Create(swapChainResources, rtvDescriptorHeap);
+    rtvClass.Create(swapChainClass.GetResources(), rtvDescriptorHeap);
     LogFile::Log("CreateRTV\n");
 }
 
@@ -413,27 +302,6 @@ void DirectXCommon::UpdateGameScreen(CbvSrvUavDescriptorHeap* srvDescriptorHeap)
     DebugUI::ShowMainViewPort(srvDescriptorHeap, renderTexture_->GetRenderTextureData(RenderTexture::kNormal1).resource.srvIndex);
 }
 
-void DirectXCommon::InitializeFence()
-{
-#pragma region //FenceとEventを生成する
-    fence.Create(device);
-    LogFile::Log("CreateFence\n");
-#pragma endregion
-}
-
-void DirectXCommon::InitializeViewPort()
-{
-    viewport = CreateViewport(static_cast<float>(window_->GetClientWidth()), static_cast<float>(window_->GetClientHeight()));
-
-    LogFile::Log("InitializeViewPort\n");
-}
-
-void DirectXCommon::ScissorRectSetting()
-{
-    //ViewportとScissor(シザー)
-    scissorRect = CreateScissorRect(window_->GetClientWidth(), window_->GetClientHeight());
-    LogFile::Log("Viewport And Scissor\n");
-}
 
 void DirectXCommon::CreateDXCCompiler()
 {
@@ -443,16 +311,18 @@ void DirectXCommon::CreateDXCCompiler()
     LogFile::Log("Init DxcCompiler\n");
 }
 
-void DirectXCommon::InitializeRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap, CbvSrvUavDescriptorHeap* srvDescriptorHeap)
+void DirectXCommon::InitializeRenderTexture(CommandListManager& commandListManager,RtvDescriptorHeap* rtvDescriptorHeap, CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
     renderTexture_ = std::make_unique<RenderTexture>();
-    renderTexture_->SetCommandListAndSrvDescriptorHeap(commandList_[kMain]->Get(), srvDescriptorHeap);
+    auto* commanList = commandListManager.GetCommandList(CommandListManager::kMain);
+
+    renderTexture_->SetCommandListAndSrvDescriptorHeap(commanList, srvDescriptorHeap);
     //グレー
     renderTexture_->Create(rtvDescriptorHeap, { 0.5f,0.5f,0.5f,1.0f });
 
     //スプライト用のレンダーテクスチャを作成
     renderTextureForSprite_ = std::make_unique<RenderTexture>();
-    renderTextureForSprite_->SetCommandListAndSrvDescriptorHeap(commandList_[kMain]->Get(), srvDescriptorHeap);
+    renderTextureForSprite_->SetCommandListAndSrvDescriptorHeap(commanList, srvDescriptorHeap);
     renderTextureForSprite_->Create(rtvDescriptorHeap, { 0.0f,0.0f,0.0f,0.0f });
 
 }

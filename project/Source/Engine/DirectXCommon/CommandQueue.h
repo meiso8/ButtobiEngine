@@ -9,8 +9,9 @@
 class CommandQueue
 {
 public:
-    void Create(const Microsoft::WRL::ComPtr<ID3D12Device>& device);
-    Microsoft::WRL::ComPtr<ID3D12CommandQueue>& GetCommandQueue() {
+    CommandQueue(const Microsoft::WRL::ComPtr<ID3D12Device>& device);
+    ~CommandQueue();
+   const Microsoft::WRL::ComPtr<ID3D12CommandQueue>& GetCommandQueue() {
         return commandQueue_;};
 private:
     Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue_ = nullptr;

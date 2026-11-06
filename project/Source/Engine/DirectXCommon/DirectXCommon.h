@@ -1,21 +1,19 @@
 #pragma once
 
-#include"CommandQueue.h"
-#include"commandList.h"
 #include"DXGIFactory.h"
 #include"GPU.h"
 #include"SwapChain.h"
 #include"DebugError.h"
 
 #include"RenderTargetView.h"
-#include"Fence.h"
+
 #include"PSO/Depth.h"//StencilTextureの作成関数　奥行き
 #include"PSO/CompileShader.h"
 
 #include"Window.h"
 #include<array>
 #include"ImGuiClass.h"
-#include"TransitionBarrier.h"
+
 #include <memory>
 
 #include"PostEffectMaterial/PostEffectMaterial.h"
@@ -25,45 +23,33 @@
 
 #include"Vector4.h"
 #include"../RenderTexture/RenderTexture.h"
-
+#include"TransitionBarrier.h"
 struct TextureResource;
 class DepthTexture;
 class CbvSrvUavDescriptorHeap;
 class RtvDescriptorHeap;
 class DsvDescriptorHeap;
+class CommandListManager;
 
 class DirectXCommon
 {
-public:
-    enum CommandListType {
-        kLoad,
-        kMain,
-    };
+
 
 private:
-    Window* window_ = nullptr;
     DXGIFactory dxgiFactory = {};
 
     static Microsoft::WRL::ComPtr<ID3D12Device> device;
     static std::unique_ptr< DxcCompiler> dxcCompiler;
-    std::unordered_map<CommandListType,std::unique_ptr<CommandList>>commandList_{};
 
-    CommandQueue commandQueue = {};
-    SwapChain swapChainClass;
+
     GPU gpu = {};
     DebugError debugError = {};
-    std::array<Microsoft::WRL::ComPtr <ID3D12Resource>, 2> swapChainResources;
+
     RenderTargetView rtvClass = {};
     std::unique_ptr<RenderTexture> renderTexture_ = nullptr;
     std::unique_ptr<RenderTexture> renderTextureForSprite_ = nullptr;
-
-    Fence fence = {};
-
-    D3D12_VIEWPORT viewport = {};
-    D3D12_RECT scissorRect = {};
-    TransitionBarrier barrierMain_ = {};
-
-    TransitionBarrier barrierLoad_ = {};
+    TransitionBarrier barrierMain_;
+    TransitionBarrier barrierLoad_;
 public:
     RenderTexture* GetRenderTexture() { return renderTexture_.get(); };
     void Finalize();
@@ -71,43 +57,33 @@ public:
     
     /// @brief 初期化
     /// @param window windowクラスを渡す
-    void PreInitialize(Window& window);
+    void InitializeDevice();
+    void InitializeBarrier(CommandListManager& commandListManager);
     void PostInitialize();
 
     /// @brief 描画前処理
 /// @param color 画面の色を指定する
-    void RenderTexturePreDraw(DsvDescriptorHeap* dsvDescriptorHeap, DepthTexture* depthTexture);
-    void ViewPortAndScissorRect();
-    void DrawRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap);
-    void DrawRenderTextureForSprite(RtvDescriptorHeap* rtvDescriptorHeap);
+    void RenderTexturePreDraw(CommandListManager& commandListManager, DsvDescriptorHeap* dsvDescriptorHeap, DepthTexture* depthTexture);
+    void DrawRenderTexture(SwapChain& swapChainClass,RtvDescriptorHeap* rtvDescriptorHeap);
+    void DrawRenderTextureForSprite(SwapChain& swapChainClass,RtvDescriptorHeap* rtvDescriptorHeap);
     void RenderTexturePostDraw(DepthTexture* depthTexture);
 
     void SettingIdTextureBarrierPre();
     void SettingIdTextureBarrierPost();
 
     /// @brief 描画前処理
-    void PreDraw();
-    /// @brief 描画後処理
-    void PostDraw();
-    /// @brief 次フレームの準備
-    void PrepareCommand(const CommandListType type);
-    
-    void CloseLoadCommandList(const CommandListType type);
+    void PreDraw(SwapChain& swapChainClass,CommandListManager& commandListManager);
 
-    void RenderTextureForSpritePreDraw();
+    void RenderTextureForSpritePreDraw(CommandListManager& commandListManager);
     void RenderTextureForSpritePostDraw();
-
-    /// @brief スワップチェインの取得関数
-    /// @return スワップチェイン
-    SwapChain& GetSwapChain() { return swapChainClass; };
     /// @brief スワップチェインのRTVの取得関数
     /// @return スワップチェインのRTV
     RenderTargetView& GetSwapChainRtv() {
         return rtvClass ;
     }
     
-    void InitializeRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap, CbvSrvUavDescriptorHeap* srvDescriptorHeap);
-    void InitializeRenderTargetView(RtvDescriptorHeap* rtvDescriptorHeap);
+    void InitializeRenderTexture(CommandListManager& commandListManager,RtvDescriptorHeap* rtvDescriptorHeap, CbvSrvUavDescriptorHeap* srvDescriptorHeap);
+    void InitializeRenderTargetView(SwapChain& swapChainClass,RtvDescriptorHeap* rtvDescriptorHeap);
 
     void UpdateGameScreen(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
     void UpdateRenderTexture(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
@@ -129,20 +105,10 @@ public:
     /// @brief コンパイラーの取得関数
     /// @return コンパイラー
     static DxcCompiler* GetDxcCompiler() { return dxcCompiler.get(); }
-    /// @brief コマンドリストの取得関数
-    /// @return コマンドリスト
-    ID3D12GraphicsCommandList* GetCommandList(const CommandListType type) { return commandList_[type]->GetCommandList().Get(); };
-    /// @brief コマンドリストクラスの取得関数
-/// @return コマンドリスト
-    CommandList* GetCommandListClass(const CommandListType type) { return commandList_[type].get(); };
+     DXGIFactory& GetDXGIFactory() { return dxgiFactory; };
+      TransitionBarrier& GetMainBarrier() { return barrierMain_; };
 private:
-    void InitializeDevice();
-    void InitializeCommand();
-    void CreateSwapChain();
 
-    void InitializeFence();
-    void InitializeViewPort();
-    void ScissorRectSetting();
     void CreateDXCCompiler();
 };
 

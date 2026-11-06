@@ -15,6 +15,7 @@
 
 #include"DrawGrid.h"
 
+
 #include"JsonFile.h"
 #include"Sound.h"
 
@@ -59,8 +60,15 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
 
     //DirectXCommon
     directXCommon_ = std::make_unique<DirectXCommon>();
-    directXCommon_->PreInitialize(*wc);
-    LogFile::Log("DirectXCommon PreInitialize");
+    directXCommon_->InitializeDevice();
+
+    //コマンドリスト管理
+    commandListManager_ = std::make_unique<CommandListManager>(directXCommon_->GetDevice(),*wc);
+    //バリアの設定
+    directXCommon_->InitializeBarrier(*commandListManager_);
+    //スワップチェインの生成
+    swapChainClass_ = std::make_unique <SwapChain>(*wc, directXCommon_->GetDXGIFactory().GetDxgiFactory(), commandListManager_->GetCommandQueue());
+
 
     //rtvManagerの生成
     rtvDescriptorHeap_ = std::make_unique<RtvDescriptorHeap>();
@@ -69,7 +77,7 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     //SRV管理
     srvDescriptorHeap_ = std::make_unique<CbvSrvUavDescriptorHeap>();
 
-    directXCommon_->InitializeRenderTargetView(rtvDescriptorHeap_.get());
+    directXCommon_->InitializeRenderTargetView(*swapChainClass_,rtvDescriptorHeap_.get());
     LogFile::Log("DirectXCommon Initialize Render Target View\n");
 
     directXCommon_->PostInitialize();
@@ -86,16 +94,16 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
         *wc,
         srvDescriptorHeap_.get()
         , directXCommon_->GetDevice().Get(),
-        directXCommon_->GetSwapChain(),
+        *swapChainClass_,
         directXCommon_->GetSwapChainRtv()
     );
     LogFile::Log("InitImGui");
 #endif
 
-    auto* mainCommandList = directXCommon_->GetCommandListClass(DirectXCommon::kMain)->Get();
-    auto* loadCommandList = directXCommon_->GetCommandListClass(DirectXCommon::kLoad)->Get();
+    auto* mainCommandList = commandListManager_->GetCommandList(CommandListManager::kMain);
+    auto* loadCommandList = commandListManager_->GetCommandList(CommandListManager::kLoad);
 
-    directXCommon_->InitializeRenderTexture(rtvDescriptorHeap_.get(), srvDescriptorHeap_.get());
+    directXCommon_->InitializeRenderTexture(*commandListManager_,rtvDescriptorHeap_.get(), srvDescriptorHeap_.get());
     //ポストプロセス管理の生成
     auto* ppm = PostProcessManager::GetInstance();
     ppm->Create(mainCommandList, srvDescriptorHeap_.get(), depthTexture_.get());
@@ -148,9 +156,7 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     eyeCatch_->Initialize();
 
     // ここまでの kLoad に積まれたテクスチャ転送コマンドを一旦GPUにキックして完了を待つ
-    directXCommon_->CloseLoadCommandList(DirectXCommon::kLoad); 
-
-
+    commandListManager_->CloseLoadCommandList(CommandListManager::kLoad);
 
 }
 
@@ -248,13 +254,10 @@ void ButtobiEngine::Load()
 {
 
     // キック後、非同期ロード用に kLoad コマンドリストを再準備（リセット）する
-    directXCommon_->PrepareCommand(DirectXCommon::kLoad);
-
+    commandListManager_->PrepareCommand(CommandListManager::kLoad);
     // ロード用（テクスチャ転送などに使う場合）
-    auto* loadCommandList = directXCommon_->GetCommandListClass(DirectXCommon::kLoad)->Get();
-    // 描画用
-    auto* mainCommandList = directXCommon_->GetCommandListClass(DirectXCommon::kMain)->Get();
-
+    auto* mainCommandList = commandListManager_->GetCommandList(CommandListManager::kMain);
+    auto* loadCommandList = commandListManager_->GetCommandList(CommandListManager::kLoad);
     auto* pso = PSO::GetInstance();
 
 
@@ -358,7 +361,8 @@ void ButtobiEngine::Load()
         LogFile::Log("Set Debug Camera");
     }
 
-    directXCommon_->CloseLoadCommandList(DirectXCommon::kLoad);
+    //Load用のコマンドを閉じる
+    commandListManager_->CloseLoadCommandList(CommandListManager::kLoad);
 
     // ==========================================
     // 初期化完了後、メインループでの描画用に mainCommandList に切り替える
@@ -416,18 +420,12 @@ void ButtobiEngine::PreCommandSet() {
     imGuiClass.Render();
 #endif
     //ポストエフェクトの前設定
-    directXCommon_->RenderTexturePreDraw(dsvDescriptorHeap_.get(), depthTexture_.get());
-
-    auto* commandList = directXCommon_->GetCommandListClass(DirectXCommon::kMain)->Get();
-
+    directXCommon_->RenderTexturePreDraw(*commandListManager_,dsvDescriptorHeap_.get(), depthTexture_.get());
 
     //SRV管理の描画前処理
-    srvDescriptorHeap_->PreDraw(commandList);
+    srvDescriptorHeap_->PreDraw(commandListManager_->GetCommandList(CommandListManager::kMain));
 
-    directXCommon_->ViewPortAndScissorRect();
-
-
-
+    commandListManager_->SetViewPortAndScissorRect();
 }
 
 void ButtobiEngine::GameDraw()
@@ -458,20 +456,20 @@ void ButtobiEngine::GameDraw()
 
 void ButtobiEngine::PostCommandSet(const bool isLoadEnd) {
 
-    auto* commandList = directXCommon_->GetCommandListClass(DirectXCommon::kMain)->Get();
+    auto* commandList = commandListManager_->GetCommandList(CommandListManager::kMain);
     //ポストエフェクトのあと設定
     directXCommon_->RenderTexturePostDraw(depthTexture_.get());
     //描画前処理
-    directXCommon_->PreDraw();
+    directXCommon_->PreDraw(*swapChainClass_ ,*commandListManager_);
     //SRV管理の描画前処理
     srvDescriptorHeap_->PreDraw(commandList);
     //ビューポートとシザー
-    directXCommon_->ViewPortAndScissorRect();
+    commandListManager_->SetViewPortAndScissorRect();
  
     // スプライトの描画
     if (isLoadEnd) {
         //ポストエフェクト
-        directXCommon_->DrawRenderTexture(rtvDescriptorHeap_.get());
+        directXCommon_->DrawRenderTexture(*swapChainClass_,rtvDescriptorHeap_.get());
         SceneManager::DrawSprite();
 
     } else {
@@ -481,15 +479,15 @@ void ButtobiEngine::PostCommandSet(const bool isLoadEnd) {
 
 #ifdef USE_IMGUI
     //諸々の描画処理が終了タイミングでImGuiの描画コマンドを積む
-    imGuiClass.DrawImGui(directXCommon_->GetCommandList(DirectXCommon::kMain));
+    imGuiClass.DrawImGui(commandList);
 
 #endif // _DEBUG
-    directXCommon_->PostDraw();
+    commandListManager_->PostDraw(directXCommon_->GetMainBarrier(),*swapChainClass_);
 
     //時間の更新を入れる
     time_->Update();
     //次のコマンド準備をする
-    directXCommon_->PrepareCommand(DirectXCommon::kMain);
+    commandListManager_->PrepareCommand(CommandListManager::kMain);
  
 
     //フォントの使用をリセットする

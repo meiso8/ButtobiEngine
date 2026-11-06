@@ -5,7 +5,7 @@
 #include"RtvDescriptorHeap.h"
 
 void RenderTargetView::Create(
-   std::array<Microsoft::WRL::ComPtr <ID3D12Resource>,2>&swapChainResources,
+    std::array<IResource, 2 >&swapChainResources,
     RtvDescriptorHeap* rtvDescriptorHeap
 ) {
 
@@ -19,7 +19,7 @@ void RenderTargetView::Create(
         uint32_t index = rtvDescriptorHeap->Allocate();
         rtvHandles_[i] = rtvDescriptorHeap->GetCPUDescriptorHandle(index);
         DirectXCommon::GetDevice()->CreateRenderTargetView(swapChainResources[i].Get(), &rtvDesc_, rtvHandles_[i]);
-        swapChainResources[i]->SetName(L"swapChainResource");
+        swapChainResources[i].SetName(L"swapChainResource");
     }
 
 }
