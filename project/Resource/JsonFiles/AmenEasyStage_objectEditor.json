@@ -340,6 +340,25 @@
             "name": "MeltStageTrigger",
             "nextStageName": "MeltStage",
             "openFlagName": "GetSolarDisc",
+            "playerSpawnData": {
+                "transform": {
+                    "rotate": {
+                        "x": 0.0,
+                        "y": 0.04453188180923462,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "translate": {
+                        "x": 0.0,
+                        "y": -0.016628149896860123,
+                        "z": -0.5
+                    }
+                }
+            },
             "shininess": 250.0,
             "temperature": 0.5,
             "textureFilePath": "Resource/Textures/white1x1.png",
@@ -370,6 +389,63 @@
                 "y": 1.0,
                 "z": 1.0
             },
+            "directoryPath": "Resource/Models/Door",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "door.obj",
+            "glassFactor": 0.0,
+            "isLocked": false,
+            "lightMode": 2,
+            "name": "Door",
+            "nextStageName": "InformationStage",
+            "openFlagName": "",
+            "playerSpawnData": {
+                "transform": {
+                    "rotate": {
+                        "x": 0.0,
+                        "y": 2.8466224670410156,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "translate": {
+                        "x": -1.8264286518096924,
+                        "y": 0.0,
+                        "z": 2.4407968521118164
+                    }
+                }
+            },
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": -3.1415908336639404,
+                    "y": 0.0015925478655844927,
+                    "z": -3.1415908336639404
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.00037482252810150385,
+                    "y": -2.520512509818218e-07,
+                    "z": -10.53390121459961
+                }
+            },
+            "type": "StageChangeTrigger"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Cube",
@@ -382,7 +458,7 @@
             "shininess": 1.0,
             "temperature": 0.5,
             "textureFilePath": "Resource/Textures/textMemo.png",
-            "textureHandle": 111,
+            "textureHandle": 112,
             "transform": {
                 "rotate": {
                     "x": -1.0058268308639526,
@@ -424,7 +500,7 @@
             "transform": {
                 "rotate": {
                     "x": 0.0,
-                    "y": 0.05216541886329651,
+                    "y": 2.8466224670410156,
                     "z": 0.0
                 },
                 "scale": {
@@ -433,88 +509,12 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": 1.0014184713363647,
+                    "x": -1.8264286518096924,
                     "y": 0.0,
-                    "z": -6.315192222595215
+                    "z": 2.4407968521118164
                 }
             },
             "type": "EMPTY"
-        },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "directoryPath": "Resource/Models/Puzzle",
-            "disabled": false,
-            "environmentCoefficient": 0.0,
-            "file_name": "Puzzle.gltf",
-            "glassFactor": 0.0,
-            "isLocked": false,
-            "lightMode": 2,
-            "name": "PuzzleObj",
-            "nextStageName": "",
-            "openFlagName": "",
-            "shininess": 250.0,
-            "temperature": 0.75,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": 3.1415927410125732,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 0.0,
-                    "y": 1.25,
-                    "z": -1.0
-                }
-            },
-            "type": "EMPTY"
-        },
-      {
-        "color": {
-          "w": 1.0,
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "directoryPath": "Resource/Models/Door",
-        "disabled": false,
-        "environmentCoefficient": 0.0,
-        "file_name": "door.obj",
-        "glassFactor": 0.0,
-        "isLocked": false,
-        "lightMode": 2,
-        "name": "Door",
-        "nextStageName": "InformationStage",
-        "openFlagName": "",
-        "shininess": 250.0,
-        "temperature": 0.0,
-        "transform": {
-          "rotate": {
-            "x": -3.1415908336639404,
-            "y": 0.0015925478655844927,
-            "z": -3.1415908336639404
-          },
-          "scale": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0
-          },
-          "translate": {
-            "x": 0.00037482252810150385,
-            "y": -2.520512509818218e-07,
-            "z": -10.53390121459961
-          }
-        },
-        "type": "StageChangeTrigger"
-      }
+        }
     ]
 }

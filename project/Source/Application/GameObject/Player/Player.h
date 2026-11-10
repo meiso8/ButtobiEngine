@@ -25,7 +25,7 @@ public:
     ~Player();
     /// @brief 初期化処理
     /// @param pos 位置を設定する
-    void Init(const Vector3& pos);
+    void Init(const Vector3& pos, bool usePos = true);
     /// @brief 描画処理
     void Draw();
     /// @brief 更新
@@ -91,11 +91,14 @@ public:
     /// @brief サーモグラフィー
     void Thermography();
 
+
 private:
     void Move();
     void Jump();
     void Zoom();
 
+    void PlayerLerpAlpha(const float endAlpha);
+    void UpdateAlpha();
     void MouseLook();
 private:
 
@@ -155,7 +158,10 @@ private:
     //音声が鳴るタイマー
     float soundTimer_ = 0.0f;
 
-
+    float kAlphaSpeed_ = 0.25f;
+    float alphaSpeedTime_ = 0.0f;
+    bool isAlpha_ = false;
+    bool isPreAlpha_ = false;
 #pragma region//jointの行列を格納
     /// @brief 頭
     Matrix4x4 headMatrix_{};

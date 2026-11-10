@@ -1,372 +1,422 @@
 {
     "name": "GameScene",
-  "objects": [
-    {
-      "color": {
-        "w": 1.0,
-        "x": 1.0,
-        "y": 1.0,
-        "z": 1.0
-      },
-      "directoryPath": "Resource/Models/Medjed",
-      "disabled": false,
-      "environmentCoefficient": 0.0,
-      "file_name": "medjed.gltf",
-      "glassFactor": 0.0,
-      "isLocked": false,
-      "lightMode": 2,
-      "name": "Medjed11",
-      "nextStageName": "",
-      "openFlagName": "",
-      "shininess": 250.0,
-      "temperature": 0.0,
-      "transform": {
-        "rotate": {
-          "x": -3.1415884494781494,
-          "y": -0.44794440269470215,
-          "z": -3.1415908336639404
+    "objects": [
+        {
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "maskTag": 4294967295,
+                "size": {
+                    "x": 2.0,
+                    "y": 2.0,
+                    "z": 2.0
+                },
+                "tag": "unKnown",
+                "type": "Sphere"
+            },
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/Medjed",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "medjed.gltf",
+            "glassFactor": 0.0,
+            "isLocked": false,
+            "lightMode": 2,
+            "name": "Medjed11",
+            "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": -3.1415884494781494,
+                    "y": -0.44794440269470215,
+                    "z": -3.1415908336639404
+                },
+                "scale": {
+                    "x": 0.9999999403953552,
+                    "y": 1.0,
+                    "z": 0.9999999403953552
+                },
+                "translate": {
+                    "x": 0.8164443969726563,
+                    "y": -0.029592234641313553,
+                    "z": 2.958151340484619
+                }
+            },
+            "type": "MESH"
         },
-        "scale": {
-          "x": 0.9999999403953552,
-          "y": 1.0,
-          "z": 0.9999999403953552
+        {
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "maskTag": 4294967295,
+                "size": {
+                    "x": 2.0,
+                    "y": 2.0,
+                    "z": 2.0
+                },
+                "tag": "unKnown",
+                "type": "Sphere"
+            },
+            "color": {
+                "w": 0.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Plane",
+            "glassFactor": 0.0,
+            "isLocked": false,
+            "lightMode": 2,
+            "name": "Object52",
+            "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "textureFilePath": "Resource/Textures/cloudy.dds",
+            "textureHandle": 53,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "translate": {
+                    "x": 1.8916079998016357,
+                    "y": 0.0,
+                    "z": 0.7634571194648743
+                }
+            },
+            "type": "MESH"
         },
-        "translate": {
-          "x": 0.8164443969726563,
-          "y": -0.029592234641313553,
-          "z": 2.958151340484619
+        {
+            "collider": {
+                "center": {
+                    "x": 0.31442952156066895,
+                    "y": 0.7316569089889526,
+                    "z": 0.05370806157588959
+                },
+                "maskTag": 4293919235,
+                "size": {
+                    "x": 2.39933705329895,
+                    "y": 1.5653760433197021,
+                    "z": 0.5392143130302429
+                },
+                "tag": "Wall",
+                "type": "AABB"
+            },
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/Gate",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "gate.gltf",
+            "glassFactor": 0.0,
+            "isLocked": false,
+            "lightMode": 2,
+            "name": "Object5",
+            "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -2.9490816593170166,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "collider": {
+                "center": {
+                    "x": -0.4160034656524658,
+                    "y": 0.09841430187225342,
+                    "z": 0.02267872355878353
+                },
+                "maskTag": 4294959619,
+                "size": {
+                    "x": 0.37838849425315857,
+                    "y": 1.0,
+                    "z": 2.171142101287842
+                },
+                "tag": "Wall",
+                "type": "AABB"
+            },
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Cube",
+            "glassFactor": 0.0,
+            "isLocked": false,
+            "lightMode": 2,
+            "name": "Object6",
+            "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "textureFilePath": "Resource/Textures/white1x1.png",
+            "textureHandle": 0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 0.8006821274757385,
+                    "y": 0.7072674036026001,
+                    "z": 0.3982276916503906
+                },
+                "translate": {
+                    "x": -1.9688719511032104,
+                    "y": 0.375007688999176,
+                    "z": 0.0
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.7553370594978333,
+                    "z": 0.0
+                },
+                "maskTag": 4294443015,
+                "size": {
+                    "x": 4.737147331237793,
+                    "y": 1.0,
+                    "z": 6.6882219314575195
+                },
+                "tag": "Wall",
+                "type": "AABB"
+            },
+            "color": {
+                "w": 0.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Cube",
+            "glassFactor": 0.0,
+            "isLocked": false,
+            "lightMode": 2,
+            "name": "Object5",
+            "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "textureFilePath": "Resource/Textures/uvChecker.png",
+            "textureHandle": 1,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "translate": {
+                    "x": 1.8916079998016357,
+                    "y": 0.0,
+                    "z": 0.7634571194648743
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.5,
+                    "z": 0.0
+                },
+                "maskTag": 4292936199,
+                "size": {
+                    "x": 1.0,
+                    "y": 2.0,
+                    "z": 1.0
+                },
+                "tag": "TicketMac",
+                "type": "AABB"
+            },
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/TicketMac",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "ticketMac.obj",
+            "glassFactor": 0.0,
+            "isLocked": false,
+            "lightMode": 2,
+            "name": "Object8",
+            "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": -1.214098392665619e-05,
+                    "y": 1.5699999332427979,
+                    "z": -1.5858804545132443e-05
+                },
+                "scale": {
+                    "x": 0.5,
+                    "y": 0.5,
+                    "z": 0.5
+                },
+                "translate": {
+                    "x": -3.088137149810791,
+                    "y": 1.1467222066130489e-05,
+                    "z": -3.631819248199463
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 0.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Plane",
+            "glassFactor": 0.0,
+            "isLocked": false,
+            "lightMode": 2,
+            "name": "Object3",
+            "nextStageName": "AmenEasyStage",
+            "openFlagName": "",
+            "playerSpawnData": {
+                "transform": {
+                    "rotate": {
+                        "x": 0.0,
+                        "y": 0.020750440657138824,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "translate": {
+                        "x": -0.09929528087377548,
+                        "y": -0.01650761067867279,
+                        "z": -8.437456130981445
+                    }
+                }
+            },
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "textureFilePath": "Resource/Textures/white1x1.png",
+            "textureHandle": 0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -2.0182442665100098,
+                    "y": 0.9064142107963562,
+                    "z": 3.558605909347534
+                }
+            },
+            "type": "StageChangeTrigger"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/Player",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "player.gltf",
+            "glassFactor": 0.0,
+            "isLocked": false,
+            "lightMode": 2,
+            "name": "Player",
+            "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 0.020750440657138824,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -0.09929528087377548,
+                    "y": -0.01650761067867279,
+                    "z": -8.437456130981445
+                }
+            },
+            "type": "EMPTY"
         }
-      },
-      "type": "MESH"
-    },
-    {
-      "color": {
-        "w": 0.0,
-        "x": 1.0,
-        "y": 1.0,
-        "z": 1.0
-      },
-      "disabled": false,
-      "environmentCoefficient": 0.0,
-      "file_name": "Plane",
-      "glassFactor": 0.0,
-      "isLocked": false,
-      "lightMode": 2,
-      "name": "Object52",
-      "nextStageName": "",
-      "openFlagName": "",
-      "shininess": 250.0,
-      "temperature": 0.0,
-      "textureFilePath": "Resource/Textures/cloudy.dds",
-      "textureHandle": 64,
-      "transform": {
-        "rotate": {
-          "x": 0.0,
-          "y": -0.0,
-          "z": 0.0
-        },
-        "scale": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0
-        },
-        "translate": {
-          "x": 1.8916079998016357,
-          "y": 0.0,
-          "z": 0.7634571194648743
-        }
-      },
-      "type": "MESH"
-    },
-    {
-      "color": {
-        "w": 0.0,
-        "x": 1.0,
-        "y": 1.0,
-        "z": 1.0
-      },
-      "disabled": false,
-      "environmentCoefficient": 0.0,
-      "file_name": "Plane",
-      "glassFactor": 0.0,
-      "lightMode": 2,
-      "name": "Object3",
-      "nextStageName": "AmenEasyStage",
-      "shininess": 250.0,
-      "temperature": 0.0,
-      "textureHandle": 0,
-      "transform": {
-        "rotate": {
-          "x": 0.0,
-          "y": -0.0,
-          "z": 0.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "translate": {
-          "x": -2.0182442665100098,
-          "y": 0.9064142107963562,
-          "z": 3.558605909347534
-        }
-      },
-      "type": "StageChangeTrigger"
-    },
-
-
-    {
-      "collider": {
-        "center": {
-          "x": 0.31442952156066895,
-          "y": 0.7316569089889526,
-          "z": 0.05370806157588959
-        },
-        "maskTag": 4293919235,
-        "size": {
-          "x": 2.39933705329895,
-          "y": 1.5653760433197021,
-          "z": 0.5392143130302429
-        },
-        "tag": "Wall",
-        "type": "AABB"
-      },
-      "color": {
-        "w": 1.0,
-        "x": 1.0,
-        "y": 1.0,
-        "z": 1.0
-      },
-      "directoryPath": "Resource/Models/Gate",
-      "disabled": false,
-      "environmentCoefficient": 0.0,
-      "file_name": "gate.gltf",
-      "glassFactor": 0.0,
-      "isLocked": false,
-      "lightMode": 2,
-      "name": "Object5",
-      "nextStageName": "",
-      "openFlagName": "",
-      "shininess": 250.0,
-      "temperature": 0.0,
-      "transform": {
-        "rotate": {
-          "x": 0.0,
-          "y": -0.0,
-          "z": 0.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "translate": {
-          "x": -2.9490816593170166,
-          "y": 0.0,
-          "z": 0.0
-        }
-      },
-      "type": "MESH"
-    },
-    {
-        "collider": {
-          "center": {
-            "x": -0.4160034656524658,
-            "y": 0.09841430187225342,
-            "z": 0.02267872355878353
-          },
-          "maskTag": 4294959619,
-          "size": {
-            "x": 0.37838849425315857,
-            "y": 1.0,
-            "z": 2.171142101287842
-          },
-          "tag": "Wall",
-          "type": "AABB"
-        },
-      "color": {
-        "w": 1.0,
-        "x": 1.0,
-        "y": 1.0,
-        "z": 1.0
-      },
-      "disabled": false,
-      "environmentCoefficient": 0.0,
-      "file_name": "Cube",
-      "glassFactor": 0.0,
-      "isLocked": false,
-      "lightMode": 2,
-      "name": "Object6",
-      "nextStageName": "",
-      "openFlagName": "",
-      "shininess": 250.0,
-      "temperature": 0.0,
-      "textureFilePath": "Resource/Textures/white1x1.png",
-      "textureHandle": 0,
-      "transform": {
-        "rotate": {
-          "x": 0.0,
-          "y": -0.0,
-          "z": 0.0
-        },
-        "scale": {
-          "x": 0.8006821274757385,
-          "y": 0.7072674036026001,
-          "z": 0.3982276916503906
-        },
-        "translate": {
-          "x": -1.9688719511032104,
-          "y": 0.375007688999176,
-          "z": 0.0
-        }
-      },
-      "type": "MESH"
-    },
-    {
-        "collider": {
-          "center": {
-            "x": 0.0,
-            "y": 0.7553370594978333,
-            "z": 0.0
-          },
-          "maskTag": 4294443015,
-          "size": {
-            "x": 4.737147331237793,
-            "y": 1.0,
-            "z": 6.6882219314575195
-          },
-          "tag": "Wall",
-          "type": "AABB"
-        },
-      "color": {
-        "w": 0.0,
-        "x": 1.0,
-        "y": 1.0,
-        "z": 1.0
-      },
-      "disabled": false,
-      "environmentCoefficient": 0.0,
-      "file_name": "Cube",
-      "glassFactor": 0.0,
-      "isLocked": false,
-      "lightMode": 2,
-      "name": "Object5",
-      "nextStageName": "",
-      "openFlagName": "",
-      "shininess": 250.0,
-      "temperature": 0.0,
-      "textureFilePath": "Resource/Textures/uvChecker.png",
-      "textureHandle": 1,
-      "transform": {
-        "rotate": {
-          "x": 0.0,
-          "y": -0.0,
-          "z": 0.0
-        },
-        "scale": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0
-        },
-        "translate": {
-          "x": 1.8916079998016357,
-          "y": 0.0,
-          "z": 0.7634571194648743
-        }
-      },
-      "type": "MESH"
-    },
-    {
-        "collider": {
-          "center": {
-            "x": 0.0,
-            "y": 0.5,
-            "z": 0.0
-          },
-          "maskTag": 4292936199,
-          "size": {
-            "x": 1.0,
-            "y": 2.0,
-            "z": 1.0
-          },
-          "tag": "TicketMac",
-          "type": "AABB"
-        },
-      "color": {
-        "w": 1.0,
-        "x": 1.0,
-        "y": 1.0,
-        "z": 1.0
-      },
-      "directoryPath": "Resource/Models/TicketMac",
-      "disabled": false,
-      "environmentCoefficient": 0.0,
-      "file_name": "ticketMac.obj",
-      "glassFactor": 0.0,
-      "isLocked": false,
-      "lightMode": 2,
-      "name": "Object8",
-      "nextStageName": "",
-      "openFlagName": "",
-      "shininess": 250.0,
-      "temperature": 0.0,
-      "transform": {
-        "rotate": {
-          "x": -1.214098392665619e-05,
-          "y": 1.5699999332427979,
-          "z": -1.5858804545132443e-05
-        },
-        "scale": {
-          "x": 0.5,
-          "y": 0.5,
-          "z": 0.5
-        },
-        "translate": {
-          "x": -3.088137149810791,
-          "y": 1.1467222066130489e-05,
-          "z": -3.631819248199463
-        }
-      },
-      "type": "MESH"
-    },
-    {
-      "color": {
-        "w": 1.0,
-        "x": 1.0,
-        "y": 1.0,
-        "z": 1.0
-      },
-      "directoryPath": "Resource/Models/Player",
-      "disabled": false,
-      "environmentCoefficient": 0.0,
-      "file_name": "player.gltf",
-      "glassFactor": 0.0,
-      "isLocked": false,
-      "lightMode": 2,
-      "name": "Player",
-      "nextStageName": "",
-      "openFlagName": "",
-      "shininess": 250.0,
-      "temperature": 0.0,
-      "transform": {
-        "rotate": {
-          "x": 0.0,
-          "y": 0.26078397035598755,
-          "z": 0.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "translate": {
-          "x": 3.25,
-          "y": 0.0,
-          "z": -3.25
-        }
-      },
-      "type": "EMPTY"
-    }
-  ]
+    ]
 }

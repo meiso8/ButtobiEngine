@@ -36,7 +36,7 @@ void EyePosition::Update()
 void EyePosition::EasingUpdate()
 {
     //タイマーをアップデートする
-    const float speed = isDown_ ? 2.0f : 1.0f;
+    const float speed = 1.0f;
     time_ += speed* TimeManager::DeltaTime();
     time_ = std::clamp(time_, 0.0f, 1.0f);
     //イージングを行う

@@ -76,11 +76,16 @@ protected:
     // ==============オブジェクト名==================
     std::string objectName_ = "Object";
     std::string objectType_ = "EMPTY";
+
+    // ==============仮にここで定義するが、ポリモーフィズムによって定義する方が良い==================
     //移動先シーン名
     std::string nextStageName_ = "";
     //開くフラグ銘
     std::string openFlagName_ = "";
+    //ロックフラグ
     bool isLocked_ = false;
+    //プレイヤーがスポーンする地点を記録する
+    EulerTransform playerSpawPoint_{};
 
     // ==============マテリアル==================
     //マテリアルに関しては継承先で色々と変えるためどうするか迷う。
@@ -112,7 +117,6 @@ protected:
     bool usePSOKey_ = false;
     TextureFactory::Handle skyBoxTexture_ = TextureFactory::Handle::SKYBOX_TEX;
     TextureFactory::Handle dissolveTexture_ = TextureFactory::Handle::NOISE0;
-private:
 
 public:
     /// @brief コマンドリストのとsrvDescriptorHeapの借り物を入れる
@@ -143,16 +147,22 @@ public:
     // ==============オブジェクトタイプ==================
     const std::string& GetObjectType() { return objectType_; };
     void SetObjectType(const std::string& name) { objectType_ = name; }
+
+
+    //後でここをポリモーフィズムなどによって分離する
     // ==============次のステージをセットする==================
     const std::string& GetNextStageName() { return nextStageName_; };
     void SetNextStageName(const std::string& stageName) { nextStageName_ = stageName; }
-
     // ==============開くフラグ銘==================
     const std::string& GetOpenFlagName() { return openFlagName_; };
     void SetOpenFlagName(const std::string& flagName) { openFlagName_ = flagName; }
-       // ==============ロックフラグ==================/
+       // ==============ロックフラグ==================
     void SetIsLocked(const bool isLocked) { isLocked_ = isLocked; };
     bool GetIsLocked() { return isLocked_; }
+    // ==============プレイヤースポーン地点==================
+    const EulerTransform& GetPlayerSpawnPoint() { return playerSpawPoint_; }
+    void SetPlayerSpawnPoint(const EulerTransform& transform) { playerSpawPoint_ = transform; }
+
 
 
     // ==============ID情報==================

@@ -8,6 +8,8 @@
 #include"ObjectManager/ObjectManager.h"
 #include"FlagManager/FlagManager.h"
 
+EulerTransform StageChangeTrigger::currentPlayerSpawnPoint_ = { .scale = {1.0f,1.0f,1.0f},.rotate = {0.0f,0.0f,0.0f},.translate = { 3.25f, 0.0f, -3.25f } };
+
 StageChangeTrigger::StageChangeTrigger()
 {
   
@@ -51,6 +53,8 @@ void StageChangeTrigger::Create(
     object_->SetGlassFactor(data.materialData.glassFactor);
     //ライトモード
     object_->SetLightMode(static_cast<Object3d::LightMode>(data.materialData.lightMode));
+    //プレイヤーのスポーン地点
+    object_->SetPlayerSpawnPoint(data.playerSpawnData.transform);
 
     //メッシュの設定
     if (data.filePath.fileName != "empty") {
@@ -66,9 +70,6 @@ void StageChangeTrigger::Create(
         } else {
             object_->SetMeshAndMaterial(ModelManager::LoadModelAndGet(data.filePath.directoryPath  + "/" + data.filePath.fileName));
         }
-
-
-
 
     }
 
@@ -126,6 +127,8 @@ void StageChangeTrigger::OnCollision(Collider* collider)
         //次のステージに進む
         StageManager::GetInstance()->SetNextStage(object_->GetNextStageName());
         std::string name = "GO to" + object_->GetNextStageName() + "Stage";
+        //最近のスポーン地点を代入する
+        currentPlayerSpawnPoint_ = object_->GetPlayerSpawnPoint();
         LogFile::Log(name);
     }
 }
