@@ -36,8 +36,8 @@ void Player::OnCollision(Collider* collider)
         OnCollisionEnemy();
     }
 
-    if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Floor")|| collider->GetCollisionAttribute() == CollisionTag::GetTag("Block")) {
-       //床にヒットした
+    if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Floor") || collider->GetCollisionAttribute() == CollisionTag::GetTag("Block")) {
+        //床にヒットした
         isFloorHit_ = true;
         //ジャンプしていたら一律ジャンプしていないことにする
         isJump_ = false;
@@ -62,9 +62,13 @@ void Player::OnCollision(Collider* collider)
     if (collider->GetCollisionAttribute() == CollisionTag::GetTag("CameraUp")) {
         //カメラ上昇するコライダーに当たった時を記入していく
         eyePosition_->ShiftToUp();
+
+         isAlpha_ = false;
+      
     } else {
         //カメラを下に移動する
         eyePosition_->ShftToDown();
+        isAlpha_ = true;
     }
 
     //コライダーに当たった時を得る
@@ -75,7 +79,7 @@ void Player::OnCollision(Collider* collider)
 Player::Player() {
 
     //モデルを取得する
-   Model* model = ModelManager::GetModel("player.gltf");
+    Model* model = ModelManager::GetModel("player.gltf");
 
     //半径をコライダーのAABBにセットする
     float radius = 0.25f;
@@ -135,7 +139,7 @@ void Player::Init(const Vector3& pos, bool usePos)
     zoomStartTimer_ = 0.0f;
 
     //体の位置初期化
-aniObject_->Initialize();
+    aniObject_->Initialize();
     if (usePos) {
         aniObject_->SetTranslate(pos);
     } else {
@@ -147,8 +151,9 @@ aniObject_->Initialize();
 
     aniObject_->SetAnimation("Idle");
     aniObject_->UpdateAniTimer();
-   
+
     aniObject_->Update();
+
 
     //頭の行列を取得する
     headMatrix_ = aniObject_->GetWorldJointMatrix("Head");
@@ -179,6 +184,12 @@ aniObject_->Initialize();
 
     cameraRotateY_ = 0.0f;
     cameraRotateX_ = 0.0f;
+
+
+    //αかどうか
+    isAlpha_ = true;
+    isPreAlpha_ = true;
+    alphaSpeedTime_ = 0.0f;
 }
 
 
@@ -212,6 +223,7 @@ void Player::Update()
 
     Thermography();
     MouseLook();
+    UpdateAlpha();
 
     //クリックしたらサウンド
     if (InputBind::IsClick()) {
@@ -298,7 +310,7 @@ void Player::Move()
         auto& transform = aniObject_->GetTransform();
         Vector3 targetTranslate = transform.translate + (forward * horizontal.z + right * horizontal.x) * speed_;
 
-        transform.translate = Lerp(transform.translate,targetTranslate,0.5f);
+        transform.translate = Lerp(transform.translate, targetTranslate, 0.5f);
 
 
         aniObject_->SetAnimation("Walk");
@@ -432,6 +444,43 @@ void Player::Thermography()
             isThermography_ = false;
         }
     }
+
+
+}
+
+void Player::PlayerLerpAlpha(const float endAlpha)
+{
+
+    Vector4 color = aniObject_->GetColor();
+    color.w = Lerp(color.w, endAlpha, kAlphaSpeed_);
+    aniObject_->SetColor(color);
+}
+
+void Player::UpdateAlpha()
+{
+    
+    if (!isPreAlpha_ && isAlpha_) {
+        alphaSpeedTime_ = 0.0f;
+    }
+
+    isPreAlpha_ = isAlpha_;
+
+    if (isAlpha_) {
+        //αの時はすぐ下げる
+        PlayerLerpAlpha(0.0f);
+    } else {
+    
+        //不透明の時は
+        alphaSpeedTime_ += TimeManager::DeltaTime();
+        alphaSpeedTime_ = std::clamp(alphaSpeedTime_,0.0f, 1.0f);
+  
+        //一秒待ってから不透明にする
+        if (alphaSpeedTime_ >= 0.5f) {
+            PlayerLerpAlpha(1.0f);
+        }
+   
+    }
+
 
 
 }
