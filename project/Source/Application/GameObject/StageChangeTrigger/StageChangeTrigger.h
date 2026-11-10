@@ -15,7 +15,10 @@ public:
     void OnCollision(Collider* collider) override;
     const std::string GetObjectString();
     const Vector3 GetWorldPos() const{ return object_->GetWorldTransform().GetWorldPosition(); };
+    static EulerTransform GetCurrentPlayerSpawnPoint() { return currentPlayerSpawnPoint_; }
+    Object3d* GetObject3d() { return object_.get(); };
 private:
     std::unique_ptr<Object3d> object_ = nullptr;
+    static EulerTransform currentPlayerSpawnPoint_;
 };
 

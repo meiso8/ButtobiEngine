@@ -2,6 +2,21 @@
     "name": "GameScene",
     "objects": [
         {
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "maskTag": 4294967295,
+                "size": {
+                    "x": 2.0,
+                    "y": 2.0,
+                    "z": 2.0
+                },
+                "tag": "unKnown",
+                "type": "Sphere"
+            },
             "color": {
                 "w": 1.0,
                 "x": 1.0,
@@ -20,7 +35,7 @@
             "shininess": 250.0,
             "temperature": 0.0,
             "textureFilePath": "Resource/Textures/none.png",
-            "textureHandle": 29,
+            "textureHandle": 20,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -41,6 +56,21 @@
             "type": "MESH"
         },
         {
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "maskTag": 4294967295,
+                "size": {
+                    "x": 2.0,
+                    "y": 2.0,
+                    "z": 2.0
+                },
+                "tag": "unKnown",
+                "type": "Sphere"
+            },
             "color": {
                 "w": 1.0,
                 "x": 1.0,
@@ -59,7 +89,7 @@
             "shininess": 250.0,
             "temperature": 0.20000000298023224,
             "textureFilePath": "Resource/Textures/arrow.png",
-            "textureHandle": 54,
+            "textureHandle": 44,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -80,6 +110,21 @@
             "type": "MESH"
         },
         {
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "maskTag": 4294967295,
+                "size": {
+                    "x": 2.0,
+                    "y": 2.0,
+                    "z": 2.0
+                },
+                "tag": "unKnown",
+                "type": "Sphere"
+            },
             "color": {
                 "w": 1.0,
                 "x": 1.0,
@@ -98,7 +143,7 @@
             "shininess": 250.0,
             "temperature": 0.20000000298023224,
             "textureFilePath": "Resource/Textures/normalGlass.png",
-            "textureHandle": 57,
+            "textureHandle": 47,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -119,6 +164,21 @@
             "type": "MESH"
         },
         {
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "maskTag": 4294967295,
+                "size": {
+                    "x": 2.0,
+                    "y": 2.0,
+                    "z": 2.0
+                },
+                "tag": "unKnown",
+                "type": "Sphere"
+            },
             "color": {
                 "w": 1.0,
                 "x": 1.0,
@@ -137,7 +197,7 @@
             "shininess": 250.0,
             "temperature": 0.0,
             "textureFilePath": "Resource/Textures/sm.png",
-            "textureHandle": 22,
+            "textureHandle": 17,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -158,6 +218,21 @@
             "type": "MESH"
         },
         {
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "maskTag": 4294967295,
+                "size": {
+                    "x": 2.0,
+                    "y": 2.0,
+                    "z": 2.0
+                },
+                "tag": "unKnown",
+                "type": "Sphere"
+            },
             "color": {
                 "w": 1.0,
                 "x": 1.0,
@@ -176,7 +251,7 @@
             "shininess": 250.0,
             "temperature": 1.0,
             "textureFilePath": "Resource/Textures/meltGlass.png",
-            "textureHandle": 56,
+            "textureHandle": 46,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -197,22 +272,21 @@
             "type": "MESH"
         },
         {
-        
-          "collider": {
-            "center": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "maskTag": 4294508547,
+                "size": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "tag": "Wall",
+                "type": "AABB"
             },
-            "maskTag": 4294508547,
-            "size": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "tag": "Wall",
-            "type": "AABB"
-          },
             "color": {
                 "w": 1.0,
                 "x": 1.0,
@@ -231,7 +305,7 @@
             "shininess": 368.4763488769531,
             "temperature": 0.0,
             "textureFilePath": "Resource/Textures/none.png",
-            "textureHandle": 29,
+            "textureHandle": 20,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -285,7 +359,7 @@
             "shininess": 250.0,
             "temperature": 0.0,
             "textureFilePath": "Resource/Textures/none.png",
-            "textureHandle": 29,
+            "textureHandle": 20,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -306,6 +380,21 @@
             "type": "MESH"
         },
         {
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "maskTag": 4294967295,
+                "size": {
+                    "x": 2.0,
+                    "y": 2.0,
+                    "z": 2.0
+                },
+                "tag": "unKnown",
+                "type": "Sphere"
+            },
             "color": {
                 "w": 1.0,
                 "x": 1.0,
@@ -324,7 +413,7 @@
             "shininess": 250.0,
             "temperature": 0.0,
             "textureFilePath": "Resource/Textures/book.png",
-            "textureHandle": 25,
+            "textureHandle": 113,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -345,6 +434,21 @@
             "type": "MESH"
         },
         {
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "maskTag": 4294967295,
+                "size": {
+                    "x": 2.0,
+                    "y": 2.0,
+                    "z": 2.0
+                },
+                "tag": "unKnown",
+                "type": "Sphere"
+            },
             "color": {
                 "w": 1.0,
                 "x": 1.0,
@@ -363,7 +467,7 @@
             "shininess": 250.0,
             "temperature": 0.0,
             "textureFilePath": "Resource/Textures/none.png",
-            "textureHandle": 29,
+            "textureHandle": 20,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -384,6 +488,21 @@
             "type": "MESH"
         },
         {
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "maskTag": 4294967295,
+                "size": {
+                    "x": 2.0,
+                    "y": 2.0,
+                    "z": 2.0
+                },
+                "tag": "unKnown",
+                "type": "Sphere"
+            },
             "color": {
                 "w": 1.0,
                 "x": 1.0,
@@ -402,7 +521,7 @@
             "shininess": 250.0,
             "temperature": 0.0,
             "textureFilePath": "Resource/Textures/book04.png",
-            "textureHandle": 28,
+            "textureHandle": 114,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -456,7 +575,7 @@
             "shininess": 250.0,
             "temperature": 0.0,
             "textureFilePath": "Resource/Textures/none.png",
-            "textureHandle": 29,
+            "textureHandle": 20,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -477,6 +596,21 @@
             "type": "MESH"
         },
         {
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "maskTag": 4294967295,
+                "size": {
+                    "x": 2.0,
+                    "y": 2.0,
+                    "z": 2.0
+                },
+                "tag": "unKnown",
+                "type": "Sphere"
+            },
             "color": {
                 "w": 1.0,
                 "x": 0.4156862795352936,
@@ -515,6 +649,21 @@
             "type": "MESH"
         },
         {
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "maskTag": 4294967295,
+                "size": {
+                    "x": 2.0,
+                    "y": 2.0,
+                    "z": 2.0
+                },
+                "tag": "unKnown",
+                "type": "Sphere"
+            },
             "color": {
                 "w": 1.0,
                 "x": 1.0,
@@ -533,7 +682,7 @@
             "shininess": 250.0,
             "temperature": 0.0,
             "textureFilePath": "Resource/Textures/none.png",
-            "textureHandle": 29,
+            "textureHandle": 20,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -554,6 +703,21 @@
             "type": "MESH"
         },
         {
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "maskTag": 4294967295,
+                "size": {
+                    "x": 2.0,
+                    "y": 2.0,
+                    "z": 2.0
+                },
+                "tag": "unKnown",
+                "type": "Sphere"
+            },
             "color": {
                 "w": 1.0,
                 "x": 1.0,
@@ -572,7 +736,7 @@
             "shininess": 250.0,
             "temperature": 0.0,
             "textureFilePath": "Resource/Textures/book04.png",
-            "textureHandle": 28,
+            "textureHandle": 114,
             "transform": {
                 "rotate": {
                     "x": 3.1415839195251465,
@@ -592,61 +756,75 @@
             },
             "type": "MESH"
         },
-      {
-        
-          "collider": {
-            "center": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
+        {
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "maskTag": 4294508547,
+                "size": {
+                    "x": 6.180190563201904,
+                    "y": 6.180190563201904,
+                    "z": 6.180190563201904
+                },
+                "tag": "Wall",
+                "type": "Sphere"
             },
-            "maskTag": 4294508547,
-            "size": {
-              "x": 6.180190563201904,
-              "y": 6.180190563201904,
-              "z": 6.180190563201904
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
             },
-            "tag": "Wall",
-            "type": "Sphere"
-          },
-          "color": {
-            "w": 1.0,
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0
-          },
-          "directoryPath": "Resource/Models/Fountain",
-          "disabled": false,
-          "environmentCoefficient": 0.0,
-          "file_name": "Fountain.obj",
-          "glassFactor": 0.0,
-          "isLocked": false,
-          "lightMode": 2,
-          "name": "Fountain",
-          "nextStageName": "",
-          "openFlagName": "",
-          "shininess": 250.0,
-          "temperature": 0.0,
-          "transform": {
-            "rotate": {
-              "x": 0.0,
-              "y": -0.0,
-              "z": 0.0
+            "directoryPath": "Resource/Models/Fountain",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Fountain.obj",
+            "glassFactor": 0.0,
+            "isLocked": false,
+            "lightMode": 2,
+            "name": "Fountain",
+            "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -10.025607109069824,
+                    "y": 0.25578248500823975,
+                    "z": 0.0
+                }
             },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "translate": {
-              "x": -10.025607109069824,
-              "y": 0.25578248500823975,
-              "z": 0.0
-            }
-          },
-          "type": "MESH"
+            "type": "MESH"
         },
         {
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "maskTag": 4294967295,
+                "size": {
+                    "x": 2.0,
+                    "y": 2.0,
+                    "z": 2.0
+                },
+                "tag": "unKnown",
+                "type": "Sphere"
+            },
             "color": {
                 "w": 1.0,
                 "x": 1.0,
@@ -665,7 +843,7 @@
             "shininess": 250.0,
             "temperature": 0.0,
             "textureFilePath": "Resource/Textures/puzzleNum.png",
-            "textureHandle": 31,
+            "textureHandle": 22,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -686,6 +864,21 @@
             "type": "MESH"
         },
         {
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "maskTag": 4294967295,
+                "size": {
+                    "x": 2.0,
+                    "y": 2.0,
+                    "z": 2.0
+                },
+                "tag": "unKnown",
+                "type": "Sphere"
+            },
             "color": {
                 "w": 1.0,
                 "x": 1.0,
@@ -724,6 +917,60 @@
             "type": "MESH"
         },
         {
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "maskTag": 4294705155,
+                "size": {
+                    "x": 8.0,
+                    "y": 8.0,
+                    "z": 8.0
+                },
+                "tag": "Fire",
+                "type": "Sphere"
+            },
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Cube",
+            "glassFactor": 0.0,
+            "isLocked": false,
+            "lightMode": 2,
+            "name": "Object17",
+            "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "textureFilePath": "Resource/Textures/white1x1.png",
+            "textureHandle": 0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -10.127548217773438,
+                    "y": -0.13944251835346222,
+                    "z": -2.361088991165161e-05
+                }
+            },
+            "type": "MESH"
+        },
+        {
             "color": {
                 "w": 1.0,
                 "x": 1.0,
@@ -740,6 +987,25 @@
             "name": "Object15",
             "nextStageName": "AmenEasyStage",
             "openFlagName": "",
+            "playerSpawnData": {
+                "transform": {
+                    "rotate": {
+                        "x": 0.0,
+                        "y": -3.144131660461426,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "translate": {
+                        "x": -0.14606936275959015,
+                        "y": -0.016878148540854454,
+                        "z": 4.658664703369141
+                    }
+                }
+            },
             "shininess": 250.0,
             "temperature": 0.0,
             "transform": {
@@ -761,57 +1027,44 @@
             },
             "type": "StageChangeTrigger"
         },
-      {
-        "collider": {
-          "center": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0
-          },
-          "maskTag": 4294705155,
-          "size": {
-            "x": 8.0,
-            "y": 8.0,
-            "z": 8.0
-          },
-          "tag": "Fire",
-          "type": "Sphere"
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/Player",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "player.gltf",
+            "glassFactor": 0.0,
+            "isLocked": false,
+            "lightMode": 2,
+            "name": "Player",
+            "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -3.144131660461426,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -0.14606936275959015,
+                    "y": -0.016878148540854454,
+                    "z": 4.658664703369141
+                }
+            },
+            "type": "EMPTY"
         },
-        "color": {
-          "w": 1.0,
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "disabled": false,
-        "environmentCoefficient": 0.0,
-        "file_name": "Cube",
-        "glassFactor": 0.0,
-        "lightMode": 2,
-        "name": "Object17",
-        "nextStageName": "",
-        "shininess": 250.0,
-        "temperature": 0.0,
-        "textureHandle": 31,
-        "transform": {
-          "rotate": {
-            "x": 0.0,
-            "y": -0.0,
-            "z": 0.0
-          },
-          "scale": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0
-          },
-          "translate": {
-            "x": -10.127548217773438,
-            "y": -0.13944251835346222,
-            "z": -2.361088991165161e-05
-          }
-        },
-        "type": "MESH"
-      },
         {
             "color": {
                 "w": 1.0,
@@ -846,44 +1099,6 @@
                     "x": 8.5,
                     "y": 1.1109999418258667,
                     "z": -5.0
-                }
-            },
-            "type": "EMPTY"
-        },
-        {
-            "color": {
-                "w": 0.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "directoryPath": "Resource/Models/Cat",
-            "disabled": false,
-            "environmentCoefficient": 0.0,
-            "file_name": "cat.obj",
-            "glassFactor": 0.0,
-            "isLocked": false,
-            "lightMode": 1,
-            "name": "Bastet",
-            "nextStageName": "BastetStage",
-            "openFlagName": "",
-            "shininess": 0.0,
-            "temperature": 0.20000000298023224,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
                 }
             },
             "type": "EMPTY"

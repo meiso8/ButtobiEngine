@@ -20,6 +20,28 @@ void Stage::LoadAndCreateObject(const std::string& fileName)
 void Stage::UpdateObject()
 {
 
+#ifdef _DEVELOP
+    ImGui::Begin("StageTriggers");
+
+    for (auto& trigger : stageTriggers_) {
+        ImGui::PushID(trigger->GetObject3d()->GetObjectID());
+        if(ImGui::TreeNode(trigger->GetObject3d()->GetObjectName().c_str())){
+            ImGui::Text(trigger->GetObject3d()->GetObjectName().c_str());
+            if (ImGui::Button("SaveSpawnPoint")) {
+                trigger->GetObject3d()->SetPlayerSpawnPoint(GetPlayer()->GetBodyWorldTransform().eTransform_);
+            }
+            ImGui::TreePop();
+        }
+        ImGui::PopID();
+        //ステージトリガーだったら
+    
+   
+    }
+    ImGui::End();
+
+#endif
+
+
     for (auto& obj : objects_) {
         obj->obj_->Update();
     }
@@ -63,10 +85,8 @@ Object3d* Stage::GetObj(const std::string& name)
         if (obj->obj_->GetObjectName() == name) {
             if (obj->obj_ != nullptr) {
                 return obj->obj_.get();
-            }
-           
+            } 
         }
-   
     }
 
     return nullptr;

@@ -20,7 +20,7 @@
 #include"DebugUI.h"
 #include"ItemManager/ItemManager.h"
 #include"FlagManager/FlagManager.h"
-
+#include"StageChangeTrigger/StageChangeTrigger.h"
 
 void Player::OnCollision(Collider* collider)
 {
@@ -125,7 +125,7 @@ Player::~Player()
     aniObject_->UnRegisterObject();
 }
 
-void Player::Init(const Vector3& pos)
+void Player::Init(const Vector3& pos, bool usePos)
 {
     //ジャンプ
     isJump_ = false;
@@ -135,9 +135,13 @@ void Player::Init(const Vector3& pos)
     zoomStartTimer_ = 0.0f;
 
     //体の位置初期化
-    aniObject_->Initialize();
-
-    aniObject_->SetTranslate(pos);
+aniObject_->Initialize();
+    if (usePos) {
+        aniObject_->SetTranslate(pos);
+    } else {
+        //最近のステージトリガーのスポーン地点を得る
+        aniObject_->SetTransform(StageChangeTrigger::GetCurrentPlayerSpawnPoint());
+    }
     aniObject_->SetObjectName("Player");
     aniObject_->RegisterObject();
 
@@ -236,6 +240,8 @@ void Player::Debug()
     DebugUI::CheckObject3d(*aniObject_);
     DebugUI::ShowMatrix4x4(headMatrix_, "HeadMatrix");
     ImGui::End();
+
+
 
 #endif //USE_IMGUI
 }

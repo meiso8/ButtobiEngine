@@ -53,7 +53,6 @@ public:
     void Finalize();
 
     void SetDrawObject(float alpha, Object3d* object3d);
-
 private:      
     void Save();
     void SetName();

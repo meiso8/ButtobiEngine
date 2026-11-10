@@ -55,6 +55,8 @@ struct LevelData {
     struct StageChangeTriggerData {
         MaterialData materialData;
         std::string nextStageName;
+        //プレイヤーがスポーンする地点を入れる
+        PlayerSpawnData playerSpawnData;
         MeshFileData filePath;
         EulerTransform transform;
         ColliderData colliderData;

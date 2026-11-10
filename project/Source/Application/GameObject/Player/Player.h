@@ -25,7 +25,7 @@ public:
     ~Player();
     /// @brief 初期化処理
     /// @param pos 位置を設定する
-    void Init(const Vector3& pos);
+    void Init(const Vector3& pos, bool usePos = true);
     /// @brief 描画処理
     void Draw();
     /// @brief 更新

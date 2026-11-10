@@ -39,7 +39,7 @@ void InformationStage::StageTransitionInitialize()
     GetMemoManager()->GenerateMemos({});
     // ミイラ前に移動
     GetPlayer()->Init({3.25f, 0.0f, -3.25f});
-
+ 
     gate_->Initialize();
     gateSensor_->Initialize();
 

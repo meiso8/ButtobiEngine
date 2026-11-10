@@ -288,6 +288,7 @@ void ObjectManager::SetDrawObject(float alpha, Object3d* object3d)
     objectAlpha_.push_back(alobj);
 }
 
+
 void ObjectManager::Finalize()
 {
     objectAlpha_.clear();
@@ -341,6 +342,12 @@ void ObjectManager::Save()
             {"isLocked",object->GetIsLocked()},
 
         };
+
+        if (object->GetObjectType() == "StageChangeTrigger") {
+            //ステージトリガーなら
+            objectJson["playerSpawnData"]["transform"] = JsonFile::EulerTransformToJson(object->GetPlayerSpawnPoint());
+        }
+
 
         //輝度を追加
 

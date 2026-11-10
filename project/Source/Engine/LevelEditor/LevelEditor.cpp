@@ -290,7 +290,7 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
         LoadCollider(objectData.colliderData, object);
 
     } else if (type.compare(objectTypeName_[kPlayerSpawn]) == 0) {
-        //ぷれいやーでーた　
+        //プレイヤーデータ
         levelData->players.emplace_back(LevelData::PlayerSpawnData{});
         LevelData::PlayerSpawnData& playerData = levelData->players.back();
        //トランスフォームの読み込み
@@ -330,6 +330,11 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
         LoadTransform(object, stageChangeTriggerData.transform);
         //コライダー
         LoadCollider(stageChangeTriggerData.colliderData, object);
+
+        if (object.contains("playerSpawnData")) {
+            //プレイヤーのスポーン地点の読み込み
+            LoadTransform(object["playerSpawnData"], stageChangeTriggerData.playerSpawnData.transform);
+        }
     }
 
 }
