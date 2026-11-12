@@ -5,8 +5,9 @@
 #include<cassert>
 #include"Bone.h"
 #include<iostream>
+#include"TimeManager.h"
 
-std::unordered_map < std::filesystem::path,std::map<std::string, Animation>> AnimationManager::animations_;
+std::unordered_map < std::filesystem::path, std::map<std::string, Animation>> AnimationManager::animations_;
 
 
 std::map<std::string, Animation>& AnimationManager::LoadAnimation(const std::filesystem::path& filePath)
@@ -23,14 +24,14 @@ std::map<std::string, Animation>& AnimationManager::LoadAnimation(const std::fil
     const aiScene* scene = importer.ReadFile(filePath.string(), 0);
     assert(scene->mNumAnimations != 0);//アニメーションがない
 
-    for (uint32_t i = 0; i < scene->mNumAnimations;++i) {
-        
+    for (uint32_t i = 0; i < scene->mNumAnimations; ++i) {
+
         Animation animation;
         //複数対応をしていく
         aiAnimation* animationAssimp = scene->mAnimations[i];
         //mDuration : mTicksPerSecondで指定された周波数における長さ、mTicksPerSecond : 周波数
         animation.duration = float(animationAssimp->mDuration / animationAssimp->mTicksPerSecond);//時間の単位を秒に変換　
-    
+
         {
             //NodeAnimatioinの解析
              //assimpでは個々のNodeのAnimationをchannelと呼んでいるのでchannelを回してnodeAnimetionの情報を取ってくる
@@ -96,19 +97,38 @@ Quaternion Interpolate(const Quaternion& a, const Quaternion& b, float t) {
     return Slerp(a, b, t);
 }
 
-void ApplyAnimation(Skeleton& skeleton, const Animation& animation, const float animationTime)
-{
-
-    for (Joint& joint : skeleton.joints) {
+void ApplyJointAnimation(std::vector<Joint>& joints, const Animation& animation, const float animationTime) {
+    for (Joint& joint : joints) {
         //対象のJointのAnimationがあれば、値の適用を行う。
         if (auto it = animation.nodeAnimations.find(joint.name); it != animation.nodeAnimations.end()) {
             const NodeAnimation& rootNodeAnimation = (*it).second;
             joint.transform.translate = CalculateValue(rootNodeAnimation.translate.keyframes, animationTime);
             joint.transform.rotate = CalculateValue(rootNodeAnimation.rotate.keyframes, animationTime);
             joint.transform.scale = CalculateValue(rootNodeAnimation.scale.keyframes, animationTime);
-
         }
+    }
+}
 
+void ApplyAnimation(Skeleton& skeleton, const Animation& animation, const float animationTime)
+{
+    ApplyJointAnimation(skeleton.joints, animation, animationTime);
+}
+
+void BlendAnimation(Skeleton& skeleton, const Animation& currentAnimation, std::vector<Joint>& preJoints,
+    std::vector<Joint>& nextJoints,const float blendTimer, const float blendTime)
+{
+
+    if (blendTimer == 0.0f) {
+        //タイマーが0の期間に次のアニメーションを計算してそこまでをブレンドする
+        ApplyJointAnimation(nextJoints, currentAnimation, 0.0f);
+    }
+
+    const float local = TimeManager::GetLocalTimer(blendTimer, 0.0f, blendTime);
+
+    for (int i = 0; i < skeleton.joints.size(); ++i) {
+        skeleton.joints[i].transform.translate = Interpolate(preJoints[i].transform.translate, nextJoints[i].transform.translate, local);
+        skeleton.joints[i].transform.rotate = Interpolate(preJoints[i].transform.rotate, nextJoints[i].transform.rotate, local);
+        skeleton.joints[i].transform.scale = Interpolate(preJoints[i].transform.scale, nextJoints[i].transform.scale, local);
     }
 
 }

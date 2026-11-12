@@ -201,7 +201,6 @@ void Player::Draw()
     if (eyePosition_->IsCameraUpOrDown()) {
         aniObject_->Draw();
     }
-
 }
 
 
