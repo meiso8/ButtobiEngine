@@ -123,7 +123,7 @@ void AnimationObject3d::UpdateAnimation()
             //アニメーションの更新を行って、骨ごとのLocal情報を更新する
             ApplyAnimation(*skeleton, *animation, animationTime_);
         } else {
-            BlendAnimation(*skeleton, *animation, preJoints_, nextJoints_, blendTimer_, blendTime_);
+            BlendAnimation(*skeleton, preJoints_, nextJoints_, blendTimer_, blendTime_);
         }
 
         //現在の骨ごとのLocal情報を基にSkeletonSpaceの情報を更新する
@@ -359,16 +359,15 @@ void AnimationObject3d::SetAnimation(const std::string animName, const float& bl
         return;
     }
 
-    Skeleton* skeleton = skinningModel_->GetSkeleton();
-
-    if (skeleton) {
-        preJoints_ = skeleton->joints;
-    }
-
     currentAnimation_ = animName;
     blendTimer_ = 0.0f;
     isBlendEnd_ = false;
-    blendTime_ = blendTime;
 
+    blendTime_ = blendTime;
+    Skeleton* skeleton = skinningModel_->GetSkeleton();
+    if (skeleton) {
+        preJoints_ = skeleton->joints;
+        ApplyJointAnimation(nextJoints_, *FindAndGetAnimation(), 0.0f);
+    }
 }
 

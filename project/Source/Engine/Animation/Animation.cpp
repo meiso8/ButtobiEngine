@@ -114,14 +114,10 @@ void ApplyAnimation(Skeleton& skeleton, const Animation& animation, const float 
     ApplyJointAnimation(skeleton.joints, animation, animationTime);
 }
 
-void BlendAnimation(Skeleton& skeleton, const Animation& currentAnimation, std::vector<Joint>& preJoints,
+void BlendAnimation(Skeleton& skeleton, std::vector<Joint>& preJoints,
     std::vector<Joint>& nextJoints,const float blendTimer, const float blendTime)
 {
 
-    if (blendTimer == 0.0f) {
-        //タイマーが0の期間に次のアニメーションを計算してそこまでをブレンドする
-        ApplyJointAnimation(nextJoints, currentAnimation, 0.0f);
-    }
 
     const float local = TimeManager::GetLocalTimer(blendTimer, 0.0f, blendTime);
 

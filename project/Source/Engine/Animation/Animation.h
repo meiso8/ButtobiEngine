@@ -47,7 +47,7 @@ template <typename T> T CalculateValue(const  std::vector<Keyframe<T>>& keyframe
 
 void ApplyAnimation(Skeleton& skeleton, const Animation& animation, const float animationTime);
 void ApplyJointAnimation(std::vector<Joint>& joints, const Animation& animation, const float animationTime);
-void BlendAnimation(Skeleton& skeleton, const Animation& currentAnimation, std::vector<Joint>& preJoints,
+void BlendAnimation(Skeleton& skeletons, std::vector<Joint>& preJoints,
     std::vector<Joint>& nextJoints, const float blendTimer, const float blendTime);
 
 

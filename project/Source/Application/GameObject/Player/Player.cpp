@@ -342,8 +342,11 @@ void Player::Jump()
 
     velocity_.y = std::clamp(velocity_.y, -1.0f, kJumpSpeed_);
 
-
-    velocity_.y -= TimeManager::DeltaTime() * 0.98f;
+    if (TimeManager::DeltaTime() <= 0.025f) {
+        //重力処理を行うが、著しくデルタタイムが上がったら処理をしない
+        //仮に40fpsとする
+        velocity_.y -= TimeManager::DeltaTime() * 0.98f;
+    }
 
     auto& transform = aniObject_->GetTransform();
     transform.translate.y += velocity_.y;

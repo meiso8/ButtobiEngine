@@ -3,6 +3,7 @@
 #include"Collision.h"
 #include"Matrix/MakeMatrix.h"
 #include"Log.h"
+#include"TimeManager.h"
 
 Vector3 ParentMatrix::GetWorldTransformByMatrix(const Matrix4x4& mat)
 {
@@ -219,7 +220,6 @@ void ResolveCollision(Vector3& pos, Vector3& velocity, const CollisionInfo& info
 
     pos += info.normal * info.penetration;
 
-    //一旦ここをコメントアウトして見る
     float normalVelocity = Dot(velocity, info.normal);
 
     if (normalVelocity < 0.0f) {
