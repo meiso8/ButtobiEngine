@@ -63,10 +63,10 @@ const std::map<std::string, Animation>& AnimationObject3d::GetAnimations()const
 Matrix4x4 AnimationObject3d::GetWorldJointMatrix(const std::string name)
 {
     auto* matrix = skinningModel_->GetJointMatrix(name);
-   
+
     //行列があったら
     if (matrix) {
-       return *matrix* worldMatrix_;
+        return *matrix * worldMatrix_;
     }
 
     return MakeIdentity4x4();
@@ -76,7 +76,7 @@ const float AnimationObject3d::GetCurrentAnimProgress()
 {
     const Animation* animation = FindAndGetAnimation();
     if (animation) {
-        return TimeManager::GetLocalTimer(animationTime_,0.0f, animation->duration);
+        return TimeManager::GetLocalTimer(animationTime_, 0.0f, animation->duration);
     } else {
         return 0.0f;
         //もしアニメーションが見つからなかったら0.0fで返す
@@ -98,7 +98,7 @@ void AnimationObject3d::ImGuiDebugBone()
 
 void AnimationObject3d::UpdateAnimation()
 {
-  const ModelData* modelData = skinningModel_->GetModelData();
+    const ModelData* modelData = skinningModel_->GetModelData();
     Skeleton* skeleton = skinningModel_->GetSkeleton();
     SkinCluster* skinCluster = skinningModel_->GetSkinCluster();
 
@@ -116,15 +116,20 @@ void AnimationObject3d::UpdateAnimation()
 
     const Animation* animation = FindAndGetAnimation();
 
-    if (animation&& skinCluster&& skeleton) {
+    if (animation && skinCluster && skeleton) {
         //アニメーションがあったら
 
-        //アニメーションの更新を行って、骨ごとのLocal情報を更新する
-        ApplyAnimation(*skeleton, *animation, animationTime_);
+        if (isBlendEnd_) {
+            //アニメーションの更新を行って、骨ごとのLocal情報を更新する
+            ApplyAnimation(*skeleton, *animation, animationTime_);
+        } else {
+            BlendAnimation(*skeleton, *animation, preJoints_, nextJoints_, blendTimer_, blendTime_);
+        }
+
         //現在の骨ごとのLocal情報を基にSkeletonSpaceの情報を更新する
-       Bone::UpdateSkeleton(*skeleton);
+        Bone::UpdateSkeleton(*skeleton);
         //SkeletonSpaceの情報を基に、SkinClusterのMatrixPaletteを更新する
-       Skin::UpdateSkinCluster(*skinCluster, *skeleton);
+        Skin::UpdateSkinCluster(*skinCluster, *skeleton);
     }
 
 
@@ -160,18 +165,35 @@ const Animation* AnimationObject3d::FindAndGetAnimation()
 
 void AnimationObject3d::UpdateAniTimer(const bool& isLoop)
 {
-    animationTime_ += TimeManager::DeltaTime();
 
-    //アニメーションを探す
-    const Animation* animation = FindAndGetAnimation();
+    if (isBlendEnd_) {
+        //ブレンドが終了したら
 
-    if (animation) {
-        if (isLoop) {
-            animationTime_ = std::fmod(animationTime_, animation->duration);
-        } else {
-            animationTime_ = std::clamp(animationTime_, 0.0f, animation->duration);
+        animationTime_ += TimeManager::DeltaTime();
+
+        //アニメーションを探す
+        const Animation* animation = FindAndGetAnimation();
+
+        if (animation) {
+            if (isLoop) {
+                animationTime_ = std::fmod(animationTime_, animation->duration);
+            } else {
+                animationTime_ = std::clamp(animationTime_, 0.0f, animation->duration);
+            }
         }
+
+    } else {
+        blendTimer_ += TimeManager::DeltaTime();
+
+        if (blendTimer_ >= blendTime_) {
+            //ブレンドタイマーが一定時間を経過するとブレンド終了とする
+            isBlendEnd_ = true;
+            blendTimer_ = 0.0f;
+        }
+
     }
+
+
 
 }
 bool AnimationObject3d::IsAnimEnd()
@@ -193,21 +215,31 @@ void AnimationObject3d::SetModelAndLoadAnimation(const Model* model)
 
     skinningModel_->SetModel(model);
 
+
+    Skeleton* skeleton = skinningModel_->GetSkeleton();
+
+    if (skeleton) {
+        preJoints_.resize(skeleton->joints.size());
+        nextJoints_.resize(skeleton->joints.size());
+        preJoints_ = skeleton->joints;
+        nextJoints_ = skeleton->joints;
+    }
+
 #ifdef _DEBUG
     if (debugBone_) {
         debugBone_->Create(*skinningModel_->GetSkeleton());
     }
-   
+
 #endif
 
 }
 
 void AnimationObject3d::Draw(
-    const BlendMode& blendMode, 
+    const BlendMode& blendMode,
     const CullMode& cullMode,
     const MaskMode maskMode,
     const bool usePSOKey,
-    const TextureFactory::Handle skyBoxTexture, 
+    const TextureFactory::Handle skyBoxTexture,
     const TextureFactory::Handle dissolveTexture,
     const bool useObjectManagerDraw)
 {
@@ -318,5 +350,25 @@ void AnimationObject3d::MeshDraw()
     //モデルデータの取得
     const auto* modelData = skinningModel_->GetModelData();
     DrawModel(modelData);
+}
+
+void AnimationObject3d::SetAnimation(const std::string animName, const float& blendTime)
+{
+
+    if (currentAnimation_ == animName) {
+        return;
+    }
+
+    Skeleton* skeleton = skinningModel_->GetSkeleton();
+
+    if (skeleton) {
+        preJoints_ = skeleton->joints;
+    }
+
+    currentAnimation_ = animName;
+    blendTimer_ = 0.0f;
+    isBlendEnd_ = false;
+    blendTime_ = blendTime;
+
 }
 

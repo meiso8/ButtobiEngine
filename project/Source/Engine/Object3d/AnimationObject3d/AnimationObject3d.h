@@ -38,9 +38,7 @@ public:
     /// @param commandList コマンドリストをセットする
     void MeshDraw()override;
     void SetSkinning(const bool& flag) { isSkinning_ = flag; }
-    void SetAnimation(const std::string animName) {
-        currentAnimation_ = animName;
-    };
+    void SetAnimation(const std::string animName,const float& blendTime = 0.25f);
     const std::string GetCurrentAnimation() { return currentAnimation_; }
    const std::map<std::string, Animation>& GetAnimations()const;
     Matrix4x4 GetWorldJointMatrix(const std::string name);
@@ -55,7 +53,14 @@ private:
 private:
 
     float animationTime_ = 0.0f;
-    std::string currentAnimation_ = "Idle";
+
+    std::vector<Joint> preJoints_;
+    std::vector<Joint> nextJoints_;
+    float blendTimer_ = 0.0f;
+    float blendTime_ = 0.25f;
+    bool isBlendEnd_ = false;
+
+    std::string currentAnimation_ = "";
 
     Matrix4x4 worldMatrix_ = { 0.0f };
     bool isSkinning_ = true;
