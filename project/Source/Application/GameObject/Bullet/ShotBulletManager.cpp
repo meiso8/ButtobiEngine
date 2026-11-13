@@ -40,7 +40,7 @@ void ShotBulletManager::Update() {
         Initialize();
     }
 
-    if (enemy_->GetPhase() != Enemy::FIREBALL) {
+    if (enemy_->GetState() != IEnemy::STATE::SHOT) {
         //ファイヤーボールの時にショットする
         return;
     }

@@ -93,10 +93,10 @@ void MedjedStage::Update()
         }
 
 
-        auto enemyPhase = medjedManager_->GetEnemyPhase();
+        auto enemyPhase = medjedManager_->GetEnemyState();
 
         //透明移動じゃないときEmitする
-        if (enemyPhase != Enemy::PHASE::ALPHA_WALK && enemyPhase != Enemy::PHASE::BEAM) {
+        if (enemyPhase != IEnemy::STATE::ALPHA_WALK && enemyPhase != IEnemy::STATE::BEAM) {
             UpdateEmitter(kMedjed_Particle);
         }
 

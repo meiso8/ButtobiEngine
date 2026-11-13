@@ -18,7 +18,6 @@ public:
     AnimationObject3d();
     ~AnimationObject3d();
     void Initialize()override;
-    void InitTime();
     void SetModelAndLoadAnimation(const Model* model);
 
     //オーバーライド

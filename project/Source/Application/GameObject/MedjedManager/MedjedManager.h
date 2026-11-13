@@ -59,9 +59,8 @@ public:
     const bool& GetIsApperMedjed() {  return enemy_->GetIsApper(); };
     const bool& GetIsEnemyDead() { return enemy_->GetIsDead(); }
     const WorldTransform& GetEnemyWorldTransform()const { return enemy_->GetWorldTransform(); }
-    const Enemy::PHASE GetEnemyPhase();
+    const IEnemy::STATE GetEnemyState()const;
     const HPs* GetEnemyHPsPtr() { return enemy_->GetHpsPtr(); }
-
 
     void SetTargetPos(const Vector3* pos) { targetPos_ = pos; }
 };

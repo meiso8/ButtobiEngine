@@ -175,11 +175,6 @@ void MedjedManager::Update()
 
 }
 
-const Enemy::PHASE MedjedManager::GetEnemyPhase()
-{
-    return enemy_->GetPhase();
-}
-
 void MedjedManager::PlaceLockersRandomly() {
     std::vector<Vector2> placedPositions;
 
@@ -233,3 +228,8 @@ bool MedjedManager::IsOverlapping(const Vector2& pos, const std::vector<Vector2>
     }
     return nullptr; // 見つからなかった場合
 }
+
+ const IEnemy::STATE MedjedManager::GetEnemyState()const
+ {
+     return enemy_->GetState();
+ }
