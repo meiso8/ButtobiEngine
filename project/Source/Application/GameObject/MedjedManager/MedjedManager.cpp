@@ -17,15 +17,15 @@ MedjedManager::MedjedManager()
 {
     enemy_ = std::make_unique<Enemy>();
 
-    dummyMedjeds_.clear();
-    dummyMedjeds_.resize(46);
+    medjeds_.clear();
+    medjeds_.resize(46);
 
-    for (int i = 0; i < dummyMedjeds_.size(); ++i) {
+    for (int i = 0; i < medjeds_.size(); ++i) {
         if (i == 0) {
             //0だけ本物のメジェド様を生成！
-            dummyMedjeds_[i] = std::make_unique<Medjed>();
+            medjeds_[i] = std::make_unique<Medjed>();
         } else {
-            dummyMedjeds_[i] = std::make_unique<DummyMedjed>();
+            medjeds_[i] = std::make_unique<BaseMedjed>();
         }
     }
 }
@@ -41,7 +41,7 @@ void MedjedManager::RayCastHit(RaySprite& raySprite) {
         return;//一旦ここでリターンする
     }
 
-    for (auto& medjed : dummyMedjeds_) {
+    for (auto& medjed : medjeds_) {
 
         AABB aabb = ColliderWorldPos::GetAABBWorldPos(medjed.get());
         float dist = 5.0f;
@@ -93,7 +93,7 @@ void MedjedManager::Initialize()
 
 void MedjedManager::Draw()
 {
-    for (auto& dummyMedjed : dummyMedjeds_) {
+    for (auto& dummyMedjed : medjeds_) {
 
         if (auto medjed = dynamic_cast<Medjed*>(dummyMedjed.get())) {
             continue;
@@ -139,7 +139,7 @@ void MedjedManager::UpdateMedjedIfNotFind()
 
 void MedjedManager::UpdateMedjedIfFind()
 {
-    for (auto& medjed : dummyMedjeds_) {
+    for (auto& medjed : medjeds_) {
 
         if (targetPos_) {
             medjed->Look(*targetPos_);
@@ -169,7 +169,7 @@ void MedjedManager::Update()
         UpdateMedjedIfNotFind();
     }
 
-    for (auto& locker : dummyMedjeds_) {
+    for (auto& locker : medjeds_) {
         locker->Update();
     }
 
@@ -178,7 +178,7 @@ void MedjedManager::Update()
 void MedjedManager::PlaceLockersRandomly() {
     std::vector<Vector2> placedPositions;
 
-    for (auto& dummy : dummyMedjeds_) {
+    for (auto& dummy : medjeds_) {
         dummy->Init();
 
         Vector2 pos;
@@ -220,7 +220,7 @@ bool MedjedManager::IsOverlapping(const Vector2& pos, const std::vector<Vector2>
 
  Medjed* MedjedManager::GetMedjed() {
 
-    for (auto& med : dummyMedjeds_) {
+    for (auto& med : medjeds_) {
 
         if (auto medjed = dynamic_cast<Medjed*>(med.get())) {
             return medjed;

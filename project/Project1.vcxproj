@@ -220,6 +220,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
     </ClCompile>
+    <ClCompile Include="Source\Engine\ObjectManager\ObjectCommandBase.cpp" />
     <ClCompile Include="Source\Engine\Particle\GPUParticle.cpp" />
     <ClCompile Include="Source\Engine\Particle\GPUParticleEmitter\GPUParticleEmitter.cpp" />
     <ClCompile Include="Source\Engine\PostEffectMaterial\PostEffectMaterial.cpp">
@@ -352,7 +353,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </ClCompile>
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\Application\GameObject\Building\Building.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Medjed\DummyMedjed\DummyMedjed.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Medjed\BaseMedjed\BaseMedjed.cpp" />
     <ClCompile Include="Source\Application\GameObject\Medjed\Medjed\Medjed.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\HPIcon.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\HPGauge.cpp" />
@@ -648,7 +649,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\TimeManager\TimeManager.h" />
     <ClInclude Include="Source\Game.h" />
     <ClInclude Include="Source\Application\GameObject\Building\Building.h" />
-    <ClInclude Include="Source\Application\GameObject\Medjed\DummyMedjed\DummyMedjed.h" />
+    <ClInclude Include="Source\Application\GameObject\Medjed\BaseMedjed\BaseMedjed.h" />
     <ClInclude Include="Source\Application\GameObject\Medjed\Medjed\Medjed.h" />
     <ClInclude Include="Source\Application\GameObject\UI\HPIcon.h" />
     <ClInclude Include="Source\Application\GameObject\UI\HPGauge.h" />

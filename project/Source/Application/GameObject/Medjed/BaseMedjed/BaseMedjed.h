@@ -6,11 +6,11 @@
 #include"AABB.h"
 
 class Model;
-class DummyMedjed :public Collider {
+class BaseMedjed :public Collider {
 
 
 public:
-    DummyMedjed();
+    BaseMedjed();
     virtual void Init();
     virtual void Draw();
     virtual void Update();

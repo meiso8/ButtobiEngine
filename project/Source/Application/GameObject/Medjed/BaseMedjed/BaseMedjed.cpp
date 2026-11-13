@@ -1,4 +1,4 @@
-#include "DummyMedjed.h"
+#include "BaseMedjed.h"
 #include"ModelManager.h"
 #include"Model.h"
 #include"CollisionConfig.h"
@@ -6,7 +6,7 @@
 #include"Easing.h"
 #include"TimeManager.h"
 #include<algorithm>
-void DummyMedjed::Look(const Vector3& target)
+void BaseMedjed::Look(const Vector3& target)
 {
     aniTimer_ += TimeManager::DeltaTime() * 0.25f;
     aniTimer_ = std::clamp(aniTimer_, 0.0f, 1.0f);
@@ -18,19 +18,19 @@ void DummyMedjed::Look(const Vector3& target)
     object3d_->GetTransform().rotate.y = startRotateY_ + Easing::EaseInOutBounce(0.0f, delta, aniTimer_);
 }
 
-void DummyMedjed::GoToTarget(const Vector3& target)
+void BaseMedjed::GoToTarget(const Vector3& target)
 {
     auto& transform = object3d_->GetTransform();
    transform.translate = Lerp(transform.translate, target, 0.05f);
 }
 
-void DummyMedjed::Hide()
+void BaseMedjed::Hide()
 {
     hideTimer_ += TimeManager::DeltaTime()*1.2f;
     hideTimer_ = std::clamp(hideTimer_, 0.0f, 1.0f);
 }
 
-DummyMedjed::DummyMedjed()
+BaseMedjed::BaseMedjed()
 {
     model_ = ModelManager::GetModel("medjed.gltf");
 
@@ -46,7 +46,7 @@ DummyMedjed::DummyMedjed()
     SetWorldMatrix(object3d_->GetWorldTransform());
 
 }
-void DummyMedjed::Init()
+void BaseMedjed::Init()
 {
     hideTimer_ = 0.0f;
     aniTimer_ = 0.0f;
@@ -59,7 +59,7 @@ void DummyMedjed::Init()
     transform.translate.y = startPosY_;
 }
 
-void DummyMedjed::Draw()
+void BaseMedjed::Draw()
 {
 
     if (IsHide()) {
@@ -71,7 +71,7 @@ void DummyMedjed::Draw()
 
 }
 
-void DummyMedjed::Update()
+void BaseMedjed::Update()
 {
     if (IsHide()) {
         return;
@@ -83,6 +83,6 @@ void DummyMedjed::Update()
 }
 
 
-void DummyMedjed::OnCollision(Collider* collider)
+void BaseMedjed::OnCollision(Collider* collider)
 {
 }

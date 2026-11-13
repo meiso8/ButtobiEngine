@@ -6,6 +6,7 @@ public:
     virtual void Do() = 0;
     //巻き戻し処理の純粋仮想関数
     virtual void UnDo() = 0;
+    virtual ~ObjectCommandBase();
 private:
 };
 
