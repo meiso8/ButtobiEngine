@@ -60,7 +60,7 @@ PixelShaderOutput main(VertexShaderOutput input)
 {
     PixelShaderOutput output;
    
-    output.temperature = GetTemperatureTexture(gMaterial.color.a, gMaterial.temperature);
+    output.temperature = GetTemperatureTexture(gMaterial.color.a, gMaterial.maskVal,gMaterial.temperature);
     output.objectID = gObjectID.id;
     
     float4 transformedUV = mul(float4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);

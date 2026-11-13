@@ -173,6 +173,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\Medjed\Enemy\ExitEnemy\ExitEnemy.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Medjed\Enemy\ShotEnemy\ShotEnemy.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Medjed\Enemy\RoundEnemy\RoundEnemy.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Medjed\Enemy\BeamEnemy\BeamEnemy.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Medjed\Enemy\AppearEnemy\AppearEnemy.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Medjed\Enemy\AlphaWalkEnemy\AlphaWalkEnemy.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Medjed\Enemy\IdleEnemy\IdleEnemy.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Medjed\Enemy\IEnemy\IEnemy.cpp" />
     <ClCompile Include="Source\Engine\Device\Device.cpp" />
     <ClCompile Include="Source\Engine\CommandListManager\CommandListManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\Network\Network.cpp" />
@@ -512,6 +520,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\System\TreeGenerator\TreeGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\Medjed\Enemy\ExitEnemy\ExitEnemy.h" />
+    <ClInclude Include="Source\Application\GameObject\Medjed\Enemy\ShotEnemy\ShotEnemy.h" />
+    <ClInclude Include="Source\Application\GameObject\Medjed\Enemy\RoundEnemy\RoundEnemy.h" />
+    <ClInclude Include="Source\Application\GameObject\Medjed\Enemy\BeamEnemy\BeamEnemy.h" />
+    <ClInclude Include="Source\Application\GameObject\Medjed\Enemy\AppearEnemy\AppearEnemy.h" />
+    <ClInclude Include="Source\Application\GameObject\Medjed\Enemy\AlphaWalkEnemy\AlphaWalkEnemy.h" />
+    <ClInclude Include="Source\Application\GameObject\Medjed\Enemy\IdleEnemy\IdleEnemy.h" />
+    <ClInclude Include="Source\Application\GameObject\Medjed\Enemy\IEnemy\IEnemy.h" />
     <ClInclude Include="Source\Engine\Device\Device.h" />
     <ClInclude Include="Source\Engine\CommandListManager\CommandListManager.h" />
     <ClInclude Include="Source\Application\GameObject\Network\Network.h" />

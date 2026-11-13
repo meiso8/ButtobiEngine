@@ -40,7 +40,7 @@ void ShotBeamManager::Update()
     auto& emitter0 = beamParticleEmitters_[0]->GetEmitter();
     auto& emitter1 = beamParticleEmitters_[1]->GetEmitter();
     auto& emitter3 = shockEmitter_->GetEmitter();
-    if (enemy_->GetPhase() != Enemy::BEAM) {
+    if (enemy_->GetState() != IEnemy::STATE::BEAM) {
         currentTime_ = 0.0f;
 
         emitter0.frequencyTime = 0.0f;

@@ -14,20 +14,17 @@
 #include"TimeManager.h"
 #include"Math/Matrix/MakeMatrix.h"
 
+#include"IdleEnemy/IdleEnemy.h"
+#include"ExitEnemy/ExitEnemy.h"
+#include"RoundEnemy/RoundEnemy.h"
+#include"ShotEnemy/ShotEnemy.h"
+#include"BeamEnemy/BeamEnemy.h"
+#include"AppearEnemy/AppearEnemy.h"
+#include"AlphaWalkEnemy/AlphaWalkEnemy.h"
+
 namespace {
     constexpr float kScale_ = 5.0f;
-    constexpr float kMoveSpeed_ = 2.0f;
 
-    constexpr float kApperTime_ = 7.0f;
-    constexpr float kApperEndTime_ = kApperTime_ + 2.0f;
-
-    constexpr float kAlphaWalkTime_ = 10.0f;
-    constexpr float kAlphaWalkEndTime_ = kAlphaWalkTime_ + 1.0f;
-
-    constexpr float kShotTime_ = 10.0f;
-
-    constexpr float kBeamTime_ = 3.0f;
-    constexpr float kBeamEndTime_ = 10.0f;
     constexpr float kColliderRad_ = 0.5f;
     constexpr float kWalkFootstepInterval_ = 0.4f;
     float soundTimer_ = 0.0f;
@@ -36,14 +33,6 @@ namespace {
 
 Enemy::Enemy()
 {
-    UpdateActions_ = {
-         {PHASE::APPEAR, std::bind(&Enemy::Appear, this)},
-         {PHASE::ROUND, std::bind(&Enemy::Round, this)},
-         {PHASE::FIREBALL, std::bind(&Enemy::Fireball, this)},
-         {PHASE::ALPHA_WALK,std::bind(&Enemy::AlphaWalk,this)},
-         {PHASE::BEAM,std::bind(&Enemy::Beam,this)},
-         {PHASE::EXIT, std::bind(&Enemy::Exit, this)},
-    };
 
     model_ = ModelManager::GetModel("medjed.gltf");
 
@@ -62,7 +51,7 @@ Enemy::Enemy()
     SetCollisionAttribute(CollisionTag::GetTag("Enemy"));
     // 敵は「プレイヤー」と「プレイヤーの弾」と衝突したい
     SetCollisionMask(
-          CollisionTag::GetTag("Player") 
+        CollisionTag::GetTag("Player")
         | CollisionTag::GetTag("PlayerBulletCold")
         | CollisionTag::GetTag("PlayerBulletHot")
     );
@@ -92,6 +81,16 @@ Enemy::Enemy()
 
         group.collider_->SetWorldMatrix(group.matrix_);
     }
+
+    states_[IEnemy::STATE::APPEAR] = std::make_unique<AppearEnemy>();
+    states_[IEnemy::STATE::ROUND] = std::make_unique<RoundEnemy>();
+    states_[IEnemy::STATE::SHOT] = std::make_unique<ShotEnemy>();
+    states_[IEnemy::STATE::ALPHA_WALK] = std::make_unique<AlphaWalkEnemy>();
+    states_[IEnemy::STATE::BEAM] = std::make_unique<BeamEnemy>();
+    states_[IEnemy::STATE::IDLE] = std::make_unique<IdleEnemy>();
+    states_[IEnemy::STATE::EXIT] = std::make_unique<ExitEnemy>();
+
+    currentState_ = states_[IEnemy::STATE::APPEAR].get();
 }
 
 Enemy::~Enemy()
@@ -102,28 +101,22 @@ Enemy::~Enemy()
 void Enemy::Init()
 {
     Json file = JsonFile::GetJsonFiles("Boss");
-    actionTime_ = file["First"]["ActionTimer"];
     characterState_.hps.maxHp = file["First"]["HP"];
     characterState_.hps.hp = characterState_.hps.maxHp;
     characterState_.isDead = false;
     characterState_.isHit = false;
 
-    velocity_ = { 10.0f,10.0f,10.0f };
-    startPos_ = { 0.0f };
-    startScale_ = { 0.0f,0.0f,0.0f };
     isAppear_ = false;
     isShotStart_ = false;
     isFootPreCollided_ = false;
-
-    phase_ = APPEAR;
 
     bodyPos_->Initialize();
     bodyPos_->SetScale({ 0.0f,0.0f,0.0f });
     bodyPos_->SetObjectName("GiantEnemy");
     bodyPos_->RegisterObject();
     bodyPos_->SetAnimation("Nod");
+    bodyPos_->SetMaskVol(0.0f);
 
-    phaseTimer_ = 0.0f;
     poyoAnimTimer_ = 0.0f;
 
 }
@@ -134,7 +127,6 @@ void Enemy::Draw(const Object3d::LightMode& lightMode)
 
     bodyPos_->SetLightMode(lightMode);
     bodyPos_->Draw();
-
 
 }
 
@@ -154,18 +146,17 @@ void Enemy::Update()
 
         if (ImGui::TreeNode(name.c_str())) {
 
-            ImGui::Text("isCollided %d", collided?"Yes":"No");
+            ImGui::Text("isCollided %d", collided ? "Yes" : "No");
             ImGui::TreePop();
         }
 
     }
 
-    const char* phase[] = { "APPEAR", "ROUND", "FIREBALL","ALPHA_WALK","BEAM","EXIT" };
-    int currentPhase = phase_;
-
+    const char* phase[] = { "APPEAR", "ROUND", "SHOT","ALPHA_WALK","BEAM","IDLE","EXIT"};
+    int currentPhase = static_cast<int>(currentState_->GetState());
 
     if (ImGui::Combo("CurrentPhase", &currentPhase, phase, IM_ARRAYSIZE(phase))) {
-        SetPhase(static_cast<PHASE>(currentPhase));
+        ChangeState(static_cast<IEnemy::STATE>(currentPhase));
     };
 
 
@@ -175,19 +166,18 @@ void Enemy::Update()
 
     if (!isAppear_) { return; }
 
-    // とりあえずフェーズが最大になったら処理を終える  
-    if (phase_ >= MAX_PHASE || phase_ < 0) {
-        return;
+    if (currentState_ != states_[currentState_->GetState()].get()) {
+        //もしも現在のステートポインタが指定したポインタと一緒じゃなかったら
+        //ステートを変更する
+        ChangeState(currentState_->GetState());
     }
 
-    UpdateTimer();
-
     // 呼び出す  
-    UpdateActions_[phase_]();
+    currentState_->Update(this);
+
     HitUpdate();
     bodyPos_->UpdateAniTimer();
     bodyPos_->Update();
-
 
     //マトリックスの更新
     colliders_["EnemyFoot_L"].matrix_ = bodyPos_->GetWorldJointMatrix("foot_L");
@@ -268,200 +258,19 @@ void Enemy::OnCollision(Collider* collider)
 
     }
 }
+const Vector3 Enemy::GetInitScale()
+{
+    return { kScale_,kScale_,kScale_ };
+}
 Vector3 Enemy::GetToTarget()const
 {
     if (target_) {
         return ToTargetVector(*target_, bodyPos_->GetWorldTransform().GetWorldPosition());
     }
 
-    return { 0.0f };
+    return { Math::ZERO };
 }
 
-
-void Enemy::SetPhase(const PHASE phase)
-{
-    phaseTimer_ = 0.0f;
-    phase_ = phase;
-    poyoAnimTimer_ = 0.0f;
-    isShotStart_ = false;
-    bodyPos_->InitTime();
-
-
-    if (phase_ == ROUND || phase_ == APPEAR) {
-        //ここを変更する
-        bodyPos_->SetAnimation("Round");
-    }
-
-    if (phase_ == ALPHA_WALK) {
-        //透明移動する
-        bodyPos_->SetAnimation("Walk");
-    }
-
-    if (phase_ == FIREBALL) {
-        auto& transform = bodyPos_->GetTransform();
-        startRotateY_ = transform.rotate.y;
-        endRotateY_ = startRotateY_ + Math::kPi *2.0f;
-
-        //ここを変更する
-        int randNum = rand() % 4;
-        if (randNum == 0) {
-            bodyPos_->SetAnimation("Swing");
-        } else if (randNum == 1) {
-            bodyPos_->SetAnimation("Nod");
-        } else if (randNum == 2) {
-            bodyPos_->SetAnimation("Step");
-        } else if (randNum == 3) {
-            bodyPos_->SetAnimation("Jump");
-        }
-
-    }
-}
-
-void Enemy::Appear()
-{
-    float time = phaseTimer_ / kApperTime_;
-    time = std::clamp(time, 0.0f, 1.0f);
-    Look();
-
-    Vector3 scale = Easing::EaseInBounce(startScale_, { kScale_,kScale_,kScale_ }, time);
-    if (phaseTimer_ >= kApperEndTime_) {
-        SetPhase(ROUND);
-        bodyPos_->SetScale(Easing::EaseInBounce(startScale_, { kScale_,kScale_,kScale_ }, time));
-
-        scale = { kScale_,kScale_,kScale_ };
-    }
-    bodyPos_->SetScale(scale);
-}
-
-void Enemy::Round()
-{
-    bodyPos_->SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInBounce(0.0f,1.0f,fmod(phaseTimer_,1.0f)) });
-
-    Vector3 translate = bodyPos_->GetTranslate();
-    translate = Lerp(translate, { 0.0f,0.0f,0.0f }, 0.5f);
-    bodyPos_->SetTranslate(translate);
-
-    Look();
-    if (phaseTimer_ >= actionTime_) {
-        SetPhase(FIREBALL);
-    }
-}
-
-void Enemy::Fireball()
-{
-    float theta = phaseTimer_ * std::numbers::phi_v<float>*2.0f;
-    bodyPos_->SetColor({ 1.0f,1.0f,1.0f,sinf(phaseTimer_) * 0.5f + 1.0f });
-
-    if (phaseTimer_ <= 1.0f) {
-        RotateY(phaseTimer_);
-    } else {
-
-        if (!isShotStart_) {
-            isShotStart_ = true;
-        }
-
-        Look();
-    }
-
-    if (phaseTimer_ >= kShotTime_) {
-        //透明移動をする
-        SetPhase(ALPHA_WALK);
-    }
-
-    if (bodyPos_->GetCurrentAnimation() == "Jump" || bodyPos_->GetCurrentAnimation() == "Step") {
-        //足音の更新処理をここで呼び出す
-        SoundFootStep(SoundFactory::MEDJED_JUMP);
-    }
-
-
-}
-
-
-void Enemy::Exit()
-{
-
-}
-
-void Enemy::AlphaWalk()
-{
-    //常にプレイヤーを向く
-    Look();
-
-    if (phaseTimer_ < kAlphaWalkTime_) {
-
-        if (phaseTimer_ <= 1.0f) {
-            //スーッとαが下がるよ
-            bodyPos_->SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInOutBack(1.0f,0.0f,phaseTimer_) });
-        }
-
-    } else if (phaseTimer_ < kAlphaWalkEndTime_) {
-
-        float time = kAlphaWalkTime_ - phaseTimer_ / (kAlphaWalkEndTime_ - kAlphaWalkTime_);
-        time = std::clamp(time, 0.0f, 1.0f);
-        bodyPos_->SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInOutBack(0.0f,1.0f,time) });
-
-    } else {
-        bodyPos_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-
-        SetPhase(BEAM);
-    }
-
-    if (target_) {
-
-
-        velocity_ = GetToTarget();
-        const float deltaTime = TimeManager::DeltaTime();
-        velocity_ *= deltaTime * kMoveSpeed_;
-
-        //Y軸方向には移動しない
-        auto translate = bodyPos_->GetTranslate();
-        translate.x += velocity_.x;
-        translate.z += velocity_.z;
-        bodyPos_->SetTranslate(translate);
-
-        //足音の更新処理をここで呼び出す
-        SoundFootStep(SoundFactory::MEDJED_FOOT_STEP_SMALL);
-
-    }
-
-}
-
-void Enemy::Beam()
-{
-
-    //ずっとコチラを覗く
-    Look();
-
-    if (phaseTimer_ < kBeamTime_) {
-
-        if (PoyoPoyoUpdateAndGetEnd(1.0f)) {
-
-            //ぽよぽよ終わったら
-            bodyPos_->SetAnimation("Swing");
-            if (!isShotStart_) {
-                //打つ
-                isShotStart_ = true;
-            }
-        } else {
-            //ぽよぽよしている時はコレ
-            bodyPos_->SetAnimation("Idle");
-        }
-
-    } else if (phaseTimer_ < kBeamEndTime_) {
-        //うなずく
-        //ショットを中止する
-        isShotStart_ = false;
-        bodyPos_->SetAnimation("Nod");
-    } else {
-        SetPhase(ROUND);
-    }
-
-}
-
-void Enemy::UpdateTimer()
-{
-    phaseTimer_ += TimeManager::DeltaTime();
-}
 
 void Enemy::Look()
 {
@@ -495,7 +304,7 @@ void Enemy::HitUpdate()
 
 
     } else {
-        if (phase_ != APPEAR) {
+        if (currentState_->GetState() != IEnemy::STATE::APPEAR) {
             //出現時じゃないとき線形補間する
             LerpScale();
         }
@@ -510,9 +319,20 @@ void Enemy::LerpScale()
     bodyPos_->SetScale(scale);
 }
 
-void Enemy::RotateY(const float& timer)
+void Enemy::RotateY(const float& startRotateY, const float& endRotateY, const float& timer)
 {
-    Vector3 rotate = {0.0f};
-    rotate.y = Easing::EaseInBack(startRotateY_, endRotateY_, timer);
+    Vector3 rotate = { 0.0f };
+    rotate.y = Easing::EaseInBack(startRotateY, endRotateY, timer);
     bodyPos_->SetRotate(rotate);
+}
+
+void Enemy::ChangeState(const IEnemy::STATE& state)
+{
+    currentState_->ChangeState(state);
+    currentState_->Exit(this);    
+    IEnemy* enemyState = states_[currentState_->GetState()].get();
+    if (enemyState) {
+        currentState_ = enemyState;
+        currentState_->Enter(this);
+    }
 }

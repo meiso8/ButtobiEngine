@@ -80,7 +80,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     
     if (outlineMask > 0.75f)
     {
-        weight =  0.0f;
+        weight = 0.0f;
     }
  
     //output.color.rgb = (1 - weight) * gTexture.Sample(gSampler, input.texcoord).rgb + weight *gMaterial.color;

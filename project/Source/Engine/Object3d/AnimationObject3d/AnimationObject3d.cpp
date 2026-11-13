@@ -50,11 +50,6 @@ void AnimationObject3d::Update()
 
 }
 
-void AnimationObject3d::InitTime()
-{
-    animationTime_ = 0.0f;
-}
-
 const std::map<std::string, Animation>& AnimationObject3d::GetAnimations()const
 {
     return skinningModel_->GetModelData()->animations_;
@@ -361,6 +356,7 @@ void AnimationObject3d::SetAnimation(const std::string animName, const float& bl
 
     currentAnimation_ = animName;
     blendTimer_ = 0.0f;
+    animationTime_ = 0.0f;
     isBlendEnd_ = false;
 
     blendTime_ = blendTime;

@@ -47,7 +47,6 @@ void Medjed::GoToTarget(const Vector3& target)
 
 void Medjed::MoveStart()
 {
-    aniObj_->InitTime();
     //アニメーションをセットするよ
     aniObj_->SetAnimation("Swing");
 }

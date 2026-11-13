@@ -2,11 +2,12 @@
 #ifndef OBJECT_FUNCTIONS_HLSLI
 #define OBJECT_FUNCTIONS_HLSLI
 
-float4 GetTemperatureTexture(float objectAlpha, float temperature)
+float4 GetTemperatureTexture(float objectAlpha, float maskVol,float temperature)
 {
     //OutLineCancel
     float outlineMask = 1.0f - objectAlpha;
     outlineMask = clamp(outlineMask, 0.0f, 1.0f);
+    outlineMask = max(outlineMask, maskVol);
     //SetTemperature　Use G Channel for OutlineMask
     return float4(temperature, outlineMask, 0.0, 1.0);
 };
