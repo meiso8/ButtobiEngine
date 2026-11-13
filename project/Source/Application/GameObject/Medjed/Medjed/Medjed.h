@@ -9,7 +9,7 @@
 #include"Collider.h"
 #include"../DummyMedjed/DummyMedjed.h"
 
-class Medjed :public DummyMedjed
+class Medjed :public BaseMedjed
 {
 
 public:

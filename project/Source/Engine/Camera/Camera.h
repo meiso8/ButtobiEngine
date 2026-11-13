@@ -53,7 +53,7 @@ protected:
     virtual void UpdateProjectionMatrix();
 public:
     Camera();
-    ~Camera();
+    virtual ~Camera();
     void SetScreenSize(const float& width, const float& height);
     void InitializeTransform();
     /// @brief 初期化

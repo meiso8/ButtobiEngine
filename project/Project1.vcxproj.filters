@@ -83,7 +83,7 @@
     <ClCompile Include="Source\Engine\TimeManager\TimeManager.cpp" />
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\Application\GameObject\Building\Building.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Medjed\DummyMedjed\DummyMedjed.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Medjed\BaseMedjed\BaseMedjed.cpp" />
     <ClCompile Include="Source\Application\GameObject\Medjed\Medjed\Medjed.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\HPIcon.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\HPGauge.cpp" />
@@ -208,6 +208,7 @@
     <ClCompile Include="Source\Application\GameObject\Medjed\Enemy\IdleEnemy\IdleEnemy.cpp" />
     <ClCompile Include="Source\Application\GameObject\Medjed\Enemy\IEnemy\IEnemy.cpp" />
     <ClCompile Include="Source\Application\GameObject\Medjed\Enemy\ExitEnemy\ExitEnemy.cpp" />
+    <ClCompile Include="Source\Engine\ObjectManager\ObjectCommandBase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\ComputeShaderPSO\ComputeShaderPSO.h" />
@@ -298,7 +299,7 @@
     <ClInclude Include="Source\Engine\TimeManager\TimeManager.h" />
     <ClInclude Include="Source\Game.h" />
     <ClInclude Include="Source\Application\GameObject\Building\Building.h" />
-    <ClInclude Include="Source\Application\GameObject\Medjed\DummyMedjed\DummyMedjed.h" />
+    <ClInclude Include="Source\Application\GameObject\Medjed\BaseMedjed\BaseMedjed.h" />
     <ClInclude Include="Source\Application\GameObject\Medjed\Medjed\Medjed.h" />
     <ClInclude Include="Source\Application\GameObject\UI\HPIcon.h" />
     <ClInclude Include="Source\Application\GameObject\UI\HPGauge.h" />

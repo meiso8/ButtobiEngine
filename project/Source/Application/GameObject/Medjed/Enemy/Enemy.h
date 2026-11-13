@@ -83,8 +83,8 @@ public:
     void Look();
     void SetAnimation(const std::string& animation) { bodyPos_->SetAnimation(animation); }
     const std::string GetCurrentAnimation() { return bodyPos_->GetCurrentAnimation(); };
-    /// @brief 足音のストップ
-/// @param tag 
+    /// @brief 足音
+    /// @param tag 
     void SoundFootStep(const SoundFactory::TAG tag);
 
     void RotateY(const float& startRotateY, const float& endRotateY, const float& timer);

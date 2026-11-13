@@ -1,5 +1,5 @@
 #pragma once
-#include"Medjed/DummyMedjed/DummyMedjed.h"
+#include"Medjed/BaseMedjed/BaseMedjed.h"
 #include<memory>
 #include <vector>
 #include "Medjed/Medjed/Medjed.h"
@@ -12,7 +12,7 @@ class MedjedManager
 
 private:
 
-    std::vector < std::unique_ptr<DummyMedjed>>dummyMedjeds_;
+    std::vector < std::unique_ptr<BaseMedjed>>medjeds_;
     std::unique_ptr<Enemy>enemy_ = nullptr;
 
     float lockerWidth = 1.0f;
@@ -32,9 +32,6 @@ private:
     void UpdateMedjedIfFind();
     void PlaceLockersRandomly();
     bool IsOverlapping(const Vector2& pos, const std::vector<Vector2>& placedPositions);
-    //プライベート関数内のみアクセス可能とする
-
-
 public:
 
     MedjedManager();
@@ -50,7 +47,7 @@ public:
     }
     Medjed* GetMedjed();
 
-    const std::vector < std::unique_ptr<DummyMedjed>>& GetAllMedjeds() { return dummyMedjeds_; };
+    const std::vector < std::unique_ptr<BaseMedjed>>& GetAllMedjeds() { return medjeds_; };
     const bool& GetIsFindMedjed() { return GetMedjed()->GetIsFind();};
     const WorldTransform& GetMedjedWorldTransform() { return GetMedjed()->GetWorldTransform(); }
     void SetIsFindMedjed(const bool& flag) { GetMedjed()->SetIsFind(flag); };
