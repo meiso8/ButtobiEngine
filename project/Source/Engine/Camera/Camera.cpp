@@ -112,7 +112,7 @@ void Camera::UpdateProjectionMatrix()
         float halfWidth = cameraData_.width * 0.5f;
         float halfHeight = cameraData_.height * 0.5f;
 
-        cameraMatrix_. projectionMat = MakeOrthographicMatrix(halfWidth, halfHeight, -halfWidth, -halfHeight, cameraData_. nearZ, cameraData_.farZ);
+        cameraMatrix_. projectionMat = MakeOrthographicMatrix(halfWidth, halfHeight, -halfWidth, -halfHeight, 0.0f, cameraData_.farZ);
     }
 
     cameraMatrix_.projectionMat.m[3][0] += cameraData_.offset.x;
