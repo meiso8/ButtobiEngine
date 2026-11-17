@@ -82,12 +82,22 @@ public:
     void SetTranslate(const Vector3& translate) { cameraData_.eTransform.translate = translate; }
     void SetRotate(const Vector3& rotate) { cameraData_.eTransform.rotate = rotate; }
 
+    void SetScaleForChangeProjection() {
+        //設定したと同時に仮にスケールを変更する
+        if (cameraData_.projectionType == PROJECTION_TYPE::PERSPECTIVE) {
+            cameraData_.eTransform.scale = Math::UNIT_SCALE;
+        } else {
+            cameraData_.eTransform.scale = { 0.01f,0.01f,1.0f };
+        }
+    }
 
     void SetFovAngleY(const float fovAngle) { cameraData_.fovAngleY = fovAngle; };
     void SetFarZ(const float farZ) { cameraData_.farZ = farZ; };
     void SetNearZ(const float nearZ) { cameraData_.nearZ = nearZ; };
     void SetOffset(const Vector2& offset) { cameraData_.offset = offset; };
-    void SetProjectionType(const PROJECTION_TYPE& type) { cameraData_.projectionType = type; };
+    void SetProjectionType(const PROJECTION_TYPE& type) { 
+        cameraData_.projectionType = type; 
+    };
     void SetWorldMatrix(const Matrix4x4& mat) { cameraMatrix_.worldMat = mat; };
     Vector3 GetWorldPos();
 

@@ -8,6 +8,9 @@ const float Camera::kFovAngle = Math::kQPi;
 void Camera::Initialize(const PROJECTION_TYPE& type) {
 
     cameraData_.projectionType = type;
+
+
+
     cameraData_.nearZ = 0.1f;
     cameraData_.farZ = 1000.0f;
     cameraData_.offset = { 0.0f };
@@ -27,7 +30,10 @@ Vector3 Camera::GetWorldPos() {
 
 void Camera::InitializeTransform()
 {
-    cameraData_.eTransform.scale = { 1.0f,1.0f,1.0f };
+
+    SetScaleForChangeProjection();
+
+
     cameraData_.eTransform.rotate = { 0.0f,0.0f,0.0f };
     cameraData_.eTransform.translate = { 0.0f,0.0f,-10.0f };
     cameraMatrix_.worldMat = MakeIdentity4x4();
@@ -111,9 +117,7 @@ void Camera::UpdateProjectionMatrix()
         //平行投影
         float halfWidth = cameraData_.width * 0.5f;
         float halfHeight = cameraData_.height * 0.5f;
-
-        cameraMatrix_. projectionMat = MakeOrthographicMatrix(halfWidth, halfHeight, -halfWidth, -halfHeight, 0.0f, cameraData_.farZ);
-    }
+        cameraMatrix_. projectionMat = MakeOrthographicMatrix(-halfWidth, halfHeight, halfWidth, -halfHeight, 0.0f, cameraData_.farZ);    }
 
     cameraMatrix_.projectionMat.m[3][0] += cameraData_.offset.x;
     cameraMatrix_.projectionMat.m[3][1] -= cameraData_.offset.y;
@@ -128,4 +132,3 @@ void Camera::UpdateViewProjectionMatrix()
 
     cameraMatrix_.viewProjectionMat = Multiply(cameraMatrix_.viewMat, cameraMatrix_. projectionMat);
 }
-
