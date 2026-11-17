@@ -44,7 +44,6 @@ public:
 private:
     DebugCamera() = default;
     ~DebugCamera() = default;
-    void UpdateProjectionMatrix();
     void MouseInputMove();
     void InputTranslate();
     void InputRotate();

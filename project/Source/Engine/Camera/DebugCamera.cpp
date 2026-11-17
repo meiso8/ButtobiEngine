@@ -10,29 +10,31 @@
 #include"Log.h"
 void DebugCamera::Initialize(const PROJECTION_TYPE& type)
 {
-   cameraData_. projectionType = type;
-   cameraData_. farZ = 1000.0f;
-   cameraData_. nearZ = 0.1f;
-   cameraData_. offset = { 0.0f };
+    cameraData_.projectionType = type;
+    SetScaleForChangeProjection();
 
-    rotateSpeed_ =  Math::kPi / 20.0f;
+    cameraData_.farZ = 1000.0f;
+    cameraData_.nearZ = 0.1f;
+    cameraData_.offset = { 0.0f };
+
+    rotateSpeed_ = Math::kPi / 20.0f;
     speed_ = 1.0f;
 
-    cameraData_.eTransform.scale = Math::UNIT_SCALE;
+
     cameraData_.eTransform.rotate = Math::ZERO;
     cameraData_.eTransform.translate = { 0.0f,0.0f,-30.0f };
-   cameraMatrix_.worldMat = MakeIdentity4x4();
+    cameraMatrix_.worldMat = MakeIdentity4x4();
 
-   cameraMatrix_.viewMat = Inverse(MakeAffineMatrix(
-      cameraData_.eTransform.scale, 
-      cameraData_.eTransform.rotate,
-      cameraData_.eTransform.translate
-   ));
-   cameraMatrix_.projectionMat= MakePerspectiveFovMatrix(
-       cameraData_.fovAngleY,
-       cameraData_.width / cameraData_.height,
-       cameraData_.nearZ, cameraData_. farZ
-   );
+    cameraMatrix_.viewMat = Inverse(MakeAffineMatrix(
+        cameraData_.eTransform.scale,
+        cameraData_.eTransform.rotate,
+        cameraData_.eTransform.translate
+    ));
+    cameraMatrix_.projectionMat = MakePerspectiveFovMatrix(
+        cameraData_.fovAngleY,
+        cameraData_.width / cameraData_.height,
+        cameraData_.nearZ, cameraData_.farZ
+    );
 
     matRot_ = MakeIdentity4x4();
 
@@ -76,7 +78,7 @@ void DebugCamera::UpdateMatrix() {
     if (!isUseImGui) {
 
         if (moveType_ == Mouse) {
-             MouseInputMove();
+            MouseInputMove();
         } else {
             //offsetを初期化する
             cameraData_.offset = { 0.0f };
@@ -95,8 +97,8 @@ void DebugCamera::UpdateMatrix() {
 
     //累積の回転行列を合成
     matRot_ = Multiply(matRot_, matRotDelta);
-   cameraMatrix_. worldMat= MakeAffineMatrix(cameraData_.eTransform.scale, cameraData_.eTransform.rotate, cameraData_. eTransform.translate);
-   cameraMatrix_. viewMat = Inverse(Multiply(matRot_, cameraMatrix_.worldMat));
+    cameraMatrix_.worldMat = MakeAffineMatrix(cameraData_.eTransform.scale, cameraData_.eTransform.rotate, cameraData_.eTransform.translate);
+    cameraMatrix_.viewMat = Inverse(Multiply(matRot_, cameraMatrix_.worldMat));
 
     UpdateProjectionMatrix();
     cameraMatrix_.viewProjectionMat = Multiply(cameraMatrix_.viewMat, cameraMatrix_.projectionMat);
@@ -105,40 +107,10 @@ void DebugCamera::UpdateMatrix() {
     UpdateData();
 }
 
-void DebugCamera::UpdateProjectionMatrix()
-{
-    if (cameraData_.projectionType== PERSPECTIVE) {
-        //投資投影
-        cameraMatrix_.projectionMat = MakePerspectiveFovMatrix(
-            cameraData_.fovAngleY, 
-            cameraData_.width / cameraData_.height,
-            cameraData_.nearZ,
-            cameraData_.farZ
-        );
-    } else if (cameraData_.projectionType == PARALLEL) {
-        
-        //平行投影
-        float halfWidth = cameraData_.width * 0.5f;
-        float halfHeight = cameraData_.height * 0.5f;
-        cameraData_.eTransform.scale = { 0.01f,0.01f,0.01f };
-
-        cameraMatrix_.projectionMat = MakeOrthographicMatrix(
-            halfWidth,
-            halfHeight,
-            -halfWidth,
-            -halfHeight,
-            cameraData_.nearZ, 
-            cameraData_.farZ
-        );
-    }
-
-   cameraMatrix_.projectionMat.m[3][0] += cameraData_.offset.x;
-   cameraMatrix_.projectionMat.m[3][1] -= cameraData_.offset.y;
-}
 
 void DebugCamera::InputTranslate() {
 
-    const float deltaTime =TimeManager::DeltaTime();
+    const float deltaTime = TimeManager::DeltaTime();
     speed_ = 5.0f * deltaTime;
     if (Input::IsPressKey(DIK_A)) {
         MoveX(-speed_);
@@ -167,7 +139,7 @@ void DebugCamera::InputTranslate() {
 };
 
 void DebugCamera::InputRotate() {
-    
+
     if (Input::IsPressKey(DIK_R)) {
 
         if (Input::IsTriggerKey(DIK_UP)) {
@@ -177,7 +149,7 @@ void DebugCamera::InputRotate() {
         const float deltaTime = TimeManager::DeltaTime();
 
         if (Input::IsPressKey(DIK_X)) {
-            deltaRotate_.x = rotateSpeed_* deltaTime;
+            deltaRotate_.x = rotateSpeed_ * deltaTime;
         }
 
         if (Input::IsPressKey(DIK_Y)) {
@@ -212,15 +184,25 @@ void DebugCamera::MouseInputMove() {
         Vector2 deltaOffset = { 0.0f,0.0f };
         deltaOffset += Input::GetMousePos();
         const float deltaTime = TimeManager::DeltaTime();
-        cameraData_. offset += { deltaOffset.x* deltaTime, deltaOffset.y* deltaTime * 2.0f };
+        cameraData_.offset += { deltaOffset.x* deltaTime, deltaOffset.y* deltaTime * 2.0f };
     } else if (Input::IsPressMouse(2)) {
         //視点の回転
         //中ボタン押し込み&&ドラッグ
         Input::isDragging_ = true;
     }
 
-    //マウススクロールする //初期位置-30
-    cameraData_.sphericalCoordinate.radius += Input::GetMouseWheel();
+    if (cameraData_.projectionType == PROJECTION_TYPE::PERSPECTIVE) {
+        //マウススクロールする //初期位置-30
+        cameraData_.sphericalCoordinate.radius += Input::GetMouseWheel();
+    } else {
+        const float wheel = Input::GetMouseWheel() * TimeManager::DeltaTime()*0.1f;
+        cameraData_.eTransform.scale.x -= wheel;
+        cameraData_.eTransform.scale.y -= wheel;
+        const float offset = 0.001f;
+        cameraData_.eTransform.scale.x = std::clamp( cameraData_.eTransform.scale.x , offset, 1.0f- offset);
+        cameraData_.eTransform.scale.y = std::clamp(cameraData_.eTransform.scale.y, offset, 1.0f- offset);
+    }
+   
 
     if (!Input::IsPressMouse(2)) {
         Input::isDragging_ = false;
@@ -229,8 +211,8 @@ void DebugCamera::MouseInputMove() {
     if (Input::isDragging_) {
         Vector2 currentPos = Input::GetMousePosFiltered();
         const float deltaTime = TimeManager::DeltaTime();
-       cameraData_.sphericalCoordinate.polar += currentPos.x * deltaTime *0.5f;
-       cameraData_.sphericalCoordinate.azimuthal -= currentPos.y * deltaTime *0.25f;
+        cameraData_.sphericalCoordinate.polar += currentPos.x * deltaTime * 0.5f;
+        cameraData_.sphericalCoordinate.azimuthal -= currentPos.y * deltaTime * 0.25f;
         cameraData_.eTransform.rotate.y = cameraData_.sphericalCoordinate.polar;
         cameraData_.eTransform.rotate.z = cameraData_.sphericalCoordinate.azimuthal;
     }

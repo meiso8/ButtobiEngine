@@ -105,11 +105,13 @@ void DebugUI::CheckCamera(Camera& camera, const char* label)
         ImGui::SliderFloat("fovAngleY", &cameraData.fovAngleY, -6.28f, 6.28f);
         ImGui::Text("Type : %s", (cameraData.projectionType == PERSPECTIVE) ? "PERSPECTIVE" : "PARALLEL");
 
+        camera.SetCameraData(cameraData);
+    
         if (ImGui::Button("ChangeType")) {
             cameraData.projectionType = (cameraData.projectionType == PERSPECTIVE) ? PARALLEL : PERSPECTIVE;
+            camera.SetProjectionType(cameraData.projectionType);
+            camera.SetScaleForChangeProjection();
         }
-
-        camera.SetCameraData(cameraData);
 
         ImGui::TreePop();
 
