@@ -7,6 +7,8 @@
 #include"DebugUI.h"
 #include"ImGuizmo.h"
 #endif
+#include<algorithm>
+
 #include"Log.h"
 void DebugCamera::Initialize(const PROJECTION_TYPE& type)
 {
