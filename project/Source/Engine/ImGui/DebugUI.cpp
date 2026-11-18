@@ -14,8 +14,6 @@
 #include"AnimationObject3d.h"
 #include"ObjectManager/ObjectManager.h"
 #include"LevelEditor/LevelEditor.h"
-#include"../../Application/GameObject/StageChangeTrigger/StageChangeTrigger.h"
-#include"../../Application/StageManager/StageManager.h"
 #include"Sound.h"
 
 #include"Lights/Light.h"
@@ -25,6 +23,8 @@
 #include"Engine/Mesh/Font/Font.h"
 
 #include"PSO.h"
+#include"PostProcessManager/PostProcessManager.h"
+
 #include"Camera.h"
 #include"DebugCamera.h"
 #include"JsonFile.h"
@@ -840,6 +840,8 @@ void DebugUI::CheckPointLightData()
 #endif
 }
 
+
+
 void DebugUI::CheckPostEffectMaterial(PostEffectMaterial::MaterialForRenderTexture& material)
 {
 
@@ -920,6 +922,18 @@ void DebugUI::CheckPostEffectMaterial(PostEffectMaterial::MaterialForDepthBasedO
 #endif
 }
 
+void DebugUI::CheckPostEffectMaterial(PostEffectMaterial::MaterialForObjectIDBasedOutline& material)
+{
+#ifdef USE_IMGUI
+    if (ImGui::TreeNode("ObjectIDBasedOutline")) {
+        ImGui::DragFloat("lineWidth", &material.lineWidth, 0.1f);
+        ImGui::DragFloat("thickness", &material.thickness, 0.1f);
+        ImGui::ColorEdit3("color", &material.color.x);
+        ImGui::TreePop();
+    }
+#endif
+}
+
 void DebugUI::CheckPostEffectMaterial(PostEffectMaterial::MaterialForRadialBlur& material)
 {
 #ifdef USE_IMGUI
@@ -977,6 +991,49 @@ void DebugUI::CheckPostEffectMaterial(PostEffectMaterial::MaterialForMosaic& mat
 #endif
 }
 
+
+namespace {
+    static void CheckLayerPostEffect(const PostProcessManager::Layer layer) {
+        auto* postProcessManager = PostProcessManager::GetInstance();
+        auto* material = postProcessManager->GetPostEffectMaterial(layer);
+        DebugUI::CheckPostEffectMaterial(*material->GetMaterialGaussianFilter());
+        DebugUI::CheckPostEffectMaterial(*material->GetMaterialGrayScale());
+        DebugUI::CheckPostEffectMaterial(*material->GetMaterialForVignette());
+        DebugUI::CheckPostEffectMaterial(*material->GetMaterialForBoxFilter());
+        DebugUI::CheckPostEffectMaterial(*material->GetMaterialForLuminanceBasedOutline());
+        DebugUI::CheckPostEffectMaterial(*material->GetMaterialForDepthBasedOutline());
+        DebugUI::CheckPostEffectMaterial(*material->GetMaterialForObjectIDBasedOutline());
+        DebugUI::CheckPostEffectMaterial(*material->GetMaterialForRadialBlur());
+        DebugUI::CheckPostEffectMaterial(*material->GetMaterialForDissolve());
+        DebugUI::CheckPostEffectMaterial(*material->GetMaterialThermography());
+        DebugUI::CheckPostEffectMaterial(*material->GetMaterialForRandom());
+        DebugUI::CheckPostEffectMaterial(*material->GetMaterialForMosaic());
+    }
+};
+
+void DebugUI::CheckPostEffect()
+{
+
+#ifdef USE_IMGUI
+
+    ImGui::Begin("PostEffect");
+    auto* postProcessManager = PostProcessManager::GetInstance();
+
+    if (ImGui::TreeNode("PostEffect Model")) {
+        CheckLayerPostEffect(PostProcessManager::kModel);
+        ImGui::TreePop();
+    }
+    if (ImGui::TreeNode("PostEffect Sprite")) {
+        CheckLayerPostEffect(PostProcessManager::kSprite);
+
+        ImGui::TreePop();
+    }
+
+    ImGui::End();
+
+#endif
+
+}
 
 void DebugUI::CheckObject3d(Object3d& object3d,const char* label)
 {
@@ -1069,6 +1126,7 @@ void DebugUI::CheckObject3d(Object3d& object3d,const char* label)
             material.refraction,
             material.glassFactor,
             material.specular,
+            material.useOutLine,
             "Material");
 
         object3d.SetMaterial(material);
@@ -1230,6 +1288,7 @@ void DebugUI::CheckParticle(ParticleManager* particleManager)
                     material->refraction,
                     material->glassFactor,
                     material->specular,
+                    material->useOutLine,
                     "Material");
                 ImGui::SliderFloat2("textureSize", &group->textureSize.x, 0.0f, static_cast<float>(Window::GetClientWidth()));
 
@@ -1401,6 +1460,7 @@ void DebugUI::CheckObject3dMaterial(
 
     float& glassFactor,
 float& specular,
+uint32_t& useOutLine,
     const char* label) {
 #ifdef USE_IMGUI
     if (ImGui::TreeNode(label)) {
@@ -1419,7 +1479,9 @@ float& specular,
         ImGui::SliderFloat("reflect", &reflect, 0.0f, 5.0f);
         ImGui::SliderFloat("glassFactor", &glassFactor, 0.0f, 1.0f);
         ImGui::SliderFloat("specular", &specular, 0.0f, 1.0f);
-
+        bool tempUseOutline = useOutLine;
+        ImGui::Checkbox("useOutline", &tempUseOutline);
+        useOutLine = tempUseOutline;
         ImGui::TreePop();
     }
 #endif
@@ -1492,7 +1554,7 @@ void DebugUI::CheckBlendMode(BlendMode& blendMode) {
 #endif
 };
 
-void DebugUI::ShowMainViewPort(CbvSrvUavDescriptorHeap* srvDescriptorHeap, const uint32_t srvIndex)
+void DebugUI::ShowMainViewPort(CbvSrvUavDescriptorHeap* srvDescriptorHeap, const int srvIndex)
 {
 #ifdef USE_IMGUI
     // 画面の中心座標を計算
@@ -1555,8 +1617,7 @@ void DebugUI::ShowMainViewPort(CbvSrvUavDescriptorHeap* srvDescriptorHeap, const
             // ImGuiの描画カーソル位置を、計算した余白の分だけズラす
             ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPosX() + offset_x, ImGui::GetCursorPosY() + offset_y));
 
-
-            // SrvManager から GPUハンドルを取得
+            //// SrvManager から GPUハンドルを取得
             D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = srvDescriptorHeap->GetGPUDescriptorHandle(srvIndex);
 
             // 画像の表示 (引数: テクスチャID, 表示サイズ(横, 縦))
@@ -1691,56 +1752,6 @@ void DebugUI::Button(const char* label, std::function<void()> onSwitch)
         }
     }
 #endif
-}
-#include"PostProcessManager/PostProcessManager.h"
-
-void DebugUI::CheckPostEffect()
-{
-
-#ifdef USE_IMGUI
-
-    ImGui::Begin("PostEffect");
-    auto* postProcessManager = PostProcessManager::GetInstance();
-
-    if (ImGui::TreeNode("PostEffect Model")) {
-
-        auto* modelMaterial = postProcessManager->GetPostEffectMaterial(PostProcessManager::kModel);
-
-        CheckPostEffectMaterial(*modelMaterial->GetMaterialGaussianFilter());
-        CheckPostEffectMaterial(*modelMaterial->GetMaterialGrayScale());
-        CheckPostEffectMaterial(*modelMaterial->GetMaterialForVignette());
-        CheckPostEffectMaterial(*modelMaterial->GetMaterialForBoxFilter());
-        CheckPostEffectMaterial(*modelMaterial->GetMaterialForLuminanceBasedOutline());
-        CheckPostEffectMaterial(*modelMaterial->GetMaterialForDepthBasedOutline());
-        CheckPostEffectMaterial(*modelMaterial->GetMaterialForRadialBlur());
-        CheckPostEffectMaterial(*modelMaterial->GetMaterialForDissolve());
-        CheckPostEffectMaterial(*modelMaterial->GetMaterialThermography());
-        CheckPostEffectMaterial(*modelMaterial->GetMaterialForRandom());
-        CheckPostEffectMaterial(*modelMaterial->GetMaterialForMosaic());
-        ImGui::TreePop();
-    }
-    if (ImGui::TreeNode("PostEffect Sprite")) {
-
-        auto* spriteMaterial = postProcessManager->GetPostEffectMaterial(PostProcessManager::kSprite);
-
-        CheckPostEffectMaterial(*spriteMaterial->GetMaterialGaussianFilter());
-        CheckPostEffectMaterial(*spriteMaterial->GetMaterialGrayScale());
-        CheckPostEffectMaterial(*spriteMaterial->GetMaterialForVignette());
-        CheckPostEffectMaterial(*spriteMaterial->GetMaterialForBoxFilter());
-        CheckPostEffectMaterial(*spriteMaterial->GetMaterialForLuminanceBasedOutline());
-        CheckPostEffectMaterial(*spriteMaterial->GetMaterialForDepthBasedOutline());
-        CheckPostEffectMaterial(*spriteMaterial->GetMaterialForRadialBlur());
-        CheckPostEffectMaterial(*spriteMaterial->GetMaterialForDissolve());
-        CheckPostEffectMaterial(*spriteMaterial->GetMaterialThermography());
-        CheckPostEffectMaterial(*spriteMaterial->GetMaterialForRandom());
-        CheckPostEffectMaterial(*spriteMaterial->GetMaterialForMosaic());
-        ImGui::TreePop();
-    }
-
-    ImGui::End();
-
-#endif
-
 }
 
 void DebugUI::CheckAABB(AABB& aabb, const char* label)

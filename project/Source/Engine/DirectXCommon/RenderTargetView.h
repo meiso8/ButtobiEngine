@@ -9,20 +9,8 @@
 
 class RtvDescriptorHeap;
 class Device;
-class RenderTargetView
-{
-public:
-    void Create(Device& device,
-        std::array<IResource, 2 >& swapChainResources,
-        RtvDescriptorHeap* rtvDescriptorHeap
-    );
-    D3D12_RENDER_TARGET_VIEW_DESC& GetDesc() { return rtvDesc_; }
-    const D3D12_CPU_DESCRIPTOR_HANDLE& GetHandle(size_t index) const;
 
-private:
-    D3D12_RENDER_TARGET_VIEW_DESC rtvDesc_{};
-    //RTVを2つ作るのでディスクリプタを2つ用意
-    D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[2]{};
-
-};
-
+namespace RenderTargetView {
+    void Create(Device& device, const D3D12_RENDER_TARGET_VIEW_DESC& rtvDesc, RenderTextureResource& resource, RtvDescriptorHeap* rtvDescriptorHeap);
+    const D3D12_RENDER_TARGET_VIEW_DESC& GetDesc();
+}

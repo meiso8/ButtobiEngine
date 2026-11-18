@@ -24,7 +24,7 @@ namespace MatArray {
         if (dstArray) {
             std::memcpy(dstArray, &srcMatrix.m[0], sizeof(float) * 16);
         }
-     
+
     }
     void ConvertArrayToMat(const float dstArray[16], Matrix4x4& srcMatrix) {
         if (dstArray) {
@@ -82,7 +82,7 @@ void ObjectManager::UnregisterObject(Object3d* gameObject) {
 
 void ObjectManager::RegisterCollider(Collider* collider, Object3d* gameObject)
 {
-    if (!collider|| !gameObject) return;
+    if (!collider || !gameObject) return;
     //コライダーマップに登録する
     colliderMaps_[gameObject] = collider;
 }
@@ -174,7 +174,7 @@ void ObjectManager::ClickObject(Camera& camera)
         objectCommandManager_.ReDo();
     }
 
- 
+
     ImGui::Checkbox("edit", &editCollider_);
 
     if (clickedID_ != 0) {
@@ -191,8 +191,8 @@ void ObjectManager::ClickObject(Camera& camera)
     ColliderCheck(camera);
 
     if (!isClicked && !ImGui::GetIO().WantCaptureMouse) {
-        //ImGuiでどこにもマウスがキャプチャーしてないとき
-        clickedID_ = renderTexture_->GetClickedObjectID();
+        //ImGuiでどこにもマウスがキャプチャーしてないとき ホバー状態を取得しない
+        clickedID_ = renderTexture_->GetClickedOrHoverObjectID(false);
     }
 
     if (isSave) {
@@ -236,7 +236,20 @@ void ObjectManager::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList
 
 void ObjectManager::Update()
 {
+
+    for (auto& obj : objects_) {
+       
+        uint32_t hoverID = renderTexture_->GetClickedOrHoverObjectID(true);
+        if (obj->GetObjectID() == hoverID) {
+      /*      obj->SetUseHoverOutLine(true);*/
+            obj->SetUseHoverOutLine(true);
+        } else {
+            obj->SetUseHoverOutLine(false);
+        }
+   
+    }
     for (auto& obj : createObjects_) {
+
         obj->Update();
     }
 }
@@ -428,7 +441,7 @@ bool ObjectManager::SelectObject(Camera& camera)
 
 bool ObjectManager::UpdateImGuizmo(Camera& camera, Object3d* object3d)
 {
-    if (editCollider_|| object3d == nullptr) {
+    if (editCollider_ || object3d == nullptr) {
         return false;
     }
 #ifdef USE_IMGUI

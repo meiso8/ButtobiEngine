@@ -47,7 +47,7 @@ struct Joint;
 class DebugUI
 {
 public:
-    static void ShowMainViewPort(CbvSrvUavDescriptorHeap* srvDescriptorHeap, const uint32_t srvIndex);
+    static void ShowMainViewPort(CbvSrvUavDescriptorHeap* srvDescriptorHeap, const int srvIndex);
     static void CheckCharacterState(CharacterState& characterState, const char* label);
     static void CheckFPS();
     static void CheckSound();
@@ -135,6 +135,7 @@ public:
         float& reflect,
         float& glassFactor,
         float& specular,
+        uint32_t& useOutLine,
         const char* label
     );
     static void CheckLightMode(int32_t& lightMode, const char* label);
@@ -153,6 +154,22 @@ public:
 
 
     static void CheckJoint(Joint& joint, std::vector<Joint>& joints);
+
+
+
+    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForRenderTexture& material);
+    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForVignette& material);
+    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForBoxFilter& material);
+    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForGaussianFilter& material);
+    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForLuminanceBasedOutline& material);
+    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForDepthBasedOutline& material);
+    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForObjectIDBasedOutline& material);
+    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForRadialBlur& material);
+    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForDissolve& material);
+    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForRandom& material);
+    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForThermography& material);
+    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForMosaic& material);
+
 private:
     /// @brief 光源
 /// @param directionalLights 
@@ -165,16 +182,8 @@ private:
 
     static void CheckPointLightData();
 
-    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForRenderTexture& material);
-    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForVignette& material);
-    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForBoxFilter& material);
-    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForGaussianFilter& material);
-    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForLuminanceBasedOutline& material);
-    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForDepthBasedOutline& material);
-    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForRadialBlur& material);
-    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForDissolve& material);
-    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForRandom& material);
-    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForThermography& material);
-    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForMosaic& material);
+
+
+
 };
 

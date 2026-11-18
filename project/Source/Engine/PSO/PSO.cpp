@@ -381,6 +381,19 @@ void PSO::CreateALLPSO()
         rtvFormat
     );
 
+    graphicsPipelineStateOffScreen_[kEffectObjectIDBasedOutline] = Create(
+        kBlendModeNone,
+        kCullModeBack,
+        kNone,
+        false,
+        RootSignature::OBJECT_ID_BASED_OUTLINE,
+        DxcCompiler::VS_OffScreen,
+        DxcCompiler::PS_ObjectIDBasedOutline,
+        kTriangle,
+        InputLayout::kInputLayoutTypeOffScreen,
+        rtvFormat
+    );
+
 
     graphicsPipelineStateOffScreen_[kEffectRadialBlur] = Create(
         kBlendModeNone,

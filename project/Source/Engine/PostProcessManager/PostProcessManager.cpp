@@ -73,16 +73,18 @@ void PostProcessManager::Execute(
         barrier->SettingBarrierSRVforRTV(renderTextureData.resource.resource);
 
         if (effect == PSO::EffectType::kEffectDissolve) {
-            DrawDissolve(layer, renderTextureData.rtvHandleCPU, srcIndex, TextureFactory::NOISE0);
+            DrawDissolve(layer, renderTextureData.resource.rtvHandleCPU, srcIndex, TextureFactory::NOISE0);
         } else if (effect == PSO::EffectType::kEffectDepthBasedOutline) {
-            DrawOutLine(layer, renderTextureData.rtvHandleCPU, srcIndex, depthTexture_->GetSRVIndex());
+            DrawOutLine(layer, renderTextureData.resource.rtvHandleCPU, srcIndex, depthTexture_->GetSRVIndex());
+        } else if (effect == PSO::EffectType::kEffectObjectIDBasedOutline) {
+            DrawObjectIDOutLine(layer, renderTextureData.resource.rtvHandleCPU, srcIndex);
         } else if (effect == PSO::EffectType::kEffectThermography) {
             //サーモグラフィーのターゲットを戻す
-            DrawThermo(layer, renderTextureData.rtvHandleCPU);
+            DrawThermo(layer, renderTextureData.resource.rtvHandleCPU);
         } else if (effect == PSO::kEffectRandom) {
-            DrawRandom(layer, randomBlendMode, renderTextureData.rtvHandleCPU, srcIndex);
+            DrawRandom(layer, randomBlendMode, renderTextureData.resource.rtvHandleCPU, srcIndex);
         } else {
-            Draw(layer, effect, renderTextureData.rtvHandleCPU, srcIndex);
+            Draw(layer, effect, renderTextureData.resource.rtvHandleCPU, srcIndex);
         }
 
         barrier->SettingBarrierRTVforSRV(renderTextureData.resource.resource);
@@ -92,7 +94,6 @@ void PostProcessManager::Execute(
     }
 
     Draw(layer, PSO::kEffectNone, dstRtvHandle, srcIndex);
-
 
 }
 
@@ -169,6 +170,29 @@ void PostProcessManager::DrawOutLine(const Layer& layer, const D3D12_CPU_DESCRIP
     DrawCallforRenderTexture(layer, 3, RenderTexture::RenderTextureType::kThermography);
 
     commandList_->DrawInstanced(3, 1, 0, 0);
+}
+void PostProcessManager::DrawObjectIDOutLine(const Layer& layer, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index)
+{
+
+    // 書き込み先（RTV）の設定とクリア
+    commandList_->OMSetRenderTargets(1, &dstRtvHandle, false, nullptr);
+
+    commandList_->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::OBJECT_ID_BASED_OUTLINE));
+    commandList_->SetPipelineState(PSO::GetGraphicsPipelineStateOffScreen(PSO::kEffectObjectIDBasedOutline).Get());//PSOを設定
+    commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    //SRVのDescriptorTableの先頭を設定。0はrootParameter[0]である。
+    commandList_->SetGraphicsRootConstantBufferView(0, renderLayer_[layer].postEffectMaterial_->GetGPUVirtualAddress(PSO::kEffectObjectIDBasedOutline));
+    //ObjectIDテクスチャを入れる     //ObjectTexture t12
+    DrawCallforRenderTexture(layer, 1, RenderTexture::RenderTextureType::kObjectID);
+    //レンダーテクスチャインデックス     //Texture t2
+    DrawCallforRenderTexture(layer, 2, index);
+    //サーモグラフィー用のテクスチャを利用してマスク処理をかける
+    DrawCallforRenderTexture(layer, 3, RenderTexture::RenderTextureType::kThermography);
+
+    commandList_->DrawInstanced(3, 1, 0, 0);
+
+
 }
 // RenderTexture.cpp にサーモグラフィー用の描画関数を追加する例
 void PostProcessManager::DrawThermo(const Layer& layer, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle)

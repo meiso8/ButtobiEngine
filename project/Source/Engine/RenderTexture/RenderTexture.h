@@ -24,9 +24,15 @@ public:
         kObjectID,
         kMaxRenderTexture,
     };
+
+    enum ReadBackResource {
+        kClick,
+        kHover,
+    };
+
     struct RenderTextureData {
-        TextureResource resource;
-        D3D12_CPU_DESCRIPTOR_HANDLE rtvHandleCPU;
+        RenderTextureResource resource;
+        DXGI_FORMAT dxgiFormat;
     };
 
 private:
@@ -36,8 +42,9 @@ private:
     std::array< RenderTextureData, kMaxRenderTexture> renderTextureDatas_;
     RenderTextureData thermographyTextureData_;
 
-    //ID用リソース
-    IResource idReadbackResource_;
+    //ID用リソースホバー用
+    IResource idReadbackResources_[2];
+
     ID3D12GraphicsCommandList* commandList_ = nullptr;
     CbvSrvUavDescriptorHeap* srvDescriptorHeap_ = nullptr;
 public:
@@ -46,10 +53,10 @@ public:
     void SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap);
 
     //  描画コマンドの最後にコピー命令を積む関数 (PostDrawの直前に呼ぶ)
-    void CopyClickPixelCommand(int mouseX, int mouseY);
+    void CopyClickPixelCommand(int mouseX, int mouseY,bool isHover);
 
     //  次のフレームのUpdateなどで、安全にIDを読み出す関数
-    uint32_t GetClickedObjectID();
+    uint32_t GetClickedOrHoverObjectID(bool isHover);
 
     const Vector4& GetColor() {
         return renderTargetClearValue_;
@@ -65,12 +72,24 @@ public:
     ~RenderTexture();
 private:
     void CreateResource(
-        const uint32_t index,
+        const RenderTextureType index,
         Device* device,
         RtvDescriptorHeap* rtvDescriptorHeap,
         DXGI_FORMAT format,
         bool createSRV
     );
 
+    //formatを決定した後
+
+    void CreateRTVResource(const RenderTextureType index);
+
+    void CreateRTV(
+        const RenderTextureType index,
+        Device* device,
+        RtvDescriptorHeap* rtvDescriptorHeap);
+
+    void CreateSRV(
+        const RenderTextureType index,
+        Device* device);
 };
 

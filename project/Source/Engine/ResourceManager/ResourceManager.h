@@ -74,6 +74,9 @@ struct TextureResource :public IResource {
     uint32_t srvIndex = 0;
 };
 
+struct RenderTextureResource :public TextureResource {
+    D3D12_CPU_DESCRIPTOR_HANDLE rtvHandleCPU;
+};
 
 template <typename T>
 struct Resource :public IResource {

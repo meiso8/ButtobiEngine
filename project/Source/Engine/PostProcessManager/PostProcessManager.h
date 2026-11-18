@@ -60,12 +60,16 @@ public:
         return renderLayer_[layer].postEffectMaterial_.get();
     }
     void Finalize();
+
 private:
     PostProcessManager() = default;
 
     ~PostProcessManager() = default;
     void Draw(const Layer& layer, const PSO::EffectType& effectType, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index);
     void DrawOutLine(const Layer& layer, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index, const uint32_t depthSrvIndex);
+
+    void DrawObjectIDOutLine(const Layer& layer, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index);
+
     void DrawDissolve(const Layer& layer, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index, const TextureFactory::Handle& textureHandle);
     void DrawRandom(const Layer& layer, const BlendMode& blendMode, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index);
     // サーモグラフィー用

@@ -65,6 +65,12 @@ void RootSignature::Create(Device& device) {
     descriptorRangeForTemperature[0].NumDescriptors = 1;//1つ
     descriptorRangeForTemperature[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SRV
     descriptorRangeForTemperature[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//オフセット自動計算
+    //ObjectIdBasedOutline　オブジェクトＩＤに基づいたアウトラインの生成
+    D3D12_DESCRIPTOR_RANGE descriptorRangeForObjectIdBasedOutline[1] = {};
+    descriptorRangeForObjectIdBasedOutline[0].BaseShaderRegister = 12;//descriptorRangeForGPUParticleSRV11を使用済みなので　Texture2D<float> gObjectTexture : register(t12);
+    descriptorRangeForObjectIdBasedOutline[0].NumDescriptors = 1;//1つ
+    descriptorRangeForObjectIdBasedOutline[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SRV
+    descriptorRangeForObjectIdBasedOutline[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//オフセット自動計算
 
     // ===================Skinning 用=============================
     //MatrixPalette用 
@@ -116,7 +122,7 @@ void RootSignature::Create(Device& device) {
 
     //SRV
     D3D12_DESCRIPTOR_RANGE descriptorRangeForGPUParticleSRV[1] = {};
-    descriptorRangeForGPUParticleSRV[0].BaseShaderRegister = 11;
+    descriptorRangeForGPUParticleSRV[0].BaseShaderRegister = 11;//descriptorRangeForGPUParticleSRV11を使用済み
     descriptorRangeForGPUParticleSRV[0].NumDescriptors = 1;//1つ
     descriptorRangeForGPUParticleSRV[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SRV
     descriptorRangeForGPUParticleSRV[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//オフセット自動計算
@@ -492,6 +498,34 @@ void RootSignature::Create(Device& device) {
     rootParametersForDepthBasedOutline[3].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForTemperature);//Tableで利用する数
 
 #pragma endregion
+
+
+#pragma region//ObjectIDBasedOutline
+    D3D12_ROOT_PARAMETER rootParametersForObjectBasedOutline[4] = {};
+
+    //Material b0
+    rootParametersForObjectBasedOutline[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+    rootParametersForObjectBasedOutline[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParametersForObjectBasedOutline[0].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
+    //ObjectTexture t12
+    rootParametersForObjectBasedOutline[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParametersForObjectBasedOutline[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParametersForObjectBasedOutline[1].DescriptorTable.pDescriptorRanges = descriptorRangeForObjectIdBasedOutline;//Tableの中身の配列を指定
+    rootParametersForObjectBasedOutline[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForObjectIdBasedOutline);//Tableで利用する数
+    //Texture t2
+    rootParametersForObjectBasedOutline[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParametersForObjectBasedOutline[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParametersForObjectBasedOutline[2].DescriptorTable.pDescriptorRanges = descriptorRange;//Tableの中身の配列を指定
+    rootParametersForObjectBasedOutline[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);//Tableで利用する数
+    //gTemperatureTexture t8
+    rootParametersForObjectBasedOutline[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParametersForObjectBasedOutline[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParametersForObjectBasedOutline[3].DescriptorTable.pDescriptorRanges = descriptorRangeForTemperature;//Tableの中身の配列を指定
+    rootParametersForObjectBasedOutline[3].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForTemperature);//Tableで利用する数
+
+#pragma endregion
+
+
 #pragma region//RandomParam
 
     D3D12_ROOT_PARAMETER rootParametersForRandom[1] = {};
@@ -555,7 +589,9 @@ void RootSignature::Create(Device& device) {
 
     descriptionRootSignature[DEPTH_BASED_OUTLINE].pParameters = rootParametersForDepthBasedOutline;//ルートパラメータ配列へのポインタ
     descriptionRootSignature[DEPTH_BASED_OUTLINE].NumParameters = _countof(rootParametersForDepthBasedOutline);//配列の長さ
-
+    //オブジェクトIDテクスチャによるアウトライン
+    descriptionRootSignature[OBJECT_ID_BASED_OUTLINE].pParameters = rootParametersForObjectBasedOutline;//ルートパラメータ配列へのポインタ
+    descriptionRootSignature[OBJECT_ID_BASED_OUTLINE].NumParameters = _countof(rootParametersForObjectBasedOutline);//配列の長さ
 
     descriptionRootSignature[DISSOLVE].pParameters = rootParametersForDepthBasedOutline;//ルートパラメータ配列へのポインタ
     descriptionRootSignature[DISSOLVE].NumParameters = _countof(rootParametersForDepthBasedOutline);//配列の長さ

@@ -16,7 +16,7 @@
 #include"Texture.h"
 #include"DebugUI.h"
 #include"Device/Device.h"
-
+#include"RenderTargetView.h"
 
 namespace fs = std::filesystem;
 
@@ -54,8 +54,7 @@ namespace ImGuiLoadFile {
 void ImGuiClass::Initialize(Window& window,
     CbvSrvUavDescriptorHeap* srvDescriptorHeap,
     Device& device,
-    SwapChain& swapChain,
-    RenderTargetView& rtv) {
+    SwapChain& swapChain) {
 
     uint32_t srvIndex = srvDescriptorHeap->Allocate();
 
@@ -126,7 +125,7 @@ void ImGuiClass::Initialize(Window& window,
     ImGui_ImplWin32_Init(window.GetHwnd());
     ImGui_ImplDX12_Init(device.GetDevice().Get(),
         swapChain.GetDesc().BufferCount,
-        rtv.GetDesc().Format,
+        RenderTargetView::GetDesc().Format,
         srvDescriptorHeap->GetDescriptorHeap(),
         srvDescriptorHeap->GetCPUDescriptorHandle(srvIndex),
         srvDescriptorHeap->GetGPUDescriptorHandle(srvIndex));

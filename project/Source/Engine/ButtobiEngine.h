@@ -49,15 +49,16 @@ private:
     /// @brief コマンドの管理
     std::unique_ptr<CommandListManager>commandListManager_ = nullptr;
     /// @brief スワップチェイン
-    std::unique_ptr <SwapChain> swapChainClass_ = nullptr;
+    std::unique_ptr<SwapChain> swapChainClass_ = nullptr;
     /// @brief RTV管理
     std::unique_ptr<RtvDescriptorHeap> rtvDescriptorHeap_ = nullptr;
     /// @brief DSV管理
     std::unique_ptr<DsvDescriptorHeap> dsvDescriptorHeap_ = nullptr;
     /// @brief SRV管理
     std::unique_ptr<CbvSrvUavDescriptorHeap> srvDescriptorHeap_ = nullptr;
+
     //シェーダーコンパイル
-    std::unique_ptr< DxcCompiler> dxcCompiler_ = nullptr;
+    std::unique_ptr<DxcCompiler> dxcCompiler_ = nullptr;
 
 
     /// @brief 深度テクスチャ
