@@ -20,7 +20,7 @@ public:
     bool GetIsGameEnd() {
         return isEnd_;
     };
-
+    void RegisterObj();
     PuzzleObj* GetPuzzleObj() {
         return puzzleObj_.get();
     };

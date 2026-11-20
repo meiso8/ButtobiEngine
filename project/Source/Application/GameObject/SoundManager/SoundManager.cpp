@@ -129,8 +129,7 @@ void SoundManager::AnubisUpdate()
 
 void SoundManager::BastetUpdate()
 {
-    //カメライベント時になる
-    PlayDistanceSE("CameraUp", SoundFactory::Piano, 50.0f, bgmVolFactor_*0.25f);
+
 }
 
 void SoundManager::WaterUpdate()

@@ -1,6 +1,8 @@
 #include"BastetStage.h"
 #include "ParticleEmitter.h"
 #include"FlagManager/FlagManager.h"
+#include"SoundManager/SoundManager.h"
+#include"Sound.h"
 BastetStage::BastetStage()
 {
     backGround_ = std::make_unique<BackGround>();
@@ -10,13 +12,10 @@ BastetStage::BastetStage()
 
 void BastetStage::Initialize()
 {
-
     //ライトの初期化
     GetLightManager()->Initialize();
-
     //背景の初期化
     backGround_->Initialize();
-   
     //ブロックマップ
     bastetBlockMap_->Initialize();
     //バステトの初期化
@@ -50,6 +49,10 @@ void BastetStage::Update()
 
     if (bastetBlockMap_->IsClear()) {
         FlagManager::SetFlag("ClearBastetBlockMap");
+        Sound::Stop(SoundFactory::Piano);
+    } else {
+        //カメライベント時になる
+        SoundManager::PlayDistanceSE("CameraUp", SoundFactory::Piano, 25.0f, 0.25f);
     }
 
 }

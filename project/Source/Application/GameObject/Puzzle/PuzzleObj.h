@@ -13,13 +13,12 @@ public:
     void Update();
     void Draw();
     void OnCollision(Collider* collider) override;
-    void SetColor(const Vector4& color) { aniObj_->SetColor(color); };
-   
+
     Vector3 GetWorldPosition() {
       return  aniObj_->GetWorldTransform().GetWorldPosition();
     }
     void SetIsOpen(const bool flag) { isOpen_ = flag; }
-
+    void RegisterObj() { aniObj_->RegisterObject(); };
 private:
     bool isOpen_ = false;
     std::unique_ptr<AnimationObject3d> aniObj_ = nullptr;

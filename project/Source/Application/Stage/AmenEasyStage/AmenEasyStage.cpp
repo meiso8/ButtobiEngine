@@ -42,6 +42,7 @@ void AmenEasyStage::StageTransitionInitialize()
 
     //スライドパズルシステム
     slidePuzzleSystem_->SetCurrentPtr();
+    slidePuzzleSystem_->RegisterObj();
 }
 
 void AmenEasyStage::Update()

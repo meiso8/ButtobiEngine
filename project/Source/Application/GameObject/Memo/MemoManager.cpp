@@ -234,8 +234,6 @@ void MemoManager::RayCastHit(RaySprite& raySprite)
 
         if (raySprite.Intersect(memo.get())) {
 
-            memo->SetColor({ 1.0f,0.0f,0.0f,1.0f });
-
             if (InputBind::IsClick()) {
                 if (!isLookItem_) {
                     isLookItem_ = true;

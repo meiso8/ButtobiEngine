@@ -19,8 +19,9 @@ public:
     static void SetMedjedApper(const bool flag) { isMedjedApper_ = flag; }
 
     static void Update();
-private:
+
     static void PlayDistanceSE(const std::string tagName, const SoundFactory::TAG soundTag, const float firstSoundDistance, const float maxVol);
+private:
     static const RaySprite* raySprite_;
     static CollisionManager* collisionManager_;
 

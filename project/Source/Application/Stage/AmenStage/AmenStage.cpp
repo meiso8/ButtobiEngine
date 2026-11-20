@@ -45,6 +45,7 @@ void AmenStage::StageTransitionInitialize()
     isGenerateItem_ = false;
     //スライドパズルシステム
     slidePuzzleSystem_->SetCurrentPtr();
+    slidePuzzleSystem_->RegisterObj();
 }
 
 void AmenStage::Update()

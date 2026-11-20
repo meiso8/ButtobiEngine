@@ -38,7 +38,6 @@ public:
        return AABB{ .min = -halfScale,.max = halfScale };
     }
 
-    void SetColor(const Vector4& color) { object_->SetColor(color); }
     void SetString(const   std::u32string& string) {  string_ = string; }
     const std::u32string& GetString() { return string_; }
 

@@ -108,8 +108,6 @@ void SlidePuzzleSystem::RayCastHit(RaySprite& ray)
 
     if (ray.Intersect(puzzleObj_.get())) {
 
-        puzzleObj_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
-
         if (InputBind::IsClick()) {
             if (!isActive_) {
                 isActive_ = true;
@@ -119,6 +117,11 @@ void SlidePuzzleSystem::RayCastHit(RaySprite& ray)
         }
     }
 
+}
+
+void SlidePuzzleSystem::RegisterObj()
+{
+    puzzleObj_->RegisterObj();
 }
 
 

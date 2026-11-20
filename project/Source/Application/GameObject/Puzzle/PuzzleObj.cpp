@@ -47,7 +47,7 @@ void PuzzleObj::Update() {
     }
 
     aniObj_->Update();
-    aniObj_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+
 }
 
 void PuzzleObj::Draw() {

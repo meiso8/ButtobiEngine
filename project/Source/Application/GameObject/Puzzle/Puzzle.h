@@ -7,10 +7,10 @@ class Puzzle
 private:
 
     //水平
-    int horizontal_ = 4;
+    int horizontalCount_ = 4;
     //垂直
-    int vertical_ = 4;
-    int maxArrayNum_ = vertical_ * horizontal_;
+    int verticalCount_ = 4;
+    int maxArrayNum_ = verticalCount_ * horizontalCount_;
 
     std::vector<int>panel_;
     //画像
