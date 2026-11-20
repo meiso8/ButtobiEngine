@@ -5,7 +5,7 @@ BastetStage::BastetStage()
 {
     backGround_ = std::make_unique<BackGround>();
     bastet_ = std::make_unique<Bastet>();
-    bastetBlockMap_ = std::make_unique<BastetBlockMap>();
+    bastetBlockMap_ = std::make_unique<PianoBlockMap>();
 }
 
 void BastetStage::Initialize()
@@ -73,9 +73,9 @@ void BastetStage::CheckCollision(CollisionManager& collisionManager, RaySprite& 
         collisionManager.AddCollider(object.get());
     }
 
-    ////ブロックの当たり判定の追加
-    //for (auto& object : bastetBlockMap_->GetMap()) {
-    //    collisionManager.AddCollider(object.get());
-    //}
+    //ブロックの当たり判定の追加
+    for (auto& object : bastetBlockMap_->GetMap()) {
+        collisionManager.AddCollider(object.get());
+    }
 
 }

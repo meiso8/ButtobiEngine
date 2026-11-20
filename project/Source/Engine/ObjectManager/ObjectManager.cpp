@@ -309,6 +309,11 @@ void ObjectManager::Finalize()
     colliderMaps_.clear();
 }
 
+uint32_t ObjectManager::GetHoverID()
+{
+    return renderTexture_->GetClickedOrHoverObjectID(true);
+}
+
 void ObjectManager::Save()
 {
 
@@ -353,6 +358,7 @@ void ObjectManager::Save()
             {"nextStageName",object->GetNextStageName()},
             {"openFlagName",object->GetOpenFlagName()},
             {"isLocked",object->GetIsLocked()},
+            {"isUseOutLine",object->GetUseOutLine()},
 
         };
 

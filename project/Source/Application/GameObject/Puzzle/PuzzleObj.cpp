@@ -21,6 +21,7 @@ PuzzleObj::PuzzleObj() {
     aniObj_->SetModelAndLoadAnimation(model);
     aniObj_->SetMeshAndMaterial(model);
     aniObj_->SetTemperature(0.75f);
+    aniObj_->SetUseOutLine(true);
 
     SetWorldMatrix(aniObj_->GetWorldTransform().matWorld_);
 }

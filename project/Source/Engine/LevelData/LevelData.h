@@ -29,6 +29,7 @@ struct LevelData {
         float environmentCoefficient;
         float glassFactor;
         uint32_t lightMode;
+        bool useOutline;
     };
 
     struct ObjectData {

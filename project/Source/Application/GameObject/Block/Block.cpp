@@ -40,7 +40,6 @@ void Block::Update()
     } else {
         object_->GetTransform().translate.y = Easing::EaseInOut(endPosY_, startPosY_, aniTimer_);
     }
-
     object_->Update();
 
 }
@@ -48,7 +47,6 @@ void Block::Update()
 void Block::OnCollision(Collider* collider)
 {
     OnCollisionCollider();
-
 
 
 }

@@ -173,7 +173,7 @@
     <ClCompile Include="Source\Application\GameObject\MeltBlockMap\MeltBlockMap.cpp" />
     <ClCompile Include="Source\Application\Stage\BastetStage\BastetStage.cpp" />
     <ClCompile Include="Source\Application\GameObject\Bastet\Bastet.cpp" />
-    <ClCompile Include="Source\Application\GameObject\BastetBlockMap\BastetBlockMap.cpp" />
+    <ClCompile Include="Source\Application\GameObject\PianoBlockMap\PianoBlockMap.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Model\Model.cpp" />
     <ClCompile Include="Source\Engine\Particle\GPUParticle.cpp" />
     <ClCompile Include="Source\Engine\Particle\GPUParticleEmitter\GPUParticleEmitter.cpp" />
@@ -411,7 +411,7 @@
     <ClInclude Include="Source\Application\GameObject\MeltBlockMap\MeltBlockMap.h" />
     <ClInclude Include="Source\Application\Stage\BastetStage\BastetStage.h" />
     <ClInclude Include="Source\Application\GameObject\Bastet\Bastet.h" />
-    <ClInclude Include="Source\Application\GameObject\BastetBlockMap\BastetBlockMap.h" />
+    <ClInclude Include="Source\Application\GameObject\PianoBlockMap\PianoBlockMap.h" />
     <ClInclude Include="Source\Engine\Particle\GPUParticle.h" />
     <ClInclude Include="Source\Engine\Particle\GPUParticleEmitter\GPUParticleEmitter.h" />
     <ClInclude Include="Source\Engine\Particle\ParticleStruct.h" />

@@ -29,6 +29,7 @@
             "file_name": "medjed.gltf",
             "glassFactor": 0.0,
             "isLocked": false,
+            "isUseOutLine": false,
             "lightMode": 2,
             "name": "Medjed11",
             "nextStageName": "",
@@ -81,6 +82,7 @@
             "file_name": "Plane",
             "glassFactor": 0.0,
             "isLocked": false,
+            "isUseOutLine": false,
             "lightMode": 2,
             "name": "Object52",
             "nextStageName": "",
@@ -136,6 +138,7 @@
             "file_name": "gate.gltf",
             "glassFactor": 0.0,
             "isLocked": false,
+            "isUseOutLine": false,
             "lightMode": 2,
             "name": "Object5",
             "nextStageName": "",
@@ -188,6 +191,7 @@
             "file_name": "Cube",
             "glassFactor": 0.0,
             "isLocked": false,
+            "isUseOutLine": false,
             "lightMode": 2,
             "name": "Object6",
             "nextStageName": "",
@@ -242,6 +246,7 @@
             "file_name": "Cube",
             "glassFactor": 0.0,
             "isLocked": false,
+            "isUseOutLine": false,
             "lightMode": 2,
             "name": "Object5",
             "nextStageName": "",
@@ -297,6 +302,7 @@
             "file_name": "ticketMac.obj",
             "glassFactor": 0.0,
             "isLocked": false,
+            "isUseOutLine": true,
             "lightMode": 2,
             "name": "Object8",
             "nextStageName": "",
@@ -305,9 +311,9 @@
             "temperature": 0.0,
             "transform": {
                 "rotate": {
-                    "x": -1.214098392665619e-05,
-                    "y": 1.5699999332427979,
-                    "z": -1.5858804545132443e-05
+                    "x": -3.1415908336639404,
+                    "y": -0.025438997894525528,
+                    "z": 3.1415884494781494
                 },
                 "scale": {
                     "x": 0.5,
@@ -315,9 +321,9 @@
                     "z": 0.5
                 },
                 "translate": {
-                    "x": -3.088137149810791,
-                    "y": 1.1467222066130489e-05,
-                    "z": -3.631819248199463
+                    "x": 0.18608491122722626,
+                    "y": 1.4295710570877418e-06,
+                    "z": -2.059252977371216
                 }
             },
             "type": "MESH"
@@ -334,6 +340,7 @@
             "file_name": "Plane",
             "glassFactor": 0.0,
             "isLocked": false,
+            "isUseOutLine": false,
             "lightMode": 2,
             "name": "Object3",
             "nextStageName": "AmenEasyStage",
@@ -382,7 +389,7 @@
         },
         {
             "color": {
-                "w": 1.0,
+                "w": 2.802596928649634e-45,
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
@@ -393,6 +400,7 @@
             "file_name": "player.gltf",
             "glassFactor": 0.0,
             "isLocked": false,
+            "isUseOutLine": false,
             "lightMode": 2,
             "name": "Player",
             "nextStageName": "",
@@ -402,7 +410,7 @@
             "transform": {
                 "rotate": {
                     "x": 0.0,
-                    "y": 0.020750440657138824,
+                    "y": -6.2478227615356445,
                     "z": 0.0
                 },
                 "scale": {
@@ -411,9 +419,9 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": -0.09929528087377548,
-                    "y": -0.01650761067867279,
-                    "z": -8.437456130981445
+                    "x": 0.27468621730804443,
+                    "y": 0.0,
+                    "z": -3.25
                 }
             },
             "type": "EMPTY"

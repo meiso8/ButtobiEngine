@@ -61,13 +61,19 @@ PixelShaderOutput main(VertexShaderOutput input)
    
     if (temperature.b >= 1.0f)
     {
+        //1.0fの時　選択状態ではない　ため　マスクをかける
         outlineMask = 1.0f;
-
-    }else
-    {
-        outlineMask = max(outlineMask, temperature.g);
     }
-    
+    else
+    {
+        //それ以外の時　例えば
+        if (temperature.b <= 0.0f)
+        {
+            //この時は選択状態のとき
+            outlineMask = max(outlineMask, temperature.g);
+        }
+    }
+
     if (outlineMask > 0.75f)
     {
         output.color.rgb = gTexture.Sample(gSampler, input.texcoord).rgb;

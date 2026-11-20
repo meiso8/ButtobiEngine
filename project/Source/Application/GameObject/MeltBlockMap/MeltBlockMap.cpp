@@ -8,8 +8,8 @@ MeltBlockMap::MeltBlockMap()
     for (auto& block : blocks_) {
         block = std::make_unique<Block>();
         block->SetCubeAABB(aabb);
-
         block->SetTextureHandle(TextureFactory::NONE);
+
     }
     colorMap_[0] = COLOR::CYAN;
     colorMap_[1] = COLOR::BLUE;
@@ -26,6 +26,8 @@ MeltBlockMap::MeltBlockMap()
     {
         blocks_[i]->SetColor(colorMap_[i]);
         blocks_[i]->SetTemperature(temperatureMap_[static_cast<BlockTempareture>(i)]);
+        blocks_[i]->SetUseOutline(true);
+
     }
 }
 
@@ -49,6 +51,7 @@ void MeltBlockMap::Initialize()
         };
 
         blocks_[i]->SetPos(pos);
+        blocks_[i]->RegisterObject("TemperatureBlock:" + std::to_string(temperatureMap_[static_cast<BlockTempareture>(i)]));
     }
 }
 
@@ -134,7 +137,7 @@ void MeltBlockMap::RayCastHit(RaySprite& raySprite)
 
         if (!blocks_[i]->GetIsPush()) {
 
-            if (raySprite.Intersect(blocks_[i].get())) {
+            if (raySprite.Intersect(blocks_[i].get(),10.0f)) {
                 Vector4 color = COLOR::ToShadowColor(colorMap_[i]);
                 blocks_[i]->SetColor(color);
                 //ブロックテクスチャによって判定しない

@@ -76,7 +76,7 @@ public:
     /// @param ratioNum　音階の数字 
     static void SetFrequencyRatio(const SoundFactory::TAG& tag, const int ratioNum);
     /// @brief 音声データの解放関数  
-/// @param soundData 音声データ  
+    /// @param soundData 音声データ  
     static void Unload(SoundData& soundData);
     static void Initialize();
     static void Finalize();
@@ -95,14 +95,11 @@ public:
 
     static std::unordered_map<std::filesystem::path, SoundData>& GetSoundDatas() { return  soundDatas_; }
 
-    static void SetBGMVolume(const float vol) { bgmVolume_; }
-    static void SetSEVolume(const float vol) { seVolume_; }
+    static void SetBGMVolume(const float vol) { bgmVolume_ = vol; }
+    static void SetSEVolume(const float vol) { seVolume_ = vol; }
     static const float GetBGMVolume() { return bgmVolume_; }
     static const float GetSEVolume() { return seVolume_; }
-private:
 
-    static float bgmVolume_;
-    static float seVolume_;
 
 private:
     Sound() = default;
@@ -115,6 +112,9 @@ private:
     static bool LoadFile(const std::filesystem::path& path);
     static XAUDIO2_BUFFER GetBuffer(const std::filesystem::path& path);
 private:
+
+    static float bgmVolume_;
+    static float seVolume_;
 
     static  Microsoft::WRL::ComPtr<IXAudio2> xAudio2_; // ComオブジェクトなのでComPtrで管理する。  
     static IXAudio2MasteringVoice* masterVoice_; // ReleaseなしのためComPtrで管理することが出来ない。  

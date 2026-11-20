@@ -11,6 +11,7 @@ AnubisBlockMap::AnubisBlockMap()
         block->SetCubeAABB(aabb);
         block->SetTemperature(0.75f);
         block->SetTextureHandle(TextureFactory::NONE);
+   
     }
 
     colorMap_[kRed] = COLOR::RED;
@@ -20,6 +21,8 @@ AnubisBlockMap::AnubisBlockMap()
 
     for (int i = 0; i < kBlockColors;++i) {
         blocks_[i]->SetColor(colorMap_[static_cast<BlockColor>(i)]);
+        blocks_[i]->SetUseOutline(true);
+   
     }
 }
 
@@ -34,7 +37,7 @@ void AnubisBlockMap::Initialize()
 
     for (int i = 0; i < kBlockColors; ++i) {
         blocks_[i]->Initialize();
-
+        blocks_[i]->RegisterObject("AnubisBlock:" + std::to_string(i));
         Vector3 pos = {
             static_cast<float>(i) * blockSize*2.0f + offsetX,
             -0.25f,

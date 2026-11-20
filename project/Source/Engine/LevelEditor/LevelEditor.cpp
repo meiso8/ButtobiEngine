@@ -210,9 +210,11 @@ void LevelEditor::CreateObject3d(std::vector<std::unique_ptr<Object3d>>& object3
         newObjectData->SetGlassFactor(objectData.materialData.glassFactor);
         //ライトモード
         newObjectData->SetLightMode(static_cast<Object3d::LightMode>(objectData.materialData.lightMode));
+        //アウトライン
+        newObjectData->SetUseOutLine(objectData.materialData.useOutline);
 
         newObjectData->SetObjectName(objectData.objectName);
-
+      
         //ロックされているかなどの情報を渡さない。
 
         newObjectData->RegisterObject();
@@ -260,7 +262,9 @@ void LevelEditor::LoadMaterialData(LevelData::MaterialData& data, nlohmann::json
     //ガラス度合
     LoadFloat(data.glassFactor, object, "glassFactor");
     LoadLightMode(data.lightMode, object);
-
+    //アウトライン
+    LoadBool(data.useOutline, object, "isUseOutLine");
+ 
 }
 
 void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {

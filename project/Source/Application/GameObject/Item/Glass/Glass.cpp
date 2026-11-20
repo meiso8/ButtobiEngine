@@ -10,7 +10,7 @@ void Glass::Init()
 
     aniTimer_ = 0.0f;
     object_->Initialize();
-
+   
     object_->SetTranslate({ 8.5f,1.111f,-5.0f });
     object_->SetTemperature(0.2f);
 

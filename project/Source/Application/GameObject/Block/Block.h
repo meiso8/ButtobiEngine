@@ -12,6 +12,12 @@ private:
     float aniTimer_ = 0.0f;
 public:
     void SetTemperature(const float temp) { object_->SetTemperature(temp); };
+    void SetUseOutline(const bool flag) { object_->SetUseOutLine(flag); };
+    void SetUseHoverOutLine(const bool flag) { object_->SetUseHoverOutLine(flag); };
+    void RegisterObject(const std::string objectName ="Block") {
+        object_->SetObjectName(objectName);
+        object_->RegisterObject(); };
+    uint32_t GetObjectId() { return object_->GetObjectID(); }
     Block();
     void SetIsPush(const bool& isPush) { isPush_ = isPush; }
     const bool& GetIsPush() { return isPush_; };

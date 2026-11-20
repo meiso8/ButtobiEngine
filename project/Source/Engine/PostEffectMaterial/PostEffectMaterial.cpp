@@ -214,7 +214,7 @@ void PostEffectMaterial::CreateMaterialForObjectIDBasedOutline()
     //マテリアルにデータを書き込む
     materialForObjectIDBasedOutline_.data->lineWidth = 10.0f;
     materialForObjectIDBasedOutline_.data->thickness = 2.0f;
-    materialForObjectIDBasedOutline_.data->color = { 0.0f,0.0f,1.0f };
+    materialForObjectIDBasedOutline_.data->color = { 1.0f,1.0f,0.0f };
 
     LogFile::Log("Create : MaterialBuffer : ObjectIDBasedOutline\n");
 }

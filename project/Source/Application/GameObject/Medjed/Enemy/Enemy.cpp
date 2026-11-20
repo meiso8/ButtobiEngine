@@ -40,7 +40,7 @@ Enemy::Enemy()
     bodyPos_->SetModelAndLoadAnimation(model_);
     bodyPos_->Create();
     bodyPos_->SetMeshAndMaterial(model_);
-
+    bodyPos_->SetUseOutLine(false);
     bodyPos_->SetTemperature(1.0f);
     float halfScale = kScale_ * 0.25f;
     Init();

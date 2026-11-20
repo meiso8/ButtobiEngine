@@ -60,7 +60,7 @@ Medjed::Medjed() {
     aniObj_->SetMeshAndMaterial(GetModelPtr());
     aniObj_->SetTemperature(1.0f);
     aniObj_->SetModelAndLoadAnimation(GetModelPtr());
-
+    aniObj_->SetUseOutLine(true);
     SetAABB(GetLocalAABB());
     SetCollisionAttribute(CollisionTag::GetTag("Medjed"));
     SetCollisionMask(
@@ -88,6 +88,7 @@ void Medjed::Update()
 
     if (IsHide()) {
         return;
+        aniObj_->SetUseOutLine(false);
     }
 
     isHit_ = false;

@@ -49,7 +49,7 @@ void Bastet::Initialize() {
     obj_->SetObjectName("Bastet");
     obj_->RegisterObject();
     obj_->SetColor({ 1.0f,1.0f,1.0f,0.0f });
-    obj_->SetTemperature(0.3f);
+    obj_->SetTemperature(0.5f);
 }
 
 void Bastet::LoadMap(const std::string& tagName)
