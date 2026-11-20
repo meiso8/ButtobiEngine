@@ -15,9 +15,11 @@
 #include"CollisionConfig.h"
 #include"InputBind.h"
 #include"TimeManager.h"
+#include"DebugUI.h"
+
 #include"PostProcessManager/PostProcessManager.h"
 #include"Sound.h"
-#include"DebugUI.h"
+
 #include"ItemManager/ItemManager.h"
 #include"FlagManager/FlagManager.h"
 #include"StageChangeTrigger/StageChangeTrigger.h"

@@ -27,8 +27,7 @@ public:
     void Initialize(Window& window,
         CbvSrvUavDescriptorHeap* srvDescriptorHeap,
         Device& device,
-        SwapChain& swapChain,
-        RenderTargetView& rtv);
+        SwapChain& swapChain);
 
     void FrameStart();
     void Render();

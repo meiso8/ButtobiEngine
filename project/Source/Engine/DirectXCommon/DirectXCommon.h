@@ -43,7 +43,6 @@ private:
     GPU gpu_ = {};
     DebugError debugError_ = {};
 
-    RenderTargetView rtvClass = {};
     std::unique_ptr<RenderTexture> renderTexture_ = nullptr;
     std::unique_ptr<RenderTexture> renderTextureForSprite_ = nullptr;
     TransitionBarrier barrierMain_;
@@ -68,21 +67,16 @@ public:
     void SettingIdTextureBarrierPre();
     void SettingIdTextureBarrierPost();
 
+    void SettingObjectIdTextureBarrier(D3D12_RESOURCE_STATES stateBefore, D3D12_RESOURCE_STATES stateAfter);
+
     /// @brief 描画前処理
     void PreDraw(SwapChain& swapChainClass,CommandListManager& commandListManager);
 
     void RenderTextureForSpritePreDraw(CommandListManager& commandListManager);
     void RenderTextureForSpritePostDraw();
-    /// @brief スワップチェインのRTVの取得関数
-    /// @return スワップチェインのRTV
-    RenderTargetView& GetSwapChainRtv() {
-        return rtvClass ;
-    }
-    
-    void InitializeRenderTexture(CommandListManager& commandListManager,RtvDescriptorHeap* rtvDescriptorHeap, CbvSrvUavDescriptorHeap* srvDescriptorHeap);
-    void InitializeRenderTargetView(SwapChain& swapChainClass,RtvDescriptorHeap* rtvDescriptorHeap);
 
-    void UpdateGameScreen(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
+    void InitializeRenderTexture(CommandListManager& commandListManager,RtvDescriptorHeap* rtvDescriptorHeap, CbvSrvUavDescriptorHeap* srvDescriptorHeap);
+
     void UpdateRenderTexture(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
     DXGIFactory& GetDXGIFactory() { return dxgiFactory_; };
     TransitionBarrier& GetMainBarrier() { return barrierMain_; };

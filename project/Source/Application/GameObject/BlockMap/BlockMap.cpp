@@ -10,7 +10,8 @@ BlockMap::BlockMap()
         for (int x = 0; x < kMapWidth; ++x) {
             map_[y][x] = std::make_unique<Block>();
             map_[y][x]->SetCubeAABB(aabb);
-
+ 
+        
             map_[y][x]->SetTemperature(0.2f);
             if (rand() % 2 == 0) {
                 map_[y][x]->SetTextureHandle(TextureFactory::PUZZLE);
@@ -30,6 +31,12 @@ BlockMap::BlockMap()
     mapT->SetTextureHandle(TextureFactory::HIERO_T);
     mapD->SetTextureHandle(TextureFactory::HIERO_D);
     mapP->SetTextureHandle(TextureFactory::HIERO_P);
+    
+    //アウトラインの設定
+    mapS->SetUseOutline(true);
+    mapT->SetUseOutline(true);
+    mapD->SetUseOutline(true);
+    mapP->SetUseOutline(true);
 
     Vector4 color = { 1.0f,1.0f,0.0f,1.0f };
     mapS->SetColor(color);
@@ -41,6 +48,8 @@ BlockMap::BlockMap()
     mapT->SetTemperature(0.75f);
     mapD->SetTemperature(0.75f);
     mapP->SetTemperature(0.75f);
+
+
 
     centerBlocks_[0] = map_[3][3].get(); // 左上
     centerBlocks_[1] = map_[4][3].get(); // 右上
@@ -85,6 +94,15 @@ void BlockMap::Initialize() {
             map_[y][x]->SetPos(pos);
         }
     }
+    auto& mapS = map_[4][2];
+    auto& mapT = map_[1][5];
+    auto& mapD = map_[2][1];
+    auto& mapP = map_[3][3];
+    //アウトラインの設定
+    mapS->RegisterObject("BlockMap:S");
+    mapT->RegisterObject("BlockMap:T");
+    mapD->RegisterObject("BlockMap:D");
+    mapP->RegisterObject("BlockMap:P");
 
 }
 
@@ -95,6 +113,7 @@ void BlockMap::Update() {
             block->Update();
             if (block->CanPushBlock()) {
                 block->SetColor({ 1.0f,1.0f,0.0f,1.0f });
+
             }
         }
     }
@@ -182,15 +201,17 @@ void BlockMap::ResetPushMap()
 
 void BlockMap::RayCastHit(RaySprite& raySprite)
 {
+
+
     for (auto& y : map_) {
         for (auto& block : y) {
             if (!block->GetIsPush() && block->CanPushBlock()) {
-
+        
                 if (raySprite.Intersect( block.get())) {
-
+           
                     block->SetColor({ 1.0f,0.0f,0.0f,1.0f });
                     block->RayCastHit();
-
+                    break;
                 }
             }
 

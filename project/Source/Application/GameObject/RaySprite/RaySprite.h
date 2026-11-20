@@ -18,8 +18,9 @@ private:
 
     bool IntersectAABB(Collider* collider, const float kMaxDistance);
     bool IntersectSphere(Collider* collider, const float kMaxDistance);
-    bool CanSelect(Collider* collider, const float kMaxDistance);
+
     void SetSprite(Collider* collider)const;
+
 public:
 
     RaySprite();
@@ -32,10 +33,10 @@ public:
     void SetRay(const Ray ray) { ray_ = ray; };
     const Ray& GetRay()const { return ray_; }
 
-    void OnCollisionColor();
-
+    bool CanSelect(Collider* collider, const float kMaxDistance = 5.0f);
     bool Intersect (Collider* collider, const float kMaxDistance = 5.0f);
 
 
+    void OnCollisionColor();
 };
 

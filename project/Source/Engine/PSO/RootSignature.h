@@ -25,6 +25,8 @@ public:
         GAUSSIANFILTER,
         LUMINANCE_BASED_OUTLINE,
         DEPTH_BASED_OUTLINE,
+        //オブジェクトIDをもとにアウトラインを作成する
+        OBJECT_ID_BASED_OUTLINE,
         RADIAL_BLUR,
         DISSOLVE,
         RANDOM,

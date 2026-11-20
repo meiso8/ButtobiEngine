@@ -205,7 +205,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\ResultMedjed\ResultMedjed.cpp" />
     <ClCompile Include="Source\Application\Stage\InformationStage\InformationStage.cpp" />
     <ClCompile Include="Source\ColliderObject\ColliderObject.cpp" />
-    <ClCompile Include="Source\Application\GameObject\BastetBlockMap\BastetBlockMap.cpp" />
+    <ClCompile Include="Source\Application\GameObject\PianoBlockMap\PianoBlockMap.cpp" />
     <ClCompile Include="Source\Application\GameObject\Bastet\Bastet.cpp" />
     <ClCompile Include="Source\Application\Stage\BastetStage\BastetStage.cpp" />
     <ClCompile Include="Source\Application\GameObject\MeltBlockMap\MeltBlockMap.cpp" />
@@ -553,7 +553,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\FreeTypeManager\GlyphRun.h" />
     <ClInclude Include="Source\Engine\Mesh\MeshCommon\Melt.h" />
     <ClInclude Include="Source\Engine\Particle\GPUParticle.h" />
-    <ClInclude Include="Source\Application\GameObject\BastetBlockMap\BastetBlockMap.h" />
+    <ClInclude Include="Source\Application\GameObject\PianoBlockMap\PianoBlockMap.h" />
     <ClInclude Include="Source\Application\GameObject\Bastet\Bastet.h" />
     <ClInclude Include="Source\Application\Stage\BastetStage\BastetStage.h" />
     <ClInclude Include="Source\Application\GameObject\MeltBlockMap\MeltBlockMap.h" />

@@ -2,7 +2,7 @@
 #include"Block/Block.h"
 
 class Camera;
-class BastetBlockMap
+class PianoBlockMap
 {
 public:
     enum BlockHz {
@@ -23,7 +23,7 @@ public:
     };
 public:
 
-    BastetBlockMap();
+    PianoBlockMap();
 
     void Initialize();
     void Update();
@@ -33,9 +33,16 @@ public:
     void RayCastHit(RaySprite& raySprite);
     void ClearSet();
    const std::array< std::unique_ptr<Block>, kMaxHz>& GetMap() { return blocks_; }
+   
 private:
+    void NormalPiano();
+    void PuzzlePiano();
+    void PianoPushSound(const int index);
+
+    bool IsBlack(const int index);
+
     std::array<bool, kMaxHz>isPushFlags_;
-    std::map<BlockHz, Vector4>colorMap_;
+
     std::array< Block*,8>whiteMap_;
     std::array<Block*,5>blackMap_;
     std::array< std::unique_ptr<Block>, kMaxHz>blocks_;

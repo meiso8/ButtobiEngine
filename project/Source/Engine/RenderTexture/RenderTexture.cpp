@@ -10,20 +10,25 @@
 #endif
 #include"Log.h"
 #include"Device/Device.h"
+#include"Window.h"
+#include"DirectXCommon/RenderTargetView.h"
 
-void RenderTexture::Create(Device* device,RtvDescriptorHeap* rtvDescriptorHeap, const Vector4& value)
+void RenderTexture::Create(Device* device, RtvDescriptorHeap* rtvDescriptorHeap, const Vector4& value)
 {
     renderTargetClearValue_ = value;
 
     CreateResource(kNormal0, device, rtvDescriptorHeap, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, true);
-    CreateResource(kNormal1, device,rtvDescriptorHeap, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, true);
+    CreateResource(kNormal1, device, rtvDescriptorHeap, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, true);
     //サーモグラフィー用テクスチャ
-    CreateResource(kThermography, device, rtvDescriptorHeap,DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, true);
+    CreateResource(kThermography, device, rtvDescriptorHeap, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, true);
     //ObjectID用テクスチャ　
-    CreateResource(kObjectID, device, rtvDescriptorHeap,DXGI_FORMAT_R32_UINT, false);
+    CreateResource(kObjectID, device, rtvDescriptorHeap, DXGI_FORMAT_R32_UINT, true);
     //ObjectID用リソース
-    idReadbackResource_.resource = ResourceFactory::CreateReadbackBufferResource(sizeof(uint32_t));
-    idReadbackResource_.resource->SetName(L"RenderTexture_Id_ReadBackResource");
+    idReadbackResources_[kClick].resource = ResourceFactory::CreateReadbackBufferResource(D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
+    idReadbackResources_[kClick].resource->SetName(L"RenderTexture_Id_ReadBackResource");
+
+    idReadbackResources_[kHover].resource = ResourceFactory::CreateReadbackBufferResource(D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
+    idReadbackResources_[kHover].resource->SetName(L"RenderTexture_Id_idReadbackResourceForHover_");
 }
 
 void RenderTexture::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap)
@@ -36,66 +41,87 @@ void RenderTexture::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList
 
 
 void RenderTexture::CreateResource(
-    const uint32_t index, 
+    const RenderTextureType index,
     Device* device,
     RtvDescriptorHeap* rtvDescriptorHeap,
     DXGI_FORMAT format, bool createSRV)
 {
-    //rtvの作成
-    renderTextureDatas_[index].resource.resource =
-        ResourceFactory::CreateRenderTextureResource(
-            Window::GetClientWidth(),
-            Window::GetClientHeight(),
-            format,
-            renderTargetClearValue_
-        );
+    renderTextureDatas_[index].dxgiFormat = format;
 
-    LogFile::Log("Rendertexture : CreateRTV\n");
-
-    D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
-    rtvDesc.Format = format;
-    rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-    uint32_t rtvIndex = rtvDescriptorHeap->Allocate();
-    renderTextureDatas_[index].rtvHandleCPU = rtvDescriptorHeap->GetCPUDescriptorHandle(rtvIndex);
-   device->GetDevice()->CreateRenderTargetView(
-        renderTextureDatas_[index].resource.Get(),
-        &rtvDesc,
-        renderTextureDatas_[index].rtvHandleCPU
-    );
-
-    LogFile::Log("Rendertexture : CreateRTVDesc\n");
+    CreateRTVResource(index);
+    //RTVの生成
+    CreateRTV(index, device, rtvDescriptorHeap);
 
     // ------------------------------------------
 
     // SRVは必要に応じて作成する
     if (createSRV) {
-        //SRVの作成
-        D3D12_SHADER_RESOURCE_VIEW_DESC renderTextureSrvDesc{};
-        renderTextureSrvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-        renderTextureSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-        renderTextureSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-        renderTextureSrvDesc.Texture2D.MipLevels = 1;
-        LogFile::Log("Rendertexture : Create SRV\n");
-
-        uint32_t& srvIndex = renderTextureDatas_[index].resource.srvIndex;
-        srvIndex = srvDescriptorHeap_->Allocate();
-
-        device->GetDevice()->CreateShaderResourceView(renderTextureDatas_[index].resource.Get(), &renderTextureSrvDesc, srvDescriptorHeap_->GetCPUDescriptorHandle(srvIndex));
-        LogFile::Log("Rendertexture : CreateShaderResourceView\n");
+        CreateSRV(index, device);
     }
 
 }
 
+void RenderTexture::CreateRTVResource(
+    const RenderTextureType index)
+{
 
-void RenderTexture::CopyClickPixelCommand(int mouseX, int mouseY)
+    //rtvResourceの作成
+    renderTextureDatas_[index].resource.resource =
+        ResourceFactory::CreateRenderTextureResource(
+            Window::GetClientWidth(),
+            Window::GetClientHeight(),
+            renderTextureDatas_[index].dxgiFormat,
+            renderTargetClearValue_
+        );
+
+    LogFile::Log("Rendertexture : CreateRTVResource\n");
+}
+
+void RenderTexture::CreateRTV(
+    const RenderTextureType index,
+    Device* device,
+    RtvDescriptorHeap* rtvDescriptorHeap)
+{
+
+    D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
+    rtvDesc.Format = renderTextureDatas_[index].dxgiFormat;
+    rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+
+    RenderTargetView::Create(*device, rtvDesc, renderTextureDatas_[index].resource, rtvDescriptorHeap);
+
+    LogFile::Log("Rendertexture : CreateRTV\n");
+}
+
+
+void RenderTexture::CreateSRV(
+    const RenderTextureType index,
+    Device* device)
+{
+    //SRVの作成
+    D3D12_SHADER_RESOURCE_VIEW_DESC renderTextureSrvDesc{};
+    renderTextureSrvDesc.Format = renderTextureDatas_[index].dxgiFormat;
+    renderTextureSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    renderTextureSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+    renderTextureSrvDesc.Texture2D.MipLevels = 1;
+    LogFile::Log("Rendertexture : Create SRV\n");
+
+    uint32_t& srvIndex = renderTextureDatas_[index].resource.srvIndex;
+    srvIndex = srvDescriptorHeap_->Allocate();
+
+    device->GetDevice()->CreateShaderResourceView(renderTextureDatas_[index].resource.Get(), &renderTextureSrvDesc, srvDescriptorHeap_->GetCPUDescriptorHandle(srvIndex));
+    LogFile::Log("Rendertexture : CreateShaderResourceView\n");
+}
+
+
+void RenderTexture::CopyClickPixelCommand(int mouseX, int mouseY, bool isHover)
 {   // 画面外の座標の場合は弾く (バッファオーバーフロー防止)
-    if (mouseX < 0 || mouseX >= 1280 || mouseY < 0 || mouseY >= 720) {
+    if (mouseX < 0 || mouseX >= Window::GetClientWidth() || mouseY < 0 || mouseY >= Window::GetClientHeight()) {
         return;
     }
 
     // kObjectIDのリソースポインタを取得
     ID3D12Resource* idTexture = renderTextureDatas_[kObjectID].resource.Get();
-    ID3D12Resource* readbackBuffer = idReadbackResource_.Get();
+    ID3D12Resource* readbackBuffer = idReadbackResources_[isHover].Get();
     if (!idTexture || !readbackBuffer) return;
 
     D3D12_RESOURCE_BARRIER barrier{};
@@ -123,13 +149,13 @@ void RenderTexture::CopyClickPixelCommand(int mouseX, int mouseY)
 
     // コピー先のReadbackバッファの指定（バッファ構造なのでFOOTPRINT形式）
     D3D12_TEXTURE_COPY_LOCATION dstLocation{};
-    dstLocation.pResource = idReadbackResource_.Get();
+    dstLocation.pResource = readbackBuffer;
     dstLocation.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
     dstLocation.PlacedFootprint.Offset = 0;
     dstLocation.PlacedFootprint.Footprint.Width = 1;
     dstLocation.PlacedFootprint.Footprint.Height = 1;
     dstLocation.PlacedFootprint.Footprint.Depth = 1;
-    dstLocation.PlacedFootprint.Footprint.Format = DXGI_FORMAT_R32_UINT; // IDのフォーマット
+    dstLocation.PlacedFootprint.Footprint.Format = renderTextureDatas_[kObjectID].dxgiFormat; // IDのフォーマット
     dstLocation.PlacedFootprint.Footprint.RowPitch = 256; // アライメントの最低規則(256バイト)に合わせる
 
     //  GPUコマンドリストにコピー命令を発行
@@ -142,9 +168,9 @@ void RenderTexture::CopyClickPixelCommand(int mouseX, int mouseY)
 
 }
 
-uint32_t RenderTexture::GetClickedObjectID()
+uint32_t RenderTexture::GetClickedOrHoverObjectID(bool isHover)
 {
-    ID3D12Resource* readbackBuffer = idReadbackResource_.Get();
+    ID3D12Resource* readbackBuffer = idReadbackResources_[isHover].Get();
     if (!readbackBuffer) return 0;
 
     // 7. GPUの処理が終わったら、CPU側でバッファをMapして数値を読み出す
@@ -170,7 +196,10 @@ void RenderTexture::Clear()
     }
 
     thermographyTextureData_.resource.Reset();
-    idReadbackResource_.Reset();
+    for (int i = 0; i < 2; ++i) {
+        idReadbackResources_[i].Reset();
+    }
+
 }
 
 RenderTexture::~RenderTexture()

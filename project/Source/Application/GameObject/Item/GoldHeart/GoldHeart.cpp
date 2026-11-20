@@ -7,7 +7,7 @@ void GoldHeart::Init()
 {
     isAnimEnd_ = false;
     isUsed_ = false;
-   
+
     isGet_ = false;
     aniTimer_ = 0.0f;
     object_->Initialize();
@@ -24,14 +24,13 @@ void GoldHeart::Init()
 void GoldHeart::Update()
 {
 
-        if (isUsed_) {
-            UpdateAniTimer(2.0f);
-            float localTimer = aniTimer_ * 0.5f;
-            object_->SetTranslate(Lerp(startPos_, endPos_, localTimer));
-        }
+    if (isUsed_) {
+        UpdateAniTimer(2.0f);
+        float localTimer = aniTimer_ * 0.5f;
+        object_->SetTranslate(Lerp(startPos_, endPos_, localTimer));
+    }
 
-        object_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-        object_->Update();
+    object_->Update();
 
 }
 

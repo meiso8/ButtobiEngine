@@ -27,6 +27,7 @@ void PostEffectMaterial::Create()
     CreateMaterialBufferForGaussianFilter();
     CreateMaterialLuminanceBasedOutline();
     CreateMaterialDepthBasedOutline();
+    CreateMaterialForObjectIDBasedOutline();
     CreateMaterialRadialBlur();
     CreateMaterialDissolve();
     CreateMaterialRandom();
@@ -56,6 +57,9 @@ void PostEffectMaterial::Clear()
 
     materialForDepthBasedOutline_.UnMap();
     materialForDepthBasedOutline_.Reset();
+
+    materialForObjectIDBasedOutline_.UnMap();
+    materialForObjectIDBasedOutline_.Reset();
 
     materialForRadialBlur_.UnMap();
     materialForRadialBlur_.Reset();
@@ -199,6 +203,21 @@ void PostEffectMaterial::CreateMaterialDepthBasedOutline()
     LogFile::Log("Create : MaterialBuffer : DepthBasedOutline\n");
 }
 
+void PostEffectMaterial::CreateMaterialForObjectIDBasedOutline()
+{    //マテリアル用のリソースを作る。
+    materialForObjectIDBasedOutline_.CreateBufferResource(L"ObjectIDBasedOutline_MaterialResource");
+    //マップする
+    resourceMap_[PSO::kEffectObjectIDBasedOutline] = materialForObjectIDBasedOutline_.Get();
+
+    //書き込むためのアドレスを取得
+    materialForObjectIDBasedOutline_.Map();
+    //マテリアルにデータを書き込む
+    materialForObjectIDBasedOutline_.data->lineWidth = 10.0f;
+    materialForObjectIDBasedOutline_.data->thickness = 2.0f;
+    materialForObjectIDBasedOutline_.data->color = { 1.0f,1.0f,0.0f };
+
+    LogFile::Log("Create : MaterialBuffer : ObjectIDBasedOutline\n");
+}
 
 void PostEffectMaterial::CreateMaterialRadialBlur()
 {

@@ -11,6 +11,7 @@ public:
     }
     void SetColor(const Vector4& color) { object_->SetColor(color); };
     const uint32_t GetSrvIndex() { return object_->GetSrvIndex(TEXTURE_USAGE_DIFFUSE); }
+
     virtual void Initialize();
     virtual void Update();
     virtual void Draw();

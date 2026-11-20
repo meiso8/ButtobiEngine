@@ -3,6 +3,8 @@
 #pragma comment(lib,"dxgi.lib")
 #include<cassert>
 #include"Log.h"
+#include"RtvDescriptorHeap.h"
+#include"RenderTargetView.h"
 
 SwapChain::SwapChain(Window& window, const Microsoft::WRL::ComPtr<IDXGIFactory7>& dxgiFactory, const Microsoft::WRL::ComPtr<ID3D12CommandQueue>& commandQueue)
 {
@@ -43,7 +45,7 @@ void SwapChain::GetBuffer(UINT buffer, Microsoft::WRL::ComPtr<ID3D12Resource>& r
 const Microsoft::WRL::ComPtr<ID3D12Resource>& SwapChain::GetCurrentResource()
 {
     //これから書き込むバックバッファのインデックスを取得
-    UINT backBufferIndex = GetSwapChain()->GetCurrentBackBufferIndex();
+    UINT backBufferIndex = swapChain_->GetCurrentBackBufferIndex();
     return resources_[backBufferIndex].resource;
 }
 
@@ -53,4 +55,20 @@ SwapChain::~SwapChain()
         resource.Reset();
     }
 
+}
+
+void SwapChain::CreateResource(Device& device, RtvDescriptorHeap* rtvDescriptorHeap)
+{    //2つ作る。
+    for (int i = 0; i < 2; ++i) {
+        RenderTargetView::Create(device, RenderTargetView::GetDesc(), resources_[i], rtvDescriptorHeap);
+    }
+
+    LogFile::Log("SwapChain : CreateRTV\n");
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE SwapChain::GetHandle()
+{
+    //これから書き込むバックバッファのインデックスを取得
+    UINT backBufferIndex = swapChain_->GetCurrentBackBufferIndex();
+    return resources_[backBufferIndex].rtvHandleCPU;
 }

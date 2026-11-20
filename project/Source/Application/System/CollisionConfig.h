@@ -14,7 +14,6 @@ public:
     static void LoadTagNames();
 private:
     static uint32_t useIndex_;
-    static const uint32_t maxCount_;
     static std::unordered_map<std::string, uint32_t>tags_;
     //逆引き用
     static std::unordered_map< uint32_t, std::string>names_;

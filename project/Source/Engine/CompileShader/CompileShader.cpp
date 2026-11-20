@@ -69,6 +69,9 @@ void DxcCompiler::ShaderSetting() {
     pixelShaderBlobs_[PS_LuminanceBasedOutline] = CompileShader(L"Resource/shader/PixelShader/LuminanceBasedOutline.PS.hlsl", L"ps_6_0");
     //DepthBasedOutline
     pixelShaderBlobs_[PS_DepthBasedOutline] = CompileShader(L"Resource/shader/PixelShader/DepthBasedOutline.PS.hlsl", L"ps_6_0");
+    //ObjectIDBasedOutline
+    pixelShaderBlobs_[PS_ObjectIDBasedOutline] = CompileShader(L"Resource/shader/PixelShader/ObjectIDBasedOutline.PS.hlsl", L"ps_6_0");
+
     //RadialBlur
     pixelShaderBlobs_[PS_RadialBlur] = CompileShader(L"Resource/shader/PixelShader/RadialBlur.PS.hlsl", L"ps_6_0");
     //Dissolve

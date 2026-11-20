@@ -53,6 +53,9 @@ void StageChangeTrigger::Create(
     object_->SetGlassFactor(data.materialData.glassFactor);
     //ライトモード
     object_->SetLightMode(static_cast<Object3d::LightMode>(data.materialData.lightMode));
+    //アウトラインの使用可否
+    object_->SetUseOutLine(data.materialData.useOutline);
+
     //プレイヤーのスポーン地点
     object_->SetPlayerSpawnPoint(data.playerSpawnData.transform);
 

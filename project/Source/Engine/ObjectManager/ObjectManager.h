@@ -51,7 +51,7 @@ public:
     void Draw(Camera& camera);
     //終了処理
     void Finalize();
-
+    uint32_t GetHoverID();
     void SetDrawObject(float alpha, Object3d* object3d);
 private:      
     void Save();
@@ -62,6 +62,7 @@ private:
     bool UpdateImGuizmoForCollider(Camera& camera, Collider* collider, const Matrix4x4& objectMat);
     void SelectMovement(ImGuizmo::MODE& currentMode,ImGuizmo::OPERATION& currentOperation, bool& snap);
     void ColliderCheck(Camera& camera);
+
     ObjectManager() = default;
     ~ObjectManager() = default;
 

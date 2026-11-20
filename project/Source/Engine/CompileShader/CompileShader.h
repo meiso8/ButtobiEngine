@@ -38,6 +38,7 @@ public:
         PS_GaussianFilter,
         PS_LuminanceBasedOutline,
         PS_DepthBasedOutline,
+        PS_ObjectIDBasedOutline,
         PS_RadialBlur,
         PS_Dissolve,
         PS_Random,

@@ -33,6 +33,8 @@ void Platform::Initialize() {
 }
 
 void Platform::Update() {
+
+
     object_->Update();
 }
 

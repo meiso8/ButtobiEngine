@@ -11,9 +11,9 @@ Item::Item()
 {
     object_ = std::make_shared<Object3d>();
     object_->Create();
+    object_->SetUseOutLine(true);
 
 
-   
     SetAABB({ .min = { -0.5f,-0.5f,-0.5f},.max = { 0.5f,0.5f,0.5f } });
     SetCollisionAttribute(CollisionTag::GetTag("Item"));
     SetCollisionMask(!CollisionTag::GetTag("Item"));
@@ -31,7 +31,7 @@ void Item::Init()
     isAnimEnd_ = false;
     isGet_ = false;
     isUsed_ = false;
- 
+
     isMelt_ = false;
 
     object_->Initialize();
@@ -53,7 +53,9 @@ void Item::Draw(const bool useItemCamera, Camera& camera)
 
 void Item::OnCollision(Collider* collider)
 {
-    object_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+    //Useしていないときまたはゲットしてないときにアウトラインを出す設定をする
+    object_->SetUseOutLine(!isGet_||!isUsed_);
+    
     OnCollisionCollider();
 }
 
@@ -113,8 +115,10 @@ void Item::SetStartEndPos(const Vector3& start, const Vector3& end)
 
 void Item::Update()
 {
-        object_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-        object_->Update();
-    
+
+    object_->Update();
+
+
+
 
 }

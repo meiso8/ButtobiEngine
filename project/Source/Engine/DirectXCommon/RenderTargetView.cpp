@@ -1,31 +1,26 @@
 #include "RenderTargetView.h"
 #include<cassert>
 #pragma comment(lib,"d3d12.lib")
-#include "DirectXCommon.h"
 #include"RtvDescriptorHeap.h"
 #include"Device/Device.h"
+#include"Log.h"
 
-void RenderTargetView::Create(Device& device,
-    std::array<IResource, 2 >&swapChainResources,
-    RtvDescriptorHeap* rtvDescriptorHeap
-) {
 
+namespace RenderTargetView {
     //Descriptorは必ずDescriptorHandleというポインタのようなものを介して扱う必要がある
     //Viewを作るときは、どこのDescriptorに情報を格納するかを明示的に指定する必要がる
-    rtvDesc_.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;//出力結果をSRGBに変換して書き込む
-    rtvDesc_.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;//2dテクスチャとして書き込む
+    //出力結果をSRGBに変換して書き込む //2dテクスチャとして書き込む
+    const D3D12_RENDER_TARGET_VIEW_DESC rtvDesc_ = { .Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB ,.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D };
 
-    //2つ作る。
-    for (int i = 0; i < 2; ++i) {
-        uint32_t index = rtvDescriptorHeap->Allocate();
-        rtvHandles_[i] = rtvDescriptorHeap->GetCPUDescriptorHandle(index);
-        device.GetDevice()->CreateRenderTargetView(swapChainResources[i].Get(), &rtvDesc_, rtvHandles_[i]);
-        swapChainResources[i].SetName(L"swapChainResource");
+    const D3D12_RENDER_TARGET_VIEW_DESC& GetDesc()  {
+        return rtvDesc_;
+    };
+
+    void Create(Device& device, const D3D12_RENDER_TARGET_VIEW_DESC& rtvDesc, RenderTextureResource& resource, RtvDescriptorHeap* rtvDescriptorHeap)
+    {
+        uint32_t rtvIndex = rtvDescriptorHeap->Allocate();
+        resource.rtvHandleCPU = rtvDescriptorHeap->GetCPUDescriptorHandle(rtvIndex);
+        device.GetDevice()->CreateRenderTargetView(resource.Get(), &rtvDesc, resource.rtvHandleCPU);
+
     }
-
-}
-
-const D3D12_CPU_DESCRIPTOR_HANDLE& RenderTargetView::GetHandle(size_t index) const {
-    assert(index < 2);
-    return rtvHandles_[index];
 }

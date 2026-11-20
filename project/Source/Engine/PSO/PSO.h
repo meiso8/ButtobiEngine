@@ -36,6 +36,8 @@ public:
         kEffectGaussianFilter,
         kEffectLuminanceBasedOutline,
         kEffectDepthBasedOutline,
+        kEffectObjectIDBasedOutline,
+
         kEffectRadialBlur,
         kEffectDissolve,
         kEffectRandom,

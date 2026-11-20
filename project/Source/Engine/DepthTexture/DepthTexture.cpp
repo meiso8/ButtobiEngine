@@ -52,7 +52,7 @@ void DepthTexture::InitializeDepthStencilView(DsvDescriptorHeap* dsvDescriptorHe
 void DepthTexture::DebugViewer(CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
 #ifdef USE_IMGUI
-    ImGui::Begin("PostEffect Viewer\n");
+    ImGui::Begin("PostEffect Viewer");
     // 例：表示したいSRVのインデックス番号
     DebugUI::CheckSRVTexture(depthTextureData_.srvIndex, srvDescriptorHeap);
     ImGui::End();

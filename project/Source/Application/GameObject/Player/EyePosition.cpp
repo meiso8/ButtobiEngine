@@ -90,7 +90,7 @@ void EyePosition::ShiftToUp()
     //開始回転
     startRot_ = transform_.eTransform_.rotate;
     //終了回転
-    endRot_ = {Math::kHPi,0.0f,0.0f };
+    endRot_ = {Math::kHPi*0.75f,0.0f,0.0f };
 }
 
 void EyePosition::Initialize()

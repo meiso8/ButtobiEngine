@@ -10,14 +10,14 @@ Mummy::Mummy() {
 
     object_->Create();
     object_->SetMeshAndMaterial(ModelManager::GetModel("mummy.obj"));
-
     object_->SetTemperature(0.2f);
+    object_->SetUseOutLine(true);
     coffinModel_ = ModelManager::GetModel("coffin.gltf");
     aniObj_ = std::make_unique<AnimationObject3d>();
 
     aniObj_->Create();
     aniObj_->SetMeshAndMaterial(coffinModel_);
-
+    aniObj_->SetUseOutLine(true);
     aniObj_->SetTemperature(0.1f);
 
 
@@ -47,6 +47,8 @@ void Mummy::Initialize() {
 
     aniObj_->Initialize();
     object_->Initialize();
+    aniObj_->RegisterObject();
+    object_->RegisterObject();
 
     auto& transform = object_->GetTransform();
     auto& aniTransform = aniObj_->GetTransform();

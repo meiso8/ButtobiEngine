@@ -2,7 +2,7 @@
 #include"JsonFile.h"
 #include"Log.h"
 uint32_t CollisionTag::useIndex_ = 0;
-const uint32_t CollisionTag::maxCount_ = 1000;
+
 std::unordered_map<std::string, uint32_t>CollisionTag::tags_;
 std::unordered_map< uint32_t, std::string>CollisionTag::names_;
 

@@ -59,7 +59,10 @@ public:
 
         float32_t glassFactor;
         float32_t specular;
-        float2 padding;
+
+        uint32_t useOutLine;
+
+        float32_t padding;
     };
 
 protected:
@@ -106,7 +109,7 @@ protected:
     // ==============ID情報==================
     CResource<ObjectID>idResource_;
     // ==============メッシュ情報==================
-    
+
     //変更する
     const Primitive* primitive_ = nullptr;
 
@@ -156,7 +159,7 @@ public:
     // ==============開くフラグ銘==================
     const std::string& GetOpenFlagName() { return openFlagName_; };
     void SetOpenFlagName(const std::string& flagName) { openFlagName_ = flagName; }
-       // ==============ロックフラグ==================
+    // ==============ロックフラグ==================
     void SetIsLocked(const bool isLocked) { isLocked_ = isLocked; };
     bool GetIsLocked() { return isLocked_; }
     // ==============プレイヤースポーン地点==================
@@ -168,6 +171,7 @@ public:
     // ==============ID情報==================
     void SetObjectID(uint32_t id) { if (idResource_.data) { idResource_.data->id = id; } }
     uint32_t GetObjectID() const { if (idResource_.data) { return idResource_.data->id; }; return 0; }
+
 
     // ==============表示非表示切り替え==================
     void SetDisabled(const bool flag) { disabled_ = flag; };
@@ -182,12 +186,12 @@ public:
 
     // ==============波データ==================
 
-   const Wave& GetWaveData(const size_t index) { return waveResource_.data[index]; };
-   void SetWaveData(const size_t index,const Wave& wave ){ waveResource_.data[index] = wave; }
-   void SetWaveTime(const size_t index, const float time) { waveResource_.data[index].time = time; };
-   void SetWaveAmplitude(const size_t index, const float amplitude) { waveResource_.data[index].amplitude = amplitude; };
-   void SetWaveDirection(const size_t index, const Vector3& direction) { waveResource_.data[index].direction = direction; };
-   void SetWaveFrequency(const size_t index, const float frequency) { waveResource_.data[index].frequency = frequency; };
+    const Wave& GetWaveData(const size_t index) { return waveResource_.data[index]; };
+    void SetWaveData(const size_t index, const Wave& wave) { waveResource_.data[index] = wave; }
+    void SetWaveTime(const size_t index, const float time) { waveResource_.data[index].time = time; };
+    void SetWaveAmplitude(const size_t index, const float amplitude) { waveResource_.data[index].amplitude = amplitude; };
+    void SetWaveDirection(const size_t index, const Vector3& direction) { waveResource_.data[index].direction = direction; };
+    void SetWaveFrequency(const size_t index, const float frequency) { waveResource_.data[index].frequency = frequency; };
 
     void InitWaveData();
     void InitWaveDataIndex(const uint32_t& index);
@@ -204,7 +208,8 @@ public:
     const Material& GetMaterial() { return *material_; };
     void SetMaterial(const Material& material) {
         *material_ = material;
-    ;}
+        ;
+    }
     //色の取得
     virtual Vector4& GetColor() { return material_->color; };
     //色の設定
@@ -233,13 +238,32 @@ public:
     //ガラス度合い
     void SetGlassFactor(const float factor) { material_->glassFactor = factor; }
     void SetRefraction(const float refraction) { material_->refraction = refraction; }
+    //アウトライン
 
+    bool GetUseOutLine() { return (material_->useOutLine & 0b1) != 0; };
+    void SetUseOutLine(bool flag) {
+        constexpr uint32_t kOutlineBit = 0b1;
+        if (flag) {
+            material_->useOutLine |= kOutlineBit;
+        } else {
+            material_->useOutLine &= ~kOutlineBit;
+        }
+    }
+    void SetUseHoverOutLine(bool flag) {
+        constexpr uint32_t kHoverOutlineBit = 0b10;
+        if (flag) {
+            material_->useOutLine |= kHoverOutlineBit; 
+        } else {
+            material_->useOutLine &= ~kHoverOutlineBit;
+        }
+    }
+    bool GetUseHoverOutLine() { return (material_->useOutLine & 0b10) != 0; }
     // ==============UVデータ==================
 
-   const Vector3& GetUVScale() { return uvTransform_.scale; };
-   const Vector3& GetUVRotate() { return uvTransform_.rotate; };
-   const Vector3& GetUVTranslate() { return uvTransform_.translate; };
-   const EulerTransform& GetUVTransform() { return uvTransform_; }
+    const Vector3& GetUVScale() { return uvTransform_.scale; };
+    const Vector3& GetUVRotate() { return uvTransform_.rotate; };
+    const Vector3& GetUVTranslate() { return uvTransform_.translate; };
+    const EulerTransform& GetUVTransform() { return uvTransform_; }
     void SetUVTransform(const EulerTransform& transform) { uvTransform_ = transform; };
     void SetUVScale(const Vector3& scale) { uvTransform_.scale = scale; }
     void SetUVRotate(const Vector3& rotate) { uvTransform_.rotate = rotate; }
@@ -278,8 +302,8 @@ public:
     const Primitive* GetPrimitive() { return primitive_; }
 
     // ==============重要==================
-    Object3d() =default;
-   virtual ~Object3d();
+    Object3d() = default;
+    virtual ~Object3d();
     void Finalize();
     /// @brief メッシュの情報を設定しその情報からマテリアルを設定する
     /// @param mesh メッシュ
@@ -306,7 +330,7 @@ public:
         const MaskMode maskMode = kAll,
         const bool usePSOKey = false,
         const TextureFactory::Handle skyBoxTexture = TextureFactory::Handle::SKYBOX_TEX,
-        const TextureFactory::Handle dissolveTexture =TextureFactory::Handle::NOISE0,
+        const TextureFactory::Handle dissolveTexture = TextureFactory::Handle::NOISE0,
         const bool useObjectManagerDraw = true
     );
 

@@ -401,6 +401,9 @@ void Object3d::CreateMaterial(
     material_->maskGamma = 1.0f;
     material_->refraction = 0.0f;
 
+    SetUseOutLine(false);
+    SetUseHoverOutLine(false);
+
     material_->glassFactor = 0.0f;
     material_->specular = 0.5f;
     //白色にしておく

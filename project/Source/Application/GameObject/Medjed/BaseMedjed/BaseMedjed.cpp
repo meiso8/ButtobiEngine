@@ -39,6 +39,7 @@ BaseMedjed::BaseMedjed()
     object3d_->Create();    
     object3d_->SetMeshAndMaterial(model_);
     object3d_->SetTemperature(0.1f);
+    object3d_->SetUseOutLine(true);
 
     SetAABB(localAABB_);
     SetCollisionAttribute(CollisionTag::GetTag("DummyMedjed"));
@@ -51,6 +52,8 @@ void BaseMedjed::Init()
     hideTimer_ = 0.0f;
     aniTimer_ = 0.0f;
     object3d_->Initialize();
+    object3d_->SetObjectName("BaseMedjed");
+    object3d_->RegisterObject();
     Random random;
     random.SetMinMax(0.0f,rotateRange_);
     startRotateY_ = random.Get();
@@ -76,7 +79,7 @@ void BaseMedjed::Update()
     if (IsHide()) {
         return;
     }
-    SetColor({ 1.0f,1.0f,1.0f,1.0f });
+  /*  SetColor({ 1.0f,1.0f,1.0f,1.0f });*/
 
     object3d_->Update();
 
