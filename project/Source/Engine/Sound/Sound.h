@@ -75,9 +75,9 @@ public:
     /// @param tag タグ
     /// @param ratioNum　音階の数字 
     static void SetFrequencyRatio(const SoundFactory::TAG& tag, const int ratioNum);
-    /// @brief 音声データの解放関数  
-    /// @param soundData 音声データ  
-    static void Unload(SoundData& soundData);
+    /// @brief 音声データの解放関数 
+    /// @param filePath ファイルパス
+    static void Unload(const std::filesystem::path& filePath);
     static void Initialize();
     static void Finalize();
     static void SetVol(const float& vol, const SoundFactory::TAG& tag);
@@ -111,6 +111,9 @@ private:
     static bool IsPlayingAll();
     static bool LoadFile(const std::filesystem::path& path);
     static XAUDIO2_BUFFER GetBuffer(const std::filesystem::path& path);
+    /// @brief 音声データの解放関数  
+    /// @param soundData 音声データ  
+    static void Unload(SoundData& soundData);
 private:
 
     static float bgmVolume_;

@@ -11,6 +11,7 @@
 #include"DebugUI.h"
 #include"PostProcessManager/PostProcessManager.h"
 #include"LightingManager.h"
+#include"VoiceSystem/VoiceSystem.h"
 
 namespace {
     const float kEndTimer_ = 13.0f;
@@ -48,7 +49,8 @@ void FirstStoryScene::Initialize()
 
 { 
     Sound::StopAllSound();
-    
+    VoiceSystem::LoadAndStart(VoiceSystem::VoiceTag::kFirstStory);
+
     //カメラを初期化する
     camera_->Initialize();
     //camera_->UpdateMatrix();
@@ -65,7 +67,8 @@ void FirstStoryScene::Initialize()
 
     isHorror_ = false;
 
-    Sound::PlayBGM(SoundFactory::CITY);
+    Sound::PlayBGM(SoundFactory::CITY,0.125f);
+
 
     skip_->Initialize();
 
@@ -96,15 +99,18 @@ void FirstStoryScene::Update()
 {
     Debug();
 
+    VoiceSystem::Update();
+
 #ifdef _RELEASE
-    if (cameraTimer_ >= kEndTimer_) {
+    if (VoiceSystem::IsEnd()) {
         SceneChange();
     } else {
     
         if (InputBind::IsClick()) {
 
             if (skip_->GetIsSkip()) {
-                cameraTimer_ = kEndTimer_;
+    
+                VoiceSystem::Stop();
             } else {
                 Sound::PlaySE(SoundFactory::FALL);
                 skip_->SetIsDraw(true);

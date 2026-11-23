@@ -30,6 +30,6 @@ PixelShaderOutput main(VertexShaderOutput input)
     //float temp = normalize(output.color.r + output.color.g + output.color.b);
     //temp *= 0.5;
 
-    output.temperature = float4(output.color.r, 0, 0, 0);
+    output.temperature = float4(output.color.r, 0, 1, 0);
     return output;
 }

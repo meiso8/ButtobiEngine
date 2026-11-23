@@ -520,6 +520,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\Item\Ticket\Ticket.cpp" />
     <ClCompile Include="Source\Application\System\TreeGenerator\TreeGenerator.cpp" />
     <ClCompile Include="Source\Application\GameObject\TicketMac\TicketMac.cpp" />
+    <ClCompile Include="Source\Application\System\VoiceSystem\VoiceSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\GameObject\Medjed\Enemy\ExitEnemy\ExitEnemy.h" />
@@ -760,6 +761,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\GameObject\Item\Ticket\Ticket.h" />
     <ClInclude Include="Source\Application\System\TreeGenerator\TreeGenerator.h" />
     <ClInclude Include="Source\Application\GameObject\TicketMac\TicketMac.h" />
+    <ClInclude Include="Source\Application\System\VoiceSystem\VoiceSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
