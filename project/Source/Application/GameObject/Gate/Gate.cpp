@@ -31,6 +31,7 @@ void Gate::Initialize()
     aniObj_->SetTranslate({ -1.0f,0.0f,0.0f });
     aniObj_->SetRotate({ 0.0f,Math::kPi,0.0f });
     aniObj_->SetAnimation("Idle");
+    aniObj_->RegisterObject();
 
     SetCollisionAttribute(CollisionTag::GetTag("Wall"));
 

@@ -5,6 +5,9 @@
 #include"GateSensor/GateSensor.h"
 #include"UI/PasswordText/PasswordText.h"
 
+
+class TicketMac;
+
 class InformationStage :public Stage
 {
 private:
@@ -17,6 +20,8 @@ private:
     std::unique_ptr<GateSensor>gateSensor_ = nullptr;
     //チケット番号入力システム
     std::unique_ptr<PasswordText>passwordText_ = nullptr;
+    //チケット販売機
+    std::unique_ptr<TicketMac>ticketMac_ = nullptr;
     bool isGenerateTicket_ = false;
  
 public:

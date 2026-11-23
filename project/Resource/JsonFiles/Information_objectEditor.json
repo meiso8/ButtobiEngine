@@ -2,21 +2,7 @@
     "name": "GameScene",
     "objects": [
         {
-            "collider": {
-                "center": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "maskTag": 4294967295,
-                "size": {
-                    "x": 2.0,
-                    "y": 2.0,
-                    "z": 2.0
-                },
-                "tag": "unKnown",
-                "type": "Sphere"
-            },
+
             "color": {
                 "w": 1.0,
                 "x": 1.0,
@@ -230,7 +216,7 @@
                 "size": {
                     "x": 4.737147331237793,
                     "y": 1.0,
-                    "z": 6.6882219314575195
+                    "z": 5.0
                 },
                 "tag": "Wall",
                 "type": "AABB"
@@ -274,60 +260,7 @@
             },
             "type": "MESH"
         },
-        {
-            "collider": {
-                "center": {
-                    "x": 0.0,
-                    "y": 0.5,
-                    "z": 0.0
-                },
-                "maskTag": 4292936199,
-                "size": {
-                    "x": 1.0,
-                    "y": 2.0,
-                    "z": 1.0
-                },
-                "tag": "TicketMac",
-                "type": "AABB"
-            },
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "directoryPath": "Resource/Models/TicketMac",
-            "disabled": false,
-            "environmentCoefficient": 0.0,
-            "file_name": "ticketMac.obj",
-            "glassFactor": 0.0,
-            "isLocked": false,
-            "isUseOutLine": true,
-            "lightMode": 2,
-            "name": "Object8",
-            "nextStageName": "",
-            "openFlagName": "",
-            "shininess": 250.0,
-            "temperature": 0.0,
-            "transform": {
-                "rotate": {
-                    "x": -3.1415908336639404,
-                    "y": -0.025438997894525528,
-                    "z": 3.1415884494781494
-                },
-                "scale": {
-                    "x": 0.5,
-                    "y": 0.5,
-                    "z": 0.5
-                },
-                "translate": {
-                    "x": 0.18608491122722626,
-                    "y": 1.4295710570877418e-06,
-                    "z": -2.059252977371216
-                }
-            },
-            "type": "MESH"
-        },
+     
         {
             "color": {
                 "w": 0.0,
