@@ -210,6 +210,7 @@
     <ClCompile Include="Source\Application\GameObject\Medjed\Enemy\ExitEnemy\ExitEnemy.cpp" />
     <ClCompile Include="Source\Engine\ObjectManager\ObjectCommandBase.cpp" />
     <ClCompile Include="Source\Application\GameObject\TicketMac\TicketMac.cpp" />
+    <ClCompile Include="Source\Application\System\VoiceSystem\VoiceSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\ComputeShaderPSO\ComputeShaderPSO.h" />
@@ -450,6 +451,7 @@
     <ClInclude Include="Source\Application\GameObject\Medjed\Enemy\IEnemy\IEnemy.h" />
     <ClInclude Include="Source\Application\GameObject\Medjed\Enemy\ExitEnemy\ExitEnemy.h" />
     <ClInclude Include="Source\Application\GameObject\TicketMac\TicketMac.h" />
+    <ClInclude Include="Source\Application\System\VoiceSystem\VoiceSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png" />

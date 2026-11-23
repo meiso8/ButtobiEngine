@@ -32,6 +32,10 @@ public:
     void Create();
     //スカイボックスに関してはこの時点で描画処理いれる
     void Draw(Camera& camera);
+
+
+
+
 private:
     void CreateMaterial(const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
 };

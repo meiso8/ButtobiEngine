@@ -201,6 +201,7 @@ void Sound::Unload(SoundData& soundData) {
     // メディアデータの解放
     soundData.mediaData.clear();
     soundData.pWaveFormat = {};
+   
 };
 
 // ====================================================================================================
@@ -348,13 +349,21 @@ void Sound::LoadAndMap(const std::filesystem::path& path, const SoundFactory::TA
 void Sound::Load(const std::filesystem::path& path)
 {
     if (LoadFile(path)) {
-        //ハンドルとパスをマッピング?
-        uint32_t handle = (uint32_t)handleToPath_.size();
-        if (handleToPath_[handle].empty()) {
-            handleToPath_[handle] = path;
-        }
+        ////ハンドルとパスをマッピング?
+        //uint32_t handle = (uint32_t)handleToPath_.size();
+        //if (handleToPath_[handle].empty()) {
+        //    handleToPath_[handle] = path;
+        //}
    
     };
+}
+
+void Sound::Unload(const std::filesystem::path& filePath)
+{
+    if (soundDatas_.contains(filePath)) {
+        Unload(soundDatas_[filePath]);
+        soundDatas_.erase(filePath);
+    }
 }
 
 void Sound::Initialize()

@@ -11,6 +11,7 @@
 #include"PostProcessManager/PostProcessManager.h"
 #include"LightingManager.h"
 #include"TreeGenerator/TreeGenerator.h"
+#include"VoiceSystem/VoiceSystem.h"
 
 SecondStoryScene::SecondStoryScene()
 {  
@@ -21,6 +22,7 @@ SecondStoryScene::SecondStoryScene()
     skyboxObject3d_ = std::make_unique<SkyboxObject3d>();
     skyboxObject3d_->Create();
     skyboxObject3d_->SetTextureHandle(TextureFactory::SKYBOX_CLOUD_TEX);
+
 
     skip_ = std::make_unique<Skip>();
     //モデルを取得する
@@ -43,7 +45,8 @@ SecondStoryScene::~SecondStoryScene()
 
 void SecondStoryScene::Initialize()
 {
-//カメラを初期化する
+    VoiceSystem::LoadAndStart(VoiceSystem::VoiceTag::kSecondStory);
+    //カメラを初期化する
     camera_->Initialize();
     camera_->SetTranslate({ 0.0f,1.586f,-1.268f });
     camera_->SetFovAngleY(0.4f);
@@ -53,7 +56,7 @@ void SecondStoryScene::Initialize()
 
     SetSceneChange();
 
-    Sound::PlayBGM(SoundFactory::CITY);
+    Sound::PlayBGM(SoundFactory::CITY,0.125f);
 
     skip_->Initialize();
 
@@ -93,8 +96,10 @@ void SecondStoryScene::Update()
 {
     Debug();
 
+    VoiceSystem::Update();
+
 #ifdef _RELEASE
-    if (walkAnimationTimer_ >= kEndTimer_) {
+    if (VoiceSystem::IsEnd()) {
         //終わりを迎えたらシーンチェンジ
         SceneChange();
     } else {
@@ -102,7 +107,7 @@ void SecondStoryScene::Update()
         if (InputBind::IsClick()) {
 
             if (skip_->GetIsSkip()) {
-                walkAnimationTimer_ = kEndTimer_;
+                VoiceSystem::Stop();
             } else {
                 Sound::PlaySE(SoundFactory::FALL);
                 skip_->SetIsDraw(true);
