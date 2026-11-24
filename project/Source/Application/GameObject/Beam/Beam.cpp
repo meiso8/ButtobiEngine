@@ -153,8 +153,10 @@ void Beam::Draw()
 
 bool Beam::Shot(const Vector3& target, const  BeamType& type, const Vector3& startPos, const Matrix4x4* parent)
 {
-
+   
     endPos_ = target;
+    startPos_ = startPos;
+
     type_ = type;
 
     parent_ = parent;
@@ -166,6 +168,8 @@ bool Beam::Shot(const Vector3& target, const  BeamType& type, const Vector3& sta
     } else {
         pos = startPos_;
     }
+    
+
 
     point_ = { .startPos = pos,.endPos = pos };
 

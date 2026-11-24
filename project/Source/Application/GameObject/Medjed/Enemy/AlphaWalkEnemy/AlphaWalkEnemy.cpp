@@ -30,7 +30,7 @@ void AlphaWalkEnemy::Update(Enemy* enemy)
         enemy->SetMaskVol(Easing::EaseInOutBack(1.0f, 0.0f, time));
     } else {
         enemy->SetMaskVol(0.0f);
-        ChangeState(IEnemy::STATE::BEAM);
+        ChangeState(IEnemy::STATE::BEAM,enemy);
     }
 
     if (enemy->GetTarget()) {

@@ -29,7 +29,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     PixelShaderOutput output;
     
     //SetTemperature　Use G Channel for OutlineMask
-    output.temperature = float4(gMaterial.temperature, 1.0f, 0.0, 1.0);
+    output.temperature = float4(gMaterial.temperature, 1.0f, 1.0, 1.0);
     
     float4 transformedUV = mul(float4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
     float4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);

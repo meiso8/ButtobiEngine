@@ -70,10 +70,9 @@ void ShotBeamManager::Update()
         if (currentTime_ <= 0.0f) {
             //一旦ビームを初期化する
             beamManager_->Initialize();
+            const Vector3 playerPos = player_->GetEyeWorldTransform().GetWorldPosition();
 
-            Vector3 target = player_->GetBodyWorldTransform().GetWorldPosition();
-
-            if (beamManager_->ShotBeam(target, enemyEyeMatL, Beam::kEnemy) && beamManager_->ShotBeam(target, enemyEyeMatR, Beam::kEnemy)) {
+            if (beamManager_->ShotBeam(playerPos, enemyEyeMatL, Beam::kEnemy) && beamManager_->ShotBeam(playerPos, enemyEyeMatR, Beam::kEnemy)) {
                 Sound::PlaySE(SoundFactory::BEAM);
                 //
                 currentTime_ = kInterval_;
@@ -110,7 +109,7 @@ void ShotBeamManager::RayCastHit(RaySprite& raySprite)
         if (!beam->GetIsActive()) { continue; }
 
         Ray ray = beam->GetRay();
-        float length = Length(ray.diff);
+        float length = Length(ray.diff)+1.0f;
 
         //アイテムがあれば　跳ね返し攻撃が出来るように作成していく予定
 

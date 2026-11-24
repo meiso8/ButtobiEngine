@@ -36,7 +36,7 @@ void BeamEnemy::Update(Enemy* enemy)
         enemy->SetIsShotStart(false);
         enemy->SetAnimation("Nod");
     } else {
-        ChangeState(IEnemy::STATE::ROUND);
+        ChangeState(IEnemy::STATE::ROUND,enemy);
     }
 }
 

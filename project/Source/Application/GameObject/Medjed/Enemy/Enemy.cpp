@@ -156,7 +156,7 @@ void Enemy::Update()
     int currentPhase = static_cast<int>(currentState_->GetState());
 
     if (ImGui::Combo("CurrentPhase", &currentPhase, phase, IM_ARRAYSIZE(phase))) {
-        ChangeState(static_cast<IEnemy::STATE>(currentPhase));
+        currentState_->ChangeState(static_cast<IEnemy::STATE>(currentPhase), this);
     };
 
 
@@ -165,12 +165,6 @@ void Enemy::Update()
 #endif // USE_IMGUI  
 
     if (!isAppear_) { return; }
-
-    if (currentState_ != states_[currentState_->GetState()].get()) {
-        //もしも現在のステートポインタが指定したポインタと一緒じゃなかったら
-        //ステートを変更する
-        ChangeState(currentState_->GetState());
-    }
 
     // 呼び出す  
     currentState_->Update(this);
@@ -328,7 +322,7 @@ void Enemy::RotateY(const float& startRotateY, const float& endRotateY, const fl
 
 void Enemy::ChangeState(const IEnemy::STATE& state)
 {
-    currentState_->ChangeState(state);
+ 
     currentState_->Exit(this);    
     IEnemy* enemyState = states_[currentState_->GetState()].get();
     if (enemyState) {
