@@ -26,7 +26,7 @@ void ShotEnemy::Update(Enemy* enemy)
 
     if (timer_ >= kShotTime_) {
         //透明移動をする
-        ChangeState(IEnemy::STATE::ALPHA_WALK);
+        ChangeState(IEnemy::STATE::ALPHA_WALK,enemy);
     }
 }
 

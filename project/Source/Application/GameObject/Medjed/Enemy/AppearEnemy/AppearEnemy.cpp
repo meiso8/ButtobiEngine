@@ -24,7 +24,7 @@ void AppearEnemy::Update(Enemy* enemy)
     if (timer_ >= kApperEndTime_) {
         scale = enemy->GetInitScale();
         //仮に回転とする
-        ChangeState(IEnemy::STATE::ROUND);
+        ChangeState(IEnemy::STATE::ROUND,enemy);
     }
 
     enemy->SetScale(scale);

@@ -25,7 +25,7 @@ public:
 
     virtual ~IEnemy();
     STATE GetState();
-    void ChangeState(const STATE state);
+    void ChangeState(const STATE state,Enemy* enemy);
 
 };
 

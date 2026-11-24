@@ -18,7 +18,7 @@ void RoundEnemy::Update(Enemy* enemy)
 
     enemy->Look();
     if (timer_ >= kRoundTime) {
-        ChangeState(IEnemy::STATE::SHOT);
+        ChangeState(IEnemy::STATE::SHOT,enemy);
     }
 }
 
