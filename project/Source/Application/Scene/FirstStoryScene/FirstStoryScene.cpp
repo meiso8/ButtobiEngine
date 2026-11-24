@@ -19,7 +19,6 @@ namespace {
     const float kMiddle0Time = 6.0f;
 }
 
-
 FirstStoryScene::FirstStoryScene()
 {   // 現在のカメラを設定
     currentCamera_ = camera_.get();
@@ -69,9 +68,7 @@ void FirstStoryScene::Initialize()
 
     Sound::PlayBGM(SoundFactory::CITY,0.125f);
 
-
     skip_->Initialize();
-
 
     //体の位置初期化
     aniObject_->Initialize();
@@ -109,16 +106,11 @@ void FirstStoryScene::Update()
         if (InputBind::IsClick()) {
 
             if (skip_->GetIsSkip()) {
-    
                 VoiceSystem::Stop();
             } else {
                 Sound::PlaySE(SoundFactory::FALL);
                 skip_->SetIsDraw(true);
             }
-        
-
-         
-
         }
     }
 
@@ -247,8 +239,6 @@ void FirstStoryScene::PlayInterCome(const int32_t index)
             isInterComeRing_[index] = true;
         }
     }
-
-
 }
 
 void FirstStoryScene::SceneChange()

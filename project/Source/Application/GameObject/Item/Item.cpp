@@ -25,6 +25,7 @@ void Item::SetModel(const std::string& tagName)
     object_->SetMeshAndMaterial(ModelManager::GetModel(tagName));
 
 }
+
 void Item::Init()
 {
     aniTimer_ = 0.0f;
@@ -61,17 +62,15 @@ void Item::OnCollision(Collider* collider)
 
 void Item::Rotate()
 {
+   // object_->SetTranslate({ 0.0f,0.0f,1.0f });
     TransformAni::RotateY(object_->GetWorldTransform(), 1.0f);
 }
 
 void Item::SetScreenStartPos()
 {
     object_->Initialize();
-
-    auto& transform = object_->GetTransform();
-    transform.translate.z = 1.0f;
-
-    startPos_ = transform.translate;
+    startPos_ = {0.0f,0.0f,1.0f};
+    object_->SetTranslate(startPos_);
     object_->Update();
 }
 
@@ -102,7 +101,6 @@ void Item::LerpScreenPosAndScale(const Vector2& screenPos, const Matrix4x4& matI
 
     // アイテムの位置を更新！ Trigger時に格納したstartPos
     object_->SetTranslate(Lerp(startPos_, worldPos, localTime));
-
     //スケールのラープ
     object_->SetScale(Lerp({ 1.0f,1.0f,1.0f }, Vector3{ screenEndSize_,screenEndSize_,screenEndSize_ }, localTime));
 }
@@ -115,10 +113,6 @@ void Item::SetStartEndPos(const Vector3& start, const Vector3& end)
 
 void Item::Update()
 {
-
     object_->Update();
-
-
-
 
 }
