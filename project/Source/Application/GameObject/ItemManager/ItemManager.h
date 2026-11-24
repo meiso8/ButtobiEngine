@@ -31,10 +31,7 @@ public:
     /// @param name アイテム名
     /// @return アイテム
     std::shared_ptr<Item> GetItem(const std::string& name);
-    /// @brief 指定アイテムをスロットに追加する関数
-    /// @param name アイテム名
-    /// @return アイテムスロットに入ったか
-    bool AddItemToSlot(const std::string& name);
+
     /// @brief アイテムの生成
     /// @param itemNames アイテム名を入れる
     void GenerateItems(const std::vector<std::string>& itemNames);

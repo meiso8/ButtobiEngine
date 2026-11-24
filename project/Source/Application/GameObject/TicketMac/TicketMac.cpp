@@ -50,3 +50,13 @@ void TicketMac::OnCollision(Collider* collider)
 {
 
 }
+
+const Vector3 TicketMac::GetWorldPosition()
+{
+    return object_->GetWorldTransform().GetWorldPosition();
+}
+
+void TicketMac::SetOutline(const bool flag)
+{
+    object_->SetUseOutLine(flag);
+}

@@ -17,6 +17,8 @@
 #include"../Item/Ticket/Ticket.h"
 #include"Line.h"
 #include"FlagManager/FlagManager.h"
+#include"ObjectManager/ObjectManager.h"
+#include"Object3d.h"
 
 namespace {
      std::string solarDiscFlagName = "GetSolarDisc";
@@ -151,14 +153,6 @@ std::shared_ptr<Item> ItemManager::GetItem(const std::string& name) {
     return nullptr;
 }
 
-bool ItemManager::AddItemToSlot(const std::string& name) {
-    auto item = GetItem(name);
-    if (item) {
-        itemSlot_.OnTriggerItemPickup(item);
-        return true;
-    }
-    return false;
-}
 
 std::shared_ptr<Item> ItemManager::RaycastHitItem( RaySprite& raySprite) {
 
@@ -172,10 +166,9 @@ std::shared_ptr<Item> ItemManager::RaycastHitItem( RaySprite& raySprite) {
         const auto& obj = item->GetObject3d();
         if (!obj) continue;
 
-        if (raySprite.Intersect(item.get())) {
+        if (raySprite.Intersect(item.get())|| obj->GetObjectID() == ObjectManager::GetInstance()->GetHoverID()) {
 
-            obj->SetColor({ 1.0f,0.0f,0.0f,1.0f });
-
+            raySprite.CanSelect(item.get());
             if (InputBind::IsClick()) {
                 return item;
             }

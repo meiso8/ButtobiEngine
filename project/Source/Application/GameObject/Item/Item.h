@@ -8,9 +8,10 @@ public:
     Item();
     virtual ~Item() = default;
     void SetModel(const std::string& tagName);
-
+    
     // 使用時の効果（プレイヤーや環境に作用）
     virtual void Use() = 0;
+ 
     // 他のアイテムと組み合わせたときの処理 
 
     virtual std::shared_ptr<Item> CombineWith(const std::shared_ptr<Item>& other) {

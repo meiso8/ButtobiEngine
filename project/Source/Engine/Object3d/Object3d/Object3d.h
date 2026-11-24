@@ -172,7 +172,6 @@ public:
     void SetObjectID(uint32_t id) { if (idResource_.data) { idResource_.data->id = id; } }
     uint32_t GetObjectID() const { if (idResource_.data) { return idResource_.data->id; }; return 0; }
 
-
     // ==============表示非表示切り替え==================
     void SetDisabled(const bool flag) { disabled_ = flag; };
     bool GetDisabled() { return disabled_; };

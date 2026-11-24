@@ -28,11 +28,7 @@ void InformationStage::Initialize()
 
     passwordText_->Initialize();
 
-
-
     isGenerateTicket_ = false;
-
-
 }
 
 void InformationStage::StageTransitionInitialize()
@@ -61,13 +57,21 @@ void InformationStage::Update()
     gateSensor_->Update();
 
     auto itemManager = GetItemManager();
-    auto item = itemManager->GetItem("Ticket");
+    auto ticket = itemManager->GetItem("Ticket");
 
-    if (item && item->IsGet()) {
-        //もし、チケットを手に入れたら
-        gate_->SetCanOpen(true);
-        FlagManager::SetFlag("GetTicket");
+    if (ticket) {
+  
+        if (ticket->IsGet()) {
+            //もし、チケットを手に入れたら
+            gate_->SetCanOpen(true);
+            FlagManager::SetFlag("GetTicket");
+        } else {
+            Vector3 pos = ticketMac_->GetWorldPosition() + Vector3{ 0.2f,0.8f,-0.25f };
+            ticket->SetStartEndPos(pos, pos + Vector3{ 0.0f, 0.0f, -0.05f });
+            ticket->SetRotate({ Math::kPi,-Math::kHPi,0.0f });
+        }
     }
+
 
     gate_->Update();
     ticketMac_->Update();
@@ -75,11 +79,13 @@ void InformationStage::Update()
     //パスワードシステム
     passwordText_->Update();
 
-    if (passwordText_->GetIsUnLock()) {
+
+    if (passwordText_->GetIsUnLock() || Input::IsTriggerKey(DIK_SPACE)) {
         if (!isGenerateTicket_) {
             isGenerateTicket_ = true;
             itemManager->GenerateItems({ "Ticket" });
             FlagManager::SetFlag("GenerateTicket");
+            ticketMac_->SetOutline(false);
         }
     }
 }

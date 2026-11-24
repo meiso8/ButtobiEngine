@@ -14,10 +14,13 @@ public:
 
     ~Ticket() { object_->UnRegisterObject(); }
      void Init();
-    void Use() override {
-        //特にすることがないが…
+    void Use() override { 
         isGet_ = true;
 
     }
+
+    void Update()override;
+private:
+    float generateAnimationTimer_ = 0.0f;
 };
 

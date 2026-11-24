@@ -106,6 +106,7 @@ bool ItemSlot::AddItem(const std::shared_ptr<Item>& item)
         if (!slot) {
             slot = item;
             slot->Init();
+        
             slot->SetScreenStartPos();
             slot->SetIsGet(true);
             return true;
