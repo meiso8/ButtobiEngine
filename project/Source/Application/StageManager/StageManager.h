@@ -27,11 +27,16 @@ public:
     void Update();
     void DrawModel();
     void DrawSprite();
-    void TransitionStage();
+
     void TransitionScene(const std::string& sceneName);
+
+    void TransitionStage();
+    void SetNextStage(const std::string& name,const bool useTransition);
+
     void SetMap(const std::string& name, std::unique_ptr<Stage> stage);
-    void SetNextStage(const std::string& name);
+
     void CheckCollision();
+
     void SetSceneChange(SceneChange* sceneChange) { sceneChange_ = sceneChange; }
     void SetMemoManager(MemoManager* memoManager);
     void SetItemManager(ItemManager* itemManager);
@@ -41,6 +46,8 @@ public:
     void SetLightingManager(LightingManager* lightingManager);
     void SetRaySprite(RaySprite* raySprite);
 private:
+
+
     RaySprite* raySprite_ = nullptr;
     CollisionManager* collisionManager_ = nullptr;
     MemoManager* memoManager_ = nullptr;

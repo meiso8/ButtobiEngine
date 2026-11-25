@@ -53,5 +53,10 @@ void SoundFactory::Load()
     Sound::LoadAndMap("Resource/Sounds/externals/Intercom02-03(Ding_Dong-Far).mp3", INTERCOM);
     Sound::LoadAndMap("Resource/Sounds/externals/city_daytime.mp3", CITY);
 
+    Sound::LoadAndMap("Resource/Sounds/externals/noise.mp3", NOISE);
+    Sound::LoadAndMap("Resource/Sounds/externals/Spotlight05-1(Long).mp3", LIGHT);
+
+
+   
 
 }

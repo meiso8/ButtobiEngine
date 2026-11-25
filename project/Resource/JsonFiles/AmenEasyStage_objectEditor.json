@@ -34,7 +34,7 @@
             "nextStageName": "",
             "openFlagName": "",
             "shininess": 250.0,
-            "temperature": 0.10000000149011612,
+            "temperature": 1.0,
             "transform": {
                 "rotate": {
                     "x": -3.1415908336639404,

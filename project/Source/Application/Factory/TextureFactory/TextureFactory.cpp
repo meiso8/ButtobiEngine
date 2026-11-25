@@ -26,7 +26,8 @@ void TextureFactory::Load()
     Texture::LoadAndMapHandle("Resource/Textures/none.png", NONE);
     Texture::LoadAndMapHandle("Resource/Textures/puzzle.png", PUZZLE);
     Texture::LoadAndMapHandle("Resource/Textures/puzzleNum.png", PUZZLE_NUM);
-
+    Texture::LoadAndMapHandle("Resource/Textures/frame.png", PUZZLE_FRAME);
+    
     Texture::LoadAndMapHandle("Resource/Textures/s.png", HIERO_S);
     Texture::LoadAndMapHandle("Resource/Textures/p.png", HIERO_P);
     Texture::LoadAndMapHandle("Resource/Textures/d.png", HIERO_D);

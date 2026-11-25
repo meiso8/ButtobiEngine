@@ -62,11 +62,8 @@ void PianoBlockMap::Initialize()
         isPush = false;
     }
 
-
-    int i = 0;
     for (auto& block : blocks_) {
         block->Initialize();
-        block->RegisterObject("PianoBlock:" + std::to_string(i++));
     }
 
     AABB collisionAABB = whiteMap_[0]->GetAABB();
@@ -114,6 +111,14 @@ void PianoBlockMap::Initialize()
         blackMap_[i]->SetTemperature(0.3f);
     }
 
+}
+
+void PianoBlockMap::Register()
+{
+    int i = 0;
+    for (auto& block : blocks_) {
+        block->RegisterObject("PianoBlock:" + std::to_string(i++));
+    }
 }
 
 void PianoBlockMap::Update()

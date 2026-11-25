@@ -128,7 +128,7 @@ void StageChangeTrigger::OnCollision(Collider* collider)
     // 衝突相手がプレイヤーかチェック
     if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Player")) {
         //次のステージに進む
-        StageManager::GetInstance()->SetNextStage(object_->GetNextStageName());
+        StageManager::GetInstance()->SetNextStage(object_->GetNextStageName(),true);
         std::string name = "GO to" + object_->GetNextStageName() + "Stage";
         //最近のスポーン地点を代入する
         currentPlayerSpawnPoint_ = object_->GetPlayerSpawnPoint();

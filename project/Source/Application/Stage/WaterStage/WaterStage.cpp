@@ -35,6 +35,8 @@ void WaterStage::StageTransitionInitialize()
     GetItemManager()->GenerateItems({});
 
     itemApper_ = false;
+
+    blockMap_->Register();
 }
 
 void WaterStage::Update()

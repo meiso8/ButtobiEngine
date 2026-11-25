@@ -37,7 +37,6 @@ void AnubisBlockMap::Initialize()
 
     for (int i = 0; i < kBlockColors; ++i) {
         blocks_[i]->Initialize();
-        blocks_[i]->RegisterObject("AnubisBlock:" + std::to_string(i));
         Vector3 pos = {
             static_cast<float>(i) * blockSize*2.0f + offsetX,
             -0.25f,
@@ -45,6 +44,13 @@ void AnubisBlockMap::Initialize()
         };
 
         blocks_[i]->SetPos(pos);
+    }
+}
+
+void AnubisBlockMap::Register()
+{
+    for (int i = 0; i < kBlockColors; ++i) {
+        blocks_[i]->RegisterObject("AnubisBlock:" + std::to_string(i));
     }
 }
 

@@ -110,22 +110,27 @@ void StageManager::TransitionScene(const std::string& sceneName)
 
 }
 
+
 void StageManager::SetMap(const std::string& name, std::unique_ptr<Stage> stage)
 {
     stages_[name] = std::move(stage);
     stageNames_[stages_[name].get()] = name;
 }
 
-void StageManager::SetNextStage(const std::string& name)
+void StageManager::SetNextStage(const std::string& name, const bool useTransition)
 {
     // すでに遷移予約が入っている場合は重複予約しない
     if (nextStage_ != nullptr) return;
     auto it = stages_.find(name);
+
     if (it != stages_.end()) {
+        if (useTransition) {
+            sceneChange_->SetState(SceneChange::kFadeIn, 1.0f);
+        }
+      
         nextStage_ = it->second.get();
     }
-    ////最初の位置を保持
-    //nextStage_ = stages_[name].get();
+
 }
 
 void StageManager::CheckCollision()

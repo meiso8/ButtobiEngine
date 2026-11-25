@@ -85,7 +85,7 @@ void SecondStoryScene::Initialize()
     grayScale->useEffect = true;
     grayScale->type = PostEffectMaterial::RenderTextureEffectType::kSepia;
     grayScale->effectVol = 0.0f;
-    LightingManager::NoonLightInit();
+    LightingManager::NoonDirLightInit();
 
     //木の生成
     treeGenerator_->Initialize();

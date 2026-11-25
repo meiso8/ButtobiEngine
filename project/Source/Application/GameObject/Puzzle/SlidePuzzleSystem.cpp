@@ -6,12 +6,15 @@
 #include"TimeManager.h"
 #include"FlagManager/FlagManager.h"
 
+namespace {
+    constexpr float openPuzzleBoxTime = 1.0f;
+}
+
  Puzzle* SlidePuzzleSystem::currentPuzzle_ =nullptr;
 
 SlidePuzzleSystem::SlidePuzzleSystem(const int horizontal, const int vertical, TextureFactory::Handle handle)
 {
-    puzzle_ = std::make_unique<Puzzle>(horizontal, vertical);
-    puzzle_->SetTexture(handle);
+    puzzle_ = std::make_unique<Puzzle>(horizontal, vertical, handle);
     puzzleObj_ = std::make_unique<PuzzleObj>();
 }
 
@@ -29,7 +32,7 @@ void SlidePuzzleSystem::Initialize(const Vector3& pos,const float& rotY)
     isEnd_ = false;
     puzzle_->Init();
     puzzleObj_->Initialize(pos, rotY);
-
+    openPuzzleBoxTimer_ = openPuzzleBoxTime;
 }
 
 void SlidePuzzleSystem::InitStaticActiveFlag()
@@ -46,20 +49,23 @@ void SlidePuzzleSystem::SetCurrentPtr()
 
 void SlidePuzzleSystem::Update(const Vector2& screenPos)
 {
-
-
-
     //クリアしたら
     if (currentPuzzle_->IsClear()) {
-        if (!isEnd_) {
-            SoundManager::PlayCorrectSE();
-            //開ける
-            puzzleObj_->SetIsOpen(true);
-            //開けたとき一律でアクティブフラグを下げる
-            FlagManager::SetFlag("SlidePuzzleIsActive", false);
-            isActive_ = false;
-            isEnd_ = true;
+
+        if (openPuzzleBoxTimer_ <= 0.0f) {
+            if (!isEnd_) {
+                SoundManager::PlayCorrectSE();
+                //開ける
+                puzzleObj_->SetIsOpen(true);
+                //開けたとき一律でアクティブフラグを下げる
+                FlagManager::SetFlag("SlidePuzzleIsActive", false);
+                isActive_ = false;
+                isEnd_ = true;
+            }
+        } else {
+            openPuzzleBoxTimer_ -= TimeManager::DeltaTime();
         }
+
     }
 
     if (!FlagManager::HasFlag("SlidePuzzleIsActive")) {
@@ -94,6 +100,11 @@ void SlidePuzzleSystem::Draw()
 
 void SlidePuzzleSystem::DrawUI()
 {
+
+    if (isEnd_) {
+        return;
+    }
+
     if (isActive_) {
         currentPuzzle_->Draw();
     }
@@ -101,6 +112,11 @@ void SlidePuzzleSystem::DrawUI()
 
 void SlidePuzzleSystem::RayCastHit(RaySprite& ray)
 {
+
+    if (isEnd_) {
+        return;
+    }
+
     //アクティブならヒットさせない
     if (isActive_) {
         return;

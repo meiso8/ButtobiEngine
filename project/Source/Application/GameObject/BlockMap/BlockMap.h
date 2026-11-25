@@ -19,6 +19,7 @@ public:
     BlockMap();
     ~BlockMap();
     void Initialize();
+    void Register();
     void Update();
     void Draw();
     const bool& IsClear() { return isClear_; };

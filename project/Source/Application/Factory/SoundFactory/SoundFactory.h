@@ -69,7 +69,11 @@ public:
         
         //インターホン
         INTERCOM,
+        //街
         CITY,
+        //ライト
+        LIGHT,
+        NOISE,
     };
 
    static void Load();

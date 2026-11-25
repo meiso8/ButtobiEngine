@@ -37,6 +37,8 @@ void BastetStage::StageTransitionInitialize()
     GetPlayer()->Init({0.0f, 0.0f, -5.0f});
     //なにも生成しない
     GetItemManager()->GenerateItems({});
+
+    bastetBlockMap_->Register();
 }
 
 void BastetStage::Update()

@@ -522,7 +522,7 @@ void DebugUI::CheckStageManager()
             // 選択肢を表示（クリックされたら true を返す）
             if (ImGui::Selectable(nextStageName.c_str(), true)) {
                 // クリックされたらStageNameをセットする
-                stageManager->SetNextStage(nextStageName);
+                stageManager->SetNextStage(nextStageName,false);
                 break;
             }
         }

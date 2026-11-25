@@ -43,6 +43,7 @@ void MeltStage::StageTransitionInitialize()
     GetItemManager()->GenerateItems({ "Glass" });
     isGenerateScarab_ = false;
 
+    meltBlockMap_->Register();
 }
 
 void MeltStage::Update()
@@ -148,11 +149,6 @@ void MeltStage::CheckCollision(CollisionManager& collisionManager, RaySprite& ra
         collisionManager.AddCollider(block.get());
     }
 
-
-    if (meltBlockMap_->IsClear()) {
-        //なぞ解きをクリアしたら
-        collisionManager.AddCollider(bastet_.get());
-    }
 
 }
 

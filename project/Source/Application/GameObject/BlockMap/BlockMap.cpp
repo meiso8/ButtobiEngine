@@ -94,6 +94,12 @@ void BlockMap::Initialize() {
             map_[y][x]->SetPos(pos);
         }
     }
+
+
+}
+
+void BlockMap::Register()
+{
     auto& mapS = map_[4][2];
     auto& mapT = map_[1][5];
     auto& mapD = map_[2][1];
@@ -103,7 +109,6 @@ void BlockMap::Initialize() {
     mapT->RegisterObject("BlockMap:T");
     mapD->RegisterObject("BlockMap:D");
     mapP->RegisterObject("BlockMap:P");
-
 }
 
 void BlockMap::Update() {

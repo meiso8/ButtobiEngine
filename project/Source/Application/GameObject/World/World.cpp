@@ -14,7 +14,11 @@ World::World() {
     object3d_->SetMeshAndMaterial(sphereMesh_.get());
     object3d_->SetLightMode(Object3d::kLightModeNone);
 
-};
+}
+World::~World()
+{
+}
+;
 
 void World::Init()
 {

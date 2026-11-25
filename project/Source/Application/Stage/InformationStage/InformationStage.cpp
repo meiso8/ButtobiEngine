@@ -3,10 +3,26 @@
 #include"InputBind.h"
 #include"FlagManager/FlagManager.h"
 #include"TicketMac/TicketMac.h"
+#include"World/World.h"
+
+#include"Sound.h"
+void InformationStage::GenerateTicket()
+{
+    if (!isGenerateTicket_) {
+        isGenerateTicket_ = true;
+        GetItemManager()->GenerateItems({ "Ticket" });
+        FlagManager::SetFlag("GenerateTicket");
+        ticketMac_->SetOutline(false);
+    }
+}
 
 InformationStage::InformationStage()
 {
     room_ = std::make_unique<InformationRoom>();
+
+    //ワールド
+    world_ = std::make_unique<World>();
+
     //ゲート
     gate_ = std::make_unique<Gate>();
     //ゲート用センサー
@@ -25,6 +41,9 @@ void InformationStage::Initialize()
 {
     room_->Init();
     room_->Update();
+
+    world_->Init();
+    world_->Update();
 
     passwordText_->Initialize();
 
@@ -50,6 +69,7 @@ void InformationStage::StageTransitionInitialize()
 
 void InformationStage::Update()
 {
+   
     room_->Update();
 
     gate_->SetHitSensor(gateSensor_->GetHitPlayer());
@@ -65,6 +85,21 @@ void InformationStage::Update()
             //もし、チケットを手に入れたら
             gate_->SetCanOpen(true);
             FlagManager::SetFlag("GetTicket");
+
+            if (ticket->IsGetAnimEnd()) {
+
+                auto lightManager = GetLightManager();
+
+                if (!FlagManager::HasFlag("GetTicketAnimEnd")) {
+                    FlagManager::SetFlag("GetTicketAnimEnd");
+                    lightManager->SetPointLightIntensity(0.25f);
+                    Sound::PlaySE(SoundFactory::LIGHT);
+                }
+
+                lightManager->UpdateInformationStageLight();
+       
+            }
+            
         } else {
             Vector3 pos = ticketMac_->GetWorldPosition() + Vector3{ 0.2f,0.8f,-0.25f };
             ticket->SetStartEndPos(pos, pos + Vector3{ 0.0f, 0.0f, -0.05f });
@@ -79,14 +114,13 @@ void InformationStage::Update()
     //パスワードシステム
     passwordText_->Update();
 
-
-    if (passwordText_->GetIsUnLock() || Input::IsTriggerKey(DIK_SPACE)) {
-        if (!isGenerateTicket_) {
-            isGenerateTicket_ = true;
-            itemManager->GenerateItems({ "Ticket" });
-            FlagManager::SetFlag("GenerateTicket");
-            ticketMac_->SetOutline(false);
-        }
+#ifdef _DEVELOP
+    if (Input::IsTriggerKey(DIK_SPACE)) {
+        GenerateTicket();
+    }
+#endif
+    if (passwordText_->GetIsUnLock()) {
+        GenerateTicket();
     }
 }
 
@@ -95,6 +129,7 @@ void InformationStage::Draw()
     room_->Draw();
     gate_->Draw();
     ticketMac_->Draw();
+    world_->Draw();
 }
 
 void InformationStage::CheckCollision(CollisionManager& collisionManager, RaySprite& raySprite)

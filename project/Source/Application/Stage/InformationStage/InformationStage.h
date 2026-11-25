@@ -5,7 +5,7 @@
 #include"GateSensor/GateSensor.h"
 #include"UI/PasswordText/PasswordText.h"
 
-
+class World;
 class TicketMac;
 
 class InformationStage :public Stage
@@ -13,7 +13,8 @@ class InformationStage :public Stage
 private:
     //部屋
     std::unique_ptr<InformationRoom>room_ = nullptr;
-
+    //ワールド
+    std::unique_ptr<World>world_ = nullptr;
     //ゲート
     std::unique_ptr<Gate>gate_ = nullptr;
     //ゲート用センサー
@@ -24,6 +25,7 @@ private:
     std::unique_ptr<TicketMac>ticketMac_ = nullptr;
     bool isGenerateTicket_ = false;
  
+    void GenerateTicket();
 public:
     InformationStage();
     void Initialize()override;
