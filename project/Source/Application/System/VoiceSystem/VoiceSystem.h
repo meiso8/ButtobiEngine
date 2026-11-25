@@ -5,14 +5,17 @@ class VoiceSystem
 
 public:
     enum class VoiceTag {
-        kFirstStory,
-        kSecondStory
+        kNoLetter,
+        kMissing,
+        kMuseum,
+        KEnter,
     };
 
    static void LoadAndStart(const VoiceTag tag);
    static void Update();
    static bool IsEnd();
    static void Stop();
+   static void Unload();
 private:
     static  std::string fileName_;
     static float volume_;

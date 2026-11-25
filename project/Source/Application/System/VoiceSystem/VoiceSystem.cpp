@@ -21,8 +21,7 @@ void VoiceSystem::Update()
     }
 
     //プレイ終了時、アンロードする
-    Sound::Unload(fileName_);
-    isEnd_ = true;
+    Unload();
 }
 
 bool VoiceSystem::IsEnd()
@@ -33,4 +32,12 @@ bool VoiceSystem::IsEnd()
 void VoiceSystem::Stop()
 {
     Sound::Stop(fileName_);
+}
+
+void VoiceSystem::Unload()
+{   
+    Sound::Stop(fileName_);
+    //プレイ終了時、アンロードする
+    Sound::Unload(fileName_);
+    isEnd_ = true;
 }

@@ -45,7 +45,11 @@ SecondStoryScene::~SecondStoryScene()
 
 void SecondStoryScene::Initialize()
 {
-    VoiceSystem::LoadAndStart(VoiceSystem::VoiceTag::kSecondStory);
+    
+    Sound::StopAllSound();
+    Sound::PlayBGM(SoundFactory::CITY, 0.125f);
+
+    VoiceSystem::LoadAndStart(VoiceSystem::VoiceTag::kMuseum);
     //カメラを初期化する
     camera_->Initialize();
     camera_->SetTranslate({ 0.0f,1.586f,-1.268f });
@@ -55,8 +59,6 @@ void SecondStoryScene::Initialize()
     LevelEditor::GetInstance()->CreateObject(objects_);
 
     SetSceneChange();
-
-    Sound::PlayBGM(SoundFactory::CITY,0.125f);
 
     skip_->Initialize();
 
