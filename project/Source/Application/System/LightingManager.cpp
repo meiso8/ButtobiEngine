@@ -4,10 +4,11 @@
 #include"Lights/SpotLightManager.h"
 #include"TimeManager.h"
 #include"DebugUI.h"
+#include"Random.h"
 
 bool LightingManager::isSpotLightOn_ = false;
 
-void LightingManager::NoonLightInit()
+void LightingManager::NoonDirLightInit()
 {
     auto* direLight = DirectionalLightManager::GetDirectionalLightData();
     direLight->color = { 1.0f,230.0f / 255.0f,200.0f / 255.0f,1.0f };
@@ -24,34 +25,34 @@ void LightingManager::Initialize()
 
     InitializeSpotLight();
 
-    InformationSceneLight();
+    InitializeInformationSceneLight();
 
     playerHandPos_.Initialize();
     isSpotLightOn_ = true;
 }
 
-void LightingManager::UpdateSpotLight()
+void LightingManager::UpdateFlashlight()
 {
 
     if (isSpotLightOn_) {
         WorldTransformUpdate(playerHandPos_);
-        SpotLightManager::GetData(0).color = { 1.0f,1.0f,1.0f,1.0f };
-        SpotLightManager::GetData(0).position = playerHandPos_.GetWorldPosition();
-        SpotLightManager::GetData(0).direction = *direction_;
-    } else {
-        SpotLightManager::GetData(0).color = { 0.0f,0.0f,0.0f,0.0f };
+        SpotLightManager::GetData(SpotLightType::kFlashlight).color = { 1.0f,1.0f,1.0f,1.0f };
+        SpotLightManager::GetData(SpotLightType::kFlashlight).position = playerHandPos_.GetWorldPosition();
+        SpotLightManager::GetData(SpotLightType::kFlashlight).direction = *direction_;
+    } else {             
+        SpotLightManager::GetData(SpotLightType::kFlashlight).color = { 0.0f,0.0f,0.0f,0.0f };
     }
 
 }
 
-void LightingManager::DirectionalLightUpdate()
+void LightingManager::UpdateDirectionalLight()
 {
     if (DirectionalLightManager::GetDirectionalLightData()->intensity < 1.0f) {
         DirectionalLightManager::GetDirectionalLightData()->intensity += TimeManager::DeltaTime() * 2.0f;
     } else {
         DirectionalLightManager::GetDirectionalLightData()->intensity = 1.0f;
         isSpotLightOn_ = false;
-        PointLightManager::InitData(0);
+        PointLightManager::InitData(SpotLightType::kFlashlight);
     }
 
 }
@@ -61,9 +62,21 @@ void LightingManager::SetHandPosParent(const WorldTransform* parent)
     playerHandPos_.Parent(*parent);
 }
 
-void LightingManager::UpdateInformationSpotLight()
+void LightingManager::UpdateInformationStageLight()
 {
-    SpotLightManager::GetData(1).intensity = { 100.0f };//輝度
+    Random random;
+    
+    float intensity = 40.0f;
+    if (random.Get() <= 0.01f) {
+        intensity = 10.0f;
+    }
+
+    SpotLightManager::GetData(SpotLightType::kInformationLight).intensity = intensity;//輝度
+}
+
+void LightingManager::SetPointLightIntensity(const float intensity)
+{
+    PointLightManager::GetData(0).intensity = intensity;
 }
 
 void LightingManager::InitializeDirectionalLight()
@@ -84,25 +97,25 @@ void LightingManager::InitializePointLight()
 
 void LightingManager::InitializeSpotLight()
 {
-    SpotLightManager::GetData(0).color = { 1.0f,1.0f,1.0f,1.0f };
-    SpotLightManager::GetData(0).position = { 0.0f,0.0f,0.0f };//位置
-    SpotLightManager::GetData(0).intensity = { 25.0f };//輝度
-    SpotLightManager::GetData(0).direction = { 0.0f,0.0f,1.0f };//スポットライトの方向
-    SpotLightManager::GetData(0).distance = 0.1f;
-    SpotLightManager::GetData(0).decay = 0.5f;
-    SpotLightManager::GetData(0).cosAngle = cosf(Math::kPi / 8.0f);//スポットライトの余弦
-    SpotLightManager::GetData(0).cosFalloffStart = 2.0f;
+    SpotLightManager::GetData(SpotLightType::kFlashlight).color = { 1.0f,1.0f,1.0f,1.0f };
+    SpotLightManager::GetData(SpotLightType::kFlashlight).position = { 0.0f,0.0f,0.0f };//位置
+    SpotLightManager::GetData(SpotLightType::kFlashlight).intensity = { 25.0f };//輝度
+    SpotLightManager::GetData(SpotLightType::kFlashlight).direction = { 0.0f,0.0f,1.0f };//スポットライトの方向
+    SpotLightManager::GetData(SpotLightType::kFlashlight).distance = 0.1f;
+    SpotLightManager::GetData(SpotLightType::kFlashlight).decay = 0.5f;
+    SpotLightManager::GetData(SpotLightType::kFlashlight).cosAngle = cosf(Math::kPi / 8.0f);//スポットライトの余弦
+    SpotLightManager::GetData(SpotLightType::kFlashlight).cosFalloffStart = 2.0f;
 }
 
-void LightingManager::InformationSceneLight()
+void LightingManager::InitializeInformationSceneLight()
 {
-    SpotLightManager::GetData(1).color = { 1.0f,1.0f,1.0f,1.0f };
-    SpotLightManager::GetData(1).position = { 0.0f,0.0f,0.0f };//位置
-    SpotLightManager::GetData(1).intensity = {0.0f };//輝度
-    SpotLightManager::GetData(1).direction = { 0.0f,1.0f,0.0f };//スポットライトの方向
-    SpotLightManager::GetData(1).distance = 0.1f;
-    SpotLightManager::GetData(1).decay = 0.5f;
-    SpotLightManager::GetData(1).cosAngle = cosf(Math::kPi / 8.0f);//スポットライトの余弦
-    SpotLightManager::GetData(1).cosFalloffStart = 2.0f;
+    SpotLightManager::GetData(SpotLightType::kInformationLight).color = {0.0f,133.0f/256.0f,1.0f,1.0f };
+    SpotLightManager::GetData(SpotLightType::kInformationLight).position = { -0.75f,4.0f,0.0f };//位置
+    SpotLightManager::GetData(SpotLightType::kInformationLight).intensity = 0.0f;//輝度
+    SpotLightManager::GetData(SpotLightType::kInformationLight).direction = { 0.0f,-1.0f,0.0f };//スポットライトの方向
+    SpotLightManager::GetData(SpotLightType::kInformationLight).distance = 0.1f;
+    SpotLightManager::GetData(SpotLightType::kInformationLight).decay = 0.5f;
+    SpotLightManager::GetData(SpotLightType::kInformationLight).cosAngle = cosf(Math::kPi / 8.0f);//スポットライトの余弦
+    SpotLightManager::GetData(SpotLightType::kInformationLight).cosFalloffStart = 2.0f;
 }
 

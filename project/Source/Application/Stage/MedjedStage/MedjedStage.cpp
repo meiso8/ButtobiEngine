@@ -85,7 +85,7 @@ void MedjedStage::Update()
 
 
         //ライト管理
-        GetLightManager()->DirectionalLightUpdate();
+        GetLightManager()->UpdateDirectionalLight();
 
         if (GetEnemyApper()) {
             particleEmitters_[kSky_Particle]->GetEmitter().transform.Parent(medjedManager_->GetEnemyWorldTransform());

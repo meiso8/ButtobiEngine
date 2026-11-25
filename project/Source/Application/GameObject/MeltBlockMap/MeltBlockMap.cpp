@@ -46,11 +46,17 @@ void MeltBlockMap::Initialize()
 
         Vector3 pos = {
             static_cast<float>(i) * blockSize * 2.0f + offsetX,
-            -0.25f,
+            0.0f,
             7.0f
         };
 
-        blocks_[i]->SetPos(pos);
+        blocks_[i]->SetPos(pos,-0.25f);
+    }
+}
+
+void MeltBlockMap::Register()
+{
+    for (int i = 0; i < kMaxBlockTemperature; ++i) {
         blocks_[i]->RegisterObject("TemperatureBlock:" + std::to_string(temperatureMap_[static_cast<BlockTempareture>(i)]));
     }
 }
@@ -125,7 +131,7 @@ void MeltBlockMap::ResetPushMap()
         if (block->GetIsPush()) {
             block->Reset(false);
             //戻す位置を設定
-            block->SetEndPos();
+            block->SetEndPos(-0.25f);
         }
     }
 

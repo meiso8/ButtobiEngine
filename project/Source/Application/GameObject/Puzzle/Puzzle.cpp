@@ -25,6 +25,7 @@ void Puzzle::Change(int x, int y)
         panel_[p1] = maxIndex;
     }
 
+
 }
 
 Vector2 Puzzle::CheckMove(const Vector2 pos)
@@ -73,7 +74,7 @@ Vector2 Puzzle::CheckMove(const Vector2 pos)
 
 
 
-Puzzle::Puzzle(const int horizontal, const int vertical)
+Puzzle::Puzzle(const int horizontal, const int vertical, const TextureFactory::Handle& handle)
 {
     horizontalCount_ = horizontal;
     verticalCount_ = vertical;
@@ -82,7 +83,7 @@ Puzzle::Puzzle(const int horizontal, const int vertical)
     centerPos_ = { float(Window::GetClientWidth() * 0.5f),float(Window::GetClientHeight() * 0.5f) };
 
     sprite_ = make_unique<Sprite>();
-    sprite_->Create(TextureFactory::PUZZLE1, centerPos_);
+    sprite_->Create(handle, centerPos_);
     sprite_->SetAnchorPoint({ 0.5f,0.5f });
 
     Vector2 size = sprite_->GetSize();
@@ -94,7 +95,7 @@ Puzzle::Puzzle(const int horizontal, const int vertical)
     panel_.resize(maxArrayNum_);
 
     rep(i, maxArrayNum_) sprites_[i] = make_unique<Sprite>(),
-        sprites_[i]->Create(TextureFactory::PUZZLE1, { 0.0f,0.0f });
+        sprites_[i]->Create(handle, { 0.0f,0.0f });
 
     for (int i = 0; i < maxArrayNum_; ++i) {
         int col = i % horizontalCount_; // 横方向のインデックス（0〜3）
@@ -106,6 +107,11 @@ Puzzle::Puzzle(const int horizontal, const int vertical)
         sprites_[i]->SetPosition({ centerPos_.x + col * size_.x,centerPos_.y + row * size_.y });
     }
 
+    frameSprite_ = std::make_unique<Sprite>();
+    frameSprite_->Create(TextureFactory::PUZZLE_FRAME, centerPos_);
+    frameSprite_->SetAnchorPoint({ 0.5f,0.5f });
+    frameSprite_->SetSize(size_ + Vector2{8.0f,8.0f});
+    curentHoverIndex_ = -1;
 }
 
 Puzzle::~Puzzle()
@@ -138,18 +144,19 @@ void Puzzle::Game(const Vector2& screenPos)
 
         Sprite* sprite = sprites_[panel_[i]].get();
 
-
         if (IsCollision(screenPos, *sprite)) {
-            sprite->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+
             curentHoverIndex_ = i;
+            
+            //フレーム位置を設定する
+            frameSprite_->SetPosition(sprites_[panel_[curentHoverIndex_]]->GetPosition());
+
             if (InputBind::IsClick()) {
                 clickedIndex = i;
                 Sound::PlaySE(SoundFactory::MOVE_ROCK, 2.0f);
             }
 
-        } else {
-            sprite->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-        }
+        } 
     }
 
     // クリックされたパネルがあれば処理
@@ -170,7 +177,6 @@ void Puzzle::Game(const Vector2& screenPos)
             sprites_[panel_[i]]->SetPosition({ centerPos_.x + col * size_.x,centerPos_.y + row * size_.y });
         }
     }
-
 }
 
 
@@ -184,13 +190,12 @@ void Puzzle::Draw()
         rep(i, maxArrayNum_)   if (panel_[i] < maxArrayNum_ - 1) {
             sprites_[panel_[i]]->Draw();
         }
+
+
+        if (curentHoverIndex_ != -1) {
+            frameSprite_->Draw();
+        }
     }
 
-}
 
-void Puzzle::SetTexture(const TextureFactory::Handle& handle)
-{
-    rep(i, maxArrayNum_)
-        sprites_[i]->SetTexture(handle);
-    sprite_->SetTexture(handle);
 }

@@ -33,4 +33,5 @@ private:
     std::unique_ptr<PuzzleObj>puzzleObj_ = nullptr;
     bool isEnd_ = false;
     bool isActive_ = false;
+    float openPuzzleBoxTimer_ = 0.0f;
 };

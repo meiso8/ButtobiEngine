@@ -12,10 +12,12 @@
 const RaySprite* SoundManager::raySprite_ = nullptr;
 CollisionManager* SoundManager::collisionManager_ = nullptr;
 bool SoundManager::isMedjedApper_ = false;
+
 float SoundManager::bgmVolFactor_ = 0.0f;
 
 std::unordered_map<std::string, std::function<void()>> SoundManager::UpdateFunctions_ = {
 
+      {"InformationStage",SoundManager::InformationUpdate},
       {"AmenStage",SoundManager::AmenUpdate},
       {"WaterStage",SoundManager::WaterUpdate},
       {"MedjedStage",SoundManager::MedjedUpdate},
@@ -42,6 +44,7 @@ void SoundManager::InitSound()
 
     isMedjedApper_ = false;
     bgmVolFactor_ = 0.0f;
+
 }
 
 void SoundManager::PlayCorrectSE()
@@ -160,4 +163,13 @@ void SoundManager::MummyUpdate()
 
 void SoundManager::MeltUpdate()
 {
+}
+
+void SoundManager::InformationUpdate()
+{
+
+    if (FlagManager::HasFlag("GetTicketAnimEnd")) {
+        Sound::PlayBGM(SoundFactory::NOISE, bgmVolFactor_*0.5f);
+    }
+ 
 }

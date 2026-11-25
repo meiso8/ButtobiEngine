@@ -13,6 +13,7 @@ class MeltBlockMap
 public:
     MeltBlockMap();
     void Initialize();
+    void Register();
     void Update();
     void Draw();
 

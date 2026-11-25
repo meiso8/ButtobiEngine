@@ -33,6 +33,8 @@ void AnubisStage::StageTransitionInitialize()
     GetPlayer()->Init({0.0f, 0.0f, -10.0f});
 
     GetItemManager()->GenerateItems({});
+
+    anubisBlockMap_->Register();
 }
 
 void AnubisStage::Update()

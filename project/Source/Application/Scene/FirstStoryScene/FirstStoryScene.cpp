@@ -89,7 +89,7 @@ void FirstStoryScene::Initialize()
     gaussianFilter->sigma = 1.0f;
     gaussianFilter->kernel = 0;
 
-    LightingManager::NoonLightInit();
+    LightingManager::NoonDirLightInit();
 }
 
 void FirstStoryScene::Update()

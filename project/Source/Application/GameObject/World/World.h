@@ -17,6 +17,7 @@ private:
     float timer_ = 0.0f;
 public:
     World();
+    ~World();
     void Init();
     void Update();
     void Draw();

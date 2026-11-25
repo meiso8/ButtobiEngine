@@ -3,21 +3,26 @@
 class LightingManager
 {
 public:
-    static void NoonLightInit();
+
+    static void NoonDirLightInit();
     void Initialize();
-    void UpdateSpotLight();
-    void DirectionalLightUpdate();
+    void UpdateFlashlight();
+    void UpdateDirectionalLight();
     void SetHandPosParent(const WorldTransform* parent);
     void SetDirection(const Vector3* direction) { direction_ = direction; }
     static bool GetIsPointLightOn() { return isSpotLightOn_; }
     static void setIsPointLightOn(const bool flag) { isSpotLightOn_ = flag; }
-
-    void UpdateInformationSpotLight();
+    void UpdateInformationStageLight();
+    void SetPointLightIntensity(const float intensity);
 private:
+    enum SpotLightType {
+        kFlashlight,
+        kInformationLight
+    };
     void InitializeDirectionalLight();
     void InitializePointLight();
     void InitializeSpotLight();
-    void InformationSceneLight();
+    void InitializeInformationSceneLight();
 
 private:
 

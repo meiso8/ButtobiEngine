@@ -84,19 +84,15 @@ void GameScene::Initialize() {
     itemManager_->Init();
     //メモマネージャー
     memoManager_->Initialize();
-    //アメンステージにする
-
-    auto* stageManager = StageManager::GetInstance();
-    //インフォメーションステージに設定する
-    stageManager->SetNextStage("InformationStage");
-
     //カメラを初期化する
     camera_->Initialize();
- /*   camera_->UpdateMatrix();*/
 
     //ステージ遷移の初期化
     sceneChange_->Initialize();
 
+    auto* stageManager = StageManager::GetInstance();
+    //インフォメーションステージに設定する
+    stageManager->SetNextStage("InformationStage", false);
     stageManager->Initialize();
     //現在のステージの初期化
     stageManager->TransitionStage();
@@ -113,7 +109,7 @@ void GameScene::Update() {
     //デバッグ処理
     Debug();
 
-    lightingManager_->UpdateSpotLight();
+    lightingManager_->UpdateFlashlight();
 
     if (PauseScreen::GetIsBackToTitle()) {
         BackToTitle();

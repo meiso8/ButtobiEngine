@@ -50,6 +50,8 @@ void Bastet::Initialize() {
     obj_->RegisterObject();
     obj_->SetColor({ 1.0f,1.0f,1.0f,0.0f });
     obj_->SetTemperature(0.5f);
+
+    
 }
 
 void Bastet::LoadMap(const std::string& tagName)
@@ -204,13 +206,14 @@ void Bastet::OnCollision(Collider* collider) {
 void Bastet::RayCastHit(RaySprite& raySprite)
 {
 
-    if (raySprite.Intersect(this,2.0f)) {
+    if (raySprite.Intersect(this,3.0f)) {
 
         if (InputBind::IsClick()) {
             //正解音を鳴らす
            SoundManager::PlayCorrectSE();
            //次のステージに進む
-           StageManager::GetInstance()->SetNextStage(obj_->GetNextStageName());
+           StageManager::GetInstance()->SetNextStage(obj_->GetNextStageName(),true);
+
         }
 
     }

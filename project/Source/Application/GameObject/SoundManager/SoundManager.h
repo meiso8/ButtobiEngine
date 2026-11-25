@@ -21,6 +21,8 @@ public:
     static void Update();
 
     static void PlayDistanceSE(const std::string tagName, const SoundFactory::TAG soundTag, const float firstSoundDistance, const float maxVol);
+
+ 
 private:
     static const RaySprite* raySprite_;
     static CollisionManager* collisionManager_;
@@ -28,7 +30,6 @@ private:
     //メンバ関数ポインタテーブル
     static std::unordered_map<std::string, std::function<void()>> UpdateFunctions_;
     static bool isMedjedApper_;
-
     static float bgmVolFactor_;
 
     static void AmenUpdate();
@@ -38,7 +39,7 @@ private:
     static void MedjedUpdate();
     static void MummyUpdate();
     static void MeltUpdate();
-   
+    static void InformationUpdate();
 
 
 };

@@ -34,6 +34,7 @@ public:
         NONE,
         PUZZLE,
         PUZZLE_NUM,
+        PUZZLE_FRAME,
 
         HIERO_S,
         HIERO_P,
