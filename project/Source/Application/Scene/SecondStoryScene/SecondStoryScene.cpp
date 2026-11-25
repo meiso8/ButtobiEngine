@@ -62,6 +62,12 @@ void SecondStoryScene::Initialize()
 
     skip_->Initialize();
 
+    //モデルを取得する
+    Model* model = ModelManager::LoadModelAndGet("Resource/Models/Gentleman/gentleman.gltf");
+
+    aniObject_->SetMeshAndMaterial(model);
+    aniObject_->SetModelAndLoadAnimation(model);
+
     //体の位置初期化
     aniObject_->Initialize();
 
@@ -73,11 +79,7 @@ void SecondStoryScene::Initialize()
     //Y軸回転させる
     aniObject_->SetRotate({ 0.0f,Math::kPi,0.0f });
 
-    //モデルを取得する
-    Model* model = ModelManager::LoadModelAndGet("Resource/Models/Gentleman/gentleman.gltf");
 
-    aniObject_->SetMeshAndMaterial(model);
-    aniObject_->SetModelAndLoadAnimation(model);
 
 
     walkAnimationTimer_ = 0.0f;
@@ -117,6 +119,7 @@ void SecondStoryScene::Update()
             auto* grayScale = PostProcessManager::GetInstance()->GetPostEffectMaterial(PostProcessManager::kModel)->GetMaterialGrayScale();
             grayScale->useEffect = false;
             LightingManager::InitializeDirectionalLight();
+            LightingManager::InitializePointLight();
             skyboxObject3d_->SetTextureHandle(TextureFactory::SKYBOX_TEX);
    
             auto model = ModelManager::GetModel("player.gltf");
