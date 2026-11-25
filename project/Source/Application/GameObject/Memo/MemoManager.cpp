@@ -22,18 +22,18 @@ std::string MemoManager::GetFilePath(const MemoType type)
     std::string fileName = "textMemo";
 
     switch (type) {
-    case MEMO1: fileName = "memo01";   break;
+    case MEMO1: fileName = "memo01"; break;
     case MEMO2:fileName = "memo02"; break;
     case MEMO3:fileName = "memo03"; break;
     case MEMO4:fileName = "memo04"; break;
     case MEMO5:fileName = "memo05"; break;
+    case MEMO_PUZZLE:fileName = "memo_puzzle"; break;
     case BOOK1:fileName = "book";  break;
     case BOOK2:fileName = "book02"; break;
     case BOOK3:fileName = "book03"; break;
     case BOOK4:fileName = "book04"; break;
     case BOOK5:fileName = "book05"; break;
     case BOOK6:fileName = "book06"; break;
-
     default:break;
     }
 
@@ -49,6 +49,7 @@ std::string MemoManager::GetKey(const MemoType type)
     case MEMO3: key = "memo3";  break;
     case MEMO4: key = "memo4";  break;
     case MEMO5: key = "memo5";  break;
+    case MEMO_PUZZLE:key = "memoPuzzle"; break;
     case BOOK1: key = "book1";  break;
     case BOOK2: key = "book2";  break;
     case BOOK3: key = "book3";  break;
@@ -260,6 +261,7 @@ void MemoManager::GenerateAllMemo()
         MEMO3,
         MEMO4,
         MEMO5,
+        MEMO_PUZZLE,
         BOOK1,
         BOOK2,
         BOOK3,

@@ -195,7 +195,7 @@
             "nextStageName": "",
             "openFlagName": "",
             "shininess": 250.0,
-            "temperature": 0.0,
+            "temperature": 1.0,
             "textureFilePath": "Resource/Textures/sm.png",
             "textureHandle": 17,
             "transform": {
@@ -412,7 +412,7 @@
             "openFlagName": "",
             "shininess": 250.0,
             "temperature": 0.0,
-            "textureFilePath": "Resource/Textures/book.png",
+            "textureFilePath": "Resource/Textures/none.png",
             "textureHandle": 113,
             "transform": {
                 "rotate": {
@@ -520,7 +520,7 @@
             "openFlagName": "",
             "shininess": 250.0,
             "temperature": 0.0,
-            "textureFilePath": "Resource/Textures/book04.png",
+            "textureFilePath": "Resource/Textures/none.png",
             "textureHandle": 114,
             "transform": {
                 "rotate": {
@@ -735,7 +735,7 @@
             "openFlagName": "",
             "shininess": 250.0,
             "temperature": 0.0,
-            "textureFilePath": "Resource/Textures/book04.png",
+            "textureFilePath": "Resource/Textures/none.png",
             "textureHandle": 114,
             "transform": {
                 "rotate": {

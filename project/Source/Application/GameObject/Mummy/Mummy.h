@@ -24,6 +24,7 @@ public:
     {
         return object_->GetWorldTransform();
     }
+    void Register();
 private:
     std::unique_ptr<Object3d> object_  = nullptr;
     std::unique_ptr<AnimationObject3d> aniObj_ = nullptr;
