@@ -29,6 +29,7 @@
             "file_name": "Amen.obj",
             "glassFactor": 0.0,
             "isLocked": false,
+            "isUseOutLine": false,
             "lightMode": 1,
             "name": "Amen",
             "nextStageName": "",
@@ -81,6 +82,7 @@
             "file_name": "Cube",
             "glassFactor": 0.0,
             "isLocked": false,
+            "isUseOutLine": false,
             "lightMode": 2,
             "name": "Object",
             "nextStageName": "",
@@ -88,7 +90,7 @@
             "shininess": 250.0,
             "temperature": 0.0,
             "textureFilePath": "Resource/Textures/ending01.png",
-            "textureHandle": 28,
+            "textureHandle": 29,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -135,14 +137,15 @@
             "file_name": "Cube",
             "glassFactor": 0.0,
             "isLocked": false,
+            "isUseOutLine": false,
             "lightMode": 2,
             "name": "Object",
             "nextStageName": "",
             "openFlagName": "",
             "shininess": 250.0,
             "temperature": 0.0,
-            "textureFilePath": "Resource/Models/Box/Box.png",
-            "textureHandle": 54,
+            "textureFilePath": "Resource/Textures/ending02.png",
+            "textureHandle": 30,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -189,6 +192,7 @@
             "file_name": "Cube",
             "glassFactor": 0.0,
             "isLocked": false,
+            "isUseOutLine": false,
             "lightMode": 2,
             "name": "Object",
             "nextStageName": "",
@@ -243,6 +247,7 @@
             "file_name": "Cube",
             "glassFactor": 0.0,
             "isLocked": false,
+            "isUseOutLine": false,
             "lightMode": 2,
             "name": "Object",
             "nextStageName": "",
@@ -250,7 +255,7 @@
             "shininess": 250.0,
             "temperature": 0.0,
             "textureFilePath": "Resource/Models/Box/Box.png",
-            "textureHandle": 54,
+            "textureHandle": 55,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -297,6 +302,7 @@
             "file_name": "Cube",
             "glassFactor": 0.0,
             "isLocked": false,
+            "isUseOutLine": false,
             "lightMode": 2,
             "name": "Object",
             "nextStageName": "",
@@ -336,6 +342,7 @@
             "file_name": "Plane",
             "glassFactor": 0.0,
             "isLocked": true,
+            "isUseOutLine": false,
             "lightMode": 2,
             "name": "MeltStageTrigger",
             "nextStageName": "MeltStage",
@@ -395,6 +402,7 @@
             "file_name": "door.obj",
             "glassFactor": 0.0,
             "isLocked": false,
+            "isUseOutLine": false,
             "lightMode": 2,
             "name": "Door",
             "nextStageName": "InformationStage",
@@ -451,14 +459,15 @@
             "file_name": "Cube",
             "glassFactor": 0.0,
             "isLocked": false,
+            "isUseOutLine": true,
             "lightMode": 2,
             "name": "Object",
             "nextStageName": "",
             "openFlagName": "",
             "shininess": 1.0,
             "temperature": 0.5,
-            "textureFilePath": "Resource/Textures/textMemo.png",
-            "textureHandle": 112,
+            "textureFilePath": "Resource/Textures/Memos/textMemo.png",
+            "textureHandle": 113,
             "transform": {
                 "rotate": {
                     "x": -1.0058268308639526,
@@ -485,12 +494,53 @@
                 "y": 1.0,
                 "z": 1.0
             },
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Cube",
+            "glassFactor": 0.0,
+            "isLocked": false,
+            "isUseOutLine": true,
+            "lightMode": 2,
+            "name": "Object",
+            "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 1.0,
+            "temperature": 0.5,
+            "textureFilePath": "Resource/Textures/Memos/memo_puzzle.png",
+            "textureHandle": 114,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 0.6597387194633484,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 0.5999999642372131,
+                    "y": 0.007200027350336313,
+                    "z": 0.5999999642372131
+                },
+                "translate": {
+                    "x": 2.1098318099975586,
+                    "y": 0.31606924533843994,
+                    "z": -2.5889077186584473
+                }
+            },
+            "type": "EMPTY"
+        },
+        {
+            "color": {
+                "w": 2.802596928649634e-45,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
             "directoryPath": "Resource/Models/Player",
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "player.gltf",
             "glassFactor": 0.0,
             "isLocked": false,
+            "isUseOutLine": false,
             "lightMode": 2,
             "name": "Player",
             "nextStageName": "",
@@ -500,7 +550,7 @@
             "transform": {
                 "rotate": {
                     "x": 0.0,
-                    "y": 2.8466224670410156,
+                    "y": 0.7597473859786987,
                     "z": 0.0
                 },
                 "scale": {
@@ -509,9 +559,48 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": -1.8264286518096924,
+                    "x": 2.9817237854003906,
                     "y": 0.0,
-                    "z": 2.4407968521118164
+                    "z": -4.669572830200195
+                }
+            },
+            "type": "EMPTY"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/Puzzle",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Puzzle.gltf",
+            "glassFactor": 0.0,
+            "isLocked": false,
+            "isUseOutLine": true,
+            "lightMode": 2,
+            "name": "PuzzleObj",
+            "nextStageName": "",
+            "openFlagName": "",
+            "shininess": 250.0,
+            "temperature": 0.75,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 3.1415927410125732,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.0,
+                    "y": 1.0,
+                    "z": -1.0
                 }
             },
             "type": "EMPTY"

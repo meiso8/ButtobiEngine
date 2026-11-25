@@ -87,7 +87,7 @@ void MummyStage::StageTransitionInitialize()
     GetPlayer()->Init({ 0.0f, 0.0f, -5.0f });
 
     GetItemManager()->GenerateItems({});
-
+    mummy_->Register();
 }
 
 void MummyStage::Update() {

@@ -16,6 +16,7 @@ public:
         MEMO3,
         MEMO4,
         MEMO5,
+        MEMO_PUZZLE,
         BOOK1,
         BOOK2,
         BOOK3,
@@ -32,7 +33,7 @@ private:
     std::unique_ptr<Sprite> sprite_ = nullptr;
     Vector2 spriteScale_ = { 1.0f,1.0f };
     static bool isLookItem_;
-    const std::string directoryFilePath = "Resource/Textures";
+    const std::string directoryFilePath = "Resource/Textures/Memos";
     //実際の表示テキスト
     Text text_;
 

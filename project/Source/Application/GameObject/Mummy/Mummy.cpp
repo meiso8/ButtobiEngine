@@ -47,8 +47,7 @@ void Mummy::Initialize() {
 
     aniObj_->Initialize();
     object_->Initialize();
-    aniObj_->RegisterObject();
-    object_->RegisterObject();
+
 
     auto& transform = object_->GetTransform();
     auto& aniTransform = aniObj_->GetTransform();
@@ -88,4 +87,10 @@ void Mummy::Draw() {
 
 void Mummy::OnCollision(Collider* collider) {
 
+}
+
+void Mummy::Register()
+{
+    aniObj_->RegisterObject();
+    object_->RegisterObject();
 }

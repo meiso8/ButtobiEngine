@@ -30,7 +30,7 @@ void AmenEasyStage::StageTransitionInitialize()
     //ステージのロード
     LoadAndCreateObject("AmenEasyStage_objectEditor");
     //メモの生成
-    GetMemoManager()->GenerateMemos({ MemoManager::TEXT1 });
+    GetMemoManager()->GenerateMemos({ MemoManager::TEXT1,MemoManager::MEMO_PUZZLE });
     
     backGround_->Initialize();
     // ミイラ前に移動
@@ -43,6 +43,8 @@ void AmenEasyStage::StageTransitionInitialize()
     //スライドパズルシステム
     slidePuzzleSystem_->SetCurrentPtr();
     slidePuzzleSystem_->RegisterObj();
+    GetLightManager()->Initialize();
+
 }
 
 void AmenEasyStage::Update()
