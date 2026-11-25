@@ -83,10 +83,12 @@ void InformationStage::Update()
   
         if (ticket->IsGet()) {
             //もし、チケットを手に入れたら
-            gate_->SetCanOpen(true);
+       
             FlagManager::SetFlag("GetTicket");
 
             if (ticket->IsGetAnimEnd()) {
+              
+                gate_->SetCanOpen(true);
 
                 auto lightManager = GetLightManager();
 

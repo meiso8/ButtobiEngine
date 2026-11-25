@@ -102,10 +102,6 @@ PixelShaderOutput main(VertexShaderOutput input)
     float weight = length(difference);
     weight = saturate(weight * gMaterial.lineWidth);
     
-    //if (outlineMask > 0.75f)
-    //{
-    //    weight = 0.0f;
-    //}
  
     //output.color.rgb = (1 - weight) * gTexture.Sample(gSampler, input.texcoord).rgb + weight *gMaterial.color;
     //This　is Lerp
