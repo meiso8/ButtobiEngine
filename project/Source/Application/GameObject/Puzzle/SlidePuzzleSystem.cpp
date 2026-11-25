@@ -5,12 +5,13 @@
 #include"InputBind.h"
 #include"TimeManager.h"
 #include"FlagManager/FlagManager.h"
-
+#include"VoiceSystem/VoiceSystem.h"
 namespace {
     constexpr float openPuzzleBoxTime = 1.0f;
+    constexpr float noActionTime = 60.0f;
 }
 
- Puzzle* SlidePuzzleSystem::currentPuzzle_ =nullptr;
+Puzzle* SlidePuzzleSystem::currentPuzzle_ = nullptr;
 
 SlidePuzzleSystem::SlidePuzzleSystem(const int horizontal, const int vertical, TextureFactory::Handle handle)
 {
@@ -25,14 +26,16 @@ SlidePuzzleSystem::~SlidePuzzleSystem()
     currentPuzzle_ = nullptr;
 }
 
-void SlidePuzzleSystem::Initialize(const Vector3& pos,const float& rotY)
+void SlidePuzzleSystem::Initialize(const Vector3& pos, const float& rotY)
 {
-    FlagManager::SetFlag("SlidePuzzleIsActive",false);
+    FlagManager::SetFlag("SlidePuzzleIsActive", false);
     isActive_ = false;
     isEnd_ = false;
     puzzle_->Init();
     puzzleObj_->Initialize(pos, rotY);
     openPuzzleBoxTimer_ = openPuzzleBoxTime;
+
+    noActionTimer_ = noActionTime;
 }
 
 void SlidePuzzleSystem::InitStaticActiveFlag()
@@ -61,6 +64,7 @@ void SlidePuzzleSystem::Update(const Vector2& screenPos)
                 FlagManager::SetFlag("SlidePuzzleIsActive", false);
                 isActive_ = false;
                 isEnd_ = true;
+                VoiceSystem::Unload();
             }
         } else {
             openPuzzleBoxTimer_ -= TimeManager::DeltaTime();
@@ -74,6 +78,11 @@ void SlidePuzzleSystem::Update(const Vector2& screenPos)
     }
 
     if (isActive_) {
+        noActionTimer_ -= TimeManager::DeltaTime();
+        if (noActionTimer_ <= 0.0f) {
+            VoiceSystem::LoadAndStart(VoiceSystem::HintTag::kPuzzle);
+            noActionTimer_ = noActionTime;
+        }
         currentPuzzle_->Game(screenPos);
     }
 

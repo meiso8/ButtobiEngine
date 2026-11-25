@@ -112,7 +112,7 @@ void SecondStoryScene::Update()
 
     if (!isStoryZeroEnd_) {
         if (VoiceSystem::IsEnd()) {
-            VoiceSystem::LoadAndStart(VoiceSystem::VoiceTag::KEnter);
+            VoiceSystem::LoadAndStart(VoiceSystem::VoiceTag::kEnter);
             isStoryZeroEnd_ = true;
             auto* grayScale = PostProcessManager::GetInstance()->GetPostEffectMaterial(PostProcessManager::kModel)->GetMaterialGrayScale();
             grayScale->useEffect = false;
