@@ -237,16 +237,13 @@ void ObjectManager::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList
 void ObjectManager::Update()
 {
 
-    for (auto& obj : objects_) {
-       
+    for (auto& obj : objects_) { 
         uint32_t hoverID = renderTexture_->GetClickedOrHoverObjectID(true);
         if (obj->GetObjectID() == hoverID) {
-      /*      obj->SetUseHoverOutLine(true);*/
             obj->SetUseHoverOutLine(true);
         } else {
             obj->SetUseHoverOutLine(false);
         }
-   
     }
     for (auto& obj : createObjects_) {
 
