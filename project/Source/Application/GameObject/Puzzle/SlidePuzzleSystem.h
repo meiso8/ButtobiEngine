@@ -34,4 +34,5 @@ private:
     bool isEnd_ = false;
     bool isActive_ = false;
     float openPuzzleBoxTimer_ = 0.0f;
+    float noActionTimer_ = 0.0f;
 };
