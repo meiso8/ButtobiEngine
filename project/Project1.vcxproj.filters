@@ -212,6 +212,7 @@
     <ClCompile Include="Source\Application\GameObject\TicketMac\TicketMac.cpp" />
     <ClCompile Include="Source\Application\System\VoiceSystem\VoiceSystem.cpp" />
     <ClCompile Include="Source\Application\Scene\FirstStoryScene\FirstStoryOne\FirstStoryOne.cpp" />
+    <ClCompile Include="Source\Application\Scene\FirstStoryScene\FirstStoryZero\FirstStoryZero.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\ComputeShaderPSO\ComputeShaderPSO.h" />
@@ -454,6 +455,7 @@
     <ClInclude Include="Source\Application\GameObject\TicketMac\TicketMac.h" />
     <ClInclude Include="Source\Application\System\VoiceSystem\VoiceSystem.h" />
     <ClInclude Include="Source\Application\Scene\FirstStoryScene\FirstStoryOne\FirstStoryOne.h" />
+    <ClInclude Include="Source\Application\Scene\FirstStoryScene\FirstStoryZero\FirstStoryZero.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png" />

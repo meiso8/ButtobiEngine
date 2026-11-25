@@ -173,6 +173,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\Scene\FirstStoryScene\FirstStoryZero\FirstStoryZero.cpp" />
     <ClCompile Include="Source\Application\Scene\FirstStoryScene\FirstStoryOne\FirstStoryOne.cpp" />
     <ClCompile Include="Source\Application\GameObject\Medjed\Enemy\ExitEnemy\ExitEnemy.cpp" />
     <ClCompile Include="Source\Application\GameObject\Medjed\Enemy\ShotEnemy\ShotEnemy.cpp" />
@@ -524,6 +525,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\System\VoiceSystem\VoiceSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\Scene\FirstStoryScene\FirstStoryZero\FirstStoryZero.h" />
     <ClInclude Include="Source\Application\Scene\FirstStoryScene\FirstStoryOne\FirstStoryOne.h" />
     <ClInclude Include="Source\Application\GameObject\Medjed\Enemy\ExitEnemy\ExitEnemy.h" />
     <ClInclude Include="Source\Application\GameObject\Medjed\Enemy\ShotEnemy\ShotEnemy.h" />
