@@ -220,7 +220,7 @@ void Player::Update()
 
     Move();
     Jump();
-    Zoom();
+    //Zoom();
 
     Thermography();
     MouseLook();
