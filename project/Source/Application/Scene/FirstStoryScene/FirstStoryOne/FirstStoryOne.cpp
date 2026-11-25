@@ -98,7 +98,7 @@ void FirstStoryOne::Update()
 
         if (!isHorror_) {
             //ホラー音を流す
-            Sound::PlaySE(SoundFactory::HORROR2);
+            Sound::PlaySE(SoundFactory::HORROR2,0.5f);
             isHorror_ = true;
         }
 
