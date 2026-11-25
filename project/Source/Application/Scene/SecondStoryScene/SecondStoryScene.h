@@ -20,6 +20,7 @@ public:
 private:
     void SceneChange();
     void Debug();
+    void WalkAnimationUpdate(float& timer, const float endTimer);
 private:
     std::vector<std::unique_ptr<LevelEditor::ObjectSet>> objects_;
 #pragma region//SkyBox
@@ -31,6 +32,9 @@ private:
     //木のランダム生成クラス
     std::unique_ptr<TreeGenerator>treeGenerator_ = nullptr;
     float walkAnimationTimer_ = 0.0f;
+    float girlWalkAnimationTimer_ = 0.0f;
     const float kEndTimer_ = 5.0f;
+    const float kGirlEndTimer_ = 15.0f;
+    bool isStoryZeroEnd_ = false;
 };
 

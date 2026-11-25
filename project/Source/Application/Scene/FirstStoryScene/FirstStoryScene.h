@@ -4,6 +4,7 @@
 #include"SkyBoxObject3d.h"
 #include"LevelEditor/LevelEditor.h"
 #include <vector>
+class FirstStoryZero;
 class FirstStoryOne;
 
 class Skip;
@@ -32,7 +33,7 @@ private:
 
     std::unique_ptr<Skip>skip_ = nullptr;
     
+    std::unique_ptr<FirstStoryZero>storyZero_ = nullptr;
     std::unique_ptr<FirstStoryOne>storyOne_ = nullptr;
-
 };
 

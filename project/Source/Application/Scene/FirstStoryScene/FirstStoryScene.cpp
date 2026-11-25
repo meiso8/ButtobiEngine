@@ -12,6 +12,7 @@
 #include"PostProcessManager/PostProcessManager.h"
 #include"LightingManager.h"
 
+#include"FirstStoryZero/FirstStoryZero.h"
 #include"FirstStoryOne/FirstStoryOne.h"
 
 
@@ -26,6 +27,7 @@ FirstStoryScene::FirstStoryScene()
 
 
     skip_ = std::make_unique<Skip>();
+    storyZero_ = std::make_unique<FirstStoryZero>();
     storyOne_ = std::make_unique<FirstStoryOne>();
 }
 
@@ -52,6 +54,7 @@ void FirstStoryScene::Initialize()
     skip_->Initialize();
 
     //============//ストーリー//===============
+    storyZero_->Initialize();
     storyOne_->Initialize();
 
 
@@ -104,8 +107,10 @@ void FirstStoryScene::Update()
         for (auto& obj : objects_) {
             obj->obj_->Update();
         }
+    } else {
+        storyZero_->Update();
     }
-
+  
 }
 
 void FirstStoryScene::DrawModel()
@@ -127,7 +132,13 @@ void FirstStoryScene::DrawSprite()
 {
     Sprite::PreDraw();
 
+    if (!storyOne_->GetIsStorZeroEnd()) {
+        storyZero_->Draw();
+    }
+  
     skip_->Draw();
+
+
 }
 
 void FirstStoryScene::SetSceneChange()
@@ -147,6 +158,8 @@ void FirstStoryScene::Debug()
     }
 
     ImGui::End();
+
+    storyZero_->Debug();
 
 #endif // !USE_IMGUI
 }

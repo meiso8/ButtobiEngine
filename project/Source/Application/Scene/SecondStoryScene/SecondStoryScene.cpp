@@ -73,8 +73,15 @@ void SecondStoryScene::Initialize()
     //Y軸回転させる
     aniObject_->SetRotate({ 0.0f,Math::kPi,0.0f });
 
+    //モデルを取得する
+    Model* model = ModelManager::LoadModelAndGet("Resource/Models/Gentleman/gentleman.gltf");
+
+    aniObject_->SetMeshAndMaterial(model);
+    aniObject_->SetModelAndLoadAnimation(model);
+
 
     walkAnimationTimer_ = 0.0f;
+    girlWalkAnimationTimer_ = 0.0f;
 
     auto* gaussianFilter = PostProcessManager::GetInstance()->
         GetPostEffectMaterial(PostProcessManager::kModel)->
@@ -92,6 +99,9 @@ void SecondStoryScene::Initialize()
     //木の生成
     treeGenerator_->Initialize();
 
+    skyboxObject3d_->SetTextureHandle(TextureFactory::SKYBOX_CLOUD_TEX);
+
+    isStoryZeroEnd_ = false;
 }
 
 void SecondStoryScene::Update()
@@ -100,8 +110,26 @@ void SecondStoryScene::Update()
 
     VoiceSystem::Update();
 
+    if (!isStoryZeroEnd_) {
+        if (VoiceSystem::IsEnd()) {
+            VoiceSystem::LoadAndStart(VoiceSystem::VoiceTag::KEnter);
+            isStoryZeroEnd_ = true;
+            auto* grayScale = PostProcessManager::GetInstance()->GetPostEffectMaterial(PostProcessManager::kModel)->GetMaterialGrayScale();
+            grayScale->useEffect = false;
+            LightingManager::InitializeDirectionalLight();
+            skyboxObject3d_->SetTextureHandle(TextureFactory::SKYBOX_TEX);
+   
+            auto model = ModelManager::GetModel("player.gltf");
+            if (model) {
+                aniObject_->SetMeshAndMaterial(model);
+                aniObject_->SetModelAndLoadAnimation(model);
+            }
+         
+        }
+    }
+
 #ifdef _RELEASE
-    if (VoiceSystem::IsEnd()) {
+    if (isStoryZeroEnd_&&VoiceSystem::IsEnd()) {
         //終わりを迎えたらシーンチェンジ
         SceneChange();
     } else {
@@ -110,6 +138,7 @@ void SecondStoryScene::Update()
 
             if (skip_->GetIsSkip()) {
                 VoiceSystem::Stop();
+                isStoryZeroEnd_ = true;
             } else {
                 Sound::PlaySE(SoundFactory::FALL);
                 skip_->SetIsDraw(true);
@@ -158,24 +187,20 @@ void SecondStoryScene::Update()
         }
 
     } else if (aniObject_->GetCurrentAnimation() == "Walk") {
+        if (isStoryZeroEnd_) {
 
-        if (walkAnimationTimer_ <= kEndTimer_) {
-            walkAnimationTimer_ += TimeManager::DeltaTime();
-
-
+            WalkAnimationUpdate(girlWalkAnimationTimer_, kGirlEndTimer_);
+        } else {
             if (walkAnimationTimer_ <= 1.0f) {
                 float localTimer = TimeManager::GetLocalTimer(walkAnimationTimer_, 0.0f, 1.0f);
-                //アイドルだったら
-                aniObject_->SetRotate({ 0.0f,Lerp(Math::kPi,0.0f,localTimer),0.0f });
                 grayScale->effectVol = Lerp(0.0f, 1.0f, localTimer);
             } else {
-                aniObject_->SetRotate({ 0.0f,0.0f,0.0f });
-                aniObject_->SetTranslate({ 0.0f,0.0f,Lerp(0.0f,20.0f,TimeManager::GetLocalTimer(walkAnimationTimer_,1.0f,kEndTimer_)) });
+
                 grayScale->effectVol = 1.0f;
             }
 
+            WalkAnimationUpdate(walkAnimationTimer_, kEndTimer_);
         }
-  
 
     }
 
@@ -188,13 +213,14 @@ void SecondStoryScene::DrawModel()
     skyboxObject3d_->Draw(*currentCamera_);
 
     for (auto& obj : objects_) {
-        obj->obj_->Draw(kBlendModeNormal, kCullModeBack, kAll, false, TextureFactory::SKYBOX_CLOUD_TEX);
+        obj->obj_->Draw(kBlendModeNormal, kCullModeBack, kAll, false, isStoryZeroEnd_? TextureFactory::SKYBOX_TEX:TextureFactory::SKYBOX_CLOUD_TEX);
     }
 
      treeGenerator_->Draw();
 
-     aniObject_->Draw();
 
+     aniObject_->Draw(kBlendModeNormal, kCullModeBack, kAll, false, isStoryZeroEnd_ ? TextureFactory::SKYBOX_TEX : TextureFactory::SKYBOX_CLOUD_TEX);
+     
 }
 
 void SecondStoryScene::DrawSprite()
@@ -227,6 +253,24 @@ void SecondStoryScene::Debug()
     treeGenerator_->Debug();
 
 #endif // !USE_IMGUI
+}
+
+void SecondStoryScene::WalkAnimationUpdate(float& timer,const float endTimer)
+{
+    if (timer <= endTimer) {
+        timer += TimeManager::DeltaTime();
+
+        if (timer <= 1.0f) {
+            float localTimer = TimeManager::GetLocalTimer(timer, 0.0f, 1.0f);
+            //アイドルだったら
+            aniObject_->SetRotate({ 0.0f,Lerp(Math::kPi,0.0f,localTimer),0.0f });
+            aniObject_->SetTranslate({ 0.0f,0.0f,0.0f });
+        } else {
+            aniObject_->SetRotate({ 0.0f,0.0f,0.0f });
+            aniObject_->SetTranslate({ 0.0f,0.0f,Lerp(0.0f,20.0f,TimeManager::GetLocalTimer(timer,1.0f,endTimer)) });
+        }
+
+    }
 }
 
 

@@ -85,6 +85,11 @@ void DirectXCommon::RenderTexturePreDraw(CommandListManager& commandListManager,
 
     // IDバッファ(Index 2)のクリア処理
     commandList->ClearRenderTargetView(renderTextureDataID.resource.rtvHandleCPU, clearColor, 0, nullptr);
+   
+    auto* ppm = PostProcessManager::GetInstance();
+
+    PostProcessManager::Layer modelLayer = PostProcessManager::kModel;
+    ppm->ClearEffects(modelLayer);
 }
 
 
@@ -93,9 +98,7 @@ void DirectXCommon::DrawRenderTexture(SwapChain& swapChainClass,RtvDescriptorHea
     auto* ppm = PostProcessManager::GetInstance();
 
     PostProcessManager::Layer modelLayer = PostProcessManager::kModel;
-    //Executeまでにこれをセットしておく
-    ppm->SetRenderTexture(renderTexture_.get(), modelLayer);
-    ppm->ClearEffects(modelLayer);
+
 
     ppm->AddEffect(PSO::kEffectGrayScale, modelLayer);
     ppm->AddEffect(PSO::kEffectDepthBasedOutline, modelLayer);
@@ -290,6 +293,11 @@ void DirectXCommon::InitializeRenderTexture(CommandListManager& commandListManag
     renderTextureForSprite_->SetCommandListAndSrvDescriptorHeap(commanList, srvDescriptorHeap);
     renderTextureForSprite_->Create(device_.get(), rtvDescriptorHeap, { 0.0f,0.0f,0.0f,0.0f });
 
+    auto* ppm = PostProcessManager::GetInstance();
+
+    PostProcessManager::Layer modelLayer = PostProcessManager::kModel;
+    //Executeまでにこれをセットしておく
+    ppm->SetRenderTexture(renderTexture_.get(), modelLayer);
 }
 
 void DirectXCommon::UpdateRenderTexture(CbvSrvUavDescriptorHeap* srvDescriptorHeap)
