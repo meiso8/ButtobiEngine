@@ -6,7 +6,7 @@ public:
 
     static void NoonDirLightInit();
     static void InitializeDirectionalLight();
-
+    static void InitializePointLight();
     void Initialize();
     void UpdateFlashlight();
     void UpdateDirectionalLight();
@@ -22,7 +22,7 @@ private:
         kInformationLight
     };
 
-    void InitializePointLight();
+
     void InitializeSpotLight();
     void InitializeInformationSceneLight();
 
