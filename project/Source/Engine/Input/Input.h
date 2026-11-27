@@ -9,7 +9,7 @@
 #include<memory>
 
 #include <Xinput.h>
-#pragma comment(lib, "xinput.lib")
+
 #include<array>
 
 class Camera;

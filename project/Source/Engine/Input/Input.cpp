@@ -1,7 +1,8 @@
                                                                                                                                                                                                                                                                                                       #include"Input.h"
 #include <cassert>
 #pragma comment(lib,"dinput8.lib")
-#pragma comment(lib,"dxguid.lib")
+#pragma comment(lib, "xinput.lib")
+
 #include"TimeManager.h"
 #include"Vector2.h"
 #include<algorithm>

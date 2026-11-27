@@ -1,6 +1,6 @@
 #include "RenderTargetView.h"
 #include<cassert>
-#pragma comment(lib,"d3d12.lib")
+
 #include"RtvDescriptorHeap.h"
 #include"Device/Device.h"
 #include"Log.h"
