@@ -1,5 +1,6 @@
 #include"BlockMap.h"
 #include"CollisionManager.h"
+#include"Random.h"
 
 BlockMap::BlockMap()
 {
@@ -13,7 +14,8 @@ BlockMap::BlockMap()
  
         
             map_[y][x]->SetTemperature(0.2f);
-            if (rand() % 2 == 0) {
+            Random<int> rand(0, 1);
+            if (rand.Get() == 0) {
                 map_[y][x]->SetTextureHandle(TextureFactory::PUZZLE);
             } else {
                 map_[y][x]->SetTextureHandle(TextureFactory::NONE);

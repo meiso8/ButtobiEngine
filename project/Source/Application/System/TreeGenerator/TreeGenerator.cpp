@@ -262,10 +262,10 @@ void TreeGenerator::PlaceLockersRandomly() {
     std::vector<Vector2> placedPositions;
     Model* model = ModelManager::LoadModelAndGet("Resource/Models/Tree/Tree.obj");
 
-    Random random;
+    Random<float> random;
     random.SetMinMax(rangeMin_, rangeMax_);
 
-    Random rotateRanDom;
+    Random<float> rotateRanDom;
     rotateRanDom.SetMinMax(0.0f, Math::kPi);
 
 

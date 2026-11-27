@@ -54,7 +54,7 @@ void BaseMedjed::Init()
     object3d_->Initialize();
     object3d_->SetObjectName("BaseMedjed");
     object3d_->RegisterObject();
-    Random random;
+    Random<float> random;
     random.SetMinMax(0.0f,rotateRange_);
     startRotateY_ = random.Get();
     auto& transform = object3d_->GetTransform();

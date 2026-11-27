@@ -24,21 +24,22 @@ private:
     int curentHoverIndex_ =-1;
 
     std::unique_ptr<Sprite>frameSprite_ = nullptr;
-
+    //下地を見せておくかそうでないかの設定
+    bool isShowResult_ = false;
 private:
     //シャッフル
     void Shuffle();
     //選択したパネルと空白を切り替える
     void Change(int x, int y);
- 
 public:
     Vector2 CheckMove(const Vector2 pos);
-    Puzzle(const int horizontal = 4, const int vertical = 4, const TextureFactory::Handle& handle = TextureFactory::PUZZLE1);
+    Puzzle(const int horizontal = 4, const int vertical = 4, const TextureFactory::Handle& handle = TextureFactory::PUZZLE1,const bool showResult = false);
     ~Puzzle();
     void Init();
     void Game(const Vector2& screenPos);
     void Draw();
     bool IsClear() { return isClear_; };
+
     //画像
     const std::vector< std::unique_ptr<Sprite>>& GetSprites() { return sprites_; };
 };

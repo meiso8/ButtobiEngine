@@ -64,10 +64,10 @@ void LightingManager::SetHandPosParent(const WorldTransform* parent)
 
 void LightingManager::UpdateInformationStageLight()
 {
-    Random random;
+    Random<int> random(0,9);
     
     float intensity = 40.0f;
-    if (random.Get() <= 0.01f) {
+    if (random.Get()== 0) {
         intensity = 10.0f;
     }
 

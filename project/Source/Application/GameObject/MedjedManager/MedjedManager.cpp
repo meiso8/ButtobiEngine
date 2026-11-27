@@ -186,13 +186,13 @@ void MedjedManager::PlaceLockersRandomly() {
         while (true) {
 
             if (auto medjed = dynamic_cast<Medjed*>(dummy.get())) {
-                Random random;
+                Random<float> random;
                 random.SetMinMax(rangeMin, rangeMax);
                 pos.x = random.Get();
                 random.SetMinMax(rangeMin, rangeMin * 0.5f);
                 pos.y = random.Get(); // Z座標として使う 
             } else {
-                Random random;
+                Random<float> random;
                 random.SetMinMax(rangeMin, rangeMax);
                 pos.x = random.Get();
                 pos.y = random.Get(); // Z座標として使う 

@@ -13,9 +13,9 @@ namespace {
 
 Puzzle* SlidePuzzleSystem::currentPuzzle_ = nullptr;
 
-SlidePuzzleSystem::SlidePuzzleSystem(const int horizontal, const int vertical, TextureFactory::Handle handle)
+SlidePuzzleSystem::SlidePuzzleSystem(const int horizontal, const int vertical, TextureFactory::Handle handle,const bool showResult)
 {
-    puzzle_ = std::make_unique<Puzzle>(horizontal, vertical, handle);
+    puzzle_ = std::make_unique<Puzzle>(horizontal, vertical, handle, showResult);
     puzzleObj_ = std::make_unique<PuzzleObj>();
 }
 

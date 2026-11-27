@@ -1,7 +1,8 @@
 #include "ShotEnemy.h"
 #include"TimeManager.h"
 #include"../Enemy.h"
-#include"Easing.h"
+#include"Random.h"
+
 namespace {
     constexpr float kShotTime_ = 10.0f;
 }
@@ -40,7 +41,8 @@ void ShotEnemy::Enter(Enemy* enemy)
     endRotateY_ = startRotateY_ + Math::kPi * 2.0f;
 
     //ここを変更する
-    int randNum = rand() % 4;
+    Random<int> rand(0, 4);
+    int randNum = rand.Get();
     if (randNum == 0) {
         enemy->SetAnimation("Swing");
     } else if (randNum == 1) {

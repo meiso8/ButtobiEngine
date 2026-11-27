@@ -9,7 +9,7 @@
 
 AmenStage::AmenStage()
 {
-    slidePuzzleSystem_ = std::make_unique<SlidePuzzleSystem>(4, 4, TextureFactory::PUZZLE);
+    slidePuzzleSystem_ = std::make_unique<SlidePuzzleSystem>(4, 4, TextureFactory::PUZZLE,false);
     amenRa_ = std::make_unique<AmenRa>();
     backGround_ = std::make_unique<BackGround>();
 }
