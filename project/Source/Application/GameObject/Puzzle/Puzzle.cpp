@@ -7,6 +7,7 @@ using namespace std;
 #include"Sound.h"
 #include"SoundManager/SoundManager.h"
 #include"InputBind.h"
+#include"Random.h"
 
 void Puzzle::Change(int x, int y)
 {
@@ -74,22 +75,24 @@ Vector2 Puzzle::CheckMove(const Vector2 pos)
 
 
 
-Puzzle::Puzzle(const int horizontal, const int vertical, const TextureFactory::Handle& handle)
+Puzzle::Puzzle(const int horizontal, const int vertical, const TextureFactory::Handle& handle, const bool showResult)
 {
     horizontalCount_ = horizontal;
     verticalCount_ = vertical;
-    maxArrayNum_ = verticalCount_ * horizontalCount_;
+    maxArrayNum_ =   horizontalCount_* verticalCount_;
+    isShowResult_ = showResult;
 
-    centerPos_ = { float(Window::GetClientWidth() * 0.5f),float(Window::GetClientHeight() * 0.5f) };
+    Vector2 centerSpritePos = { float(Window::GetClientWidth() * 0.5f),float(Window::GetClientHeight() * 0.5f) };
 
     sprite_ = make_unique<Sprite>();
-    sprite_->Create(handle, centerPos_);
+    sprite_->Create(handle, centerSpritePos);
     sprite_->SetAnchorPoint({ 0.5f,0.5f });
 
     Vector2 size = sprite_->GetSize();
     size_ = { size.x / horizontalCount_,size.y / verticalCount_ };
 
-    centerPos_ -= size_ * static_cast<float>(horizontalCount_) * 0.375f;
+    centerSpritePos -= {size_.x* (horizontalCount_-1)*0.5f, size_.y* (verticalCount_-1)*0.5f};
+    centerPos_ = centerSpritePos;
 
     sprites_.resize(maxArrayNum_);
     panel_.resize(maxArrayNum_);
@@ -128,7 +131,9 @@ void Puzzle::Init()
 void Puzzle::Shuffle()
 {
     rep(i, maxArrayNum_) panel_[i] = i;
-    rep(j, 1000) Change(rand() % horizontalCount_, rand() % verticalCount_);
+    Random<int> horizontalRandom(0, horizontalCount_-1);
+    Random<int> verticalRandom(0, verticalCount_ - 1);
+    rep(j, 1000) Change(horizontalRandom.Get(), verticalRandom.Get());
 }
 
 void Puzzle::Game(const Vector2& screenPos)
@@ -177,6 +182,11 @@ void Puzzle::Game(const Vector2& screenPos)
             sprites_[panel_[i]]->SetPosition({ centerPos_.x + col * size_.x,centerPos_.y + row * size_.y });
         }
     }
+
+    if (isShowResult_ || isClear_) {
+        //リザルトを常に見せる時かクリアしたとき
+        sprite_->SetColor(isClear_ ? Vector4{ 1.0f,1.0f,1.0f,1.0f } : Vector4{ 1.0f,1.0f,1.0f,0.125f });
+    }
 }
 
 
@@ -184,18 +194,20 @@ void Puzzle::Draw()
 {
     Sprite::PreDraw();
 
-    if (isClear_) {
+    if (isShowResult_|| isClear_) {
+        //リザルトを常に見せる時かクリアしたとき
         sprite_->Draw();
-    } else {
+    }
+
+
+    if (!isClear_) {
         rep(i, maxArrayNum_)   if (panel_[i] < maxArrayNum_ - 1) {
             sprites_[panel_[i]]->Draw();
         }
-
-
         if (curentHoverIndex_ != -1) {
             frameSprite_->Draw();
         }
     }
-
-
 }
+
+

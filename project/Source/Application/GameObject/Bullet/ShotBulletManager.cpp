@@ -11,6 +11,7 @@
 #include"CoordinateTransform.h"
 #include"TimeManager.h"
 #include"RhythmManager.h"
+#include"Random.h"
 
 ShotBulletManager::ShotBulletManager(const Enemy* enemy)
     :enemy_(enemy)
@@ -51,13 +52,13 @@ void ShotBulletManager::Update() {
 
             Vector3 toTarget = enemy_->GetToTarget();
             Sound::PlaySE(SoundFactory::FIRE_BALL);
-
-            if (rand() % 2 == 0) {
+            Random<int> rand(0, 1);
+            if (rand.Get() == 0) {
 
                 const int bulletCount = 5;
                 const float spreadAngle = Math::kPi/ 6.0f; // ±30度の範囲
-
-                int select = rand() % bulletCount;
+                Random<int> selectRand(0, bulletCount-1);
+                int select = selectRand.Get();
 
                 for (int i = 0; i < bulletCount; ++i) {
                     float angleOffset = spreadAngle * ((float)i / (bulletCount - 1) - 0.5f); // -0.5〜+0.5
@@ -73,7 +74,7 @@ void ShotBulletManager::Update() {
 
                 Vector3 shotPosition = enemy_->GetWorldPos() + toTarget * 0.5f;
                 shotPosition.y += 0.5f;
-                bulletManager_->ShotBullet(shotPosition, toTarget, shotSpeed_, shotSize_, rand() % 2 == 0 ? Bullet::kEnemyHot : Bullet::kEnemyCold);
+                bulletManager_->ShotBullet(shotPosition, toTarget, shotSpeed_, shotSize_, rand.Get() == 0 ? Bullet::kEnemyHot : Bullet::kEnemyCold);
             }
 
 

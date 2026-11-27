@@ -142,7 +142,7 @@ Particle MakeNewParticle(
 SphericalMove MakeNewSphericalCoordinate(const float& radius, const int& count, const int& maxCount, const float& radiusSpeed, const float& polarSpeed, const MinMax& polarSpeedMinMax, const MinMax& radiusSpeedMinMax)
 {
     SphericalMove spherical;
-    Random random;
+    Random<float> random;
     spherical.coordinate.azimuthal = 0.0f;
     spherical.coordinate.polar = Math::kPi*2.0f / maxCount * count;
     spherical.coordinate.radius = radius;

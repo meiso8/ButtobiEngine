@@ -8,7 +8,7 @@
 #include"TextureFactory.h"
 class SlidePuzzleSystem {
 public:
-    SlidePuzzleSystem(const int horizontal, const int vertical, TextureFactory::Handle handle);
+    SlidePuzzleSystem(const int horizontal, const int vertical, TextureFactory::Handle handle,const bool showResult);
     ~SlidePuzzleSystem();
     void Initialize(const Vector3& pos, const float& rotY);
     static void InitStaticActiveFlag();

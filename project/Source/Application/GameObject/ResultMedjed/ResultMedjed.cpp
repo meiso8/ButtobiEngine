@@ -1,6 +1,7 @@
 #include "ResultMedjed.h"
 #include"ModelManager.h"
 #include"Model.h"
+#include"Random.h"
 
 ResultMedjed::ResultMedjed()
 {
@@ -13,7 +14,7 @@ ResultMedjed::ResultMedjed()
   aniObj_->SetTemperature(1.0f);
   aniObj_->SetModelAndLoadAnimation(model);
 
-  anilists_ = {
+  aniLists_ = {
   "Jump",
   "Nod",
   "Round",
@@ -35,19 +36,21 @@ void ResultMedjed::Initialize()
     aniObj_->SetObjectName("ResultMedjed");
     aniObj_->RegisterObject();
     //アニメーションをセットするよ
-    aniObj_->SetAnimation(anilists_[currentAnimNum_]);
+    aniObj_->SetAnimation(aniLists_[currentAnimNum_]);
 }
 
 void ResultMedjed::Update(const bool isResetAnim)
 {
     if (isResetAnim) {
         
+        Random<int> random(0, aniLists_.size()-1);
         while (preAnimNum_ == currentAnimNum_) {
-            currentAnimNum_ = rand() % anilists_.size();
+
+            currentAnimNum_ = random.Get();
 
         }
         //アニメーションをセットするよ
-        aniObj_->SetAnimation(anilists_[currentAnimNum_]);
+        aniObj_->SetAnimation(aniLists_[currentAnimNum_]);
         preAnimNum_ = currentAnimNum_;
     }
 

@@ -7,7 +7,7 @@ class ResultMedjed
 {
 private:
     std::unique_ptr<AnimationObject3d>aniObj_ = nullptr;
-    std::array<std::string,6>anilists_;
+    std::array<std::string,6>aniLists_;
     uint32_t preAnimNum_ = 0;
     uint32_t currentAnimNum_ = 0;
 public:
