@@ -129,6 +129,7 @@ void Puzzle::Shuffle()
 {
     rep(i, maxArrayNum_) panel_[i] = i;
     rep(j, 1000) Change(rand() % horizontalCount_, rand() % verticalCount_);
+    rep(j, 1000) Change(random.Get() % horizontalCount_, random.Get() % verticalCount_);
 }
 
 void Puzzle::Game(const Vector2& screenPos)
