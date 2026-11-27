@@ -1,6 +1,5 @@
 #include "SwapChain.h"
-#pragma comment(lib,"d3d12.lib")
-#pragma comment(lib,"dxgi.lib")
+
 #include<cassert>
 #include"Log.h"
 #include"RtvDescriptorHeap.h"
