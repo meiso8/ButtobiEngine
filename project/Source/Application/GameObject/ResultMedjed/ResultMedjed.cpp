@@ -43,7 +43,7 @@ void ResultMedjed::Update(const bool isResetAnim)
 {
     if (isResetAnim) {
         
-        Random<int> random(0, aniLists_.size()-1);
+        Random<int> random(0, static_cast<int>(aniLists_.size()-1));
         while (preAnimNum_ == currentAnimNum_) {
 
             currentAnimNum_ = random.Get();
